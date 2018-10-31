@@ -2,16 +2,22 @@
   "name": "distant-divinity",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "dependencies": {
+    "lodash": "^4.17.11",
+    "mainloop.js": "^1.0.4",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
-    "react-scripts": "2.0.5"
+    "react-scripts": "2.0.5",
+    "twig": "^1.12.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "cssnano": "^4.0.5",
+    "flow-bin": "^0.85.0",
+    "node-sass": "^4.9.0",
+    "postcss": "^7.0.2",
+    "postcss-cli": "^6.0.0",
+    "websocket": "^1.0.26"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -21,5 +27,14 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "scripts": {
+    "build": "npm run sass:build && react-scripts build",
+    "css:postbuild": "postcss < public/index.css > public/index.css.tmp && mv public/index.css.tmp public/index.css",
+    "postbuild": "npm run css:postbuild",
+    "sass:build": "./node_modules/.bin/node-sass -r ./scss -o ./public",
+    "sass:watch": "./node_modules/.bin/node-sass -r -w ./scss -o ./public",
+    "start": "react-scripts start",
+    "test": "react-scripts test --env=jsdom"
+  }
 }

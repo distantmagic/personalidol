@@ -1,0 +1,68 @@
+# .knows(fact.aliased(''))
+
+dialogue:
+  start:
+    - action: dialogue.goto('GREETING')
+
+  sections:
+    GREETING:
+
+      - actor: character.aliased('VOLO')
+        condition: not message.actor.knows(character.player().name)
+        # label: 'Greetings stranger.'
+        label: _('dialogue-00000001-welcome.VOLO.GREETING.not_knows_player_name')
+        action: message.actor.tell(message.label)
+
+      - actor: character.aliased('VOLO')
+        condition: message.actor.knows(character.player().name)
+        # label: 'Greetings ' ~ character.player().name ~ '.'
+        label: _('dialogue-00000001-welcome.VOLO.GREETING.knows_player_name')
+        action: message.actor.tell(message.label)
+
+      - actor: character.aliased('VOLO')
+        label: >
+          '
+            How can the old chap '~ message.actor.name ~ '
+            help you in your journeys?
+          '
+        action:
+          - message.actor.tell(message.label)
+          - character.player().learn(message.actor.name)
+        feedback:
+          - actor: character.player()
+            condition: not message.actor.knows(character.aliased('VOLO').role)
+            label: >
+              '
+                Nice to meet you stranger. My name is
+                ' ~ message.actor.name ~ '. May I ask what you do for a living?
+              '
+            action:
+              - message.actor.tell(message.label)
+              - character.aliased('VOLO').learn(message.actor.name)
+            outcome:
+              - actor: character.aliased('VOLO')
+                label: >
+                  '
+                    I am a reasonably well known bard. I am surprised you did
+                    not hear of my deeds.
+                  '
+                action:
+                  - message.actor.tell(message.label)
+                  - character.player().learn(message.actor.role)
+                  - dialogue.goto('QUESTIONS')
+          - action: dialogue.goto('GOODBYE')
+
+  QUESTIONS:
+    - actor: character.player()
+      action: message.actor.tell('')
+
+  GOODBYE:
+    - actor: character.player()
+      label: >
+        '
+          Nice to meet you stranger. Please forgive me my interruption.
+          I am in a hurry and I must go.
+        '
+      action: message.actor.tell(message.label)
+      outcome:
+        - action: dialogue.end()
