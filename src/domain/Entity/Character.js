@@ -1,6 +1,8 @@
 // @flow
 
+import CommandBus from '../../classes/CommandBus';
 import Entity from '../Entity';
+import ForgetMemorizable from '../../classes/Command/ForgetMemorizable';
 
 import type { Hears } from '../../interfaces/Sentient/Perceives/Hears';
 import type { Memorizable } from '../../interfaces/Memorizable';
@@ -12,7 +14,10 @@ import type { Speaks } from '../../interfaces/Sentient/Speaks';
 import type { Vocal } from '../../interfaces/Message/Vocal';
 
 export default class Character extends Entity implements Hears, Memorizes, Sees, Speaks {
+  commandBus: CommandBus;
+
   forget(memorizable: Memorizable): void {
+    this.commandBus.source(new ForgetMemorizable(this, memorizable));
   }
 
   hear(message: Vocal): void {
