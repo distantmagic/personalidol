@@ -2,7 +2,7 @@
 
 dialogue:
   start:
-    - action: dialogue.goto('GREETING')
+    - include: GREETING
 
   sections:
     GREETING:
@@ -22,47 +22,50 @@ dialogue:
       - actor: character.aliased('VOLO')
         label: >
           '
-            How can the old chap '~ message.actor.name ~ '
+            How can the old chap ' ~ message.actor.name ~ '
             help you in your journeys?
           '
         action:
           - message.actor.tell(message.label)
           - character.player().learn(message.actor.name)
+
         feedback:
-          - actor: character.player()
-            condition: not message.actor.knows(character.aliased('VOLO').role)
-            label: >
-              '
-                Nice to meet you stranger. My name is
-                ' ~ message.actor.name ~ '. May I ask what you do for a living?
-              '
-            action:
-              - message.actor.tell(message.label)
-              - character.aliased('VOLO').learn(message.actor.name)
-            outcome:
-              - actor: character.aliased('VOLO')
-                label: >
-                  '
-                    I am a reasonably well known bard. I am surprised you did
-                    not hear of my deeds.
-                  '
-                action:
-                  - message.actor.tell(message.label)
-                  - character.player().learn(message.actor.role)
-                  - dialogue.goto('QUESTIONS')
-          - action: dialogue.goto('GOODBYE')
 
-  QUESTIONS:
-    - actor: character.player()
-      action: message.actor.tell('')
+          - options:
 
-  GOODBYE:
-    - actor: character.player()
-      label: >
-        '
-          Nice to meet you stranger. Please forgive me my interruption.
-          I am in a hurry and I must go.
-        '
-      action: message.actor.tell(message.label)
-      outcome:
-        - action: dialogue.end()
+            - actor: character.player()
+              condition: not message.actor.knows(character.aliased('VOLO').role)
+              label: >
+                '
+                  Nice to meet you stranger. My name is
+                  ' ~ message.actor.name ~ '. May I ask what you do for a living?
+                '
+              action:
+                - message.actor.tell(message.label)
+                - character.aliased('VOLO').learn(message.actor.name)
+              outcome:
+                - actor: character.aliased('VOLO')
+                  label: >
+                    '
+                      I am a reasonably well known ' ~ message.actor.role ~ '.
+                      I am surprised you did not hear of my deeds.
+                    '
+                  action:
+                    - message.actor.tell(message.label)
+                    - character.player().learn(message.actor.role)
+                    # - dialogue.interact('QUESTIONS')
+
+                  feedback:
+
+                    - actor: character.player()
+                      action: message.actor.tell('')
+
+            - actor: character.player()
+              label: >
+                '
+                  Nice to meet you stranger. Please forgive me my interruption.
+                  I am in a hurry and I must go.
+                '
+              action: message.actor.tell(message.label)
+              outcome:
+                - action: dialogue.end()

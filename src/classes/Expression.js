@@ -2,8 +2,17 @@
 
 import twig from 'twig';
 
+type TwigRendererData = ?{
+  [string]: number | string
+};
+
+type TwigRenderer = {
+  render: (data: TwigRendererData) => string,
+};
+
 export default class Expression {
   expression: string;
+  template: TwigRenderer;
 
   constructor(expression: string): void {
     this.expression = expression;
@@ -12,7 +21,7 @@ export default class Expression {
     });
   }
 
-  execute(data: ?object): Promise<string> {
-    return Promise.resolve(this.template.render(data));
+  execute(data: TwigRendererData): string {
+    return this.template.render(data);
   }
 }

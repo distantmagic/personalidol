@@ -4,6 +4,7 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
+    "js-yaml": "^3.12.0",
     "lodash": "^4.17.11",
     "mainloop.js": "^1.0.4",
     "react": "^16.6.0",
