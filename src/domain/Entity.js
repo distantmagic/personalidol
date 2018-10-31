@@ -1,4 +1,4 @@
 // @flow
 
-export default class Entity{
+export default class Entity {
 }
