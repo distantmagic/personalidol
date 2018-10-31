@@ -11,13 +11,13 @@ dialogue:
         condition: not message.actor.knows(character.player().name)
         # label: 'Greetings stranger.'
         label: _('dialogue-00000001-welcome.VOLO.GREETING.not_knows_player_name')
-        action: message.actor.tell(message.label)
+        action: message.actor.tell(dialogue.characters, message.label)
 
       - actor: character.aliased('VOLO')
         condition: message.actor.knows(character.player().name)
         # label: 'Greetings ' ~ character.player().name ~ '.'
         label: _('dialogue-00000001-welcome.VOLO.GREETING.knows_player_name')
-        action: message.actor.tell(message.label)
+        action: message.actor.tell(dialogue.characters, message.label)
 
       - actor: character.aliased('VOLO')
         label: >
@@ -26,7 +26,7 @@ dialogue:
             help you in your journeys?
           '
         action:
-          - message.actor.tell(message.label)
+          - message.actor.tell(dialogue.characters, message.label)
           - character.player().learn(message.actor.name)
 
         feedback:
@@ -41,7 +41,7 @@ dialogue:
                   ' ~ message.actor.name ~ '. May I ask what you do for a living?
                 '
               action:
-                - message.actor.tell(message.label)
+                - message.actor.tell(dialogue.characters, message.label)
                 - character.aliased('VOLO').learn(message.actor.name)
               outcome:
                 - actor: character.aliased('VOLO')
@@ -51,14 +51,14 @@ dialogue:
                       I am surprised you did not hear of my deeds.
                     '
                   action:
-                    - message.actor.tell(message.label)
+                    - message.actor.tell(dialogue.characters, message.label)
                     - character.player().learn(message.actor.role)
                     # - dialogue.interact('QUESTIONS')
 
                   feedback:
 
                     - actor: character.player()
-                      action: message.actor.tell('')
+                      action: message.actor.tell(dialogue.characters, '')
 
             - actor: character.player()
               label: >
@@ -66,6 +66,6 @@ dialogue:
                   Nice to meet you stranger. Please forgive me my interruption.
                   I am in a hurry and I must go.
                 '
-              action: message.actor.tell(message.label)
+              action: message.actor.tell(dialogue.characters, message.label)
               outcome:
                 - action: dialogue.end()
