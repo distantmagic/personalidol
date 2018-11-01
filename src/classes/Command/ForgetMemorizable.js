@@ -2,8 +2,8 @@
 
 import Command from '../Command';
 
-import type { Memorizable } from '../../interfaces/Memorizable';
-import type { Memorizes } from '../../interfaces/Sentient/Perceives/Memorizes';
+import type { Memorizable } from '../../domaininterfaces/Memorizable';
+import type { Memorizes } from '../../domaininterfaces/Sentient/Perceives/Memorizes';
 
 export default class ForgetMemorizable extends Command {
   memorizes: Memorizes;
