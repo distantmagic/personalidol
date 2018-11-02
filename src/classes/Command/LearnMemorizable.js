@@ -2,7 +2,7 @@
 
 import Command from '../Command';
 
-import type { Message } from '../../domaininterfaces/Message';
+import type { Message } from '../../domaininterfaces/Perceivable/Message';
 import type { Memorizes } from '../../domaininterfaces/Sentient/Perceives/Memorizes';
 
 export default class LearnMemorizable extends Command {

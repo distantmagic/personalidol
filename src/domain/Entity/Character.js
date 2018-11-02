@@ -8,16 +8,17 @@ import HearMessage from '../../classes/Command/HearMessage';
 import LearnMemorizable from '../../classes/Command/LearnMemorizable';
 import TellMessage from '../../classes/Command/TellMessage';
 
+import type { Aims } from '../../domaininterfaces/Sentient/Aims';
 import type { Hears } from '../../domaininterfaces/Sentient/Perceives/Hears';
 import type { Memorizable } from '../../domaininterfaces/Memorizable';
 import type { Memorizes } from '../../domaininterfaces/Sentient/Perceives/Memorizes';
-import type { Message } from '../../domaininterfaces/Message';
+import type { Message } from '../../domaininterfaces/Perceivable/Message';
 import type { Perceives } from '../../domaininterfaces/Sentient/Perceives';
 import type { Sees } from '../../domaininterfaces/Sentient/Perceives/Sees';
 import type { Speaks } from '../../domaininterfaces/Sentient/Speaks';
-import type { Vocal } from '../../domaininterfaces/Message/Vocal';
+import type { Vocal } from '../../domaininterfaces/Perceivable/Message/Vocal';
 
-export default class Character extends Entity implements Hears, Memorizes, Sees, Speaks {
+export default class Character extends Entity implements Aims, Hears, Memorizes, Sees, Speaks {
   commandBus: CommandBus;
   memorized: Collection<Memorizable>;
 

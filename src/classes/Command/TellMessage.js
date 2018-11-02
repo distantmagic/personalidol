@@ -2,7 +2,7 @@
 
 import Command from '../Command';
 
-import type { Message } from '../../domaininterfaces/Message';
+import type { Message } from '../../domaininterfaces/Perceivable/Message';
 import type { Perceives } from '../../domaininterfaces/Sentient/Perceives';
 
 export default class TellMessage extends Command {
