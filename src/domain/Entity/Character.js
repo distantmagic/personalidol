@@ -7,7 +7,9 @@ import ForgetMemorizable from '../../classes/Command/ForgetMemorizable';
 import HearMessage from '../../classes/Command/HearMessage';
 import LearnMemorizable from '../../classes/Command/LearnMemorizable';
 import TellMessage from '../../classes/Command/TellMessage';
+import { default as AimCommand } from '../../classes/Command/Aim';
 
+import type { Aimable } from '../../domaininterfaces/Memorizable/Aimable';
 import type { Aims } from '../../domaininterfaces/Sentient/Aims';
 import type { Hears } from '../../domaininterfaces/Sentient/Perceives/Hears';
 import type { Memorizable } from '../../domaininterfaces/Memorizable';
@@ -21,6 +23,10 @@ import type { Vocal } from '../../domaininterfaces/Perceivable/Message/Vocal';
 export default class Character extends Entity implements Aims, Hears, Memorizes, Sees, Speaks {
   commandBus: CommandBus;
   memorized: Collection<Memorizable>;
+
+  aim(aimable: Aimable): void {
+    this.commandBus.source(new AimCommand(this, aimable));
+  }
 
   forget(memorizable: Memorizable): void {
     this.commandBus.source(new ForgetMemorizable(this, memorizable));
