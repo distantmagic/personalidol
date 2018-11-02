@@ -1,6 +1,5 @@
 // @flow
 
-import Collection from '../../classes/Collection';
 import CommandBus from '../../classes/CommandBus';
 import Entity from '../Entity';
 import ForgetMemorizable from '../../classes/Command/ForgetMemorizable';
@@ -11,6 +10,7 @@ import { default as AimCommand } from '../../classes/Command/Aim';
 
 import type { Aimable } from '../../domaininterfaces/Memorizable/Aimable';
 import type { Aims } from '../../domaininterfaces/Sentient/Aims';
+import type { Collection } from '../../interfaces/Collection';
 import type { Hears } from '../../domaininterfaces/Sentient/Perceives/Hears';
 import type { Memorizable } from '../../domaininterfaces/Memorizable';
 import type { Memorizes } from '../../domaininterfaces/Sentient/Perceives/Memorizes';
@@ -44,9 +44,9 @@ export default class Character extends Entity implements Aims, Hears, Memorizes,
     this.commandBus.source(new LearnMemorizable(this, memorizable));
   }
 
-  tell(beings: Array<Perceives>, message: Message): void {
-    for (let being of beings) {
+  tell(beings: Collection<Perceives>, message: Message): void {
+    beings.forEach(being => {
       this.commandBus.source(new TellMessage(being, message));
-    }
+    });
   }
 }

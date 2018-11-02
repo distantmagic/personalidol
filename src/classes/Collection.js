@@ -1,8 +1,9 @@
 // @flow
 
+import type { Collection as CollectionInterface } from '../interfaces/Collection';
 import type { Equatable } from '../interfaces/Equatable';
 
-export default class Collection<T> {
+export default class Collection<T> implements CollectionInterface<T> {
   elements: Array<Equatable<T>>;
 
   constructor(elements: ?Array<Equatable<T>>) {
@@ -15,5 +16,9 @@ export default class Collection<T> {
 
   contains(some: T & Equatable<T>): boolean {
     return this.elements.some(element => element.isEqual(some));
+  }
+
+  forEach(callback: (Equatable<T>) => void): void {
+    this.elements.forEach(callback);
   }
 }
