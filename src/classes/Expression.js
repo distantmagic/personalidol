@@ -3,7 +3,7 @@
 import twig from 'twig';
 
 type TwigRendererData = ?{
-  [string]: number | string
+  [string]: any,
 };
 
 type TwigRenderer = {

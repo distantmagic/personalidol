@@ -1,4 +1,9 @@
+// @flow
+
 import Expression from './Expression';
+
+declare var expect: any;
+declare var it: any;
 
 it('performs math calculations', async () => {
   const expression = new Expression('2 + 2');
