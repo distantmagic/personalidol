@@ -1,11 +1,11 @@
 // @flow
 
-import Command from '../Command';
+import Command from '../../classes/Command';
 
 import type { Message } from '../../domaininterfaces/Perceivable/Message';
 import type { Perceives } from '../../domaininterfaces/Sentient/Perceives';
 
-export default class HearMessage extends Command {
+export default class TellMessage extends Command {
   message: Message;
   perceiving: Perceives;
 

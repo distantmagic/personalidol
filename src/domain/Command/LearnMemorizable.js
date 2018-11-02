@@ -1,6 +1,6 @@
 // @flow
 
-import Command from '../Command';
+import Command from '../../classes/Command';
 
 import type { Message } from '../../domaininterfaces/Perceivable/Message';
 import type { Memorizes } from '../../domaininterfaces/Sentient/Perceives/Memorizes';

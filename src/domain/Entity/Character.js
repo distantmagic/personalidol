@@ -2,11 +2,11 @@
 
 import CommandBus from '../../classes/CommandBus';
 import Entity from '../Entity';
-import ForgetMemorizable from '../../classes/Command/ForgetMemorizable';
-import HearMessage from '../../classes/Command/HearMessage';
-import LearnMemorizable from '../../classes/Command/LearnMemorizable';
-import TellMessage from '../../classes/Command/TellMessage';
-import { default as AimCommand } from '../../classes/Command/Aim';
+import ForgetMemorizable from '../../domain/Command/ForgetMemorizable';
+import HearMessage from '../../domain/Command/HearMessage';
+import LearnMemorizable from '../../domain/Command/LearnMemorizable';
+import TellMessage from '../../domain/Command/TellMessage';
+import { default as AimCommand } from '../../domain/Command/Aim';
 
 import type { Aimable } from '../../domaininterfaces/Memorizable/Aimable';
 import type { Aims } from '../../domaininterfaces/Sentient/Aims';
@@ -21,6 +21,7 @@ import type { Speaks } from '../../domaininterfaces/Sentient/Speaks';
 import type { Vocal } from '../../domaininterfaces/Perceivable/Message/Vocal';
 
 export default class Character extends Entity implements Aims, Hears, Memorizes, Sees, Speaks {
+  aims: Collection<Aimable>;
   commandBus: CommandBus;
   memorized: Collection<Memorizable>;
 

@@ -1,6 +1,6 @@
 // @flow
 
-import Command from '../Command';
+import Command from '../../classes/Command';
 
 import type { Memorizable } from '../../domaininterfaces/Memorizable';
 import type { Memorizes } from '../../domaininterfaces/Sentient/Perceives/Memorizes';

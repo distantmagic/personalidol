@@ -10,13 +10,13 @@ dialogue:
       - actor: character.aliased('VOLO')
         condition: not this.actor.knows(character.player().name)
         # label: 'Greetings stranger.'
-        label: _('dialogue-00000001-welcome.VOLO.GREETING.not_knows_player_name')
+        label: translate('dialogue-00000001-welcome.VOLO.GREETING.not_knows_player_name')
         action: this.actor.tell(dialogue.characters, message.vocal(this.label))
 
       - actor: character.aliased('VOLO')
         condition: this.actor.knows(character.player().name)
         # label: 'Greetings ' ~ character.player().name ~ '.'
-        label: _('dialogue-00000001-welcome.VOLO.GREETING.knows_player_name')
+        label: translate('dialogue-00000001-welcome.VOLO.GREETING.knows_player_name')
         action: this.actor.tell(dialogue.characters, message.vocal(this.label))
 
       - actor: character.aliased('VOLO')
