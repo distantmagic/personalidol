@@ -11,17 +11,19 @@ export default class ClockNotifier {
     this.observers = [];
   }
 
+  addObserver(observer: ClockObserver) {
+    this.observers.push(observer);
+  }
+
   notify(): void {
     for (let observer of this.observers) {
       observer.round();
     }
   }
 
-  observe(observer: ClockObserver) {
-    this.observers.push(observer);
-  }
-
   tick(ticks: number): void {
-    this.notify();
+    if (0 === ticks % this.frequency) {
+      this.notify();
+    }
   }
 }
