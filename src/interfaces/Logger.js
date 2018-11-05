@@ -2,6 +2,16 @@
 
 import type { LoggerContext } from './LoggerContext';
 
+export type LogSeverity = 'alert'
+  | 'critical'
+  | 'debug'
+  | 'emergency'
+  | 'error'
+  | 'info'
+  | 'notice'
+  | 'warning'
+;
+
 export interface Logger {
   /**
    * System is unusable.
@@ -53,4 +63,9 @@ export interface Logger {
    * Detailed debug information.
    */
   debug(context: LoggerContext): void;
+
+  /**
+   * Logs with an arbitrary level.
+   */
+  log(severity: LogSeverity, context: LoggerContext): void;
 }

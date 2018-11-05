@@ -6,7 +6,7 @@ export default class ClockNotifier {
   frequency: number;
   observers: Array<ClockObserver>;
 
-  constructor(frequency: number) {
+  constructor(frequency: number = 10) {
     this.frequency = frequency;
     this.observers = [];
   }

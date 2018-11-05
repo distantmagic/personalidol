@@ -18,17 +18,23 @@ export default class TranslatorErrorHandler {
     const exception = new MissingInterpolationException(text, value);
 
     this.logger.error(new ExceptionLoggerContext(exception));
+
+    throw exception;
   }
 
   missingKeyHandler(lng: string, ns: string, key: string, fallbackValue: string): void {
     const exception = new MissingKeyException(lng, ns, key, fallbackValue);
 
     this.logger.error(new ExceptionLoggerContext(exception));
+
+    throw exception;
   }
 
   returnedObjectHandler(key: string, value: string, options: any): ?string {
     const exception = new ReturnedObjectException(key, value, options);
 
     this.logger.error(new ExceptionLoggerContext(exception));
+
+    throw exception;
   }
 }
