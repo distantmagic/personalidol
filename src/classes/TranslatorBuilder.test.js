@@ -1,7 +1,5 @@
 // @flow
 
-import Clock from './Clock';
-import ClockNotifier from './ClockNotifier';
 import CommandBuffer from './CommandBuffer';
 import CommandBus from './CommandBus';
 import Logger from './Logger';
@@ -10,10 +8,8 @@ import TranslatorBuilder from './TranslatorBuilder';
 declare var expect: any;
 declare var it: any;
 
-const clockNotifier: ClockNotifier = new ClockNotifier();
-const clock: Clock = new Clock(clockNotifier);
 const commandBuffer: CommandBuffer = new CommandBuffer();
-const commandBus: CommandBus = new CommandBus(clock, commandBuffer);
+const commandBus: CommandBus = new CommandBus(commandBuffer);
 const logger: Logger = new Logger(commandBus);
 
 it('checks if translation exists', async () => {

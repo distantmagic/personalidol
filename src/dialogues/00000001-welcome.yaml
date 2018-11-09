@@ -8,7 +8,7 @@ dialogue:
     GREETING:
 
       - actor: character.aliased('VOLO')
-        condition: not this.actor.knows(character.player().name)
+        condition: not(this.actor.knows(character.player().name))
         # label: 'Greetings stranger.'
         label: translate('dialogue-00000001-welcome.VOLO.GREETING.not_knows_player_name')
         action: this.actor.tell(dialogue.characters, message.vocal(this.label))
@@ -34,7 +34,7 @@ dialogue:
           - options:
 
             - actor: character.player()
-              condition: not this.actor.knows(character.aliased('VOLO').role)
+              condition: not(this.actor.knows(character.aliased('VOLO').role))
               label: >
                 '
                   Nice to meet you stranger. My name is

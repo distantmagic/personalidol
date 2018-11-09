@@ -22,7 +22,8 @@ export default class TranslatorBuilder {
       const errorHandler = new TranslatorErrorHandler(this.logger);
 
       i18nextInstance.init({
-        debug: process.env.REACT_APP_DEBUG,
+        // debug: process.env.REACT_APP_DEBUG,
+        debug: false,
         defaultNS: 'default',
         fallbackLng: 'dev',
         missingInterpolationHandler: errorHandler.missingInterpolationHandler,

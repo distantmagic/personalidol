@@ -4,6 +4,7 @@ import CommandBus from '../../classes/CommandBus';
 import Entity from '../Entity';
 import ForgetMemorizable from '../../domain/Command/ForgetMemorizable';
 import HearMessage from '../../domain/Command/HearMessage';
+import Knows from '../../domain/Query/Knows';
 import LearnMemorizable from '../../domain/Command/LearnMemorizable';
 import TellMessage from '../../domain/Command/TellMessage';
 import { default as AimCommand } from '../../domain/Command/Aim';
@@ -21,9 +22,7 @@ import type { Speaks } from '../../domaininterfaces/Sentient/Speaks';
 import type { Vocal } from '../../domaininterfaces/Perceivable/Message/Vocal';
 
 export default class Character extends Entity implements Aims, Hears, Memorizes, Sees, Speaks {
-  aims: Collection<Aimable>;
   commandBus: CommandBus;
-  memorized: Collection<Memorizable>;
 
   aim(aimable: Aimable): void {
     this.commandBus.source(new AimCommand(this, aimable));
@@ -37,8 +36,8 @@ export default class Character extends Entity implements Aims, Hears, Memorizes,
     this.commandBus.source(new HearMessage(this, message));
   }
 
-  knows(memorizable: Memorizable): boolean {
-    return this.memorized.contains(memorizable);
+  knows(memorizable: Memorizable): Promise<boolean> {
+    return this.queryBus.source<boolean>(new Knows(this, memorizable));
   }
 
   learn(memorizable: Memorizable): void {
