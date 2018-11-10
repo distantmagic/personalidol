@@ -17,7 +17,7 @@ export default class ClockNotifier {
 
   notify(): void {
     for (let observer of this.observers) {
-      observer.round();
+      observer.flush();
     }
   }
 

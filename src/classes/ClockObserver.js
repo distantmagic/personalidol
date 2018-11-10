@@ -1,7 +1,7 @@
 // @flow
 
 export default class ClockObserver {
-  round(): void {
+  flush(): void {
     throw new Error('Not yet implemented.');
   }
 }

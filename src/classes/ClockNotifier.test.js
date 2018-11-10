@@ -16,7 +16,7 @@ class Foo extends ClockObserver {
     this.callback = callback;
   }
 
-  round(): void {
+  flush(): void {
     this.callback();
   }
 }
