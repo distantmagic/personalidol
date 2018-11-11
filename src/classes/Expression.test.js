@@ -9,7 +9,7 @@ it('performs math calculations', () => {
   const expression = new Expression('2 + 2');
   const result = expression.execute();
 
-  expect(result).toBe('4');
+  expect(result).resolves.toBe('4');
 });
 
 it('uses variables', () => {
@@ -18,7 +18,7 @@ it('uses variables', () => {
     foo: 3,
   });
 
-  expect(result).toBe('5');
+  expect(result).resolves.toBe('5');
 });
 
 it('uses objects', () => {
@@ -29,5 +29,34 @@ it('uses objects', () => {
     },
   });
 
-  expect(result).toBe('Greetings CHARNAME');
+  expect(result).resolves.toBe('Greetings CHARNAME');
+});
+
+it('uses promises', () => {
+  const expression = new Expression(`"Greetings " ~ character.player().name`);
+  const result = expression.execute({
+    character: {
+      player: () => ({
+        name: Promise.resolve('CHARNAME'),
+      }),
+    },
+  });
+
+  expect(result).resolves.toBe('Greetings CHARNAME');
+});
+
+it('resolves conditions with promises', () => {
+  const expression = new Expression(`
+    not character.player().knows() and character.player().aims()
+  `);
+  const result = expression.execute({
+    character: {
+      player: () => ({
+        aims: () => Promise.resolve(true),
+        knows: () => Promise.resolve(false),
+      }),
+    },
+  });
+
+  expect(result).resolves.toBe('true');
 });

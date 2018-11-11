@@ -21,7 +21,7 @@ export default class Expression {
     });
   }
 
-  execute(data: TwigRendererData): string {
-    return this.template.render(data);
+  execute(data: TwigRendererData): Promise<string> {
+    return this.template.renderAsync(data);
   }
 }

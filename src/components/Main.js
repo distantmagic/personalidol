@@ -1,6 +1,11 @@
+// @flow
+
 import React from 'react';
 
-export default class Main extends React.Component {
+type Props = {
+};
+
+export default class Main extends React.Component<Props> {
   render() {
     return (
       <div className="app">
