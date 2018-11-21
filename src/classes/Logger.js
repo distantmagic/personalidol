@@ -1,6 +1,5 @@
 // @flow
 
-import CommandBus from "./CommandBus";
 import LogMessage from "./Command/LogMessage";
 
 import type {

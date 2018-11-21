@@ -1,6 +1,5 @@
 // @flow
 
-import CommandBus from "../../classes/CommandBus";
 import Entity from "../Entity";
 import ForgetMemorizable from "../../domain/Command/ForgetMemorizable";
 import HearMessage from "../../domain/Command/HearMessage";
@@ -23,31 +22,31 @@ import type { Vocal } from "../../domaininterfaces/Perceivable/Message/Vocal";
 
 export default class Character extends Entity
   implements Aims, Hears, Memorizes, Sees, Speaks {
-  commandBus: CommandBus;
 
   aim(aimable: Aimable): void {
-    this.commandBus.source(new AimCommand(this, aimable));
+    // this.commandBus.source(new AimCommand(this, aimable));
   }
 
   forget(memorizable: Memorizable): void {
-    this.commandBus.source(new ForgetMemorizable(this, memorizable));
+    // this.commandBus.source(new ForgetMemorizable(this, memorizable));
   }
 
   hear(message: Vocal): void {
-    this.commandBus.source(new HearMessage(this, message));
+    // this.commandBus.source(new HearMessage(this, message));
   }
 
-  knows(memorizable: Memorizable): Promise<boolean> {
-    return this.queryBus.source<boolean>(new Knows(this, memorizable));
+  async knows(memorizable: Memorizable): Promise<boolean> {
+    // return this.queryBus.source<boolean>(new Knows(this, memorizable));
+    return false;
   }
 
   learn(memorizable: Memorizable): void {
-    this.commandBus.source(new LearnMemorizable(this, memorizable));
+    // this.commandBus.source(new LearnMemorizable(this, memorizable));
   }
 
   tell(beings: Collection<Perceives>, message: Message): void {
     beings.forEach(being => {
-      this.commandBus.source(new TellMessage(being, message));
+      // this.commandBus.source(new TellMessage(being, message));
     });
   }
 }

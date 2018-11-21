@@ -2,8 +2,6 @@
 
 import React from "react";
 
-import Dialogue from "./Dialogue";
-
 type Props = {};
 
 type State = {
@@ -22,10 +20,6 @@ export default class Main extends React.Component<Props, State> {
   }
 
   render() {
-    return (
-      <div className="app">
-        <Dialogue />
-      </div>
-    );
+    return null;
   }
 }

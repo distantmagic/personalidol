@@ -3,12 +3,12 @@
 import trim from "lodash/trim";
 import twig from "twig";
 
-type TwigRendererData = ?{
+type ExpressionData = ?{
   [string]: any
 };
 
 type TwigRenderer = {
-  renderAsync: (data: TwigRendererData) => Promise<string>
+  renderAsync: (data: ExpressionData) => Promise<string>
 };
 
 export default class Expression {
@@ -22,7 +22,7 @@ export default class Expression {
     });
   }
 
-  async execute(data: TwigRendererData): Promise<string> {
+  async execute(data: ExpressionData): Promise<string> {
     const response = await this.template.renderAsync(data);
 
     return trim(response);
