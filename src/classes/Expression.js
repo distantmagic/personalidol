@@ -22,11 +22,9 @@ export default class Expression {
     });
   }
 
-  after(response: string) {
-    return trim(response);
-  }
+  async execute(data: TwigRendererData): Promise<string> {
+    const response = await this.template.renderAsync(data);
 
-  execute(data: TwigRendererData): Promise<string> {
-    return this.template.renderAsync(data).then(this.after);
+    return trim(response);
   }
 }
