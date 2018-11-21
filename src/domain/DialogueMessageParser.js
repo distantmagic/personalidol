@@ -1,5 +1,6 @@
 // @flow
 
+import DialogueContext from "./DialogueContext";
 import DialogueMessage from "./DialogueMessage";
 import Expression from "../classes/Expression";
 
@@ -10,22 +11,10 @@ export default class DialogueMessageParser {
     this.message = message;
   }
 
-  async parse(): Promise<DialogueMessage> {
+  async parse(context: DialogueContext): Promise<DialogueMessage> {
     const expression = new Expression(this.message.label);
-    const label = await expression.execute({
-      character: {
-        player() {
-          return {
-            name: "foo"
-          };
-        }
-      },
-      this: {
-        actor: {
-          name: "bar"
-        }
-      }
-    });
+    const data = await context.data();
+    const label = await expression.execute(data);
 
     return new DialogueMessage({
       label: label

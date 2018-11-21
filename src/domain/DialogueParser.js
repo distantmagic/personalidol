@@ -3,6 +3,7 @@
 import YAML from "yaml";
 
 import Dialogue from "./Dialogue";
+import DialogueContext from "./DialogueContext";
 import DialogueMessage from "./DialogueMessage";
 import DialogueMessageParser from "./DialogueMessageParser";
 
@@ -13,16 +14,19 @@ export default class DialogueParser {
     this.dialogue = dialogue;
   }
 
-  async parse(): Promise<Dialogue> {
+  async parse(context: DialogueContext): Promise<Dialogue> {
     const parsed = YAML.parse(this.dialogue);
-    const messages = await Promise.all(this.prepareMessages(parsed));
+    const messages = await Promise.all(this.prepareMessages(context, parsed));
 
     return new Dialogue(messages);
   }
 
-  prepareMessages(dialogue: Object): Array<Promise<DialogueMessage>> {
+  prepareMessages(
+    context: DialogueContext,
+    dialogue: Object
+  ): Array<Promise<DialogueMessage>> {
     return dialogue.dialogue.start.map(message =>
-      new DialogueMessageParser(message).parse()
+      new DialogueMessageParser(message).parse(context)
     );
   }
 }

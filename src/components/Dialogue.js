@@ -22,8 +22,9 @@ export default class Dialogue extends React.Component<Props, State> {
     const response = await fetch("dialogues/0001-welcome.yaml");
     const content = await response.text();
 
+    const dialogueContext = new DialogueContext();
     const dialogueParser = new DialogueParser(content);
-    const dialogue = await dialogueParser.parse();
+    const dialogue = await dialogueParser.parse(dialogueContext);
 
     this.setState({
       dialogue: dialogue
