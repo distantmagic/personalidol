@@ -1,4 +1,3 @@
 // @flow
 
-export default class Command {
-}
+export default class Command {}

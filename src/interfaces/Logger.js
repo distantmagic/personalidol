@@ -1,16 +1,16 @@
 // @flow
 
-import type { LoggerContext } from './LoggerContext';
+import type { LoggerContext } from "./LoggerContext";
 
-export type LogSeverity = 'alert'
-  | 'critical'
-  | 'debug'
-  | 'emergency'
-  | 'error'
-  | 'info'
-  | 'notice'
-  | 'warning'
-;
+export type LogSeverity =
+  | "alert"
+  | "critical"
+  | "debug"
+  | "emergency"
+  | "error"
+  | "info"
+  | "notice"
+  | "warning";
 
 export interface Logger {
   /**

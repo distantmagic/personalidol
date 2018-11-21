@@ -1,8 +1,8 @@
 // @flow
 
-import Collection from './Collection';
+import Collection from "./Collection";
 
-import type { Equatable } from '../interfaces/Equatable';
+import type { Equatable } from "../interfaces/Equatable";
 
 declare var expect: any;
 declare var it: any;
@@ -19,9 +19,9 @@ class Foo implements Equatable<Foo> {
   }
 }
 
-it('makes collection immutable', () => {
+it("makes collection immutable", () => {
   const collection = new Collection<Foo>();
-  const foo = new Foo('test');
+  const foo = new Foo("test");
 
   const newColleciton = collection.add(foo);
 
@@ -30,19 +30,18 @@ it('makes collection immutable', () => {
   expect(newColleciton.contains(foo)).toBe(true);
 });
 
-
-it('uses equatable to find objects', () => {
+it("uses equatable to find objects", () => {
   const collection = new Collection<Foo>();
-  const foo = new Foo('test');
-  const other = new Foo('test');
+  const foo = new Foo("test");
+  const other = new Foo("test");
 
   expect(collection.add(foo).contains(other)).toBe(true);
 });
 
-it('does not find object', () => {
+it("does not find object", () => {
   const collection = new Collection<Foo>();
-  const foo = new Foo('test');
-  const other = new Foo('test2');
+  const foo = new Foo("test");
+  const other = new Foo("test2");
 
   expect(collection.add(foo).contains(other)).toBe(false);
 });

@@ -1,6 +1,5 @@
 // @flow
 
-import type { Perceivable } from '../Perceivable';
+import type { Perceivable } from "../Perceivable";
 
-export interface Message extends Perceivable {
-}
+export interface Message extends Perceivable {}

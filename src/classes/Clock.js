@@ -1,6 +1,6 @@
 // @flow
 
-import ClockNotifier from './ClockNotifier';
+import ClockNotifier from "./ClockNotifier";
 
 export default class Clock {
   clockNotifier: ClockNotifier;

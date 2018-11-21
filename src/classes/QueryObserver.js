@@ -1,8 +1,8 @@
 // @flow
 
-import AlreadyRejected from './Exception/QueryObserver/AlreadyRejected';
-import AlreadyResolved from './Exception/QueryObserver/AlreadyResolved';
-import Query from './Query';
+import AlreadyRejected from "./Exception/QueryObserver/AlreadyRejected";
+import AlreadyResolved from "./Exception/QueryObserver/AlreadyResolved";
+import Query from "./Query";
 
 type ResolveResult<U> = U;
 

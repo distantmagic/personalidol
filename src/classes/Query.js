@@ -1,4 +1,3 @@
 // @flow
 
-export default class Query<T> {
-}
+export default class Query<T> {}

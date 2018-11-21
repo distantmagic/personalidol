@@ -1,4 +1,3 @@
 // @flow
 
-export interface Perceivable {
-}
+export interface Perceivable {}

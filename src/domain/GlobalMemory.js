@@ -1,4 +1,3 @@
 // @flow
 
-export default class GlobalMemory {
-}
+export default class GlobalMemory {}

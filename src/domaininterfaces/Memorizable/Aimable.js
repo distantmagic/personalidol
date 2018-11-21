@@ -1,6 +1,5 @@
 // @flow
 
-import type { Memorizable } from '../Memorizable';
+import type { Memorizable } from "../Memorizable";
 
-export interface Aimable extends Memorizable {
-}
+export interface Aimable extends Memorizable {}

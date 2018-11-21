@@ -1,6 +1,5 @@
 // @flow
 
-import type { Aimable } from '../Aimable';
+import type { Aimable } from "../Aimable";
 
-export interface Deed extends Aimable {
-}
+export interface Deed extends Aimable {}

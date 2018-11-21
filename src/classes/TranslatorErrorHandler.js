@@ -1,11 +1,11 @@
 // @flow
 
-import { default as ExceptionLoggerContext } from './LoggerContext/Exception';
-import { default as MissingKeyException } from './Exception/Translator/MissingKey';
-import { default as MissingInterpolationException } from './Exception/Translator/MissingInterpolation';
-import { default as ReturnedObjectException } from './Exception/Translator/ReturnedObject';
+import { default as ExceptionLoggerContext } from "./LoggerContext/Exception";
+import { default as MissingKeyException } from "./Exception/Translator/MissingKey";
+import { default as MissingInterpolationException } from "./Exception/Translator/MissingInterpolation";
+import { default as ReturnedObjectException } from "./Exception/Translator/ReturnedObject";
 
-import type { Logger } from '../interfaces/Logger';
+import type { Logger } from "../interfaces/Logger";
 
 export default class TranslatorErrorHandler {
   logger: Logger;
@@ -22,7 +22,12 @@ export default class TranslatorErrorHandler {
     throw exception;
   }
 
-  missingKeyHandler(lng: string, ns: string, key: string, fallbackValue: string): void {
+  missingKeyHandler(
+    lng: string,
+    ns: string,
+    key: string,
+    fallbackValue: string
+  ): void {
     const exception = new MissingKeyException(lng, ns, key, fallbackValue);
 
     this.logger.error(new ExceptionLoggerContext(exception));

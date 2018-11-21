@@ -1,9 +1,9 @@
 // @flow
 
-import CommandBus from '../classes/CommandBus';
-import QueryBus from '../classes/QueryBus';
+import CommandBus from "../classes/CommandBus";
+import QueryBus from "../classes/QueryBus";
 
-import type { Equatable } from '../interfaces/Equatable';
+import type { Equatable } from "../interfaces/Equatable";
 
 export default class Entity implements Equatable<Entity> {
   commandBus: CommandBus;

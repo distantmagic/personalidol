@@ -1,8 +1,8 @@
 // @flow
 
-import Query from './Query';
-import QueryBuffer from './QueryBuffer';
-import QueryObserver from './QueryObserver';
+import Query from "./Query";
+import QueryBuffer from "./QueryBuffer";
+import QueryObserver from "./QueryObserver";
 
 export default class QueryBus {
   queryBuffer: QueryBuffer;

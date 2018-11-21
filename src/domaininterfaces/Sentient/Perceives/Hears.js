@@ -1,7 +1,7 @@
 // @flow
 
-import type { Vocal } from '../../Perceivable/Message/Vocal';
-import type { Perceives } from '../Perceives';
+import type { Vocal } from "../../Perceivable/Message/Vocal";
+import type { Perceives } from "../Perceives";
 
 export interface Hears extends Perceives {
   hear(message: Vocal): void;

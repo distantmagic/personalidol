@@ -1,6 +1,5 @@
 // @flow
 
-import type { Equatable } from '../interfaces/Equatable';
+import type { Equatable } from "../interfaces/Equatable";
 
-export interface Sentient {
-}
+export interface Sentient {}

@@ -1,6 +1,6 @@
 // @flow
 
-import QueryObserver from './QueryObserver';
+import QueryObserver from "./QueryObserver";
 
 export default class CommandBuffer {
   queue: Array<QueryObserver<any>>;

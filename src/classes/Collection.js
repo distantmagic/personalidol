@@ -1,7 +1,7 @@
 // @flow
 
-import type { Collection as CollectionInterface } from '../interfaces/Collection';
-import type { Equatable } from '../interfaces/Equatable';
+import type { Collection as CollectionInterface } from "../interfaces/Collection";
+import type { Equatable } from "../interfaces/Equatable";
 
 export default class Collection<T> implements CollectionInterface<T> {
   elements: Array<Equatable<T>>;

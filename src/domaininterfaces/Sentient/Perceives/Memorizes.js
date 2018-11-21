@@ -1,7 +1,7 @@
 // @flow
 
-import type { Memorizable } from '../../Memorizable';
-import type { Perceives } from '../Perceives';
+import type { Memorizable } from "../../Memorizable";
+import type { Perceives } from "../Perceives";
 
 export interface Memorizes extends Perceives {
   forget(memorizable: Memorizable): void;

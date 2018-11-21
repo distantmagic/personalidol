@@ -1,6 +1,5 @@
 // @flow
 
-import type { Message } from '../Message';
+import type { Message } from "../Message";
 
-export interface Psychic extends Message {
-}
+export interface Psychic extends Message {}

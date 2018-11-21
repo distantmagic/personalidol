@@ -1,6 +1,5 @@
 // @flow
 
-import type { Sentient } from '../Sentient';
+import type { Sentient } from "../Sentient";
 
-export interface Feels extends Sentient {
-}
+export interface Feels extends Sentient {}

@@ -1,6 +1,6 @@
 // @flow
 
-import type { Equatable } from './Equatable';
+import type { Equatable } from "./Equatable";
 
 export interface Collection<T> {
   constructor(elements: ?Array<Equatable<T>>): void;

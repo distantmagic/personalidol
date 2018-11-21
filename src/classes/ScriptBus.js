@@ -1,4 +1,3 @@
 // @flow
 
-export default class ScriptBus {
-}
+export default class ScriptBus {}

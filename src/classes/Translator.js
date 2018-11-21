@@ -1,11 +1,11 @@
 // @flow
 
-import TranslatorErrorHandler from './TranslatorErrorHandler';
+import TranslatorErrorHandler from "./TranslatorErrorHandler";
 
 type I18nextTranslateKeys = Array<string> | string;
 type I18nextType = {
-  exists: (I18nextTranslateKeys) => boolean,
-  t: (I18nextTranslateKeys) => string,
+  exists: I18nextTranslateKeys => boolean,
+  t: I18nextTranslateKeys => string
 };
 
 export default class Translator {

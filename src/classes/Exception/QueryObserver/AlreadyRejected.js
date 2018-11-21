@@ -1,6 +1,5 @@
 // @flow
 
-import QueryObserver from '../QueryObserver';
+import QueryObserver from "../QueryObserver";
 
-export default class AlreadyRejected extends QueryObserver {
-}
+export default class AlreadyRejected extends QueryObserver {}

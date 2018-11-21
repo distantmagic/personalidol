@@ -1,4 +1,3 @@
 // @flow
 
-export default class Emotion {
-}
+export default class Emotion {}

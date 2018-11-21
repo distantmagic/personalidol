@@ -1,9 +1,9 @@
 // @flow
 
-import Query from '../../classes/Query';
+import Query from "../../classes/Query";
 
-import type { Memorizable } from '../../domaininterfaces/Memorizable';
-import type { Memorizes } from '../../domaininterfaces/Sentient/Perceives/Memorizes';
+import type { Memorizable } from "../../domaininterfaces/Memorizable";
+import type { Memorizes } from "../../domaininterfaces/Sentient/Perceives/Memorizes";
 
 export default class Knows extends Query<boolean> {
   memorizable: Memorizable;

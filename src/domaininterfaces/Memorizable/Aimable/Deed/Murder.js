@@ -1,6 +1,5 @@
 // @flow
 
-import type { Deed } from '../Deed';
+import type { Deed } from "../Deed";
 
-export interface Murder extends Deed {
-}
+export interface Murder extends Deed {}

@@ -1,13 +1,14 @@
 // @flow
 
-import twig from 'twig';
+import trim from "lodash/trim";
+import twig from "twig";
 
 type TwigRendererData = ?{
-  [string]: any,
+  [string]: any
 };
 
 type TwigRenderer = {
-  render: (data: TwigRendererData) => string,
+  renderAsync: (data: TwigRendererData) => Promise<string>
 };
 
 export default class Expression {
@@ -17,11 +18,15 @@ export default class Expression {
   constructor(expression: string): void {
     this.expression = expression;
     this.template = twig.twig({
-      data: `{{${expression}}}`,
+      data: `${expression}`
     });
   }
 
+  after(response: string) {
+    return trim(response);
+  }
+
   execute(data: TwigRendererData): Promise<string> {
-    return this.template.renderAsync(data);
+    return this.template.renderAsync(data).then(this.after);
   }
 }

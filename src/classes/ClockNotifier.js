@@ -1,6 +1,6 @@
 // @flow
 
-import ClockObserver from './ClockObserver';
+import ClockObserver from "./ClockObserver";
 
 export default class ClockNotifier {
   frequency: number;

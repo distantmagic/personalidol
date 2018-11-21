@@ -1,4 +1,3 @@
 // @flow
 
-export interface LoggerContext {
-}
+export interface LoggerContext {}

@@ -1,7 +1,7 @@
 // @flow
 
-import Command from './Command';
-import CommandBuffer from './CommandBuffer';
+import Command from "./Command";
+import CommandBuffer from "./CommandBuffer";
 
 export default class CommandBus {
   commandBuffer: CommandBuffer;

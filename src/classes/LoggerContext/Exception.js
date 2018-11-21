@@ -1,6 +1,6 @@
 // @flow
 
-import LoggerContext from '../LoggerContext';
+import LoggerContext from "../LoggerContext";
 
 export default class Exception extends LoggerContext {
   error: Error;

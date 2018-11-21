@@ -1,4 +1,3 @@
 // @flow
 
-export default class Engine {
-}
+export default class Engine {}

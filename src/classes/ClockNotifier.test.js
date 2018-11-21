@@ -1,7 +1,7 @@
 // @flow
 
-import ClockNotifier from './ClockNotifier';
-import ClockObserver from './ClockObserver';
+import ClockNotifier from "./ClockNotifier";
+import ClockObserver from "./ClockObserver";
 
 declare var expect: any;
 declare var it: any;
@@ -21,7 +21,7 @@ class Foo extends ClockObserver {
   }
 }
 
-it('notifies with given frequency', () => {
+it("notifies with given frequency", () => {
   const clockNotifier = new ClockNotifier(2);
   const mockedCallback = jest.fn();
   const clockObserver = new Foo(mockedCallback);

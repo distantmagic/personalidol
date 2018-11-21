@@ -1,9 +1,9 @@
 // @flow
 
-import Command from '../../classes/Command';
+import Command from "../../classes/Command";
 
-import type { Aimable } from '../../domaininterfaces/Memorizable/Aimable';
-import type { Aims } from '../../domaininterfaces/Sentient/Aims';
+import type { Aimable } from "../../domaininterfaces/Memorizable/Aimable";
+import type { Aims } from "../../domaininterfaces/Sentient/Aims";
 
 export default class Aim extends Command {
   aims: Aims;

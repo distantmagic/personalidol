@@ -1,6 +1,6 @@
 // @flow
 
-import Command from './Command';
+import Command from "./Command";
 
 export default class CommandBuffer {
   queue: Array<Command>;

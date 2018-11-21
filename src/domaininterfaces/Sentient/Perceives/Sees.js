@@ -1,6 +1,5 @@
 // @flow
 
-import type { Perceives } from '../Perceives';
+import type { Perceives } from "../Perceives";
 
-export interface Sees extends Perceives {
-}
+export interface Sees extends Perceives {}

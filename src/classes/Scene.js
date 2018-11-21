@@ -1,4 +1,3 @@
 // @flow
 
-export default class Scene {
-}
+export default class Scene {}
