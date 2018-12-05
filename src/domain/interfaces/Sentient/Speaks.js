@@ -1,6 +1,6 @@
 // @flow
 
-import type { Collection } from "../../interfaces/Collection";
+import type { Collection } from "../../../framework/interfaces/Collection";
 import type { Message } from "../Perceivable/Message";
 import type { Perceives } from "./Perceives";
 import type { Sentient } from "../Sentient";

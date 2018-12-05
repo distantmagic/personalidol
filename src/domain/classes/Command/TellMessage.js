@@ -1,9 +1,9 @@
 // @flow
 
-import Command from "../../classes/Command";
+import Command from "../../../framework/classes/Command";
 
-import type { Message } from "../../domaininterfaces/Perceivable/Message";
-import type { Perceives } from "../../domaininterfaces/Sentient/Perceives";
+import type { Message } from "../../interfaces/Perceivable/Message";
+import type { Perceives } from "../../interfaces/Sentient/Perceives";
 
 export default class TellMessage extends Command {
   message: Message;

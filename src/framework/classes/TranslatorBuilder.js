@@ -5,7 +5,6 @@ import i18next from "i18next";
 import Translator from "./Translator";
 import TranslatorErrorHandler from "./TranslatorErrorHandler";
 import { default as ExceptionLoggerContext } from "./LoggerContext/Exception";
-import { default as resources } from "../lang/all";
 
 import type { Logger } from "../interfaces/Logger";
 
@@ -16,7 +15,7 @@ export default class TranslatorBuilder {
     this.logger = logger;
   }
 
-  createTranslator(): Promise<Translator> {
+  createTranslator(resources: {}): Promise<Translator> {
     return new Promise((resolve, reject) => {
       const i18nextInstance = i18next.createInstance();
       const errorHandler = new TranslatorErrorHandler(this.logger);

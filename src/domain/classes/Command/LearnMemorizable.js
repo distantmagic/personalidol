@@ -1,9 +1,9 @@
 // @flow
 
-import Command from "../../classes/Command";
+import Command from "../../../framework/classes/Command";
 
-import type { Message } from "../../domaininterfaces/Perceivable/Message";
-import type { Memorizes } from "../../domaininterfaces/Sentient/Perceives/Memorizes";
+import type { Message } from "../../interfaces/Perceivable/Message";
+import type { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
 
 export default class LearnMemorizable extends Command {
   message: Message;

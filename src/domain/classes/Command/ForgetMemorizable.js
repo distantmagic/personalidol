@@ -1,9 +1,9 @@
 // @flow
 
-import Command from "../../classes/Command";
+import Command from "../../../framework/classes/Command";
 
-import type { Memorizable } from "../../domaininterfaces/Memorizable";
-import type { Memorizes } from "../../domaininterfaces/Sentient/Perceives/Memorizes";
+import type { Memorizable } from "../../interfaces/Memorizable";
+import type { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
 
 export default class ForgetMemorizable extends Command {
   memorizes: Memorizes;

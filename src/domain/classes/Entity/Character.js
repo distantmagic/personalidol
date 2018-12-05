@@ -1,24 +1,24 @@
 // @flow
 
 import Entity from "../Entity";
-import ForgetMemorizable from "../../domain/Command/ForgetMemorizable";
-import HearMessage from "../../domain/Command/HearMessage";
-import Knows from "../../domain/Query/Knows";
-import LearnMemorizable from "../../domain/Command/LearnMemorizable";
-import TellMessage from "../../domain/Command/TellMessage";
-import { default as AimCommand } from "../../domain/Command/Aim";
+import ForgetMemorizable from "../Command/ForgetMemorizable";
+import HearMessage from "../Command/HearMessage";
+import Knows from "../Query/Knows";
+import LearnMemorizable from "../Command/LearnMemorizable";
+import TellMessage from "../Command/TellMessage";
+import { default as AimCommand } from "../Command/Aim";
 
-import type { Aimable } from "../../domaininterfaces/Memorizable/Aimable";
-import type { Aims } from "../../domaininterfaces/Sentient/Aims";
-import type { Collection } from "../../interfaces/Collection";
-import type { Hears } from "../../domaininterfaces/Sentient/Perceives/Hears";
-import type { Memorizable } from "../../domaininterfaces/Memorizable";
-import type { Memorizes } from "../../domaininterfaces/Sentient/Perceives/Memorizes";
-import type { Message } from "../../domaininterfaces/Perceivable/Message";
-import type { Perceives } from "../../domaininterfaces/Sentient/Perceives";
-import type { Sees } from "../../domaininterfaces/Sentient/Perceives/Sees";
-import type { Speaks } from "../../domaininterfaces/Sentient/Speaks";
-import type { Vocal } from "../../domaininterfaces/Perceivable/Message/Vocal";
+import type { Aimable } from "../../interfaces/Memorizable/Aimable";
+import type { Aims } from "../../interfaces/Sentient/Aims";
+import type { Collection } from "../../../framework/interfaces/Collection";
+import type { Hears } from "../../interfaces/Sentient/Perceives/Hears";
+import type { Memorizable } from "../../interfaces/Memorizable";
+import type { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
+import type { Message } from "../../interfaces/Perceivable/Message";
+import type { Perceives } from "../../interfaces/Sentient/Perceives";
+import type { Sees } from "../../interfaces/Sentient/Perceives/Sees";
+import type { Speaks } from "../../interfaces/Sentient/Speaks";
+import type { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
 export default class Character extends Entity
   implements Aims, Hears, Memorizes, Sees, Speaks {
