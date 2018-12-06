@@ -26,8 +26,8 @@ it("makes collection immutable", () => {
   const newColleciton = collection.add(foo);
 
   expect(collection).not.toBe(newColleciton);
-  expect(collection.contains(foo)).toBe(false);
-  expect(newColleciton.contains(foo)).toBe(true);
+  expect(collection.includes(foo)).toBe(false);
+  expect(newColleciton.includes(foo)).toBe(true);
 });
 
 it("uses equatable to find objects", () => {
@@ -35,7 +35,7 @@ it("uses equatable to find objects", () => {
   const foo = new Foo("test");
   const other = new Foo("test");
 
-  expect(collection.add(foo).contains(other)).toBe(true);
+  expect(collection.add(foo).includes(other)).toBe(true);
 });
 
 it("does not find object", () => {
@@ -43,5 +43,5 @@ it("does not find object", () => {
   const foo = new Foo("test");
   const other = new Foo("test2");
 
-  expect(collection.add(foo).contains(other)).toBe(false);
+  expect(collection.add(foo).includes(other)).toBe(false);
 });
