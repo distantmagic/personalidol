@@ -1,7 +1,7 @@
 // @flow
 
-import type { ExpressionCaster } from "../interfaces/ExpressionCaster";
-import type { ExpressionData } from "../types/ExpressionData";
+import type { ExpressionCaster } from "../../interfaces/ExpressionCaster";
+import type { ExpressionData } from "../../types/ExpressionData";
 
 export default class ExpressionCasterNumber
   implements ExpressionCaster<number> {

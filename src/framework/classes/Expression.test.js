@@ -1,9 +1,9 @@
 // @flow
 
 import Expression from "./Expression";
-import ExpressionCasterBoolean from "./ExpressionCasterBoolean";
-import ExpressionCasterNumber from "./ExpressionCasterNumber";
-import ExpressionCasterString from "./ExpressionCasterString";
+import ExpressionCasterBoolean from "./ExpressionCaster/Boolean";
+import ExpressionCasterNumber from "./ExpressionCaster/Number";
+import ExpressionCasterString from "./ExpressionCaster/String";
 
 declare var expect: any;
 declare var it: any;
