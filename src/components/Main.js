@@ -22,9 +22,6 @@ export default class Main extends React.Component<Props, State> {
   }
 
   render() {
-    return (
-      <Dialogue
-      />
-    );
+    return <Dialogue />;
   }
 }

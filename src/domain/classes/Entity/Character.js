@@ -22,7 +22,6 @@ import type { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
 export default class Character extends Entity
   implements Aims, Hears, Memorizes, Sees, Speaks {
-
   aim(aimable: Aimable): void {
     // this.commandBus.source(new AimCommand(this, aimable));
   }

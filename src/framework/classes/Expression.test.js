@@ -1,28 +1,38 @@
 // @flow
 
 import Expression from "./Expression";
+import ExpressionCasterBoolean from "./ExpressionCasterBoolean";
+import ExpressionCasterNumber from "./ExpressionCasterNumber";
+import ExpressionCasterString from "./ExpressionCasterString";
 
 declare var expect: any;
 declare var it: any;
 
+const booleanCaster = new ExpressionCasterBoolean();
+const numberCaster = new ExpressionCasterNumber();
+const stringCaster = new ExpressionCasterString();
+
 it("performs math calculations", () => {
-  const expression = new Expression("{{ 2 + 2 }}");
+  const expression = new Expression<number>("{{ 2 + 2 }}", numberCaster);
   const result = expression.execute();
 
-  expect(result).resolves.toBe("4");
+  expect(result).resolves.toBe(4);
 });
 
 it("uses variables", () => {
-  const expression = new Expression("{{ 2 + foo }}");
+  const expression = new Expression<number>("{{ 2 + foo }}", numberCaster);
   const result = expression.execute({
     foo: 3
   });
 
-  expect(result).resolves.toBe("5");
+  expect(result).resolves.toBe(5);
 });
 
 it("uses objects", () => {
-  const expression = new Expression(`Greetings {{ character.player().name }}`);
+  const expression = new Expression<string>(
+    `Greetings {{ character.player().name }}`,
+    stringCaster
+  );
   const result = expression.execute({
     character: {
       player: () => ({ name: "CHARNAME" })
@@ -33,7 +43,10 @@ it("uses objects", () => {
 });
 
 it("uses promises", () => {
-  const expression = new Expression(`Greetings {{ character.player().name }}`);
+  const expression = new Expression<string>(
+    `Greetings {{ character.player().name }}`,
+    stringCaster
+  );
   const result = expression.execute({
     character: {
       player: () => ({
@@ -46,9 +59,12 @@ it("uses promises", () => {
 });
 
 it("resolves conditions with promises", () => {
-  const expression = new Expression(`
+  const expression = new Expression<boolean>(
+    `
     {{ not character.player().knows() and character.player().aims() }}
-  `);
+  `,
+    booleanCaster
+  );
   const result = expression.execute({
     character: {
       player: () => ({
@@ -58,5 +74,5 @@ it("resolves conditions with promises", () => {
     }
   });
 
-  expect(result).resolves.toBe("true");
+  expect(result).resolves.toBe(true);
 });

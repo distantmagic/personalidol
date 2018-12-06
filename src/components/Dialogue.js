@@ -4,16 +4,13 @@ import React from "react";
 
 type Props = {};
 
-type State = {
-};
+type State = {};
 
 export default class Dialogue extends React.Component<Props, State> {
   render() {
     return (
       <ul>
-        <li>
-          test
-        </li>
+        <li>test</li>
       </ul>
     );
   }
