@@ -7,6 +7,7 @@
     "@sentry/browser": "^4.3.0",
     "babel-plugin-relay": "^2.0.0-rc.1",
     "core-js": "^2.5.7",
+    "eventemitter3": "^3.1.0",
     "i18next": "^12.0.0",
     "immutable": "^4.0.0-rc.12",
     "keycloak-js": "^4.6.0",
@@ -15,7 +16,8 @@
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-relay": "^1.7.0",
-    "react-scripts": "2.0.5",
+    "react-scripts": "^2.1.1",
+    "three": "^0.99.0",
     "twig": "^1.12.0",
     "yaml": "^1.0.1"
   },

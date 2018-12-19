@@ -20,11 +20,17 @@ import type { Sees } from "../../interfaces/Sentient/Perceives/Sees";
 import type { Speaks } from "../../interfaces/Sentient/Speaks";
 import type { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
-export default class Character extends Entity
+export default class Person extends Entity
   implements Aims, Hears, Memorizes, Sees, Speaks {
   aim(aimable: Aimable): void {
     // this.commandBus.source(new AimCommand(this, aimable));
   }
+
+  aware(otherEntity: Entity, knows: Memorizable): void {
+    // aware(awareness: Awareness): void {
+  }
+
+  feels(/* emotion:  */): void {}
 
   forget(memorizable: Memorizable): void {
     // this.commandBus.source(new ForgetMemorizable(this, memorizable));
@@ -37,6 +43,12 @@ export default class Character extends Entity
   async knows(memorizable: Memorizable): Promise<boolean> {
     // return this.queryBus.source<boolean>(new Knows(this, memorizable));
     return false;
+  }
+
+  intuition(agains: Entity) {
+    // uzaleznione od jakosci postepowania
+    // dobre - prawdziwa intuicja
+    // zle - nieprawdziwe przeczucie, szalenstwo, paranoja
   }
 
   learn(memorizable: Memorizable): void {
