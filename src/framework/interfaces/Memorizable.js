@@ -1,5 +1,5 @@
 // @flow
 
-import type { Equatable } from "../../framework/interfaces/Equatable";
+import type { Equatable } from "./Equatable";
 
 export interface Memorizable extends Equatable<Memorizable> {}

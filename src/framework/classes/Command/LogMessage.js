@@ -1,6 +1,6 @@
 // @flow
 
-import Command from "../../classes/Command";
+import Command from "../Command";
 
 import type { LogSeverity } from "../../interfaces/Logger";
 import type { LoggerContext } from "../../interfaces/LoggerContext";

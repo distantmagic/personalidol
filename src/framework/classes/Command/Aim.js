@@ -1,6 +1,6 @@
 // @flow
 
-import Command from "../../../framework/classes/Command";
+import Command from "../Command";
 
 import type { Aimable } from "../../interfaces/Memorizable/Aimable";
 import type { Aims } from "../../interfaces/Sentient/Aims";

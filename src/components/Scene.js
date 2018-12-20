@@ -3,10 +3,12 @@
 import * as React from "react";
 
 import CancelToken from "../framework/classes/CancelToken";
-import { default as DialogueScene } from "../domain/classes/Scene/Dialogue";
-import { default as DialogueSceneState } from "../domain/classes/SceneState/Dialogue";
+import Dialogue from "./Dialogue";
+import { default as DialogueScene } from "../framework/classes/Scene/Dialogue";
+import { default as DialogueSceneState } from "../framework/classes/SceneState/Dialogue";
 
 type Props = {
+  cancelToken: CancelToken,
   dialogueScene: DialogueScene
 };
 
@@ -15,32 +17,22 @@ type State = {
 };
 
 export default class Scene extends React.Component<Props, State> {
-  cancelToken: CancelToken;
-
   state = {
     sceneState: null
   };
 
-  constructor(props: Props) {
-    super(props);
-
-    this.cancelToken = new CancelToken();
-  }
-
   async componentDidMount() {
-    for await (const sceneState of this.props.dialogueScene.awaitStateUpdates(
-      this.cancelToken
-    )) {
-      if (!this.cancelToken.isCancelled()) {
+    const stateGenerator = this.props.dialogueScene.awaitStateUpdates(
+      this.props.cancelToken
+    );
+
+    for await (const sceneState of stateGenerator) {
+      if (!this.props.cancelToken.isCancelled()) {
         this.setState({
           sceneState: sceneState
         });
       }
     }
-  }
-
-  componentWillUnmount() {
-    this.cancelToken.cancel();
   }
 
   render() {
@@ -50,12 +42,6 @@ export default class Scene extends React.Component<Props, State> {
       return null;
     }
 
-    return (
-      <ol>
-        {sceneState.messages().map(message => (
-          <li key={message}>{message}</li>
-        ))}
-      </ol>
-    );
+    return <Dialogue sceneState={sceneState} />;
   }
 }

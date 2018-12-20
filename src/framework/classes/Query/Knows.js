@@ -1,6 +1,6 @@
 // @flow
 
-import Query from "../../../framework/classes/Query";
+import Query from "../Query";
 
 import type { Memorizable } from "../../interfaces/Memorizable";
 import type { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";

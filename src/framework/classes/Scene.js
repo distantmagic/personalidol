@@ -36,7 +36,7 @@ export default class Scene<T: SceneState> implements SceneInterface {
       yield this.sceneState;
     }
 
-    while (true) {
+    while (!cancelToken.isCancelled()) {
       yield await this.awaitStateUpdate(cancelToken);
     }
   }
