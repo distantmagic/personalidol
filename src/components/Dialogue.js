@@ -18,7 +18,7 @@ export default class Dialogue extends React.Component<Props, State> {
         {this.props.sceneState.prompt()}
         <ol>
           {this.props.sceneState.buttons().map(button => (
-            <li key={button}>
+            <li key={button.label()}>
               <DialogueButton button={button} />
             </li>
           ))}

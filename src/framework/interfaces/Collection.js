@@ -1,16 +1,20 @@
 // @flow
 
 import type { List } from "immutable";
-import type { Equatable } from "./Equatable";
 
-export type CollectionInput<U> = ?Array<Equatable<U>> | ?List<Equatable<U>>;
+import type { CollectionInput } from "../types/CollectionInput";
+import type { CollectionItem } from "../types/CollectionItem";
 
 export interface Collection<T> {
   constructor(elements: CollectionInput<T>): void;
 
-  add(element: Equatable<T>): Collection<T>;
+  add(element: CollectionItem<T>): Collection<T>;
 
-  forEach(callback: (Equatable<T>) => void): void;
+  forEach(callback: (CollectionItem<T>) => void): void;
 
-  includes(some: T & Equatable<T>): boolean;
+  includes(some: CollectionItem<T>): boolean;
+
+  map<U>(callback: (CollectionItem<T>) => U): Array<U>;
+
+  toArray(): Array<CollectionItem<T>>;
 }

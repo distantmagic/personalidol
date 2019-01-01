@@ -1,22 +1,25 @@
 // @flow
 
+import DialogueButton from "../DialogueButton";
+import Collection from "../Collection";
+
 import type { SceneState } from "../../interfaces/SceneState";
 
 export default class Dialogue implements SceneState {
-  _messages: Array<string>;
+  _buttons: Collection<DialogueButton>;
   _prompt: string;
 
   constructor() {
     this._prompt = String(Math.random());
-    this._messages = [
-      String(Math.random()),
-      String(Math.random()),
-      String(Math.random())
-    ];
+    this._buttons = new Collection<DialogueButton>([
+      new DialogueButton(String(Math.random())),
+      new DialogueButton(String(Math.random())),
+      new DialogueButton(String(Math.random()))
+    ]);
   }
 
-  buttons(): Array<string> {
-    return this._messages;
+  buttons(): Collection<DialogueButton> {
+    return this._buttons;
   }
 
   prompt(): string {

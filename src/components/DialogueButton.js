@@ -3,8 +3,10 @@
 import * as React from "react";
 import autoBind from "auto-bind";
 
+import { default as DialogueButtonModel } from "../framework/classes/DialogueButton";
+
 type Props = {
-  button: string
+  button: DialogueButtonModel
 };
 
 type State = {};
@@ -21,6 +23,8 @@ export default class DialogueButton extends React.Component<Props, State> {
   }
 
   render() {
-    return <button onClick={this.onMessageClick}>{this.props.button}</button>;
+    return (
+      <button onClick={this.onMessageClick}>{this.props.button.label()}</button>
+    );
   }
 }
