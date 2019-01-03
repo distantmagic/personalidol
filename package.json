@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "cssnano": "^4.0.5",
-    "flow-bin": "^0.85.0",
+    "flow-bin": "^0.89.0",
     "node-sass": "^4.9.0",
     "postcss": "^7.0.2",
     "postcss-cli": "^6.0.0",

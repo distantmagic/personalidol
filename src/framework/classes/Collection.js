@@ -5,7 +5,6 @@ import { List } from "immutable";
 import type { Collection as CollectionInterface } from "../interfaces/Collection";
 import type { CollectionInput } from "../types/CollectionInput";
 import type { CollectionItem } from "../types/CollectionItem";
-import type { Equatable } from "../interfaces/Equatable";
 
 export default class Collection<T> implements CollectionInterface<T> {
   elements: List<CollectionItem<T>>;

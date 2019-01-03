@@ -3,28 +3,28 @@
 import * as React from "react";
 
 import CancelToken from "../framework/classes/CancelToken";
-// import Dialogue from "../framework/classes/Dialogue";
-import Scene from "./Scene";
-import { default as DialogueScene } from "../framework/classes/Scene/Dialogue";
-import { default as DialogueSceneState } from "../framework/classes/SceneState/Dialogue";
+import DialogueController from "./DialogueController";
+import QueryBus from "../framework/classes/QueryBus";
+import { default as DialogueResourceReference } from "../framework/classes/ResourceReference/Dialogue";
 
 type Props = {};
 
 type State = {
-  dialogueScene: DialogueScene,
-  error: ?Error
+  cancelToken: CancelToken,
+  dialogueResourceReference: DialogueResourceReference,
+  error: ?Error,
+  queryBus: QueryBus
 };
 
 export default class Main extends React.Component<Props, State> {
-  cancelToken: CancelToken;
-
   constructor(props: Props) {
     super(props);
 
-    this.cancelToken = new CancelToken();
     this.state = {
-      dialogueScene: new DialogueScene(),
-      error: null
+      cancelToken: new CancelToken(),
+      dialogueResourceReference: new DialogueResourceReference("1"),
+      error: null,
+      queryBus: new QueryBus()
     };
   }
 
@@ -34,28 +34,27 @@ export default class Main extends React.Component<Props, State> {
     });
   }
 
-  componentDidMount() {
-    this.state.dialogueScene.setSceneState(new DialogueSceneState());
-  }
-
   componentWillUnmount() {
-    this.cancelToken.cancel();
+    this.state.cancelToken.cancel();
   }
 
   render() {
     return (
       <div>
-        <Scene
-          cancelToken={this.cancelToken}
-          dialogueScene={this.state.dialogueScene}
+        <DialogueController
+          cancelToken={this.state.cancelToken}
+          dialogueResourceReference={this.state.dialogueResourceReference}
+          queryBus={this.state.queryBus}
         />
-        <Scene
-          cancelToken={this.cancelToken}
-          dialogueScene={this.state.dialogueScene}
+        <DialogueController
+          cancelToken={this.state.cancelToken}
+          dialogueResourceReference={this.state.dialogueResourceReference}
+          queryBus={this.state.queryBus}
         />
-        <Scene
-          cancelToken={this.cancelToken}
-          dialogueScene={this.state.dialogueScene}
+        <DialogueController
+          cancelToken={this.state.cancelToken}
+          dialogueResourceReference={this.state.dialogueResourceReference}
+          queryBus={this.state.queryBus}
         />
       </div>
     );

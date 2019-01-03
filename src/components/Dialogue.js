@@ -3,27 +3,25 @@
 import * as React from "react";
 
 import DialogueButton from "./DialogueButton";
-import { default as DialogueSceneState } from "../framework/classes/SceneState/Dialogue";
+import { default as DialogueModel } from "../framework/classes/Dialogue";
 
-type Props = {
-  sceneState: DialogueSceneState
-};
+type Props = {};
 
 type State = {};
 
 export default class Dialogue extends React.Component<Props, State> {
   render() {
-    return (
-      <div>
-        {this.props.sceneState.prompt()}
-        <ol>
-          {this.props.sceneState.buttons().map(button => (
-            <li key={button.label()}>
-              <DialogueButton button={button} />
-            </li>
-          ))}
-        </ol>
-      </div>
-    );
+    return <div />;
   }
 }
+
+// <div>
+//   {this.props.dialogue.prompt()}
+//   <ol>
+//     {this.props.dialogue.buttons().map(button => (
+//       <li key={button.label()}>
+//         <DialogueButton button={button} />
+//       </li>
+//     ))}
+//   </ol>
+// </div>
