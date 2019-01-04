@@ -45,3 +45,16 @@ it("does not find object", () => {
 
   expect(collection.add(foo).includes(other)).toBe(false);
 });
+
+it("returns unique list", () => {
+  const foo1 = new Foo("foo1");
+  const foo2 = new Foo("foo1");
+  const foo3 = new Foo("foo2");
+  const collection = new Collection<Foo>([foo1, foo2, foo3]);
+
+  const unique = collection.unique();
+
+  expect(unique.elements.includes(foo1)).toBe(true);
+  expect(unique.elements.includes(foo2)).toBe(false);
+  expect(unique.elements.includes(foo3)).toBe(true);
+});

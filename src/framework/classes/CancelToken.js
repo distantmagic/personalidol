@@ -4,10 +4,7 @@ import EventEmitter from "eventemitter3";
 
 import Cancelled from "./Exception/Cancelled";
 
-import type {
-  CancelToken as CancelTokenInterface,
-  OnCancelCallback
-} from "../interfaces/CancelToken";
+import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 
 export default class CancelToken implements CancelTokenInterface {
   _isCancelled: boolean;
@@ -27,7 +24,13 @@ export default class CancelToken implements CancelTokenInterface {
     this.eventEmitter.emit("cancel", new Cancelled());
   }
 
-  onCancel(callback: OnCancelCallback): void {
-    this.eventEmitter.once("cancel", callback);
+  onCancelled(): Promise<void> {
+    return new Promise(resolve => {
+      if (this._isCancelled) {
+        resolve();
+      } else {
+        this.eventEmitter.once("cancel", resolve);
+      }
+    });
   }
 }

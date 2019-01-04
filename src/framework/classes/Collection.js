@@ -17,6 +17,10 @@ export default class Collection<T> implements CollectionInterface<T> {
     return new Collection<T>(this.elements.push(element));
   }
 
+  filter(callback: (CollectionItem<T>) => boolean): Collection<T> {
+    return new Collection(this.elements.filter(callback));
+  }
+
   forEach(callback: (CollectionItem<T>) => void): void {
     this.elements.forEach(callback);
   }
@@ -31,5 +35,12 @@ export default class Collection<T> implements CollectionInterface<T> {
 
   toArray(): Array<CollectionItem<T>> {
     return this.elements.toArray();
+  }
+
+  unique(): Collection<T> {
+    return this.elements.reduce<Collection<T>>(
+      (acc, item) => (acc.includes(item) ? acc : acc.add(item)),
+      new Collection()
+    );
   }
 }

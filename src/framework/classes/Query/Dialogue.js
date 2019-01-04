@@ -13,7 +13,8 @@ export default class Dialogue implements Query<DialogueModel> {
     this._ref = ref;
   }
 
-  async execute(cancelToken: CancelToken): Promise<DialogueModel> {
+  async execute(cancelToken?: CancelToken): Promise<DialogueModel> {
+    console.log("execute dialogue query");
     return new DialogueModel();
   }
 

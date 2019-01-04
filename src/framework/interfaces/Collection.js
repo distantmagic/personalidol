@@ -6,15 +6,19 @@ import type { CollectionInput } from "../types/CollectionInput";
 import type { CollectionItem } from "../types/CollectionItem";
 
 export interface Collection<T> {
-  constructor(elements: CollectionInput<T>): void;
+  constructor(CollectionInput<T>): void;
 
-  add(element: CollectionItem<T>): Collection<T>;
+  add(CollectionItem<T>): Collection<T>;
 
-  forEach(callback: (CollectionItem<T>) => void): void;
+  filter((CollectionItem<T>) => boolean): Collection<T>;
 
-  includes(some: CollectionItem<T>): boolean;
+  forEach((CollectionItem<T>) => void): void;
 
-  map<U>(callback: (CollectionItem<T>) => U): Array<U>;
+  includes(CollectionItem<T>): boolean;
+
+  map<U>((CollectionItem<T>) => U): Array<U>;
 
   toArray(): Array<CollectionItem<T>>;
+
+  unique(): Collection<T>;
 }

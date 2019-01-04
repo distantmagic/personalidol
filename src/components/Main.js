@@ -34,6 +34,12 @@ export default class Main extends React.Component<Props, State> {
     });
   }
 
+  componentDidMount() {
+    setInterval(() => {
+      this.state.queryBus.process();
+    }, 1000);
+  }
+
   componentWillUnmount() {
     this.state.cancelToken.cancel();
   }
