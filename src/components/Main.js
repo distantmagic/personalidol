@@ -17,6 +17,8 @@ type State = {
 };
 
 export default class Main extends React.Component<Props, State> {
+  queryBusInterval: IntervalID;
+
   constructor(props: Props) {
     super(props);
 
@@ -35,12 +37,13 @@ export default class Main extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    setInterval(() => {
-      this.state.queryBus.process();
+    this.queryBusInterval = setInterval(() => {
+      this.state.queryBus.tick();
     }, 1000);
   }
 
   componentWillUnmount() {
+    clearInterval(this.queryBusInterval);
     this.state.cancelToken.cancel();
   }
 

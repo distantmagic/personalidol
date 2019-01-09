@@ -9,7 +9,15 @@ export interface CancelTokenQuery<T> extends Equatable<CancelTokenQuery<T>> {
 
   execute(): Promise<T>;
 
+  getQuery(): Query<T>;
+
+  getResult(): T;
+
   isCancelled(): boolean;
 
+  isExecuted(): boolean;
+
   onExecuted(): Promise<T>;
+
+  setExecuted(result: T): void;
 }

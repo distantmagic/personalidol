@@ -26,8 +26,8 @@ it("makes collection immutable", () => {
   const newColleciton = collection.add(foo);
 
   expect(collection).not.toBe(newColleciton);
-  expect(collection.includes(foo)).toBe(false);
-  expect(newColleciton.includes(foo)).toBe(true);
+  expect(collection.includesSimilar(foo)).toBe(false);
+  expect(newColleciton.includesSimilar(foo)).toBe(true);
 });
 
 it("uses equatable to find objects", () => {
@@ -35,7 +35,7 @@ it("uses equatable to find objects", () => {
   const foo = new Foo("test");
   const other = new Foo("test");
 
-  expect(collection.add(foo).includes(other)).toBe(true);
+  expect(collection.add(foo).includesSimilar(other)).toBe(true);
 });
 
 it("does not find object", () => {
@@ -43,7 +43,7 @@ it("does not find object", () => {
   const foo = new Foo("test");
   const other = new Foo("test2");
 
-  expect(collection.add(foo).includes(other)).toBe(false);
+  expect(collection.add(foo).includesSimilar(other)).toBe(false);
 });
 
 it("returns unique list", () => {
@@ -54,7 +54,7 @@ it("returns unique list", () => {
 
   const unique = collection.unique();
 
-  expect(unique.elements.includes(foo1)).toBe(true);
-  expect(unique.elements.includes(foo2)).toBe(false);
-  expect(unique.elements.includes(foo3)).toBe(true);
+  expect(unique.includes(foo1)).toBe(true);
+  expect(unique.includes(foo2)).toBe(false);
+  expect(unique.includes(foo3)).toBe(true);
 });

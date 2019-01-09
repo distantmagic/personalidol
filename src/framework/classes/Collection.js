@@ -17,8 +17,18 @@ export default class Collection<T> implements CollectionInterface<T> {
     return new Collection<T>(this.elements.push(element));
   }
 
+  contract(
+    reducer: (Collection<T>, CollectionItem<T>) => Collection<T>
+  ): Collection<T> {
+    return this.elements.reduce<Collection<T>>(reducer, new Collection());
+  }
+
   filter(callback: (CollectionItem<T>) => boolean): Collection<T> {
     return new Collection(this.elements.filter(callback));
+  }
+
+  find(predicate: (CollectionItem<T>) => boolean): ?CollectionItem<T> {
+    return this.elements.find(predicate);
   }
 
   forEach(callback: (CollectionItem<T>) => void): void {
@@ -30,7 +40,19 @@ export default class Collection<T> implements CollectionInterface<T> {
   }
 
   includes(some: CollectionItem<T>): boolean {
-    return this.elements.some(element => element.isEqual(some));
+    return this.elements.includes(some);
+  }
+
+  includesSimilar(some: CollectionItem<T>): boolean {
+    return this.some(element => element.isEqual(some));
+  }
+
+  similar(some: CollectionItem<T>): Collection<T> {
+    return this.filter(element => element.isEqual(some) && element !== some);
+  }
+
+  some(predicate: (CollectionItem<T>) => boolean): boolean {
+    return this.elements.some(predicate);
   }
 
   toArray(): Array<CollectionItem<T>> {
@@ -38,9 +60,8 @@ export default class Collection<T> implements CollectionInterface<T> {
   }
 
   unique(): Collection<T> {
-    return this.elements.reduce<Collection<T>>(
-      (acc, item) => (acc.includes(item) ? acc : acc.add(item)),
-      new Collection()
+    return this.contract((acc, item) =>
+      acc.includesSimilar(item) ? acc : acc.add(item)
     );
   }
 }

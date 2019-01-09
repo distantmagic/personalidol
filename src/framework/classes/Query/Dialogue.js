@@ -14,7 +14,6 @@ export default class Dialogue implements Query<DialogueModel> {
   }
 
   async execute(cancelToken?: CancelToken): Promise<DialogueModel> {
-    console.log("execute dialogue query");
     return new DialogueModel();
   }
 

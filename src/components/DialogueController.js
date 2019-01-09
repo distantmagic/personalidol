@@ -17,12 +17,10 @@ type State = {};
 
 export default class DialogueController extends React.Component<Props, State> {
   async componentDidMount() {
-    const query = new DialogueQuery(this.props.dialogueResourceReference);
-
     try {
       const dialogue = await this.props.queryBus.enqueue(
         this.props.cancelToken,
-        query
+        new DialogueQuery(this.props.dialogueResourceReference)
       );
       console.log(dialogue);
     } catch (e) {

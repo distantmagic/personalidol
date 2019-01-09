@@ -2,9 +2,16 @@
 
 import type { CancelToken } from "./CancelToken";
 import type { Query } from "./Query";
+import type { QueryBatch } from "./QueryBatch";
 
 export interface QueryBus {
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<T>;
 
-  process(): Promise<void>;
+  findSimilarQuery<T>(Query<T>): ?Query<T>;
+
+  flush(): QueryBatch;
+
+  pickQuery<T>(Query<T>): Query<T>;
+
+  tick(): Promise<void>;
 }

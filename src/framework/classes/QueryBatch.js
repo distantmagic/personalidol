@@ -1,5 +1,6 @@
 // @flow
 
+// import type { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
 import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
 export default class QueryBatch {
@@ -9,12 +10,26 @@ export default class QueryBatch {
     this.collection = collection;
   }
 
+  getActive(): QueryBusQueueCollection {
+    return this.collection.filter(query => !query.isCancelled());
+  }
+
+  infer(collection: QueryBusQueueCollection): void {
+    collection.forEach(cancelTokenQuery => {
+      this.getActive()
+        .similar(cancelTokenQuery)
+        .forEach(activeQuery => {
+          activeQuery.setExecuted(cancelTokenQuery.getResult());
+        });
+    });
+  }
+
   async process(): Promise<void> {
-    const active = this.collection.filter(query => !query.isCancelled());
-    const unique = active.unique();
+    const unique = this.getActive().unique();
+    const executions = unique.map(query => query.execute());
 
-    const queries = unique.map(query => query.execute());
+    await Promise.all(executions);
 
-    await Promise.all(queries);
+    this.infer(unique);
   }
 }

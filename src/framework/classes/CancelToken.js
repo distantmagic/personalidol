@@ -15,13 +15,13 @@ export default class CancelToken implements CancelTokenInterface {
     this.eventEmitter = new EventEmitter();
   }
 
-  isCancelled(): boolean {
-    return this._isCancelled;
-  }
-
   cancel(): void {
     this._isCancelled = true;
     this.eventEmitter.emit("cancel", new Cancelled());
+  }
+
+  isCancelled(): boolean {
+    return this._isCancelled;
   }
 
   onCancelled(): Promise<void> {
