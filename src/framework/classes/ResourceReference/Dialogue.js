@@ -4,14 +4,19 @@ import { default as DialogueModel } from "../Dialogue";
 
 import type { ResourceReference } from "../../interfaces/ResourceReference";
 
-export default class Dialogue implements ResourceReference<DialogueModel> {
-  _id: string;
+export default class Dialogue
+  implements ResourceReference<string, DialogueModel> {
+  _key: string;
 
-  constructor(id: string) {
-    this._id = id;
+  constructor(key: string) {
+    this._key = key;
+  }
+
+  getReference(): string {
+    return this._key;
   }
 
   isEqual(other: Dialogue) {
-    return other._id === this._id;
+    return other._key === this._key;
   }
 }

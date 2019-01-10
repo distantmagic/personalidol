@@ -1,5 +1,7 @@
 // @flow
 
+import YAML from "yaml";
+
 import { default as DialogueResourceReference } from "../ResourceReference/Dialogue";
 import { default as DialogueModel } from "../Dialogue";
 
@@ -7,17 +9,20 @@ import type { CancelToken } from "../../interfaces/CancelToken";
 import type { Query } from "../../interfaces/Query";
 
 export default class Dialogue implements Query<DialogueModel> {
-  _ref: DialogueResourceReference;
+  ref: DialogueResourceReference;
 
   constructor(ref: DialogueResourceReference) {
-    this._ref = ref;
+    this.ref = ref;
   }
 
   async execute(cancelToken?: CancelToken): Promise<DialogueModel> {
-    return new DialogueModel();
+    const response = await fetch(this.ref.getReference());
+    const dialogue = await response.text();
+
+    return new DialogueModel(YAML.parse(dialogue));
   }
 
   isEqual(other: Dialogue): boolean {
-    return this._ref.isEqual(other._ref);
+    return this.ref.isEqual(other.ref);
   }
 }

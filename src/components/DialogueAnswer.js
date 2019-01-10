@@ -3,10 +3,11 @@
 import * as React from "react";
 import autoBind from "auto-bind";
 
-import { default as DialogueButtonModel } from "../framework/classes/DialogueButton";
+import DialogueMessage from "../framework/classes/DialogueMessage";
 
 type Props = {
-  button: DialogueButtonModel
+  answer: DialogueMessage,
+  prompt: string
 };
 
 type State = {};
@@ -20,11 +21,11 @@ export default class DialogueButton extends React.Component<Props, State> {
 
   onMessageClick(evt: SyntheticEvent<HTMLButtonElement>) {
     evt.preventDefault();
+
+    console.log(this.props.answer.key());
   }
 
   render() {
-    return (
-      <button onClick={this.onMessageClick}>{this.props.button.label()}</button>
-    );
+    return <button onClick={this.onMessageClick}>{this.props.prompt}</button>;
   }
 }

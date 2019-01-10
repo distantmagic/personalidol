@@ -4,6 +4,7 @@ import * as React from "react";
 
 import CancelToken from "../framework/classes/CancelToken";
 import DialogueController from "./DialogueController";
+import ExpressionGlobalContext from "../framework/classes/ExpressionGlobalContext";
 import QueryBus from "../framework/classes/QueryBus";
 import { default as DialogueResourceReference } from "../framework/classes/ResourceReference/Dialogue";
 
@@ -12,6 +13,7 @@ type Props = {};
 type State = {
   cancelToken: CancelToken,
   dialogueResourceReference: DialogueResourceReference,
+  expressionGlobalContext: ExpressionGlobalContext,
   error: ?Error,
   queryBus: QueryBus
 };
@@ -22,11 +24,16 @@ export default class Main extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const queryBus = new QueryBus();
+
     this.state = {
       cancelToken: new CancelToken(),
-      dialogueResourceReference: new DialogueResourceReference("1"),
+      dialogueResourceReference: new DialogueResourceReference(
+        "data/dialogues/umbrux-intro.yml"
+      ),
+      expressionGlobalContext: new ExpressionGlobalContext(queryBus),
       error: null,
-      queryBus: new QueryBus()
+      queryBus: queryBus
     };
   }
 

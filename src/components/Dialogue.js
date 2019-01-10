@@ -2,26 +2,42 @@
 
 import * as React from "react";
 
-import DialogueButton from "./DialogueButton";
+import DialogueAnswerController from "./DialogueAnswerController";
+import DialogueMessage from "../framework/classes/DialogueMessage";
+import QueryBus from "../framework/classes/QueryBus";
 import { default as DialogueModel } from "../framework/classes/Dialogue";
 
-type Props = {};
+import type { Collection } from "../framework/interfaces/Collection";
+
+type Props = {
+  actor: string,
+  answers: Collection<DialogueMessage>,
+  dialogue: DialogueModel,
+  message: DialogueMessage,
+  prompt: string,
+  queryBus: QueryBus
+};
 
 type State = {};
 
 export default class Dialogue extends React.Component<Props, State> {
   render() {
-    return <div />;
+    return (
+      <div>
+        <strong>{this.props.actor}</strong>
+        {" - "}
+        {this.props.prompt}
+        <ol>
+          {this.props.answers.map(answer => (
+            <li key={answer.key()}>
+              <DialogueAnswerController
+                answer={answer}
+                queryBus={this.props.queryBus}
+              />
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
   }
 }
-
-// <div>
-//   {this.props.dialogue.prompt()}
-//   <ol>
-//     {this.props.dialogue.buttons().map(button => (
-//       <li key={button.label()}>
-//         <DialogueButton button={button} />
-//       </li>
-//     ))}
-//   </ol>
-// </div>

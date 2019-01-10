@@ -1,0 +1,25 @@
+initial_message: start
+messages:
+  start:
+    actor: Commoner
+    prompt: Hello, world!
+
+  f1:
+    answer_to: start
+    actor: $PLAYER
+    prompt: siema :D :D :D
+
+  f11:
+    answer_to: start
+    actor: $PLAYER
+    prompt: SIEMAAAAAAAAAAA ZIOOOOM! :D :D :D
+
+  f2:
+    answer_to: start
+    actor: $PLAYER
+    prompt: Co tam???????????????? xD
+
+  f3:
+    answer_to: start
+    actor: $PLAYER
+    prompt: NARA :( :( :(
