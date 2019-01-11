@@ -2,24 +2,24 @@ initial_message: start
 messages:
   start:
     actor: Commoner
-    prompt: Hello, world!
+    prompt: Hello, {{ CHARNAME }}!
 
   f1:
     answer_to: start
-    actor: $PLAYER
+    actor: "{{ CHARNAME }}"
     prompt: siema :D :D :D
 
   f11:
     answer_to: start
-    actor: $PLAYER
+    actor: "{{ CHARNAME }}"
     prompt: SIEMAAAAAAAAAAA ZIOOOOM! :D :D :D
 
   f2:
     answer_to: start
-    actor: $PLAYER
+    actor: "{{ CHARNAME }}"
     prompt: Co tam???????????????? xD
 
   f3:
     answer_to: start
-    actor: $PLAYER
+    actor: "{{ CHARNAME }}"
     prompt: NARA :( :( :(

@@ -6,6 +6,7 @@ import autoBind from "auto-bind";
 import DialogueMessage from "../framework/classes/DialogueMessage";
 
 type Props = {
+  actor: string,
   answer: DialogueMessage,
   prompt: string
 };
@@ -26,6 +27,12 @@ export default class DialogueButton extends React.Component<Props, State> {
   }
 
   render() {
-    return <button onClick={this.onMessageClick}>{this.props.prompt}</button>;
+    return (
+      <span>
+        {this.props.actor}
+        {" - "}
+        <button onClick={this.onMessageClick}>{this.props.prompt}</button>
+      </span>
+    );
   }
 }

@@ -4,7 +4,9 @@ import * as React from "react";
 
 import CancelToken from "../framework/classes/CancelToken";
 import DialogueController from "./DialogueController";
+import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionGlobalContext from "../framework/classes/ExpressionGlobalContext";
+import Logger from "../framework/classes/Logger";
 import QueryBus from "../framework/classes/QueryBus";
 import { default as DialogueResourceReference } from "../framework/classes/ResourceReference/Dialogue";
 
@@ -13,8 +15,9 @@ type Props = {};
 type State = {
   cancelToken: CancelToken,
   dialogueResourceReference: DialogueResourceReference,
-  expressionGlobalContext: ExpressionGlobalContext,
+  expressionBus: ExpressionBus,
   error: ?Error,
+  logger: Logger,
   queryBus: QueryBus
 };
 
@@ -31,8 +34,12 @@ export default class Main extends React.Component<Props, State> {
       dialogueResourceReference: new DialogueResourceReference(
         "data/dialogues/umbrux-intro.yml"
       ),
-      expressionGlobalContext: new ExpressionGlobalContext(queryBus),
+      expressionBus: new ExpressionBus(
+        queryBus,
+        new ExpressionGlobalContext(queryBus)
+      ),
       error: null,
+      logger: new Logger(),
       queryBus: queryBus
     };
   }
@@ -60,16 +67,19 @@ export default class Main extends React.Component<Props, State> {
         <DialogueController
           cancelToken={this.state.cancelToken}
           dialogueResourceReference={this.state.dialogueResourceReference}
+          expressionBus={this.state.expressionBus}
           queryBus={this.state.queryBus}
         />
         <DialogueController
           cancelToken={this.state.cancelToken}
           dialogueResourceReference={this.state.dialogueResourceReference}
+          expressionBus={this.state.expressionBus}
           queryBus={this.state.queryBus}
         />
         <DialogueController
           cancelToken={this.state.cancelToken}
           dialogueResourceReference={this.state.dialogueResourceReference}
+          expressionBus={this.state.expressionBus}
           queryBus={this.state.queryBus}
         />
       </div>

@@ -4,7 +4,6 @@ import i18next from "i18next";
 
 import Translator from "./Translator";
 import TranslatorErrorHandler from "./TranslatorErrorHandler";
-import { default as ExceptionLoggerContext } from "./LoggerContext/Exception";
 
 import type { Logger } from "../interfaces/Logger";
 
@@ -37,7 +36,7 @@ export default class TranslatorBuilder {
         },
         err => {
           if (err) {
-            this.logger.error(new ExceptionLoggerContext(err));
+            this.logger.error(err.message);
             reject(err);
           } else {
             resolve(new Translator(i18nextInstance, errorHandler));

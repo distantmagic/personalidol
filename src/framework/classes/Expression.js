@@ -13,20 +13,29 @@ type TwigRenderer = {
 
 export default class Expression<T> implements ExpressionInterface<T> {
   caster: ExpressionCaster<T>;
+  data: ExpressionData;
   expression: string;
   template: TwigRenderer;
 
-  constructor(expression: string, caster: ExpressionCaster<T>): void {
+  constructor(
+    expression: string,
+    caster: ExpressionCaster<T>,
+    data: ExpressionData
+  ): void {
     this.caster = caster;
+    this.data = data;
     this.expression = expression;
     this.template = twig.twig({
       data: `${expression}`
     });
   }
 
-  async execute(data: ExpressionData): Promise<T> {
-    const result = await this.template.renderAsync(data);
+  async execute(): Promise<T> {
+    const result = await this.template.renderAsync({
+      ...this.data,
+      CHARNAME: "Abdel"
+    });
 
-    return this.caster.cast(this.expression, data, trim(result));
+    return this.caster.cast(this.expression, this.data, trim(result));
   }
 }

@@ -8,7 +8,7 @@ import type { DialogueScript } from "../types/DialogueScript";
 import type { DialogueScriptMessage } from "../types/DialogueScriptMessage";
 import type { Equatable } from "../interfaces/Equatable";
 import type { Expressible } from "../interfaces/Expressible";
-import type { QueryBus } from "../interfaces/QueryBus";
+import type { ExpressionBus } from "../interfaces/ExpressionBus";
 
 export default class DialogueMessage
   implements Equatable<DialogueMessage>, Expressible<any> {
@@ -26,11 +26,17 @@ export default class DialogueMessage
     this.script = script;
   }
 
-  async actor(queryBus: QueryBus): Promise<string> {
-    return this.message.actor;
+  async actor(expressionBus: ExpressionBus): Promise<string> {
+    const caster = new StringExpressionCaster();
+
+    return expressionBus.enqueue(
+      new Expression<string>(this.message.actor, caster)
+    );
   }
 
-  async answers(quieryBus: QueryBus): Promise<Collection<DialogueMessage>> {
+  async answers(
+    expressionBus: ExpressionBus
+  ): Promise<Collection<DialogueMessage>> {
     const answers = [];
 
     for (let key in this.script.messages) {
@@ -67,7 +73,11 @@ export default class DialogueMessage
     return this._key;
   }
 
-  async prompt(queryBus: QueryBus): Promise<string> {
-    return this.message.prompt;
+  async prompt(expressionBus: ExpressionBus): Promise<string> {
+    const caster = new StringExpressionCaster();
+
+    return expressionBus.enqueue(
+      new Expression<string>(this.message.prompt, caster)
+    );
   }
 }

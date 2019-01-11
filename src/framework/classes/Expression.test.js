@@ -20,10 +20,10 @@ it("performs math calculations", () => {
 });
 
 it("uses variables", () => {
-  const expression = new Expression<number>("{{ 2 + foo }}", numberCaster);
-  const result = expression.execute({
+  const expression = new Expression<number>("{{ 2 + foo }}", numberCaster, {
     foo: 3
   });
+  const result = expression.execute();
 
   expect(result).resolves.toBe(5);
 });
@@ -31,13 +31,14 @@ it("uses variables", () => {
 it("uses objects", () => {
   const expression = new Expression<string>(
     `Greetings {{ character.player().name }}`,
-    stringCaster
-  );
-  const result = expression.execute({
-    character: {
-      player: () => ({ name: "CHARNAME" })
+    stringCaster,
+    {
+      character: {
+        player: () => ({ name: "CHARNAME" })
+      }
     }
-  });
+  );
+  const result = expression.execute();
 
   expect(result).resolves.toBe("Greetings CHARNAME");
 });
@@ -45,15 +46,16 @@ it("uses objects", () => {
 it("uses promises", () => {
   const expression = new Expression<string>(
     `Greetings {{ character.player().name }}`,
-    stringCaster
-  );
-  const result = expression.execute({
-    character: {
-      player: () => ({
-        name: Promise.resolve("CHARNAME")
-      })
+    stringCaster,
+    {
+      character: {
+        player: () => ({
+          name: Promise.resolve("CHARNAME")
+        })
+      }
     }
-  });
+  );
+  const result = expression.execute();
 
   expect(result).resolves.toBe("Greetings CHARNAME");
 });
@@ -61,18 +63,19 @@ it("uses promises", () => {
 it("resolves conditions with promises", () => {
   const expression = new Expression<boolean>(
     `
-    {{ not character.player().knows() and character.player().aims() }}
-  `,
-    booleanCaster
-  );
-  const result = expression.execute({
-    character: {
-      player: () => ({
-        aims: () => Promise.resolve(true),
-        knows: () => Promise.resolve(false)
-      })
+      {{ not character.player().knows() and character.player().aims() }}
+    `,
+    booleanCaster,
+    {
+      character: {
+        player: () => ({
+          aims: () => Promise.resolve(true),
+          knows: () => Promise.resolve(false)
+        })
+      }
     }
-  });
+  );
+  const result = expression.execute();
 
   expect(result).resolves.toBe(true);
 });

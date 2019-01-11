@@ -1,46 +1,42 @@
 // @flow
 
-import LogMessage from "./Command/LogMessage";
-
-import type {
-  Logger as LoggerInterface,
-  LogSeverity
-} from "../interfaces/Logger";
-import type { LoggerContext } from "../interfaces/LoggerContext";
-import type { LoggerTransport } from "../interfaces/LoggerTransport";
+import type { Logger as LoggerInterface } from "../interfaces/Logger";
+import type { LogSeverityEnum } from "../types/LogSeverityEnum";
 
 export default class Logger implements LoggerInterface {
-  emergency(context: LoggerContext): void {
-    this.log("emergency", context);
+  emergency(message: string): void {
+    this.log("emergency", message);
   }
 
-  alert(context: LoggerContext): void {
-    this.log("alert", context);
+  alert(message: string): void {
+    this.log("alert", message);
   }
 
-  critical(context: LoggerContext): void {
-    this.log("critical", context);
+  critical(message: string): void {
+    this.log("critical", message);
   }
 
-  error(context: LoggerContext): void {
-    this.log("error", context);
+  error(message: string): void {
+    this.log("error", message);
   }
 
-  warning(context: LoggerContext): void {
-    this.log("warning", context);
+  warning(message: string): void {
+    this.log("warning", message);
   }
 
-  notice(context: LoggerContext): void {
-    this.log("notice", context);
+  notice(message: string): void {
+    this.log("notice", message);
   }
 
-  info(context: LoggerContext): void {
-    this.log("info", context);
+  info(message: string): void {
+    this.log("info", message);
   }
 
-  debug(context: LoggerContext): void {
-    this.log("debug", context);
+  debug(message: string): void {
+    this.log("debug", message);
   }
 
-  log(severity: LogSeverity, context: LoggerContext): void {}
+  log(severity: LogSeverityEnum, message: string): void {
+    console.log(`[DD] ${severity}: ${message}`);
+  }
 }

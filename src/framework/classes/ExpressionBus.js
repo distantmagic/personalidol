@@ -1,5 +1,8 @@
 // @flow
 
+import type { Expression } from "../interfaces/Expression";
+import type { ExpressionBus as ExpressionBusInterface } from "../interfaces/ExpressionBus";
+import type { ExpressionGlobalContext } from "../interfaces/ExpressionGlobalContext";
 import type { QueryBus } from "../interfaces/QueryBus";
 
 /**
@@ -7,10 +10,19 @@ import type { QueryBus } from "../interfaces/QueryBus";
  * Thus expressions themselves cannot be put on query bus, but instead query
  * bus can be used to execute queries produced by expressions.
  */
-export default class ExpressionBus {
+export default class ExpressionBus implements ExpressionBusInterface {
+  expressionGlobalContext: ExpressionGlobalContext;
   queryBus: QueryBus;
 
-  constructor(queryBus: QueryBus) {
+  constructor(
+    queryBus: QueryBus,
+    expressionGlobalContext: ExpressionGlobalContext
+  ) {
+    this.expressionGlobalContext = expressionGlobalContext;
     this.queryBus = queryBus;
+  }
+
+  enqueue<T>(expression: Expression<T>): Promise<T> {
+    return expression.execute();
   }
 }

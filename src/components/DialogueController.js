@@ -5,17 +5,19 @@ import * as React from "react";
 import CancelToken from "../framework/classes/CancelToken";
 import Dialogue from "../framework/classes/Dialogue";
 import DialogueMessage from "../framework/classes/DialogueMessage";
-import QueryBus from "../framework/classes/QueryBus";
 import { default as CancelledException } from "../framework/classes/Exception/Cancelled";
 import { default as DialogueComponent } from "./Dialogue";
 import { default as DialogueQuery } from "../framework/classes/Query/Dialogue";
 import { default as DialogueResourceReference } from "../framework/classes/ResourceReference/Dialogue";
 
 import type { Collection } from "../framework/interfaces/Collection";
+import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
+import type { QueryBus } from "../framework/interfaces/QueryBus";
 
 type Props = {
   cancelToken: CancelToken,
   dialogueResourceReference: DialogueResourceReference,
+  expressionBus: ExpressionBus,
   queryBus: QueryBus
 };
 
@@ -52,11 +54,16 @@ export default class DialogueController extends React.Component<Props, State> {
       new DialogueQuery(reference)
     );
     const message = dialogue.initialMessage();
+    // const messageExpression = message.expression();
+
+    // if (messageExpression) {
+    //   await this.props.expressionBus.enqueue(messageExpression);
+    // }
 
     const [actor, answers, prompt] = await Promise.all([
-      message.actor(this.props.queryBus),
-      message.answers(this.props.queryBus),
-      message.prompt(this.props.queryBus)
+      message.actor(this.props.expressionBus),
+      message.answers(this.props.expressionBus),
+      message.prompt(this.props.expressionBus)
     ]);
 
     this.setState({
@@ -80,6 +87,7 @@ export default class DialogueController extends React.Component<Props, State> {
         actor={actor}
         answers={answers}
         dialogue={dialogue}
+        expressionBus={this.props.expressionBus}
         message={message}
         prompt={prompt}
         queryBus={this.props.queryBus}
