@@ -6,12 +6,22 @@ import { default as DialogueResourceReference } from "../ResourceReference/Dialo
 import { default as DialogueModel } from "../Dialogue";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
+import type { ExpressionBus } from "../../interfaces/ExpressionBus";
+import type { ExpressionContext } from "../../interfaces/ExpressionContext";
 import type { Query } from "../../interfaces/Query";
 
 export default class Dialogue implements Query<DialogueModel> {
+  context: ExpressionContext;
+  expressionBus: ExpressionBus;
   ref: DialogueResourceReference;
 
-  constructor(ref: DialogueResourceReference) {
+  constructor(
+    ref: DialogueResourceReference,
+    expressionBus: ExpressionBus,
+    context: ExpressionContext
+  ) {
+    this.context = context;
+    this.expressionBus = expressionBus;
     this.ref = ref;
   }
 
@@ -19,7 +29,11 @@ export default class Dialogue implements Query<DialogueModel> {
     const response = await fetch(this.ref.getReference());
     const dialogue = await response.text();
 
-    return new DialogueModel(YAML.parse(dialogue));
+    return new DialogueModel(
+      this.expressionBus,
+      YAML.parse(dialogue),
+      this.context
+    );
   }
 
   isEqual(other: Dialogue): boolean {

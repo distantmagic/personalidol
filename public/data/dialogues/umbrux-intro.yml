@@ -1,25 +1,36 @@
 initial_message: start
 messages:
+
   start:
     actor: Commoner
-    prompt: Hello, {{ CHARNAME }}!
+    prompt: >
+      Hello, {{ dialogue.initiator }}!
+      {{ message.key }}
+      {% for i in 1..10 %}
+        [{{ i }}]
+      {% endfor %}
 
   f1:
     answer_to: start
-    actor: "{{ CHARNAME }}"
+    actor: "{{ message.key }}"
     prompt: siema :D :D :D
 
   f11:
     answer_to: start
-    actor: "{{ CHARNAME }}"
-    prompt: SIEMAAAAAAAAAAA ZIOOOOM! :D :D :D
+    actor: "{{ message.key }}"
+    prompt: SIEMAAAAAAAAAAA {{ dialogue.initiator }}! :D :D :D
 
   f2:
     answer_to: start
-    actor: "{{ CHARNAME }}"
+    actor: "{{ message.key }}"
     prompt: Co tam???????????????? xD
 
   f3:
     answer_to: start
-    actor: "{{ CHARNAME }}"
+    actor: "{{ message.key }}"
     prompt: NARA :( :( :(
+
+  f4:
+    answer_to: f1
+    actor: "{{ message.key }}"
+    prompt: Woooo!

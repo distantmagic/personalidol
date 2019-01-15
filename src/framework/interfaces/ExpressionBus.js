@@ -1,7 +1,10 @@
 // @flow
 
+import type { Expressible } from "./Expressible";
 import type { Expression } from "./Expression";
 
 export interface ExpressionBus {
-  enqueue<T>(Expression<T>): Promise<T>;
+  enqueue(Expression): Promise<string>;
+
+  expressible(Expressible): Promise<null | string>;
 }

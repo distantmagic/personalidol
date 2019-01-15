@@ -6,11 +6,13 @@ import DialogueAnswer from "./DialogueAnswer";
 import DialogueMessage from "../framework/classes/DialogueMessage";
 
 import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
+import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 
 type Props = {
   answer: DialogueMessage,
   expressionBus: ExpressionBus,
+  expressionContext: ExpressionContext,
   queryBus: QueryBus
 };
 
@@ -30,15 +32,15 @@ export default class DialogueAnswerController extends React.Component<
 
   async componentDidMount() {
     this.setState({
-      actor: await this.props.answer.actor(this.props.expressionBus),
-      prompt: await this.props.answer.prompt(this.props.expressionBus)
+      actor: await this.props.answer.actor(),
+      prompt: await this.props.answer.prompt()
     });
   }
 
   render() {
     const { actor, prompt } = this.state;
 
-    if (!actor || !prompt) {
+    if ("string" !== typeof actor || "string" !== typeof prompt) {
       return <div>Loading...</div>;
     }
 

@@ -1,8 +1,8 @@
 // @flow
 
+import type { Expressible } from "../interfaces/Expressible";
 import type { Expression } from "../interfaces/Expression";
 import type { ExpressionBus as ExpressionBusInterface } from "../interfaces/ExpressionBus";
-import type { ExpressionGlobalContext } from "../interfaces/ExpressionGlobalContext";
 import type { QueryBus } from "../interfaces/QueryBus";
 
 /**
@@ -11,18 +11,23 @@ import type { QueryBus } from "../interfaces/QueryBus";
  * bus can be used to execute queries produced by expressions.
  */
 export default class ExpressionBus implements ExpressionBusInterface {
-  expressionGlobalContext: ExpressionGlobalContext;
   queryBus: QueryBus;
 
-  constructor(
-    queryBus: QueryBus,
-    expressionGlobalContext: ExpressionGlobalContext
-  ) {
-    this.expressionGlobalContext = expressionGlobalContext;
+  constructor(queryBus: QueryBus) {
     this.queryBus = queryBus;
   }
 
-  enqueue<T>(expression: Expression<T>): Promise<T> {
+  enqueue(expression: Expression): Promise<string> {
     return expression.execute();
+  }
+
+  async expressible(expressible: Expressible): Promise<null | string> {
+    const expression = expressible.expression();
+
+    if (!expression) {
+      return null;
+    }
+
+    return this.enqueue(expression);
   }
 }

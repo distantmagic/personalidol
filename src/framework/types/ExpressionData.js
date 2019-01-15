@@ -1,5 +1,5 @@
 // @flow
 
-export type ExpressionData = ?{
+export type ExpressionData = {
   [string]: any
 };

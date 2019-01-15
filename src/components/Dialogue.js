@@ -8,6 +8,7 @@ import { default as DialogueModel } from "../framework/classes/Dialogue";
 
 import type { Collection } from "../framework/interfaces/Collection";
 import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
+import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
   answers: Collection<DialogueMessage>,
   dialogue: DialogueModel,
   expressionBus: ExpressionBus,
+  expressionContext: ExpressionContext,
   message: DialogueMessage,
   prompt: string,
   queryBus: QueryBus
@@ -35,6 +37,10 @@ export default class Dialogue extends React.Component<Props, State> {
               <DialogueAnswerController
                 answer={answer}
                 expressionBus={this.props.expressionBus}
+                expressionContext={this.props.expressionContext.set(
+                  "message",
+                  answer
+                )}
                 queryBus={this.props.queryBus}
               />
             </li>

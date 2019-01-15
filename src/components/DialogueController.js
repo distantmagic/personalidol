@@ -12,12 +12,14 @@ import { default as DialogueResourceReference } from "../framework/classes/Resou
 
 import type { Collection } from "../framework/interfaces/Collection";
 import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
+import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 
 type Props = {
   cancelToken: CancelToken,
   dialogueResourceReference: DialogueResourceReference,
   expressionBus: ExpressionBus,
+  expressionContext: ExpressionContext,
   queryBus: QueryBus
 };
 
@@ -51,19 +53,20 @@ export default class DialogueController extends React.Component<Props, State> {
   async loadDialogue(reference: DialogueResourceReference) {
     const dialogue = await this.props.queryBus.enqueue(
       this.props.cancelToken,
-      new DialogueQuery(reference)
+      new DialogueQuery(
+        reference,
+        this.props.expressionBus,
+        this.props.expressionContext
+      )
     );
-    const message = dialogue.initialMessage();
-    // const messageExpression = message.expression();
+    const message = dialogue.start();
 
-    // if (messageExpression) {
-    //   await this.props.expressionBus.enqueue(messageExpression);
-    // }
+    await this.props.expressionBus.expressible(message);
 
     const [actor, answers, prompt] = await Promise.all([
-      message.actor(this.props.expressionBus),
-      message.answers(this.props.expressionBus),
-      message.prompt(this.props.expressionBus)
+      message.actor(),
+      message.answers(),
+      message.prompt()
     ]);
 
     this.setState({
@@ -78,7 +81,13 @@ export default class DialogueController extends React.Component<Props, State> {
   render() {
     const { actor, dialogue, message, answers, prompt } = this.state;
 
-    if (!actor || !answers || !dialogue || !message || !prompt) {
+    if (
+      "string" !== typeof actor ||
+      "string" !== typeof prompt ||
+      !answers ||
+      !dialogue ||
+      !message
+    ) {
       return <div>Loading...</div>;
     }
 
@@ -88,6 +97,10 @@ export default class DialogueController extends React.Component<Props, State> {
         answers={answers}
         dialogue={dialogue}
         expressionBus={this.props.expressionBus}
+        expressionContext={this.props.expressionContext.set(
+          "dialogue",
+          dialogue
+        )}
         message={message}
         prompt={prompt}
         queryBus={this.props.queryBus}

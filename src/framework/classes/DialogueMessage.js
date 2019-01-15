@@ -2,48 +2,59 @@
 
 import Collection from "./Collection";
 import Expression from "./Expression";
-import { default as StringExpressionCaster } from "./ExpressionCaster/String";
 
+import type { Contextual } from "../interfaces/Contextual";
 import type { DialogueScript } from "../types/DialogueScript";
 import type { DialogueScriptMessage } from "../types/DialogueScriptMessage";
 import type { Equatable } from "../interfaces/Equatable";
 import type { Expressible } from "../interfaces/Expressible";
 import type { ExpressionBus } from "../interfaces/ExpressionBus";
+import type { ExpressionContext } from "../interfaces/ExpressionContext";
 
 export default class DialogueMessage
-  implements Equatable<DialogueMessage>, Expressible<any> {
+  implements Contextual, Equatable<DialogueMessage>, Expressible {
   _key: string;
+  context: ExpressionContext;
+  expressionBus: ExpressionBus;
   message: DialogueScriptMessage;
   script: DialogueScript;
 
   constructor(
+    expressionBus: ExpressionBus,
     script: DialogueScript,
     message: DialogueScriptMessage,
-    key: string
+    key: string,
+    context: ExpressionContext
   ) {
     this._key = key;
+    this.context = context;
+    this.expressionBus = expressionBus;
     this.message = message;
     this.script = script;
   }
 
-  async actor(expressionBus: ExpressionBus): Promise<string> {
-    const caster = new StringExpressionCaster();
-
-    return expressionBus.enqueue(
-      new Expression<string>(this.message.actor, caster)
+  actor(): Promise<string> {
+    return this.expressionBus.enqueue(
+      new Expression(this.message.actor, this.getExpressionContext())
     );
   }
 
-  async answers(
-    expressionBus: ExpressionBus
-  ): Promise<Collection<DialogueMessage>> {
+  async answers(): Promise<Collection<DialogueMessage>> {
     const answers = [];
 
     for (let key in this.script.messages) {
       if (this.script.messages.hasOwnProperty(key)) {
         let answer = this.script.messages[key];
         if (this.canBeAnsweredWithScriptMessage(answer)) {
-          answers.push(new DialogueMessage(this.script, answer, key));
+          answers.push(
+            new DialogueMessage(
+              this.expressionBus,
+              this.script,
+              answer,
+              key,
+              this.context
+            )
+          );
         }
       }
     }
@@ -55,14 +66,16 @@ export default class DialogueMessage
     return message.answer_to === this.key();
   }
 
-  expression(): ?Expression<string> {
+  expression(): ?Expression {
     if (!this.message.expression) {
       return null;
     }
 
-    const caster = new StringExpressionCaster();
+    return new Expression(this.message.expression, this.getExpressionContext());
+  }
 
-    return new Expression<string>(this.message.expression, caster);
+  getExpressionContext(): ExpressionContext {
+    return this.context.set("message", this);
   }
 
   isEqual(other: DialogueMessage) {
@@ -73,11 +86,12 @@ export default class DialogueMessage
     return this._key;
   }
 
-  async prompt(expressionBus: ExpressionBus): Promise<string> {
-    const caster = new StringExpressionCaster();
-
-    return expressionBus.enqueue(
-      new Expression<string>(this.message.prompt, caster)
+  prompt(): Promise<string> {
+    const expression = new Expression(
+      this.message.prompt,
+      this.getExpressionContext()
     );
+
+    return this.expressionBus.enqueue(expression);
   }
 }

@@ -1,5 +1,5 @@
 // @flow
 
-export interface Expression<T> {
-  execute(): Promise<T>;
+export interface Expression {
+  execute(): Promise<string>;
 }
