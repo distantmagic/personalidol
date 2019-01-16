@@ -13,6 +13,7 @@ type Props = {
   answer: DialogueMessage,
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
+  onDialogueAnswerClick: DialogueMessage => void,
   queryBus: QueryBus
 };
 
@@ -48,6 +49,7 @@ export default class DialogueAnswerController extends React.Component<
       <DialogueAnswer
         actor={actor}
         answer={this.props.answer}
+        onClick={this.props.onDialogueAnswerClick}
         prompt={prompt}
       />
     );

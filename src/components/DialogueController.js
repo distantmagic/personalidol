@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import autoBind from "auto-bind";
 
 import CancelToken from "../framework/classes/CancelToken";
 import Dialogue from "../framework/classes/Dialogue";
@@ -40,6 +41,12 @@ export default class DialogueController extends React.Component<Props, State> {
     prompt: null
   };
 
+  constructor(props: Props) {
+    super(props);
+
+    autoBind.react(this);
+  }
+
   async componentDidMount() {
     try {
       await this.loadDialogue(this.props.dialogueResourceReference);
@@ -59,8 +66,22 @@ export default class DialogueController extends React.Component<Props, State> {
         this.props.expressionContext
       )
     );
-    const message = dialogue.start();
 
+    this.setDialogueMessage(dialogue, dialogue.start());
+  }
+
+  onDialogueAnswerClick(message: DialogueMessage): void {
+    const dialogue = this.state.dialogue;
+
+    if (dialogue) {
+      this.setDialogueMessage(dialogue, message);
+    }
+  }
+
+  async setDialogueMessage(
+    dialogue: Dialogue,
+    message: DialogueMessage
+  ): Promise<void> {
     await this.props.expressionBus.expressible(message);
 
     const [actor, answers, prompt] = await Promise.all([
@@ -102,6 +123,7 @@ export default class DialogueController extends React.Component<Props, State> {
           dialogue
         )}
         message={message}
+        onDialogueAnswerClick={this.onDialogueAnswerClick}
         prompt={prompt}
         queryBus={this.props.queryBus}
       />

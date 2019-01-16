@@ -18,6 +18,7 @@ type Props = {
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
   message: DialogueMessage,
+  onDialogueAnswerClick: DialogueMessage => void,
   prompt: string,
   queryBus: QueryBus
 };
@@ -41,6 +42,7 @@ export default class Dialogue extends React.Component<Props, State> {
                   "message",
                   answer
                 )}
+                onDialogueAnswerClick={this.props.onDialogueAnswerClick}
                 queryBus={this.props.queryBus}
               />
             </li>

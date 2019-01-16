@@ -8,6 +8,7 @@ import DialogueMessage from "../framework/classes/DialogueMessage";
 type Props = {
   actor: string,
   answer: DialogueMessage,
+  onClick: DialogueMessage => void,
   prompt: string
 };
 
@@ -23,7 +24,7 @@ export default class DialogueButton extends React.Component<Props, State> {
   onMessageClick(evt: SyntheticEvent<HTMLButtonElement>) {
     evt.preventDefault();
 
-    console.log(this.props.answer.key());
+    this.props.onClick(this.props.answer);
   }
 
   render() {

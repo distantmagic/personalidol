@@ -2,35 +2,41 @@ initial_message: start
 messages:
 
   start:
-    actor: Commoner
+    actor: Volo
     prompt: >
-      Hello, {{ dialogue.initiator }}!
-      {{ message.key }}
-      {% for i in 1..10 %}
-        [{{ i }}]
-      {% endfor %}
+      Siema, {{ dialogue.initiator }}!
+      Jam jest {{ message.actor }}!
 
   f1:
     answer_to: start
     actor: "{{ message.key }}"
+    pickable: not message.actor.ai()
     prompt: siema :D :D :D
 
   f11:
     answer_to: start
     actor: "{{ message.key }}"
-    prompt: SIEMAAAAAAAAAAA {{ dialogue.initiator }}! :D :D :D
+    pickable: true
+    prompt: SIEMAAAAAAAAAAA {{ dialogue.start.actor }}! :D :D :D
 
   f2:
     answer_to: start
     actor: "{{ message.key }}"
+    pickable: true
     prompt: Co tam???????????????? xD
 
   f3:
     answer_to: start
     actor: "{{ message.key }}"
+    pickable: true
     prompt: NARA :( :( :(
 
   f4:
     answer_to: f1
-    actor: "{{ message.key }}"
+    actor: Volo
     prompt: Woooo!
+
+  f5:
+    answer_to: f1
+    actor: Volo
+    prompt: Hooooo!
