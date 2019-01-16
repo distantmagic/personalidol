@@ -61,9 +61,9 @@ export default class DialogueController extends React.Component<Props, State> {
     const dialogue = await this.props.queryBus.enqueue(
       this.props.cancelToken,
       new DialogueQuery(
-        reference,
         this.props.expressionBus,
-        this.props.expressionContext
+        this.props.expressionContext,
+        reference
       )
     );
 

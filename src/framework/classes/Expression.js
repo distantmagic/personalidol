@@ -26,8 +26,6 @@ export default class Expression implements ExpressionInterface {
   }
 
   async execute(): Promise<string> {
-    const result = await this.template.renderAsync(this.context.toObject());
-
-    return result;
+    return await this.template.renderAsync(this.context.toObject());
   }
 }

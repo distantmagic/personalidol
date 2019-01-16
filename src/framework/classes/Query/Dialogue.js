@@ -16,9 +16,9 @@ export default class Dialogue implements Query<DialogueModel> {
   ref: DialogueResourceReference;
 
   constructor(
-    ref: DialogueResourceReference,
     expressionBus: ExpressionBus,
-    context: ExpressionContext
+    context: ExpressionContext,
+    ref: DialogueResourceReference
   ) {
     this.context = context;
     this.expressionBus = expressionBus;
@@ -31,8 +31,8 @@ export default class Dialogue implements Query<DialogueModel> {
 
     return new DialogueModel(
       this.expressionBus,
-      YAML.parse(dialogue),
-      this.context
+      this.context,
+      YAML.parse(dialogue)
     );
   }
 

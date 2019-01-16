@@ -12,7 +12,11 @@ export default class ExpressionContext implements ExpressionContextInterface {
   map: Map<string, any>;
 
   constructor(elements: ?ExpressionContextInput) {
-    this.map = elements ? elements : new Map<string, any>();
+    this.map = Map<string, any>(elements ? elements : {});
+  }
+
+  has(key: string): boolean {
+    return this.map.has(key);
   }
 
   set(key: string, value: any): ExpressionContext {
