@@ -2,8 +2,9 @@
 
 import YAML from "yaml";
 
-import { default as DialogueResourceReference } from "../ResourceReference/Dialogue";
+import DialogueScript from "../DialogueScript";
 import { default as DialogueModel } from "../Dialogue";
+import { default as DialogueResourceReference } from "../ResourceReference/Dialogue";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { ExpressionBus } from "../../interfaces/ExpressionBus";
@@ -32,7 +33,7 @@ export default class Dialogue implements Query<DialogueModel> {
     return new DialogueModel(
       this.expressionBus,
       this.context,
-      YAML.parse(dialogue)
+      new DialogueScript(YAML.parse(dialogue))
     );
   }
 

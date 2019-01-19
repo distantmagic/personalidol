@@ -4,9 +4,6 @@ import Collection from "./Collection";
 
 import type { Equatable } from "../interfaces/Equatable";
 
-declare var expect: any;
-declare var it: any;
-
 class Foo implements Equatable<Foo> {
   phrase: string;
 

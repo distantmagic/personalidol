@@ -6,5 +6,5 @@ import type { Perceives } from "./Perceives";
 import type { Sentient } from "../Sentient";
 
 export interface Speaks extends Sentient {
-  tell(beings: Collection<Perceives>, message: Message): void;
+  tell(beings: Collection<Perceives>, message: Message): Promise<void>;
 }

@@ -12,6 +12,7 @@ import type { Aimable } from "../../interfaces/Memorizable/Aimable";
 import type { Aims } from "../../interfaces/Sentient/Aims";
 import type { Collection } from "../../../framework/interfaces/Collection";
 import type { Hears } from "../../interfaces/Sentient/Perceives/Hears";
+import type { Identifiable } from "../../interfaces/Identifiable";
 import type { Memorizable } from "../../interfaces/Memorizable";
 import type { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
 import type { Message } from "../../interfaces/Perceivable/Message";
@@ -21,22 +22,22 @@ import type { Speaks } from "../../interfaces/Sentient/Speaks";
 import type { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
 export default class Person extends Entity
-  implements Aims, Hears, Memorizes, Sees, Speaks {
-  aim(aimable: Aimable): void {
+  implements Aims, Hears, Identifiable, Memorizes, Sees, Speaks {
+  async aim(aimable: Aimable): Promise<void> {
     // this.commandBus.source(new AimCommand(this, aimable));
   }
 
-  aware(otherEntity: Entity, knows: Memorizable): void {
-    // aware(awareness: Awareness): void {
+  async aware(otherEntity: Entity, knows: Memorizable): Promise<void> {
+    // aware(awareness: Awareness): Promise<void> {
   }
 
-  feels(/* emotion:  */): void {}
+  async feels(/* emotion:  */): Promise<void> {}
 
-  forget(memorizable: Memorizable): void {
+  async forget(memorizable: Memorizable): Promise<void> {
     // this.commandBus.source(new ForgetMemorizable(this, memorizable));
   }
 
-  hear(message: Vocal): void {
+  async hear(message: Vocal): Promise<void> {
     // this.commandBus.source(new HearMessage(this, message));
   }
 
@@ -45,17 +46,17 @@ export default class Person extends Entity
     return false;
   }
 
-  intuition(agains: Entity) {
+  async intuition(against: Entity): Promise<void> {
     // uzaleznione od jakosci postepowania
     // dobre - prawdziwa intuicja
     // zle - nieprawdziwe przeczucie, szalenstwo, paranoja
   }
 
-  learn(memorizable: Memorizable): void {
+  async learn(memorizable: Memorizable): Promise<void> {
     // this.commandBus.source(new LearnMemorizable(this, memorizable));
   }
 
-  tell(beings: Collection<Perceives>, message: Message): void {
+  async tell(beings: Collection<Perceives>, message: Message): Promise<void> {
     beings.forEach(being => {
       // this.commandBus.source(new TellMessage(being, message));
     });

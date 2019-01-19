@@ -3,9 +3,6 @@
 import Expression from "./Expression";
 import ExpressionContext from "./ExpressionContext";
 
-declare var expect: any;
-declare var it: any;
-
 it("performs math calculations", () => {
   const expression = new Expression("{{ 2 + 2 }}");
   const result = expression.execute();
@@ -29,7 +26,10 @@ it("uses objects", () => {
       player: () => ({ name: "CHARNAME" })
     }
   });
-  const expression = new Expression(`Greetings {{ character.player().name }}`, context);
+  const expression = new Expression(
+    `Greetings {{ character.player().name }}`,
+    context
+  );
   const result = expression.execute();
 
   expect(result).resolves.toBe("Greetings CHARNAME");
@@ -43,7 +43,10 @@ it("uses promises", () => {
       })
     }
   });
-  const expression = new Expression(`Greetings {{ character.player().name }}`, context);
+  const expression = new Expression(
+    `Greetings {{ character.player().name }}`,
+    context
+  );
   const result = expression.execute();
 
   expect(result).resolves.toBe("Greetings CHARNAME");

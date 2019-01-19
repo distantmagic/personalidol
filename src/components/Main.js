@@ -3,7 +3,6 @@
 import * as React from "react";
 
 import CancelToken from "../framework/classes/CancelToken";
-import DialogueController from "./DialogueController";
 import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
 import Logger from "../framework/classes/Logger";
@@ -35,7 +34,7 @@ export default class Main extends React.Component<Props, State> {
       dialogueResourceReference: new DialogueResourceReference(
         "data/dialogues/umbrux-intro.yml"
       ),
-      expressionBus: new ExpressionBus(queryBus),
+      expressionBus: new ExpressionBus(),
       expressionContext: new ExpressionContext(),
       error: null,
       logger: new Logger(),
@@ -61,30 +60,6 @@ export default class Main extends React.Component<Props, State> {
   }
 
   render() {
-    return (
-      <div>
-        <DialogueController
-          cancelToken={this.state.cancelToken}
-          dialogueResourceReference={this.state.dialogueResourceReference}
-          expressionBus={this.state.expressionBus}
-          expressionContext={this.state.expressionContext}
-          queryBus={this.state.queryBus}
-        />
-        <DialogueController
-          cancelToken={this.state.cancelToken}
-          dialogueResourceReference={this.state.dialogueResourceReference}
-          expressionBus={this.state.expressionBus}
-          expressionContext={this.state.expressionContext}
-          queryBus={this.state.queryBus}
-        />
-        <DialogueController
-          cancelToken={this.state.cancelToken}
-          dialogueResourceReference={this.state.dialogueResourceReference}
-          expressionBus={this.state.expressionBus}
-          expressionContext={this.state.expressionContext}
-          queryBus={this.state.queryBus}
-        />
-      </div>
-    );
+    return <div />;
   }
 }

@@ -9,7 +9,7 @@ import type { CollectionItem } from "../types/CollectionItem";
 export default class Collection<T> implements CollectionInterface<T> {
   elements: List<CollectionItem<T>>;
 
-  constructor(elements: CollectionInput<T>) {
+  constructor(elements: ?CollectionInput<T>) {
     this.elements = List<CollectionItem<T>>(elements || []);
   }
 

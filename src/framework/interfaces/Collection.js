@@ -6,7 +6,7 @@ import type { CollectionInput } from "../types/CollectionInput";
 import type { CollectionItem } from "../types/CollectionItem";
 
 export interface Collection<T> {
-  constructor(CollectionInput<T>): void;
+  constructor(?CollectionInput<T>): void;
 
   add(CollectionItem<T>): Collection<T>;
 

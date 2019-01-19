@@ -1,4 +1,7 @@
-initial_message: start
+metadata:
+
+  start_message: start
+
 messages:
 
   start:
