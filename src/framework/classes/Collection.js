@@ -7,23 +7,33 @@ import type { CollectionInput } from "../types/CollectionInput";
 import type { CollectionItem } from "../types/CollectionItem";
 
 export default class Collection<T> implements CollectionInterface<T> {
-  elements: List<CollectionItem<T>>;
+  +elements: List<CollectionItem<T>>;
 
   constructor(elements: ?CollectionInput<T>) {
     this.elements = List<CollectionItem<T>>(elements || []);
   }
 
-  add(element: CollectionItem<T>): Collection<T> {
+  add(element: CollectionItem<T>): CollectionInterface<T> {
     return new Collection<T>(this.elements.push(element));
   }
 
-  contract(
-    reducer: (Collection<T>, CollectionItem<T>) => Collection<T>
-  ): Collection<T> {
-    return this.elements.reduce<Collection<T>>(reducer, new Collection());
+  clear(): CollectionInterface<T> {
+    return new Collection<T>(this.elements.clear());
   }
 
-  filter(callback: (CollectionItem<T>) => boolean): Collection<T> {
+  contract(
+    reducer: (
+      CollectionInterface<T>,
+      CollectionItem<T>
+    ) => CollectionInterface<T>
+  ): CollectionInterface<T> {
+    return this.elements.reduce<CollectionInterface<T>>(
+      reducer,
+      new Collection()
+    );
+  }
+
+  filter(callback: (CollectionItem<T>) => boolean): CollectionInterface<T> {
     return new Collection(this.elements.filter(callback));
   }
 
@@ -47,7 +57,7 @@ export default class Collection<T> implements CollectionInterface<T> {
     return this.some(element => element.isEqual(some));
   }
 
-  similar(some: CollectionItem<T>): Collection<T> {
+  similar(some: CollectionItem<T>): CollectionInterface<T> {
     return this.filter(element => element.isEqual(some) && element !== some);
   }
 
@@ -59,7 +69,7 @@ export default class Collection<T> implements CollectionInterface<T> {
     return this.elements.toArray();
   }
 
-  unique(): Collection<T> {
+  unique(): CollectionInterface<T> {
     return this.contract((acc, item) =>
       acc.includesSimilar(item) ? acc : acc.add(item)
     );

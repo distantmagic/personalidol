@@ -13,5 +13,5 @@ export interface QueryBus {
 
   pickQuery<T>(Query<T>): Query<T>;
 
-  tick(): Promise<void>;
+  tick(): Promise<QueryBus>;
 }

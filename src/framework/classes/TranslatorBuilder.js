@@ -8,7 +8,7 @@ import TranslatorErrorHandler from "./TranslatorErrorHandler";
 import type { Logger } from "../interfaces/Logger";
 
 export default class TranslatorBuilder {
-  logger: Logger;
+  +logger: Logger;
 
   constructor(logger: Logger) {
     this.logger = logger;

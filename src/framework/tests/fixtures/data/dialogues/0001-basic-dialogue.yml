@@ -1,0 +1,23 @@
+metadata:
+
+  start_message: start
+
+messages:
+
+  start:
+    actor: Actor1
+    prompt: Prompt1
+
+  m1:
+    actor: Actor2
+    answer_to: start
+    prompt: Prompt2.1
+
+  m2:
+    actor: Actor2
+    answer_to: start
+    prompt: Prompt2.2
+
+  m3:
+    actor: Actor2
+    prompt: Prompt2.3

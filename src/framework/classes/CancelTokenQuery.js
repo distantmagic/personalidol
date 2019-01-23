@@ -11,9 +11,9 @@ export default class CancelTokenQuery<T>
   _executionResult: T;
   _isExecuted: boolean;
   _result: ?T;
-  cancelToken: CancelToken;
-  eventEmitter: EventEmitter;
-  query: Query<T>;
+  +cancelToken: CancelToken;
+  +eventEmitter: EventEmitter;
+  +query: Query<T>;
 
   constructor(cancelToken: CancelToken, query: Query<T>) {
     this.cancelToken = cancelToken;

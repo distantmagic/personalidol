@@ -1,6 +1,5 @@
 // @flow
 
-import DialogueMessages from "./DialogueMessages";
 import DialogueScript from "./DialogueScript";
 import DialogueTurn from "./DialogueTurn";
 
@@ -10,9 +9,9 @@ import type { ExpressionContext } from "../interfaces/ExpressionContext";
 import type { Speaks } from "../interfaces/Sentient/Speaks";
 
 export default class Dialogue implements Contextual {
-  context: ExpressionContext;
-  expressionBus: ExpressionBus;
-  script: DialogueScript;
+  +context: ExpressionContext;
+  +expressionBus: ExpressionBus;
+  +script: DialogueScript;
 
   constructor(
     expressionBus: ExpressionBus,
@@ -26,10 +25,6 @@ export default class Dialogue implements Contextual {
 
   getExpressionContext(): ExpressionContext {
     return this.context.set("dialogue", this);
-  }
-
-  getMessages(): DialogueMessages {
-    return this.script.getMessages();
   }
 
   async initiate(initiator: Speaks): Promise<DialogueTurn> {

@@ -1,8 +1,8 @@
 // @flow
 
-import Expression from "./Expression";
-import ExpressionContext from "./ExpressionContext";
-import UnexpectedOverride from "./Exception/Collection/UnexpectedOverride";
+import Expression from "../../classes/Expression";
+import ExpressionContext from "../../classes/ExpressionContext";
+import UnexpectedOverride from "../../classes/Exception/Collection/UnexpectedOverride";
 
 it("is immutable", () => {
   const context = new ExpressionContext();

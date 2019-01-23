@@ -9,8 +9,8 @@ type I18nextType = {
 };
 
 export default class Translator {
-  errorHandler: TranslatorErrorHandler;
-  i18next: I18nextType;
+  +errorHandler: TranslatorErrorHandler;
+  +i18next: I18nextType;
 
   constructor(i18next: I18nextType, errorHandler: TranslatorErrorHandler) {
     this.i18next = i18next;

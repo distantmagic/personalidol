@@ -9,7 +9,7 @@ import type { ExpressionContextInput } from "../types/ExpressionContextInput";
 import type { ExpressionData } from "../types/ExpressionData";
 
 export default class ExpressionContext implements ExpressionContextInterface {
-  map: Map<string, any>;
+  +map: Map<string, any>;
 
   constructor(elements: ?ExpressionContextInput) {
     this.map = Map<string, any>(elements ? elements : {});

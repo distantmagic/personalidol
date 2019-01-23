@@ -1,9 +1,0 @@
-metadata:
-
-  start_message: start
-
-messages:
-
-  start:
-    actor: Actor1
-    prompt: Prompt1

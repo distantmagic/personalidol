@@ -10,6 +10,8 @@ export interface Collection<T> {
 
   add(CollectionItem<T>): Collection<T>;
 
+  clear(): Collection<T>;
+
   contract((Collection<T>, CollectionItem<T>) => any): Collection<T>;
 
   filter((CollectionItem<T>) => boolean): Collection<T>;

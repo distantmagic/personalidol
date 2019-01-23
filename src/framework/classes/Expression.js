@@ -13,9 +13,9 @@ type TwigRenderer = {
 };
 
 export default class Expression implements ExpressionInterface {
-  context: ExpressionContextInterface;
-  expression: string;
-  template: TwigRenderer;
+  +context: ExpressionContextInterface;
+  +expression: string;
+  +template: TwigRenderer;
 
   constructor(expression: string, context: ?ExpressionContextInterface): void {
     this.context = context || new ExpressionContext();

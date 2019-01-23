@@ -7,7 +7,7 @@ import { default as ReturnedObjectException } from "./Exception/Translator/Retur
 import type { Logger } from "../interfaces/Logger";
 
 export default class TranslatorErrorHandler {
-  logger: Logger;
+  +logger: Logger;
 
   constructor(logger: Logger) {
     this.logger = logger;

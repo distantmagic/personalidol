@@ -6,7 +6,7 @@ import { default as VendorMainLoop } from "mainloop.js";
 import type { MainLoopObserver } from "../interfaces/MainLoopObserver";
 
 export default class MainLoop {
-  eventEmitter: EventEmitter;
+  +eventEmitter: EventEmitter;
 
   static getInstance(): MainLoop {
     return singleton;

@@ -8,7 +8,7 @@ import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelTo
 
 export default class CancelToken implements CancelTokenInterface {
   _isCancelled: boolean;
-  eventEmitter: EventEmitter;
+  +eventEmitter: EventEmitter;
 
   constructor() {
     this._isCancelled = false;

@@ -4,7 +4,7 @@
 import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
 export default class QueryBatch {
-  collection: QueryBusQueueCollection;
+  +collection: QueryBusQueueCollection;
 
   constructor(collection: QueryBusQueueCollection) {
     this.collection = collection;

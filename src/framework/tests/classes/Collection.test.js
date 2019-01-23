@@ -1,8 +1,8 @@
 // @flow
 
-import Collection from "./Collection";
+import Collection from "../../classes/Collection";
 
-import type { Equatable } from "../interfaces/Equatable";
+import type { Equatable } from "../../interfaces/Equatable";
 
 class Foo implements Equatable<Foo> {
   phrase: string;

@@ -9,6 +9,8 @@ import Logger from "../framework/classes/Logger";
 import QueryBus from "../framework/classes/QueryBus";
 import { default as DialogueResourceReference } from "../framework/classes/ResourceReference/Dialogue";
 
+import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
+
 type Props = {};
 
 type State = {
@@ -18,7 +20,7 @@ type State = {
   expressionContext: ExpressionContext,
   error: ?Error,
   logger: Logger,
-  queryBus: QueryBus
+  queryBus: QueryBusInterface
 };
 
 export default class Main extends React.Component<Props, State> {
@@ -49,8 +51,10 @@ export default class Main extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.queryBusInterval = setInterval(() => {
-      this.state.queryBus.tick();
+    this.queryBusInterval = setInterval(async () => {
+      this.setState({
+        queryBus: await this.state.queryBus.tick()
+      });
     }, 1000);
   }
 

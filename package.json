@@ -11,7 +11,6 @@
     "eventemitter3": "^3.1.0",
     "i18next": "^12.0.0",
     "immutable": "^4.0.0-rc.12",
-    "keycloak-js": "^4.6.0",
     "lodash": "^4.17.11",
     "mainloop.js": "^1.0.4",
     "react": "^16.6.0",

@@ -36,7 +36,7 @@ export default class QueryBus implements QueryBusInterface {
   flush(): QueryBatch {
     const queryBatch = new QueryBatch(this.collection);
 
-    this.collection = new Collection();
+    this.collection = this.collection.clear();
 
     return queryBatch;
   }
@@ -45,7 +45,9 @@ export default class QueryBus implements QueryBusInterface {
     return this.findSimilarQuery(other) || other;
   }
 
-  tick(): Promise<void> {
-    return this.flush().process();
+  async tick(): Promise<QueryBusInterface> {
+    await this.flush().process();
+
+    return this;
   }
 }
