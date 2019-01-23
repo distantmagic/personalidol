@@ -4,7 +4,8 @@ import Expression from "./Expression";
 import ExpressionContext from "./ExpressionContext";
 
 it("performs math calculations", () => {
-  const expression = new Expression("{{ 2 + 2 }}");
+  const context = new ExpressionContext();
+  const expression = new Expression("{{ 2 + 2 }}", context);
   const result = expression.execute();
 
   expect(result).resolves.toBe("4");

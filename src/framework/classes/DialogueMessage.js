@@ -1,14 +1,24 @@
 // @flow
 
+import Expression from "./Expression";
+
 import type { DialogueMessage as DialogueMessageInterface } from "../interfaces/DialogueMessage";
 import type { DialogueScriptMessage } from "../types/DialogueScriptMessage";
+import type { Expression as ExpressionInterface } from "../interfaces/Expression";
+import type { ExpressionContext } from "../interfaces/ExpressionContext";
 
 export default class DialogueMessage implements DialogueMessageInterface {
   +_key: string;
+  +context: ExpressionContext;
   +messageScript: DialogueScriptMessage;
 
-  constructor(key: string, messageScript: DialogueScriptMessage) {
+  constructor(
+    context: ExpressionContext,
+    key: string,
+    messageScript: DialogueScriptMessage
+  ) {
     this._key = key;
+    this.context = context;
     this.messageScript = messageScript;
   }
 
@@ -28,6 +38,18 @@ export default class DialogueMessage implements DialogueMessageInterface {
     }
 
     return [answerTo];
+  }
+
+  expression(): ?ExpressionInterface {
+    const expression = this.messageScript.expression;
+
+    if (expression) {
+      return new Expression(expression, this.getExpressionContext());
+    }
+  }
+
+  getExpressionContext(): ExpressionContext {
+    return this.context.set("message", this);
   }
 
   async key(): Promise<string> {

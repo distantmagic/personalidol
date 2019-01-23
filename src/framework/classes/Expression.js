@@ -2,8 +2,6 @@
 
 import twig from "twig";
 
-import ExpressionContext from "./ExpressionContext";
-
 import type { Expression as ExpressionInterface } from "../interfaces/Expression";
 import type { ExpressionContext as ExpressionContextInterface } from "../interfaces/ExpressionContext";
 import type { ExpressionData } from "../types/ExpressionData";
@@ -17,8 +15,8 @@ export default class Expression implements ExpressionInterface {
   +expression: string;
   +template: TwigRenderer;
 
-  constructor(expression: string, context: ?ExpressionContextInterface): void {
-    this.context = context || new ExpressionContext();
+  constructor(expression: string, context: ExpressionContextInterface): void {
+    this.context = context;
     this.expression = expression;
     this.template = twig.twig({
       data: `${expression}`

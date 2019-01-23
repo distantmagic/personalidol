@@ -37,6 +37,8 @@ export default class DialogueTurn implements DialogueTurnInterface {
   async answer(
     answer: DialogueMessageInterface
   ): Promise<?DialogueTurnInterface> {
+    await this.expressionBus.expressible(answer);
+
     const followUp = await this.followUpAnswer(answer);
 
     if (!followUp) {
@@ -60,8 +62,9 @@ export default class DialogueTurn implements DialogueTurnInterface {
     answer: DialogueMessageInterface
   ): Promise<?DialogueMessageInterface> {
     const answers = await this.script.getAnswers(answer);
+    const followUpAnswer = answers.first();
 
-    return answers.first();
+    return followUpAnswer;
   }
 
   prompt(): Promise<string> {

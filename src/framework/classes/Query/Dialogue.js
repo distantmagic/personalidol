@@ -33,7 +33,7 @@ export default class Dialogue implements Query<DialogueModel> {
     return new DialogueModel(
       this.expressionBus,
       this.context,
-      new DialogueScript(YAML.parse(dialogue))
+      new DialogueScript(this.context, YAML.parse(dialogue))
     );
   }
 
