@@ -16,8 +16,18 @@ export default class DialogueMessage implements DialogueMessageInterface {
     return this.messageScript.actor;
   }
 
-  async answerTo(): Promise<?string> {
-    return this.messageScript.answer_to;
+  async answerTo(): Promise<Array<string>> {
+    const answerTo = this.messageScript.answer_to;
+
+    if (Array.isArray(answerTo)) {
+      return answerTo;
+    }
+
+    if (!answerTo) {
+      return [];
+    }
+
+    return [answerTo];
   }
 
   async key(): Promise<string> {
@@ -25,7 +35,9 @@ export default class DialogueMessage implements DialogueMessageInterface {
   }
 
   async isAnswerTo(other: DialogueMessageInterface): Promise<boolean> {
-    return (await other.key()) === (await this.answerTo());
+    const parents = await this.answerTo();
+
+    return parents.includes(await other.key());
   }
 
   async prompt(): Promise<string> {

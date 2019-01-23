@@ -21,3 +21,10 @@ messages:
   m3:
     actor: Actor2
     prompt: Prompt2.3
+
+  m4:
+    actor: Actor4
+    answer_to:
+      - m1
+      - m2
+    prompt: Prompt4
