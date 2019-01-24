@@ -5,6 +5,7 @@ import Collection from "./Collection";
 import QueryBatch from "./QueryBatch";
 
 import type { CancelToken } from "../interfaces/CancelToken";
+import type { ClockTick } from "../interfaces/ClockTick";
 import type { Query } from "../interfaces/Query";
 import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
 import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
@@ -45,7 +46,15 @@ export default class QueryBus implements QueryBusInterface {
     return this.findSimilarQuery(other) || other;
   }
 
-  async tick(): Promise<QueryBusInterface> {
+  async tick(tick: ClockTick): Promise<QueryBusInterface> {
+    // Random things happen, timeouts and intervals are not reliable (those are
+    // definitely not real time clock) and QueryBus is really important to
+    // the system.
+    // It's better to have this additional check here, just for safety.
+    if (tick.isCancelled()) {
+      return this;
+    }
+
     await this.flush().process();
 
     return this;

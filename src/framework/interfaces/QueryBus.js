@@ -1,6 +1,7 @@
 // @flow
 
 import type { CancelToken } from "./CancelToken";
+import type { ClockTick } from "./ClockTick";
 import type { Query } from "./Query";
 import type { QueryBatch } from "./QueryBatch";
 
@@ -13,5 +14,5 @@ export interface QueryBus {
 
   pickQuery<T>(Query<T>): Query<T>;
 
-  tick(): Promise<QueryBus>;
+  tick(ClockTick): Promise<QueryBus>;
 }

@@ -2,11 +2,13 @@
 
 import * as React from "react";
 
+import BusClock from "../framework/classes/BusClock";
 import CancelToken from "../framework/classes/CancelToken";
 import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
 import Logger from "../framework/classes/Logger";
 import QueryBus from "../framework/classes/QueryBus";
+import QueryBusController from "../framework/classes/QueryBusController";
 
 import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
 
@@ -18,7 +20,8 @@ type State = {
   expressionContext: ExpressionContext,
   error: ?Error,
   logger: Logger,
-  queryBus: QueryBusInterface
+  queryBus: QueryBusInterface,
+  queryBusController: QueryBusController
 };
 
 export default class Main extends React.Component<Props, State> {
@@ -27,13 +30,17 @@ export default class Main extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const busClock = new BusClock();
+    const queryBus = new QueryBus();
+
     this.state = {
       cancelToken: new CancelToken(),
       expressionBus: new ExpressionBus(),
       expressionContext: new ExpressionContext(),
       error: null,
       logger: new Logger(),
-      queryBus: new QueryBus()
+      queryBus: queryBus,
+      queryBusController: new QueryBusController(busClock, queryBus)
     };
   }
 
@@ -44,15 +51,10 @@ export default class Main extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.queryBusInterval = setInterval(async () => {
-      this.setState({
-        queryBus: await this.state.queryBus.tick()
-      });
-    }, 1000);
+    this.state.queryBusController.interval(this.state.cancelToken);
   }
 
   componentWillUnmount() {
-    clearInterval(this.queryBusInterval);
     this.state.cancelToken.cancel();
   }
 

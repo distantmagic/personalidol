@@ -12,7 +12,7 @@ it("produces interval events generator", async () => {
 
   setTimeout(function() {
     cancelToken.cancel();
-  }, 40);
+  }, 50);
 
   for await (let tick of interval(20, cancelToken)) {
     ticks.push(Date.now());
@@ -23,7 +23,7 @@ it("produces interval events generator", async () => {
 
 it("ticks infinitely", async () => {
   let ticksCount = 0;
-  const expectedTicks = 2;
+  const expectedTicks = 10;
 
   for await (let tick of interval(1)) {
     ticksCount += 1;

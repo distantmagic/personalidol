@@ -2,4 +2,4 @@
 
 import type { ClockTick } from "./ClockTick";
 
-export interface BusClockTick extends ClockTick {}
+export interface IntervalTick extends ClockTick {}

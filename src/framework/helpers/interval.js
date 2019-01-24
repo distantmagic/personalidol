@@ -1,13 +1,15 @@
 // @flow
 
+import IntervalTick from "../classes/IntervalTick";
 import timeout from "./timeout";
 
 import type { CancelToken } from "../interfaces/CancelToken";
+import type { IntervalTick as IntervalTickInterface } from "../interfaces/IntervalTick";
 
 export default async function* interval(
   delay: number,
   cancelToken: ?CancelToken
-): AsyncGenerator<void, void, void> {
+): AsyncGenerator<IntervalTickInterface, void, void> {
   let baseline = Date.now();
   let nextTick = delay;
 
@@ -18,7 +20,7 @@ export default async function* interval(
       break;
     }
 
-    yield void 0;
+    yield new IntervalTick(tick);
 
     baseline += delay;
     nextTick = delay - (Date.now() - baseline);

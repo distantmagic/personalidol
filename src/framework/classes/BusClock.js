@@ -18,7 +18,7 @@ export default class BusClock implements BusClockInterface {
     cancelToken: CancelToken
   ): AsyncGenerator<BusClockTickInterface, void, void> {
     for await (let tick of interval(this.delay, cancelToken)) {
-      yield new BusClockTick();
+      yield new BusClockTick(tick);
     }
   }
 }

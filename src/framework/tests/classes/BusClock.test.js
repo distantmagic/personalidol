@@ -11,7 +11,7 @@ it("ticks", async () => {
 
   setTimeout(function() {
     cancelToken.cancel();
-  }, 40);
+  }, 50);
 
   for await (let tick of clock.interval(cancelToken)) {
     ticks += 1;

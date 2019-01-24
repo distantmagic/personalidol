@@ -1,5 +1,5 @@
 // @flow
 
-export interface TimeoutTick {
-  isCancelled(): boolean;
-}
+import type { ClockTick } from "./ClockTick";
+
+export interface TimeoutTick extends ClockTick {}
