@@ -15,6 +15,7 @@ declare module 'yn' {
 
   declare function yn(string, {| default: boolean, lenient?: boolean |}): boolean;
   declare function yn(string, ?Options): boolean | null;
+
   declare function yn(any, {| default: true, lenient?: boolean |}): true;
   declare function yn(any, {| default: false, lenient?: boolean |}): false;
   declare function yn(any, ?Options): null;

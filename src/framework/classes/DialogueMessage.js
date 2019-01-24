@@ -43,17 +43,11 @@ export default class DialogueMessage implements DialogueMessageInterface {
   condition(): ?ExpressionInterface {
     const condition = this.messageScript.condition;
 
-    if (condition) {
-      return new Expression(condition, this.getExpressionContext());
+    if (!condition) {
+      return null;
     }
-  }
 
-  expression(): ?ExpressionInterface {
-    const expression = this.messageScript.expression;
-
-    if (expression) {
-      return new Expression(expression, this.getExpressionContext());
-    }
+    return new Expression(condition, this.getExpressionContext());
   }
 
   getExpressionContext(): ExpressionContext {

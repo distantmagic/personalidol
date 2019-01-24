@@ -56,7 +56,7 @@ export default class CancelTokenQuery<T>
 
   onExecuted(): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.cancelToken.onCancelled().then(reject);
+      this.cancelToken.onCancelled(reject);
       this.eventEmitter.once("executed", resolve);
     });
   }

@@ -1,10 +1,9 @@
 // @flow
 
 import type { DialogueFragment } from "./DialogueFragment";
-import type { Expressible } from "./Expressible";
 import type { Expression } from "./Expression";
 
-export interface DialogueMessage extends DialogueFragment, Expressible {
+export interface DialogueMessage extends DialogueFragment {
   condition(): ?Expression;
 
   key(): Promise<string>;

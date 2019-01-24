@@ -1,9 +1,11 @@
 // @flow
 
+import type { CancelTokenCallback } from "../types/CancelTokenCallback";
+
 export interface CancelToken {
   cancel(): void;
 
   isCancelled(): boolean;
 
-  onCancelled(): Promise<void>;
+  onCancelled(CancelTokenCallback): void;
 }

@@ -2,7 +2,6 @@
 
 import Condition from "./Condition";
 
-import type { Expressible } from "../interfaces/Expressible";
 import type { Expression } from "../interfaces/Expression";
 import type { ExpressionBus as ExpressionBusInterface } from "../interfaces/ExpressionBus";
 // import type { QueryBus } from "../interfaces/QueryBus";
@@ -22,15 +21,5 @@ export default class ExpressionBus implements ExpressionBusInterface {
     const condition = new Condition(result);
 
     return condition.interpret();
-  }
-
-  async expressible(expressible: Expressible): Promise<?string> {
-    const expression = expressible.expression();
-
-    if (!expression) {
-      return null;
-    }
-
-    return this.enqueue(expression);
   }
 }

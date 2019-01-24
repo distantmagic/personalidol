@@ -7,7 +7,6 @@ import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
 import Logger from "../framework/classes/Logger";
 import QueryBus from "../framework/classes/QueryBus";
-import { default as DialogueResourceReference } from "../framework/classes/ResourceReference/Dialogue";
 
 import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
 
@@ -15,7 +14,6 @@ type Props = {};
 
 type State = {
   cancelToken: CancelToken,
-  dialogueResourceReference: DialogueResourceReference,
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
   error: ?Error,
@@ -29,18 +27,13 @@ export default class Main extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const queryBus = new QueryBus();
-
     this.state = {
       cancelToken: new CancelToken(),
-      dialogueResourceReference: new DialogueResourceReference(
-        "data/dialogues/umbrux-intro.yml"
-      ),
       expressionBus: new ExpressionBus(),
       expressionContext: new ExpressionContext(),
       error: null,
       logger: new Logger(),
-      queryBus: queryBus
+      queryBus: new QueryBus()
     };
   }
 
