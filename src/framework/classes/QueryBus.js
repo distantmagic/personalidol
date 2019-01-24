@@ -48,7 +48,7 @@ export default class QueryBus implements QueryBusInterface {
 
   async tick(tick: ClockTick): Promise<QueryBusInterface> {
     // Random things happen, timeouts and intervals are not reliable (those are
-    // definitely not real time clock) and QueryBus is really important to
+    // definitely not real time clocks) and QueryBus is really important to
     // the system.
     // It's better to have this additional check here, just for safety.
     if (tick.isCancelled()) {

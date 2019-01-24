@@ -13,3 +13,11 @@ it("supports cancel token", async () => {
   // return timeout tick with the time that actually elapsed
   await timeout(10000, cancelToken);
 });
+
+it("is immediately stopped with already paused cancel token", async () => {
+  const cancelToken = new CancelToken();
+
+  cancelToken.cancel();
+
+  await timeout(10000, cancelToken);
+});
