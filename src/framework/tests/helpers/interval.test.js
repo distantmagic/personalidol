@@ -34,7 +34,6 @@ it("ticks infinitely", async () => {
   expect(ticksCount).toBe(expectedTicks);
 });
 
-
 it("is immediately stopped with already paused cancel token", async () => {
   const cancelToken = new CancelToken();
   const ticks = [];

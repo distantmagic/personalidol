@@ -18,7 +18,7 @@ export default class QueryBus implements QueryBusInterface {
   }
 
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<T> {
-    const pickedQuery = this.pickQuery(query);
+    const pickedQuery = this.findSimilarQuery(query) || query;
     const cancelTokenQuery = new CancelTokenQuery(cancelToken, pickedQuery);
 
     this.collection = this.collection.add(cancelTokenQuery);
@@ -40,10 +40,6 @@ export default class QueryBus implements QueryBusInterface {
     this.collection = this.collection.clear();
 
     return queryBatch;
-  }
-
-  pickQuery<T>(other: Query<T>): Query<T> {
-    return this.findSimilarQuery(other) || other;
   }
 
   async tick(tick: ClockTick): Promise<QueryBusInterface> {

@@ -1,11 +1,10 @@
 // @flow
 
+import type { Cancellable } from "./Cancellable";
 import type { CancelTokenCallback } from "../types/CancelTokenCallback";
 
-export interface CancelToken {
+export interface CancelToken extends Cancellable {
   cancel(): void;
-
-  isCancelled(): boolean;
 
   onCancelled(CancelTokenCallback): void;
 }

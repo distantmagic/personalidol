@@ -30,7 +30,6 @@ export default class Main extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const busClock = new BusClock();
     const queryBus = new QueryBus();
 
     this.state = {
@@ -40,7 +39,7 @@ export default class Main extends React.Component<Props, State> {
       error: null,
       logger: new Logger(),
       queryBus: queryBus,
-      queryBusController: new QueryBusController(busClock, queryBus)
+      queryBusController: new QueryBusController(new BusClock(), queryBus)
     };
   }
 

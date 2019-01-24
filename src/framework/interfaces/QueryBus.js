@@ -12,7 +12,5 @@ export interface QueryBus {
 
   flush(): QueryBatch;
 
-  pickQuery<T>(Query<T>): Query<T>;
-
   tick(ClockTick): Promise<QueryBus>;
 }
