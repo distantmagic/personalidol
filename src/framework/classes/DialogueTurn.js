@@ -1,5 +1,7 @@
 // @flow
 
+import { Map } from "immutable";
+
 import DialogueScript from "./DialogueScript";
 
 import type { DialogueMessage as DialogueMessageInterface } from "../interfaces/DialogueMessage";
@@ -37,8 +39,6 @@ export default class DialogueTurn implements DialogueTurnInterface {
   async answer(
     answer: DialogueMessageInterface
   ): Promise<?DialogueTurnInterface> {
-    await this.expressionBus.expressible(answer);
-
     const followUp = await this.followUpAnswer(answer);
 
     if (!followUp) {
@@ -54,17 +54,31 @@ export default class DialogueTurn implements DialogueTurnInterface {
     );
   }
 
-  answers(): Promise<DialogueMessages> {
-    return this.script.getAnswers(this.currentMessage);
+  async answers(): Promise<DialogueMessages> {
+    const answers = await this.script.getAnswers(this.currentMessage);
+    let ret = Map<string, DialogueMessageInterface>();
+
+    for (let answer of answers.toSet().toArray()) {
+      const condition = answer.condition();
+
+      if (!condition || (await this.expressionBus.condition(condition))) {
+        ret = ret.set(await answer.key(), answer);
+      }
+    }
+
+    return ret;
   }
 
   async followUpAnswer(
     answer: DialogueMessageInterface
   ): Promise<?DialogueMessageInterface> {
     const answers = await this.script.getAnswers(answer);
-    const followUpAnswer = answers.first();
 
-    return followUpAnswer;
+    return answers.first();
+  }
+
+  getExpressionContext(): ExpressionContext {
+    return this.context.set("turn", this);
   }
 
   prompt(): Promise<string> {

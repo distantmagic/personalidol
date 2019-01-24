@@ -23,8 +23,22 @@ messages:
     prompt: Prompt2.3
 
   m4:
-    actor: Actor4
+    actor: Actor2
+    answer_to: start
+    # this one should is intentionally false
+    condition: '{{ message.actor == "Actor3" }}'
+    prompt: Prompt2.4
+
+  m5:
+    actor: Actor2
+    answer_to: start
+    # this one should is intentionally true
+    condition: '{{ message.actor == "Actor2" }}'
+    prompt: Prompt2.5
+
+  m6:
+    actor: Actor6
     answer_to:
       - m1
       - m2
-    prompt: Prompt4
+    prompt: Prompt6

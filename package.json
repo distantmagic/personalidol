@@ -9,6 +9,8 @@
     "babel-plugin-relay": "^2.0.0-rc.1",
     "core-js": "^2.5.7",
     "eventemitter3": "^3.1.0",
+    "fengari": "^0.1.4",
+    "fengari-interop": "^0.1.2",
     "i18next": "^12.0.0",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.11",
@@ -19,7 +21,8 @@
     "react-scripts": "^2.1.1",
     "three": "^0.99.0",
     "twig": "^1.12.0",
-    "yaml": "^1.0.1"
+    "yaml": "^1.0.1",
+    "yn": "^3.0.0"
   },
   "devDependencies": {
     "cssnano": "^4.0.5",

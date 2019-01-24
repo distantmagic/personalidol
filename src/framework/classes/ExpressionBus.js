@@ -1,5 +1,7 @@
 // @flow
 
+import Condition from "./Condition";
+
 import type { Expressible } from "../interfaces/Expressible";
 import type { Expression } from "../interfaces/Expression";
 import type { ExpressionBus as ExpressionBusInterface } from "../interfaces/ExpressionBus";
@@ -13,6 +15,13 @@ import type { ExpressionBus as ExpressionBusInterface } from "../interfaces/Expr
 export default class ExpressionBus implements ExpressionBusInterface {
   enqueue(expression: Expression): Promise<string> {
     return expression.execute();
+  }
+
+  async condition(expression: Expression): Promise<boolean> {
+    const result = await this.enqueue(expression);
+    const condition = new Condition(result);
+
+    return condition.interpret();
   }
 
   async expressible(expressible: Expressible): Promise<?string> {

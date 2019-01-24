@@ -35,6 +35,8 @@ it("switches dialogue turns", async () => {
   expect(answers.has("m1")).toBeTruthy();
   expect(answers.has("m2")).toBeTruthy();
   expect(answers.has("m3")).toBeFalsy();
+  expect(answers.has("m4")).toBeFalsy();
+  expect(answers.has("m5")).toBeTruthy();
 
   const answer1 = answers.get("m1");
 
@@ -48,6 +50,6 @@ it("switches dialogue turns", async () => {
     throw new Error("Turn2 is unexpectedly empty.");
   }
 
-  expect(await turn2.actor()).toBe("Actor4");
-  expect(await turn2.prompt()).toBe("Prompt4");
+  expect(await turn2.actor()).toBe("Actor6");
+  expect(await turn2.prompt()).toBe("Prompt6");
 });

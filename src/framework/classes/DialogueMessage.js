@@ -40,6 +40,14 @@ export default class DialogueMessage implements DialogueMessageInterface {
     return [answerTo];
   }
 
+  condition(): ?ExpressionInterface {
+    const condition = this.messageScript.condition;
+
+    if (condition) {
+      return new Expression(condition, this.getExpressionContext());
+    }
+  }
+
   expression(): ?ExpressionInterface {
     const expression = this.messageScript.expression;
 
