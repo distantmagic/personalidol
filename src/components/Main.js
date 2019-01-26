@@ -62,7 +62,7 @@ export default class Main extends React.Component<Props, State> {
     return (
       <DialogueLoader
         dialogueResourceReference={
-          new DialogueResourceReference("/data/dialogues/umbrux-intro.yml")
+          new DialogueResourceReference("/data/dialogues/test-dialogue.yml")
         }
         dialogueInitiator={new Person("Laelaps")}
         expressionBus={this.state.expressionBus}
