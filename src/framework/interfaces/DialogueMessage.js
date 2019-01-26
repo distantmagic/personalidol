@@ -7,7 +7,7 @@ import type { Expression } from "./Expression";
 export interface DialogueMessage extends DialogueFragment {
   condition(): ?Expression;
 
-  key(): Promise<string>;
+  key(): string;
 
   answerTo(): Promise<Array<string>>;
 

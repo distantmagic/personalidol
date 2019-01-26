@@ -5,7 +5,7 @@ metadata:
 messages:
 
   start:
-    actor: Actor1
+    actor: Actor1 ({{ message.key }})
     prompt: Prompt1 ({{ message.actor }})
 
   m1:

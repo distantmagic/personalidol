@@ -35,7 +35,7 @@ export default class DialogueScript implements Contextual {
 
     for (let message of messages.toSet().toArray()) {
       if (await message.isAnswerTo(prompt)) {
-        ret = ret.set(await message.key(), message);
+        ret = ret.set(message.key(), message);
       }
     }
 

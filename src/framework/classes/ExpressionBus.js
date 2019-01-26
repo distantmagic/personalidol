@@ -1,8 +1,10 @@
 // @flow
 
 import Condition from "./Condition";
+import Expression from "./Expression";
 
-import type { Expression } from "../interfaces/Expression";
+import type { Expression as ExpressionInterface } from "../interfaces/Expression";
+import type { ExpressionContext } from "../interfaces/ExpressionContext";
 import type { ExpressionBus as ExpressionBusInterface } from "../interfaces/ExpressionBus";
 // import type { QueryBus } from "../interfaces/QueryBus";
 
@@ -12,14 +14,18 @@ import type { ExpressionBus as ExpressionBusInterface } from "../interfaces/Expr
  * bus can be used to execute queries produced by expressions.
  */
 export default class ExpressionBus implements ExpressionBusInterface {
-  enqueue(expression: Expression): Promise<string> {
+  enqueue(expression: ExpressionInterface): Promise<string> {
     return expression.execute();
   }
 
-  async condition(expression: Expression): Promise<boolean> {
+  async condition(expression: ExpressionInterface): Promise<boolean> {
     const result = await this.enqueue(expression);
     const condition = new Condition(result);
 
     return condition.interpret();
+  }
+
+  expression(expression: string, context: ExpressionContext): Promise<string> {
+    return this.enqueue(new Expression(expression, context));
   }
 }

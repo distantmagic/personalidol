@@ -31,8 +31,8 @@ it("switches dialogue turns", async () => {
   const person = new Person("TestActor");
   const turn1 = await dialogue.initiate(person);
 
-  expect(await turn1.actor()).toBe("Actor1");
-  expect(await turn1.prompt()).toBe("Prompt1 (Actor1)");
+  expect(await turn1.actor()).toBe("Actor1 (start)");
+  expect(await turn1.prompt()).toBe("Prompt1 (Actor1 (start))");
 
   const answers = await turn1.answers();
 

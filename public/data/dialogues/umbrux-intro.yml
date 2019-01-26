@@ -10,36 +10,46 @@ messages:
       Siema, {{ turn.initiator.name }}!
       Jam jest {{ message.actor }}!
 
-  f1:
+  a1:
     answer_to: start
     actor: "{{ message.key }}"
     pickable: not message.actor.ai()
     prompt: siema :D :D :D
 
-  f11:
+  a11:
     answer_to: start
     actor: "{{ message.key }}"
     pickable: true
-    prompt: SIEMAAAAAAAAAAA {{ dialogue.start.actor }}! :D :D :D
+    prompt: SIEMAAAAAAAAAAA {{ message.actor }}! :D :D :D
 
-  f2:
+  a2:
     answer_to: start
     actor: "{{ message.key }}"
     pickable: true
     prompt: Co tam???????????????? xD
 
-  f3:
+  a3:
     answer_to: start
     actor: "{{ message.key }}"
     pickable: true
     prompt: NARA :( :( :(
 
-  f4:
-    answer_to: f1
+  b1:
+    answer_to: a1
     actor: Volo
     prompt: Woooo!
 
-  f5:
-    answer_to: f1
+  c1:
+    answer_to: b1
+    actor: "{{ message.key }}"
+    prompt: Co?
+
+  c2:
+    answer_to: b1
+    actor: "{{ message.key }}"
+    prompt: Co?
+
+  a5:
+    answer_to: a1
     actor: Volo
     prompt: Hooooo!

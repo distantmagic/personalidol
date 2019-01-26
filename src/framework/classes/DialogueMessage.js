@@ -27,7 +27,10 @@ export default class DialogueMessage implements DialogueMessageInterface {
   }
 
   async actor(): Promise<string> {
-    return this.messageScript.actor;
+    return this.expressionBus.expression(
+      this.messageScript.actor,
+      this.getExpressionContext()
+    );
   }
 
   async answerTo(): Promise<Array<string>> {
@@ -62,19 +65,20 @@ export default class DialogueMessage implements DialogueMessageInterface {
     return this.messageScript;
   }
 
-  async key(): Promise<string> {
+  key(): string {
     return this._key;
   }
 
   async isAnswerTo(other: DialogueMessageInterface): Promise<boolean> {
     const parents = await this.answerTo();
 
-    return parents.includes(await other.key());
+    return parents.includes(other.key());
   }
 
   prompt(): Promise<string> {
-    return this.expressionBus.enqueue(
-      new Expression(this.messageScript.prompt, this.getExpressionContext())
+    return this.expressionBus.expression(
+      this.messageScript.prompt,
+      this.getExpressionContext()
     );
   }
 }
