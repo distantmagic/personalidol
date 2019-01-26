@@ -15,7 +15,8 @@ import type { Speaks } from "../framework/interfaces/Sentient/Speaks";
 type Props = {|
   dialogue: DialogueClass,
   dialogueInitiator: Identifiable & Speaks,
-  logger: Logger
+  logger: Logger,
+  onDialogueEnd: () => any
 |};
 
 type State = {|
@@ -54,14 +55,13 @@ export default class Dialogue extends React.Component<Props, State> {
 
     const nextDialogueTurn = await dialogueTurn.answer(message);
 
-    if (!nextDialogueTurn) {
-      // dialogue ended
-      console.log("dialogue ended");
+    if (nextDialogueTurn) {
+      this.setState({
+        dialogueTurn: nextDialogueTurn
+      });
+    } else {
+      this.props.onDialogueEnd();
     }
-
-    this.setState({
-      dialogueTurn: nextDialogueTurn
-    });
   }
 
   render() {
@@ -76,6 +76,7 @@ export default class Dialogue extends React.Component<Props, State> {
         dialogueTurn={dialogueTurn}
         logger={this.props.logger}
         onAnswerClick={this.onAnswerClick}
+        onDialogueEnd={this.props.onDialogueEnd}
       />
     );
   }

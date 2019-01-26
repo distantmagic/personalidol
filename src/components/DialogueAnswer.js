@@ -11,11 +11,13 @@ type Props = {|
 |};
 
 type State = {|
+  actor: null | string,
   prompt: null | string
 |};
 
 export default class DialogueAnswer extends React.Component<Props, State> {
   state = {
+    actor: null,
     prompt: null
   };
 
@@ -27,6 +29,7 @@ export default class DialogueAnswer extends React.Component<Props, State> {
 
   async componentDidMount(): Promise<void> {
     this.setState({
+      actor: await this.props.dialogueMessage.actor(),
       prompt: await this.props.dialogueMessage.prompt()
     });
   }
@@ -38,6 +41,13 @@ export default class DialogueAnswer extends React.Component<Props, State> {
   }
 
   render() {
-    return <button onClick={this.onAnswerClick}>{this.state.prompt}</button>;
+    return (
+      <button
+        className="dialogue__turn__answer__button"
+        onClick={this.onAnswerClick}
+      >
+        {this.state.actor} - {this.state.prompt}
+      </button>
+    );
   }
 }

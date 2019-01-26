@@ -1,55 +1,44 @@
 metadata:
 
-  start_message: start
+  start_message: m1
 
 messages:
 
-  start:
-    actor: Volo
+  m1:
+    actor: Narrator
+    answer_to: m1_a1_a1_a1
     prompt: >
-      Siema, {{ turn.initiator.name }}!
-      Jam jest {{ message.actor }}!
+      Spotykasz na stoku pustelnika, który ma przy sobie całą gamę roślin,
+      których nigdy wcześniej widziałeś na pustyni. Zaciekawiony rozpoczynasz z
+      nim rozmowę. Pustelnik oferuje zabrać cię ze sobą do swojej groty, żeby
+      pokazać swój wynalazek - miksturę leczniczą przygotowaną z pędów
+      tajemniczej rośliny. Pustelnik jest starszym człowiekiem i nie ma siły,
+      ani ochoty podróżować, ale chętnie podzieli się receptą z tobą -
+      napotkanym wędrowcem.
 
-  a1:
-    answer_to: start
-    actor: "{{ message.key }}"
-    pickable: not message.actor.ai()
-    prompt: siema :D :D :D
+  m1_a1:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1
+    prompt: >
+      Dobrodzieju, zanim opowiesz mi trochę o twoich cudach, pozwól zapytam o
+      te malunki w grocie. Masz też talent malarski, czy to nie twoje?
 
-  a11:
-    answer_to: start
-    actor: "{{ message.key }}"
-    pickable: true
-    prompt: SIEMAAAAAAAAAAA {{ message.actor }}! :D :D :D
+  m1_a2:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1
+    prompt: >
+      Dobrodzieju, nie traćmy czasu, pokaż proszę swoje wynalazki, zrobię 
+      wszystko, żeby pomóc.
 
-  a2:
-    answer_to: start
-    actor: "{{ message.key }}"
-    pickable: true
-    prompt: Co tam???????????????? xD
+  m1_a1_a1:
+    actor: Pustelnik
+    answer_to: m1_a1
+    prompt: >
+      Nie, to nie ja jestem ich autorem, choć od zawsze bardzo je lubiłem.
+      Zastałem je już, gdy pierwszy raz wszedłem do tej groty!
 
-  a3:
-    answer_to: start
-    actor: "{{ message.key }}"
-    pickable: true
-    prompt: NARA :( :( :(
-
-  b1:
-    answer_to: a1
-    actor: Volo
-    prompt: Woooo!
-
-  c1:
-    answer_to: b1
-    actor: "{{ message.key }}"
-    prompt: Co?
-
-  c2:
-    answer_to: b1
-    actor: "{{ message.key }}"
-    prompt: Co?
-
-  a5:
-    answer_to: a1
-    actor: Volo
-    prompt: Hooooo!
+  m1_a1_a1_a1:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1_a1_a1
+    prompt: >
+      Rozumiem, dziękuję.

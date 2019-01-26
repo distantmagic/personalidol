@@ -10,7 +10,7 @@ import type { BusClockTick as BusClockTickInterface } from "../interfaces/BusClo
 export default class BusClock implements BusClockInterface {
   delay: number;
 
-  constructor(delay: number = 1000) {
+  constructor(delay: number = 10) {
     this.delay = delay;
   }
 

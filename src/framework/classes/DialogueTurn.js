@@ -54,7 +54,7 @@ export default class DialogueTurn implements DialogueTurnInterface {
       this.context,
       this.script,
       followUp,
-      this.initiator
+      this._initiator
     );
   }
 
@@ -67,7 +67,15 @@ export default class DialogueTurn implements DialogueTurnInterface {
       const condition = answer.condition();
 
       if (!condition || (await this.expressionBus.condition(condition))) {
-        ret = ret.set(answer.key(), answer);
+        ret = ret.set(
+          answer.key(),
+          new DialogueMessage(
+            this.expressionBus,
+            this.getExpressionContext(),
+            answer.key(),
+            answer.getMessageScript()
+          )
+        );
       }
     }
 

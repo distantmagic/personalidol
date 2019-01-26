@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import autoBind from "auto-bind";
 
 import CancelToken from "../framework/classes/CancelToken";
 import Dialogue from "./Dialogue";
@@ -27,6 +28,7 @@ type Props = {|
 type State = {|
   cancelToken: CancelToken,
   dialogue: ?DialogueClass,
+  isDialogueEnded: boolean,
   isLoading: boolean
 |};
 
@@ -34,9 +36,12 @@ export default class DialogueLoader extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    autoBind.react(this);
+
     this.state = {
       cancelToken: new CancelToken(),
       dialogue: null,
+      isDialogueEnded: false,
       isLoading: true
     };
   }
@@ -64,6 +69,12 @@ export default class DialogueLoader extends React.Component<Props, State> {
     this.state.cancelToken.cancel();
   }
 
+  onDialogueEnd(): void {
+    this.setState({
+      isDialogueEnded: true
+    });
+  }
+
   render() {
     const dialogue = this.state.dialogue;
 
@@ -71,10 +82,15 @@ export default class DialogueLoader extends React.Component<Props, State> {
       return <div>Loading...</div>;
     }
 
+    if (this.state.isDialogueEnded) {
+      return <div className="dialogue__end">Koniec dialogu.</div>;
+    }
+
     return (
       <Dialogue
         dialogue={dialogue}
         dialogueInitiator={this.props.dialogueInitiator}
+        onDialogueEnd={this.onDialogueEnd}
         logger={this.props.logger}
       />
     );
