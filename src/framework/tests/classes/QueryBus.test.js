@@ -50,7 +50,8 @@ it("executes similar queries only once", async () => {
 
   queryBus.tick(new TimeoutTick(false));
 
-  await promises;
+  const results = await promises;
 
   expect(total.executed).toBe(4);
+  expect(results).toEqual([1, 1, 2, 3, 4, 4, 4]);
 });
