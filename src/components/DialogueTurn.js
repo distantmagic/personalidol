@@ -6,6 +6,7 @@ import * as React from "react";
 import autoBind from "auto-bind";
 
 import DialogueAnswer from "./DialogueAnswer";
+import DialogueSpinner from "./DialogueSpinner";
 
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { DialogueTurn as DialogueTurnInterface } from "../framework/interfaces/DialogueTurn";
@@ -57,7 +58,7 @@ export default class DialogueTurn extends React.Component<Props, State> {
     const answers = this.state.answers;
 
     if (!answers) {
-      return <div>Loading...</div>;
+      return <DialogueSpinner />;
     }
 
     return (

@@ -60,18 +60,16 @@ export default class Main extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
-        <DialogueLoader
-          dialogueResourceReference={
-            new DialogueResourceReference("/data/dialogues/umbrux-intro.yml")
-          }
-          dialogueInitiator={new Person("Laelaps")}
-          expressionBus={this.state.expressionBus}
-          expressionContext={this.state.expressionContext}
-          logger={this.props.logger}
-          queryBus={this.state.queryBus}
-        />
-      </div>
+      <DialogueLoader
+        dialogueResourceReference={
+          new DialogueResourceReference("/data/dialogues/umbrux-intro.yml")
+        }
+        dialogueInitiator={new Person("Laelaps")}
+        expressionBus={this.state.expressionBus}
+        expressionContext={this.state.expressionContext}
+        logger={this.props.logger}
+        queryBus={this.state.queryBus}
+      />
     );
   }
 }

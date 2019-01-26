@@ -313,11 +313,19 @@ body {
   line-height: 1.3;
   width: 100%; }
 
-.dialogue__end,
-.dialogue__turn {
-  padding: 2rem; }
+#root {
+  align-items: flex-start;
+  justify-content: center;
+  display: flex; }
 
-.dialogue__end {
+.dialogue__end,
+.dialogue__spinner,
+.dialogue__turn {
+  padding: 2rem;
+  max-width: 80ch; }
+
+.dialogue__end,
+.dialogue__spinner {
   text-align: center; }
 
 .dialogue__turn {
@@ -339,6 +347,7 @@ body {
   border: none;
   color: crimson;
   cursor: pointer;
+  line-height: 1.3;
   padding: 0.5rem 0.5rem;
   text-align: left;
   width: 100%; }

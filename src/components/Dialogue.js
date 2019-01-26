@@ -3,8 +3,9 @@
 import * as React from "react";
 import autoBind from "auto-bind";
 
-import { default as DialogueTurnComponent } from "./DialogueTurn";
+import DialogueSpinner from "./DialogueSpinner";
 import { default as DialogueClass } from "../framework/classes/Dialogue";
+import { default as DialogueTurnComponent } from "./DialogueTurn";
 
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { DialogueTurn } from "../framework/interfaces/DialogueTurn";
@@ -68,7 +69,7 @@ export default class Dialogue extends React.Component<Props, State> {
     const dialogueTurn = this.state.dialogueTurn;
 
     if (!dialogueTurn) {
-      return <div>Loading...</div>;
+      return <DialogueSpinner />;
     }
 
     return (

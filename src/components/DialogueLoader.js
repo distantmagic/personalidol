@@ -7,6 +7,7 @@ import CancelToken from "../framework/classes/CancelToken";
 import Dialogue from "./Dialogue";
 import DialogueQuery from "../framework/classes/Query/Dialogue";
 import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
+import DialogueSpinner from "./DialogueSpinner";
 import { default as DialogueClass } from "../framework/classes/Dialogue";
 
 import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
@@ -79,7 +80,7 @@ export default class DialogueLoader extends React.Component<Props, State> {
     const dialogue = this.state.dialogue;
 
     if (!dialogue) {
-      return <div>Loading...</div>;
+      return <DialogueSpinner />;
     }
 
     if (this.state.isDialogueEnded) {
