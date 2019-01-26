@@ -6,7 +6,7 @@ messages:
 
   m1:
     actor: Narrator
-    answer_to: m1_a1_a1_a1
+    answer_to: m1_a1_a1_a2
     prompt: >
       Spotykasz na stoku pustelnika, który ma przy sobie całą gamę roślin,
       których nigdy wcześniej widziałeś na pustyni. Zaciekawiony rozpoczynasz z
@@ -33,6 +33,20 @@ messages:
   m1_a1_a1_a1:
     actor: "{{ turn.initiator.name }}"
     answer_to: m1_a1_a1
+    prompt: >
+      Masz jakieś przypuszczenia skąd mogły się tu wziąć?
+
+  m1_a1_a1_a1_a1:
+    actor: Pustelnik
+    answer_to: m1_a1_a1_a1
+    prompt: >
+      Niestety, spróbuj może zapytać w wiosce o podnóża góry?
+
+  m1_a1_a1_a2:
+    actor: "{{ turn.initiator.name }}"
+    answer_to:
+      - m1_a1_a1
+      - m1_a1_a1_a1_a1
     prompt: >
       Rozumiem, dziękuję.
 

@@ -8,6 +8,6 @@ type State = {||};
 
 export default class DialogueSpinner extends React.Component<Props, State> {
   render() {
-    return <div className="dialogue__spinner">Loading...</div>;
+    return <div className="dialogue__spinner">Ładowanie...</div>;
   }
 }
