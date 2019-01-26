@@ -23,13 +23,6 @@ messages:
       Dobrodzieju, zanim opowiesz mi trochę o twoich cudach, pozwól zapytam o
       te malunki w grocie. Masz też talent malarski, czy to nie twoje?
 
-  m1_a2:
-    actor: "{{ turn.initiator.name }}"
-    answer_to: m1
-    prompt: >
-      Dobrodzieju, nie traćmy czasu, pokaż proszę swoje wynalazki, zrobię 
-      wszystko, żeby pomóc.
-
   m1_a1_a1:
     actor: Pustelnik
     answer_to: m1_a1
@@ -42,3 +35,28 @@ messages:
     answer_to: m1_a1_a1
     prompt: >
       Rozumiem, dziękuję.
+
+  m1_a2:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1
+    prompt: >
+      Dobrodzieju, nie traćmy czasu, pokaż proszę swoje wynalazki, zrobię 
+      wszystko, żeby pomóc.
+
+  m1_a2_a1:
+    actor: Pustelnik
+    answer_to: m1_a2
+    prompt: >
+      Twoje słowa to miód na serce. Chodź za mną, wszystko ci pokażę.
+
+  m1_a3:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1
+    prompt: >
+      Wybacz dobrodzieju, ale muszę pilnie odejść. Wrócę do ciebie później.
+
+  m1_a3_a1:
+    actor: Pustelnik
+    answer_to: m1_a3
+    prompt: >
+      Szerokiej drogi!

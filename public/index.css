@@ -322,7 +322,8 @@ body {
 .dialogue__spinner,
 .dialogue__turn {
   padding: 2rem;
-  max-width: 80ch; }
+  max-width: 80ch;
+  width: 100%; }
 
 .dialogue__end,
 .dialogue__spinner {
@@ -333,6 +334,14 @@ body {
   grid-row-gap: 1rem;
   grid-template-areas: "a b" "c c";
   grid-template-columns: 10ch 1fr; }
+
+.dialogue__turn__end {
+  background-color: transparent;
+  border: 1px solid crimson;
+  color: inherit;
+  cursor: pointer;
+  grid-area: c;
+  padding: 0.5rem; }
 
 .dialogue__turn__actor {
   color: crimson;
