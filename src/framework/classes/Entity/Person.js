@@ -1,12 +1,12 @@
 // @flow
 
 import Entity from "../Entity";
-import ForgetMemorizable from "../Command/ForgetMemorizable";
-import HearMessage from "../Command/HearMessage";
-import Knows from "../Query/Knows";
-import LearnMemorizable from "../Command/LearnMemorizable";
-import TellMessage from "../Command/TellMessage";
-import { default as AimCommand } from "../Command/Aim";
+// import ForgetMemorizable from "../Command/ForgetMemorizable";
+// import HearMessage from "../Command/HearMessage";
+// import Knows from "../Query/Knows";
+// import LearnMemorizable from "../Command/LearnMemorizable";
+// import TellMessage from "../Command/TellMessage";
+// import { default as AimCommand } from "../Command/Aim";
 
 import type { Aimable } from "../../interfaces/Memorizable/Aimable";
 import type { Aims } from "../../interfaces/Sentient/Aims";
@@ -23,6 +23,14 @@ import type { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
 export default class Person extends Entity
   implements Aims, Hears, Identifiable, Memorizes, Sees, Speaks {
+  _name: string;
+
+  constructor(name: string) {
+    super();
+
+    this._name = name;
+  }
+
   async aim(aimable: Aimable): Promise<void> {
     // this.commandBus.source(new AimCommand(this, aimable));
   }
@@ -50,6 +58,10 @@ export default class Person extends Entity
     // uzaleznione od jakosci postepowania
     // dobre - prawdziwa intuicja
     // zle - nieprawdziwe przeczucie, szalenstwo, paranoja
+  }
+
+  async name(): Promise<string> {
+    return this._name;
   }
 
   async learn(memorizable: Memorizable): Promise<void> {

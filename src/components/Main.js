@@ -4,29 +4,31 @@ import * as React from "react";
 
 import BusClock from "../framework/classes/BusClock";
 import CancelToken from "../framework/classes/CancelToken";
+import DialogueLoader from "./DialogueLoader";
+import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
-import Logger from "../framework/classes/Logger";
+import Person from "../framework/classes/Entity/Person";
 import QueryBus from "../framework/classes/QueryBus";
 import QueryBusController from "../framework/classes/QueryBusController";
 
+import type { Logger } from "../framework/interfaces/Logger";
 import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
 
-type Props = {};
+type Props = {|
+  logger: Logger
+|};
 
-type State = {
+type State = {|
   cancelToken: CancelToken,
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
   error: ?Error,
-  logger: Logger,
   queryBus: QueryBusInterface,
   queryBusController: QueryBusController
-};
+|};
 
 export default class Main extends React.Component<Props, State> {
-  queryBusInterval: IntervalID;
-
   constructor(props: Props) {
     super(props);
 
@@ -37,27 +39,39 @@ export default class Main extends React.Component<Props, State> {
       expressionBus: new ExpressionBus(),
       expressionContext: new ExpressionContext(),
       error: null,
-      logger: new Logger(),
       queryBus: queryBus,
       queryBusController: new QueryBusController(new BusClock(), queryBus)
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: Object) {
+  componentDidCatch(error: Error, errorInfo: Object): void {
     this.setState({
       error: error
     });
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.state.queryBusController.interval(this.state.cancelToken);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.state.cancelToken.cancel();
   }
 
   render() {
-    return <div />;
+    return (
+      <div>
+        <DialogueLoader
+          dialogueResourceReference={
+            new DialogueResourceReference("/data/dialogues/umbrux-intro.yml")
+          }
+          dialogueInitiator={new Person("Laelaps")}
+          expressionBus={this.state.expressionBus}
+          expressionContext={this.state.expressionContext}
+          logger={this.props.logger}
+          queryBus={this.state.queryBus}
+        />
+      </div>
+    );
   }
 }

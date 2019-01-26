@@ -10,6 +10,7 @@ import "core-js/es6/object";
 import React from "react";
 import ReactDOM from "react-dom";
 
+import Logger from "./framework/classes/Logger";
 import Main from "./components/Main";
 
 // Sentry.init({
@@ -27,5 +28,5 @@ import Main from "./components/Main";
 const rootElement = document.getElementById("root");
 
 if (rootElement) {
-  ReactDOM.render(<Main />, rootElement);
+  ReactDOM.render(<Main logger={new Logger()} />, rootElement);
 }

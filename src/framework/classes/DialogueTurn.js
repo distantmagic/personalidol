@@ -2,6 +2,7 @@
 
 import { Map } from "immutable";
 
+import DialogueMessage from "./DialogueMessage";
 import DialogueScript from "./DialogueScript";
 
 import type { DialogueMessage as DialogueMessageInterface } from "../interfaces/DialogueMessage";
@@ -9,13 +10,14 @@ import type { DialogueMessages } from "../types/DialogueMessages";
 import type { DialogueTurn as DialogueTurnInterface } from "../interfaces/DialogueTurn";
 import type { ExpressionBus } from "../interfaces/ExpressionBus";
 import type { ExpressionContext } from "../interfaces/ExpressionContext";
+import type { Identifiable } from "../interfaces/Identifiable";
 import type { Speaks } from "../interfaces/Sentient/Speaks";
 
 export default class DialogueTurn implements DialogueTurnInterface {
+  +_initiator: Identifiable & Speaks;
   +context: ExpressionContext;
-  +expressionBus: ExpressionBus;
-  +initiator: Speaks;
   +currentMessage: DialogueMessageInterface;
+  +expressionBus: ExpressionBus;
   +script: DialogueScript;
 
   constructor(
@@ -23,17 +25,19 @@ export default class DialogueTurn implements DialogueTurnInterface {
     context: ExpressionContext,
     script: DialogueScript,
     currentMessage: DialogueMessageInterface,
-    initiator: Speaks
+    initiator: Identifiable & Speaks
   ) {
+    this._initiator = initiator;
     this.context = context;
     this.currentMessage = currentMessage;
     this.expressionBus = expressionBus;
-    this.initiator = initiator;
     this.script = script;
   }
 
-  actor(): Promise<string> {
-    return this.currentMessage.actor();
+  async actor(): Promise<string> {
+    const currentMessage = await this.getCurrentMessage();
+
+    return currentMessage.actor();
   }
 
   async answer(
@@ -55,7 +59,8 @@ export default class DialogueTurn implements DialogueTurnInterface {
   }
 
   async answers(): Promise<DialogueMessages> {
-    const answers = await this.script.getAnswers(this.currentMessage);
+    const currentMessage = await this.getCurrentMessage();
+    const answers = await this.script.getAnswers(currentMessage);
     let ret = Map<string, DialogueMessageInterface>();
 
     for (let answer of answers.toSet().toArray()) {
@@ -77,11 +82,26 @@ export default class DialogueTurn implements DialogueTurnInterface {
     return answers.first();
   }
 
+  async getCurrentMessage(): Promise<DialogueMessageInterface> {
+    return new DialogueMessage(
+      this.expressionBus,
+      this.getExpressionContext(),
+      await this.currentMessage.key(),
+      this.currentMessage.getMessageScript()
+    );
+  }
+
+  async initiator(): Promise<Identifiable & Speaks> {
+    return this._initiator;
+  }
+
   getExpressionContext(): ExpressionContext {
     return this.context.set("turn", this);
   }
 
-  prompt(): Promise<string> {
-    return this.currentMessage.prompt();
+  async prompt(): Promise<string> {
+    const currentMessage = await this.getCurrentMessage();
+
+    return currentMessage.prompt();
   }
 }

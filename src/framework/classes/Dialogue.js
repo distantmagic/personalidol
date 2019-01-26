@@ -6,6 +6,7 @@ import DialogueTurn from "./DialogueTurn";
 import type { Contextual } from "../interfaces/Contextual";
 import type { ExpressionBus } from "../interfaces/ExpressionBus";
 import type { ExpressionContext } from "../interfaces/ExpressionContext";
+import type { Identifiable } from "../interfaces/Identifiable";
 import type { Speaks } from "../interfaces/Sentient/Speaks";
 
 export default class Dialogue implements Contextual {
@@ -27,7 +28,7 @@ export default class Dialogue implements Contextual {
     return this.context.set("dialogue", this);
   }
 
-  async initiate(initiator: Speaks): Promise<DialogueTurn> {
+  async initiate(initiator: Identifiable & Speaks): Promise<DialogueTurn> {
     return new DialogueTurn(
       this.expressionBus,
       this.getExpressionContext(),

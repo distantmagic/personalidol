@@ -2,6 +2,9 @@
 
 import EventEmitter from "eventemitter3";
 
+import Cancelled from "./Exception/Cancelled";
+
+// import type { Cancelled as CancelledInterface } from "../interfaces/Exception/Cancelled";
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 import type { CancelTokenCallback } from "../types/CancelTokenCallback";
 
@@ -25,9 +28,11 @@ export default class CancelToken implements CancelTokenInterface {
 
   onCancelled(callback: CancelTokenCallback): void {
     if (this._isCancelled) {
-      callback();
+      callback(new Cancelled("Token was already cancelled."));
     } else {
-      this.eventEmitter.once("cancel", callback);
+      this.eventEmitter.once("cancel", function() {
+        callback(new Cancelled("Token was cancelled."));
+      });
     }
   }
 }

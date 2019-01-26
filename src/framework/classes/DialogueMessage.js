@@ -5,20 +5,24 @@ import Expression from "./Expression";
 import type { DialogueMessage as DialogueMessageInterface } from "../interfaces/DialogueMessage";
 import type { DialogueScriptMessage } from "../types/DialogueScriptMessage";
 import type { Expression as ExpressionInterface } from "../interfaces/Expression";
+import type { ExpressionBus } from "../interfaces/ExpressionBus";
 import type { ExpressionContext } from "../interfaces/ExpressionContext";
 
 export default class DialogueMessage implements DialogueMessageInterface {
   +_key: string;
   +context: ExpressionContext;
+  +expressionBus: ExpressionBus;
   +messageScript: DialogueScriptMessage;
 
   constructor(
+    expressionBus: ExpressionBus,
     context: ExpressionContext,
     key: string,
     messageScript: DialogueScriptMessage
   ) {
     this._key = key;
     this.context = context;
+    this.expressionBus = expressionBus;
     this.messageScript = messageScript;
   }
 
@@ -54,6 +58,10 @@ export default class DialogueMessage implements DialogueMessageInterface {
     return this.context.set("message", this);
   }
 
+  getMessageScript(): DialogueScriptMessage {
+    return this.messageScript;
+  }
+
   async key(): Promise<string> {
     return this._key;
   }
@@ -64,7 +72,9 @@ export default class DialogueMessage implements DialogueMessageInterface {
     return parents.includes(await other.key());
   }
 
-  async prompt(): Promise<string> {
-    return this.messageScript.prompt;
+  prompt(): Promise<string> {
+    return this.expressionBus.enqueue(
+      new Expression(this.messageScript.prompt, this.getExpressionContext())
+    );
   }
 }

@@ -2,7 +2,7 @@
 
 import Expression from "../../classes/Expression";
 import ExpressionContext from "../../classes/ExpressionContext";
-import UnexpectedOverride from "../../classes/Exception/Collection/UnexpectedOverride";
+import UnexpectedOverride from "../../classes/Exception/UnexpectedOverride";
 
 it("is immutable", () => {
   const context = new ExpressionContext();

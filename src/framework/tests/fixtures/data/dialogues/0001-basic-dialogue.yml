@@ -6,7 +6,7 @@ messages:
 
   start:
     actor: Actor1
-    prompt: Prompt1
+    prompt: Prompt1 ({{ message.actor }})
 
   m1:
     actor: Actor2

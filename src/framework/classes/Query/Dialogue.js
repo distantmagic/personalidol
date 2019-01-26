@@ -12,9 +12,9 @@ import type { ExpressionContext } from "../../interfaces/ExpressionContext";
 import type { Query } from "../../interfaces/Query";
 
 export default class Dialogue implements Query<DialogueModel> {
-  context: ExpressionContext;
-  expressionBus: ExpressionBus;
-  ref: DialogueResourceReference;
+  +context: ExpressionContext;
+  +expressionBus: ExpressionBus;
+  +ref: DialogueResourceReference;
 
   constructor(
     expressionBus: ExpressionBus,
@@ -33,7 +33,7 @@ export default class Dialogue implements Query<DialogueModel> {
     return new DialogueModel(
       this.expressionBus,
       this.context,
-      new DialogueScript(this.context, YAML.parse(dialogue))
+      new DialogueScript(this.expressionBus, this.context, YAML.parse(dialogue))
     );
   }
 

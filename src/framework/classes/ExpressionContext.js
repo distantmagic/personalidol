@@ -2,11 +2,12 @@
 
 import { Map } from "immutable";
 
-import UnexpectedOverride from "./Exception/Collection/UnexpectedOverride";
+import UnexpectedOverride from "./Exception/UnexpectedOverride";
+
+import type { TwigRendererData } from "twig";
 
 import type { ExpressionContext as ExpressionContextInterface } from "../interfaces/ExpressionContext";
 import type { ExpressionContextInput } from "../types/ExpressionContextInput";
-import type { ExpressionData } from "../types/ExpressionData";
 
 export default class ExpressionContext implements ExpressionContextInterface {
   +map: Map<string, any>;
@@ -29,7 +30,7 @@ export default class ExpressionContext implements ExpressionContextInterface {
     return new ExpressionContext(this.map.set(key, value));
   }
 
-  toObject(): ExpressionData {
+  toObject(): TwigRendererData {
     return this.map.toObject();
   }
 }

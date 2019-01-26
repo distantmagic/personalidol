@@ -2,6 +2,7 @@
 
 import * as fixtures from "../fixtures";
 import DialogueScript from "../../classes/DialogueScript";
+import ExpressionBus from "../../classes/ExpressionBus";
 import ExpressionContext from "../../classes/ExpressionContext";
 
 const testContext = {};
@@ -13,9 +14,9 @@ beforeEach(async () => {
 });
 
 it("loads dialogue messages", async () => {
-  const context = new ExpressionContext();
   const dialogueScript = new DialogueScript(
-    context,
+    new ExpressionBus(),
+    new ExpressionContext(),
     testContext.dialogueScript
   );
   const messages = await dialogueScript.getMessages();

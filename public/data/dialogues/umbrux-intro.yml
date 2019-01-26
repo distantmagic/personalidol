@@ -7,7 +7,7 @@ messages:
   start:
     actor: Volo
     prompt: >
-      Siema, {{ dialogue.initiator }}!
+      Siema, {{ turn.initiator.name }}!
       Jam jest {{ message.actor }}!
 
   f1:

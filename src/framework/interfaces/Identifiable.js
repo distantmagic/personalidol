@@ -1,3 +1,5 @@
 // @flow
 
-export interface Identifiable {}
+export interface Identifiable {
+  name(): Promise<string>;
+}
