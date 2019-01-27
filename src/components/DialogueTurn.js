@@ -62,24 +62,26 @@ export default class DialogueTurn extends React.Component<Props, State> {
     }
 
     return (
-      <div className="dialogue__turn">
-        <div className="dialogue__turn__actor">{this.state.actor}</div>
-        <div className="dialogue__turn__prompt">{this.state.prompt}</div>
+      <div className="dd__dialogue__turn ">
+        <div className="dd__dialogue__turn__prompt">
+          <div className="dd__dialogue__turn__actor">{this.state.actor}</div>
+          {this.state.prompt}
+        </div>
         {answers.isEmpty() ? (
           <button
-            className="dialogue__turn__end"
+            className="dd__dialogue__turn__end dd__button"
             onClick={this.onDialogueEndClick}
           >
             Zakończ dialog
           </button>
         ) : (
-          <ol className="dialogue__turn__answers">
+          <ol className="dd__dialogue__turn__answers">
             {answers
               .toSet()
               .toArray()
               .map(dialogueMessage => (
                 <li
-                  className="dialogue__turn__answer"
+                  className="dd__dialogue__turn__answer"
                   key={dialogueMessage.key()}
                 >
                   <DialogueAnswer

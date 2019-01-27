@@ -43,7 +43,7 @@ export default class DialogueAnswer extends React.Component<Props, State> {
   render() {
     return (
       <button
-        className="dialogue__turn__answer__button"
+        className="dd__dialogue__turn__answer__button"
         onClick={this.onAnswerClick}
       >
         {this.state.actor} - {this.state.prompt}

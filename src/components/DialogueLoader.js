@@ -84,7 +84,7 @@ export default class DialogueLoader extends React.Component<Props, State> {
     }
 
     if (this.state.isDialogueEnded) {
-      return <div className="dialogue__end">Koniec dialogu.</div>;
+      return <div className="dd__dialogue__end">Koniec dialogu.</div>;
     }
 
     return (

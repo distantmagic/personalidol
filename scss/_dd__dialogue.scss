@@ -1,0 +1,63 @@
+.dd__dialogue {
+  justify-content: center;
+  display: flex;
+}
+
+.dd__dialogue__end,
+.dd__dialogue__spinner,
+.dd__dialogue__turn {
+  height: 100%;
+  // max-width: 80ch;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.dd__dialogue__turn {
+  align-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+
+.dd__dialogue__turn__actor {
+  color: crimson;
+  display: inline;
+  // float: left;
+  font-weight: bold;
+  margin-left: -1rem;
+
+  &:after {
+    content: "-";
+    padding: 0 0.5ch;
+  }
+}
+
+.dd__dialogue__turn__answer__button {
+  background-color: transparent;
+  border: none;
+  color: crimson;
+  cursor: pointer;
+  line-height: 1.3;
+  padding: 0.1rem 0.5rem;
+  text-align: left;
+  width: 100%;
+
+  &:focus,
+  &:hover {
+    color: lighten(crimson, 20%);
+    outline: none;
+  }
+}
+
+.dd__dialogue__turn__answers {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0 2rem;
+}
+
+.dd__dialogue__turn__prompt {
+  padding-bottom: 1rem;
+  padding-left: 1.5rem;
+}

@@ -60,16 +60,29 @@ export default class Main extends React.Component<Props, State> {
 
   render() {
     return (
-      <DialogueLoader
-        dialogueResourceReference={
-          new DialogueResourceReference("/data/dialogues/test-dialogue.yml")
-        }
-        dialogueInitiator={new Person("Laelaps")}
-        expressionBus={this.state.expressionBus}
-        expressionContext={this.state.expressionContext}
-        logger={this.props.logger}
-        queryBus={this.state.queryBus}
-      />
+      <div
+        className="dd__container dd__hud"
+        style={{
+          "--dd-hud-dialogue-height": "160px"
+        }}
+      >
+        <div className="dd__aside dd__aside--hud" />
+        <div className="dd__dialogue dd__dialogue--hud">
+          <DialogueLoader
+            dialogueResourceReference={
+              new DialogueResourceReference("/data/dialogues/umbrux-intro.yml")
+            }
+            dialogueInitiator={new Person("Laelaps")}
+            expressionBus={this.state.expressionBus}
+            expressionContext={this.state.expressionContext}
+            logger={this.props.logger}
+            queryBus={this.state.queryBus}
+          />
+        </div>
+        <div className="dd__scene dd__scene--hud" />
+        <div className="dd__statusbar dd__statusbar--hud" />
+        <div className="dd__toolbar dd__toolbar--hud" />
+      </div>
     );
   }
 }
