@@ -44,6 +44,14 @@ $dd-hud-toolbar-height: 80px;
 }
 
 .dd__aside.dd__aside--hud {
+  background-image:
+    url("/assets/image-rise-and-fall.png"),
+    url("/assets/texture-mineshaft-marble-512.png")
+  ;
+  background-blend-mode: multiply;
+  background-position: 30% 50%, center;
+  background-repeat: no-repeat, repeat;
+  background-size: cover, auto;
   grid-area: aside;
 }
 
