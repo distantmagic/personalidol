@@ -495,8 +495,8 @@ button {
 
 .dd__statusbar {
   align-items: center;
-  justify-content: center;
-  display: flex; }
+  display: flex;
+  padding-left: 8px; }
 
 .dd__toolbar {
   display: grid;
