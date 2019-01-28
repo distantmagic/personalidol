@@ -8,69 +8,22 @@ messages:
     actor: Narrator
     answer_to: m1_a1_a1_a2
     prompt: >
-      Spotykasz na stoku pustelnika, który ma przy sobie całą gamę roślin,
-      których nigdy wcześniej widziałeś na pustyni. Zaciekawiony rozpoczynasz z
-      nim rozmowę. Pustelnik oferuje zabrać cię ze sobą do swojej groty, żeby
-      pokazać swój wynalazek - miksturę leczniczą przygotowaną z pędów
-      tajemniczej rośliny. Pustelnik jest starszym człowiekiem i nie ma siły,
-      ani ochoty podróżować, ale chętnie podzieli się receptą z tobą -
-      napotkanym wędrowcem.
+      [Kazimierz Malewicz][https://wikipedia/kmalewicz] czczony jak wielki prorok. Jego obraz - "Czarny
+      Kwadrat" został sztandarem i flagą sił Fałszywego Mesjasza.
 
-  m1_a1:
-    actor: "{{ turn.initiator.name }}"
-    answer_to: m1
-    prompt: >
-      Dobrodzieju, zanim opowiesz mi trochę o twoich cudach, pozwól zapytam o
-      te malunki w grocie. Masz też talent malarski, czy to nie twoje?
-
-  m1_a1_a1:
-    actor: Pustelnik
-    answer_to: m1_a1
-    prompt: >
-      Nie, to nie ja jestem ich autorem, choć od zawsze bardzo je lubiłem.
-      Zastałem je już, gdy pierwszy raz wszedłem do tej groty!
-
-  m1_a1_a1_a1:
-    actor: "{{ turn.initiator.name }}"
-    answer_to: m1_a1_a1
-    prompt: >
-      Masz jakieś przypuszczenia skąd mogły się tu wziąć?
-
-  m1_a1_a1_a1_a1:
-    actor: Pustelnik
-    answer_to: m1_a1_a1_a1
-    prompt: >
-      Niestety, spróbuj może zapytać w wiosce o podnóża góry?
-
-  m1_a1_a1_a2:
-    actor: "{{ turn.initiator.name }}"
-    answer_to:
-      - m1_a1_a1
-      - m1_a1_a1_a1_a1
-    prompt: >
-      Rozumiem, dziękuję.
-
-  m1_a2:
-    actor: "{{ turn.initiator.name }}"
-    answer_to: m1
-    prompt: >
-      Dobrodzieju, nie traćmy czasu, pokaż proszę swoje wynalazki, zrobię 
-      wszystko, żeby pomóc.
-
-  m1_a2_a1:
-    actor: Pustelnik
-    answer_to: m1_a2
-    prompt: >
-      Twoje słowa to miód na serce. Chodź za mną, wszystko ci pokażę.
-
-  m1_a3:
-    actor: "{{ turn.initiator.name }}"
-    answer_to: m1
-    prompt: >
-      Wybacz dobrodzieju, ale muszę pilnie odejść. Wrócę do ciebie później.
-
-  m1_a3_a1:
-    actor: Pustelnik
-    answer_to: m1_a3
-    prompt: >
-      Szerokiej drogi!
+      Irure dolor cillum dolore excepteur incididunt dolor enim dolor eiusmod
+      sit enim sed commodo elit in ut fugiat officia dolor dolore sunt dolore
+      deserunt ut dolor anim consectetur cupidatat velit velit non enim fugiat
+      voluptate ut pariatur consequat qui dolor magna nostrud consectetur duis
+      labore culpa ut dolore excepteur mollit velit in consectetur officia
+      fugiat esse dolor dolore sunt id anim reprehenderit dolor dolor aute
+      labore ut deserunt voluptate ullamco aute eu sit tempor non sint eiusmod
+      enim esse nisi culpa ut adipisicing tempor veniam sit adipisicing nostrud
+      consequat voluptate exercitation laborum ut esse labore consequat duis
+      exercitation ut minim qui sit excepteur velit exercitation et in
+      voluptate anim do dolore culpa ut consectetur in pariatur laboris non
+      commodo velit anim dolore ex eiusmod anim enim pariatur nostrud aliqua
+      fugiat anim aliqua ea ullamco aute reprehenderit ullamco quis anim non
+      pariatur ad sed veniam pariatur proident dolore aute eiusmod do
+      consectetur laboris ea irure consequat dolor amet magna consequat dolor
+      sed sint qui officia eu cillum ut ut consectetur aliqua adipisicing.

@@ -81,8 +81,15 @@ export default class Dialogue extends React.Component<Props, State> {
           onDialogueEnd={this.props.onDialogueEnd}
         />
         <div className="dd__dialogue__toolbar">
-          <button className="dd__button dd__button--dialogue__toolbar" />
-          <button className="dd__button dd__button--dialogue__toolbar" />
+          <button className="dd__button dd__button--dialogue__toolbar">
+            Przełącz historię
+          </button>
+          <button className="dd__button dd__button--dialogue__toolbar">
+            Powiększ
+          </button>
+          <button className="dd__button dd__button--dialogue__toolbar">
+            Zmniejsz
+          </button>
         </div>
       </React.Fragment>
     );

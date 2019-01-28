@@ -1,0 +1,76 @@
+metadata:
+
+  start_message: m1
+
+messages:
+
+  m1:
+    actor: Narrator
+    answer_to: m1_a1_a1_a2
+    prompt: >
+      Spotykasz na stoku pustelnika, który ma przy sobie całą gamę roślin,
+      których nigdy wcześniej widziałeś na pustyni. Zaciekawiony rozpoczynasz z
+      nim rozmowę. Pustelnik oferuje zabrać cię ze sobą do swojej groty, żeby
+      pokazać swój wynalazek - miksturę leczniczą przygotowaną z pędów
+      tajemniczej rośliny. Pustelnik jest starszym człowiekiem i nie ma siły,
+      ani ochoty podróżować, ale chętnie podzieli się receptą z tobą -
+      napotkanym wędrowcem.
+
+  m1_a1:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1
+    prompt: >
+      Dobrodzieju, zanim opowiesz mi trochę o twoich cudach, pozwól zapytam o
+      te malunki w grocie. Masz też talent malarski, czy to nie twoje?
+
+  m1_a1_a1:
+    actor: Pustelnik
+    answer_to: m1_a1
+    prompt: >
+      Nie, to nie ja jestem ich autorem, choć od zawsze bardzo je lubiłem.
+      Zastałem je już, gdy pierwszy raz wszedłem do tej groty!
+
+  m1_a1_a1_a1:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1_a1_a1
+    prompt: >
+      Masz jakieś przypuszczenia skąd mogły się tu wziąć?
+
+  m1_a1_a1_a1_a1:
+    actor: Pustelnik
+    answer_to: m1_a1_a1_a1
+    prompt: >
+      Niestety, spróbuj może zapytać w wiosce o podnóża góry?
+
+  m1_a1_a1_a2:
+    actor: "{{ turn.initiator.name }}"
+    answer_to:
+      - m1_a1_a1
+      - m1_a1_a1_a1_a1
+    prompt: >
+      Rozumiem, dziękuję.
+
+  m1_a2:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1
+    prompt: >
+      Dobrodzieju, nie traćmy czasu, pokaż proszę swoje wynalazki, zrobię 
+      wszystko, żeby pomóc.
+
+  m1_a2_a1:
+    actor: Pustelnik
+    answer_to: m1_a2
+    prompt: >
+      Twoje słowa to miód na serce. Chodź za mną, wszystko ci pokażę.
+
+  m1_a3:
+    actor: "{{ turn.initiator.name }}"
+    answer_to: m1
+    prompt: >
+      Wybacz dobrodzieju, ale muszę pilnie odejść. Wrócę do ciebie później.
+
+  m1_a3_a1:
+    actor: Pustelnik
+    answer_to: m1_a3
+    prompt: >
+      Szerokiej drogi!
