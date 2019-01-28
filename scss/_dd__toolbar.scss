@@ -1,0 +1,23 @@
+$dd-hud-toolbar-button-side: $dd-hud-toolbar-height - 16px;
+
+.dd__toolbar {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-columns: repeat(
+    var(--dd-toolbar-elements),
+    $dd-hud-toolbar-button-side
+  );
+  overflow-x: scroll;
+  padding: 5px;
+  white-space: nowrap;
+}
+
+.dd__button.dd__button--toolbar {
+  height: $dd-hud-toolbar-button-side;
+  // padding: 0;
+  width: $dd-hud-toolbar-button-side;
+
+  &:before {
+    background-size: cover;
+  }
+}

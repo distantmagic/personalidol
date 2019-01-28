@@ -1,6 +1,26 @@
+.dd__button.dd__button--dialogue__toolbar {
+  height: 27px;
+  width: 27px;
+}
+
+.dd__button.dd__button--dialogue__toolbar
+  + .dd__button.dd__button--dialogue__toolbar {
+  margin-top: 3px;
+}
+
+.dd__button.dd__button--dialogue-turn-end {
+  left: 0;
+  bottom: 2px;
+  min-height: 57px;
+  position: absolute;
+  width: 100%;
+}
+
 .dd__dialogue {
-  justify-content: center;
-  display: flex;
+  // justify-content: center;
+  display: grid;
+  grid-template-areas: "turn toolbar";
+  grid-template-columns: 1fr 36px;
 }
 
 .dd__dialogue__end,
@@ -12,12 +32,31 @@
   width: 100%;
 }
 
+.dd__dialogue__toolbar {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 6px 3px;
+}
+
 .dd__dialogue__turn {
   align-content: flex-start;
   display: flex;
   flex-direction: column;
+  grid-area: turn;
+  height: 70px;
   justify-content: space-between;
   overflow-y: auto;
+  position: relative;
+}
+
+.dd__hud.dd__hud--dialogue-huge .dd__dialogue__turn.dd__dialogue__turn {
+  height: 590px;
+}
+
+.dd__hud.dd__hud--dialogue-medium .dd__dialogue__turn.dd__dialogue__turn {
+  height: 290px;
 }
 
 .dd__dialogue__turn__actor {

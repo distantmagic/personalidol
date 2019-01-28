@@ -62,14 +62,14 @@ export default class DialogueTurn extends React.Component<Props, State> {
     }
 
     return (
-      <div className="dd__dialogue__turn ">
+      <div className="dd__dialogue__turn">
         <div className="dd__dialogue__turn__prompt">
           <div className="dd__dialogue__turn__actor">{this.state.actor}</div>
           {this.state.prompt}
         </div>
         {answers.isEmpty() ? (
           <button
-            className="dd__dialogue__turn__end dd__button"
+            className="dd__button dd__button--dialogue-turn-end"
             onClick={this.onDialogueEndClick}
           >
             Zakończ dialog

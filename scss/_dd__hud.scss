@@ -1,4 +1,8 @@
-$baseline: 1.6;
+$dd-hud-toolbar-height: 80px;
+
+@import "dd__dialogue";
+@import "dd__statusbar";
+@import "dd__toolbar";
 
 .dd__hud {
   display: grid;
@@ -7,8 +11,16 @@ $baseline: 1.6;
     "dialogue   aside"
     "toolbar    aside"
     "statusbar  statusbar";
-  grid-template-columns: 1fr 300px;
-  grid-template-rows: 1fr 300px 80px 30px;
+  grid-template-columns: calc(100vw - 300px) 300px;
+  grid-template-rows: 1fr 80px $dd-hud-toolbar-height 50px;
+}
+
+.dd__hud.dd__hud--dialogue-medium {
+  grid-template-rows: 1fr 300px $dd-hud-toolbar-height 50px;
+}
+
+.dd__hud.dd__hud--dialogue-huge {
+  grid-template-rows: 1fr 600px $dd-hud-toolbar-height 50px;
 }
 
 .dd__aside.dd__aside--hud,
@@ -25,7 +37,7 @@ $baseline: 1.6;
 .dd__statusbar.dd__statusbar--hud,
 .dd__toolbar.dd__toolbar--hud {
   background-image: url("/assets/texture-mineshaft-marble-512.png");
-  border-color: rgba(55, 55, 55, 0.3);
+  border-color: rgba(55, 55, 55, 0.4);
   border-radius: 4px;
   border-style: outset;
   border-width: 3px;
@@ -36,7 +48,6 @@ $baseline: 1.6;
 }
 
 .dd__dialogue.dd__dialogue--hud {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
   grid-area: dialogue;
 }
 
@@ -46,16 +57,17 @@ $baseline: 1.6;
 }
 
 .dd__scene.dd__scene--hud {
-  background-color: black;
   grid-area: scene;
 }
 
 .dd__statusbar.dd__statusbar--hud {
-  background-color: lighten(black, 20%);
+  // background-image: url("/assets/texture-cod-gray-marble-512.png");
+  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  // background-image: url("/assets/texture-blood-marble-512.png");
+  color: rgba(255, 255, 255, 0.7);
   grid-area: statusbar;
 }
 
 .dd__toolbar.dd__toolbar--hud {
-  background-color: lighten(black, 25%);
   grid-area: toolbar;
 }

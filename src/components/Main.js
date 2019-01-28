@@ -60,12 +60,7 @@ export default class Main extends React.Component<Props, State> {
 
   render() {
     return (
-      <div
-        className="dd__container dd__hud"
-        style={{
-          "--dd-hud-dialogue-height": "160px"
-        }}
-      >
+      <div className="dd__container dd__hud dd__hud--dialogue-medium">
         <div className="dd__aside dd__aside--hud" />
         <div className="dd__dialogue dd__dialogue--hud">
           <DialogueLoader
@@ -80,8 +75,23 @@ export default class Main extends React.Component<Props, State> {
           />
         </div>
         <div className="dd__scene dd__scene--hud" />
-        <div className="dd__statusbar dd__statusbar--hud" />
-        <div className="dd__toolbar dd__toolbar--hud" />
+        <div className="dd__statusbar dd__statusbar--hud">
+          Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
+          będzie przyjaźnie nastawiony.
+        </div>
+        <div
+          className="dd__toolbar dd__toolbar--hud"
+          style={{
+            "--dd-toolbar-elements": 45
+          }}
+        >
+          <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">
+            Brutalna siła
+          </button>
+          <button className="dd__button dd__button--toolbar dd__button--icon dd__button--magic">Czar</button>
+          <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">Modlitwa</button>
+          <button className="dd__button dd__button--toolbar dd__button--icon dd__button--backpack">Ekwipunek</button>
+        </div>
       </div>
     );
   }

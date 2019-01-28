@@ -318,6 +318,9 @@ body {
   line-height: 1.3;
   width: 100%; }
 
+button {
+  padding: 0; }
+
 #root,
 .dd__container {
   align-items: flex-start;
@@ -326,24 +329,107 @@ body {
   height: 100%;
   width: 100%; }
 
+.dd__button,
+.dd__button:before {
+  border-color: rgba(55, 55, 55, 0.6);
+  border-radius: 10px;
+  border-width: 3px; }
+
 .dd__button {
   background-color: transparent;
-  background-image: url("/assets/texture-blood-marble-512.png");
-  border-color: rgba(55, 55, 55, 0.3);
-  border-radius: 4px;
-  border-style: outset;
-  border-width: 3px;
+  background-image: url("/assets/texture-mineshaft-marble-512.png");
+  border-style: inset;
   color: white;
   cursor: pointer;
-  padding: 0.5rem; }
+  overflow: hidden;
+  position: relative;
+  transition: padding 0.05s ease-in-out;
+  z-index: 2; }
+  .dd__button:active {
+    padding-left: 3px;
+    padding-top: 3px; }
+  .dd__button:active:before {
+    filter: brightness(0.8);
+    transform: translateX(3px) translateY(3px); }
+  .dd__button:after {
+    background-color: black;
+    bottom: 0;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -2; }
+  .dd__button:before {
+    background-image: url("/assets/texture-mineshaft-marble-512.png");
+    border-style: outset;
+    bottom: 0;
+    content: "";
+    left: 0;
+    position: absolute;
+    transition: filter 0.05s ease-in-out, transform 0.05s ease-in-out;
+    right: 0;
+    top: 0;
+    z-index: -1; }
   .dd__button:focus {
-    background-position: 3px 3px;
-    border-style: inset;
     outline: none; }
 
+.dd__button:nth-of-type(2):before {
+  border-top-left-radius: 20px; }
+
+.dd__button:nth-of-type(3):before {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px; }
+
+.dd__button.dd__button--highlight:active:after {
+  filter: brightness(1.2); }
+
+.dd__button.dd__button--highlight:after {
+  background-image: url("/assets/texture-blood-marble-512.png");
+  transition: filter 0.05s ease-in-out; }
+
+.dd__button.dd__button--icon {
+  font-size: 0;
+  line-height: 0; }
+  .dd__button.dd__button--icon:before {
+    background-position: center;
+    background-repeat: no-repeat; }
+
+.dd__button.dd__button--icon.dd__button--backpack:before {
+  background-image: url("/assets/icon-backpack.svg"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 66%, 100%; }
+
+.dd__button.dd__button--icon.dd__button--magic:before {
+  background-image: url("/assets/icon-magic.svg"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 66%, 100%; }
+
+.dd__button.dd__button--icon.dd__button--prayer:before {
+  background-image: url("/assets/icon-prayer.svg"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 66%, 100%; }
+
+.dd__button.dd__button--icon.dd__button--strength:before {
+  background-image: url("/assets/icon-strength.svg"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 66%, 100%; }
+
+.dd__button.dd__button--dialogue__toolbar {
+  height: 27px;
+  width: 27px; }
+
+.dd__button.dd__button--dialogue__toolbar
++ .dd__button.dd__button--dialogue__toolbar {
+  margin-top: 3px; }
+
+.dd__button.dd__button--dialogue-turn-end {
+  left: 0;
+  bottom: 2px;
+  min-height: 57px;
+  position: absolute;
+  width: 100%; }
+
 .dd__dialogue {
-  justify-content: center;
-  display: flex; }
+  display: grid;
+  grid-template-areas: "turn toolbar";
+  grid-template-columns: 1fr 36px; }
 
 .dd__dialogue__end,
 .dd__dialogue__spinner,
@@ -352,12 +438,28 @@ body {
   padding: 1.5rem;
   width: 100%; }
 
+.dd__dialogue__toolbar {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 6px 3px; }
+
 .dd__dialogue__turn {
   align-content: flex-start;
   display: flex;
   flex-direction: column;
+  grid-area: turn;
+  height: 70px;
   justify-content: space-between;
-  overflow-y: auto; }
+  overflow-y: auto;
+  position: relative; }
+
+.dd__hud.dd__hud--dialogue-huge .dd__dialogue__turn.dd__dialogue__turn {
+  height: 590px; }
+
+.dd__hud.dd__hud--dialogue-medium .dd__dialogue__turn.dd__dialogue__turn {
+  height: 290px; }
 
 .dd__dialogue__turn__actor {
   color: crimson;
@@ -391,11 +493,36 @@ body {
   padding-bottom: 1rem;
   padding-left: 1.5rem; }
 
+.dd__statusbar {
+  align-items: center;
+  justify-content: center;
+  display: flex; }
+
+.dd__toolbar {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px);
+  overflow-x: scroll;
+  padding: 5px;
+  white-space: nowrap; }
+
+.dd__button.dd__button--toolbar {
+  height: 64px;
+  width: 64px; }
+  .dd__button.dd__button--toolbar:before {
+    background-size: cover; }
+
 .dd__hud {
   display: grid;
   grid-template-areas: "scene      aside" "dialogue   aside" "toolbar    aside" "statusbar  statusbar";
-  grid-template-columns: 1fr 300px;
-  grid-template-rows: 1fr 300px 80px 30px; }
+  grid-template-columns: calc(100vw - 300px) 300px;
+  grid-template-rows: 1fr 80px 80px 50px; }
+
+.dd__hud.dd__hud--dialogue-medium {
+  grid-template-rows: 1fr 300px 80px 50px; }
+
+.dd__hud.dd__hud--dialogue-huge {
+  grid-template-rows: 1fr 600px 80px 50px; }
 
 .dd__aside.dd__aside--hud,
 .dd__dialogue.dd__dialogue--hud,
@@ -410,7 +537,7 @@ body {
 .dd__statusbar.dd__statusbar--hud,
 .dd__toolbar.dd__toolbar--hud {
   background-image: url("/assets/texture-mineshaft-marble-512.png");
-  border-color: rgba(55, 55, 55, 0.3);
+  border-color: rgba(55, 55, 55, 0.4);
   border-radius: 4px;
   border-style: outset;
   border-width: 3px; }
@@ -419,7 +546,6 @@ body {
   grid-area: aside; }
 
 .dd__dialogue.dd__dialogue--hud {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
   grid-area: dialogue; }
 
 .dd__dialogue.dd__dialogue--hud.dd__dialogue--light {
@@ -427,13 +553,12 @@ body {
   color: black; }
 
 .dd__scene.dd__scene--hud {
-  background-color: black;
   grid-area: scene; }
 
 .dd__statusbar.dd__statusbar--hud {
-  background-color: #333333;
+  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  color: rgba(255, 255, 255, 0.7);
   grid-area: statusbar; }
 
 .dd__toolbar.dd__toolbar--hud {
-  background-color: #404040;
   grid-area: toolbar; }
