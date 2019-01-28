@@ -312,8 +312,8 @@ body {
   background-image: url("/assets/texture-cod-gray-marble-512.png");
   color: rgba(255, 255, 255, 0.95);
   display: grid;
-  font-size: 18px;
-  font-family: "PostAntiqua", georgia, serif;
+  font-size: 16px;
+  font-family: "Kurale", serif;
   height: 100vh;
   line-height: 1.3;
   width: 100%; }
@@ -551,6 +551,11 @@ button {
   grid-area: aside; }
 
 .dd__dialogue.dd__dialogue--hud {
+  background-image: url("/assets/image-disasters-of-war.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-blend-mode: multiply;
+  background-position: 100% 50%, center;
+  background-repeat: no-repeat, repeat;
+  background-size: contain, auto;
   grid-area: dialogue; }
 
 .dd__dialogue.dd__dialogue--hud.dd__dialogue--light {
