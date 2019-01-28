@@ -556,7 +556,6 @@ button {
   grid-area: scene; }
 
 .dd__statusbar.dd__statusbar--hud {
-  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
   color: rgba(255, 255, 255, 0.7);
   grid-area: statusbar; }
 

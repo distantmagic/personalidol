@@ -62,12 +62,14 @@ $dd-hud-toolbar-height: 80px;
 
 .dd__statusbar.dd__statusbar--hud {
   // background-image: url("/assets/texture-cod-gray-marble-512.png");
-  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  // background-image: url("/assets/texture-navy-blue-marble-512.jpg");
   // background-image: url("/assets/texture-blood-marble-512.png");
   color: rgba(255, 255, 255, 0.7);
   grid-area: statusbar;
 }
 
 .dd__toolbar.dd__toolbar--hud {
+  // background-image: url("/assets/texture-cod-gray-marble-512.png");
+  // background-image: url("/assets/texture-navy-blue-marble-512.jpg");
   grid-area: toolbar;
 }

@@ -124,7 +124,7 @@ button {
     filter: brightness(1.2);
   }
   &:after {
-    background-image: url('/assets/texture-blood-marble-512.png');
+    background-image: url("/assets/texture-blood-marble-512.png");
     transition: filter 0.05s ease-in-out;
     // background-blend-mode: luminosity;
   }
@@ -142,10 +142,8 @@ button {
 
 @each $icon in (backpack, magic, prayer, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
-    background-image:
-      url('/assets/icon-#{$icon}.svg'),
-      url("/assets/texture-mineshaft-marble-512.png")
-    ;
+    background-image: url("/assets/icon-#{$icon}.svg"),
+      url("/assets/texture-mineshaft-marble-512.png");
     background-size: 66%, 100%;
   }
 }
