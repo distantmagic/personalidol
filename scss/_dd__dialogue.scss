@@ -30,7 +30,7 @@
 .dd__dialogue__turn {
   height: 100%;
   // max-width: 80ch;
-  padding: 1.5rem;
+  padding: #{2 * $dd-frame-padding} $dd-frame-padding;
   width: 100%;
 }
 
@@ -49,7 +49,7 @@
   grid-area: turn;
   height: 70px;
   justify-content: space-between;
-  overflow-y: auto;
+  overflow-y: hidden;
   position: relative;
 }
 

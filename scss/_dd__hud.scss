@@ -1,7 +1,12 @@
+$dd-hud-statusbar-height: 50px;
 $dd-hud-toolbar-height: 80px;
+$dd-hud-dialogue-small-height: $dd-hud-toolbar-height;
+$dd-hud-dialogue-medium-height: 300px;
+$dd-hud-dialogue-huge-height: 600px;
 $dd-hud-aside-width: 300px;
 
 @import "dd__dialogue";
+@import "dd__scene";
 @import "dd__statusbar";
 @import "dd__toolbar";
 
@@ -13,15 +18,33 @@ $dd-hud-aside-width: 300px;
     "toolbar    aside"
     "statusbar  statusbar";
   grid-template-columns: calc(100vw - #{$dd-hud-aside-width}) $dd-hud-aside-width;
-  grid-template-rows: 1fr 80px $dd-hud-toolbar-height 50px;
+}
+
+.dd__hud.dd__hud--dialogue-small {
+  grid-template-rows:
+    calc(100vh - #{$dd-hud-dialogue-small-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
+    #{$dd-hud-dialogue-small-height}
+    $dd-hud-toolbar-height
+    $dd-hud-statusbar-height
+  ;
 }
 
 .dd__hud.dd__hud--dialogue-medium {
-  grid-template-rows: 1fr 300px $dd-hud-toolbar-height 50px;
+  grid-template-rows:
+    calc(100vh - #{$dd-hud-dialogue-medium-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
+    #{$dd-hud-dialogue-medium-height}
+    $dd-hud-toolbar-height
+    $dd-hud-statusbar-height
+  ;
 }
 
 .dd__hud.dd__hud--dialogue-huge {
-  grid-template-rows: 1fr 600px $dd-hud-toolbar-height 50px;
+  grid-template-rows:
+    calc(100vh - #{$dd-hud-dialogue-huge-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
+    $dd-hud-dialogue-huge-height
+    $dd-hud-toolbar-height
+    $dd-hud-statusbar-height
+  ;
 }
 
 .dd__aside.dd__aside--hud,
@@ -60,7 +83,7 @@ $dd-hud-aside-width: 300px;
   background-blend-mode: multiply;
   background-position: 100% 50%, center;
   background-repeat: no-repeat, repeat;
-  background-size: contain, auto;
+  background-size: auto;
   grid-area: dialogue;
 }
 

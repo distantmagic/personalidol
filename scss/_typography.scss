@@ -1,0 +1,55 @@
+$dd-font-size-base: 16px;
+
+@function tp-font-size($scale: 1) {
+  @return $dd-font-size-base * $scale;
+}
+
+@mixin tp-text($scale: 1) {
+  font-size: tp-font-size($scale);
+  line-height: tp-font-size($scale * 1.25);
+}
+
+@mixin tp-heading($scale: 1) {
+  @include tp-text($scale);
+
+  margin-bottom: tp-font-size($scale * 0.375);
+  margin-top: tp-font-size($scale * 1.375);
+}
+
+@mixin tp-heading-h1() {
+  @include tp-heading(1.5);
+}
+
+@mixin tp-heading-h2() {
+  @include tp-heading(1.15);
+}
+
+@mixin tp-heading-h3() {
+  @include tp-heading(1);
+}
+
+.dd-tp__formatted-text {
+  p {
+    max-width: 80ch;
+  }
+
+  p + p {
+    // content: "\2767";
+    text-indent: 1em;
+  }
+}
+
+.dd-tp__formatted-text h1,
+.dd-tp__heading-h1 {
+  @include tp-heading-h1();
+}
+
+.dd-tp__formatted-text h2,
+.dd-tp__heading-h2 {
+  @include tp-heading-h2();
+}
+
+.dd-tp__formatted-text h3,
+.dd-tp__heading-h3 {
+  @include tp-heading-h3();
+}

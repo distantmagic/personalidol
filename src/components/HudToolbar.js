@@ -14,9 +14,12 @@ export default class HudToolbar extends React.Component<Props, State> {
       <HudToolbarScrollbar
         className="dd__toolbar dd__toolbar--hud"
         style={{
-          "--dd-toolbar-elements": 4
+          "--dd-toolbar-elements": 6
         }}
       >
+        <button className="dd__button dd__button--toolbar dd__button--icon dd__button--dialogue">
+          Rozmowa
+        </button>
         <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">
           Brutalna siła
         </button>
@@ -28,6 +31,9 @@ export default class HudToolbar extends React.Component<Props, State> {
         </button>
         <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--backpack">
           Ekwipunek
+        </button>
+        <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--skill">
+          Umiejętność specjalna
         </button>
 
         <div className="dd__toolbar__scroll-indicator" />

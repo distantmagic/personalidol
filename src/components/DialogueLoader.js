@@ -23,6 +23,8 @@ type Props = {|
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
   logger: Logger,
+  onDialogueBoxSizeDecrease: () => any,
+  onDialogueBoxSizeIncrease: () => any,
   queryBus: QueryBus
 |};
 
@@ -91,6 +93,8 @@ export default class DialogueLoader extends React.Component<Props, State> {
       <Dialogue
         dialogue={dialogue}
         dialogueInitiator={this.props.dialogueInitiator}
+        onDialogueBoxSizeDecrease={this.props.onDialogueBoxSizeDecrease}
+        onDialogueBoxSizeIncrease={this.props.onDialogueBoxSizeIncrease}
         onDialogueEnd={this.onDialogueEnd}
         logger={this.props.logger}
       />

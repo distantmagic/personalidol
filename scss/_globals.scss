@@ -1,28 +1,42 @@
 @import "breakpoints";
 @import "functions";
 @import "normalize";
+@import "typography";
 @import "z-index";
 
-$dd-frame-border-width: 3px;
+$dd-frame-border-width: 2px;
+$dd-frame-padding: 5px;
 
 *,
 * * {
   box-sizing: border-box;
 }
 
+body, button {
+  text-shadow:
+    rgba(55, 55, 55, 0.6) -1px 0 0,
+    rgba(55, 55, 55, 0.6) 0 -1px 0,
+    rgba(0, 0, 0, 0.6) 0 1px 0,
+    rgba(0, 0, 0, 0.6) 1px 0 0
+  ;
+}
+
 body {
   background-color: black;
   background-image: url("/assets/texture-cod-gray-marble-512.png");
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.85);
   display: grid;
-  font-size: 16px;
   font-family: "Kurale", serif;
   height: 100vh;
-  line-height: 1.3;
   width: 100%;
 }
 
-button {
+body, button,
+h1, h2, h3, h4, h5, h6,
+p {
+  @include tp-text(1);
+
+  margin: 0;
   padding: 0;
 }
 
@@ -123,10 +137,10 @@ button {
   }
 }
 
-@each $icon in (backpack, magic, prayer, strength) {
+@each $icon in (backpack, dialogue, magic, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
     background-image: url("/assets/icon-#{$icon}.svg"),
       url("/assets/texture-mineshaft-marble-512.png");
-    background-size: 66%, 100%;
+    background-size: 66%, auto;
   }
 }

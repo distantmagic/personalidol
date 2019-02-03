@@ -303,22 +303,55 @@ template {
 [hidden] {
   display: none; }
 
+.dd-tp__formatted-text p {
+  max-width: 80ch; }
+
+.dd-tp__formatted-text p + p {
+  text-indent: 1em; }
+
+.dd-tp__formatted-text h1,
+.dd-tp__heading-h1 {
+  font-size: 24px;
+  line-height: 30px;
+  margin-bottom: 9px;
+  margin-top: 33px; }
+
+.dd-tp__formatted-text h2,
+.dd-tp__heading-h2 {
+  font-size: 18.4px;
+  line-height: 23px;
+  margin-bottom: 6.9px;
+  margin-top: 25.3px; }
+
+.dd-tp__formatted-text h3,
+.dd-tp__heading-h3 {
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 6px;
+  margin-top: 22px; }
+
 *,
 * * {
   box-sizing: border-box; }
 
+body, button {
+  text-shadow: rgba(55, 55, 55, 0.6) -1px 0 0, rgba(55, 55, 55, 0.6) 0 -1px 0, rgba(0, 0, 0, 0.6) 0 1px 0, rgba(0, 0, 0, 0.6) 1px 0 0; }
+
 body {
   background-color: black;
   background-image: url("/assets/texture-cod-gray-marble-512.png");
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.85);
   display: grid;
-  font-size: 16px;
   font-family: "Kurale", serif;
   height: 100vh;
-  line-height: 1.3;
   width: 100%; }
 
-button {
+body, button,
+h1, h2, h3, h4, h5, h6,
+p {
+  font-size: 16px;
+  line-height: 20px;
+  margin: 0;
   padding: 0; }
 
 #root,
@@ -333,7 +366,7 @@ button {
 .dd__button:before {
   border-color: rgba(55, 55, 55, 0.6);
   border-radius: 10px;
-  border-width: 3px; }
+  border-width: 2px; }
 
 .dd__button {
   background-color: transparent;
@@ -346,11 +379,11 @@ button {
   transition: padding 0.05s ease-in-out;
   z-index: 2; }
   .dd__button:active {
-    padding-left: 3px;
-    padding-top: 3px; }
+    padding-left: 2px;
+    padding-top: 2px; }
   .dd__button:active:before {
     filter: brightness(0.8);
-    transform: translateX(3px) translateY(3px); }
+    transform: translateX(2px) translateY(2px); }
   .dd__button:after {
     background-color: black;
     bottom: 0;
@@ -397,19 +430,27 @@ button {
 
 .dd__button.dd__button--icon.dd__button--backpack:before {
   background-image: url("/assets/icon-backpack.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, 100%; }
+  background-size: 66%, auto; }
+
+.dd__button.dd__button--icon.dd__button--dialogue:before {
+  background-image: url("/assets/icon-dialogue.svg"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 66%, auto; }
 
 .dd__button.dd__button--icon.dd__button--magic:before {
   background-image: url("/assets/icon-magic.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, 100%; }
+  background-size: 66%, auto; }
 
 .dd__button.dd__button--icon.dd__button--prayer:before {
   background-image: url("/assets/icon-prayer.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, 100%; }
+  background-size: 66%, auto; }
+
+.dd__button.dd__button--icon.dd__button--skill:before {
+  background-image: url("/assets/icon-skill.svg"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 66%, auto; }
 
 .dd__button.dd__button--icon.dd__button--strength:before {
   background-image: url("/assets/icon-strength.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, 100%; }
+  background-size: 66%, auto; }
 
 .dd__button.dd__button--dialogue__toolbar {
   font-size: 0;
@@ -437,7 +478,7 @@ button {
 .dd__dialogue__spinner,
 .dd__dialogue__turn {
   height: 100%;
-  padding: 1.5rem;
+  padding: 10px 5px;
   width: 100%; }
 
 .dd__dialogue__toolbar {
@@ -454,7 +495,7 @@ button {
   grid-area: turn;
   height: 70px;
   justify-content: space-between;
-  overflow-y: auto;
+  overflow-y: hidden;
   position: relative; }
 
 .dd__hud.dd__hud--dialogue-huge .dd__dialogue__turn.dd__dialogue__turn {
@@ -495,6 +536,42 @@ button {
   padding-bottom: 1rem;
   padding-left: 1.5rem; }
 
+.dd__scene.dd__scene--text {
+  overflow-y: auto;
+  padding: 1rem; }
+
+.scene__interactions {
+  background-image: url("/assets/image-nobody-knows-anybody.png"), url("/assets/texture-navy-blue-marble-512.jpg");
+  background-blend-mode: multiply;
+  background-position: 100% 100%, center;
+  background-repeat: no-repeat, repeat;
+  background-size: contain, auto;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  table-layout: fixed;
+  width: 100%; }
+  .scene__interactions td, .scene__interactions th {
+    border: 1px solid white;
+    border-color: rgba(55, 55, 55, 0.4);
+    border-style: outset;
+    border-width: 3px;
+    overflow: hidden;
+    padding: 10px 5px; }
+    .scene__interactions td:last-child, .scene__interactions th:last-child {
+      border-right-color: #232323;
+      border-right-style: solid;
+      border-right-width: 1px; }
+  .scene__interactions tr:last-child td, .scene__interactions tr:last-child th {
+    border-bottom-color: #232323;
+    border-bottom-style: solid;
+    border-bottom-width: 1px; }
+
+.scene__interactions__entity-header {
+  width: 40%; }
+
+.scene__interactions__interaction-header {
+  width: 10%; }
+
 .dd__statusbar {
   align-items: center;
   display: flex;
@@ -502,29 +579,31 @@ button {
 
 .dd__toolbar {
   display: grid;
-  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc(100vw - 300px - 4.6 * 64px);
+  grid-template-columns: repeat(var(--dd-toolbar-elements), 66px) calc(100vw - 300px - 4.6 * 66px);
   overflow: hidden;
   padding: 5px;
   position: relative;
   white-space: nowrap; }
 
 .dd__button.dd__button--toolbar {
-  height: 64px;
-  width: 64px; }
+  height: 66px;
+  width: 66px; }
   .dd__button.dd__button--toolbar:before {
     background-size: cover; }
 
 .dd__hud {
   display: grid;
   grid-template-areas: "scene      aside" "dialogue   aside" "toolbar    aside" "statusbar  statusbar";
-  grid-template-columns: calc(100vw - 300px) 300px;
-  grid-template-rows: 1fr 80px 80px 50px; }
+  grid-template-columns: calc(100vw - 300px) 300px; }
+
+.dd__hud.dd__hud--dialogue-small {
+  grid-template-rows: calc(100vh - 80px - 80px - 50px) 80px 80px 50px; }
 
 .dd__hud.dd__hud--dialogue-medium {
-  grid-template-rows: 1fr 300px 80px 50px; }
+  grid-template-rows: calc(100vh - 300px - 80px - 50px) 300px 80px 50px; }
 
 .dd__hud.dd__hud--dialogue-huge {
-  grid-template-rows: 1fr 600px 80px 50px; }
+  grid-template-rows: calc(100vh - 600px - 80px - 50px) 600px 80px 50px; }
 
 .dd__aside.dd__aside--hud,
 .dd__dialogue.dd__dialogue--hud,
@@ -542,7 +621,7 @@ button {
   border-color: rgba(55, 55, 55, 0.4);
   border-radius: 4px;
   border-style: outset;
-  border-width: 3px; }
+  border-width: 2px; }
 
 .dd__aside.dd__aside--hud {
   background-image: url("/assets/image-rise-and-fall.png"), url("/assets/texture-mineshaft-marble-512.png");
@@ -557,7 +636,7 @@ button {
   background-blend-mode: multiply;
   background-position: 100% 50%, center;
   background-repeat: no-repeat, repeat;
-  background-size: contain, auto;
+  background-size: auto;
   grid-area: dialogue; }
 
 .dd__dialogue.dd__dialogue--hud.dd__dialogue--light {

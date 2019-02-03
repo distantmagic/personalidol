@@ -17,7 +17,9 @@ type Props = {|
   dialogue: DialogueClass,
   dialogueInitiator: Identifiable & Speaks,
   logger: Logger,
-  onDialogueEnd: () => any
+  onDialogueEnd: () => any,
+  onDialogueBoxSizeDecrease: () => any,
+  onDialogueBoxSizeIncrease: () => any,
 |};
 
 type State = {|
@@ -65,6 +67,18 @@ export default class Dialogue extends React.Component<Props, State> {
     }
   }
 
+  onDialogueBoxSizeDecreaseClick(evt: SyntheticEvent<HTMLElement>) {
+    evt.preventDefault();
+
+    this.props.onDialogueBoxSizeDecrease();
+  }
+
+  onDialogueBoxSizeIncreaseClick(evt: SyntheticEvent<HTMLElement>) {
+    evt.preventDefault();
+
+    this.props.onDialogueBoxSizeIncrease();
+  }
+
   render() {
     const dialogueTurn = this.state.dialogueTurn;
 
@@ -81,13 +95,16 @@ export default class Dialogue extends React.Component<Props, State> {
           onDialogueEnd={this.props.onDialogueEnd}
         />
         <div className="dd__dialogue__toolbar">
-          <button className="dd__button dd__button--dialogue__toolbar">
-            Przełącz historię
-          </button>
-          <button className="dd__button dd__button--dialogue__toolbar">
+          <button
+            className="dd__button dd__button--dialogue__toolbar"
+            onClick={this.onDialogueBoxSizeIncreaseClick}
+          >
             Powiększ
           </button>
-          <button className="dd__button dd__button--dialogue__toolbar">
+          <button
+            className="dd__button dd__button--dialogue__toolbar"
+            onClick={this.onDialogueBoxSizeDecreaseClick}
+          >
             Zmniejsz
           </button>
         </div>
