@@ -14,7 +14,7 @@ export default class HudToolbar extends React.Component<Props, State> {
       <HudToolbarScrollbar
         className="dd__toolbar dd__toolbar--hud"
         style={{
-          "--dd-toolbar-elements": 40
+          "--dd-toolbar-elements": 4
         }}
       >
         <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">
@@ -29,42 +29,6 @@ export default class HudToolbar extends React.Component<Props, State> {
         <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--backpack">
           Ekwipunek
         </button>
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
-        <button className="dd__button dd__button--toolbar" />
 
         <div className="dd__toolbar__scroll-indicator" />
       </HudToolbarScrollbar>
