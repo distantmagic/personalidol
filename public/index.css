@@ -567,9 +567,12 @@ p {
     border-bottom-width: 1px; }
 
 .scene__interactions__entity-header {
-  width: 40%; }
+  width: 30%; }
 
 .scene__interactions__interaction-header {
+  width: 10%; }
+
+.scene__interactions__state-header {
   width: 10%; }
 
 .dd__statusbar {

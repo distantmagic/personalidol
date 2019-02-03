@@ -46,6 +46,12 @@ export default class HudScene extends React.Component<Props, State> {
                   Encja
                 </th>
                 <th
+                  className="scene__interactions__state-header"
+                  rowSpan="2"
+                >
+                  Stan
+                </th>
+                <th
                   colSpan="6"
                   scope="col"
                 >
@@ -96,6 +102,9 @@ export default class HudScene extends React.Component<Props, State> {
                 <td>
                   Legowisko
                 </td>
+                <td>
+                  Wolne
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -106,6 +115,9 @@ export default class HudScene extends React.Component<Props, State> {
               <tr>
                 <td>
                   Mnich
+                </td>
+                <td>
+                  Zdrowy
                 </td>
                 <td></td>
                 <td></td>
@@ -118,6 +130,9 @@ export default class HudScene extends React.Component<Props, State> {
                 <td>
                   Palenisko
                 </td>
+                <td>
+                  Płonie
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -128,6 +143,10 @@ export default class HudScene extends React.Component<Props, State> {
               <tr>
                 <td>
                   Regał z książkami, notatkami, pudełkami, szkatułkami, słoikami
+                </td>
+                <td>
+                  Zamek nie zablokowany
+                  Zamknięty
                 </td>
                 <td></td>
                 <td></td>
@@ -147,6 +166,10 @@ export default class HudScene extends React.Component<Props, State> {
                     </ol>
                   */}
                 </td>
+                <td>
+                  Zamek nie zablokowany
+                  Zamknięta
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -157,6 +180,10 @@ export default class HudScene extends React.Component<Props, State> {
               <tr>
                 <td>
                   Zapasowe latarki
+                </td>
+                <td>
+                  Działające
+                  Wyłączone
                 </td>
                 <td></td>
                 <td></td>
@@ -169,6 +196,10 @@ export default class HudScene extends React.Component<Props, State> {
                 <td>
                   Zapasowe pochodnie
                 </td>
+                <td>
+                  Gotowe do zapalenia
+                  Zgaszone
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -179,6 +210,9 @@ export default class HudScene extends React.Component<Props, State> {
               <tr>
                 <td>
                   Zasłona przysłaniająca wejście do tunelu
+                </td>
+                <td>
+                  Odsłonięta
                 </td>
                 <td></td>
                 <td></td>
