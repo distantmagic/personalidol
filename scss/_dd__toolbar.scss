@@ -1,14 +1,17 @@
-$dd-hud-toolbar-button-side: $dd-hud-toolbar-height - 16px;
+$dd-hud-toolbar-padding: 5px;
+$dd-hud-toolbar-button-side: $dd-hud-toolbar-height -
+  (2 * $dd-hud-toolbar-padding) - (2 * $dd-frame-border-width);
+$dd-hud-toolbar-scroll-indicator-height: 10px;
 
 .dd__toolbar {
   display: grid;
-  grid-column-gap: 5px;
-  grid-template-columns: repeat(
-    var(--dd-toolbar-elements),
-    $dd-hud-toolbar-button-side
-  );
-  overflow-x: scroll;
-  padding: 5px;
+  // grid-column-gap: $dd-hud-toolbar-padding;
+  grid-template-columns:
+    repeat(var(--dd-toolbar-elements), $dd-hud-toolbar-button-side)
+    calc(100vw - #{$dd-hud-aside-width} - 4.6 * #{$dd-hud-toolbar-button-side});
+  overflow: hidden;
+  padding: $dd-hud-toolbar-padding;
+  position: relative;
   white-space: nowrap;
 }
 

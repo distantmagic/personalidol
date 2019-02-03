@@ -412,7 +412,9 @@ button {
   background-size: 66%, 100%; }
 
 .dd__button.dd__button--dialogue__toolbar {
+  font-size: 0;
   height: 27px;
+  line-height: 0;
   width: 27px; }
 
 .dd__button.dd__button--dialogue__toolbar
@@ -500,10 +502,10 @@ button {
 
 .dd__toolbar {
   display: grid;
-  grid-column-gap: 5px;
-  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px);
-  overflow-x: scroll;
+  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc(100vw - 300px - 4.6 * 64px);
+  overflow: hidden;
   padding: 5px;
+  position: relative;
   white-space: nowrap; }
 
 .dd__button.dd__button--toolbar {

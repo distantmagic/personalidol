@@ -13,3 +13,7 @@
 @function powrem($number, $exponent) {
   @return pow($number, $exponent) * 1rem;
 }
+
+@function strip_unit($value) {
+  @return $value / ($value * 0 + 1);
+}

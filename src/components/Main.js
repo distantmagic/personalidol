@@ -8,6 +8,7 @@ import DialogueLoader from "./DialogueLoader";
 import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
+import HudToolbar from "./HudToolbar";
 import Person from "../framework/classes/Entity/Person";
 import QueryBus from "../framework/classes/QueryBus";
 import QueryBusController from "../framework/classes/QueryBusController";
@@ -79,25 +80,7 @@ export default class Main extends React.Component<Props, State> {
           Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
           będzie przyjaźnie nastawiony.
         </div>
-        <div
-          className="dd__toolbar dd__toolbar--hud"
-          style={{
-            "--dd-toolbar-elements": 45
-          }}
-        >
-          <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">
-            Brutalna siła
-          </button>
-          <button className="dd__button dd__button--toolbar dd__button--icon dd__button--magic">
-            Czar
-          </button>
-          <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">
-            Modlitwa
-          </button>
-          <button className="dd__button dd__button--toolbar dd__button--icon dd__button--backpack">
-            Ekwipunek
-          </button>
-        </div>
+        <HudToolbar />
       </div>
     );
   }
