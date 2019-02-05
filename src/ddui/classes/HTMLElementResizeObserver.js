@@ -7,8 +7,10 @@ import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { HTMLElementResizeEvent as HTMLElementResizeEventInterface } from "../interfaces/HTMLElementResizeEvent";
 
 export default class HTMLElementResizeObserver {
-  currentHeight: number;
-  currentWidth: number;
+  currentOffsetHeight: number;
+  currentOffsetWidth: number;
+  currentStyleHeight: string | void;
+  currentStyleWidth: string | void;
   htmlElement: ?HTMLElement;
 
   constructor() {
@@ -21,8 +23,8 @@ export default class HTMLElementResizeObserver {
   }
 
   unobserve() {
-    this.currentHeight = -1;
-    this.currentWidth = -1;
+    this.currentOffsetHeight = -1;
+    this.currentOffsetWidth = -1;
     this.htmlElement = null;
   }
 
@@ -38,16 +40,22 @@ export default class HTMLElementResizeObserver {
 
       const offsetHeight = htmlElement.offsetHeight;
       const offsetWidth = htmlElement.offsetWidth;
+      const styleHeight = htmlElement.style.height;
+      const styleWidth = htmlElement.style.width;
 
       if (
-        this.currentHeight !== offsetHeight ||
-        this.currentWidth !== offsetWidth
+        this.currentOffsetHeight !== offsetHeight ||
+        this.currentOffsetWidth !== offsetWidth ||
+        this.currentStyleHeight !== styleHeight ||
+        this.currentStyleWidth !== styleWidth
       ) {
         yield new HTMLElementResizeEvent(tick, offsetWidth, offsetHeight);
       }
 
-      this.currentHeight = offsetHeight;
-      this.currentWidth = offsetWidth;
+      this.currentOffsetHeight = offsetHeight;
+      this.currentOffsetWidth = offsetWidth;
+      this.currentStyleHeight = styleHeight;
+      this.currentStyleWidth = styleWidth;
     }
   }
 }

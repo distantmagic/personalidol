@@ -21,7 +21,6 @@ export default class SceneManager<T> {
 
     for await (let tick of frameinterval()) {
       await this.controller.tick(canvas, tick);
-      // break;
     }
   }
 
