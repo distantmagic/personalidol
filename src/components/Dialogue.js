@@ -19,7 +19,7 @@ type Props = {|
   logger: Logger,
   onDialogueEnd: () => any,
   onDialogueBoxSizeDecrease: () => any,
-  onDialogueBoxSizeIncrease: () => any,
+  onDialogueBoxSizeIncrease: () => any
 |};
 
 type State = {|

@@ -24,7 +24,6 @@ type Props = {|
 |};
 
 type State = {|
-  cancelToken: CancelToken,
   dialogueBoxSize: 1 | 2 | 3,
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
@@ -34,6 +33,8 @@ type State = {|
 |};
 
 export default class Main extends React.Component<Props, State> {
+  cancelToken: CancelToken;
+
   constructor(props: Props) {
     super(props);
 
@@ -41,8 +42,8 @@ export default class Main extends React.Component<Props, State> {
 
     const queryBus = new QueryBus();
 
+    this.cancelToken = new CancelToken();
     this.state = {
-      cancelToken: new CancelToken(),
       dialogueBoxSize: 1,
       expressionBus: new ExpressionBus(),
       expressionContext: new ExpressionContext(),
@@ -59,11 +60,11 @@ export default class Main extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    this.state.queryBusController.interval(this.state.cancelToken);
+    this.state.queryBusController.interval(this.cancelToken);
   }
 
   componentWillUnmount(): void {
-    this.state.cancelToken.cancel();
+    this.cancelToken.cancel();
   }
 
   onDialogueBoxSizeDecrease() {
@@ -82,9 +83,9 @@ export default class Main extends React.Component<Props, State> {
     }
   }
 
-  setDialogueBoxSize(dialogueBoxSize: $PropertyType<State, 'dialogueBoxSize'>) {
+  setDialogueBoxSize(dialogueBoxSize: $PropertyType<State, "dialogueBoxSize">) {
     this.setState({
-      dialogueBoxSize: dialogueBoxSize,
+      dialogueBoxSize: dialogueBoxSize
     });
   }
 
@@ -94,7 +95,7 @@ export default class Main extends React.Component<Props, State> {
         className={classnames("dd__container", "dd__hud", {
           "dd__hud--dialogue-small": 1 === this.state.dialogueBoxSize,
           "dd__hud--dialogue-medium": 2 === this.state.dialogueBoxSize,
-          "dd__hud--dialogue-huge": 3 === this.state.dialogueBoxSize,
+          "dd__hud--dialogue-huge": 3 === this.state.dialogueBoxSize
         })}
       >
         <div className="dd__aside dd__aside--hud" />

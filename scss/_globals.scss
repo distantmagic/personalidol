@@ -12,13 +12,10 @@ $dd-frame-padding: 5px;
   box-sizing: border-box;
 }
 
-body, button {
-  text-shadow:
-    rgba(55, 55, 55, 0.6) -1px 0 0,
-    rgba(55, 55, 55, 0.6) 0 -1px 0,
-    rgba(0, 0, 0, 0.6) 0 1px 0,
-    rgba(0, 0, 0, 0.6) 1px 0 0
-  ;
+body,
+button {
+  text-shadow: rgba(55, 55, 55, 0.6) -1px 0 0, rgba(55, 55, 55, 0.6) 0 -1px 0,
+    rgba(0, 0, 0, 0.6) 0 1px 0, rgba(0, 0, 0, 0.6) 1px 0 0;
 }
 
 body {
@@ -31,8 +28,14 @@ body {
   width: 100%;
 }
 
-body, button,
-h1, h2, h3, h4, h5, h6,
+body,
+button,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 p {
   @include tp-text(1);
 

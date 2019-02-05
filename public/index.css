@@ -334,7 +334,8 @@ template {
 * * {
   box-sizing: border-box; }
 
-body, button {
+body,
+button {
   text-shadow: rgba(55, 55, 55, 0.6) -1px 0 0, rgba(55, 55, 55, 0.6) 0 -1px 0, rgba(0, 0, 0, 0.6) 0 1px 0, rgba(0, 0, 0, 0.6) 1px 0 0; }
 
 body {
@@ -346,8 +347,14 @@ body {
   height: 100vh;
   width: 100%; }
 
-body, button,
-h1, h2, h3, h4, h5, h6,
+body,
+button,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 p {
   font-size: 16px;
   line-height: 20px;
@@ -550,18 +557,21 @@ p {
   margin: 1rem 0;
   table-layout: fixed;
   width: 100%; }
-  .scene__interactions td, .scene__interactions th {
+  .scene__interactions td,
+  .scene__interactions th {
     border: 1px solid white;
     border-color: rgba(55, 55, 55, 0.4);
     border-style: outset;
     border-width: 3px;
     overflow: hidden;
     padding: 10px 5px; }
-    .scene__interactions td:last-child, .scene__interactions th:last-child {
+    .scene__interactions td:last-child,
+    .scene__interactions th:last-child {
       border-right-color: #232323;
       border-right-style: solid;
       border-right-width: 1px; }
-  .scene__interactions tr:last-child td, .scene__interactions tr:last-child th {
+  .scene__interactions tr:last-child td,
+  .scene__interactions tr:last-child th {
     border-bottom-color: #232323;
     border-bottom-style: solid;
     border-bottom-width: 1px; }
@@ -600,13 +610,13 @@ p {
   grid-template-columns: calc(100vw - 300px) 300px; }
 
 .dd__hud.dd__hud--dialogue-small {
-  grid-template-rows: calc(100vh - 80px - 80px - 50px) 80px 80px 50px; }
+  grid-template-rows: calc( 100vh - 80px - 80px - 50px) 80px 80px 50px; }
 
 .dd__hud.dd__hud--dialogue-medium {
-  grid-template-rows: calc(100vh - 300px - 80px - 50px) 300px 80px 50px; }
+  grid-template-rows: calc( 100vh - 300px - 80px - 50px) 300px 80px 50px; }
 
 .dd__hud.dd__hud--dialogue-huge {
-  grid-template-rows: calc(100vh - 600px - 80px - 50px) 600px 80px 50px; }
+  grid-template-rows: calc( 100vh - 600px - 80px - 50px) 600px 80px 50px; }
 
 .dd__aside.dd__aside--hud,
 .dd__dialogue.dd__dialogue--hud,

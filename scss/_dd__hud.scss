@@ -22,29 +22,32 @@ $dd-hud-aside-width: 300px;
 
 .dd__hud.dd__hud--dialogue-small {
   grid-template-rows:
-    calc(100vh - #{$dd-hud-dialogue-small-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
+    calc(
+      100vh - #{$dd-hud-dialogue-small-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height}
+    )
     #{$dd-hud-dialogue-small-height}
     $dd-hud-toolbar-height
-    $dd-hud-statusbar-height
-  ;
+    $dd-hud-statusbar-height;
 }
 
 .dd__hud.dd__hud--dialogue-medium {
   grid-template-rows:
-    calc(100vh - #{$dd-hud-dialogue-medium-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
+    calc(
+      100vh - #{$dd-hud-dialogue-medium-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height}
+    )
     #{$dd-hud-dialogue-medium-height}
     $dd-hud-toolbar-height
-    $dd-hud-statusbar-height
-  ;
+    $dd-hud-statusbar-height;
 }
 
 .dd__hud.dd__hud--dialogue-huge {
   grid-template-rows:
-    calc(100vh - #{$dd-hud-dialogue-huge-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
+    calc(
+      100vh - #{$dd-hud-dialogue-huge-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height}
+    )
     $dd-hud-dialogue-huge-height
     $dd-hud-toolbar-height
-    $dd-hud-statusbar-height
-  ;
+    $dd-hud-statusbar-height;
 }
 
 .dd__aside.dd__aside--hud,

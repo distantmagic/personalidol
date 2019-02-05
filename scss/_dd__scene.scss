@@ -1,3 +1,7 @@
+.dd__scene.dd__scene--canvas {
+  // background-color: white;
+}
+
 .dd__scene.dd__scene--text {
   // display: flex;
   overflow-y: auto;
@@ -5,10 +9,8 @@
 }
 
 .scene__interactions {
-  background-image:
-    url("/assets/image-nobody-knows-anybody.png"),
-    url("/assets/texture-navy-blue-marble-512.jpg")
-  ;
+  background-image: url("/assets/image-nobody-knows-anybody.png"),
+    url("/assets/texture-navy-blue-marble-512.jpg");
   background-blend-mode: multiply;
   background-position: 100% 100%, center;
   background-repeat: no-repeat, repeat;
@@ -18,7 +20,8 @@
   table-layout: fixed;
   width: 100%;
 
-  td, th {
+  td,
+  th {
     border: 1px solid white;
     border-color: rgba(55, 55, 55, 0.4);
     border-style: outset;
@@ -34,7 +37,8 @@
   }
 
   tr:last-child {
-    td, th {
+    td,
+    th {
       border-bottom-color: rgb(35, 35, 35);
       border-bottom-style: solid;
       border-bottom-width: 1px;
