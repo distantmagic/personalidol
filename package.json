@@ -22,6 +22,7 @@
     "react-dom": "^16.6.0",
     "react-relay": "^1.7.0",
     "react-scripts": "^2.1.1",
+    "resize-observer-polyfill": "^1.5.1",
     "three": "^0.101.1",
     "twig": "^1.12.0",
     "yaml": "^1.0.1",

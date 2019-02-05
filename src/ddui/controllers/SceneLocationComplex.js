@@ -31,6 +31,7 @@ export default class SceneLocationComplex
     this.scene.add(this.mesh);
 
     this.renderer = new THREE.WebGLRenderer({
+      alpha: true,
       canvas: canvas
     });
   }

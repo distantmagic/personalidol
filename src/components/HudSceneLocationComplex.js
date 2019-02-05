@@ -4,6 +4,7 @@ import * as React from "react";
 import autoBind from "auto-bind";
 
 import CancelToken from "../framework/classes/CancelToken";
+import HTMLElementResizeObserver from "../ddui/classes/HTMLElementResizeObserver";
 import SceneLocationComplex from "../ddui/controllers/SceneLocationComplex";
 import SceneManager from "../ddui/classes/SceneManager";
 
@@ -16,8 +17,10 @@ export default class HudSceneLocationComplex extends React.Component<
   State
 > {
   cancelToken: CancelToken;
+  canvas: ?HTMLCanvasElement;
+  htmlElementResizeObserver: HTMLElementResizeObserver;
+  scene: ?HTMLElement;
   sceneManager: SceneManager<HTMLCanvasElement>;
-  threeScene: ?HTMLCanvasElement;
 
   constructor(props: Props) {
     super(props);
@@ -25,10 +28,19 @@ export default class HudSceneLocationComplex extends React.Component<
     autoBind.react(this);
 
     this.cancelToken = new CancelToken();
+    this.htmlElementResizeObserver = new HTMLElementResizeObserver();
     this.sceneManager = new SceneManager(
       this.cancelToken,
       new SceneLocationComplex()
     );
+  }
+
+  async componentDidMount() {
+    for await (let evt of this.htmlElementResizeObserver.listen(
+      this.cancelToken
+    )) {
+      this.sceneManager.controller.resize(evt.width, evt.height);
+    }
   }
 
   componentWillUnmount() {
@@ -36,34 +48,26 @@ export default class HudSceneLocationComplex extends React.Component<
   }
 
   setScene(scene: ?HTMLElement): void {
-    const update = () => {
-      if (scene) {
-        this.sceneManager.controller.resize(
-          scene.offsetWidth,
-          scene.offsetHeight
-        );
-      }
-    };
+    this.scene = scene;
 
-    setInterval(update, 40);
-    update();
+    if (scene) {
+      this.htmlElementResizeObserver.observe(scene);
+    } else {
+      this.htmlElementResizeObserver.unobserve();
+    }
   }
 
   async setThreeCanvas(canvas: ?HTMLCanvasElement): Promise<void> {
-    const previousScene = this.threeScene;
+    const previousCanvas = this.canvas;
 
-    this.threeScene = canvas;
+    this.canvas = canvas;
 
-    if (previousScene) {
-      await this.sceneManager.detach(previousScene);
+    if (previousCanvas) {
+      await this.sceneManager.detach(previousCanvas);
     }
 
     // nothing changed while awaiting for canvas unmount
-    if (
-      canvas &&
-      this.threeScene === canvas &&
-      !this.cancelToken.isCancelled()
-    ) {
+    if (canvas && this.canvas === canvas && !this.cancelToken.isCancelled()) {
       await this.sceneManager.attach(canvas);
     }
   }
