@@ -2,11 +2,11 @@
 
 import * as THREE from "three";
 
+import type { CanvasController } from "../interfaces/CanvasController";
 import type { ClockTick } from "../../framework/interfaces/ClockTick";
-import type { SceneController } from "../interfaces/SceneController";
 
-export default class SceneLocationComplex
-  implements SceneController<HTMLCanvasElement> {
+export default class CanvasLocationComplex
+  implements CanvasController<HTMLCanvasElement> {
   camera: THREE.PerspectiveCamera;
   mesh: THREE.Mesh;
   renderer: THREE.WebGLRenderer;

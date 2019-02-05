@@ -2,7 +2,7 @@
 
 import type { ClockTick } from "../../framework/interfaces/ClockTick";
 
-export interface SceneController<T> {
+export interface CanvasController<T> {
   init(canvas: T): Promise<void>;
 
   destroy(canvas: T): Promise<void>;

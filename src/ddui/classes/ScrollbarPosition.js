@@ -3,9 +3,9 @@
 import clamp from "clamp";
 
 export default class ScrollbarPosition {
-  scrollWidth: number;
-  offsetWidth: number;
-  scrollLeft: number;
+  +scrollWidth: number;
+  +offsetWidth: number;
+  +scrollLeft: number;
 
   constructor(scrollWidth: number, offsetWidth: number, scrollLeft: number) {
     this.scrollWidth = scrollWidth;

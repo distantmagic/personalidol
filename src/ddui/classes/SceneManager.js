@@ -3,15 +3,13 @@
 import frameinterval from "../../framework/helpers/frameinterval";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
-import type { SceneController } from "../interfaces/SceneController";
+import type { CanvasController } from "../interfaces/CanvasController";
 
 export default class SceneManager<T> {
-  cancelToken: CancelToken;
-  controller: SceneController<T>;
-  canvasHeight: number;
-  canvasWidth: number;
+  +cancelToken: CancelToken;
+  +controller: CanvasController<T>;
 
-  constructor(cancelToken: CancelToken, controller: SceneController<T>) {
+  constructor(cancelToken: CancelToken, controller: CanvasController<T>) {
     this.cancelToken = cancelToken;
     this.controller = controller;
   }

@@ -4,8 +4,8 @@ import * as React from "react";
 import autoBind from "auto-bind";
 
 import CancelToken from "../framework/classes/CancelToken";
+import CanvasLocationComplex from "../ddui/controllers/CanvasLocationComplex";
 import HTMLElementResizeObserver from "../ddui/classes/HTMLElementResizeObserver";
-import SceneLocationComplex from "../ddui/controllers/SceneLocationComplex";
 import SceneManager from "../ddui/classes/SceneManager";
 
 type Props = {||};
@@ -19,7 +19,6 @@ export default class HudSceneLocationComplex extends React.Component<
   cancelToken: CancelToken;
   canvas: ?HTMLCanvasElement;
   htmlElementResizeObserver: HTMLElementResizeObserver;
-  scene: ?HTMLElement;
   sceneManager: SceneManager<HTMLCanvasElement>;
 
   constructor(props: Props) {
@@ -31,7 +30,7 @@ export default class HudSceneLocationComplex extends React.Component<
     this.htmlElementResizeObserver = new HTMLElementResizeObserver();
     this.sceneManager = new SceneManager(
       this.cancelToken,
-      new SceneLocationComplex()
+      new CanvasLocationComplex()
     );
   }
 
@@ -48,8 +47,6 @@ export default class HudSceneLocationComplex extends React.Component<
   }
 
   setScene(scene: ?HTMLElement): void {
-    this.scene = scene;
-
     if (scene) {
       this.htmlElementResizeObserver.observe(scene);
     } else {
