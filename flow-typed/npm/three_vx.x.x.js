@@ -14,6 +14,8 @@
  */
 
 declare module 'three' {
+  declare type RepeatWrapping = 1000;
+
   declare interface AmbientLight extends Light {
     +isAmbientLight: true;
     castShadow: boolean;
@@ -22,6 +24,15 @@ declare module 'three' {
   }
 
   declare interface BoxGeometry extends Geometry {
+    parameters: {|
+      depth: number,
+      depthSegments: number,
+      height: number,
+      heightSegments: number,
+      width: number,
+      widthSegments: number,
+    |};
+
     constructor(
       width?: number,
       height?: number,
@@ -48,7 +59,13 @@ declare module 'three' {
   }
 
   declare interface Geometry {
+    isGeometry: true;
+
     constructor(): void;
+
+    scale(x: number, y: number, z: number): Geometry;
+
+    translate(x: number, y: number, z: number): Geometry;
   }
 
   declare interface Light extends Object3D {
@@ -63,13 +80,26 @@ declare module 'three' {
     constructor(Geometry, Material): void;
   }
 
+  declare interface MeshBasicMaterial extends Material {
+    constructor({|
+      map: Texture,
+    |}): void;
+  }
+
   declare interface MeshNormalMaterial extends Material {
     constructor(): void;
   }
 
+  declare interface MeshPhongMaterial extends Material {
+    constructor({|
+      map: Texture,
+    |}): void;
+  }
+
   declare interface Object3D {
-    position: Vector3;
-    rotation: Euler;
+    +position: Vector3;
+    +rotation: Euler;
+    +scale: Vector3;
   }
 
   declare interface PerspectiveCamera extends Camera {
@@ -83,6 +113,13 @@ declare module 'three' {
     ): void;
 
     updateProjectionMatrix(): void;
+  }
+
+  declare interface PointLight extends Light {
+    +isPointLight: true;
+    +position: Vector3;
+
+    constructor(color?: number, intensity?: number, distance?: number, decay?: number): void;
   }
 
   declare interface Renderer {
@@ -102,6 +139,17 @@ declare module 'three' {
     add(Object3D): void;
   }
 
+  declare interface Texture {
+    wrapS: RepeatWrapping;
+    wrapT: RepeatWrapping;
+  }
+
+  declare interface TextureLoader {
+    constructor(): void;
+
+    load(url: string, onLoad?: Function, onProgress?: Function, onError?: Function): Texture;
+  }
+
   declare interface Vector3 {
     +isVector: true;
     x: number;
@@ -109,6 +157,8 @@ declare module 'three' {
     z: number;
 
     constructor(number, number, number): void;
+
+    set(number, number, number): Vector3;
   }
 
   declare interface WebGLRenderer extends Renderer {
@@ -128,9 +178,14 @@ declare module 'three' {
     AmbientLight: AmbientLight,
     BoxGeometry: BoxGeometry,
     Mesh: Mesh,
+    MeshBasicMaterial: MeshBasicMaterial,
     MeshNormalMaterial: MeshNormalMaterial,
+    MeshPhongMaterial: MeshPhongMaterial,
     PerspectiveCamera: PerspectiveCamera,
+    PointLight: PointLight,
+    RepeatWrapping: RepeatWrapping,
     Scene: Scene,
+    TextureLoader: TextureLoader,
     WebGLRenderer: WebGLRenderer,
   |};
 }

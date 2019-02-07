@@ -17,8 +17,10 @@ export default class SceneManager<T> {
   async attach(canvas: T): Promise<void> {
     await this.controller.init(canvas);
 
-    for await (let tick of frameinterval()) {
-      await this.controller.tick(canvas, tick);
+    for await (let tick of frameinterval(this.cancelToken)) {
+      if (this.controller.isInitialized()) {
+        await this.controller.tick(canvas, tick);
+      }
     }
   }
 

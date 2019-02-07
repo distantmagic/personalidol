@@ -7,6 +7,8 @@ export interface CanvasController<T> {
 
   destroy(canvas: T): Promise<void>;
 
+  isInitialized(): boolean;
+
   resize(width: number, height: number): Promise<void>;
 
   tick(canvas: T, ClockTick): Promise<void>;
