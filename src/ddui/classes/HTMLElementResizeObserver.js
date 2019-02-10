@@ -1,31 +1,22 @@
 // @flow
 
 import HTMLElementResizeEvent from "./HTMLElementResizeEvent";
+import HTMLElementSize from "./HTMLElementSize";
 import interval from "../../framework/helpers/interval";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { HTMLElementResizeEvent as HTMLElementResizeEventInterface } from "../interfaces/HTMLElementResizeEvent";
+import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../interfaces/HTMLElementResizeObserver";
+import type { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";
 
-export default class HTMLElementResizeObserver {
-  currentOffsetHeight: number;
-  currentOffsetWidth: number;
-  currentStyleHeight: string | void;
-  currentStyleWidth: string | void;
+export default class HTMLElementResizeObserver
+  implements HTMLElementResizeObserverInterface {
   htmlElement: ?HTMLElement;
+  htmlElementSize: ?HTMLElementSizeInterface;
 
   constructor() {
-    this.unobserve();
-  }
-
-  observe(htmlElement: HTMLElement) {
-    this.unobserve();
-    this.htmlElement = htmlElement;
-  }
-
-  unobserve() {
-    this.currentOffsetHeight = -1;
-    this.currentOffsetWidth = -1;
     this.htmlElement = null;
+    this.htmlElementSize = null;
   }
 
   async *listen(
@@ -33,29 +24,30 @@ export default class HTMLElementResizeObserver {
   ): AsyncGenerator<HTMLElementResizeEventInterface, void, void> {
     for await (let tick of interval(40, cancelToken)) {
       const htmlElement = this.htmlElement;
+      const previousHTMLElementSize = this.htmlElementSize;
 
-      if (!htmlElement) {
-        continue;
+      if (htmlElement) {
+        const htmlElementSize = new HTMLElementSize(htmlElement);
+
+        if (
+          !previousHTMLElementSize ||
+          !htmlElementSize.isEqual(previousHTMLElementSize)
+        ) {
+          yield new HTMLElementResizeEvent(tick, htmlElementSize);
+        }
+
+        this.htmlElementSize = new HTMLElementSize(htmlElement);
       }
-
-      const offsetHeight = htmlElement.offsetHeight;
-      const offsetWidth = htmlElement.offsetWidth;
-      const styleHeight = htmlElement.style.height;
-      const styleWidth = htmlElement.style.width;
-
-      if (
-        this.currentOffsetHeight !== offsetHeight ||
-        this.currentOffsetWidth !== offsetWidth ||
-        this.currentStyleHeight !== styleHeight ||
-        this.currentStyleWidth !== styleWidth
-      ) {
-        yield new HTMLElementResizeEvent(tick, offsetWidth, offsetHeight);
-      }
-
-      this.currentOffsetHeight = offsetHeight;
-      this.currentOffsetWidth = offsetWidth;
-      this.currentStyleHeight = styleHeight;
-      this.currentStyleWidth = styleWidth;
     }
+  }
+
+  observe(htmlElement: HTMLElement): void {
+    this.htmlElement = htmlElement;
+    this.htmlElementSize = null;
+  }
+
+  unobserve(): void {
+    this.htmlElement = null;
+    this.htmlElementSize = null;
   }
 }

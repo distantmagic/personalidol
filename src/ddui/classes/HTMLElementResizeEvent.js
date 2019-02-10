@@ -2,16 +2,23 @@
 
 import type { ClockTick } from "../../framework/interfaces/ClockTick";
 import type { HTMLElementResizeEvent as HTMLElementResizeEventInterface } from "../interfaces/HTMLElementResizeEvent";
+import type { HTMLElementSize } from "../interfaces/HTMLElementSize";
 
 export default class HTMLElementResizeEvent
   implements HTMLElementResizeEventInterface {
-  +height: number;
+  +htmlElementSize: HTMLElementSize;
   +tick: ClockTick;
-  +width: number;
 
-  constructor(tick: ClockTick, width: number, height: number) {
-    this.height = height;
+  constructor(tick: ClockTick, htmlElementSize: HTMLElementSize) {
+    this.htmlElementSize = htmlElementSize;
     this.tick = tick;
-    this.width = width;
+  }
+
+  getClockTick(): ClockTick {
+    return this.tick;
+  }
+
+  getHTMLElementSize(): HTMLElementSize {
+    return this.htmlElementSize;
   }
 }

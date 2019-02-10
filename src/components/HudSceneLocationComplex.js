@@ -8,6 +8,9 @@ import CanvasLocationComplex from "../ddui/controllers/CanvasLocationComplex";
 import HTMLElementResizeObserver from "../ddui/classes/HTMLElementResizeObserver";
 import SceneManager from "../ddui/classes/SceneManager";
 
+import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../ddui/interfaces/HTMLElementResizeObserver";
+import type { SceneManager as SceneManagerInterface } from "../ddui/interfaces/SceneManager";
+
 type Props = {||};
 
 type State = {||};
@@ -18,8 +21,8 @@ export default class HudSceneLocationComplex extends React.Component<
 > {
   cancelToken: CancelToken;
   canvas: ?HTMLCanvasElement;
-  htmlElementResizeObserver: HTMLElementResizeObserver;
-  sceneManager: SceneManager<HTMLCanvasElement>;
+  htmlElementResizeObserver: HTMLElementResizeObserverInterface;
+  sceneManager: SceneManagerInterface;
 
   constructor(props: Props) {
     super(props);
@@ -34,15 +37,15 @@ export default class HudSceneLocationComplex extends React.Component<
     );
   }
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     for await (let evt of this.htmlElementResizeObserver.listen(
       this.cancelToken
     )) {
-      this.sceneManager.controller.resize(evt.width, evt.height);
+      this.sceneManager.resize(evt.getHTMLElementSize());
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.cancelToken.cancel();
   }
 
@@ -55,18 +58,13 @@ export default class HudSceneLocationComplex extends React.Component<
   }
 
   async setThreeCanvas(canvas: ?HTMLCanvasElement): Promise<void> {
-    const previousCanvas = this.canvas;
-
-    this.canvas = canvas;
-
-    if (previousCanvas) {
-      await this.sceneManager.detach(previousCanvas);
+    if (canvas) {
+      this.sceneManager.attach(canvas);
     }
+  }
 
-    // nothing changed while awaiting for canvas unmount
-    if (canvas && this.canvas === canvas && !this.cancelToken.isCancelled()) {
-      await this.sceneManager.attach(canvas);
-    }
+  shouldComponentUpdate(): boolean {
+    return false;
   }
 
   render() {
