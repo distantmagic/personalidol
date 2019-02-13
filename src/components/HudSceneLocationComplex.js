@@ -6,6 +6,7 @@ import autoBind from "auto-bind";
 import CancelToken from "../framework/classes/CancelToken";
 import CanvasLocationComplex from "../ddui/controllers/CanvasLocationComplex";
 import HTMLElementResizeObserver from "../ddui/classes/HTMLElementResizeObserver";
+import HudSceneLocationComplexCanvas from "./HudSceneLocationComplexCanvas";
 import SceneManager from "../ddui/classes/SceneManager";
 
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../ddui/interfaces/HTMLElementResizeObserver";
@@ -19,10 +20,10 @@ export default class HudSceneLocationComplex extends React.Component<
   Props,
   State
 > {
-  cancelToken: CancelToken;
+  +cancelToken: CancelToken;
+  +htmlElementResizeObserver: HTMLElementResizeObserverInterface;
+  +sceneManager: SceneManagerInterface;
   canvas: ?HTMLCanvasElement;
-  htmlElementResizeObserver: HTMLElementResizeObserverInterface;
-  sceneManager: SceneManagerInterface;
 
   constructor(props: Props) {
     super(props);
@@ -31,10 +32,7 @@ export default class HudSceneLocationComplex extends React.Component<
 
     this.cancelToken = new CancelToken();
     this.htmlElementResizeObserver = new HTMLElementResizeObserver();
-    this.sceneManager = new SceneManager(
-      this.cancelToken,
-      new CanvasLocationComplex()
-    );
+    this.sceneManager = new SceneManager(new CanvasLocationComplex());
   }
 
   async componentDidMount(): Promise<void> {
@@ -57,23 +55,13 @@ export default class HudSceneLocationComplex extends React.Component<
     }
   }
 
-  async setThreeCanvas(canvas: ?HTMLCanvasElement): Promise<void> {
-    if (canvas) {
-      this.sceneManager.attach(canvas);
-    }
-  }
-
-  shouldComponentUpdate(): boolean {
-    return false;
-  }
-
   render() {
     return (
       <div
         className="dd__scene dd__scene--hud dd__scene--canvas"
         ref={this.setScene}
       >
-        <canvas ref={this.setThreeCanvas} />
+        <HudSceneLocationComplexCanvas sceneManager={this.sceneManager} />
       </div>
     );
   }
