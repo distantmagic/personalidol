@@ -2,9 +2,9 @@
 
 import * as THREE from "three";
 
-import type { CanvasController } from "../interfaces/CanvasController";
-import type { ClockTick } from "../../framework/interfaces/ClockTick";
-import type { ElementSize } from "../interfaces/ElementSize";
+import type { CanvasController } from "../framework/interfaces/CanvasController";
+import type { ClockTick } from "../framework/interfaces/ClockTick";
+import type { ElementSize } from "../framework/interfaces/ElementSize";
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.PerspectiveCamera;

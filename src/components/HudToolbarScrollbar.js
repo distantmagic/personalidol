@@ -3,7 +3,7 @@
 import * as React from "react";
 import autoBind from "auto-bind";
 
-import ScrollbarPosition from "../ddui/classes/ScrollbarPosition";
+import ScrollbarPosition from "../framework/classes/ScrollbarPosition";
 
 type Props = {|
   children: Array<any>,

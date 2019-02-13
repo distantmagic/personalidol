@@ -4,13 +4,13 @@ import * as React from "react";
 import autoBind from "auto-bind";
 
 import CancelToken from "../framework/classes/CancelToken";
-import CanvasLocationComplex from "../ddui/controllers/CanvasLocationComplex";
-import HTMLElementResizeObserver from "../ddui/classes/HTMLElementResizeObserver";
+import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
+import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
 import HudSceneLocationComplexCanvas from "./HudSceneLocationComplexCanvas";
-import SceneManager from "../ddui/classes/SceneManager";
+import SceneManager from "../framework/classes/SceneManager";
 
-import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../ddui/interfaces/HTMLElementResizeObserver";
-import type { SceneManager as SceneManagerInterface } from "../ddui/interfaces/SceneManager";
+import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../framework/interfaces/HTMLElementResizeObserver";
+import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
 
 type Props = {||};
 

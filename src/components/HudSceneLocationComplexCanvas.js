@@ -5,7 +5,7 @@ import autoBind from "auto-bind";
 
 import CancelToken from "../framework/classes/CancelToken";
 
-import type { SceneManager as SceneManagerInterface } from "../ddui/interfaces/SceneManager";
+import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
 
 type Props = {|
   sceneManager: SceneManagerInterface
