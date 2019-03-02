@@ -51,7 +51,7 @@
   "scripts": {
     "build": "npm run sass:build && react-scripts build",
     "flow:watch": "fswatch src | xargs -n1 -I{} yarn run flow status",
-    "postbuild": "npm run css:postbuild",
+    "postbuild": "npm run sass:postbuild",
     "prettier": "./node_modules/.bin/prettier --write \"./{public,scss,src}/**/*.{htm,html,js,scss}\"",
     "sass:build": "./node_modules/.bin/node-sass -r ./scss -o ./public",
     "sass:postbuild": "postcss < public/index.css > public/index.css.tmp && mv public/index.css.tmp public/index.css",
