@@ -38,8 +38,6 @@ export default class SceneManager implements SceneManagerInterface {
 
   async loop(cancelToken: CancelToken): Promise<void> {
     for await (let tick of frameinterval(cancelToken)) {
-      const renderer = this.renderer;
-
       if (this.renderer) {
         await this.controller.tick(this.renderer, tick);
       }

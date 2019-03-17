@@ -18,6 +18,8 @@ export interface DialogueTurn extends Contextual, DialogueFragment {
 
   getCurrentMessage(): Promise<DialogueMessage>;
 
+  getIllustration(): Promise<?string>;
+
   initiator(): Promise<Identifiable & Speaks>;
 
   prompt(): Promise<string>;

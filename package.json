@@ -56,7 +56,7 @@
     "sass:build": "./node_modules/.bin/node-sass -r ./scss -o ./public",
     "sass:postbuild": "postcss < public/index.css > public/index.css.tmp && mv public/index.css.tmp public/index.css",
     "sass:watch": "./node_modules/.bin/node-sass -r -w ./scss -o ./public",
-    "start": "react-scripts start",
+    "start": "PORT=3100 react-scripts start",
     "test": "react-scripts test --env=jsdom"
   }
 }

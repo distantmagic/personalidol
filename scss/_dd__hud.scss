@@ -1,9 +1,7 @@
 $dd-hud-statusbar-height: 50px;
 $dd-hud-toolbar-height: 80px;
-$dd-hud-dialogue-small-height: $dd-hud-toolbar-height;
-$dd-hud-dialogue-medium-height: 300px;
-$dd-hud-dialogue-huge-height: 600px;
-$dd-hud-aside-width: 300px;
+$dd-hud-dialogue-width: 521px;
+$dd-hud-aside-width: 326px;
 
 @import "dd__dialogue";
 @import "dd__scene";
@@ -13,39 +11,15 @@ $dd-hud-aside-width: 300px;
 .dd__hud {
   display: grid;
   grid-template-areas:
-    "scene      aside"
-    "dialogue   aside"
-    "toolbar    aside"
-    "statusbar  statusbar";
-  grid-template-columns: calc(100vw - #{$dd-hud-aside-width}) $dd-hud-aside-width;
-}
-
-.dd__hud.dd__hud--dialogue-small {
+    "scene dialogue aside"
+    "toolbar dialogue aside"
+    "statusbar statusbar statusbar";
+  grid-template-columns:
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
+    $dd-hud-dialogue-width
+    $dd-hud-aside-width;
   grid-template-rows:
-    calc(
-      100vh - #{$dd-hud-dialogue-small-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height}
-    )
-    #{$dd-hud-dialogue-small-height}
-    $dd-hud-toolbar-height
-    $dd-hud-statusbar-height;
-}
-
-.dd__hud.dd__hud--dialogue-medium {
-  grid-template-rows:
-    calc(
-      100vh - #{$dd-hud-dialogue-medium-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height}
-    )
-    #{$dd-hud-dialogue-medium-height}
-    $dd-hud-toolbar-height
-    $dd-hud-statusbar-height;
-}
-
-.dd__hud.dd__hud--dialogue-huge {
-  grid-template-rows:
-    calc(
-      100vh - #{$dd-hud-dialogue-huge-height} - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height}
-    )
-    $dd-hud-dialogue-huge-height
+    calc(100vh - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
     $dd-hud-toolbar-height
     $dd-hud-statusbar-height;
 }
@@ -84,7 +58,7 @@ $dd-hud-aside-width: 300px;
   background-image: url("/assets/image-disasters-of-war.png"),
     url("/assets/texture-mineshaft-marble-512.png");
   background-blend-mode: multiply;
-  background-position: 100% 50%, center;
+  background-position: 100% 100%, center;
   background-repeat: no-repeat, repeat;
   background-size: auto;
   grid-area: dialogue;

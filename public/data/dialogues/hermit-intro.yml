@@ -7,6 +7,7 @@ messages:
   m1:
     actor: Narrator
     answer_to: m1_a1_a1_a2
+    illustration: image-salomon-koninck-hermit.jpg
     prompt: >
       Spotykasz na stoku pustelnika, który ma przy sobie całą gamę roślin,
       których nigdy wcześniej widziałeś na pustyni. Zaciekawiony rozpoczynasz z
@@ -26,6 +27,7 @@ messages:
   m1_a1_a1:
     actor: Pustelnik
     answer_to: m1_a1
+    illustration: image-icons-cave.jpg
     prompt: >
       Nie, to nie ja jestem ich autorem, choć od zawsze bardzo je lubiłem.
       Zastałem je już, gdy pierwszy raz wszedłem do tej groty!
@@ -39,6 +41,7 @@ messages:
   m1_a1_a1_a1_a1:
     actor: Pustelnik
     answer_to: m1_a1_a1_a1
+    illustration: image-icons-cave.jpg
     prompt: >
       Niestety, spróbuj może zapytać w wiosce o podnóża góry?
 
@@ -60,6 +63,7 @@ messages:
   m1_a2_a1:
     actor: Pustelnik
     answer_to: m1_a2
+    illustration: image-salomon-koninck-hermit.jpg
     prompt: >
       Twoje słowa to miód na serce. Chodź za mną, wszystko ci pokażę.
 
@@ -72,5 +76,6 @@ messages:
   m1_a3_a1:
     actor: Pustelnik
     answer_to: m1_a3
+    illustration: image-salomon-koninck-hermit.jpg
     prompt: >
       Szerokiej drogi!

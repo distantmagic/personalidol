@@ -91,18 +91,12 @@ export default class Main extends React.Component<Props, State> {
 
   render() {
     return (
-      <div
-        className={classnames("dd__container", "dd__hud", {
-          "dd__hud--dialogue-small": 1 === this.state.dialogueBoxSize,
-          "dd__hud--dialogue-medium": 2 === this.state.dialogueBoxSize,
-          "dd__hud--dialogue-huge": 3 === this.state.dialogueBoxSize
-        })}
-      >
+      <div className={classnames("dd__container", "dd__hud")}>
         <div className="dd__aside dd__aside--hud" />
         <div className="dd__dialogue dd__dialogue--hud">
           <DialogueLoader
             dialogueResourceReference={
-              new DialogueResourceReference("/data/dialogues/test-dialogue.yml")
+              new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
             }
             dialogueInitiator={new Person("Laelaps")}
             expressionBus={this.state.expressionBus}

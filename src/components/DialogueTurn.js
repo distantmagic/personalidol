@@ -22,6 +22,7 @@ type Props = {|
 type State = {|
   actor: ?string,
   answers: ?Map<string, DialogueMessage>,
+  illustration: ?string,
   prompt: ?string
 |};
 
@@ -29,6 +30,7 @@ export default class DialogueTurn extends React.Component<Props, State> {
   state = {
     actor: null,
     answers: null,
+    illustration: null,
     prompt: null
   };
 
@@ -44,6 +46,7 @@ export default class DialogueTurn extends React.Component<Props, State> {
     this.setState({
       actor: await this.props.dialogueTurn.actor(),
       answers: answers,
+      illustration: await this.props.dialogueTurn.getIllustration(),
       prompt: await this.props.dialogueTurn.prompt()
     });
   }
@@ -61,8 +64,19 @@ export default class DialogueTurn extends React.Component<Props, State> {
       return <DialogueSpinner />;
     }
 
+    const illustration = this.state.illustration;
+
     return (
       <div className="dd__dialogue__turn">
+        {illustration && (
+          <div className="dd__dialogue__turn__illustration">
+            <img
+              alt="Illustration"
+              className="dd__dialogue__turn__illustration__image"
+              src={`/assets/${illustration}`}
+            />
+          </div>
+        )}
         <div className="dd__dialogue__turn__prompt">
           <div className="dd__dialogue__turn__actor">{this.state.actor}</div>
           {this.state.prompt}

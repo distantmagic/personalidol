@@ -5,5 +5,6 @@ export type DialogueScriptMessage = {
   answer_to?: string | Array<string>,
   condition?: string,
   expression?: string,
+  illustration?: string,
   prompt: string
 };

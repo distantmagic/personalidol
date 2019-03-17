@@ -87,28 +87,12 @@ export default class Dialogue extends React.Component<Props, State> {
     }
 
     return (
-      <React.Fragment>
-        <DialogueTurnComponent
-          dialogueTurn={dialogueTurn}
-          logger={this.props.logger}
-          onAnswerClick={this.onAnswerClick}
-          onDialogueEnd={this.props.onDialogueEnd}
-        />
-        <div className="dd__dialogue__toolbar">
-          <button
-            className="dd__button dd__button--dialogue__toolbar"
-            onClick={this.onDialogueBoxSizeIncreaseClick}
-          >
-            Powiększ
-          </button>
-          <button
-            className="dd__button dd__button--dialogue__toolbar"
-            onClick={this.onDialogueBoxSizeDecreaseClick}
-          >
-            Zmniejsz
-          </button>
-        </div>
-      </React.Fragment>
+      <DialogueTurnComponent
+        dialogueTurn={dialogueTurn}
+        logger={this.props.logger}
+        onAnswerClick={this.onAnswerClick}
+        onDialogueEnd={this.props.onDialogueEnd}
+      />
     );
   }
 }

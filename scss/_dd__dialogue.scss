@@ -1,15 +1,3 @@
-.dd__button.dd__button--dialogue__toolbar {
-  font-size: 0;
-  height: 27px;
-  line-height: 0;
-  width: 27px;
-}
-
-.dd__button.dd__button--dialogue__toolbar
-  + .dd__button.dd__button--dialogue__toolbar {
-  margin-top: 3px;
-}
-
 .dd__button.dd__button--dialogue-turn-end {
   left: 0;
   bottom: 2px;
@@ -21,8 +9,9 @@
 .dd__dialogue {
   // justify-content: center;
   display: grid;
-  grid-template-areas: "turn toolbar";
-  grid-template-columns: 1fr 36px;
+  grid-template-areas: "turn";
+  grid-template-columns: 1fr;
+  overflow: auto;
 }
 
 .dd__dialogue__end,
@@ -30,35 +19,23 @@
 .dd__dialogue__turn {
   height: 100%;
   // max-width: 80ch;
-  padding: #{2 * $dd-frame-padding} $dd-frame-padding;
   width: 100%;
 }
 
-.dd__dialogue__toolbar {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 6px 3px;
+.dd__dialogue__end,
+.dd__dialogue__spinner {
+  padding: 16px;
 }
 
 .dd__dialogue__turn {
   align-content: flex-start;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   grid-area: turn;
-  height: 70px;
+  height: 100%;
   justify-content: space-between;
   overflow-y: hidden;
   position: relative;
-}
-
-.dd__hud.dd__hud--dialogue-huge .dd__dialogue__turn.dd__dialogue__turn {
-  height: 590px;
-}
-
-.dd__hud.dd__hud--dialogue-medium .dd__dialogue__turn.dd__dialogue__turn {
-  height: 290px;
 }
 
 .dd__dialogue__turn__actor {
@@ -95,10 +72,35 @@
   display: grid;
   grid-template-columns: 1fr;
   margin: 0;
-  padding: 0 2rem;
+  padding-left: 3rem;
+  padding-right: 1.5rem;
+}
+
+.dd__dialogue__turn__illustration {
+  border-color: rgba(55, 55, 55, 0.4);
+  border-style: outset;
+  border-bottom-width: $dd-frame-border-width;
+  border-left-width: 0;
+  border-right-width: 0;
+  border-top-width: 0;
+  height: 320px;
+  // padding-left: 1rem;
+  // padding-right: 1rem;
+  // padding-top: 1rem;
+}
+
+.dd__dialogue__turn__illustration__image {
+  animation-name: fadein;
+  animation-duration: 0.6s;
+  height: 100%;
+  mix-blend-mode: color-dodge;
+  object-fit: cover;
+  width: 100%;
 }
 
 .dd__dialogue__turn__prompt {
   padding-bottom: 1rem;
-  padding-left: 1.5rem;
+  padding-left: 2rem;
+  padding-right: 1.5rem;
+  padding-top: 1rem;
 }

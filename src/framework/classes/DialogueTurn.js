@@ -99,6 +99,12 @@ export default class DialogueTurn implements DialogueTurnInterface {
     );
   }
 
+  async getIllustration(): Promise<?string> {
+    const messageScript = await this.currentMessage.getMessageScript();
+
+    return messageScript.illustration;
+  }
+
   async initiator(): Promise<Identifiable & Speaks> {
     return this._initiator;
   }

@@ -1,3 +1,4 @@
+@import "animations";
 @import "breakpoints";
 @import "functions";
 @import "normalize";
@@ -5,7 +6,7 @@
 @import "z-index";
 
 $dd-frame-border-width: 2px;
-$dd-frame-padding: 5px;
+$dd-frame-padding: 6px;
 
 *,
 * * {
