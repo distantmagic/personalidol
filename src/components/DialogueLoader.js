@@ -82,22 +82,32 @@ export default class DialogueLoader extends React.Component<Props, State> {
     const dialogue = this.state.dialogue;
 
     if (!dialogue) {
-      return <DialogueSpinner />;
+      return (
+        <div className="dd__dialogue dd__dialogue--hud dd__frame">
+          <DialogueSpinner />
+        </div>
+      );
     }
 
     if (this.state.isDialogueEnded) {
-      return <div className="dd__dialogue__end">Koniec dialogu.</div>;
+      return (
+        <div className="dd__dialogue dd__dialogue--hud dd__frame">
+          <div className="dd__dialogue__end">Koniec dialogu.</div>
+        </div>
+      );
     }
 
     return (
-      <Dialogue
-        dialogue={dialogue}
-        dialogueInitiator={this.props.dialogueInitiator}
-        onDialogueBoxSizeDecrease={this.props.onDialogueBoxSizeDecrease}
-        onDialogueBoxSizeIncrease={this.props.onDialogueBoxSizeIncrease}
-        onDialogueEnd={this.onDialogueEnd}
-        logger={this.props.logger}
-      />
+      <div className="dd__dialogue dd__dialogue--hud dd__frame">
+        <Dialogue
+          dialogue={dialogue}
+          dialogueInitiator={this.props.dialogueInitiator}
+          onDialogueBoxSizeDecrease={this.props.onDialogueBoxSizeDecrease}
+          onDialogueBoxSizeIncrease={this.props.onDialogueBoxSizeIncrease}
+          onDialogueEnd={this.onDialogueEnd}
+          logger={this.props.logger}
+        />
+      </div>
     );
   }
 }

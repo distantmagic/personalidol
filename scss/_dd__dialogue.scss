@@ -7,7 +7,12 @@
 }
 
 .dd__dialogue {
-  // justify-content: center;
+  background-blend-mode: multiply;
+  background-image: url("/assets/image-disasters-of-war.png"),
+    url("/assets/texture-mineshaft-marble-512.png");
+  background-position: 100% 100%, center;
+  background-repeat: no-repeat, repeat;
+  background-size: auto;
   display: grid;
   grid-template-areas: "turn";
   grid-template-columns: 1fr;
@@ -29,6 +34,8 @@
 
 .dd__dialogue__turn {
   align-content: flex-start;
+  animation-duration: 0.6s;
+  animation-name: fadein;
   display: grid;
   grid-template-columns: 1fr;
   grid-area: turn;
@@ -70,30 +77,30 @@
 
 .dd__dialogue__turn__answers {
   display: grid;
+  grid-row-gap: 0.5rem;
   grid-template-columns: 1fr;
   margin: 0;
+  padding-bottom: 5rem;
   padding-left: 3rem;
   padding-right: 1.5rem;
+  padding-top: 1.5rem;
 }
 
 .dd__dialogue__turn__illustration {
-  border-color: rgba(55, 55, 55, 0.4);
-  border-style: outset;
-  border-bottom-width: $dd-frame-border-width;
-  border-left-width: 0;
-  border-right-width: 0;
-  border-top-width: 0;
+  background-image: url("/assets/texture-mineshaft-marble-512.png");
+  display: grid;
+  grid-template-columns: 1fr;
   height: 320px;
+  margin: 1rem 1rem 0 1rem;
   // padding-left: 1rem;
   // padding-right: 1rem;
   // padding-top: 1rem;
 }
 
 .dd__dialogue__turn__illustration__image {
-  animation-name: fadein;
-  animation-duration: 0.6s;
+  border-radius: $dd-frame-border-radius;
   height: 100%;
-  mix-blend-mode: color-dodge;
+  // mix-blend-mode: color-dodge;
   object-fit: cover;
   width: 100%;
 }
@@ -102,5 +109,5 @@
   padding-bottom: 1rem;
   padding-left: 2rem;
   padding-right: 1.5rem;
-  padding-top: 1rem;
+  padding-top: 1.5rem;
 }

@@ -12,7 +12,7 @@ export default class HudToolbar extends React.Component<Props, State> {
   render() {
     return (
       <HudToolbarScrollbar
-        className="dd__toolbar dd__toolbar--hud"
+        className="dd__frame dd__toolbar dd__toolbar--hud"
         style={{
           "--dd-toolbar-elements": 6
         }}

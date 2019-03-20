@@ -465,6 +465,45 @@ p {
   background-image: url("/assets/icon-strength.svg"), url("/assets/texture-mineshaft-marble-512.png");
   background-size: 66%, auto; }
 
+.dd__frame {
+  border-color: rgba(55, 55, 55, 0.4);
+  border-radius: 4px;
+  border-style: outset;
+  border-width: 2px; }
+
+.dd__frame.dd__frame--inset {
+  border-style: inset; }
+
+.dd__aside {
+  align-content: flex-start;
+  background-image: url("/assets/image-rise-and-fall.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-blend-mode: multiply;
+  background-position: 30% 50%, center;
+  background-repeat: no-repeat, repeat;
+  background-size: cover, auto;
+  display: grid;
+  grid-area: aside;
+  grid-row-gap: 6px;
+  grid-template-columns: 1fr;
+  padding: 6px; }
+
+.dd__aside__portrait {
+  background-color: transparent;
+  border: none;
+  display: grid;
+  filter: brightness(0.6);
+  height: 106px;
+  cursor: pointer; }
+
+.dd__aside__portrait.dd__aside__portrait--active {
+  filter: brightness(1);
+  outline: 1px solid green; }
+
+.dd__aside__portrait__image {
+  height: 100%;
+  object-fit: contain;
+  width: 100%; }
+
 .dd__button.dd__button--dialogue-turn-end {
   left: 0;
   bottom: 2px;
@@ -473,6 +512,11 @@ p {
   width: 100%; }
 
 .dd__dialogue {
+  background-blend-mode: multiply;
+  background-image: url("/assets/image-disasters-of-war.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-position: 100% 100%, center;
+  background-repeat: no-repeat, repeat;
+  background-size: auto;
   display: grid;
   grid-template-areas: "turn";
   grid-template-columns: 1fr;
@@ -490,6 +534,8 @@ p {
 
 .dd__dialogue__turn {
   align-content: flex-start;
+  animation-duration: 0.6s;
+  animation-name: fadein;
   display: grid;
   grid-template-columns: 1fr;
   grid-area: turn;
@@ -522,25 +568,24 @@ p {
 
 .dd__dialogue__turn__answers {
   display: grid;
+  grid-row-gap: 0.5rem;
   grid-template-columns: 1fr;
   margin: 0;
+  padding-bottom: 5rem;
   padding-left: 3rem;
-  padding-right: 1.5rem; }
+  padding-right: 1.5rem;
+  padding-top: 1.5rem; }
 
 .dd__dialogue__turn__illustration {
-  border-color: rgba(55, 55, 55, 0.4);
-  border-style: outset;
-  border-bottom-width: 2px;
-  border-left-width: 0;
-  border-right-width: 0;
-  border-top-width: 0;
-  height: 320px; }
+  background-image: url("/assets/texture-mineshaft-marble-512.png");
+  display: grid;
+  grid-template-columns: 1fr;
+  height: 320px;
+  margin: 1rem 1rem 0 1rem; }
 
 .dd__dialogue__turn__illustration__image {
-  animation-name: fadein;
-  animation-duration: 0.6s;
+  border-radius: 4px;
   height: 100%;
-  mix-blend-mode: color-dodge;
   object-fit: cover;
   width: 100%; }
 
@@ -548,7 +593,7 @@ p {
   padding-bottom: 1rem;
   padding-left: 2rem;
   padding-right: 1.5rem;
-  padding-top: 1rem; }
+  padding-top: 1.5rem; }
 
 .dd__scene.dd__scene--text {
   overflow-y: auto;
@@ -594,13 +639,14 @@ p {
 
 .dd__statusbar {
   align-items: center;
+  color: rgba(255, 255, 255, 0.7);
   display: flex;
   padding-left: 8px; }
 
 .dd__toolbar {
   display: grid;
   grid-column-gap: 4px;
-  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc(100vw - 326px - 4.6 * 64px);
+  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc(100vw - 80px - 4.6 * 64px);
   grid-template-rows: 1fr;
   overflow: auto;
   padding: 6px;
@@ -615,8 +661,8 @@ p {
 
 .dd__hud {
   display: grid;
-  grid-template-areas: "scene dialogue aside" "toolbar dialogue aside" "statusbar statusbar statusbar";
-  grid-template-columns: calc(100vw - 326px - 521px) 521px 326px;
+  grid-template-areas: "aside dialogue scene" "aside dialogue toolbar" "aside dialogue statusbar";
+  grid-template-columns: 80px 524px calc(100vw - 80px - 524px);
   grid-template-rows: calc(100vh - 80px - 50px) 80px 50px; }
 
 .dd__aside.dd__aside--hud,
@@ -627,41 +673,20 @@ p {
   height: 100%;
   width: 100%; }
 
-.dd__aside.dd__aside--hud,
-.dd__dialogue.dd__dialogue--hud,
-.dd__statusbar.dd__statusbar--hud,
-.dd__toolbar.dd__toolbar--hud {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
-  border-color: rgba(55, 55, 55, 0.4);
-  border-radius: 4px;
-  border-style: outset;
-  border-width: 2px; }
-
 .dd__aside.dd__aside--hud {
-  background-image: url("/assets/image-rise-and-fall.png"), url("/assets/texture-mineshaft-marble-512.png");
-  background-blend-mode: multiply;
-  background-position: 30% 50%, center;
-  background-repeat: no-repeat, repeat;
-  background-size: cover, auto;
   grid-area: aside; }
 
 .dd__dialogue.dd__dialogue--hud {
-  background-image: url("/assets/image-disasters-of-war.png"), url("/assets/texture-mineshaft-marble-512.png");
-  background-blend-mode: multiply;
-  background-position: 100% 100%, center;
-  background-repeat: no-repeat, repeat;
-  background-size: auto;
   grid-area: dialogue; }
-
-.dd__dialogue.dd__dialogue--hud.dd__dialogue--light {
-  background-image: url("/assets/texture-white-marble-512.png");
-  color: black; }
 
 .dd__scene.dd__scene--hud {
   grid-area: scene; }
 
+.dd__statusbar.dd__statusbar--hud,
+.dd__toolbar.dd__toolbar--hud {
+  background-image: url("/assets/texture-mineshaft-marble-512.png"); }
+
 .dd__statusbar.dd__statusbar--hud {
-  color: rgba(255, 255, 255, 0.7);
   grid-area: statusbar; }
 
 .dd__toolbar.dd__toolbar--hud {

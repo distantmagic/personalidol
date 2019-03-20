@@ -69,7 +69,7 @@ export default class DialogueTurn extends React.Component<Props, State> {
     return (
       <div className="dd__dialogue__turn">
         {illustration && (
-          <div className="dd__dialogue__turn__illustration">
+          <div className="dd__frame dd__frame--inset dd__dialogue__turn__illustration">
             <img
               alt="Illustration"
               className="dd__dialogue__turn__illustration__image"

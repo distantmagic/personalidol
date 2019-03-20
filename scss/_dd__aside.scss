@@ -1,0 +1,35 @@
+.dd__aside {
+  align-content: flex-start;
+  background-image: url("/assets/image-rise-and-fall.png"),
+    url("/assets/texture-mineshaft-marble-512.png");
+  background-blend-mode: multiply;
+  background-position: 30% 50%, center;
+  background-repeat: no-repeat, repeat;
+  background-size: cover, auto;
+  display: grid;
+  grid-area: aside;
+  grid-row-gap: $dd-frame-padding;
+  grid-template-columns: 1fr;
+  padding: $dd-frame-padding;
+}
+
+.dd__aside__portrait {
+  background-color: transparent;
+  border: none;
+  display: grid;
+  // filter: brightness(0.6) grayscale(0.3);
+  filter: brightness(0.6);
+  height: 106px;
+  cursor: pointer;
+}
+
+.dd__aside__portrait.dd__aside__portrait--active {
+  filter: brightness(1);
+  outline: 1px solid green;
+}
+
+.dd__aside__portrait__image {
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}

@@ -1,8 +1,9 @@
 $dd-hud-statusbar-height: 50px;
 $dd-hud-toolbar-height: 80px;
-$dd-hud-dialogue-width: 521px;
-$dd-hud-aside-width: 326px;
+$dd-hud-dialogue-width: 524px;
+$dd-hud-aside-width: 80px;
 
+@import "dd__aside";
 @import "dd__dialogue";
 @import "dd__scene";
 @import "dd__statusbar";
@@ -11,13 +12,13 @@ $dd-hud-aside-width: 326px;
 .dd__hud {
   display: grid;
   grid-template-areas:
-    "scene dialogue aside"
-    "toolbar dialogue aside"
-    "statusbar statusbar statusbar";
+    "aside dialogue scene"
+    "aside dialogue toolbar"
+    "aside dialogue statusbar";
   grid-template-columns:
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
+    $dd-hud-aside-width
     $dd-hud-dialogue-width
-    $dd-hud-aside-width;
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width});
   grid-template-rows:
     calc(100vh - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
     $dd-hud-toolbar-height
@@ -33,48 +34,24 @@ $dd-hud-aside-width: 326px;
   width: 100%;
 }
 
-.dd__aside.dd__aside--hud,
-.dd__dialogue.dd__dialogue--hud,
-.dd__statusbar.dd__statusbar--hud,
-.dd__toolbar.dd__toolbar--hud {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
-  border-color: rgba(55, 55, 55, 0.4);
-  border-radius: 4px;
-  border-style: outset;
-  border-width: $dd-frame-border-width;
-}
-
 .dd__aside.dd__aside--hud {
-  background-image: url("/assets/image-rise-and-fall.png"),
-    url("/assets/texture-mineshaft-marble-512.png");
-  background-blend-mode: multiply;
-  background-position: 30% 50%, center;
-  background-repeat: no-repeat, repeat;
-  background-size: cover, auto;
   grid-area: aside;
 }
 
 .dd__dialogue.dd__dialogue--hud {
-  background-image: url("/assets/image-disasters-of-war.png"),
-    url("/assets/texture-mineshaft-marble-512.png");
-  background-blend-mode: multiply;
-  background-position: 100% 100%, center;
-  background-repeat: no-repeat, repeat;
-  background-size: auto;
   grid-area: dialogue;
-}
-
-.dd__dialogue.dd__dialogue--hud.dd__dialogue--light {
-  background-image: url("/assets/texture-white-marble-512.png");
-  color: black;
 }
 
 .dd__scene.dd__scene--hud {
   grid-area: scene;
 }
 
+.dd__statusbar.dd__statusbar--hud,
+.dd__toolbar.dd__toolbar--hud {
+  background-image: url("/assets/texture-mineshaft-marble-512.png");
+}
+
 .dd__statusbar.dd__statusbar--hud {
-  color: rgba(255, 255, 255, 0.7);
   grid-area: statusbar;
 }
 

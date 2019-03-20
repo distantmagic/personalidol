@@ -10,6 +10,7 @@ import DialogueLoader from "./DialogueLoader";
 import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
+import HudAside from "./HudAside";
 import HudScene from "./HudScene";
 import HudToolbar from "./HudToolbar";
 import Person from "../framework/classes/Entity/Person";
@@ -92,23 +93,21 @@ export default class Main extends React.Component<Props, State> {
   render() {
     return (
       <div className={classnames("dd__container", "dd__hud")}>
-        <div className="dd__aside dd__aside--hud" />
-        <div className="dd__dialogue dd__dialogue--hud">
-          <DialogueLoader
-            dialogueResourceReference={
-              new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
-            }
-            dialogueInitiator={new Person("Laelaps")}
-            expressionBus={this.state.expressionBus}
-            expressionContext={this.state.expressionContext}
-            logger={this.props.logger}
-            onDialogueBoxSizeDecrease={this.onDialogueBoxSizeDecrease}
-            onDialogueBoxSizeIncrease={this.onDialogueBoxSizeIncrease}
-            queryBus={this.state.queryBus}
-          />
-        </div>
+        <HudAside />
+        <DialogueLoader
+          dialogueResourceReference={
+            new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
+          }
+          dialogueInitiator={new Person("Laelaps")}
+          expressionBus={this.state.expressionBus}
+          expressionContext={this.state.expressionContext}
+          logger={this.props.logger}
+          onDialogueBoxSizeDecrease={this.onDialogueBoxSizeDecrease}
+          onDialogueBoxSizeIncrease={this.onDialogueBoxSizeIncrease}
+          queryBus={this.state.queryBus}
+        />
         <HudScene />
-        <div className="dd__statusbar dd__statusbar--hud">
+        <div className="dd__frame dd__statusbar dd__statusbar--hud">
           Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
           będzie przyjaźnie nastawiony.
         </div>
