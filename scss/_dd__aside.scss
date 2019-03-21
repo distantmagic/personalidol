@@ -14,22 +14,57 @@
 }
 
 .dd__aside__portrait {
-  background-color: transparent;
-  border: none;
+  // background-color: transparent;
+  // border: none;
+  border-radius: $dd-frame-border-radius;
   display: grid;
   // filter: brightness(0.6) grayscale(0.3);
-  filter: brightness(0.6);
-  height: 106px;
+  // filter: brightness(0.6);
+  grid-template-columns: 64px auto;
+  grid-template-rows: 1fr;
+  height: 96px;
   cursor: pointer;
+
+  &:nth-of-type(4n) .dd__aside__portrait__statuses {
+    background-position: 128px;
+  }
+  &:nth-of-type(4n + 1) .dd__aside__portrait__statuses {
+    background-position: 256px;
+  }
+  &:nth-of-type(4n + 2) .dd__aside__portrait__statuses {
+    background-position: 384px;
+  }
 }
 
 .dd__aside__portrait.dd__aside__portrait--active {
-  filter: brightness(1);
-  outline: 1px solid green;
+  // filter: brightness(1);
+  // outline: 1px solid green;
 }
 
 .dd__aside__portrait__image {
+  // background-color: red;
+  border-bottom-left-radius: $dd-frame-border-radius;
+  border-top-left-radius: $dd-frame-border-radius;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   width: 100%;
+}
+
+.dd__aside__portrait__statuses {
+  background-image: url("/assets/texture-mineshaft-marble-512.png");
+  background-size: auto;
+  display: grid;
+  grid-auto-rows: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dd__aside__portrait__status {
+  // background-color: red;
+  // border: 2px inset gray;
+  // border-radius: $dd-frame-border-radius;
+  font-size: 0;
+  line-height: 0;
 }

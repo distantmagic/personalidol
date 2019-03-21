@@ -78,13 +78,12 @@ export default class DialogueTurn extends React.Component<Props, State> {
             />
           </div>
         )}
-        <h1 className="dd__dialogue__turn__title">
-          Jaskinia pustelnika
-        </h1>
+        <h1 className="dd__dialogue__turn__title">Jaskinia pustelnika</h1>
         <div className="dd__dialogue__turn__prompt dd-tp__formatted-text">
           <div className="dd__dialogue__turn__actor">{this.state.actor}</div>
           <ReactMarkdown source={this.state.prompt} />
         </div>
+        <hr className="dd__dialogue__hr" />
         {answers.isEmpty() ? (
           <button
             className="dd__button dd__button--dialogue-turn-end"

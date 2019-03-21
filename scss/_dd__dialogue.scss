@@ -30,6 +30,20 @@ $dd-dialogue-padding-horizontal: 1rem;
   padding: 16px;
 }
 
+.dd__dialogue__hr {
+  // background-color: red;
+  background-image: url("/assets/image-horizontal-rule-ornamental.png");
+  background-position: 0 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: none;
+  height: 32px;
+  display: block;
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+  width: 100%;
+}
+
 .dd__dialogue__turn {
   align-content: flex-start;
   // background-color: white;
@@ -93,7 +107,7 @@ $dd-dialogue-padding-horizontal: 1rem;
   padding-bottom: 3rem;
   padding-left: $dd-dialogue-padding-horizontal + 1rem;
   padding-right: $dd-dialogue-padding-horizontal;
-  padding-top: 3rem;
+  padding-top: 1rem;
 }
 
 .dd__dialogue__turn__illustration {

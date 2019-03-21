@@ -496,21 +496,39 @@ p {
   padding: 6px; }
 
 .dd__aside__portrait {
-  background-color: transparent;
-  border: none;
+  border-radius: 4px;
   display: grid;
-  filter: brightness(0.6);
-  height: 106px;
+  grid-template-columns: 64px auto;
+  grid-template-rows: 1fr;
+  height: 96px;
   cursor: pointer; }
-
-.dd__aside__portrait.dd__aside__portrait--active {
-  filter: brightness(1);
-  outline: 1px solid green; }
+  .dd__aside__portrait:nth-of-type(4n) .dd__aside__portrait__statuses {
+    background-position: 128px; }
+  .dd__aside__portrait:nth-of-type(4n + 1) .dd__aside__portrait__statuses {
+    background-position: 256px; }
+  .dd__aside__portrait:nth-of-type(4n + 2) .dd__aside__portrait__statuses {
+    background-position: 384px; }
 
 .dd__aside__portrait__image {
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   width: 100%; }
+
+.dd__aside__portrait__statuses {
+  background-image: url("/assets/texture-mineshaft-marble-512.png");
+  background-size: auto;
+  display: grid;
+  grid-auto-rows: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+
+.dd__aside__portrait__status {
+  font-size: 0;
+  line-height: 0; }
 
 .dd__button.dd__button--dialogue-turn-end {
   left: 0;
@@ -536,6 +554,18 @@ p {
 .dd__dialogue__end,
 .dd__dialogue__spinner {
   padding: 16px; }
+
+.dd__dialogue__hr {
+  background-image: url("/assets/image-horizontal-rule-ornamental.png");
+  background-position: 0 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: none;
+  height: 32px;
+  display: block;
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+  width: 100%; }
 
 .dd__dialogue__turn {
   align-content: flex-start;
@@ -583,7 +613,7 @@ p {
   padding-bottom: 3rem;
   padding-left: 2rem;
   padding-right: 1rem;
-  padding-top: 3rem; }
+  padding-top: 1rem; }
 
 .dd__dialogue__turn__illustration {
   animation-duration: 0.6s;
@@ -665,7 +695,7 @@ p {
 .dd__toolbar {
   display: grid;
   grid-column-gap: 4px;
-  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc(100vw - 80px - 4.6 * 64px);
+  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc(100vw - 128px - 4.6 * 64px);
   grid-template-rows: 1fr;
   overflow: auto;
   padding-bottom: 6px;
@@ -684,7 +714,7 @@ p {
 .dd__hud {
   display: grid;
   grid-template-areas: "aside dialogue scene" "aside dialogue toolbar" "aside dialogue statusbar";
-  grid-template-columns: 80px 524px calc(100vw - 80px - 524px);
+  grid-template-columns: 128px 524px calc(100vw - 128px - 524px);
   grid-template-rows: calc(100vh - 80px - 50px) 80px 50px; }
 
 .dd__aside.dd__aside--hud,
