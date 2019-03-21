@@ -4,6 +4,7 @@ import { Map } from "immutable";
 
 import * as React from "react";
 import autoBind from "auto-bind";
+import ReactMarkdown from "react-markdown";
 
 import DialogueAnswer from "./DialogueAnswer";
 import DialogueSpinner from "./DialogueSpinner";
@@ -69,17 +70,20 @@ export default class DialogueTurn extends React.Component<Props, State> {
     return (
       <div className="dd__dialogue__turn">
         {illustration && (
-          <div className="dd__frame dd__frame--inset dd__dialogue__turn__illustration">
+          <div className="dd__dialogue__turn__illustration">
             <img
               alt="Illustration"
               className="dd__dialogue__turn__illustration__image"
-              src={`/assets/${illustration}`}
+              src={`/assets/image-manuscript-header.png`}
             />
           </div>
         )}
-        <div className="dd__dialogue__turn__prompt">
+        <h1 className="dd__dialogue__turn__title">
+          Jaskinia pustelnika
+        </h1>
+        <div className="dd__dialogue__turn__prompt dd-tp__formatted-text">
           <div className="dd__dialogue__turn__actor">{this.state.actor}</div>
-          {this.state.prompt}
+          <ReactMarkdown source={this.state.prompt} />
         </div>
         {answers.isEmpty() ? (
           <button

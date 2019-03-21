@@ -15,12 +15,14 @@ messages:
   m1:
     actor: Narrator
     answer_to: m1_a1_a1_a2
-    illustration: image-salomon-koninck-hermit+texture-mineshaft-marble-512_color-dodge.jpg
+    illustration: image-salomon-koninck-hermit.jpg
     prompt: >
       Masz za sobą długą wspinaczkę, która jednak nie wyczerpała cię do końca
       dzięki twojej dobrej kondycji. Oglądasz się na zbocze góry i rozległe
       skaliste równiny. Słyszysz krzyk orła, który dostrzegł ofiarę, szum
-      potężnego wiatru i wielką, wielką ciszę, która pokrywa całe równiny.
+      potężnego wiatru i wielką, wielką ciszę, która pokrywa całą krainę wokół.
+
+
       Dotarłeś do celu. Masz przed sobą jaskinię pustelnika - mistrza zielarza,
       potencjalnie skrybę zaginionej wiedzy.
       Nie wiesz jak zareaguje na obcego wędrowca, ale zbliższasz się powolnym,
@@ -32,6 +34,8 @@ messages:
       Ku twojej radości pustelnik spogląda na ciebie i spokojnym głosem
       zaprasza: "proszę, wejdź wędrowcze, usiądź" i wskazuje na kamień ze
       skórzaną narzutą, który widocznie służy mu czasami za siedzisko.
+
+
       Nie wytrzymujesz i zaciekawiony rozpoczynasz rozmowę i cieszysz się,
       kiedy widzisz, że starzec chętnie odpowiada na pytania.
 
@@ -45,7 +49,7 @@ messages:
   m1_a1_a1:
     actor: Pustelnik
     answer_to: m1_a1
-    illustration: image-icons-cave+texture-mineshaft-marble-512_color-dodge.jpg
+    illustration: image-icons-cave.jpg
     prompt: >
       Nie, to nie ja jestem ich autorem, choć od zawsze bardzo je lubiłem.
       Zastałem je już, gdy pierwszy raz wszedłem do tej groty!
@@ -59,7 +63,7 @@ messages:
   m1_a1_a1_a1_a1:
     actor: Pustelnik
     answer_to: m1_a1_a1_a1
-    illustration: image-icons-cave+texture-mineshaft-marble-512_color-dodge.jpg
+    illustration: image-icons-cave.jpg
     prompt: >
       Niestety, spróbuj może zapytać w wiosce o podnóża góry?
 
@@ -81,7 +85,7 @@ messages:
   m1_a2_a1:
     actor: Pustelnik
     answer_to: m1_a2
-    illustration: image-salomon-koninck-hermit+texture-mineshaft-marble-512_color-dodge.jpg
+    illustration: image-salomon-koninck-hermit.jpg
     prompt: >
       Twoje słowa to miód na serce. Chodź za mną, wszystko ci pokażę.
 
@@ -94,6 +98,6 @@ messages:
   m1_a3_a1:
     actor: Pustelnik
     answer_to: m1_a3
-    illustration: image-salomon-koninck-hermit+texture-mineshaft-marble-512_color-dodge.jpg
+    illustration: image-salomon-koninck-hermit.jpg
     prompt: >
       Szerokiej drogi!

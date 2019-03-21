@@ -1,5 +1,7 @@
 @import "animations";
 @import "breakpoints";
+@import "colors";
+@import "fonts";
 @import "functions";
 @import "normalize";
 @import "typography";
@@ -14,23 +16,32 @@ $dd-frame-padding: 6px;
   box-sizing: border-box;
 }
 
-body,
-button {
-  text-shadow: rgba(55, 55, 55, 0.6) -1px 0 0, rgba(55, 55, 55, 0.6) 0 -1px 0,
-    rgba(black, 0.6) 0 1px 0, rgba(black, 0.6) 1px 0 0;
+::selection {
+  background-color: crimson;
+  color: white;
+}
+
+html {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
+  @include tp-text(1);
+
   background-color: black;
   background-image: url("/assets/texture-cod-gray-marble-512.png");
   color: rgba(255, 255, 255, 0.85);
   display: grid;
-  font-family: "Kurale", serif;
+  font-family: $font-family-vesper-libre;
   height: 100vh;
+  text-shadow: rgba(55, 55, 55, 0.6) -1px 0 0, rgba(55, 55, 55, 0.6) 0 -1px 0,
+    rgba(black, 0.6) 0 1px 0, rgba(black, 0.6) 1px 0 0;
   width: 100%;
 }
 
-body,
 button,
 h1,
 h2,
@@ -39,8 +50,8 @@ h4,
 h5,
 h6,
 p {
-  @include tp-text(1);
-
+  font-size: inherit;
+  line-height: inherit;
   margin: 0;
   padding: 0;
 }
