@@ -524,11 +524,70 @@ p {
   grid-template-columns: repeat(2, 1fr);
   list-style-type: none;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  position: relative; }
 
 .dd__aside__portrait__status {
-  font-size: 0;
-  line-height: 0; }
+  display: grid; }
+  .dd__aside__portrait__status:hover .dd__aside__portrait__status__icon__tooltip {
+    opacity: 1; }
+  .dd__aside__portrait__status:nth-of-type(1) .dd__aside__portrait__status__icon__tooltip {
+    top: 12px; }
+  .dd__aside__portrait__status:nth-of-type(2) .dd__aside__portrait__status__icon__tooltip {
+    top: 12px; }
+  .dd__aside__portrait__status:nth-of-type(3) .dd__aside__portrait__status__icon__tooltip {
+    top: 36px; }
+  .dd__aside__portrait__status:nth-of-type(4) .dd__aside__portrait__status__icon__tooltip {
+    top: 36px; }
+  .dd__aside__portrait__status:nth-of-type(5) .dd__aside__portrait__status__icon__tooltip {
+    top: 60px; }
+  .dd__aside__portrait__status:nth-of-type(6) .dd__aside__portrait__status__icon__tooltip {
+    top: 60px; }
+  .dd__aside__portrait__status:nth-of-type(7) .dd__aside__portrait__status__icon__tooltip {
+    top: 84px; }
+  .dd__aside__portrait__status:nth-of-type(8) .dd__aside__portrait__status__icon__tooltip {
+    top: 84px; }
+  .dd__aside__portrait__status:nth-of-type(9) .dd__aside__portrait__status__icon__tooltip {
+    top: 108px; }
+  .dd__aside__portrait__status:nth-of-type(10) .dd__aside__portrait__status__icon__tooltip {
+    top: 108px; }
+  .dd__aside__portrait__status:nth-of-type(11) .dd__aside__portrait__status__icon__tooltip {
+    top: 132px; }
+  .dd__aside__portrait__status:nth-of-type(12) .dd__aside__portrait__status__icon__tooltip {
+    top: 132px; }
+
+.dd__aside__portrait__status__icon {
+  display: grid; }
+
+.dd__aside__portrait__status__icon__image {
+  height: 100%;
+  width: 100%; }
+
+.dd__aside__portrait__status__icon__tooltip {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 4px;
+  display: flex;
+  filter: drop-shadow(12px 12px 24px rgba(0, 0, 0, 0.6));
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  padding: 1rem 1.5rem;
+  position: absolute;
+  right: -12px;
+  transform: translateX(100%) translateY(-12px);
+  width: 328px;
+  z-index: 1; }
+  .dd__aside__portrait__status__icon__tooltip:before {
+    border-color: transparent black transparent transparent;
+    border-style: solid;
+    border-width: 6px 10.4px 6px 0;
+    height: 0;
+    width: 0;
+    content: "";
+    left: -10.4px;
+    position: absolute;
+    top: 6px; }
 
 .dd__button.dd__button--dialogue-turn-end {
   left: 0;
