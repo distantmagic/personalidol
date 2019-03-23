@@ -8,6 +8,7 @@ import HudAsidePortraitIcon from "./HudAsidePortraitIcon";
 
 type Props = {|
   isActive: boolean,
+  name: string,
   src: string
 |};
 
@@ -33,9 +34,7 @@ export default class HudAsidePortrait extends React.Component<Props, State> {
           src={this.props.src}
         />
         <ul className="dd__aside__portrait__statuses">
-          <li className="dd__aside__portrait__status dd__frame dd__frame--inset">
-            <HudAsidePortraitIcon />
-          </li>
+          <HudAsidePortraitIcon name={this.props.name} />
           <li className="dd__aside__portrait__status dd__frame dd__frame--inset" />
           <li className="dd__aside__portrait__status dd__frame dd__frame--inset" />
           <li className="dd__aside__portrait__status dd__frame dd__frame--inset" />

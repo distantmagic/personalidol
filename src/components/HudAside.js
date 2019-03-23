@@ -21,14 +21,17 @@ export default class HudAside extends React.Component<Props, State> {
       <div className="dd__aside dd__aside--hud dd__frame">
         <HudAsidePortrait
           isActive={true}
+          name="Arlance"
           src="/assets/portrait-arthurian-knight.png"
         />
         <HudAsidePortrait
           isActive={false}
+          name="Moort"
           src="/assets/portrait-eduard-charlemont-moorish-chief.jpg"
         />
         <HudAsidePortrait
           isActive={false}
+          name="Circassia"
           src="/assets/portrait-veiled-circassian-beauty.jpg"
         />
       </div>

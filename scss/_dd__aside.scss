@@ -63,10 +63,23 @@
 }
 
 .dd__aside__portrait__status {
+  cursor: default;
   display: grid;
 
-  &:hover .dd__aside__portrait__status__icon__tooltip {
-    opacity: 1;
+  // 'react-outside-click-handler' mandatory <div />
+  > div {
+    // background-color: red;
+    display: grid;
+    height: 100%;
+    width: 100%;
+  }
+
+  &:hover,
+  &.dd__aside__portrait__status--active {
+    .dd__aside__portrait__status__icon__tooltip {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 
   @for $i from 1 through 12 {
@@ -77,6 +90,9 @@
 }
 
 .dd__aside__portrait__status__icon {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
   display: grid;
 }
 
@@ -90,6 +106,7 @@
   background-color: rgba(black, 0.85);
   // background-image: url('assets/texture-paper-1-512.jpg');
   border-radius: $dd-frame-border-radius;
+  cursor: default;
   display: flex;
   filter: drop-shadow(12px 12px 24px rgba(black, 0.6));
   // height: 100%;

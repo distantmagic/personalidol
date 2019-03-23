@@ -22,6 +22,7 @@
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-markdown": "^4.0.6",
+    "react-outside-click-handler": "^1.2.3",
     "react-relay": "^1.7.0",
     "react-scripts": "^2.1.1",
     "resize-observer-polyfill": "^1.5.1",

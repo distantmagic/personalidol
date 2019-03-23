@@ -375,6 +375,9 @@ p {
   margin: 0;
   padding: 0; }
 
+button {
+  color: inherit; }
+
 #root,
 .dd__container {
   align-items: flex-start;
@@ -528,9 +531,15 @@ p {
   position: relative; }
 
 .dd__aside__portrait__status {
+  cursor: default;
   display: grid; }
-  .dd__aside__portrait__status:hover .dd__aside__portrait__status__icon__tooltip {
-    opacity: 1; }
+  .dd__aside__portrait__status > div {
+    display: grid;
+    height: 100%;
+    width: 100%; }
+  .dd__aside__portrait__status:hover .dd__aside__portrait__status__icon__tooltip, .dd__aside__portrait__status.dd__aside__portrait__status--active .dd__aside__portrait__status__icon__tooltip {
+    opacity: 1;
+    pointer-events: auto; }
   .dd__aside__portrait__status:nth-of-type(1) .dd__aside__portrait__status__icon__tooltip {
     top: 12px; }
   .dd__aside__portrait__status:nth-of-type(2) .dd__aside__portrait__status__icon__tooltip {
@@ -557,6 +566,9 @@ p {
     top: 132px; }
 
 .dd__aside__portrait__status__icon {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
   display: grid; }
 
 .dd__aside__portrait__status__icon__image {
@@ -567,6 +579,7 @@ p {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.85);
   border-radius: 4px;
+  cursor: default;
   display: flex;
   filter: drop-shadow(12px 12px 24px rgba(0, 0, 0, 0.6));
   justify-content: center;
