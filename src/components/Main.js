@@ -11,6 +11,7 @@ import DialogueResourceReference from "../framework/classes/ResourceReference/Di
 import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
 import HudAside from "./HudAside";
+import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
 import HudToolbar from "./HudToolbar";
 import Person from "../framework/classes/Entity/Person";
@@ -112,6 +113,7 @@ export default class Main extends React.Component<Props, State> {
           będzie przyjaźnie nastawiony.
         </div>
         <HudToolbar />
+        <HudModalRouter />
       </div>
     );
   }

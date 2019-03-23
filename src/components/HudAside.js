@@ -22,17 +22,17 @@ export default class HudAside extends React.Component<Props, State> {
         <HudAsidePortrait
           isActive={true}
           name="Arlance"
-          src="/assets/portrait-arthurian-knight.png"
+          src="/assets/portrait-arlance.jpg"
         />
         <HudAsidePortrait
           isActive={false}
-          name="Moort"
-          src="/assets/portrait-eduard-charlemont-moorish-chief.jpg"
+          name="Moore"
+          src="/assets/portrait-moore.jpg"
         />
         <HudAsidePortrait
           isActive={false}
           name="Circassia"
-          src="/assets/portrait-veiled-circassian-beauty.jpg"
+          src="/assets/portrait-circassia.jpg"
         />
       </div>
     );

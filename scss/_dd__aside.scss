@@ -66,16 +66,7 @@
   cursor: default;
   display: grid;
 
-  // 'react-outside-click-handler' mandatory <div />
-  > div {
-    // background-color: red;
-    display: grid;
-    height: 100%;
-    width: 100%;
-  }
-
-  &:hover,
-  &.dd__aside__portrait__status--active {
+  &:hover {
     .dd__aside__portrait__status__icon__tooltip {
       opacity: 1;
       pointer-events: auto;
@@ -109,6 +100,7 @@
   cursor: default;
   display: flex;
   filter: drop-shadow(12px 12px 24px rgba(black, 0.6));
+  flex-direction: column;
   // height: 100%;
   // min-height: 4rem;
   justify-content: center;
