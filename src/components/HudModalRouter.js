@@ -7,6 +7,8 @@ import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
 import HudModalCharacter from "./HudModalCharacter";
 import HudModalOverlay from "./HudModalOverlay";
 
+import type { ContextRouter } from "react-router";
+
 type Props = {||};
 
 type State = {||};
@@ -18,7 +20,9 @@ export default class HudModalRouter extends React.Component<Props, State> {
     autoBind.react(this);
   }
 
-  renderModalOverlay() {
+  renderModalOverlay(router: ContextRouter) {
+    console.log(router);
+
     return (
       <HudModalOverlay>
         <Switch>

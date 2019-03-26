@@ -14,56 +14,111 @@
 .dd__modal__character {
   background-image: url("/assets/texture-mineshaft-marble-512.png");
   display: grid;
-  grid-column-gap: 1rem;
+  grid-gap: 1rem;
   grid-template-areas:
-    "avatar stats"
-    "avatar content";
-  grid-template-columns: 204px 1fr;
-  grid-template-rows: auto 1fr;
+    "avatar stats soul"
+    "name stats soul"
+    "bio stats soul";
+  grid-template-columns: 204px 3fr 2fr;
+  grid-template-rows: 204px auto auto;
   height: calc(100vh - 204px);
   padding: 1rem;
   width: 838px;
+
+  dl {
+    align-content: flex-start;
+    display: grid;
+    grid-column-gap: 1rem;
+    // grid-row-gap: 0.25rem;
+    grid-template-columns: 1fr 8ch;
+
+    // dt {
+    //   clear: both;
+    //   float: left;
+    // }
+    dd {
+      // float: right;
+      text-align: right;
+    }
+  }
+}
+
+.dd__modal__character__about {
+  // align-content: flex-start;
+  // display: grid;
+  grid-area: about;
+  // grid-gap: 1rem;
+  // grid-template-areas:
+  //   "avatar"
+  //   "name"
+  //   "bio"
+  // ;
+  // grid-template-columns: 1fr;
+  // grid-template-rows: 326px repeat(2, auto);
+  // overflow-y: scroll;
 }
 
 .dd__modal__character__avatar {
-  align-content: flex-start;
   display: grid;
   grid-area: avatar;
-  grid-row-gap: 1rem;
-  grid-template-areas:
-    "image"
-    "name"
-    "bio";
-  grid-template-rows: auto auto 1fr;
-  height: 100%;
-  overflow-y: scroll;
-}
-
-.dd__modal__character__avatar__bio {
-  grid-area: bio;
-  // text-align: justify;
 }
 
 .dd__modal__character__avatar__image {
-  grid-area: image;
-  height: 326px;
+  height: 100%;
   object-fit: cover;
   width: 100%;
 }
 
-.dd__modal__character__avatar__name {
-  align-items: center;
+.dd__modal__character__bio {
+  grid-area: bio;
+  // text-align: justify;
+  overflow-y: scroll;
+}
+
+.dd__modal__character__name {
+  // align-items: center;
   display: flex;
   font-size: 1rem;
   grid-area: name;
-  justify-content: center;
+  // justify-content: center;
   // letter-spacing: 1px;
-  text-align: center;
+  // text-align: center;
   // text-transform: uppercase;
 }
 
-.dd__modal__character__content {
-  grid-area: content;
+.dd__modal__character__inventory {
+  // background-color: red;
+  display: grid;
+  grid-area: inventory;
+  overflow-y: scroll;
+  position: relative;
+  // height: 100%;
+  // width: 100%;
+
+  &:after {
+    background-position: center;
+    background-repeat: no-repeat;
+    content: "";
+    height: 100%;
+    left: 0;
+    opacity: 0.3;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.dd__modal__character__inventory.dd__modal__character__inventory--female:after {
+  background-image: url('/assets/image-queen-silhouette.svg');
+}
+
+.dd__modal__character__inventory.dd__modal__character__inventory--male:after {
+  background-image: url('/assets/image-knight-silhouette.svg');
+}
+
+.dd__modal__character__soul {
+  grid-area: soul;
+  overflow-y: scroll;
 }
 
 .dd__modal__character__stats {

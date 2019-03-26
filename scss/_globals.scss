@@ -61,6 +61,12 @@ button {
   color: inherit;
 }
 
+dd,
+dt {
+  margin: 0;
+  padding: 0;
+}
+
 #root,
 .dd__container {
   align-items: flex-start;

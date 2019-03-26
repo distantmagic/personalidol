@@ -379,6 +379,11 @@ a,
 button {
   color: inherit; }
 
+dd,
+dt {
+  margin: 0;
+  padding: 0; }
+
 #root,
 .dd__container {
   align-items: flex-start;
@@ -727,43 +732,67 @@ button {
 .dd__modal__character {
   background-image: url("/assets/texture-mineshaft-marble-512.png");
   display: grid;
-  grid-column-gap: 1rem;
-  grid-template-areas: "avatar stats" "avatar content";
-  grid-template-columns: 204px 1fr;
-  grid-template-rows: auto 1fr;
+  grid-gap: 1rem;
+  grid-template-areas: "avatar stats soul" "name stats soul" "bio stats soul";
+  grid-template-columns: 204px 3fr 2fr;
+  grid-template-rows: 204px auto auto;
   height: calc(100vh - 204px);
   padding: 1rem;
   width: 838px; }
+  .dd__modal__character dl {
+    align-content: flex-start;
+    display: grid;
+    grid-column-gap: 1rem;
+    grid-template-columns: 1fr 8ch; }
+    .dd__modal__character dl dd {
+      text-align: right; }
+
+.dd__modal__character__about {
+  grid-area: about; }
 
 .dd__modal__character__avatar {
-  align-content: flex-start;
   display: grid;
-  grid-area: avatar;
-  grid-row-gap: 1rem;
-  grid-template-areas: "image" "name" "bio";
-  grid-template-rows: auto auto 1fr;
-  height: 100%;
-  overflow-y: scroll; }
-
-.dd__modal__character__avatar__bio {
-  grid-area: bio; }
+  grid-area: avatar; }
 
 .dd__modal__character__avatar__image {
-  grid-area: image;
-  height: 326px;
+  height: 100%;
   object-fit: cover;
   width: 100%; }
 
-.dd__modal__character__avatar__name {
-  align-items: center;
+.dd__modal__character__bio {
+  grid-area: bio;
+  overflow-y: scroll; }
+
+.dd__modal__character__name {
   display: flex;
   font-size: 1rem;
-  grid-area: name;
-  justify-content: center;
-  text-align: center; }
+  grid-area: name; }
 
-.dd__modal__character__content {
-  grid-area: content; }
+.dd__modal__character__inventory {
+  display: grid;
+  grid-area: inventory;
+  overflow-y: scroll;
+  position: relative; }
+  .dd__modal__character__inventory:after {
+    background-position: center;
+    background-repeat: no-repeat;
+    content: "";
+    height: 100%;
+    left: 0;
+    opacity: 0.3;
+    position: absolute;
+    top: 0;
+    width: 100%; }
+
+.dd__modal__character__inventory.dd__modal__character__inventory--female:after {
+  background-image: url("/assets/image-queen-silhouette.svg"); }
+
+.dd__modal__character__inventory.dd__modal__character__inventory--male:after {
+  background-image: url("/assets/image-knight-silhouette.svg"); }
+
+.dd__modal__character__soul {
+  grid-area: soul;
+  overflow-y: scroll; }
 
 .dd__modal__character__stats {
   grid-area: stats; }
