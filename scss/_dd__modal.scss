@@ -16,14 +16,16 @@
   display: grid;
   grid-gap: 1rem;
   grid-template-areas:
-    "avatar stats soul"
-    "name stats soul"
-    "bio stats soul";
-  grid-template-columns: 204px 3fr 2fr;
-  grid-template-rows: 204px auto auto;
+    "name bio soul"
+    "avatar bio soul"
+    "avatar bio stats"
+    "avatar bio stats";
+  grid-template-columns: 2fr 3fr 5fr;
+  grid-template-rows: repeat(4, auto);
   height: calc(100vh - 204px);
   padding: 1rem;
-  width: 838px;
+  // width: 838px;
+  width: calc(100vw - 326px);
 
   dl {
     align-content: flex-start;
@@ -109,11 +111,11 @@
 }
 
 .dd__modal__character__inventory.dd__modal__character__inventory--female:after {
-  background-image: url('/assets/image-queen-silhouette.svg');
+  background-image: url("/assets/image-queen-silhouette.svg");
 }
 
 .dd__modal__character__inventory.dd__modal__character__inventory--male:after {
-  background-image: url('/assets/image-knight-silhouette.svg');
+  background-image: url("/assets/image-knight-silhouette.svg");
 }
 
 .dd__modal__character__soul {

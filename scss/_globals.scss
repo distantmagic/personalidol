@@ -43,6 +43,9 @@ body {
 }
 
 button,
+dd,
+dl,
+dt,
 h1,
 h2,
 h3,
@@ -59,12 +62,6 @@ p {
 a,
 button {
   color: inherit;
-}
-
-dd,
-dt {
-  margin: 0;
-  padding: 0;
 }
 
 #root,

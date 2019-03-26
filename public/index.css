@@ -363,6 +363,9 @@ body {
   width: 100%; }
 
 button,
+dd,
+dl,
+dt,
 h1,
 h2,
 h3,
@@ -378,11 +381,6 @@ p {
 a,
 button {
   color: inherit; }
-
-dd,
-dt {
-  margin: 0;
-  padding: 0; }
 
 #root,
 .dd__container {
@@ -733,12 +731,12 @@ dt {
   background-image: url("/assets/texture-mineshaft-marble-512.png");
   display: grid;
   grid-gap: 1rem;
-  grid-template-areas: "avatar stats soul" "name stats soul" "bio stats soul";
-  grid-template-columns: 204px 3fr 2fr;
-  grid-template-rows: 204px auto auto;
+  grid-template-areas: "name bio soul" "avatar bio soul" "avatar bio stats" "avatar bio stats";
+  grid-template-columns: 2fr 3fr 5fr;
+  grid-template-rows: repeat(4, auto);
   height: calc(100vh - 204px);
   padding: 1rem;
-  width: 838px; }
+  width: calc(100vw - 326px); }
   .dd__modal__character dl {
     align-content: flex-start;
     display: grid;
