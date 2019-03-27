@@ -16,7 +16,7 @@ type Props = {|
 
 type State = {||};
 
-export default class CustomScrollbar extends React.Component<Props, State> {
+export default class HudToolbarScrollbar extends React.Component<Props, State> {
   containerRef: ?HTMLElement;
 
   static defaultProps = {

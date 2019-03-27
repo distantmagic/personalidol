@@ -103,6 +103,7 @@ export default class DialogueTurn extends React.Component<Props, State> {
                 >
                   <DialogueAnswer
                     dialogueMessage={dialogueMessage}
+                    logger={this.props.logger}
                     onAnswerClick={this.props.onAnswerClick}
                   />
                 </li>

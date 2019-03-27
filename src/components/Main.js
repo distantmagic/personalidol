@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from "react";
-import autoBind from "auto-bind";
+// import autoBind from "auto-bind";
 import classnames from "classnames";
 
 import BusClock from "../framework/classes/BusClock";
@@ -19,102 +19,47 @@ import QueryBus from "../framework/classes/QueryBus";
 import QueryBusController from "../framework/classes/QueryBusController";
 
 import type { Logger } from "../framework/interfaces/Logger";
-import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
+// import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
 
 type Props = {|
   logger: Logger
 |};
 
-type State = {|
-  dialogueBoxSize: 1 | 2 | 3,
-  expressionBus: ExpressionBus,
-  expressionContext: ExpressionContext,
-  error: ?Error,
-  queryBus: QueryBusInterface,
-  queryBusController: QueryBusController
-|};
+export default function Main(props: Props) {
+  const [ cancelToken ] = React.useState(new CancelToken());
+  const [ expressionBus ] = React.useState(new ExpressionBus());
+  const [ expressionContext ] = React.useState(new ExpressionContext());
+  const [ queryBus ] = React.useState(new QueryBus());
+  const [ queryBusController ] = React.useState(new QueryBusController(new BusClock(), queryBus));
 
-export default class Main extends React.Component<Props, State> {
-  cancelToken: CancelToken;
+  React.useEffect(function () {
+    queryBusController.interval(cancelToken);
 
-  constructor(props: Props) {
-    super(props);
-
-    autoBind.react(this);
-
-    const queryBus = new QueryBus();
-
-    this.cancelToken = new CancelToken();
-    this.state = {
-      dialogueBoxSize: 1,
-      expressionBus: new ExpressionBus(),
-      expressionContext: new ExpressionContext(),
-      error: null,
-      queryBus: queryBus,
-      queryBusController: new QueryBusController(new BusClock(), queryBus)
+    return function() {
+      cancelToken.cancel();
     };
-  }
+  }, [ cancelToken, queryBusController ]);
 
-  componentDidCatch(error: Error, errorInfo: Object): void {
-    this.setState({
-      error: error
-    });
-  }
-
-  componentDidMount(): void {
-    this.state.queryBusController.interval(this.cancelToken);
-  }
-
-  componentWillUnmount(): void {
-    this.cancelToken.cancel();
-  }
-
-  onDialogueBoxSizeDecrease() {
-    if (3 === this.state.dialogueBoxSize) {
-      this.setDialogueBoxSize(2);
-    } else if (2 === this.state.dialogueBoxSize) {
-      this.setDialogueBoxSize(1);
-    }
-  }
-
-  onDialogueBoxSizeIncrease() {
-    if (1 === this.state.dialogueBoxSize) {
-      this.setDialogueBoxSize(2);
-    } else if (2 === this.state.dialogueBoxSize) {
-      this.setDialogueBoxSize(3);
-    }
-  }
-
-  setDialogueBoxSize(dialogueBoxSize: $PropertyType<State, "dialogueBoxSize">) {
-    this.setState({
-      dialogueBoxSize: dialogueBoxSize
-    });
-  }
-
-  render() {
-    return (
-      <div className={classnames("dd__container", "dd__hud")}>
-        <HudAside />
-        <DialogueLoader
-          dialogueResourceReference={
-            new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
-          }
-          dialogueInitiator={new Person("Laelaps")}
-          expressionBus={this.state.expressionBus}
-          expressionContext={this.state.expressionContext}
-          logger={this.props.logger}
-          onDialogueBoxSizeDecrease={this.onDialogueBoxSizeDecrease}
-          onDialogueBoxSizeIncrease={this.onDialogueBoxSizeIncrease}
-          queryBus={this.state.queryBus}
-        />
-        <HudScene />
-        <div className="dd__frame dd__statusbar dd__statusbar--hud">
-          Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
-          będzie przyjaźnie nastawiony.
-        </div>
-        <HudToolbar />
-        <HudModalRouter />
+  return (
+    <div className={classnames("dd__container", "dd__hud")}>
+      <HudAside />
+      <DialogueLoader
+        dialogueResourceReference={
+          new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
+        }
+        dialogueInitiator={new Person("Laelaps")}
+        expressionBus={expressionBus}
+        expressionContext={expressionContext}
+        logger={props.logger}
+        queryBus={queryBus}
+      />
+      <HudScene />
+      <div className="dd__frame dd__statusbar dd__statusbar--hud">
+        Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
+        będzie przyjaźnie nastawiony.
       </div>
-    );
-  }
+      <HudToolbar />
+      <HudModalRouter />
+    </div>
+  );
 }

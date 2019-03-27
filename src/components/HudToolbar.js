@@ -6,38 +6,34 @@ import HudToolbarScrollbar from "./HudToolbarScrollbar";
 
 type Props = {||};
 
-type State = {||};
+export default function HudToolbar(props: Props) {
+  return (
+    <HudToolbarScrollbar
+      className="dd__frame dd__toolbar dd__toolbar--hud"
+      style={{
+        "--dd-toolbar-elements": 6
+      }}
+    >
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--dialogue">
+        Rozmowa
+      </button>
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">
+        Brutalna siła
+      </button>
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--magic">
+        Czar
+      </button>
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">
+        Modlitwa
+      </button>
+      <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--backpack">
+        Ekwipunek
+      </button>
+      <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--skill">
+        Umiejętność specjalna
+      </button>
 
-export default class HudToolbar extends React.Component<Props, State> {
-  render() {
-    return (
-      <HudToolbarScrollbar
-        className="dd__frame dd__toolbar dd__toolbar--hud"
-        style={{
-          "--dd-toolbar-elements": 6
-        }}
-      >
-        <button className="dd__button dd__button--toolbar dd__button--icon dd__button--dialogue">
-          Rozmowa
-        </button>
-        <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">
-          Brutalna siła
-        </button>
-        <button className="dd__button dd__button--toolbar dd__button--icon dd__button--magic">
-          Czar
-        </button>
-        <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">
-          Modlitwa
-        </button>
-        <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--backpack">
-          Ekwipunek
-        </button>
-        <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--skill">
-          Umiejętność specjalna
-        </button>
-
-        <div className="dd__toolbar__scroll-indicator" />
-      </HudToolbarScrollbar>
-    );
-  }
+      <div className="dd__toolbar__scroll-indicator" />
+    </HudToolbarScrollbar>
+  );
 }

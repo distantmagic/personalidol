@@ -1,14 +1,13 @@
 // @flow
 
 import * as React from "react";
-import autoBind from "auto-bind";
 
 import CancelToken from "../framework/classes/CancelToken";
 import Dialogue from "./Dialogue";
 import DialogueQuery from "../framework/classes/Query/Dialogue";
 import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import DialogueSpinner from "./DialogueSpinner";
-import { default as DialogueClass } from "../framework/classes/Dialogue";
+// import { default as DialogueClass } from "../framework/classes/Dialogue";
 
 import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
 import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
@@ -23,91 +22,59 @@ type Props = {|
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
   logger: Logger,
-  onDialogueBoxSizeDecrease: () => any,
-  onDialogueBoxSizeIncrease: () => any,
   queryBus: QueryBus
 |};
 
-type State = {|
-  cancelToken: CancelToken,
-  dialogue: ?DialogueClass,
-  isDialogueEnded: boolean,
-  isLoading: boolean
-|};
+export default function DialogueLoader(props: Props) {
+  const [ cancelToken ] = React.useState(new CancelToken());
+  const [ dialogue, setDialogue ] = React.useState(null);
+  const [ isDialogueEnded, setIsDialogueEnded ] = React.useState(false);
 
-export default class DialogueLoader extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    autoBind.react(this);
-
-    this.state = {
-      cancelToken: new CancelToken(),
-      dialogue: null,
-      isDialogueEnded: false,
-      isLoading: true
-    };
-  }
-
-  async componentDidMount(): Promise<void> {
+  React.useEffect(function () {
     const query = new DialogueQuery(
-      this.props.expressionBus,
-      this.props.expressionContext,
-      this.props.dialogueResourceReference
+      props.expressionBus,
+      props.expressionContext,
+      props.dialogueResourceReference
     );
 
-    try {
-      this.setState({
-        dialogue: await this.props.queryBus.enqueue(
-          this.state.cancelToken,
-          query
-        )
-      });
-    } catch (e) {
-      this.props.logger.notice(e.message);
-    }
-  }
+    props.queryBus
+      .enqueue(cancelToken, query)
+      .then(setDialogue)
+      .catch(props.logger.error)
+    ;
 
-  componentWillUnmount(): void {
-    this.state.cancelToken.cancel();
-  }
+    return function () {
+      cancelToken.cancel();
 
-  onDialogueEnd(): void {
-    this.setState({
-      isDialogueEnded: true
-    });
-  }
+      setDialogue(null);
+      setIsDialogueEnded(false);
+    };
+  }, [ cancelToken, cancelToken.isCancelled(), props.dialogueResourceReference ]);
 
-  render() {
-    const dialogue = this.state.dialogue;
-
-    if (!dialogue) {
-      return (
-        <div className="dd__dialogue dd__dialogue--hud dd__frame">
-          <DialogueSpinner />
-        </div>
-      );
-    }
-
-    if (this.state.isDialogueEnded) {
-      return (
-        <div className="dd__dialogue dd__dialogue--hud dd__frame">
-          <div className="dd__dialogue__end">Koniec dialogu.</div>
-        </div>
-      );
-    }
-
+  if (!dialogue) {
     return (
       <div className="dd__dialogue dd__dialogue--hud dd__frame">
-        <Dialogue
-          dialogue={dialogue}
-          dialogueInitiator={this.props.dialogueInitiator}
-          onDialogueBoxSizeDecrease={this.props.onDialogueBoxSizeDecrease}
-          onDialogueBoxSizeIncrease={this.props.onDialogueBoxSizeIncrease}
-          onDialogueEnd={this.onDialogueEnd}
-          logger={this.props.logger}
-        />
+        <DialogueSpinner />
       </div>
     );
   }
+
+  if (isDialogueEnded) {
+    return (
+      <div className="dd__dialogue dd__dialogue--hud dd__frame">
+        <div className="dd__dialogue__end">Koniec dialogu.</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="dd__dialogue dd__dialogue--hud dd__frame">
+      <Dialogue
+        dialogue={dialogue}
+        dialogueInitiator={props.dialogueInitiator}
+        onDialogueEnd={setIsDialogueEnded}
+        logger={props.logger}
+      />
+    </div>
+  );
 }

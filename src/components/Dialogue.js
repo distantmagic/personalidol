@@ -18,8 +18,6 @@ type Props = {|
   dialogueInitiator: Identifiable & Speaks,
   logger: Logger,
   onDialogueEnd: () => any,
-  onDialogueBoxSizeDecrease: () => any,
-  onDialogueBoxSizeIncrease: () => any
 |};
 
 type State = {|
@@ -65,18 +63,6 @@ export default class Dialogue extends React.Component<Props, State> {
     } else {
       this.props.onDialogueEnd();
     }
-  }
-
-  onDialogueBoxSizeDecreaseClick(evt: SyntheticEvent<HTMLElement>) {
-    evt.preventDefault();
-
-    this.props.onDialogueBoxSizeDecrease();
-  }
-
-  onDialogueBoxSizeIncreaseClick(evt: SyntheticEvent<HTMLElement>) {
-    evt.preventDefault();
-
-    this.props.onDialogueBoxSizeIncrease();
   }
 
   render() {

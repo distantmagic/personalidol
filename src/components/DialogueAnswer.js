@@ -1,53 +1,42 @@
 // @flow
 
 import * as React from "react";
-import autoBind from "auto-bind";
 
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
+import type { Logger } from "../framework/interfaces/Logger";
 
 type Props = {|
   dialogueMessage: DialogueMessage,
+  logger: Logger,
   onAnswerClick: DialogueMessage => any
 |};
 
-type State = {|
-  actor: null | string,
-  prompt: null | string
-|};
+export default function DialogueAnswer(props: Props) {
+  const [ actor, setActor ] = React.useState(null);
+  const [ prompt, setPrompt ] = React.useState(null);
 
-export default class DialogueAnswer extends React.Component<Props, State> {
-  state = {
-    actor: null,
-    prompt: null
-  };
+  React.useEffect(function () {
+    props.dialogueMessage.actor().then(setActor).catch(props.logger.error);
+    props.dialogueMessage.prompt().then(setPrompt).catch(props.logger.error);
 
-  constructor(props: Props) {
-    super(props);
+    return function () {
+      setActor(null);
+      setPrompt(null);
+    };
+  }, [ props.dialogueMessage ]);
 
-    autoBind.react(this);
-  }
-
-  async componentDidMount(): Promise<void> {
-    this.setState({
-      actor: await this.props.dialogueMessage.actor(),
-      prompt: await this.props.dialogueMessage.prompt()
-    });
-  }
-
-  onAnswerClick(evt: SyntheticEvent<any>): void {
+  function onAnswerClick(evt: SyntheticEvent<any>): void {
     evt.preventDefault();
 
-    this.props.onAnswerClick(this.props.dialogueMessage);
+    props.onAnswerClick(props.dialogueMessage);
   }
 
-  render() {
-    return (
-      <button
-        className="dd__dialogue__turn__answer__button"
-        onClick={this.onAnswerClick}
-      >
-        {this.state.actor} - {this.state.prompt}
-      </button>
-    );
-  }
+  return (
+    <button
+      className="dd__dialogue__turn__answer__button"
+      onClick={onAnswerClick}
+    >
+      {actor} - {prompt}
+    </button>
+  );
 }
