@@ -50,7 +50,7 @@ export default function DialogueLoader(props: Props) {
         setIsDialogueEnded(false);
       };
     },
-    [cancelToken, cancelToken.isCancelled(), props.dialogueResourceReference]
+    [cancelToken, props.dialogueResourceReference]
   );
 
   if (!dialogue) {

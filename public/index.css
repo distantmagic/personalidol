@@ -619,13 +619,11 @@ button {
   padding: 1.5rem; }
 
 .dd__dialogue__end,
-.dd__dialogue__spinner,
 .dd__dialogue__turn {
   height: 100%;
   width: 100%; }
 
-.dd__dialogue__end,
-.dd__dialogue__spinner {
+.dd__dialogue__end {
   padding: 16px; }
 
 .dd__dialogue__hr {
@@ -657,6 +655,16 @@ button {
   grid-area: turn;
   justify-content: space-between;
   position: relative; }
+
+.dd__dialogue__turn.dd__dialogue__turn--loading {
+  align-content: stretch;
+  justify-content: stretch; }
+
+.dd__dialogue__turn__loading-image {
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: color-burn;
+  width: 100%; }
 
 .dd__dialogue__turn__actor {
   color: crimson;

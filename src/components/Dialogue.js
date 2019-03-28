@@ -27,13 +27,12 @@ export default function Dialogue(props: Props) {
       return;
     }
 
-    setDialogueTurn(null);
-
     const nextDialogueTurn = await dialogueTurn.answer(message);
 
     if (nextDialogueTurn) {
       setDialogueTurn(nextDialogueTurn);
     } else {
+      setDialogueTurn(null);
       props.onDialogueEnd();
     }
   }

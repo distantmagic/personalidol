@@ -20,10 +20,13 @@ type Props = {|
 |};
 
 export default function DialogueTurn(props: Props) {
-  const [actor, setActor] = React.useState(null);
-  const [answers, setAnswers] = React.useState(Map());
-  const [illustration, setIllustration] = React.useState(null);
-  const [prompt, setPrompt] = React.useState(null);
+  const [state, setState] = React.useState({
+    actor: null,
+    answers: Map(),
+    illustration: null,
+    isLoading: true,
+    prompt: null
+  });
 
   function onDialogueEndClick(evt: SyntheticEvent<any>): void {
     evt.preventDefault();
@@ -33,33 +36,33 @@ export default function DialogueTurn(props: Props) {
 
   React.useEffect(
     function() {
-      props.dialogueTurn
-        .actor()
-        .then(setActor)
-        .catch(props.logger.error);
-      props.dialogueTurn
-        .answers()
-        .then(setAnswers)
-        .catch(props.logger.error);
-      props.dialogueTurn
-        .getIllustration()
-        .then(setIllustration)
-        .catch(props.logger.error);
-      props.dialogueTurn
-        .prompt()
-        .then(setPrompt)
+      Promise.all([
+        props.dialogueTurn.actor(),
+        props.dialogueTurn.answers(),
+        props.dialogueTurn.getIllustration(),
+        props.dialogueTurn.prompt()
+      ])
+        .then(([actor, answers, illustration, prompt]) => {
+          setState({
+            actor: actor,
+            answers: answers,
+            illustration: illustration,
+            isLoading: false,
+            prompt: prompt
+          });
+        })
         .catch(props.logger.error);
     },
     [props.dialogueTurn]
   );
 
-  if (!answers) {
+  if (state.isLoading) {
     return <DialogueSpinner />;
   }
 
   return (
     <div className="dd__dialogue__turn">
-      {illustration && (
+      {state.illustration && (
         <div className="dd__dialogue__turn__illustration">
           <img
             alt="Illustration"
@@ -70,11 +73,11 @@ export default function DialogueTurn(props: Props) {
       )}
       <h1 className="dd__dialogue__turn__title">Jaskinia pustelnika</h1>
       <div className="dd__dialogue__turn__prompt dd-tp__formatted-text">
-        <div className="dd__dialogue__turn__actor">{actor}</div>
-        <ReactMarkdown source={prompt} />
+        <div className="dd__dialogue__turn__actor">{state.actor}</div>
+        <ReactMarkdown source={state.prompt} />
       </div>
       <hr className="dd__dialogue__hr" />
-      {answers.isEmpty() ? (
+      {state.answers.isEmpty() ? (
         <button
           className="dd__button dd__button--dialogue-turn-end"
           onClick={onDialogueEndClick}
@@ -83,7 +86,7 @@ export default function DialogueTurn(props: Props) {
         </button>
       ) : (
         <ol className="dd__dialogue__turn__answers">
-          {answers
+          {state.answers
             .toSet()
             .toArray()
             .map(dialogueMessage => (
