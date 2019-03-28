@@ -15,7 +15,7 @@ export default function HudModalRouterDefaultRoute(props: Props) {
       <Switch>
         <Route
           exact
-          path="/character/:characterId"
+          path="/character/:characterId/:subpage?"
           component={HudModalCharacter}
         />
         <Route component={HudModalRouterNotFound} />
