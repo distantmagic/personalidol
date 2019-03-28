@@ -5,6 +5,7 @@ import { Route, Switch } from "react-router-dom";
 
 import HudModalCharacterInventory from "./HudModalCharacterInventory";
 import HudModalCharacterStats from "./HudModalCharacterStats";
+import HudModalLoader from "./HudModalLoader";
 
 import type { Match } from "react-router";
 
@@ -13,6 +14,25 @@ type Props = {|
 |};
 
 export default function HudModalRouter(props: Props) {
+  const [state, setState] = React.useState({
+    character: null,
+    isLoading: true
+  });
+
+  React.useEffect(
+    function() {
+      setState({
+        charater: null,
+        isLoading: false
+      });
+    },
+    [props.match.params.characterId]
+  );
+
+  if (state.isLoading) {
+    return <HudModalLoader />;
+  }
+
   return (
     <Switch>
       <Route
