@@ -1,9 +1,15 @@
 // @flow
 
+import autoBind from "auto-bind";
+
 import type { Logger as LoggerInterface } from "../interfaces/Logger";
 import type { LogSeverityEnum } from "../types/LogSeverityEnum";
 
 export default class Logger implements LoggerInterface {
+  constructor() {
+    autoBind(this);
+  }
+
   emergency(message: string): void {
     this.log("emergency", message);
   }

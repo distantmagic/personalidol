@@ -3,15 +3,36 @@
 import * as React from "react";
 import upperFirst from "lodash/upperFirst";
 
-import type { Match } from "react-router";
+import Character from "../framework/classes/Entity/Person/Character";
+import HudModalLoader from "./HudModalLoader";
 
 type Props = {|
-  match: Match
+  character: Character
 |};
 
 export default function HudModalCharacterStats(props: Props) {
-  const characterId = String(props.match.params.characterId);
-  const characterName = upperFirst(characterId);
+  const [state, setState] = React.useState({
+    id: null,
+    isLoading: true,
+    name: null
+  });
+
+  React.useEffect(
+    function() {
+      props.character.name().then(name => {
+        setState({
+          id: name,
+          isLoading: false,
+          name: upperFirst(name)
+        });
+      });
+    },
+    [props.character]
+  );
+
+  if (state.isLoading) {
+    return <HudModalLoader />;
+  }
 
   return (
     <div className="dd__frame dd__modal__character">
@@ -19,10 +40,10 @@ export default function HudModalCharacterStats(props: Props) {
         <img
           alt="portrait"
           className="dd__modal__character__avatar__image"
-          src={`/assets/portrait-${characterId}.jpg`}
+          src={`/assets/portrait-${state.id}.jpg`}
         />
       </div>
-      <div className="dd__modal__character__name">{characterName}</div>
+      <div className="dd__modal__character__name">{state.name}</div>
       <dl className="dd__modal__character__body">
         <dt>Siła</dt>
         <dd>1/1-20</dd>

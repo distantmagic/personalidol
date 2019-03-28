@@ -23,7 +23,7 @@ import type { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
 export default class Person extends Entity
   implements Aims, Hears, Identifiable, Memorizes, Sees, Speaks {
-  _name: string;
+  +_name: string;
 
   constructor(name: string) {
     super();

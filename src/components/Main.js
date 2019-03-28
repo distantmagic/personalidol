@@ -63,7 +63,7 @@ export default function Main(props: Props) {
         będzie przyjaźnie nastawiony.
       </div>
       <HudToolbar />
-      <HudModalRouter />
+      <HudModalRouter logger={props.logger} queryBus={queryBus} />
     </div>
   );
 }
