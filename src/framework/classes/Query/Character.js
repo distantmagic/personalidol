@@ -13,12 +13,17 @@ export default class Character implements Query<CharacterModel> {
     this.ref = ref;
   }
 
-  async execute(cancelToken?: CancelToken): Promise<CharacterModel> {
-    // const response = await fetch("https://randomuser.me/api/");
-    // const character = await response.json();
+  async execute(cancelToken?: CancelToken): Promise<?CharacterModel> {
+    const ref = this.ref.getReference();
 
-    return new CharacterModel(this.ref.getReference());
-    // return new CharacterModel(character.results[0].name.first);
+    switch (ref) {
+      case "arlance":
+      case "circassia":
+      case "moore":
+        return new CharacterModel(ref);
+      default:
+        return null;
+    }
   }
 
   isEqual(other: Character): boolean {

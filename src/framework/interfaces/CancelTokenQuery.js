@@ -7,7 +7,7 @@ import type { Query } from "./Query";
 export interface CancelTokenQuery<T> extends Equatable<CancelTokenQuery<T>> {
   constructor(cancelToken: CancelToken, query: Query<T>): void;
 
-  execute(): Promise<T>;
+  execute(): Promise<?T>;
 
   getQuery(): Query<T>;
 
@@ -17,7 +17,7 @@ export interface CancelTokenQuery<T> extends Equatable<CancelTokenQuery<T>> {
 
   isExecuted(): boolean;
 
-  onExecuted(): Promise<T>;
+  onExecuted(): Promise<?T>;
 
-  setExecuted(result: T): void;
+  setExecuted(result: ?T): void;
 }

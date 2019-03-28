@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import { Redirect } from "react-router-dom";
 
 import CancelToken from "../framework/classes/CancelToken";
 import CharacterQuery from "../framework/classes/Query/Character";
@@ -67,7 +68,7 @@ export default function HudModalCharacterLoader(props: Props) {
   const character = state.character;
 
   if (!character) {
-    return ":(";
+    return <Redirect to="/" />;
   }
 
   return <HudModalCharacter character={character} />;

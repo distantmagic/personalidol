@@ -8,7 +8,7 @@ import type { Query } from "../interfaces/Query";
 
 export default class CancelTokenQuery<T>
   implements CancelTokenQueryInterface<T> {
-  _executionResult: T;
+  _executionResult: ?T;
   _isExecuted: boolean;
   _result: ?T;
   +cancelToken: CancelToken;
@@ -22,7 +22,7 @@ export default class CancelTokenQuery<T>
     this.query = query;
   }
 
-  execute(): Promise<T> {
+  execute(): Promise<?T> {
     return this.query.execute(this.cancelToken).then(result => {
       this.setExecuted(result);
 
@@ -61,7 +61,7 @@ export default class CancelTokenQuery<T>
     });
   }
 
-  setExecuted(result: T): void {
+  setExecuted(result: ?T): void {
     this._executionResult = result;
     this._isExecuted = true;
     this._result = result;
