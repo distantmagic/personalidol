@@ -26,30 +26,32 @@ type Props = {|
 |};
 
 export default function DialogueLoader(props: Props) {
-  const [ cancelToken ] = React.useState(new CancelToken());
-  const [ dialogue, setDialogue ] = React.useState(null);
-  const [ isDialogueEnded, setIsDialogueEnded ] = React.useState(false);
+  const [cancelToken] = React.useState(new CancelToken());
+  const [dialogue, setDialogue] = React.useState(null);
+  const [isDialogueEnded, setIsDialogueEnded] = React.useState(false);
 
-  React.useEffect(function () {
-    const query = new DialogueQuery(
-      props.expressionBus,
-      props.expressionContext,
-      props.dialogueResourceReference
-    );
+  React.useEffect(
+    function() {
+      const query = new DialogueQuery(
+        props.expressionBus,
+        props.expressionContext,
+        props.dialogueResourceReference
+      );
 
-    props.queryBus
-      .enqueue(cancelToken, query)
-      .then(setDialogue)
-      .catch(props.logger.error)
-    ;
+      props.queryBus
+        .enqueue(cancelToken, query)
+        .then(setDialogue)
+        .catch(props.logger.error);
 
-    return function () {
-      cancelToken.cancel();
+      return function() {
+        cancelToken.cancel();
 
-      setDialogue(null);
-      setIsDialogueEnded(false);
-    };
-  }, [ cancelToken, cancelToken.isCancelled(), props.dialogueResourceReference ]);
+        setDialogue(null);
+        setIsDialogueEnded(false);
+      };
+    },
+    [cancelToken, cancelToken.isCancelled(), props.dialogueResourceReference]
+  );
 
   if (!dialogue) {
     return (

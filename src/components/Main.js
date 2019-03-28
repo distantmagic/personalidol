@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from "react";
-// import autoBind from "auto-bind";
 import classnames from "classnames";
 
 import BusClock from "../framework/classes/BusClock";
@@ -26,19 +25,24 @@ type Props = {|
 |};
 
 export default function Main(props: Props) {
-  const [ cancelToken ] = React.useState(new CancelToken());
-  const [ expressionBus ] = React.useState(new ExpressionBus());
-  const [ expressionContext ] = React.useState(new ExpressionContext());
-  const [ queryBus ] = React.useState(new QueryBus());
-  const [ queryBusController ] = React.useState(new QueryBusController(new BusClock(), queryBus));
+  const [cancelToken] = React.useState(new CancelToken());
+  const [expressionBus] = React.useState(new ExpressionBus());
+  const [expressionContext] = React.useState(new ExpressionContext());
+  const [queryBus] = React.useState(new QueryBus());
+  const [queryBusController] = React.useState(
+    new QueryBusController(new BusClock(), queryBus)
+  );
 
-  React.useEffect(function () {
-    queryBusController.interval(cancelToken);
+  React.useEffect(
+    function() {
+      queryBusController.interval(cancelToken);
 
-    return function() {
-      cancelToken.cancel();
-    };
-  }, [ cancelToken, queryBusController ]);
+      return function() {
+        cancelToken.cancel();
+      };
+    },
+    [cancelToken, queryBusController]
+  );
 
   return (
     <div className={classnames("dd__container", "dd__hud")}>

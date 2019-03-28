@@ -12,18 +12,27 @@ type Props = {|
 |};
 
 export default function DialogueAnswer(props: Props) {
-  const [ actor, setActor ] = React.useState(null);
-  const [ prompt, setPrompt ] = React.useState(null);
+  const [actor, setActor] = React.useState(null);
+  const [prompt, setPrompt] = React.useState(null);
 
-  React.useEffect(function () {
-    props.dialogueMessage.actor().then(setActor).catch(props.logger.error);
-    props.dialogueMessage.prompt().then(setPrompt).catch(props.logger.error);
+  React.useEffect(
+    function() {
+      props.dialogueMessage
+        .actor()
+        .then(setActor)
+        .catch(props.logger.error);
+      props.dialogueMessage
+        .prompt()
+        .then(setPrompt)
+        .catch(props.logger.error);
 
-    return function () {
-      setActor(null);
-      setPrompt(null);
-    };
-  }, [ props.dialogueMessage ]);
+      return function() {
+        setActor(null);
+        setPrompt(null);
+      };
+    },
+    [props.dialogueMessage]
+  );
 
   function onAnswerClick(evt: SyntheticEvent<any>): void {
     evt.preventDefault();

@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from "react";
-import autoBind from "auto-bind";
 
 import CancelToken from "../framework/classes/CancelToken";
 
@@ -11,38 +10,31 @@ type Props = {|
   sceneManager: SceneManagerInterface
 |};
 
-type State = {||};
+export default function HudSceneLocationComplexCanvas(props: Props) {
+  const threeCanvasRef = React.useRef(null);
+  const [cancelToken] = React.useState(new CancelToken());
 
-export default class HudSceneLocationComplexCanvas extends React.Component<
-  Props,
-  State
-> {
-  +cancelToken: CancelToken;
-  +sceneManager: SceneManagerInterface;
+  React.useEffect(
+    function() {
+      const element = threeCanvasRef.current;
 
-  constructor(props: Props) {
-    super(props);
+      if (element) {
+        props.sceneManager.attach(element);
+      }
+    },
+    [threeCanvasRef]
+  );
 
-    autoBind.react(this);
+  React.useEffect(
+    function() {
+      props.sceneManager.loop(cancelToken);
 
-    this.cancelToken = new CancelToken();
-  }
+      return function() {
+        cancelToken.cancel();
+      };
+    },
+    [cancelToken, props.sceneManager]
+  );
 
-  async componentDidMount(): Promise<void> {
-    await this.props.sceneManager.loop(this.cancelToken);
-  }
-
-  componentWillUnmount(): void {
-    this.cancelToken.cancel();
-  }
-
-  async setThreeCanvas(canvas: ?HTMLCanvasElement): Promise<void> {
-    if (canvas) {
-      this.props.sceneManager.attach(canvas);
-    }
-  }
-
-  render() {
-    return <canvas ref={this.setThreeCanvas} />;
-  }
+  return <canvas ref={threeCanvasRef} />;
 }

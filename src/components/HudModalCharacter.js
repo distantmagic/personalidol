@@ -22,9 +22,7 @@ export default function HudModalRouter(props: Props) {
           src={`/assets/portrait-${characterId}.jpg`}
         />
       </div>
-      <div className="dd__modal__character__name">
-        {characterName}
-      </div>
+      <div className="dd__modal__character__name">{characterName}</div>
       <dl className="dd__modal__character__body">
         <dt>Siła</dt>
         <dd>1/1-20</dd>

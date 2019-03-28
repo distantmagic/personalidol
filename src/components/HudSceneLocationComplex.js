@@ -8,15 +8,16 @@ import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObs
 import HudSceneLocationComplexCanvas from "./HudSceneLocationComplexCanvas";
 import SceneManager from "../framework/classes/SceneManager";
 
-// import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../framework/interfaces/HTMLElementResizeObserver";
-// import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
-
 type Props = {||};
 
 export default function HudSceneLocationComplex(props: Props) {
-  const [ cancelToken ] = React.useState(new CancelToken());
-  const [ htmlElementResizeObserver ] = React.useState(new HTMLElementResizeObserver());
-  const [ sceneManager ] = React.useState(new SceneManager(new CanvasLocationComplex()));
+  const [cancelToken] = React.useState(new CancelToken());
+  const [htmlElementResizeObserver] = React.useState(
+    new HTMLElementResizeObserver()
+  );
+  const [sceneManager] = React.useState(
+    new SceneManager(new CanvasLocationComplex())
+  );
 
   async function htmlElementResizeObserve() {
     for await (let evt of htmlElementResizeObserver.listen(cancelToken)) {
@@ -32,19 +33,19 @@ export default function HudSceneLocationComplex(props: Props) {
     }
   }
 
-  React.useEffect(function () {
-    htmlElementResizeObserve();
+  React.useEffect(
+    function() {
+      htmlElementResizeObserve();
 
-    return function () {
-      cancelToken.cancel();
-    };
-  }, [ cancelToken ]);
+      return function() {
+        cancelToken.cancel();
+      };
+    },
+    [cancelToken]
+  );
 
   return (
-    <div
-      className="dd__scene dd__scene--hud dd__scene--canvas"
-      ref={setScene}
-    >
+    <div className="dd__scene dd__scene--hud dd__scene--canvas" ref={setScene}>
       <HudSceneLocationComplexCanvas sceneManager={sceneManager} />
     </div>
   );
