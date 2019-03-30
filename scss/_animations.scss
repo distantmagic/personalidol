@@ -6,3 +6,12 @@
     opacity: 1;
   }
 }
+
+@keyframes spin {
+  from {
+    transform: rotateZ(0);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}

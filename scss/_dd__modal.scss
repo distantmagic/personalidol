@@ -1,3 +1,5 @@
+@import "dd__modal__character";
+
 .dd__modal {
   align-items: center;
   display: flex;
@@ -11,126 +13,6 @@
   z-index: $z-index-modal;
 }
 
-.dd__modal__character {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-areas:
-    "avatar body soul"
-    "avatar senses soul"
-    "name senses soul";
-  grid-template-columns: 2fr 3fr 5fr;
-  grid-template-rows: repeat(2, 1fr) 1rem;
-  height: calc(100vh - 204px);
-  padding: 1rem;
-  // width: 838px;
-  width: calc(100vw - 326px);
-
-  dl {
-    align-content: flex-start;
-    display: grid;
-    grid-column-gap: 1rem;
-    // grid-row-gap: 0.25rem;
-    grid-template-columns: 1fr 8ch;
-
-    // dt {
-    //   clear: both;
-    //   float: left;
-    // }
-    dd {
-      // float: right;
-      text-align: right;
-    }
-  }
-}
-
-.dd__modal__character__about {
-  // align-content: flex-start;
-  // display: grid;
-  grid-area: about;
-  // grid-gap: 1rem;
-  // grid-template-areas:
-  //   "avatar"
-  //   "name"
-  //   "bio"
-  // ;
-  // grid-template-columns: 1fr;
-  // grid-template-rows: 326px repeat(2, auto);
-  // overflow-y: scroll;
-}
-
-.dd__modal__character__avatar {
-  display: grid;
-  grid-area: avatar;
-}
-
-.dd__modal__character__avatar__image {
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
-
-.dd__modal__character__bio {
-  grid-area: bio;
-  // text-align: justify;
-  overflow-y: scroll;
-}
-
-.dd__modal__character__body {
-  grid-area: body;
-  // padding: 1.5rem 0;
-}
-
-.dd__modal__character__name {
-  // align-items: center;
-  display: flex;
-  font-size: 1rem;
-  grid-area: name;
-  // justify-content: center;
-  // letter-spacing: 1px;
-  // text-align: center;
-  // text-transform: uppercase;
-}
-
-.dd__modal__character__inventory {
-  // background-color: red;
-  display: grid;
-  grid-area: inventory;
-  overflow-y: scroll;
-  position: relative;
-  // height: 100%;
-  // width: 100%;
-
-  &:after {
-    background-position: center;
-    background-repeat: no-repeat;
-    content: "";
-    height: 100%;
-    left: 0;
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-}
-
-.dd__modal__character__inventory.dd__modal__character__inventory--female:after {
-  background-image: url("/assets/image-queen-silhouette.svg");
-}
-
-.dd__modal__character__inventory.dd__modal__character__inventory--male:after {
-  background-image: url("/assets/image-knight-silhouette.svg");
-}
-
-.dd__modal__character__senses {
-  grid-area: senses;
-}
-
-.dd__modal__character__soul {
-  grid-area: soul;
-  overflow-y: scroll;
-}
-
 .dd__modal__content {
   // filter: drop-shadow(0 0 50px black);
   position: relative;
@@ -140,7 +22,7 @@
   animation-name: fadein;
   animation-duration: 0.3s;
   background-color: rgba(black, 0.8);
-  background-image: radial-gradient(black 30%, transparent);
+  background-image: radial-gradient(rgba(black, 0.6) 30%, transparent);
   height: 100%;
   left: 0;
   position: absolute;

@@ -1,8 +1,15 @@
+@charset "UTF-8";
 @keyframes fadein {
   from {
     opacity: 0; }
   to {
     opacity: 1; } }
+
+@keyframes spin {
+  from {
+    transform: rotateZ(0); }
+  to {
+    transform: rotateZ(360deg); } }
 
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 /* Document
@@ -390,6 +397,25 @@ button {
   height: 100%;
   width: 100%; }
 
+.dd__loader {
+  align-items: center;
+  animation-duration: 1s;
+  animation-name: fadein;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  width: 100%; }
+  .dd__loader:before {
+    animation-direction: alternate;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-name: fadein;
+    content: "⏳";
+    font-size: 2rem; }
+  .dd__loader:not(:empty):before {
+    padding-bottom: 1rem; }
+
 .dd__button,
 .dd__button:before {
   border-color: rgba(55, 55, 55, 0.6);
@@ -488,6 +514,40 @@ button {
 
 .dd__frame.dd__frame--inset {
   border-style: inset; }
+
+.dd__hud {
+  display: grid;
+  grid-template-areas: "aside dialogue scene" "aside dialogue toolbar" "aside dialogue statusbar";
+  grid-template-columns: 128px 524px calc(100vw - 128px - 524px);
+  grid-template-rows: calc(100vh - 80px - 50px) 80px 50px;
+  position: relative; }
+
+.dd__aside.dd__aside--hud,
+.dd__dialogue.dd__dialogue--hud,
+.dd__scene.dd__scene--hud,
+.dd__statusbar.dd__statusbar--hud,
+.dd__toolbar.dd__toolbar--hud {
+  height: 100%;
+  width: 100%; }
+
+.dd__aside.dd__aside--hud {
+  grid-area: aside; }
+
+.dd__dialogue.dd__dialogue--hud {
+  grid-area: dialogue; }
+
+.dd__scene.dd__scene--hud {
+  grid-area: scene; }
+
+.dd__statusbar.dd__statusbar--hud,
+.dd__toolbar.dd__toolbar--hud {
+  background-image: url("/assets/texture-mineshaft-marble-512.png"); }
+
+.dd__statusbar.dd__statusbar--hud {
+  grid-area: statusbar; }
+
+.dd__toolbar.dd__toolbar--hud {
+  grid-area: toolbar; }
 
 .dd__aside {
   align-content: flex-start;
@@ -657,8 +717,8 @@ button {
   position: relative; }
 
 .dd__dialogue__turn.dd__dialogue__turn--loading {
-  align-content: stretch;
-  justify-content: stretch; }
+  align-content: center;
+  justify-items: center; }
 
 .dd__dialogue__turn__loading-image {
   height: 100%;
@@ -723,24 +783,37 @@ button {
   color: crimson;
   font-family: "Almendra", serif; }
 
-.dd__modal {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  left: 128px;
-  perspective: 100px;
-  position: absolute;
-  top: 0;
-  width: calc(100% - 128px);
-  z-index: 4; }
+.dd__spinner__gears {
+  position: relative;
+  transform: translateX(-14%) translateY(16%);
+  width: 60%; }
+  .dd__spinner__gears:after, .dd__spinner__gears:before {
+    animation-name: spin;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    background-image: url("/assets/image-gear.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    content: "";
+    display: block; }
+  .dd__spinner__gears:after {
+    animation-duration: 3s;
+    padding-bottom: 100%; }
+  .dd__spinner__gears:before {
+    animation-direction: reverse;
+    animation-duration: 2s;
+    position: absolute;
+    height: 60%;
+    right: -37%;
+    top: -37%;
+    width: 60%; }
 
 .dd__modal__character {
   background-image: url("/assets/texture-mineshaft-marble-512.png");
   display: grid;
   grid-gap: 1rem;
-  grid-template-areas: "avatar body soul" "avatar senses soul" "name senses soul";
-  grid-template-columns: 2fr 3fr 5fr;
+  grid-template-areas: "avatar content content" "avatar content content" "name content content";
+  grid-template-columns: 2fr 5fr;
   grid-template-rows: repeat(2, 1fr) 1rem;
   height: calc(100vh - 204px);
   padding: 1rem;
@@ -753,9 +826,6 @@ button {
     .dd__modal__character dl dd {
       text-align: right; }
 
-.dd__modal__character__about {
-  grid-area: about; }
-
 .dd__modal__character__avatar {
   display: grid;
   grid-area: avatar; }
@@ -765,46 +835,25 @@ button {
   object-fit: cover;
   width: 100%; }
 
-.dd__modal__character__bio {
-  grid-area: bio;
-  overflow-y: scroll; }
-
-.dd__modal__character__body {
-  grid-area: body; }
+.dd__modal__character__content {
+  grid-area: content; }
 
 .dd__modal__character__name {
   display: flex;
   font-size: 1rem;
   grid-area: name; }
 
-.dd__modal__character__inventory {
-  display: grid;
-  grid-area: inventory;
-  overflow-y: scroll;
-  position: relative; }
-  .dd__modal__character__inventory:after {
-    background-position: center;
-    background-repeat: no-repeat;
-    content: "";
-    height: 100%;
-    left: 0;
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    width: 100%; }
-
-.dd__modal__character__inventory.dd__modal__character__inventory--female:after {
-  background-image: url("/assets/image-queen-silhouette.svg"); }
-
-.dd__modal__character__inventory.dd__modal__character__inventory--male:after {
-  background-image: url("/assets/image-knight-silhouette.svg"); }
-
-.dd__modal__character__senses {
-  grid-area: senses; }
-
-.dd__modal__character__soul {
-  grid-area: soul;
-  overflow-y: scroll; }
+.dd__modal {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 128px;
+  perspective: 100px;
+  position: absolute;
+  top: 0;
+  width: calc(100% - 128px);
+  z-index: 4; }
 
 .dd__modal__content {
   position: relative; }
@@ -813,7 +862,7 @@ button {
   animation-name: fadein;
   animation-duration: 0.3s;
   background-color: rgba(0, 0, 0, 0.8);
-  background-image: radial-gradient(black 30%, transparent);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.6) 30%, transparent);
   height: 100%;
   left: 0;
   position: absolute;
@@ -888,37 +937,3 @@ button {
   width: 64px; }
   .dd__button.dd__button--toolbar:before {
     background-size: cover; }
-
-.dd__hud {
-  display: grid;
-  grid-template-areas: "aside dialogue scene" "aside dialogue toolbar" "aside dialogue statusbar";
-  grid-template-columns: 128px 524px calc(100vw - 128px - 524px);
-  grid-template-rows: calc(100vh - 80px - 50px) 80px 50px;
-  position: relative; }
-
-.dd__aside.dd__aside--hud,
-.dd__dialogue.dd__dialogue--hud,
-.dd__scene.dd__scene--hud,
-.dd__statusbar.dd__statusbar--hud,
-.dd__toolbar.dd__toolbar--hud {
-  height: 100%;
-  width: 100%; }
-
-.dd__aside.dd__aside--hud {
-  grid-area: aside; }
-
-.dd__dialogue.dd__dialogue--hud {
-  grid-area: dialogue; }
-
-.dd__scene.dd__scene--hud {
-  grid-area: scene; }
-
-.dd__statusbar.dd__statusbar--hud,
-.dd__toolbar.dd__toolbar--hud {
-  background-image: url("/assets/texture-mineshaft-marble-512.png"); }
-
-.dd__statusbar.dd__statusbar--hud {
-  grid-area: statusbar; }
-
-.dd__toolbar.dd__toolbar--hud {
-  grid-area: toolbar; }

@@ -1,49 +1,16 @@
 // @flow
 
 import * as React from "react";
-import upperFirst from "lodash/upperFirst";
 
 import Character from "../framework/classes/Entity/Person/Character";
-import HudModalLoader from "./HudModalLoader";
 
 type Props = {|
   character: Character
 |};
 
 export default function HudModalCharacterStats(props: Props) {
-  const [state, setState] = React.useState({
-    id: null,
-    isLoading: true,
-    name: null
-  });
-
-  React.useEffect(
-    function() {
-      props.character.name().then(name => {
-        setState({
-          id: name,
-          isLoading: false,
-          name: upperFirst(name)
-        });
-      });
-    },
-    [props.character]
-  );
-
-  if (state.isLoading) {
-    return <HudModalLoader />;
-  }
-
   return (
-    <div className="dd__frame dd__modal__character">
-      <div className="dd__modal__character__avatar">
-        <img
-          alt="portrait"
-          className="dd__modal__character__avatar__image"
-          src={`/assets/portrait-${state.id}.jpg`}
-        />
-      </div>
-      <div className="dd__modal__character__name">{state.name}</div>
+    <React.Fragment>
       <dl className="dd__modal__character__body">
         <dt>Siła</dt>
         <dd>1/1-20</dd>
@@ -118,6 +85,6 @@ export default function HudModalCharacterStats(props: Props) {
         </dt>
         <dd>20/0-100</dd>
       </dl>
-    </div>
+    </React.Fragment>
   );
 }

@@ -73,6 +73,32 @@ button {
   width: 100%;
 }
 
+.dd__loader {
+  align-items: center;
+  animation-duration: 1s;
+  animation-name: fadein;
+  // background-color: rgba(255, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  // font-family: serif;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+
+  &:before {
+    animation-direction: alternate;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-name: fadein;
+    content: "⏳";
+    font-size: 2rem;
+  }
+
+  &:not(:empty):before {
+    padding-bottom: 1rem;
+  }
+}
+
 .dd__button,
 .dd__button:before {
   border-color: rgba(55, 55, 55, 0.6);

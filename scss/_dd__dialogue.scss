@@ -70,8 +70,8 @@ $dd-dialogue-padding-horizontal: 1rem;
 }
 
 .dd__dialogue__turn.dd__dialogue__turn--loading {
-  align-content: stretch;
-  justify-content: stretch;
+  align-content: center;
+  justify-items: center;
 }
 
 .dd__dialogue__turn__loading-image {

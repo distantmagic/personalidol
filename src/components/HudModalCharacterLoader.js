@@ -62,7 +62,7 @@ export default function HudModalCharacterLoader(props: Props) {
   );
 
   if (state.isLoading) {
-    return <HudModalLoader />;
+    return <HudModalLoader label="Loading character" />;
   }
 
   const character = state.character;

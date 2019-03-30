@@ -6,7 +6,6 @@ import "core-js/es6/promise";
 import "core-js/es6/object";
 
 // import * as Sentry from "@sentry/browser";
-// import Keycloak from "keycloak-js";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -19,14 +18,16 @@ import Main from "./components/Main";
 //   release: process.env.REACT_APP_RELEASE
 // });
 
-// const keycloak = Keycloak({
-//   url: "https://keycloak.newride.construction/auth",
-//   realm: "distant-divinity",
-//   clientId: "webapp"
-// });
+function init(rootElement: HTMLElement) {
+  document.addEventListener("readystatechange", function() {
+    if ("complete" === document.readyState) {
+      ReactDOM.render(<Main logger={new Logger()} />, rootElement);
+    }
+  });
+}
 
 const rootElement = document.getElementById("root");
 
 if (rootElement) {
-  ReactDOM.render(<Main logger={new Logger()} />, rootElement);
+  init(rootElement);
 }
