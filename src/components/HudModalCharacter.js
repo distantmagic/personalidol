@@ -46,7 +46,6 @@ export default function HudModalCharacter(props: Props) {
           src={`/assets/portrait-${state.id}.jpg`}
         />
       </div>
-      <div className="dd__modal__character__name">{state.name}</div>
       <div className="dd__modal__character__content">
         <Switch>
           <Route
@@ -63,6 +62,8 @@ export default function HudModalCharacter(props: Props) {
           />
         </Switch>
       </div>
+      <div className="dd__modal__character__name">{state.name}</div>
+      <div className="dd__modal__character__tabs">tabs tabs</div>
     </div>
   );
 }

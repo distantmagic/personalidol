@@ -3,11 +3,11 @@
   display: grid;
   grid-gap: 1rem;
   grid-template-areas:
-    "avatar content content"
+    "avatar tabs tabs"
     "avatar content content"
     "name content content";
   grid-template-columns: 2fr 5fr;
-  grid-template-rows: repeat(2, 1fr) 1rem;
+  grid-template-rows: 3rem 1fr 1rem;
   height: calc(100vh - 204px);
   padding: 1rem;
   // width: 838px;
@@ -43,7 +43,10 @@
 }
 
 .dd__modal__character__content {
+  align-content: flex-start;
+  display: grid;
   grid-area: content;
+  overflow-y: auto;
 }
 
 .dd__modal__character__name {
@@ -55,4 +58,8 @@
   // letter-spacing: 1px;
   // text-align: center;
   // text-transform: uppercase;
+}
+
+.dd__modal__character__tabs {
+  grid-area: tabs;
 }

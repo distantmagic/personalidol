@@ -812,9 +812,9 @@ button {
   background-image: url("/assets/texture-mineshaft-marble-512.png");
   display: grid;
   grid-gap: 1rem;
-  grid-template-areas: "avatar content content" "avatar content content" "name content content";
+  grid-template-areas: "avatar tabs tabs" "avatar content content" "name content content";
   grid-template-columns: 2fr 5fr;
-  grid-template-rows: repeat(2, 1fr) 1rem;
+  grid-template-rows: 3rem 1fr 1rem;
   height: calc(100vh - 204px);
   padding: 1rem;
   width: calc(100vw - 326px); }
@@ -836,12 +836,18 @@ button {
   width: 100%; }
 
 .dd__modal__character__content {
-  grid-area: content; }
+  align-content: flex-start;
+  display: grid;
+  grid-area: content;
+  overflow-y: auto; }
 
 .dd__modal__character__name {
   display: flex;
   font-size: 1rem;
   grid-area: name; }
+
+.dd__modal__character__tabs {
+  grid-area: tabs; }
 
 .dd__modal {
   align-items: center;
