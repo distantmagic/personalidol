@@ -71,12 +71,11 @@ $dd-dialogue-padding-horizontal: 1rem;
   // outline: 1px solid green;
   // position: absolute;
   transform: translateY(
-      calc(
-        (100vh - 4rem - #{2 * $dd-frame-border-width}) *
-          var(--dd-scroll-percentage-normalized) - 50%
-      )
+    calc(
+      (100vh - 4rem - #{2 * $dd-frame-border-width}) *
+        var(--dd-scroll-percentage-normalized) - 50%
     )
-    translate3d(0, 0, 0);
+  );
   width: 100%;
   will-change: transform;
 }

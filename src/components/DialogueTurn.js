@@ -3,10 +3,9 @@
 import { Map } from "immutable";
 
 import * as React from "react";
-import ReactMarkdown from "react-markdown";
 
-import DialogueAnswer from "./DialogueAnswer";
 import DialogueSpinner from "./DialogueSpinner";
+import DialogueTurnPrompt from "./DialogueTurnPrompt";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
 import ScrollbarPosition from "../framework/classes/ScrollbarPosition";
 
@@ -80,12 +79,6 @@ export default function DialogueTurn(props: Props) {
     prompt: null
   });
 
-  function onDialogueEndClick(evt: SyntheticEvent<any>): void {
-    evt.preventDefault();
-
-    props.onDialogueEnd();
-  }
-
   React.useEffect(
     function() {
       Promise.all([
@@ -115,56 +108,30 @@ export default function DialogueTurn(props: Props) {
   return (
     <div className="dd__dialogue dd__dialogue--hud dd__frame">
       <div className="dd__dialogue__scrollframe" ref={setContainerElement}>
-        <div className="dd__dialogue__turn">
-          {state.illustration && (
-            <div className="dd__dialogue__turn__illustration">
-              <img
-                alt="Illustration"
-                className="dd__dialogue__turn__illustration__image"
-                src={`/assets/image-manuscript-header.png`}
-              />
-            </div>
-          )}
-          <h1 className="dd__dialogue__turn__title">Jaskinia pustelnika</h1>
-          <div className="dd__dialogue__turn__prompt dd-tp__formatted-text">
-            <div className="dd__dialogue__turn__actor">{state.actor}</div>
-            <ReactMarkdown source={state.prompt} />
-          </div>
-          <hr className="dd__dialogue__hr" />
-          {state.answers.isEmpty() ? (
-            <button
-              className="dd__button dd__button--dialogue-turn-end"
-              onClick={onDialogueEndClick}
-            >
-              Zakończ dialog
-            </button>
-          ) : (
-            <ol className="dd__dialogue__turn__answers">
-              {state.answers
-                .toSet()
-                .toArray()
-                .map(dialogueMessage => (
-                  <li
-                    className="dd__dialogue__turn__answer"
-                    key={dialogueMessage.key()}
-                  >
-                    <DialogueAnswer
-                      dialogueMessage={dialogueMessage}
-                      logger={props.logger}
-                      onAnswerClick={props.onAnswerClick}
-                    />
-                  </li>
-                ))}
-            </ol>
-          )}
-        </div>
-        <div
-          className="dd__dialogue__scrollframe__scrollbar"
-          style={{
-            "--dd-scroll-percentage-normalized": scrollPercentage / 100
-          }}
-        >
-          <div className="dd__dialogue__scrollframe__scrollbar__indicator" />
+        <DialogueTurnPrompt
+          actor={state.actor}
+          answers={state.answers}
+          illustration={state.illustration}
+          logger={props.logger}
+          onAnswerClick={props.onAnswerClick}
+          onDialogueEnd={props.onDialogueEnd}
+          prompt={state.prompt}
+        />
+        <div className="dd__dialogue__scrollframe__scrollbar">
+          <div
+            className="dd__dialogue__scrollframe__scrollbar__indicator"
+            style={{
+              "--dd-scroll-percentage-normalized": scrollPercentage / 100
+              // transform: `
+              //   translateY(
+              //     calc(
+              //       (100vh - 4rem - 4px) *
+              //       ${scrollPercentage / 100} - 50%
+              //     )
+              //   )
+              // `
+            }}
+          />
         </div>
       </div>
     </div>

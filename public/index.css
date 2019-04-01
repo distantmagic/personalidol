@@ -726,7 +726,7 @@ button {
 .dd__dialogue__scrollframe__scrollbar__indicator {
   background-color: blue;
   height: 26px;
-  transform: translateY(calc( (100vh - 4rem - 4px) * var(--dd-scroll-percentage-normalized) - 50%)) translate3d(0, 0, 0);
+  transform: translateY(calc( (100vh - 4rem - 4px) * var(--dd-scroll-percentage-normalized) - 50%));
   width: 100%;
   will-change: transform; }
 
