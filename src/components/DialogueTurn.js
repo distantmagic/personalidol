@@ -28,7 +28,7 @@ function updateScrollDelta(
   const scrollPosition = new ScrollbarPosition(
     ref.scrollHeight,
     ref.offsetHeight,
-    28,
+    36,
     ref.scrollTop
   );
   setScrollPercentage(Math.min(100, scrollPosition.scrollPercentage));
@@ -122,16 +122,12 @@ export default function DialogueTurn(props: Props) {
             className="dd__dialogue__scrollframe__scrollbar__indicator"
             style={{
               "--dd-scroll-percentage-normalized": scrollPercentage / 100
-              // transform: `
-              //   translateY(
-              //     calc(
-              //       (100vh - 4rem - 4px) *
-              //       ${scrollPercentage / 100} - 50%
-              //     )
-              //   )
-              // `
             }}
           />
+          <div className="dd__dialogue__scrollframe__scrollbar__track">
+            <button className="dd__dialogue__scrollframe__scrollbar__track__edge dd__dialogue__scrollframe__scrollbar__track__edge--head" />
+            <button className="dd__dialogue__scrollframe__scrollbar__track__edge dd__dialogue__scrollframe__scrollbar__track__edge--tail" />
+          </div>
         </div>
       </div>
     </div>
