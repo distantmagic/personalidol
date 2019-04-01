@@ -45,7 +45,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.mesh.rotation.x += 0.01;
     this.mesh.rotation.y += 0.02;
-    // this.mesh.scale.x = ((this.mesh.scale.x + 0.1) % 10);
+    // this.mesh.scale.x = ((this.mesh.scale.x + 0.1) % 6);
 
     renderer.render(this.scene, this.camera);
   }

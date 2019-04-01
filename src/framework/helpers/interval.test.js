@@ -1,7 +1,7 @@
 // @flow
 
-import CancelToken from "../../classes/CancelToken";
-import interval from "../../helpers/interval";
+import CancelToken from "../classes/CancelToken";
+import interval from "./interval";
 
 it("produces interval events generator", async () => {
   const cancelToken = new CancelToken();

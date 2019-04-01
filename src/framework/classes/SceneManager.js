@@ -26,6 +26,10 @@ export default class SceneManager implements SceneManagerInterface {
     });
   }
 
+  async detach(): Promise<void> {
+    console.log('detach');
+  }
+
   async resize(elementSize: ElementSize): Promise<void> {
     this.controller.resize(elementSize);
 

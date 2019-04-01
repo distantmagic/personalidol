@@ -1,7 +1,7 @@
 // @flow
 
-import CancelToken from "../../classes/CancelToken";
-import frame from "../../helpers/frame";
+import CancelToken from "../classes/CancelToken";
+import frame from "./frame";
 
 it("ticks", async () => {
   const cancelToken = new CancelToken();

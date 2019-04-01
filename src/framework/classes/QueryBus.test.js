@@ -1,11 +1,11 @@
 // @flow
 
-import CancelToken from "../../classes/CancelToken";
-import QueryBus from "../../classes/QueryBus";
-import TimeoutTick from "../../classes/TimeoutTick";
+import CancelToken from "./CancelToken";
+import QueryBus from "./QueryBus";
+import TimeoutTick from "./TimeoutTick";
 
-import type { CancelToken as CancelTokenInterface } from "../../interfaces/CancelToken";
-import type { Query } from "../../interfaces/Query";
+import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
+import type { Query } from "../interfaces/Query";
 
 type Total = {
   executed: number

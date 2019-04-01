@@ -1,7 +1,7 @@
 // @flow
 
-import CancelToken from "../../classes/CancelToken";
-import frameinterval from "../../helpers/frameinterval";
+import CancelToken from "../classes/CancelToken";
+import frameinterval from "./frameinterval";
 
 it("ticks infinitely", async () => {
   let ticksCount = 0;

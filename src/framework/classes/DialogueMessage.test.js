@@ -1,8 +1,8 @@
 // @flow
 
-import DialogueMessage from "../../classes/DialogueMessage";
-import ExpressionBus from "../../classes/ExpressionBus";
-import ExpressionContext from "../../classes/ExpressionContext";
+import DialogueMessage from "./DialogueMessage";
+import ExpressionBus from "./ExpressionBus";
+import ExpressionContext from "./ExpressionContext";
 
 it("determines if message is an answer to something else", async () => {
   const context = new ExpressionContext();

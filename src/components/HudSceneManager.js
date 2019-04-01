@@ -3,27 +3,25 @@
 import * as React from "react";
 
 import CancelToken from "../framework/classes/CancelToken";
-import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
 import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
-import HudSceneLocationComplexCanvas from "./HudSceneLocationComplexCanvas";
-import SceneManager from "../framework/classes/SceneManager";
+import HudSceneCanvas from "./HudSceneCanvas";
 
 import type { CancelToken as CancelTokenInterface } from "../framework/interfaces/CancelToken";
+import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
 
-type Props = {||};
+type Props = {|
+  sceneManager: SceneManagerInterface,
+|};
 
-export default function HudSceneLocationComplex(props: Props) {
+export default function HudSceneManager(props: Props) {
   const [scene, setScene] = React.useState(null);
   const [htmlElementResizeObserver] = React.useState(
     new HTMLElementResizeObserver()
   );
-  const [sceneManager] = React.useState(
-    new SceneManager(new CanvasLocationComplex())
-  );
 
   async function htmlElementResizeObserve(cancelToken: CancelTokenInterface) {
     for await (let evt of htmlElementResizeObserver.listen(cancelToken)) {
-      sceneManager.resize(evt.getHTMLElementSize());
+      props.sceneManager.resize(evt.getHTMLElementSize());
     }
   }
 
@@ -37,7 +35,7 @@ export default function HudSceneLocationComplex(props: Props) {
         cancelToken.cancel();
       };
     },
-    [scene]
+    [props.sceneManager, scene]
   );
 
   React.useEffect(
@@ -52,12 +50,12 @@ export default function HudSceneLocationComplex(props: Props) {
         htmlElementResizeObserver.unobserve();
       };
     },
-    [scene]
+    [htmlElementResizeObserver, scene]
   );
 
   return (
     <div className="dd__scene dd__scene--hud dd__scene--canvas" ref={setScene}>
-      <HudSceneLocationComplexCanvas sceneManager={sceneManager} />
+      <HudSceneCanvas sceneManager={props.sceneManager} />
     </div>
   );
 }

@@ -1,9 +1,9 @@
 // @flow
 
 import * as fixtures from "../fixtures";
-import DialogueScript from "../../classes/DialogueScript";
-import ExpressionBus from "../../classes/ExpressionBus";
-import ExpressionContext from "../../classes/ExpressionContext";
+import DialogueScript from "./DialogueScript";
+import ExpressionBus from "./ExpressionBus";
+import ExpressionContext from "./ExpressionContext";
 
 const testContext = {};
 

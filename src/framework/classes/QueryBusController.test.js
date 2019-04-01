@@ -1,9 +1,9 @@
 // @flow
 
-import BusClock from "../../classes/BusClock";
-import CancelToken from "../../classes/CancelToken";
-import QueryBus from "../../classes/QueryBus";
-import QueryBusController from "../../classes/QueryBusController";
+import BusClock from "./BusClock";
+import CancelToken from "./CancelToken";
+import QueryBus from "./QueryBus";
+import QueryBusController from "./QueryBusController";
 
 it("supports cancel token", async () => {
   const cancelToken = new CancelToken();

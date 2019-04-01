@@ -1,7 +1,7 @@
 // @flow
 
-import CancelToken from "../../classes/CancelToken";
-import timeout from "../../helpers/timeout";
+import CancelToken from "../classes/CancelToken";
+import timeout from "./timeout";
 
 it("supports cancel token", async () => {
   const cancelToken = new CancelToken();

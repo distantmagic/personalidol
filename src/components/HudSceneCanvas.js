@@ -10,14 +10,22 @@ type Props = {|
   sceneManager: SceneManagerInterface
 |};
 
-export default function HudSceneLocationComplexCanvas(props: Props) {
+export default React.memo<Props>(function (props: Props) {
   const [threeCanvas, setThreeCanvas] = React.useState(null);
 
   React.useEffect(
     function() {
-      if (threeCanvas) {
-        props.sceneManager.attach(threeCanvas);
+      if (!threeCanvas) {
+        return;
       }
+
+      const sceneManager = props.sceneManager;
+
+      sceneManager.attach(threeCanvas);
+
+      return function () {
+        sceneManager.detach();
+      };
     },
     [threeCanvas]
   );
@@ -36,4 +44,4 @@ export default function HudSceneLocationComplexCanvas(props: Props) {
   );
 
   return <canvas ref={setThreeCanvas} />;
-}
+});

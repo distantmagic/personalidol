@@ -1,7 +1,7 @@
 // @flow
 
-import Expression from "../../classes/Expression";
-import ExpressionContext from "../../classes/ExpressionContext";
+import Expression from "./Expression";
+import ExpressionContext from "./ExpressionContext";
 
 it("performs math calculations", () => {
   const context = new ExpressionContext();

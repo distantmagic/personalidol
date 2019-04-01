@@ -1,7 +1,7 @@
 // @flow
 
-import BusClock from "../../classes/BusClock";
-import CancelToken from "../../classes/CancelToken";
+import BusClock from "./BusClock";
+import CancelToken from "./CancelToken";
 
 it("ticks", async () => {
   let ticks = 0;

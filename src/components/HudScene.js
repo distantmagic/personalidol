@@ -2,16 +2,20 @@
 
 import * as React from "react";
 
-import HudSceneLocationComplex from "./HudSceneLocationComplex";
+import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
+import HudSceneManager from "./HudSceneManager";
 // import HudSceneLocationRoom from "./HudSceneLocationRoom";
+import SceneManager from "../framework/classes/SceneManager";
 
 type Props = {||};
 
-// constructor(props: Props) {
-// super(props);
-// pass scene manager via props
-// this.sceneManager = new SceneManager(new CanvasLocationComplex());
-// }
 export default function HudScene(props: Props) {
-  return <HudSceneLocationComplex />;
+  // return (
+  //   <HudSceneLocationRoom />
+  // );
+  return (
+    <HudSceneManager
+      sceneManager={new SceneManager(new CanvasLocationComplex())}
+    />
+  );
 }
