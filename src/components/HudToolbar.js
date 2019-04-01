@@ -20,11 +20,11 @@ export default function HudToolbar(props: Props) {
       <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">
         Brutalna siła
       </button>
-      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--magic">
-        Czar
-      </button>
       <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">
         Modlitwa
+      </button>
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--magic">
+        Czar
       </button>
       <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--backpack">
         Ekwipunek

@@ -485,28 +485,32 @@ button {
     background-repeat: no-repeat; }
 
 .dd__button.dd__button--icon.dd__button--backpack:before {
-  background-image: url("/assets/icon-backpack.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, auto; }
+  background-image: url("/assets/icon-backpack.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 80%, auto; }
 
 .dd__button.dd__button--icon.dd__button--dialogue:before {
-  background-image: url("/assets/icon-dialogue.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, auto; }
+  background-image: url("/assets/icon-dialogue.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 80%, auto; }
 
 .dd__button.dd__button--icon.dd__button--magic:before {
-  background-image: url("/assets/icon-magic.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, auto; }
+  background-image: url("/assets/icon-magic.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 80%, auto; }
+
+.dd__button.dd__button--icon.dd__button--observe:before {
+  background-image: url("/assets/icon-observe.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 80%, auto; }
 
 .dd__button.dd__button--icon.dd__button--prayer:before {
-  background-image: url("/assets/icon-prayer.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, auto; }
+  background-image: url("/assets/icon-prayer.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 80%, auto; }
 
 .dd__button.dd__button--icon.dd__button--skill:before {
-  background-image: url("/assets/icon-skill.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, auto; }
+  background-image: url("/assets/icon-skill.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 80%, auto; }
 
 .dd__button.dd__button--icon.dd__button--strength:before {
-  background-image: url("/assets/icon-strength.svg"), url("/assets/texture-mineshaft-marble-512.png");
-  background-size: 66%, auto; }
+  background-image: url("/assets/icon-strength.png"), url("/assets/texture-mineshaft-marble-512.png");
+  background-size: 80%, auto; }
 
 .dd__frame {
   border-color: rgba(55, 55, 55, 0.4);

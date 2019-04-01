@@ -195,11 +195,12 @@ button {
   }
 }
 
-@each $icon in (backpack, dialogue, magic, prayer, skill, strength) {
+@each $icon in (backpack, dialogue, magic, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
-    background-image: url("/assets/icon-#{$icon}.svg"),
+    background-image: url("/assets/icon-#{$icon}.png"),
       url("/assets/texture-mineshaft-marble-512.png");
-    background-size: 66%, auto;
+    background-size: 80%, auto;
+    // filter: grayscale(1);
   }
 }
 
