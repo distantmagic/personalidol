@@ -26,12 +26,12 @@ type Props = {|
 |};
 
 export default function DialogueLoader(props: Props) {
-  const [cancelToken] = React.useState(new CancelToken());
   const [dialogue, setDialogue] = React.useState(null);
   const [isDialogueEnded, setIsDialogueEnded] = React.useState(false);
 
   React.useEffect(
     function() {
+      const cancelToken = new CancelToken();
       const query = new DialogueQuery(
         props.expressionBus,
         props.expressionContext,
@@ -50,7 +50,7 @@ export default function DialogueLoader(props: Props) {
         setIsDialogueEnded(false);
       };
     },
-    [cancelToken, props.dialogueResourceReference]
+    [props.dialogueResourceReference]
   );
 
   if (!dialogue) {

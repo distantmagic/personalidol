@@ -8,10 +8,12 @@ import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObs
 import HudSceneLocationComplexCanvas from "./HudSceneLocationComplexCanvas";
 import SceneManager from "../framework/classes/SceneManager";
 
+import type { CancelToken as CancelTokenInterface } from "../framework/interfaces/CancelToken";
+
 type Props = {||};
 
 export default function HudSceneLocationComplex(props: Props) {
-  const [cancelToken] = React.useState(new CancelToken());
+  const [scene, setScene] = React.useState(null);
   const [htmlElementResizeObserver] = React.useState(
     new HTMLElementResizeObserver()
   );
@@ -19,29 +21,38 @@ export default function HudSceneLocationComplex(props: Props) {
     new SceneManager(new CanvasLocationComplex())
   );
 
-  async function htmlElementResizeObserve() {
+  async function htmlElementResizeObserve(cancelToken: CancelTokenInterface) {
     for await (let evt of htmlElementResizeObserver.listen(cancelToken)) {
       sceneManager.resize(evt.getHTMLElementSize());
     }
   }
 
-  function setScene(scene: ?HTMLElement): void {
-    if (scene) {
-      htmlElementResizeObserver.observe(scene);
-    } else {
-      htmlElementResizeObserver.unobserve();
-    }
-  }
-
   React.useEffect(
     function() {
-      htmlElementResizeObserve();
+      const cancelToken = new CancelToken();
+
+      htmlElementResizeObserve(cancelToken);
 
       return function() {
         cancelToken.cancel();
       };
     },
-    [cancelToken]
+    [scene]
+  );
+
+  React.useEffect(
+    function() {
+      if (!scene) {
+        return;
+      }
+
+      htmlElementResizeObserver.observe(scene);
+
+      return function() {
+        htmlElementResizeObserver.unobserve();
+      };
+    },
+    [scene]
   );
 
   return (

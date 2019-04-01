@@ -11,30 +11,29 @@ type Props = {|
 |};
 
 export default function HudSceneLocationComplexCanvas(props: Props) {
-  const threeCanvasRef = React.useRef(null);
-  const [cancelToken] = React.useState(new CancelToken());
+  const [threeCanvas, setThreeCanvas] = React.useState(null);
 
   React.useEffect(
     function() {
-      const element = threeCanvasRef.current;
-
-      if (element) {
-        props.sceneManager.attach(element);
+      if (threeCanvas) {
+        props.sceneManager.attach(threeCanvas);
       }
     },
-    [threeCanvasRef]
+    [threeCanvas]
   );
 
   React.useEffect(
     function() {
+      const cancelToken = new CancelToken();
+
       props.sceneManager.loop(cancelToken);
 
       return function() {
         cancelToken.cancel();
       };
     },
-    [cancelToken, props.sceneManager]
+    [props.sceneManager]
   );
 
-  return <canvas ref={threeCanvasRef} />;
+  return <canvas ref={setThreeCanvas} />;
 }

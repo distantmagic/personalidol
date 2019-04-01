@@ -21,7 +21,6 @@ type Props = {|
 |};
 
 export default function HudModalCharacterLoader(props: Props) {
-  const [cancelToken] = React.useState(new CancelToken());
   const [state, setState] = React.useState({
     character: null,
     isLoading: true
@@ -40,6 +39,7 @@ export default function HudModalCharacterLoader(props: Props) {
         return;
       }
 
+      const cancelToken = new CancelToken();
       const query = new CharacterQuery(
         new CharacterResourceReference(characterId)
       );
@@ -58,7 +58,7 @@ export default function HudModalCharacterLoader(props: Props) {
         cancelToken.cancel();
       };
     },
-    [cancelToken, props.match.params.characterId]
+    [props.match.params.characterId]
   );
 
   if (state.isLoading) {
