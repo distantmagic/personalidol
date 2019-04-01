@@ -720,14 +720,13 @@ button {
 
 .dd__dialogue__scrollframe__scrollbar {
   grid-template-rows: 1rem 1fr 1rem;
-  height: calc(100vh - 4rem - 4px);
+  height: calc(100vh - 6rem - 4px);
   left: 0;
   position: sticky;
-  top: 1rem; }
+  top: 2rem; }
 
 .dd__dialogue__scrollframe__scrollbar__indicator,
 .dd__dialogue__scrollframe__scrollbar__track__edge {
-  background-color: red;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -735,12 +734,12 @@ button {
   left: 50%; }
 
 .dd__dialogue__scrollframe__scrollbar__indicator {
-  background-image: radial-gradient(rgba(248, 233, 189, 0.5) 10%, transparent 70%), radial-gradient(at top left, white 10%, transparent 60%), linear-gradient(to right, #f8e9bd, #502a0d 40%);
+  background-image: radial-gradient(rgba(248, 233, 189, 0.6) 10%, transparent 70%), radial-gradient(at top left, white 10%, transparent 60%), linear-gradient(to right, #f8e9bd, #502a0d 40%);
   box-shadow: inset 0 0 2px #f8e9bd;
   filter: drop-shadow(0 0 4px black);
   height: 16px;
   position: relative;
-  transform: translateX(-50%) translateY(calc( (100vh - 8rem - 4px) * var(--dd-scroll-percentage-normalized) + 2rem - 50%));
+  transform: translateX(-50%) translateY(calc( (100vh - 8rem - 4px) * var(--dd-scroll-percentage-normalized) + 1rem - 50%));
   width: 16px;
   will-change: transform;
   z-index: 3; }
@@ -757,20 +756,28 @@ button {
   position: absolute;
   top: 0;
   transform: translateX(-50%);
-  width: 100%; }
+  width: 16px; }
 
 .dd__dialogue__scrollframe__scrollbar__track__edge {
   border: none;
+  height: 1.5rem;
   left: 50%;
-  position: absolute; }
+  position: absolute;
+  width: 16px; }
 
 .dd__dialogue__scrollframe__scrollbar__track__edge.dd__dialogue__scrollframe__scrollbar__track__edge--head {
+  -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background-image: radial-gradient(at bottom center, rgba(80, 42, 13, 0.5) 10%, transparent), linear-gradient(to right, #f8e9bd 40%, #94846a 50%);
   top: 0;
-  transform: translateX(-50%) translateY(-50%); }
+  transform: translateX(-50%) translateY(-100%); }
 
 .dd__dialogue__scrollframe__scrollbar__track__edge.dd__dialogue__scrollframe__scrollbar__track__edge--tail {
+  -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  background-image: radial-gradient(at top center, rgba(80, 42, 13, 0.5) 10%, transparent), linear-gradient(to right, #f8e9bd 40%, #94846a 50%);
   bottom: 0;
-  transform: translateX(-50%) translateY(50%); }
+  transform: translateX(-50%) translateY(100%); }
 
 .dd__dialogue__turn {
   align-content: flex-start;

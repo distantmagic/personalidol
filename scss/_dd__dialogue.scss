@@ -57,15 +57,14 @@ $dd-dialogue-padding-horizontal: 1rem;
 
 .dd__dialogue__scrollframe__scrollbar {
   grid-template-rows: 1rem 1fr 1rem;
-  height: calc(100vh - 4rem - #{2 * $dd-frame-border-width});
+  height: calc(100vh - 6rem - #{2 * $dd-frame-border-width});
   left: 0;
   position: sticky;
-  top: 1rem;
+  top: 2rem;
 }
 
 .dd__dialogue__scrollframe__scrollbar__indicator,
 .dd__dialogue__scrollframe__scrollbar__track__edge {
-  background-color: red;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -75,7 +74,7 @@ $dd-dialogue-padding-horizontal: 1rem;
 
 .dd__dialogue__scrollframe__scrollbar__indicator {
   background-image: radial-gradient(
-      rgba($color-givry, 0.5) 10%,
+      rgba($color-givry, 0.6) 10%,
       transparent 70%
     ),
     radial-gradient(at top left, white 10%, transparent 60%),
@@ -88,7 +87,7 @@ $dd-dialogue-padding-horizontal: 1rem;
     translateY(
       calc(
         (100vh - 8rem - #{2 * $dd-frame-border-width}) *
-          var(--dd-scroll-percentage-normalized) + 2rem - 50%
+          var(--dd-scroll-percentage-normalized) + 1rem - 50%
       )
     );
   width: 16px;
@@ -114,23 +113,43 @@ $dd-dialogue-padding-horizontal: 1rem;
   position: absolute;
   top: 0;
   transform: translateX(-50%);
-  width: 100%;
+  width: 16px;
 }
 
 .dd__dialogue__scrollframe__scrollbar__track__edge {
   border: none;
+  height: 1.5rem;
   left: 50%;
   position: absolute;
+  width: 16px;
 }
 
 .dd__dialogue__scrollframe__scrollbar__track__edge.dd__dialogue__scrollframe__scrollbar__track__edge--head {
+  -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+
+  background-image: radial-gradient(
+      at bottom center,
+      rgba($color-cioccolato, 0.5) 10%,
+      transparent
+    ),
+    linear-gradient(to right, $color-givry 40%, $color-arrowtown 50%);
   top: 0;
-  transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-100%);
 }
 
 .dd__dialogue__scrollframe__scrollbar__track__edge.dd__dialogue__scrollframe__scrollbar__track__edge--tail {
+  -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+
+  background-image: radial-gradient(
+      at top center,
+      rgba($color-cioccolato, 0.5) 10%,
+      transparent
+    ),
+    linear-gradient(to right, $color-givry 40%, $color-arrowtown 50%);
   bottom: 0;
-  transform: translateX(-50%) translateY(50%);
+  transform: translateX(-50%) translateY(100%);
 }
 
 .dd__dialogue__turn {
