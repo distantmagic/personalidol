@@ -359,6 +359,7 @@ body {
   background-color: black;
   background-image: url("/assets/texture-cod-gray-marble-512.png");
   color: rgba(255, 255, 255, 0.85);
+  cursor: url("/assets/cursor-rpg-basicred-32.png") 7 2, default;
   display: grid;
   font-family: "Vesper Libre", sans-serif;
   height: 100vh;
@@ -384,7 +385,8 @@ p {
 
 a,
 button {
-  color: inherit; }
+  color: inherit;
+  cursor: url("/assets/cursor-rpg-pointer-32.png") 6 1, pointer; }
 
 #root,
 .dd__container {
@@ -428,7 +430,7 @@ button {
   background-color: transparent;
   border-style: inset;
   color: white;
-  cursor: pointer;
+  cursor: url("/assets/cursor-rpg-pointer-32.png") 6 1, pointer;
   overflow: hidden;
   position: relative;
   transition: padding 0.05s ease-in-out;
@@ -528,7 +530,7 @@ button {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.85);
   border-radius: 4px;
-  cursor: default;
+  cursor: url("/assets/cursor-rpg-basicred-32.png") 7 2, default;
   display: flex;
   filter: drop-shadow(12px 12px 24px rgba(0, 0, 0, 0.6));
   flex-direction: column;
@@ -604,7 +606,7 @@ button {
   grid-template-columns: 64px auto;
   grid-template-rows: 1fr;
   height: 96px;
-  cursor: pointer; }
+  cursor: url("/assets/cursor-rpg-pointer-32.png") 6 1, pointer; }
   .dd__aside__portrait:nth-of-type(4n) .dd__aside__portrait__statuses {
     background-position: 128px; }
   .dd__aside__portrait:nth-of-type(4n + 1) .dd__aside__portrait__statuses {
@@ -631,7 +633,7 @@ button {
   position: relative; }
 
 .dd__aside__portrait__status {
-  cursor: default;
+  cursor: url("/assets/cursor-rpg-basicred-32.png") 7 2, default;
   display: grid; }
   .dd__aside__portrait__status:hover .dd__aside__portrait__status__icon__tooltip {
     opacity: 1; }
@@ -663,7 +665,7 @@ button {
 .dd__aside__portrait__status__icon {
   background-color: transparent;
   border: none;
-  cursor: pointer;
+  cursor: url("/assets/cursor-rpg-pointer-32.png") 6 1, pointer;
   display: grid; }
 
 .dd__aside__portrait__status__icon__image {
@@ -812,7 +814,7 @@ button {
   background-color: transparent;
   border: none;
   color: crimson;
-  cursor: pointer;
+  cursor: url("/assets/cursor-rpg-pointer-32.png") 6 1, pointer;
   text-align: left;
   width: 100%; }
   .dd__dialogue__turn__answer__button:focus, .dd__dialogue__turn__answer__button:hover {

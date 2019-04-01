@@ -1,6 +1,7 @@
 @import "animations";
 @import "breakpoints";
 @import "colors";
+@import "cursors";
 @import "fonts";
 @import "functions";
 @import "normalize";
@@ -34,6 +35,7 @@ body {
   background-color: black;
   background-image: url("/assets/texture-cod-gray-marble-512.png");
   color: rgba(255, 255, 255, 0.85);
+  cursor: $cursor-default;
   display: grid;
   font-family: $font-family-vesper-libre;
   height: 100vh;
@@ -63,6 +65,7 @@ p {
 a,
 button {
   color: inherit;
+  cursor: $cursor-pointer;
 }
 
 #root,
@@ -117,7 +120,7 @@ button {
   background-color: transparent;
   border-style: inset;
   color: white;
-  cursor: pointer;
+  cursor: $cursor-pointer;
   overflow: hidden;
   position: relative;
   transition: padding 0.05s ease-in-out;
@@ -233,7 +236,7 @@ button {
   background-color: rgba(black, 0.85);
   // background-image: url('assets/texture-paper-1-512.jpg');
   border-radius: $dd-frame-border-radius;
-  cursor: default;
+  cursor: $cursor-default;
   display: flex;
   filter: drop-shadow(12px 12px 24px rgba(black, 0.6));
   flex-direction: column;
