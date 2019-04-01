@@ -3,21 +3,47 @@
 import clamp from "clamp";
 
 export default class ScrollbarPosition {
-  +scrollWidth: number;
-  +offsetWidth: number;
-  +scrollLeft: number;
+  +changed: boolean;
+  +scrollLength: number;
+  +offsetLength: number;
+  +scrollIndicatorHeight: number;
+  +scrollOffset: number;
+  +scrollPercentage: number;
 
-  constructor(scrollWidth: number, offsetWidth: number, scrollLeft: number) {
-    this.scrollWidth = scrollWidth;
-    this.offsetWidth = offsetWidth;
-    this.scrollLeft = scrollLeft;
+  constructor(
+    scrollLength: number,
+    offsetLength: number,
+    scrollIndicatorHeight: number,
+    scrollOffset: number,
+    changed: boolean = false
+  ) {
+    this.changed = changed;
+    this.offsetLength = offsetLength;
+    this.scrollIndicatorHeight = scrollIndicatorHeight;
+    this.scrollLength = scrollLength;
+    this.scrollOffset = scrollOffset;
+
+    this.scrollPercentage =
+      (scrollOffset / (scrollLength - offsetLength)) * 100;
   }
 
   adjust(delta: number): ScrollbarPosition {
-    return new ScrollbarPosition(
-      this.scrollWidth,
-      this.offsetWidth,
-      clamp(this.scrollLeft + delta, 0, this.scrollWidth - this.offsetWidth)
+    const updatedScrollOffset = clamp(
+      this.scrollOffset + delta,
+      0,
+      this.scrollLength - this.offsetLength
     );
+
+    return new ScrollbarPosition(
+      this.scrollLength,
+      this.offsetLength,
+      this.scrollIndicatorHeight,
+      updatedScrollOffset,
+      updatedScrollOffset !== this.scrollOffset
+    );
+  }
+
+  isChanged(): boolean {
+    return this.changed;
   }
 }

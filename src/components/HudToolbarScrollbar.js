@@ -34,30 +34,28 @@ export default function HudToolbarScrollbar(props: Props) {
     const scrollPosition = new ScrollbarPosition(
       ref.scrollWidth,
       ref.offsetWidth,
+      0,
       ref.scrollLeft
     );
     const updatedScrollPosition = scrollPosition.adjust(delta);
 
-    ref.scrollLeft = updatedScrollPosition.scrollLeft;
+    ref.scrollLeft = updatedScrollPosition.scrollOffset;
   }
 
-  React.useEffect(
-    function() {
-      const element = containerRef.current;
+  React.useEffect(function() {
+    const element = containerRef.current;
 
-      if (!element) {
-        return;
-      }
+    if (!element) {
+      return;
+    }
 
-      element.addEventListener("wheel", onWheel, false);
-      updateScrollDelta(element, 0);
+    element.addEventListener("wheel", onWheel, false);
+    updateScrollDelta(element, 0);
 
-      return function(boundElement: HTMLElement) {
-        boundElement.removeEventListener("wheel", onWheel);
-      }.bind(null, element);
-    },
-    [containerRef]
-  );
+    return function(boundElement: HTMLElement) {
+      boundElement.removeEventListener("wheel", onWheel);
+    }.bind(null, element);
+  });
 
   return React.createElement(
     props.type,

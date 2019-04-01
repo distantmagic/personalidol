@@ -7,9 +7,5 @@ type Props = {|
 |};
 
 export default function HudModalLoader(props: Props) {
-  return (
-    <span aria-label="Loading..." className="dd__loader">
-      {props.label}
-    </span>
-  );
+  return <span className="dd__loader">{props.label}</span>;
 }

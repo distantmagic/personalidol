@@ -1,15 +1,19 @@
+$dd-modal-grid-gap: 2 * $dd-frame-padding;
+$dd-modal-character-avatar-column-width: 204px;
+
+@import "dd__modal__character__inventory";
+
 .dd__modal__character {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
   display: grid;
-  grid-gap: 1rem;
+  grid-gap: $dd-modal-grid-gap;
   grid-template-areas:
-    "avatar tabs tabs"
     "avatar content content"
     "name content content";
-  grid-template-columns: 2fr 5fr;
-  grid-template-rows: 3rem 1fr 1rem;
+  grid-template-columns: $dd-modal-character-avatar-column-width 1fr;
+  grid-template-rows: 1fr 1rem;
   height: calc(100vh - 204px);
-  padding: 1rem;
+  padding: $dd-modal-grid-gap;
+  position: relative;
   // width: 838px;
   width: calc(100vw - 326px);
 
@@ -43,10 +47,10 @@
 }
 
 .dd__modal__character__content {
-  align-content: flex-start;
+  // align-content: flex-start;
   display: grid;
   grid-area: content;
-  overflow-y: auto;
+  // overflow-y: auto;
 }
 
 .dd__modal__character__name {
@@ -61,5 +65,25 @@
 }
 
 .dd__modal__character__tabs {
-  grid-area: tabs;
+  // grid-area: tabs;
+  display: flex;
+  flex-direction: row;
+  left: $dd-modal-character-avatar-column-width + $dd-modal-grid-gap;
+  position: absolute;
+  top: 0;
+  transform: translateY(-100%);
+}
+
+.dd__modal__character__tab {
+  display: flex;
+  padding: 1.5 * $dd-frame-padding 4 * $dd-frame-padding;
+  text-decoration: none;
+}
+
+.dd__modal__character__tab + .dd__modal__character__tab {
+  // margin-left: $dd-frame-padding;
+}
+
+.dd__modal__character__tab:not(.dd__modal__character__tab--active) {
+  transform: scale(0.9);
 }

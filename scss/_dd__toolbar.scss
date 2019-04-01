@@ -9,7 +9,7 @@ $dd-hud-toolbar-scroll-indicator-height: 10px;
     repeat(var(--dd-toolbar-elements), $dd-hud-toolbar-button-side)
     calc(100vw - #{$dd-hud-aside-width} - 4.6 * #{$dd-hud-toolbar-button-side});
   grid-template-rows: 1fr;
-  overflow: auto;
+  overflow: hidden;
   padding-bottom: $dd-frame-padding;
   padding-left: 2 * $dd-frame-padding;
   padding-right: $dd-frame-padding;

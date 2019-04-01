@@ -54,6 +54,7 @@ h5,
 h6,
 p {
   font-size: inherit;
+  font-weight: normal;
   line-height: inherit;
   margin: 0;
   padding: 0;
@@ -75,8 +76,6 @@ button {
 
 .dd__loader {
   align-items: center;
-  animation-duration: 1s;
-  animation-name: fadein;
   // background-color: rgba(255, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
@@ -90,8 +89,16 @@ button {
     animation-duration: 1s;
     animation-iteration-count: infinite;
     animation-name: fadein;
-    content: "⏳";
+    // background-color: red;
+    background-image: url("/assets/image-hourglass.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: "";
+    display: flex;
     font-size: 2rem;
+    height: 5rem;
+    width: 3rem;
   }
 
   &:not(:empty):before {
@@ -108,7 +115,6 @@ button {
 
 .dd__button {
   background-color: transparent;
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
   border-style: inset;
   color: white;
   cursor: pointer;
@@ -140,7 +146,6 @@ button {
   }
 
   &:before {
-    background-image: url("/assets/texture-mineshaft-marble-512.png");
     border-style: outset;
     bottom: 0;
     content: "";
@@ -197,6 +202,7 @@ button {
 
 .dd__frame {
   border-color: rgba(55, 55, 55, 0.4);
+  background-image: url("/assets/texture-mineshaft-marble-512.png");
   border-radius: $dd-frame-border-radius;
   border-style: outset;
   border-width: $dd-frame-border-width;
@@ -204,4 +210,61 @@ button {
 
 .dd__frame.dd__frame--inset {
   border-style: inset;
+}
+
+.dd__frame.dd__frame--tab {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-width: 0;
+}
+
+.dd__frame.dd__frame--tab:not(.dd__frame--active) {
+  background-image: linear-gradient(
+      to bottom,
+      transparent 60%,
+      rgba(black, 0.3)
+    ),
+    url("/assets/texture-cod-gray-marble-512.png");
+  // filter: brightness(0.6);
+}
+
+.dd__tooltip {
+  align-items: center;
+  background-color: rgba(black, 0.85);
+  // background-image: url('assets/texture-paper-1-512.jpg');
+  border-radius: $dd-frame-border-radius;
+  cursor: default;
+  display: flex;
+  filter: drop-shadow(12px 12px 24px rgba(black, 0.6));
+  flex-direction: column;
+  // height: 100%;
+  // min-height: 4rem;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  padding: 1rem 1.5rem;
+  position: absolute;
+  right: -12px;
+  top: 12px;
+  text-align: center;
+  // transition: opacity 0.1s ease-in-out;
+  transform: translateX(100%) translateY(-12px);
+  width: 328px;
+  z-index: $z-index-dd-aside-portrait-status-tooltip;
+
+  &:before {
+    border-color: transparent black transparent transparent;
+    border-style: solid;
+    border-width: 6px 10.4px 6px 0;
+    height: 0;
+    width: 0;
+
+    // background-color: green;
+    content: "";
+    // height: 12px;
+    left: -10.4px;
+    position: absolute;
+    top: 6px;
+    // width: 12px;
+  }
 }

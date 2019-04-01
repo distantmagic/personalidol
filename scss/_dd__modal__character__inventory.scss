@@ -1,0 +1,175 @@
+$dd-modal-character-inventory-slot-side-width: 50px;
+$dd-modal-character-inventory-slots: (
+  back: (
+    5,
+    5
+  ),
+  belt: (
+    4,
+    5
+  ),
+  feet: (
+    4,
+    10
+  ),
+  head: (
+    4,
+    1
+  ),
+  larm: (
+    5,
+    3
+  ),
+  legs: (
+    4,
+    8
+  ),
+  lhand: (
+    5,
+    4
+  ),
+  lring: (
+    6,
+    4
+  ),
+  neck: (
+    4,
+    2
+  ),
+  rarm: (
+    3,
+    3
+  ),
+  rhand: (
+    3,
+    4
+  ),
+  rring: (
+    2,
+    4
+  ),
+  shield: (
+    1,
+    2
+  ),
+  torso: (
+    4,
+    3
+  ),
+  utility1: (
+    1,
+    6
+  ),
+  utility2: (
+    1,
+    7
+  ),
+  utility3: (
+    1,
+    8
+  ),
+  utility4: (
+    1,
+    9
+  ),
+  utility5: (
+    1,
+    10
+  ),
+  weapon: (
+    1,
+    1
+  )
+);
+
+.dd__frame.dd__frame--inventory-slot {
+  background-image: unset;
+  // opacity: 0.3;
+  position: relative;
+  z-index: $z-index-dd-modal-character-inventory-slot;
+
+  &:before {
+    background-image: url("/assets/texture-mineshaft-marble-512.png");
+    content: "";
+    height: 100%;
+    left: 0;
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+  }
+}
+
+.dd__modal__character__inventory {
+  // background-color: rgba(255, 0, 0, 0.3);
+  display: grid;
+}
+
+.dd__modal__character__inventory__paperdoll {
+  align-content: center;
+  display: grid;
+  // grid-gap: $dd-frame-padding;
+  grid-template-columns: repeat(
+    6,
+    $dd-modal-character-inventory-slot-side-width
+  );
+  grid-template-rows: repeat(10, $dd-modal-character-inventory-slot-side-width);
+  justify-content: center;
+  position: relative;
+
+  &:before {
+    background-image: url("/assets/image-knight-silhouette.svg");
+    background-position: center;
+    background-size: 100% calc(100% - 128px);
+    background-repeat: no-repeat;
+    content: "";
+    // filter: drop-shadow(0 0 1px red);
+    height: 100%;
+    left: 0;
+    opacity: 0.4;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.dd__modal__character__inventory__slot {
+  display: grid;
+  position: relative;
+
+  &:hover {
+    .dd__modal__character__inventory__slot__tooltip {
+      opacity: 1;
+    }
+  }
+
+  @each $slot, $position in $dd-modal-character-inventory-slots {
+    &.dd__modal__character__inventory__slot--#{$slot} {
+      grid-column: nth($position, 1);
+      grid-row: nth($position, 2);
+    }
+  }
+}
+
+.dd__modal__character__inventory__slot.dd__modal__character__inventory__slot--active {
+  // border-color: rgba(black, 0.6);
+
+  &:before {
+    // background-color: rgba(black, 0.8);
+    background-blend-mode: hard-light;
+  }
+}
+
+.dd__modal__character__inventory__slot__image {
+  // filter: drop-shadow(0 0 4px blue);
+  height: 100%;
+  width: 100%;
+}
+
+.dd__modal__character__inventory__slot__tooltip {
+  // position: absolute;
+  // right: 0;
+  // top: 0;
+}

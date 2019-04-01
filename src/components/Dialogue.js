@@ -48,7 +48,7 @@ export default function Dialogue(props: Props) {
   );
 
   if (!dialogueTurn) {
-    return <DialogueSpinner />;
+    return <DialogueSpinner label="Loading dialogue turn..." />;
   }
 
   return (

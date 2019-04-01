@@ -6,11 +6,13 @@ import type { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/
 export default class HTMLElementSize implements HTMLElementSizeInterface {
   +htmlElement: HTMLElement;
   +htmlElementHeight: number;
+  +htmlElementScrollHeight: number;
   +htmlElementWidth: number;
 
   constructor(htmlElement: HTMLElement) {
     this.htmlElement = htmlElement;
     this.htmlElementHeight = htmlElement.offsetHeight;
+    this.htmlElementScrollHeight = htmlElement.scrollHeight;
     this.htmlElementWidth = htmlElement.offsetWidth;
   }
 
@@ -24,6 +26,10 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
 
   getHeight(): number {
     return this.htmlElementHeight;
+  }
+
+  getScrollHeight(): number {
+    return this.htmlElementScrollHeight;
   }
 
   getWidth(): number {

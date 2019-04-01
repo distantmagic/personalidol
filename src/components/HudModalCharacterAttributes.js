@@ -8,9 +8,9 @@ type Props = {|
   character: Character
 |};
 
-export default function HudModalCharacterStats(props: Props) {
+export default function HudModalCharacterAttributes(props: Props) {
   return (
-    <React.Fragment>
+    <div className="dd__modal__character__attributes">
       <dl className="dd__modal__character__body">
         <dt>Siła</dt>
         <dd>1/1-20</dd>
@@ -85,6 +85,6 @@ export default function HudModalCharacterStats(props: Props) {
         </dt>
         <dd>20/0-100</dd>
       </dl>
-    </React.Fragment>
+    </div>
   );
 }

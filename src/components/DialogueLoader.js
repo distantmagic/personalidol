@@ -54,11 +54,7 @@ export default function DialogueLoader(props: Props) {
   );
 
   if (!dialogue) {
-    return (
-      <div className="dd__dialogue dd__dialogue--hud dd__frame">
-        <DialogueSpinner />
-      </div>
-    );
+    return <DialogueSpinner label="Loading dialogue..." />;
   }
 
   if (isDialogueEnded) {
@@ -70,13 +66,11 @@ export default function DialogueLoader(props: Props) {
   }
 
   return (
-    <div className="dd__dialogue dd__dialogue--hud dd__frame">
-      <Dialogue
-        dialogue={dialogue}
-        dialogueInitiator={props.dialogueInitiator}
-        onDialogueEnd={setIsDialogueEnded}
-        logger={props.logger}
-      />
-    </div>
+    <Dialogue
+      dialogue={dialogue}
+      dialogueInitiator={props.dialogueInitiator}
+      onDialogueEnd={setIsDialogueEnded}
+      logger={props.logger}
+    />
   );
 }

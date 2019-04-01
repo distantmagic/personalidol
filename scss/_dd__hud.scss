@@ -17,6 +17,7 @@ $dd-hud-aside-width: 128px;
     calc(100vh - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
     $dd-hud-toolbar-height
     $dd-hud-statusbar-height;
+  height: 100vh;
   position: relative;
 }
 
@@ -39,11 +40,6 @@ $dd-hud-aside-width: 128px;
 
 .dd__scene.dd__scene--hud {
   grid-area: scene;
-}
-
-.dd__statusbar.dd__statusbar--hud,
-.dd__toolbar.dd__toolbar--hud {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
 }
 
 .dd__statusbar.dd__statusbar--hud {
