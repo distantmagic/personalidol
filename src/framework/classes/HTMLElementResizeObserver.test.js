@@ -1,6 +1,6 @@
 // @flow
 
-import CancelToken from "../../framework/classes/CancelToken";
+import CancelToken from "../classes/CancelToken";
 import HTMLElementResizeObserver from "../classes/HTMLElementResizeObserver";
 
 it("observes element changes", async () => {

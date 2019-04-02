@@ -52,7 +52,10 @@ function useScrollPercentageState() {
         setScrollPercentage
       );
 
-      containerElement.addEventListener("wheel", onWheelBound, false);
+      containerElement.addEventListener("wheel", onWheelBound, {
+        capture: true,
+        passive: true
+      });
       updateScrollDelta(
         containerElement,
         containerHTMLElementSize,

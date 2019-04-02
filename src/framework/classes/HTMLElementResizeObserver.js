@@ -2,9 +2,9 @@
 
 import HTMLElementResizeEvent from "./HTMLElementResizeEvent";
 import HTMLElementSize from "./HTMLElementSize";
-import interval from "../../framework/helpers/interval";
+import interval from "../helpers/interval";
 
-import type { CancelToken } from "../../framework/interfaces/CancelToken";
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { HTMLElementResizeEvent as HTMLElementResizeEventInterface } from "../interfaces/HTMLElementResizeEvent";
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../interfaces/HTMLElementResizeObserver";
 import type { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";

@@ -14,12 +14,8 @@
 }
 
 .dd__aside__portrait {
-  // background-color: transparent;
-  // border: none;
   border-radius: $dd-frame-border-radius;
   display: grid;
-  // filter: brightness(0.6) grayscale(0.3);
-  // filter: brightness(0.6);
   grid-template-columns: 64px auto;
   grid-template-rows: 1fr;
   height: 96px;
@@ -37,12 +33,9 @@
 }
 
 .dd__aside__portrait.dd__aside__portrait--active {
-  // filter: brightness(1);
-  // outline: 1px solid green;
 }
 
 .dd__aside__portrait__image {
-  // background-color: red;
   border-bottom-left-radius: $dd-frame-border-radius;
   border-top-left-radius: $dd-frame-border-radius;
   height: 100%;
@@ -69,7 +62,6 @@
   &:hover {
     .dd__aside__portrait__status__icon__tooltip {
       opacity: 1;
-      // pointer-events: auto;
     }
   }
 

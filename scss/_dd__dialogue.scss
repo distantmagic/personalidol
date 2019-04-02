@@ -79,8 +79,10 @@ $dd-dialogue-padding-horizontal: 1rem;
     ),
     radial-gradient(at top left, white 10%, transparent 60%),
     linear-gradient(to right, $color-givry, $color-cioccolato 40%);
-  box-shadow: inset 0 0 2px $color-givry;
-  filter: drop-shadow(0 0 4px black);
+  box-shadow:
+    inset 0 0 2px $color-givry,
+    0 0 4px black
+  ;
   height: 16px;
   position: relative;
   transform: translateX(-50%)

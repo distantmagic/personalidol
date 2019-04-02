@@ -1,6 +1,6 @@
 // @flow
 
-import type { ClockTick } from "../../framework/interfaces/ClockTick";
+import type { ClockTick } from "../interfaces/ClockTick";
 import type { HTMLElementResizeEvent as HTMLElementResizeEventInterface } from "../interfaces/HTMLElementResizeEvent";
 import type { HTMLElementSize } from "../interfaces/HTMLElementSize";
 

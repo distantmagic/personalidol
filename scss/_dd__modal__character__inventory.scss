@@ -124,7 +124,6 @@ $dd-modal-character-inventory-slots: (
     background-size: 100% calc(100% - 128px);
     background-repeat: no-repeat;
     content: "";
-    // filter: drop-shadow(0 0 1px red);
     height: 100%;
     left: 0;
     opacity: 0.4;
@@ -163,7 +162,6 @@ $dd-modal-character-inventory-slots: (
 }
 
 .dd__modal__character__inventory__slot__image {
-  // filter: drop-shadow(0 0 4px blue);
   height: 100%;
   width: 100%;
 }

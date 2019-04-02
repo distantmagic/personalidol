@@ -1,22 +1,51 @@
 // @flow
 
-import EventEmitter from "eventemitter3";
 import { default as VendorMainLoop } from "mainloop.js";
 
-import type { MainLoopObserver } from "../interfaces/MainLoopObserver";
+import RequestAnimationFrameTick from "./RequestAnimationFrameTick";
+import SingletonException from "./Exception/Singleton";
 
-export default class MainLoop {
-  +eventEmitter: EventEmitter;
+import type { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
+import type { MainLoopTickCallback } from "../interfaces/MainLoopTickCallback";
+
+let instance;
+
+export default class MainLoop implements MainLoopInterface {
+  // +eventEmitter: EventEmitter;
 
   static getInstance(): MainLoop {
-    return singleton;
+    return instance;
   }
 
   constructor() {
-    this.eventEmitter = new EventEmitter();
+    if (instance) {
+      throw new SingletonException("MainLoop is a singleton. Use `getInstance()` instead.");
+    }
+
+    // this.eventEmitter = new EventEmitter();
   }
 
-  addObserver(mainLoopObserver: MainLoopObserver) {}
+  setDraw(callback: MainLoopTickCallback): void {
+    VendorMainLoop.setDraw(function (time) {
+      callback(new RequestAnimationFrameTick(false));
+    });
+  }
+
+  setUpdate(callback: MainLoopTickCallback): void {
+    VendorMainLoop.setUpdate(function (time) {
+      callback(new RequestAnimationFrameTick(false));
+    });
+  }
+
+  start(): void {
+    VendorMainLoop.setMaxAllowedFPS(30);
+    VendorMainLoop.start();
+  }
+
+  stop(): void {
+    VendorMainLoop.stop();
+  }
 }
 
-const singleton = new MainLoop();
+// https://11xnewride.com/tutorials/javascript/how-to-make-javascript-singleton
+instance = new MainLoop();

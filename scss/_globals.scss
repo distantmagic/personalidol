@@ -200,7 +200,6 @@ button {
     background-image: url("/assets/icon-#{$icon}.png"),
       url("/assets/texture-mineshaft-marble-512.png");
     background-size: 80%, auto;
-    // filter: grayscale(1);
   }
 }
 
@@ -229,7 +228,6 @@ button {
       rgba(black, 0.3)
     ),
     url("/assets/texture-cod-gray-marble-512.png");
-  // filter: brightness(0.6);
 }
 
 .dd__tooltip {

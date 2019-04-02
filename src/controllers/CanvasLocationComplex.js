@@ -1,5 +1,6 @@
 // @flow
 
+import autoBind from "auto-bind";
 import * as THREE from "three";
 
 import type { CanvasController } from "../framework/interfaces/CanvasController";
@@ -13,6 +14,8 @@ export default class CanvasLocationComplex implements CanvasController {
   +scene: THREE.Scene;
 
   constructor() {
+    autoBind(this);
+
     this.camera = new THREE.PerspectiveCamera(70, 1, 0.1, 10);
     this.camera.position.z = 3;
     this.scene = new THREE.Scene();
@@ -35,18 +38,26 @@ export default class CanvasLocationComplex implements CanvasController {
     this.scene.add(this.light);
   }
 
+  async begin(tick: ClockTick): Promise<void> {
+  }
+
+  async draw(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {
+    renderer.render(this.scene, this.camera);
+  }
+
+  async end(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {
+  }
+
   async resize(elementSize: ElementSize): Promise<void> {
     this.camera.aspect = elementSize.getAspect();
     this.camera.updateProjectionMatrix();
   }
 
-  async tick(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {
+  async update(tick: ClockTick): Promise<void> {
     // this.light.position.y += 0.1;
 
     this.mesh.rotation.x += 0.01;
     this.mesh.rotation.y += 0.02;
     // this.mesh.scale.x = ((this.mesh.scale.x + 0.1) % 6);
-
-    renderer.render(this.scene, this.camera);
   }
 }

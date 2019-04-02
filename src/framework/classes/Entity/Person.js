@@ -10,7 +10,7 @@ import Entity from "../Entity";
 
 import type { Aimable } from "../../interfaces/Memorizable/Aimable";
 import type { Aims } from "../../interfaces/Sentient/Aims";
-import type { Collection } from "../../../framework/interfaces/Collection";
+import type { Collection } from "../../interfaces/Collection";
 import type { Hears } from "../../interfaces/Sentient/Perceives/Hears";
 import type { Identifiable } from "../../interfaces/Identifiable";
 import type { Memorizable } from "../../interfaces/Memorizable";
