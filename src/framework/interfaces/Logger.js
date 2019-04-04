@@ -1,12 +1,13 @@
 // @flow
 
+import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
 import type { LogSeverityEnum } from "../types/LogSeverityEnum";
 
 export interface Logger {
   /**
    * System is unusable.
    */
-  emergency(string): void;
+  emergency(LoggerBreadcrumbs, string): void;
 
   /**
    * Action must be taken immediately.
@@ -14,20 +15,20 @@ export interface Logger {
    * Example: Entire website down, database unavailable, etc. This should
    * trigger the SMS alerts and wake you up.
    */
-  alert(string): void;
+  alert(LoggerBreadcrumbs, string): void;
 
   /**
    * Critical conditions.
    *
    * Example: Application component unavailable, unexpected exception.
    */
-  critical(string): void;
+  critical(LoggerBreadcrumbs, string): void;
 
   /**
    * Runtime errors that do not require immediate action but should typically
    * be logged and monitored.
    */
-  error(string): void;
+  error(LoggerBreadcrumbs, string): void;
 
   /**
    * Exceptional occurrences that are not errors.
@@ -35,27 +36,27 @@ export interface Logger {
    * Example: Use of deprecated APIs, poor use of an API, undesirable things
    * that are not necessarily wrong.
    */
-  warning(string): void;
+  warning(LoggerBreadcrumbs, string): void;
 
   /**
    * Normal but significant events.
    */
-  notice(string): void;
+  notice(LoggerBreadcrumbs, string): void;
 
   /**
    * Interesting events.
    *
    * Example: User logs in, SQL logs.
    */
-  info(string): void;
+  info(LoggerBreadcrumbs, string): void;
 
   /**
    * Detailed debug information.
    */
-  debug(string): void;
+  debug(LoggerBreadcrumbs, string): void;
 
   /**
    * Logs with an arbitrary level.
    */
-  log(LogSeverityEnum, string): void;
+  log(LoggerBreadcrumbs, LogSeverityEnum, string): void;
 }

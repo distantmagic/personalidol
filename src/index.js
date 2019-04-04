@@ -9,7 +9,9 @@ import "core-js/es6/object";
 import React from "react";
 import ReactDOM from "react-dom";
 
+import ExceptionHandler from "./framework/classes/ExceptionHandler";
 import Logger from "./framework/classes/Logger";
+import LoggerBreadcrumbs from "./framework/classes/LoggerBreadcrumbs";
 import Main from "./components/Main";
 
 // Sentry.init({
@@ -18,11 +20,26 @@ import Main from "./components/Main";
 //   release: process.env.REACT_APP_RELEASE
 // });
 
+function render(rootElement: HTMLElement) {
+  const logger = new Logger();
+
+  ReactDOM.render(
+    <Main
+      exceptionHandler={new ExceptionHandler(logger)}
+      logger={logger}
+      loggerBreadcrumbs={new LoggerBreadcrumbs()}
+    />,
+    rootElement
+  );
+}
+
 function init(rootElement: HTMLElement) {
   document.addEventListener("readystatechange", function() {
-    if ("complete" === document.readyState) {
-      ReactDOM.render(<Main logger={new Logger()} />, rootElement);
+    if ("complete" !== document.readyState) {
+      return;
     }
+
+    render(rootElement);
   });
 }
 

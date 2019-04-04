@@ -28,10 +28,10 @@ export default class CancelToken implements CancelTokenInterface {
 
   onCancelled(callback: CancelTokenCallback): void {
     if (this._isCancelled) {
-      callback(new Cancelled("Token was already cancelled."));
+      callback(new Cancelled("Token is already cancelled."));
     } else {
       this.eventEmitter.once("cancel", function() {
-        callback(new Cancelled("Token was cancelled."));
+        callback(new Cancelled("Token is cancelled."));
       });
     }
   }

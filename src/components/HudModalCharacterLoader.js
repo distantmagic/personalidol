@@ -11,11 +11,15 @@ import HudModalLoader from "./HudModalLoader";
 
 import type { Match } from "react-router";
 
+import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Logger } from "../framework/interfaces/Logger";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 
 type Props = {|
+  exceptionHandler: ExceptionHandler,
   logger: Logger,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   match: Match,
   queryBus: QueryBus
 |};
@@ -52,7 +56,12 @@ export default function HudModalCharacterLoader(props: Props) {
             isLoading: false
           })
         )
-        .catch(props.logger.error);
+        .catch((error: Error) => {
+          return props.exceptionHandler.captureException(
+            props.loggerBreadcrumbs.add("characterQuery"),
+            error
+          );
+        });
 
       return function() {
         cancelToken.cancel();

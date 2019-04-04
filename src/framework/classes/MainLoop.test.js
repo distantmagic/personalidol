@@ -4,7 +4,7 @@ import MainLoop from "./MainLoop";
 import SingletonException from "./Exception/Singleton";
 
 it("is a singleton", () => {
-  expect(function () {
+  expect(function() {
     new MainLoop();
   }).toThrow(SingletonException);
 });

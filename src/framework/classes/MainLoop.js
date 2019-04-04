@@ -19,26 +19,30 @@ export default class MainLoop implements MainLoopInterface {
 
   constructor() {
     if (instance) {
-      throw new SingletonException("MainLoop is a singleton. Use `getInstance()` instead.");
+      throw new SingletonException(
+        "MainLoop is a singleton. Use `getInstance()` instead."
+      );
     }
 
     // this.eventEmitter = new EventEmitter();
   }
 
   setDraw(callback: MainLoopTickCallback): void {
-    VendorMainLoop.setDraw(function (time) {
+    VendorMainLoop.setDraw(function(time) {
+      // console.log('mainloop.draw');
       callback(new RequestAnimationFrameTick(false));
     });
   }
 
   setUpdate(callback: MainLoopTickCallback): void {
-    VendorMainLoop.setUpdate(function (time) {
+    console.log("VendorMainLoop.setUpdate");
+    VendorMainLoop.setUpdate(function(time) {
       callback(new RequestAnimationFrameTick(false));
     });
   }
 
   start(): void {
-    VendorMainLoop.setMaxAllowedFPS(30);
+    VendorMainLoop.setMaxAllowedFPS(4);
     VendorMainLoop.start();
   }
 

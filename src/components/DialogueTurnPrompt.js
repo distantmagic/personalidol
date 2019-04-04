@@ -7,19 +7,23 @@ import DialogueAnswer from "./DialogueAnswer";
 
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { DialogueMessages } from "../framework/types/DialogueMessages";
+import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Logger } from "../framework/interfaces/Logger";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 
 type Props = {|
   actor: string,
   answers: DialogueMessages,
+  exceptionHandler: ExceptionHandler,
   illustration: ?string,
   logger: Logger,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
   onDialogueEnd: () => any,
   prompt: string
 |};
 
-export default React.memo<Props>(function(props: Props) {
+export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
   function onDialogueEndClick(evt: SyntheticEvent<any>): void {
     evt.preventDefault();
 
@@ -62,7 +66,11 @@ export default React.memo<Props>(function(props: Props) {
               >
                 <DialogueAnswer
                   dialogueMessage={dialogueMessage}
+                  exceptionHandler={props.exceptionHandler}
                   logger={props.logger}
+                  loggerBreadcrumbs={props.loggerBreadcrumbs.add(
+                    "DialogueAnswer"
+                  )}
                   onAnswerClick={props.onAnswerClick}
                 />
               </li>

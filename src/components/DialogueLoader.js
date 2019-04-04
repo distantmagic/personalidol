@@ -11,17 +11,21 @@ import DialogueSpinner from "./DialogueSpinner";
 
 import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
 import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
+import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Identifiable } from "../framework/interfaces/Identifiable";
 import type { Logger } from "../framework/interfaces/Logger";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 import type { Speaks } from "../framework/interfaces/Sentient/Speaks";
 
 type Props = {|
   dialogueInitiator: Identifiable & Speaks,
   dialogueResourceReference: DialogueResourceReference,
+  exceptionHandler: ExceptionHandler,
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
   logger: Logger,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus
 |};
 
@@ -41,13 +45,15 @@ export default function DialogueLoader(props: Props) {
       props.queryBus
         .enqueue(cancelToken, query)
         .then(setDialogue)
-        .catch(props.logger.error);
+        .catch((error: Error) => {
+          return props.exceptionHandler.captureException(
+            props.loggerBreadcrumbs.add("dialogueQuery"),
+            error
+          );
+        });
 
       return function() {
         cancelToken.cancel();
-
-        setDialogue(null);
-        setIsDialogueEnded(false);
       };
     },
     [props.dialogueResourceReference]
@@ -69,8 +75,10 @@ export default function DialogueLoader(props: Props) {
     <Dialogue
       dialogue={dialogue}
       dialogueInitiator={props.dialogueInitiator}
+      exceptionHandler={props.exceptionHandler}
       onDialogueEnd={setIsDialogueEnded}
       logger={props.logger}
+      loggerBreadcrumbs={props.loggerBreadcrumbs.add("Dialogue")}
     />
   );
 }

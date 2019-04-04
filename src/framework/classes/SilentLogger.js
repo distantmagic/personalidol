@@ -1,24 +1,29 @@
 // @flow
 
 import type { Logger as LoggerInterface } from "../interfaces/Logger";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { LogSeverityEnum } from "../types/LogSeverityEnum";
 
 export default class SilentLogger implements LoggerInterface {
-  emergency(message: string): void {}
+  emergency(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  alert(message: string): void {}
+  alert(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  critical(message: string): void {}
+  critical(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  error(message: string): void {}
+  error(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  warning(message: string): void {}
+  warning(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  notice(message: string): void {}
+  notice(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  info(message: string): void {}
+  info(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  debug(message: string): void {}
+  debug(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  log(severity: LogSeverityEnum, message: string): void {}
+  log(
+    breadcrumbs: LoggerBreadcrumbs,
+    severity: LogSeverityEnum,
+    message: string
+  ): void {}
 }

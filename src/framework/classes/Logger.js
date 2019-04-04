@@ -3,6 +3,7 @@
 import autoBind from "auto-bind";
 
 import type { Logger as LoggerInterface } from "../interfaces/Logger";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { LogSeverityEnum } from "../types/LogSeverityEnum";
 
 export default class Logger implements LoggerInterface {
@@ -10,39 +11,43 @@ export default class Logger implements LoggerInterface {
     autoBind(this);
   }
 
-  emergency(message: string): void {
-    this.log("emergency", message);
+  emergency(breadcrumbs: LoggerBreadcrumbs, message: string): void {
+    this.log(breadcrumbs, "emergency", message);
   }
 
-  alert(message: string): void {
-    this.log("alert", message);
+  alert(breadcrumbs: LoggerBreadcrumbs, message: string): void {
+    this.log(breadcrumbs, "alert", message);
   }
 
-  critical(message: string): void {
-    this.log("critical", message);
+  critical(breadcrumbs: LoggerBreadcrumbs, message: string): void {
+    this.log(breadcrumbs, "critical", message);
   }
 
-  error(message: string): void {
-    this.log("error", message);
+  error(breadcrumbs: LoggerBreadcrumbs, message: string): void {
+    this.log(breadcrumbs, "error", message);
   }
 
-  warning(message: string): void {
-    this.log("warning", message);
+  warning(breadcrumbs: LoggerBreadcrumbs, message: string): void {
+    this.log(breadcrumbs, "warning", message);
   }
 
-  notice(message: string): void {
-    this.log("notice", message);
+  notice(breadcrumbs: LoggerBreadcrumbs, message: string): void {
+    this.log(breadcrumbs, "notice", message);
   }
 
-  info(message: string): void {
-    this.log("info", message);
+  info(breadcrumbs: LoggerBreadcrumbs, message: string): void {
+    this.log(breadcrumbs, "info", message);
   }
 
-  debug(message: string): void {
-    this.log("debug", message);
+  debug(breadcrumbs: LoggerBreadcrumbs, message: string): void {
+    this.log(breadcrumbs, "debug", message);
   }
 
-  log(severity: LogSeverityEnum, message: string): void {
-    console.log(`[DD] ${severity}: ${message}`);
+  log(
+    breadcrumbs: LoggerBreadcrumbs,
+    severity: LogSeverityEnum,
+    message: string
+  ): void {
+    console.log(`[DD][${severity}]`, message);
   }
 }

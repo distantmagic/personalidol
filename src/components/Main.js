@@ -13,35 +13,69 @@ import HudAside from "./HudAside";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
 import HudToolbar from "./HudToolbar";
+import MainLoop from "../framework/classes/MainLoop";
 import Person from "../framework/classes/Entity/Person";
 import QueryBus from "../framework/classes/QueryBus";
 import QueryBusController from "../framework/classes/QueryBusController";
 
+import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Logger } from "../framework/interfaces/Logger";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 // import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
 
 type Props = {|
-  logger: Logger
+  exceptionHandler: ExceptionHandler,
+  logger: Logger,
+  loggerBreadcrumbs: LoggerBreadcrumbs
 |};
 
 export default function Main(props: Props) {
-  const [cancelToken] = React.useState(new CancelToken());
   const [expressionBus] = React.useState(new ExpressionBus());
   const [expressionContext] = React.useState(new ExpressionContext());
+  const [isDocumentHidden, setIsDocumentHidden] = React.useState(
+    document.hidden
+  );
   const [queryBus] = React.useState(new QueryBus());
   const [queryBusController] = React.useState(
     new QueryBusController(new BusClock(), queryBus)
   );
 
+  React.useEffect(function() {
+    function onHiddenChange() {
+      setIsDocumentHidden(document.hidden);
+    }
+
+    document.addEventListener("visibilitychange", onHiddenChange);
+
+    return function() {
+      document.removeEventListener("visibilitychange", onHiddenChange);
+    };
+  });
+
   React.useEffect(
     function() {
+      const mainLoop = MainLoop.getInstance();
+
+      if (isDocumentHidden) {
+        mainLoop.stop();
+      } else {
+        mainLoop.start();
+      }
+    },
+    [isDocumentHidden]
+  );
+
+  React.useEffect(
+    function() {
+      const cancelToken = new CancelToken();
+
       queryBusController.interval(cancelToken);
 
       return function() {
         cancelToken.cancel();
       };
     },
-    [cancelToken, queryBusController]
+    [queryBusController]
   );
 
   return (
@@ -52,9 +86,11 @@ export default function Main(props: Props) {
           new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
         }
         dialogueInitiator={new Person("Laelaps")}
+        exceptionHandler={props.exceptionHandler}
         expressionBus={expressionBus}
         expressionContext={expressionContext}
         logger={props.logger}
+        loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
         queryBus={queryBus}
       />
       <HudScene />
@@ -63,7 +99,12 @@ export default function Main(props: Props) {
         będzie przyjaźnie nastawiony.
       </div>
       <HudToolbar />
-      <HudModalRouter logger={props.logger} queryBus={queryBus} />
+      <HudModalRouter
+        exceptionHandler={props.exceptionHandler}
+        logger={props.logger}
+        loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")}
+        queryBus={queryBus}
+      />
     </div>
   );
 }

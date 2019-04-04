@@ -10,7 +10,7 @@ type Props = {|
   sceneManager: SceneManagerInterface
 |};
 
-export default React.memo<Props>(function (props: Props) {
+export default function HudSceneCanvas(props: Props) {
   const [threeCanvas, setThreeCanvas] = React.useState(null);
 
   React.useEffect(
@@ -23,7 +23,7 @@ export default React.memo<Props>(function (props: Props) {
 
       sceneManager.attach(threeCanvas);
 
-      return function () {
+      return function() {
         sceneManager.detach();
       };
     },
@@ -44,4 +44,4 @@ export default React.memo<Props>(function (props: Props) {
   );
 
   return <canvas ref={setThreeCanvas} />;
-});
+}

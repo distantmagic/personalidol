@@ -3,11 +3,15 @@
 import * as React from "react";
 
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
+import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Logger } from "../framework/interfaces/Logger";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 
 type Props = {|
   dialogueMessage: DialogueMessage,
+  exceptionHandler: ExceptionHandler,
   logger: Logger,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any
 |};
 
@@ -20,16 +24,21 @@ export default function DialogueAnswer(props: Props) {
       props.dialogueMessage
         .actor()
         .then(setActor)
-        .catch(props.logger.error);
+        .catch((error: Error) => {
+          return props.exceptionHandler.captureException(
+            props.loggerBreadcrumbs.add("dialogueMessageActor"),
+            error
+          );
+        });
       props.dialogueMessage
         .prompt()
         .then(setPrompt)
-        .catch(props.logger.error);
-
-      return function() {
-        setActor(null);
-        setPrompt(null);
-      };
+        .catch((error: Error) => {
+          return props.exceptionHandler.captureException(
+            props.loggerBreadcrumbs.add("dialogueMessagePrompt"),
+            error
+          );
+        });
     },
     [props.dialogueMessage]
   );

@@ -2,4 +2,4 @@
 
 import type { ClockTick } from "./ClockTick";
 
-export type MainLoopTickCallback = (ClockTick) => void | Promise<void>;
+export type MainLoopTickCallback = ClockTick => void | Promise<void>;

@@ -38,15 +38,14 @@ export default class CanvasLocationComplex implements CanvasController {
     this.scene.add(this.light);
   }
 
-  async begin(tick: ClockTick): Promise<void> {
-  }
+  async begin(tick: ClockTick): Promise<void> {}
 
   async draw(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {
+    console.log("controller.draw");
     renderer.render(this.scene, this.camera);
   }
 
-  async end(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {
-  }
+  async end(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {}
 
   async resize(elementSize: ElementSize): Promise<void> {
     this.camera.aspect = elementSize.getAspect();

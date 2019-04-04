@@ -11,11 +11,15 @@ import ScrollbarPosition from "../framework/classes/ScrollbarPosition";
 
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { DialogueTurn as DialogueTurnInterface } from "../framework/interfaces/DialogueTurn";
+import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Logger } from "../framework/interfaces/Logger";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 
 type Props = {|
   dialogueTurn: DialogueTurnInterface,
+  exceptionHandler: ExceptionHandler,
   logger: Logger,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
   onDialogueEnd: () => any
 |};
@@ -28,7 +32,7 @@ function updateScrollDelta(
   const scrollPosition = new ScrollbarPosition(
     ref.scrollHeight,
     ref.offsetHeight,
-    36,
+    16,
     ref.scrollTop
   );
   setScrollPercentage(Math.min(100, scrollPosition.scrollPercentage));
@@ -45,12 +49,13 @@ function useScrollPercentageState() {
       }
 
       const containerHTMLElementSize = new HTMLElementSize(containerElement);
-      const onWheelBound = updateScrollDelta.bind(
-        null,
-        containerElement,
-        containerHTMLElementSize,
-        setScrollPercentage
-      );
+      const onWheelBound = function() {
+        return updateScrollDelta(
+          containerElement,
+          containerHTMLElementSize,
+          setScrollPercentage
+        );
+      };
 
       containerElement.addEventListener("wheel", onWheelBound, {
         capture: true,
@@ -99,7 +104,12 @@ export default function DialogueTurn(props: Props) {
             prompt: prompt
           });
         })
-        .catch(props.logger.error);
+        .catch((error: Error) => {
+          return props.exceptionHandler.captureException(
+            props.loggerBreadcrumbs.add("dialogueTurnDetails"),
+            error
+          );
+        });
     },
     [props.dialogueTurn]
   );
@@ -114,8 +124,10 @@ export default function DialogueTurn(props: Props) {
         <DialogueTurnPrompt
           actor={state.actor}
           answers={state.answers}
+          exceptionHandler={props.exceptionHandler}
           illustration={state.illustration}
           logger={props.logger}
+          loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueTurnPrompt")}
           onAnswerClick={props.onAnswerClick}
           onDialogueEnd={props.onDialogueEnd}
           prompt={state.prompt}

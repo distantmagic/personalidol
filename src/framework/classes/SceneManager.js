@@ -24,6 +24,7 @@ export default class SceneManager implements SceneManagerInterface {
   }
 
   async attach(canvas: HTMLCanvasElement): Promise<void> {
+    console.log("sceneManager.attach");
     this.renderer = new THREE.WebGLRenderer({
       alpha: true,
       canvas: canvas
@@ -35,7 +36,7 @@ export default class SceneManager implements SceneManagerInterface {
   }
 
   async detach(): Promise<void> {
-    console.log('detach');
+    console.log("sceneManager.detach");
   }
 
   async draw(tick: ClockTick): Promise<void> {
@@ -58,10 +59,11 @@ export default class SceneManager implements SceneManagerInterface {
     const mainLoop = MainLoop.getInstance();
 
     mainLoop.setDraw(this.draw);
+    console.log("loop.setUpdate");
     mainLoop.setUpdate(this.update);
     mainLoop.start();
 
-    cancelToken.onCancelled(mainLoop.stop)
+    // cancelToken.onCancelled(mainLoop.stop);
   }
 
   async resize(elementSize: ElementSize): Promise<void> {

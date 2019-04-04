@@ -10,7 +10,7 @@ import type { CancelToken as CancelTokenInterface } from "../framework/interface
 import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
 
 type Props = {|
-  sceneManager: SceneManagerInterface,
+  sceneManager: SceneManagerInterface
 |};
 
 export default function HudSceneManager(props: Props) {
