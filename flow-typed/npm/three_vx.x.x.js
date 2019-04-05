@@ -84,7 +84,7 @@ declare module 'three' {
 
   declare interface MeshBasicMaterial extends Material {
     constructor({|
-      map: Texture,
+      map?: Texture,
     |}): void;
   }
 
@@ -94,7 +94,7 @@ declare module 'three' {
 
   declare interface MeshPhongMaterial extends Material {
     constructor({|
-      map: Texture,
+      map?: Texture,
     |}): void;
   }
 
@@ -131,6 +131,8 @@ declare module 'three' {
       height: number,
       width: number,
     |};
+
+    setPixelRatio(number): void;
 
     setSize(number, number, ?boolean): void;
   }
