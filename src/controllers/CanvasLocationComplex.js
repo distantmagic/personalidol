@@ -15,12 +15,16 @@ export default class CanvasLocationComplex implements CanvasController {
   +material: THREE.Material;
   +mesh: THREE.Mesh;
   +scene: THREE.Scene;
+  clock: any;
+  mixer: any;
   // +texture: THREE.Texture;
 
   constructor() {
     autoBind(this);
 
     console.log(FBXLoader);
+
+    this.clock = new THREE.Clock();
 
     this.camera = new THREE.PerspectiveCamera(70, 10, 0.1, 1000);
     this.camera.position.y = 20;
@@ -49,9 +53,11 @@ export default class CanvasLocationComplex implements CanvasController {
       "/assets/mesh-lp-guy.fbx",
       object => {
         console.log("onLoad", object);
-        // mixer = new THREE.AnimationMixer( object );
-        // var action = mixer.clipAction( object.animations[ 0 ] );
-        // action.play();
+        this.mixer = new THREE.AnimationMixer(object);
+
+        const action = this.mixer.clipAction( object.animations[ 2 ] );
+        action.play();
+
         // // object.traverse( function ( child ) {
         // //   if ( child.isMesh ) {
         // //     child.castShadow = true;
@@ -86,9 +92,9 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   draw(renderer: THREE.WebGLRenderer, tick: ClockTick): void {
-    renderer.setPixelRatio(window.devicePixelRatio / 1);
+    // renderer.setPixelRatio(window.devicePixelRatio / 4);
     // renderer.setPixelRatio(window.devicePixelRatio * 2);
-    // renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.render(this.scene, this.camera);
   }
 
@@ -100,6 +106,13 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   update(tick: ClockTick): void {
+    const delta = this.clock.getDelta();
+
+    if (this.mixer) {
+      this.mixer.update(delta);
+    }
+
+    // console.log(delta);
     // this.light.position.y += 0.1;
 
     this.mesh.rotation.x += 0.01;
