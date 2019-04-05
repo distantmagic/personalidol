@@ -56,7 +56,11 @@ export default function DialogueLoader(props: Props) {
         cancelToken.cancel();
       };
     },
-    [props.dialogueResourceReference]
+    [
+      props.dialogueResourceReference,
+      props.expressionBus,
+      props.expressionContext
+    ]
   );
 
   if (!dialogue) {

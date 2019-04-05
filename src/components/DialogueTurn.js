@@ -48,28 +48,25 @@ function useScrollPercentageState() {
         return;
       }
 
-      const containerHTMLElementSize = new HTMLElementSize(containerElement);
+      const element = containerElement;
+      const containerHTMLElementSize = new HTMLElementSize(element);
       const onWheelBound = function() {
         return updateScrollDelta(
-          containerElement,
+          element,
           containerHTMLElementSize,
           setScrollPercentage
         );
       };
 
-      containerElement.addEventListener("wheel", onWheelBound, {
+      element.addEventListener("wheel", onWheelBound, {
         capture: true,
         passive: true
       });
-      updateScrollDelta(
-        containerElement,
-        containerHTMLElementSize,
-        setScrollPercentage
-      );
+      updateScrollDelta(element, containerHTMLElementSize, setScrollPercentage);
 
-      return function(boundElement: HTMLElement) {
-        boundElement.removeEventListener("wheel", onWheelBound);
-      }.bind(null, containerElement);
+      return function() {
+        element.removeEventListener("wheel", onWheelBound);
+      };
     },
     [containerElement]
   );

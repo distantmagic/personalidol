@@ -13,56 +13,51 @@ type Props = {|
   type: string
 |};
 
+function updateScrollDelta(ref: HTMLElement, delta: number): void {
+  const scrollPosition = new ScrollbarPosition(
+    ref.scrollWidth,
+    ref.offsetWidth,
+    0,
+    ref.scrollLeft
+  );
+  const updatedScrollPosition = scrollPosition.adjust(delta);
+
+  ref.scrollLeft = updatedScrollPosition.scrollOffset;
+}
+
 export default function HudToolbarScrollbar(props: Props) {
-  const containerRef = React.useRef(null);
+  const [containerElement, setContainerElement] = React.useState(null);
 
-  function onWheel(evt: WheelEvent): void {
-    evt.preventDefault();
+  React.useEffect(
+    function() {
+      if (!containerElement) {
+        return;
+      }
 
-    const element = containerRef.current;
+      const element = containerElement;
 
-    if (element) {
-      updateScroll(evt, element);
-    }
-  }
+      const onWheelBound = function(evt: WheelEvent) {
+        evt.preventDefault();
 
-  function updateScroll(evt: WheelEvent, ref: HTMLElement): void {
-    updateScrollDelta(ref, evt.deltaX);
-  }
+        updateScrollDelta(element, evt.deltaX);
+      };
 
-  function updateScrollDelta(ref: HTMLElement, delta: number): void {
-    const scrollPosition = new ScrollbarPosition(
-      ref.scrollWidth,
-      ref.offsetWidth,
-      0,
-      ref.scrollLeft
-    );
-    const updatedScrollPosition = scrollPosition.adjust(delta);
+      element.addEventListener("wheel", onWheelBound, false);
+      updateScrollDelta(element, 0);
 
-    ref.scrollLeft = updatedScrollPosition.scrollOffset;
-  }
-
-  React.useEffect(function() {
-    const element = containerRef.current;
-
-    if (!element) {
-      return;
-    }
-
-    element.addEventListener("wheel", onWheel, false);
-    updateScrollDelta(element, 0);
-
-    return function(boundElement: HTMLElement) {
-      boundElement.removeEventListener("wheel", onWheel);
-    }.bind(null, element);
-  });
+      return function() {
+        element.removeEventListener("wheel", onWheelBound);
+      };
+    },
+    [containerElement]
+  );
 
   return React.createElement(
     props.type,
     {
       className: props.className,
       style: props.style,
-      ref: containerRef
+      ref: setContainerElement
     },
     [props.children]
   );

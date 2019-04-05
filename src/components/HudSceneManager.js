@@ -7,11 +7,22 @@ import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObs
 import HudSceneCanvas from "./HudSceneCanvas";
 
 import type { CancelToken as CancelTokenInterface } from "../framework/interfaces/CancelToken";
-import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
+import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../framework/interfaces/HTMLElementResizeObserver";
+import type { SceneManager } from "../framework/interfaces/SceneManager";
 
 type Props = {|
-  sceneManager: SceneManagerInterface
+  sceneManager: SceneManager
 |};
+
+async function htmlElementResizeObserve(
+  cancelToken: CancelTokenInterface,
+  htmlElementResizeObserver: HTMLElementResizeObserverInterface,
+  sceneManager: SceneManager
+) {
+  for await (let evt of htmlElementResizeObserver.listen(cancelToken)) {
+    sceneManager.resize(evt.getHTMLElementSize());
+  }
+}
 
 export default function HudSceneManager(props: Props) {
   const [scene, setScene] = React.useState(null);
@@ -19,23 +30,22 @@ export default function HudSceneManager(props: Props) {
     new HTMLElementResizeObserver()
   );
 
-  async function htmlElementResizeObserve(cancelToken: CancelTokenInterface) {
-    for await (let evt of htmlElementResizeObserver.listen(cancelToken)) {
-      props.sceneManager.resize(evt.getHTMLElementSize());
-    }
-  }
-
   React.useEffect(
     function() {
       const cancelToken = new CancelToken();
+      const sceneManager = props.sceneManager;
 
-      htmlElementResizeObserve(cancelToken);
+      htmlElementResizeObserve(
+        cancelToken,
+        htmlElementResizeObserver,
+        sceneManager
+      );
 
       return function() {
         cancelToken.cancel();
       };
     },
-    [props.sceneManager, scene]
+    [htmlElementResizeObserver, props.sceneManager, scene]
   );
 
   React.useEffect(
@@ -44,10 +54,13 @@ export default function HudSceneManager(props: Props) {
         return;
       }
 
-      htmlElementResizeObserver.observe(scene);
+      // keep the old reference in case state changes
+      const observer = htmlElementResizeObserver;
+
+      observer.observe(scene);
 
       return function() {
-        htmlElementResizeObserver.unobserve();
+        observer.unobserve();
       };
     },
     [htmlElementResizeObserver, props.sceneManager, scene]
