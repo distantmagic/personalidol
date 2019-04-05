@@ -8,7 +8,6 @@ type CancelTokenQueryCallback<U> = (?U) => any;
 
 export default class CancelTokenQuery<T>
   implements CancelTokenQueryInterface<T> {
-  _executionResult: ?T;
   _isExecuted: boolean;
   _result: ?T;
   +cancelToken: CancelToken;
@@ -62,7 +61,6 @@ export default class CancelTokenQuery<T>
   }
 
   setExecuted(result: ?T): void {
-    this._executionResult = result;
     this._isExecuted = true;
     this._result = result;
 
