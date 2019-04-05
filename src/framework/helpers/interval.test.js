@@ -12,7 +12,7 @@ it("produces interval events generator", async () => {
     cancelToken.cancel();
   }, 50);
 
-  for await (let tick of interval(20, cancelToken)) {
+  for await (let tick of interval(cancelToken, 20)) {
     ticks.push(Date.now());
   }
 
@@ -20,10 +20,11 @@ it("produces interval events generator", async () => {
 });
 
 it("ticks infinitely", async () => {
-  let ticksCount = 0;
+  const cancelToken = new CancelToken();
   const expectedTicks = 10;
+  let ticksCount = 0;
 
-  for await (let tick of interval(1)) {
+  for await (let tick of interval(cancelToken, 1)) {
     ticksCount += 1;
 
     if (ticksCount >= expectedTicks) {
@@ -40,7 +41,7 @@ it("is immediately stopped with already paused cancel token", async () => {
 
   cancelToken.cancel();
 
-  for await (let tick of interval(20, cancelToken)) {
+  for await (let tick of interval(cancelToken, 20)) {
     ticks.push(Date.now());
   }
 

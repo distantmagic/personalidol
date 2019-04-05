@@ -40,17 +40,20 @@ export default function Main(props: Props) {
     new QueryBusController(new BusClock(), queryBus)
   );
 
-  React.useEffect(function() {
-    function onHiddenChange() {
-      setIsDocumentHidden(document.hidden);
-    }
+  React.useEffect(
+    function() {
+      function onHiddenChange() {
+        setIsDocumentHidden(document.hidden);
+      }
 
-    document.addEventListener("visibilitychange", onHiddenChange);
+      document.addEventListener("visibilitychange", onHiddenChange);
 
-    return function() {
-      document.removeEventListener("visibilitychange", onHiddenChange);
-    };
-  });
+      return function() {
+        document.removeEventListener("visibilitychange", onHiddenChange);
+      };
+    },
+    [isDocumentHidden]
+  );
 
   React.useEffect(
     function() {

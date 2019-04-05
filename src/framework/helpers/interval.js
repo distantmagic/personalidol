@@ -7,22 +7,16 @@ import type { CancelToken } from "../interfaces/CancelToken";
 import type { IntervalTick as IntervalTickInterface } from "../interfaces/IntervalTick";
 
 export default async function* interval(
-  delay: number,
-  cancelToken: ?CancelToken
+  cancelToken: CancelToken,
+  delay: number = 40
 ): AsyncGenerator<IntervalTickInterface, void, void> {
-  let baseline = Date.now();
-  let nextTick = delay;
-
   while (!cancelToken || !cancelToken.isCancelled()) {
-    const tick = await timeout(nextTick, cancelToken);
+    const tick = await timeout(cancelToken, delay);
 
     if (tick.isCancelled()) {
       break;
     }
 
     yield new IntervalTick(tick);
-
-    baseline += delay;
-    nextTick = delay - (Date.now() - baseline);
   }
 }

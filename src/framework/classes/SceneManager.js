@@ -9,12 +9,10 @@ import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasController } from "../interfaces/CanvasController";
 import type { ClockTick } from "../interfaces/ClockTick";
 import type { ElementSize } from "../interfaces/ElementSize";
-import type { HTMLElementResizeObserver } from "../interfaces/HTMLElementResizeObserver";
 import type { SceneManager as SceneManagerInterface } from "../interfaces/SceneManager";
 
 export default class SceneManager implements SceneManagerInterface {
   +controller: CanvasController;
-  +htmlElementResizeObserver: HTMLElementResizeObserver;
   renderer: ?THREE.WebGLRenderer;
 
   constructor(controller: CanvasController) {

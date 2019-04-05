@@ -11,7 +11,7 @@ it("supports cancel token", async () => {
   }, 25);
 
   // return timeout tick with the time that actually elapsed
-  const tick = await timeout(10000, cancelToken);
+  const tick = await timeout(cancelToken, 10000);
 
   expect(tick.isCancelled()).toBeTruthy();
 });
@@ -21,7 +21,7 @@ it("is immediately stopped with already paused cancel token", async () => {
 
   cancelToken.cancel();
 
-  const tick = await timeout(10000, cancelToken);
+  const tick = await timeout(cancelToken, 10000);
 
   expect(tick.isCancelled()).toBeTruthy();
 });

@@ -6,8 +6,8 @@ import type { CancelToken } from "../interfaces/CancelToken";
 import type { TimeoutTick as TimeoutTickInterface } from "../interfaces/TimeoutTick";
 
 export default function timeout(
-  delay: number,
-  cancelToken: ?CancelToken
+  cancelToken: CancelToken,
+  delay: number
 ): Promise<TimeoutTickInterface> {
   return new Promise(function(resolve) {
     if (cancelToken && cancelToken.isCancelled()) {
@@ -18,10 +18,7 @@ export default function timeout(
       resolve(new TimeoutTick(false));
     }, delay);
 
-    if (!cancelToken) {
-      return;
-    }
-
+    // console.log("on cancelled", delay);
     cancelToken.onCancelled(function() {
       clearTimeout(timeoutId);
       resolve(new TimeoutTick(true));
