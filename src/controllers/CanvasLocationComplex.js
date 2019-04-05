@@ -42,7 +42,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.scene.add(this.light);
   }
 
-  async begin(tick: ClockTick): Promise<void> {}
+  begin(tick: ClockTick): void {}
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
     this.scene.remove(this.light);
@@ -53,18 +53,18 @@ export default class CanvasLocationComplex implements CanvasController {
     this.texture.dispose();
   }
 
-  async draw(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {
+  draw(renderer: THREE.WebGLRenderer, tick: ClockTick): void {
     renderer.render(this.scene, this.camera);
   }
 
-  async end(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {}
+  end(renderer: THREE.WebGLRenderer, tick: ClockTick): void {}
 
   async resize(elementSize: ElementSize): Promise<void> {
     this.camera.aspect = elementSize.getAspect();
     this.camera.updateProjectionMatrix();
   }
 
-  async update(tick: ClockTick): Promise<void> {
+  update(tick: ClockTick): void {
     // this.light.position.y += 0.1;
 
     this.mesh.rotation.x += 0.01;

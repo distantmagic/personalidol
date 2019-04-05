@@ -2,6 +2,8 @@
 
 import autoBind from "auto-bind";
 
+import CancelledException from "./Exception/Cancelled";
+
 import type { ExceptionHandler as ExceptionHandlerInterface } from "../interfaces/ExceptionHandler";
 import type { Logger } from "../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
@@ -19,8 +21,13 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
     breadcrumbs: LoggerBreadcrumbs,
     error: Error
   ): Promise<void> {
-    this.logger.error(breadcrumbs, error.message);
-    console.error("/DD/EXCEPTION_HANDLER:/%s", breadcrumbs.asString(), error);
+    if (error instanceof CancelledException) {
+      this.logger.warning(breadcrumbs, error.message);
+      console.warn("/DD/EXCEPTION_HANDLER:/%s", breadcrumbs.asString(), error);
+    } else {
+      this.logger.error(breadcrumbs, error.message);
+      console.error("/DD/EXCEPTION_HANDLER:/%s", breadcrumbs.asString(), error);
+    }
   }
 
   // captureExceptionCurry(breadcrumbs: LoggerBreadcrumbs): (Error) => Promise<void> {
