@@ -18,7 +18,6 @@ export default function timeout(
       resolve(new TimeoutTick(false));
     }, delay);
 
-    // console.log("on cancelled", delay);
     cancelToken.onCancelled(function() {
       clearTimeout(timeoutId);
       resolve(new TimeoutTick(true));

@@ -17,7 +17,7 @@ export default class QueryBus implements QueryBusInterface {
     this.collection = new Collection();
   }
 
-  enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<T> {
+  enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<?T> {
     const pickedQuery = this.findSimilarQuery(query) || query;
     const cancelTokenQuery = new CancelTokenQuery(cancelToken, pickedQuery);
 

@@ -1,10 +1,10 @@
 // @flow
 
-import EventEmitter from "eventemitter3";
-
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
 import type { Query } from "../interfaces/Query";
+
+type CancelTokenQueryCallback<U> = (?U) => any;
 
 export default class CancelTokenQuery<T>
   implements CancelTokenQueryInterface<T> {
@@ -12,12 +12,12 @@ export default class CancelTokenQuery<T>
   _isExecuted: boolean;
   _result: ?T;
   +cancelToken: CancelToken;
-  +eventEmitter: EventEmitter;
+  +callbacks: Set<CancelTokenQueryCallback<T>>;
   +query: Query<T>;
 
   constructor(cancelToken: CancelToken, query: Query<T>) {
+    this.callbacks = new Set();
     this.cancelToken = cancelToken;
-    this.eventEmitter = new EventEmitter();
     this._isExecuted = false;
     this.query = query;
   }
@@ -54,10 +54,10 @@ export default class CancelTokenQuery<T>
     return this._isExecuted;
   }
 
-  onExecuted(): Promise<T> {
-    return new Promise((resolve, reject) => {
+  onExecuted(): Promise<?T> {
+    return new Promise<?T>((resolve, reject) => {
       this.cancelToken.onCancelled(reject);
-      this.eventEmitter.once("executed", resolve);
+      this.callbacks.add(resolve);
     });
   }
 
@@ -65,6 +65,10 @@ export default class CancelTokenQuery<T>
     this._executionResult = result;
     this._isExecuted = true;
     this._result = result;
-    this.eventEmitter.emit("executed", result);
+
+    for (let [callback] of this.callbacks.entries()) {
+      callback(result);
+    }
+    this.callbacks.clear();
   }
 }

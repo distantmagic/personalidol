@@ -1,7 +1,5 @@
 // @flow
 
-import EventEmitter from "eventemitter3";
-
 import Cancelled from "./Exception/Cancelled";
 
 // import type { Cancelled as CancelledInterface } from "../interfaces/Exception/Cancelled";
@@ -10,16 +8,20 @@ import type { CancelTokenCallback } from "../types/CancelTokenCallback";
 
 export default class CancelToken implements CancelTokenInterface {
   _isCancelled: boolean;
-  +eventEmitter: EventEmitter;
+  +callbacks: Set<CancelTokenCallback>;
 
   constructor() {
     this._isCancelled = false;
-    this.eventEmitter = new EventEmitter();
+    this.callbacks = new Set();
   }
 
   cancel(): void {
     this._isCancelled = true;
-    this.eventEmitter.emit("cancel");
+
+    for (let [callback] of this.callbacks.entries()) {
+      callback(new Cancelled("Token is cancelled."));
+    }
+    this.callbacks.clear();
   }
 
   isCancelled(): boolean {
@@ -31,9 +33,7 @@ export default class CancelToken implements CancelTokenInterface {
     if (this._isCancelled) {
       callback(new Cancelled("Token is already cancelled."));
     } else {
-      this.eventEmitter.once("cancel", function() {
-        callback(new Cancelled("Token is cancelled."));
-      });
+      this.callbacks.add(callback);
     }
   }
 }
