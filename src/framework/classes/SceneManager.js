@@ -24,11 +24,13 @@ export default class SceneManager implements SceneManagerInterface {
   }
 
   async attach(canvas: HTMLCanvasElement): Promise<void> {
-    console.log("sceneManager.attach");
-    this.renderer = new THREE.WebGLRenderer({
+    const renderer = new THREE.WebGLRenderer({
       alpha: true,
       canvas: canvas
     });
+    this.renderer = renderer;
+
+    return this.controller.attach(renderer);
   }
 
   async begin(tick: ClockTick): Promise<void> {
@@ -36,7 +38,15 @@ export default class SceneManager implements SceneManagerInterface {
   }
 
   async detach(): Promise<void> {
-    console.log("sceneManager.detach");
+    const renderer = this.renderer;
+
+    if (!renderer) {
+      throw new Error("Renderer should be present while detaching controller.");
+    }
+
+    await this.controller.detach(renderer);
+
+    this.renderer = null;
   }
 
   async draw(tick: ClockTick): Promise<void> {

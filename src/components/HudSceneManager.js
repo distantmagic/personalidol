@@ -50,7 +50,7 @@ export default function HudSceneManager(props: Props) {
         htmlElementResizeObserver.unobserve();
       };
     },
-    [htmlElementResizeObserver, scene]
+    [htmlElementResizeObserver, props.sceneManager, scene]
   );
 
   return (

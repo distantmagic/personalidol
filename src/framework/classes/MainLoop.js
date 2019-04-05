@@ -29,13 +29,11 @@ export default class MainLoop implements MainLoopInterface {
 
   setDraw(callback: MainLoopTickCallback): void {
     VendorMainLoop.setDraw(function(time) {
-      // console.log('mainloop.draw');
       callback(new RequestAnimationFrameTick(false));
     });
   }
 
   setUpdate(callback: MainLoopTickCallback): void {
-    console.log("VendorMainLoop.setUpdate");
     VendorMainLoop.setUpdate(function(time) {
       callback(new RequestAnimationFrameTick(false));
     });

@@ -63,6 +63,8 @@ declare module 'three' {
 
     constructor(): void;
 
+    dispose(): void;
+
     scale(x: number, y: number, z: number): Geometry;
 
     translate(x: number, y: number, z: number): Geometry;
@@ -73,7 +75,7 @@ declare module 'three' {
     intensity: number;
   }
 
-  declare interface Material {
+  declare interface Material extends Geometry {
   }
 
   declare interface Mesh extends Object3D {
@@ -137,9 +139,11 @@ declare module 'three' {
     constructor(): void;
 
     add(Object3D): void;
+
+    remove(Object3D): void;
   }
 
-  declare interface Texture {
+  declare interface Texture extends Geometry {
     wrapS: RepeatWrapping;
     wrapT: RepeatWrapping;
   }

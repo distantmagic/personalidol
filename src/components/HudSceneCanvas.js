@@ -27,7 +27,7 @@ export default function HudSceneCanvas(props: Props) {
         sceneManager.detach();
       };
     },
-    [threeCanvas]
+    [props.sceneManager, threeCanvas]
   );
 
   React.useEffect(

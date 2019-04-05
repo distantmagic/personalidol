@@ -9,9 +9,12 @@ import type { ElementSize } from "../framework/interfaces/ElementSize";
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.PerspectiveCamera;
+  +geometry: THREE.Geometry;
   +light: THREE.PointLight;
+  +material: THREE.Material;
   +mesh: THREE.Mesh;
   +scene: THREE.Scene;
+  +texture: THREE.Texture;
 
   constructor() {
     autoBind(this);
@@ -20,28 +23,37 @@ export default class CanvasLocationComplex implements CanvasController {
     this.camera.position.z = 3;
     this.scene = new THREE.Scene();
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const texture = new THREE.TextureLoader().load(
+    this.geometry = new THREE.BoxGeometry(1, 1, 1);
+    this.texture = new THREE.TextureLoader().load(
       "/assets/texture-navy-blue-marble-512.jpg"
     );
-    const material = new THREE.MeshPhongMaterial({
-      map: texture
+    this.material = new THREE.MeshPhongMaterial({
+      map: this.texture
     });
 
-    this.mesh = new THREE.Mesh(geometry, material);
-
-    this.scene.add(this.mesh);
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
 
     this.light = new THREE.PointLight();
     this.light.position.set(3, 3, 3);
+  }
 
+  async attach(renderer: THREE.WebGLRenderer): Promise<void> {
+    this.scene.add(this.mesh);
     this.scene.add(this.light);
   }
 
   async begin(tick: ClockTick): Promise<void> {}
 
+  async detach(renderer: THREE.WebGLRenderer): Promise<void> {
+    this.scene.remove(this.light);
+    this.scene.remove(this.mesh);
+
+    this.geometry.dispose();
+    this.material.dispose();
+    this.texture.dispose();
+  }
+
   async draw(renderer: THREE.WebGLRenderer, tick: ClockTick): Promise<void> {
-    console.log("controller.draw");
     renderer.render(this.scene, this.camera);
   }
 
