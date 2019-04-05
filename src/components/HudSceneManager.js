@@ -23,6 +23,7 @@ export default function HudSceneManager(props: Props) {
         return;
       }
 
+      const element = scene;
       const resizeObserver = new ResizeObserver(
         debounce(function(mutationList) {
           for (let mutation of mutationList) {
@@ -37,8 +38,8 @@ export default function HudSceneManager(props: Props) {
         }, 300)
       );
 
-      props.sceneManager.resize(new HTMLElementSize(scene));
-      resizeObserver.observe(scene);
+      props.sceneManager.resize(new HTMLElementSize(element));
+      resizeObserver.observe(element);
 
       return function() {
         resizeObserver.disconnect();
