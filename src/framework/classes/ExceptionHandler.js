@@ -23,16 +23,10 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
   ): Promise<void> {
     if (error instanceof CancelledException) {
       this.logger.warning(breadcrumbs, error.message);
-      console.warn("/DD/EXCEPTION_HANDLER:/%s", breadcrumbs.asString(), error);
+      console.warn("/DD/EXCEPTION_HANDLER:/%s", breadcrumbs.asString(), error.message, error.stack);
     } else {
       this.logger.error(breadcrumbs, error.message);
-      console.error("/DD/EXCEPTION_HANDLER:/%s", breadcrumbs.asString(), error);
+      console.error("/DD/EXCEPTION_HANDLER:/%s", breadcrumbs.asString(), error.message, error.stack);
     }
   }
-
-  // captureExceptionCurry(breadcrumbs: LoggerBreadcrumbs): (Error) => Promise<void> {
-  //   return (error: Error) => {
-  //     return this.captureException(breadcrumbs, error);
-  //   };
-  // }
 }
