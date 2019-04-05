@@ -69,11 +69,7 @@ export default class SceneManager implements SceneManagerInterface {
     const mainLoop = MainLoop.getInstance();
 
     mainLoop.setDraw(this.draw);
-    console.log("loop.setUpdate");
     mainLoop.setUpdate(this.update);
-    mainLoop.start();
-
-    // cancelToken.onCancelled(mainLoop.stop);
   }
 
   async resize(elementSize: ElementSize): Promise<void> {
