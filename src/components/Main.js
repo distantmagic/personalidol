@@ -35,6 +35,7 @@ export default function Main(props: Props) {
   const [isDocumentHidden, setIsDocumentHidden] = React.useState(
     document.hidden
   );
+  const [mainLoop] = React.useState(MainLoop.getInstance());
   const [queryBus] = React.useState(new QueryBus());
   const [queryBusController] = React.useState(
     new QueryBusController(new BusClock(), queryBus)
@@ -57,15 +58,13 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
-      const mainLoop = MainLoop.getInstance();
-
       if (isDocumentHidden) {
         mainLoop.stop();
       } else {
         mainLoop.start();
       }
     },
-    [isDocumentHidden]
+    [isDocumentHidden, mainLoop]
   );
 
   React.useEffect(
@@ -96,7 +95,7 @@ export default function Main(props: Props) {
         loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
         queryBus={queryBus}
       />
-      <HudScene />
+      <HudScene mainLoop={mainLoop} />
       <div className="dd__frame dd__statusbar dd__statusbar--hud">
         Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
         będzie przyjaźnie nastawiony.

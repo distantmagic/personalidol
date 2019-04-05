@@ -3,22 +3,22 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import MainLoop from "./MainLoop";
-
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasController } from "../interfaces/CanvasController";
-import type { ClockTick } from "../interfaces/ClockTick";
 import type { ElementSize } from "../interfaces/ElementSize";
+import type { MainLoop } from "../interfaces/MainLoop";
 import type { SceneManager as SceneManagerInterface } from "../interfaces/SceneManager";
 
 export default class SceneManager implements SceneManagerInterface {
   +controller: CanvasController;
+  +mainLoop: MainLoop;
   renderer: ?THREE.WebGLRenderer;
 
-  constructor(controller: CanvasController) {
+  constructor(mainLoop: MainLoop, controller: CanvasController) {
     autoBind(this);
 
     this.controller = controller;
+    this.mainLoop = mainLoop;
   }
 
   async attach(canvas: HTMLCanvasElement): Promise<void> {
@@ -28,11 +28,10 @@ export default class SceneManager implements SceneManagerInterface {
     });
     this.renderer = renderer;
 
-    return this.controller.attach(renderer);
-  }
+    this.mainLoop.setDraw(this.controller.draw.bind(this.controller, renderer));
+    this.mainLoop.setEnd(this.controller.end.bind(this.controller, renderer));
 
-  async begin(tick: ClockTick): Promise<void> {
-    this.controller.begin(tick);
+    return this.controller.attach(renderer);
   }
 
   async detach(): Promise<void> {
@@ -42,32 +41,23 @@ export default class SceneManager implements SceneManagerInterface {
       throw new Error("Renderer should be present while detaching controller.");
     }
 
+    this.mainLoop.clearDraw();
+    this.mainLoop.clearEnd();
+
     await this.controller.detach(renderer);
 
     this.renderer = null;
   }
 
-  async draw(tick: ClockTick): Promise<void> {
-    const renderer = this.renderer;
-
-    if (renderer) {
-      this.controller.draw(renderer, tick);
-    }
-  }
-
-  async end(tick: ClockTick): Promise<void> {
-    const renderer = this.renderer;
-
-    if (renderer) {
-      this.controller.end(renderer, tick);
-    }
-  }
-
   async loop(cancelToken: CancelToken): Promise<void> {
-    const mainLoop = MainLoop.getInstance();
+    if (cancelToken.isCancelled()) {
+      return;
+    }
 
-    mainLoop.setDraw(this.draw);
-    mainLoop.setUpdate(this.update);
+    this.mainLoop.setBegin(this.controller.begin);
+    this.mainLoop.setUpdate(this.controller.update);
+
+    cancelToken.onCancelled(this.mainLoop.clear);
   }
 
   resize(elementSize: ElementSize): void {
@@ -78,9 +68,5 @@ export default class SceneManager implements SceneManagerInterface {
     if (renderer) {
       renderer.setSize(elementSize.getWidth(), elementSize.getHeight());
     }
-  }
-
-  async update(tick: ClockTick): Promise<void> {
-    this.controller.update(tick);
   }
 }

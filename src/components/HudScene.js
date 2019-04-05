@@ -7,7 +7,11 @@ import HudSceneManager from "./HudSceneManager";
 // import HudSceneLocationRoom from "./HudSceneLocationRoom";
 import SceneManager from "../framework/classes/SceneManager";
 
-type Props = {||};
+import type { MainLoop } from "../framework/interfaces/MainLoop";
+
+type Props = {|
+  mainLoop: MainLoop
+|};
 
 export default function HudScene(props: Props) {
   // return (
@@ -15,7 +19,9 @@ export default function HudScene(props: Props) {
   // );
   return (
     <HudSceneManager
-      sceneManager={new SceneManager(new CanvasLocationComplex())}
+      sceneManager={
+        new SceneManager(props.mainLoop, new CanvasLocationComplex())
+      }
     />
   );
 }
