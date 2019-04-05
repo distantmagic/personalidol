@@ -59,7 +59,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
   end(renderer: THREE.WebGLRenderer, tick: ClockTick): void {}
 
-  async resize(elementSize: ElementSize): Promise<void> {
+  resize(elementSize: ElementSize): void {
     this.camera.aspect = elementSize.getAspect();
     this.camera.updateProjectionMatrix();
   }

@@ -72,7 +72,7 @@ export default class SceneManager implements SceneManagerInterface {
     mainLoop.setUpdate(this.update);
   }
 
-  async resize(elementSize: ElementSize): Promise<void> {
+  resize(elementSize: ElementSize): void {
     this.controller.resize(elementSize);
 
     const renderer = this.renderer;
