@@ -60,7 +60,7 @@ export default class MainLoop implements MainLoopInterface {
   }
 
   start(): void {
-    VendorMainLoop.setMaxAllowedFPS(10);
+    VendorMainLoop.setMaxAllowedFPS(30);
     VendorMainLoop.start();
   }
 

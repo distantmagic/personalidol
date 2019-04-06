@@ -4,7 +4,7 @@ import * as React from "react";
 import * as THREE from "three";
 
 import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
-import HudSceneManager from "./HudSceneManager";
+import HudSceneCanvas from "./HudSceneCanvas";
 // import HudSceneLocationRoom from "./HudSceneLocationRoom";
 import ResourceLoadError from "../framework/classes/Exception/ResourceLoadError";
 import ResourcesLoadingState from "../framework/classes/ResourcesLoadingState";
@@ -58,14 +58,12 @@ export default function HudScene(props: Props) {
       let error = null;
 
       manager.onStart = function(url, itemsLoaded, itemsTotal) {
-        console.log("onStart", error);
         setLoadingState(
           new ResourcesLoadingState(itemsLoaded, itemsTotal, error)
         );
       };
 
       manager.onProgress = function(url, itemsLoaded, itemsTotal) {
-        console.log("onProgress", error);
         globalItemsLoaded = itemsLoaded;
         globalItemsTotal = itemsTotal;
 
@@ -110,7 +108,7 @@ export default function HudScene(props: Props) {
   }
 
   return (
-    <HudSceneManager
+    <HudSceneCanvas
       resourcesLoadingState={resourcesLoadingState}
       sceneManager={sceneManager}
     />

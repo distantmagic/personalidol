@@ -32,7 +32,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
     this.texture = new THREE.TextureLoader(threeLoadingManager).load(
-      "/assets/texture-navy-blue-marble-512.jpg"
+      "/assets/texture-blood-marble-512.png"
     );
     this.threeLoadingManager = threeLoadingManager;
     this.material = new THREE.MeshPhongMaterial({

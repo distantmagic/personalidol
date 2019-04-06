@@ -1071,6 +1071,7 @@ button {
 .dd__scene.dd__scene--canvas {
   position: relative; }
 
+.dd__scene__canvas.dd__scene__canvas--attaching,
 .dd__scene__canvas.dd__scene__canvas--loading {
   display: none; }
 
