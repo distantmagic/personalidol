@@ -9,7 +9,7 @@ import type { CanvasController } from "../framework/interfaces/CanvasController"
 import type { ElementSize } from "../framework/interfaces/ElementSize";
 
 export default class CanvasLocationComplex implements CanvasController {
-  +camera: THREE.PerspectiveCamera;
+  +camera: THREE.OrthographicCamera;
   +geometry: THREE.Geometry;
   +light: THREE.PointLight;
   +material: THREE.Material;
@@ -18,7 +18,7 @@ export default class CanvasLocationComplex implements CanvasController {
   +texture: THREE.Texture;
   +threeLoadingManager: THREE.LoadingManager;
   keys: {
-    [string]: boolean,
+    [string]: boolean
   };
   guy: ?THREE.Object3D;
   mixer: ?THREE.AnimationMixer;
@@ -28,10 +28,13 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.keys = {};
 
-    this.camera = new THREE.PerspectiveCamera(70, 10, 0.1, 1000);
-    this.camera.position.y = 20;
-    this.camera.position.z = 40;
     this.scene = new THREE.Scene();
+
+    this.camera = new THREE.OrthographicCamera();
+    this.camera.position.set(20, 20, 20);
+    this.camera.lookAt(this.scene.position);
+    // this.camera.position.y = 20;
+    // this.camera.position.z = 40;
 
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
     this.texture = new THREE.TextureLoader(threeLoadingManager).load(
@@ -80,8 +83,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.scene.add(this.light);
   }
 
-  begin(): void {
-  }
+  begin(): void {}
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
     document.removeEventListener("keydown", this.onKeyDown);
@@ -119,7 +121,15 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   resize(elementSize: ElementSize): void {
-    this.camera.aspect = elementSize.getAspect();
+    const zoom = 30;
+    const height = elementSize.getHeight();
+    const width = elementSize.getWidth();
+
+    this.camera.left = -width / zoom;
+    this.camera.near = 0;
+    this.camera.right = width / zoom;
+    this.camera.top = height / zoom;
+    this.camera.bottom = -height / zoom;
     this.camera.updateProjectionMatrix();
   }
 
@@ -133,10 +143,9 @@ export default class CanvasLocationComplex implements CanvasController {
     const guy = this.guy;
 
     if (guy) {
-
       if (this.keys.ArrowLeft) {
         guy.position.x -= 1;
-        guy.rotation.y = -1 * Math.PI / 2;
+        guy.rotation.y = (-1 * Math.PI) / 2;
       }
       if (this.keys.ArrowRight) {
         guy.position.x += 1;
@@ -157,7 +166,7 @@ export default class CanvasLocationComplex implements CanvasController {
         guy.rotation.y = 0;
       }
       if (this.keys.ArrowDown && this.keys.ArrowLeft) {
-        guy.rotation.y = -1 * Math.PI / 4;
+        guy.rotation.y = (-1 * Math.PI) / 4;
       }
       if (this.keys.ArrowDown && this.keys.ArrowRight) {
         guy.rotation.y = Math.PI / 4;

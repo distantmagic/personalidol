@@ -62,6 +62,8 @@ declare module 'three' {
     +isCamera: true;
 
     constructor(): void;
+
+    updateProjectionMatrix(): void;
   }
 
   declare interface Euler {
@@ -130,6 +132,26 @@ declare module 'three' {
     +position: Vector3;
     +rotation: Euler;
     +scale: Vector3;
+
+    lookAt(Vector3): void;
+  }
+
+  declare interface OrthographicCamera extends Camera {
+    bottom: number;
+    far: number;
+    left: number;
+    near: number;
+    right: number;
+    top: number;
+
+    constructor(
+      bottom?: number,
+      far?: number,
+      left?: number,
+      near?: number,
+      right?: number,
+      top?: number
+    ): void;
   }
 
   declare interface PerspectiveCamera extends Camera {
@@ -141,8 +163,6 @@ declare module 'three' {
       near: number,
       far: number
     ): void;
-
-    updateProjectionMatrix(): void;
   }
 
   declare interface PointLight extends Light {
