@@ -14,7 +14,7 @@
  */
 
 declare module 'mainloop.js' {
-  declare type AnimateCallback = () => void;
+  declare export type AnimateCallback = number => void;
   declare type UpdateCallback = (number) => void;
 
   declare class MainLoop {

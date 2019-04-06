@@ -1,6 +1,6 @@
 // @flow
 
-import type { MainLoopTickCallback } from "./MainLoopTickCallback";
+import type { AnimateCallback } from "mainloop.js";
 
 export interface MainLoop {
   // unset all callbacks
@@ -10,13 +10,13 @@ export interface MainLoop {
 
   clearEnd(): void;
 
-  setBegin(MainLoopTickCallback): void;
+  setBegin(AnimateCallback): void;
 
-  setDraw(MainLoopTickCallback): void;
+  setDraw(AnimateCallback): void;
 
-  setEnd(MainLoopTickCallback): void;
+  setEnd(AnimateCallback): void;
 
-  setUpdate(MainLoopTickCallback): void;
+  setUpdate(AnimateCallback): void;
 
   start(): void;
 

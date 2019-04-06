@@ -2,10 +2,10 @@
 
 import autoBind from "auto-bind";
 import * as THREE from "three";
+
 import FBXLoader from "../three/FBXLoader";
 
 import type { CanvasController } from "../framework/interfaces/CanvasController";
-import type { ClockTick } from "../framework/interfaces/ClockTick";
 import type { ElementSize } from "../framework/interfaces/ElementSize";
 
 export default class CanvasLocationComplex implements CanvasController {
@@ -15,14 +15,13 @@ export default class CanvasLocationComplex implements CanvasController {
   +material: THREE.Material;
   +mesh: THREE.Mesh;
   +scene: THREE.Scene;
+  +threeLoadingManager: THREE.LoadingManager;
   clock: any;
   mixer: any;
-  // +texture: THREE.Texture;
+  +texture: THREE.Texture;
 
-  constructor() {
+  constructor(threeLoadingManager: THREE.LoadingManager) {
     autoBind(this);
-
-    console.log(FBXLoader);
 
     this.clock = new THREE.Clock();
 
@@ -32,11 +31,12 @@ export default class CanvasLocationComplex implements CanvasController {
     this.scene = new THREE.Scene();
 
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
-    // this.texture = new THREE.TextureLoader().load(
-    //   "/assets/texture-navy-blue-marble-512.jpg"
-    // );
+    this.texture = new THREE.TextureLoader(threeLoadingManager).load(
+      "/assets/texture-navy-blue-marble-512.jpg"
+    );
+    this.threeLoadingManager = threeLoadingManager;
     this.material = new THREE.MeshPhongMaterial({
-      // map: this.texture
+      map: this.texture
     });
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -47,40 +47,33 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   async attach(renderer: THREE.WebGLRenderer): Promise<void> {
-    const loader = new FBXLoader();
+    // const object = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
+    const object = await new Promise((resolve, reject) => {
+      const loader = new FBXLoader(this.threeLoadingManager);
 
-    loader.load(
-      "/assets/mesh-lp-guy.fbx",
-      object => {
-        console.log("onLoad", object);
-        this.mixer = new THREE.AnimationMixer(object);
+      loader.load("/assets/mesh-lp-guy.fbx", resolve, null, reject);
+    });
 
-        const action = this.mixer.clipAction( object.animations[ 2 ] );
-        action.play();
+    this.mixer = new THREE.AnimationMixer(object);
 
-        // // object.traverse( function ( child ) {
-        // //   if ( child.isMesh ) {
-        // //     child.castShadow = true;
-        // //     child.receiveShadow = true;
-        // //   }
-        // } );
-        object.position.set(0, 0, 0);
-        object.scale.set(0.2, 0.2, 0.2);
-        this.scene.add(object);
-      },
-      function(progress) {
-        console.log(progress);
-      },
-      function(error) {
-        console.log(error);
-      }
-    );
+    const action = this.mixer.clipAction(object.animations[2]);
+    action.play();
 
+    // // object.traverse( function ( child ) {
+    // //   if ( child.isMesh ) {
+    // //     child.castShadow = true;
+    // //     child.receiveShadow = true;
+    // //   }
+    // } );
+    object.position.set(0, 0, 0);
+    object.scale.set(0.2, 0.2, 0.2);
+
+    this.scene.add(object);
     this.scene.add(this.mesh);
     this.scene.add(this.light);
   }
 
-  begin(tick: ClockTick): void {}
+  begin(): void {}
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
     this.scene.remove(this.light);
@@ -91,21 +84,21 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.texture.dispose();
   }
 
-  draw(renderer: THREE.WebGLRenderer, tick: ClockTick): void {
-    // renderer.setPixelRatio(window.devicePixelRatio / 4);
+  draw(renderer: THREE.WebGLRenderer): void {
+    // renderer.setPixelRatio(window.devicePixelRatio / 2);
     // renderer.setPixelRatio(window.devicePixelRatio * 2);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.render(this.scene, this.camera);
   }
 
-  end(renderer: THREE.WebGLRenderer, tick: ClockTick): void {}
+  end(renderer: THREE.WebGLRenderer): void {}
 
   resize(elementSize: ElementSize): void {
     this.camera.aspect = elementSize.getAspect();
     this.camera.updateProjectionMatrix();
   }
 
-  update(tick: ClockTick): void {
+  update(): void {
     const delta = this.clock.getDelta();
 
     if (this.mixer) {

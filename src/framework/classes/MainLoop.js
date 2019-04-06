@@ -4,11 +4,11 @@ import autoBind from "auto-bind";
 import noop from "lodash/noop";
 import { default as VendorMainLoop } from "mainloop.js";
 
-import RequestAnimationFrameTick from "./RequestAnimationFrameTick";
 import SingletonException from "./Exception/Singleton";
 
+import type { AnimateCallback } from "mainloop.js";
+
 import type { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
-import type { MainLoopTickCallback } from "../interfaces/MainLoopTickCallback";
 
 let instance;
 
@@ -43,28 +43,20 @@ export default class MainLoop implements MainLoopInterface {
     VendorMainLoop.setEnd(noop);
   }
 
-  setBegin(callback: MainLoopTickCallback): void {
-    VendorMainLoop.setBegin(function(time) {
-      callback(new RequestAnimationFrameTick(false));
-    });
+  setBegin(callback: AnimateCallback): void {
+    VendorMainLoop.setBegin(callback);
   }
 
-  setDraw(callback: MainLoopTickCallback): void {
-    VendorMainLoop.setDraw(function(time) {
-      callback(new RequestAnimationFrameTick(false));
-    });
+  setDraw(callback: AnimateCallback): void {
+    VendorMainLoop.setDraw(callback);
   }
 
-  setEnd(callback: MainLoopTickCallback): void {
-    VendorMainLoop.setEnd(function(time) {
-      callback(new RequestAnimationFrameTick(false));
-    });
+  setEnd(callback: AnimateCallback): void {
+    VendorMainLoop.setEnd(callback);
   }
 
-  setUpdate(callback: MainLoopTickCallback): void {
-    VendorMainLoop.setUpdate(function(time) {
-      callback(new RequestAnimationFrameTick(false));
-    });
+  setUpdate(callback: AnimateCallback): void {
+    VendorMainLoop.setUpdate(callback);
   }
 
   start(): void {

@@ -5,11 +5,11 @@ import * as THREE from "three";
 import type { ClockTick } from "./ClockTick";
 
 export interface Animatable {
-  begin(ClockTick): void;
+  begin(): void;
 
-  draw(THREE.WebGLRenderer, ClockTick): void;
+  draw(THREE.WebGLRenderer): void;
 
-  end(THREE.WebGLRenderer, ClockTick): void;
+  end(THREE.WebGLRenderer): void;
 
-  update(ClockTick): void;
+  update(): void;
 }

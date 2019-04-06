@@ -23,6 +23,19 @@ declare module 'three' {
     constructor(color?: number, intensity?: number): void;
   }
 
+  declare interface AnimationAction {
+    play(): void;
+  }
+
+  declare interface AnimationClip {
+  }
+
+  declare interface AnimationMixer {
+    constructor(Object3D): void;
+
+    clipAction(AnimationClip, optionalRoot: ?Object3D): AnimationAction;
+  }
+
   declare interface BoxGeometry extends Geometry {
     parameters: {|
       depth: number,
@@ -58,6 +71,10 @@ declare module 'three' {
     constructor(number, number, number): void;
   }
 
+  declare interface Clock {
+    constructor(autoStart?: boolean): void;
+  }
+
   declare interface Geometry {
     isGeometry: true;
 
@@ -73,6 +90,15 @@ declare module 'three' {
   declare interface Light extends Object3D {
     +isLight: true;
     intensity: number;
+  }
+
+  declare interface LoadingManager {
+    constructor(): void;
+
+    onError?: (url: string) => void;
+    onLoad?: () => void;
+    onProgress?: (url: string, itemsLoaded: number, itemsTotal: number) => void;
+    onStart?: (url: string, itemsLoaded: number, itemsTotal: number) => void;
   }
 
   declare interface Material extends Geometry {
@@ -151,7 +177,7 @@ declare module 'three' {
   }
 
   declare interface TextureLoader {
-    constructor(): void;
+    constructor(?LoadingManager): void;
 
     load(url: string, onLoad?: Function, onProgress?: Function, onError?: Function): Texture;
   }
@@ -182,11 +208,14 @@ declare module 'three' {
 
   declare module.exports: {|
     AmbientLight: AmbientLight,
+    AnimationMixer: AnimationMixer,
     BoxGeometry: BoxGeometry,
+    Clock: Clock,
     Mesh: Mesh,
     MeshBasicMaterial: MeshBasicMaterial,
     MeshNormalMaterial: MeshNormalMaterial,
     MeshPhongMaterial: MeshPhongMaterial,
+    LoadingManager: LoadingManager,
     PerspectiveCamera: PerspectiveCamera,
     PointLight: PointLight,
     RepeatWrapping: RepeatWrapping,

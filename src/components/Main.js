@@ -95,7 +95,7 @@ export default function Main(props: Props) {
         loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
         queryBus={queryBus}
       />
-      <HudScene mainLoop={mainLoop} />
+      {!isDocumentHidden && <HudScene mainLoop={mainLoop} />}
       <div className="dd__frame dd__statusbar dd__statusbar--hud">
         Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
         będzie przyjaźnie nastawiony.

@@ -28,8 +28,12 @@ export default class SceneManager implements SceneManagerInterface {
     });
     this.renderer = renderer;
 
-    this.mainLoop.setDraw(this.controller.draw.bind(this.controller, renderer));
-    this.mainLoop.setEnd(this.controller.end.bind(this.controller, renderer));
+    this.mainLoop.setDraw(() => {
+      return this.controller.draw(renderer);
+    });
+    this.mainLoop.setEnd(() => {
+      return this.controller.end(renderer);
+    });
 
     return this.controller.attach(renderer);
   }
@@ -50,14 +54,18 @@ export default class SceneManager implements SceneManagerInterface {
   }
 
   async loop(cancelToken: CancelToken): Promise<void> {
+    cancelToken.onCancelled(this.mainLoop.clear);
+
     if (cancelToken.isCancelled()) {
       return;
     }
 
-    this.mainLoop.setBegin(this.controller.begin);
-    this.mainLoop.setUpdate(this.controller.update);
-
-    cancelToken.onCancelled(this.mainLoop.clear);
+    this.mainLoop.setBegin(() => {
+      return this.controller.begin();
+    });
+    this.mainLoop.setUpdate(() => {
+      return this.controller.update();
+    });
   }
 
   resize(elementSize: ElementSize): void {

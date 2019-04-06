@@ -8,9 +8,11 @@ import ElementSize from "../framework/classes/ElementSize";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
 import HudSceneCanvas from "./HudSceneCanvas";
 
+import type { ResourcesLoadingState } from "../framework/interfaces/ResourcesLoadingState";
 import type { SceneManager } from "../framework/interfaces/SceneManager";
 
 type Props = {|
+  resourcesLoadingState: ResourcesLoadingState,
   sceneManager: SceneManager
 |};
 
@@ -50,7 +52,18 @@ export default function HudSceneManager(props: Props) {
 
   return (
     <div className="dd__scene dd__scene--hud dd__scene--canvas" ref={setScene}>
-      <HudSceneCanvas sceneManager={props.sceneManager} />
+      {props.resourcesLoadingState.isLoading() && (
+        <div className="dd__loader dd__scene__loader">
+          Loading asset {props.resourcesLoadingState.getItemsLoaded()}
+          {" of "}
+          {props.resourcesLoadingState.getItemsTotal()}
+          ...
+        </div>
+      )}
+      <HudSceneCanvas
+        resourcesLoadingState={props.resourcesLoadingState}
+        sceneManager={props.sceneManager}
+      />
     </div>
   );
 }

@@ -1,5 +1,21 @@
 .dd__scene.dd__scene--canvas {
   // background-color: white;
+  position: relative;
+}
+
+.dd__scene__canvas.dd__scene__canvas--loading {
+  display: none;
+}
+
+.dd__scene__loader {
+  background-blend-mode: color-burn;
+  background-image: url("/assets/image-disasters-of-war.png"),
+    url("/assets/texture-blood-marble-512.png");
+  background-position: 100% 100%, center;
+  background-repeat: no-repeat, repeat;
+  left: 0;
+  position: absolute;
+  top: 0;
 }
 
 .dd__scene.dd__scene--text {
