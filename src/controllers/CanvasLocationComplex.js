@@ -15,15 +15,18 @@ export default class CanvasLocationComplex implements CanvasController {
   +material: THREE.Material;
   +mesh: THREE.Mesh;
   +scene: THREE.Scene;
-  +threeLoadingManager: THREE.LoadingManager;
-  clock: any;
-  mixer: any;
   +texture: THREE.Texture;
+  +threeLoadingManager: THREE.LoadingManager;
+  keys: {
+    [string]: boolean,
+  };
+  guy: ?THREE.Object3D;
+  mixer: ?THREE.AnimationMixer;
 
   constructor(threeLoadingManager: THREE.LoadingManager) {
     autoBind(this);
 
-    this.clock = new THREE.Clock();
+    this.keys = {};
 
     this.camera = new THREE.PerspectiveCamera(70, 10, 0.1, 1000);
     this.camera.position.y = 20;
@@ -47,62 +50,118 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   async attach(renderer: THREE.WebGLRenderer): Promise<void> {
-    // const object = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
-    const object = await new Promise((resolve, reject) => {
+    document.addEventListener("keydown", this.onKeyDown);
+    document.addEventListener("keyup", this.onKeyUp);
+
+    // const guy = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
+    const guy = await new Promise((resolve, reject) => {
       const loader = new FBXLoader(this.threeLoadingManager);
 
       loader.load("/assets/mesh-lp-guy.fbx", resolve, null, reject);
     });
 
-    this.mixer = new THREE.AnimationMixer(object);
+    this.guy = guy;
+    this.mixer = new THREE.AnimationMixer(guy);
 
-    const action = this.mixer.clipAction(object.animations[4]);
+    const action = this.mixer.clipAction(guy.animations[8]);
     action.play();
 
-    // // object.traverse( function ( child ) {
+    // // guy.traverse( function ( child ) {
     // //   if ( child.isMesh ) {
     // //     child.castShadow = true;
     // //     child.receiveShadow = true;
     // //   }
     // } );
-    object.position.set(0, 0, 0);
-    object.scale.set(0.2, 0.2, 0.2);
+    guy.position.set(0, 0, 0);
+    guy.scale.set(0.05, 0.05, 0.05);
 
-    this.scene.add(object);
+    this.scene.add(guy);
     this.scene.add(this.mesh);
     this.scene.add(this.light);
   }
 
-  begin(): void {}
+  begin(): void {
+  }
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
+    document.removeEventListener("keydown", this.onKeyDown);
+    document.removeEventListener("keyup", this.onKeyUp);
+
+    const guy = this.guy;
+
+    if (guy) {
+      this.scene.remove(guy);
+    }
+
     this.scene.remove(this.light);
     this.scene.remove(this.mesh);
 
     this.geometry.dispose();
     this.material.dispose();
-    // this.texture.dispose();
+    this.texture.dispose();
   }
 
-  draw(renderer: THREE.WebGLRenderer): void {
-    // renderer.setPixelRatio(window.devicePixelRatio / 2);
+  draw(renderer: THREE.WebGLRenderer, interpolationPercentage: number): void {
+    renderer.setPixelRatio(window.devicePixelRatio / 2);
     // renderer.setPixelRatio(window.devicePixelRatio * 2);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    // renderer.setPixelRatio(window.devicePixelRatio);
     renderer.render(this.scene, this.camera);
   }
 
-  end(renderer: THREE.WebGLRenderer): void {}
+  end(fps: number, isPanicked: boolean): void {}
+
+  onKeyDown(evt: KeyboardEvent) {
+    this.keys[evt.key] = true;
+  }
+
+  onKeyUp(evt: KeyboardEvent) {
+    this.keys[evt.key] = false;
+  }
 
   resize(elementSize: ElementSize): void {
     this.camera.aspect = elementSize.getAspect();
     this.camera.updateProjectionMatrix();
   }
 
-  update(): void {
-    const delta = this.clock.getDelta();
+  update(delta: number): void {
+    const mixer = this.mixer;
 
-    if (this.mixer) {
-      this.mixer.update(delta);
+    if (mixer) {
+      mixer.update(delta / 1000);
+    }
+
+    const guy = this.guy;
+
+    if (guy) {
+
+      if (this.keys.ArrowLeft) {
+        guy.position.x -= 1;
+        guy.rotation.y = -1 * Math.PI / 2;
+      }
+      if (this.keys.ArrowRight) {
+        guy.position.x += 1;
+        guy.rotation.y = Math.PI / 2;
+      }
+      if (this.keys.ArrowUp) {
+        guy.position.z -= 1;
+        guy.rotation.y = Math.PI;
+      }
+      if (this.keys.ArrowUp && this.keys.ArrowLeft) {
+        guy.rotation.y = -1 * Math.PI * 0.75;
+      }
+      if (this.keys.ArrowUp && this.keys.ArrowRight) {
+        guy.rotation.y = Math.PI * 0.75;
+      }
+      if (this.keys.ArrowDown) {
+        guy.position.z += 1;
+        guy.rotation.y = 0;
+      }
+      if (this.keys.ArrowDown && this.keys.ArrowLeft) {
+        guy.rotation.y = -1 * Math.PI / 4;
+      }
+      if (this.keys.ArrowDown && this.keys.ArrowRight) {
+        guy.rotation.y = Math.PI / 4;
+      }
     }
 
     // console.log(delta);

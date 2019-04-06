@@ -28,12 +28,10 @@ export default class SceneManager implements SceneManagerInterface {
     });
     this.renderer = renderer;
 
-    this.mainLoop.setDraw(() => {
-      return this.controller.draw(renderer);
+    this.mainLoop.setDraw(interpolationPercentage => {
+      return this.controller.draw(renderer, interpolationPercentage);
     });
-    this.mainLoop.setEnd(() => {
-      return this.controller.end(renderer);
-    });
+    this.mainLoop.setEnd(this.controller.end);
 
     return this.controller.attach(renderer);
   }
@@ -60,12 +58,8 @@ export default class SceneManager implements SceneManagerInterface {
       return;
     }
 
-    this.mainLoop.setBegin(() => {
-      return this.controller.begin();
-    });
-    this.mainLoop.setUpdate(() => {
-      return this.controller.update();
-    });
+    this.mainLoop.setBegin(this.controller.begin);
+    this.mainLoop.setUpdate(this.controller.update);
   }
 
   resize(elementSize: ElementSize): void {

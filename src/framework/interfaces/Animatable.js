@@ -7,9 +7,9 @@ import type { ClockTick } from "./ClockTick";
 export interface Animatable {
   begin(): void;
 
-  draw(THREE.WebGLRenderer): void;
+  draw(THREE.WebGLRenderer, interpolationPercentage: number): void;
 
-  end(THREE.WebGLRenderer): void;
+  end(fps: number, isPanicked: boolean): void;
 
-  update(): void;
+  update(delta: number): void;
 }

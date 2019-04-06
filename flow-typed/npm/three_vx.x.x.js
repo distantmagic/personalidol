@@ -34,6 +34,8 @@ declare module 'three' {
     constructor(Object3D): void;
 
     clipAction(AnimationClip, optionalRoot: ?Object3D): AnimationAction;
+
+    update(delta: number): void;
   }
 
   declare interface BoxGeometry extends Geometry {

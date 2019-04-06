@@ -14,8 +14,10 @@
  */
 
 declare module 'mainloop.js' {
-  declare export type AnimateCallback = number => void;
-  declare type UpdateCallback = (number) => void;
+  declare export type BeginCallback = () => void;
+  declare export type DrawCallback = (interpolationPercentage: number) => void;
+  declare export type EndCallback = (fps: number, isPanicked: boolean) => void;
+  declare export type UpdateCallback = (number) => void;
 
   declare class MainLoop {
     // Returns the exponential moving average of the frames per second.
@@ -35,16 +37,16 @@ declare module 'mainloop.js' {
 
     // the begin function runs at the beginning of each frame and is typically
     // used to process input.
-    setBegin(AnimateCallback): MainLoop;
+    setBegin(BeginCallback): MainLoop;
 
     // the draw function should update the screen, usually by changing the DOM
     // or painting a canvas.
-    setDraw(AnimateCallback): MainLoop;
+    setDraw(DrawCallback): MainLoop;
 
     // the end function runs at the end of each frame and is typically used
     // for cleanup tasks such as adjusting the visual quality based on the
     // frame rate.
-    setEnd(AnimateCallback): MainLoop;
+    setEnd(EndCallback): MainLoop;
 
     // Sets a maximum frame rate.
     setMaxAllowedFPS(number): MainLoop;

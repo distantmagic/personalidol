@@ -6,7 +6,12 @@ import { default as VendorMainLoop } from "mainloop.js";
 
 import SingletonException from "./Exception/Singleton";
 
-import type { AnimateCallback } from "mainloop.js";
+import type {
+  BeginCallback,
+  DrawCallback,
+  EndCallback,
+  UpdateCallback
+} from "mainloop.js";
 
 import type { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
 
@@ -43,19 +48,19 @@ export default class MainLoop implements MainLoopInterface {
     VendorMainLoop.setEnd(noop);
   }
 
-  setBegin(callback: AnimateCallback): void {
+  setBegin(callback: BeginCallback): void {
     VendorMainLoop.setBegin(callback);
   }
 
-  setDraw(callback: AnimateCallback): void {
+  setDraw(callback: DrawCallback): void {
     VendorMainLoop.setDraw(callback);
   }
 
-  setEnd(callback: AnimateCallback): void {
+  setEnd(callback: EndCallback): void {
     VendorMainLoop.setEnd(callback);
   }
 
-  setUpdate(callback: AnimateCallback): void {
+  setUpdate(callback: UpdateCallback): void {
     VendorMainLoop.setUpdate(callback);
   }
 
