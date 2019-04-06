@@ -56,7 +56,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.mixer = new THREE.AnimationMixer(object);
 
-    const action = this.mixer.clipAction(object.animations[2]);
+    const action = this.mixer.clipAction(object.animations[4]);
     action.play();
 
     // // object.traverse( function ( child ) {

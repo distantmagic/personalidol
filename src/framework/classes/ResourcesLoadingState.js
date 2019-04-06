@@ -4,16 +4,18 @@ import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "..
 
 export default class ResourcesLoadingState
   implements ResourcesLoadingStateInterface {
+  +error: ?Error;
   +itemsLoaded: number;
   +itemsTotal: number;
 
-  constructor(itemsLoaded: number = 0, itemsTotal: number = 0) {
+  constructor(itemsLoaded: number = 0, itemsTotal: number = 0, error: ?Error) {
     if (itemsLoaded > itemsTotal) {
       throw new Error(
         "Invalid resources loading state. There are more loaded items than total items."
       );
     }
 
+    this.error = error;
     this.itemsLoaded = itemsLoaded;
     this.itemsTotal = itemsTotal;
   }
@@ -43,14 +45,26 @@ export default class ResourcesLoadingState
     );
   }
 
+  isFailed(): boolean {
+    return !!this.error;
+  }
+
   isLoading(): boolean {
-    return this.getItemsLoaded() < this.getItemsTotal();
+    return !this.isFailed() && this.getItemsLoaded() < this.getItemsTotal();
+  }
+
+  setError(error: Error): ResourcesLoadingStateInterface {
+    return new ResourcesLoadingState(
+      this.getItemsLoaded(),
+      this.getItemsTotal(),
+      error
+    );
   }
 
   setProgress(
     itemsLoaded: number,
     itemsTotal: number
   ): ResourcesLoadingStateInterface {
-    return new ResourcesLoadingState(itemsLoaded, itemsTotal);
+    return new ResourcesLoadingState(itemsLoaded, itemsTotal, this.error);
   }
 }

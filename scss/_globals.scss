@@ -93,7 +93,7 @@ button {
     animation-iteration-count: infinite;
     animation-name: fadein;
     // background-color: red;
-    background-image: url("/assets/image-hourglass.png");
+    background-image: url("/assets/icon-hourglass.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -106,6 +106,13 @@ button {
 
   &:not(:empty):before {
     padding-bottom: 1rem;
+  }
+}
+
+.dd__loader.dd__loader--error {
+  &:before {
+    animation: unset;
+    background-image: url("/assets/icon-error.png");
   }
 }
 

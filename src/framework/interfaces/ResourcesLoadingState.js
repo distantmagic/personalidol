@@ -4,6 +4,8 @@ import { Equatable } from "./Equatable";
 
 export interface ResourcesLoadingState
   extends Equatable<ResourcesLoadingState> {
+  isFailed(): boolean;
+
   isLoading(): boolean;
 
   getItemsLoaded(): number;
@@ -11,6 +13,8 @@ export interface ResourcesLoadingState
   getItemsTotal(): number;
 
   getProgressPercentage(): number;
+
+  setError(error: Error): ResourcesLoadingState;
 
   setProgress(itemsLoaded: number, itemsTotal: number): ResourcesLoadingState;
 }

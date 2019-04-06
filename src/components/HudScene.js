@@ -6,14 +6,19 @@ import * as THREE from "three";
 import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
 import HudSceneManager from "./HudSceneManager";
 // import HudSceneLocationRoom from "./HudSceneLocationRoom";
+import ResourceLoadError from "../framework/classes/Exception/ResourceLoadError";
 import ResourcesLoadingState from "../framework/classes/ResourcesLoadingState";
 import SceneManager from "../framework/classes/SceneManager";
 
+import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { MainLoop } from "../framework/interfaces/MainLoop";
 import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../framework/interfaces/ResourcesLoadingState";
 import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
 
 type Props = {|
+  exceptionHandler: ExceptionHandler,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   mainLoop: MainLoop
 |};
 
@@ -48,21 +53,37 @@ export default function HudScene(props: Props) {
     function() {
       // keep the old reference
       const manager = threeLoadingManager;
+      let globalItemsLoaded = 0;
+      let globalItemsTotal = 0;
+      let error = null;
 
       manager.onStart = function(url, itemsLoaded, itemsTotal) {
+        console.log("onStart", error);
         setLoadingState(
-          resourcesLoadingState.setProgress(itemsLoaded, itemsTotal)
+          new ResourcesLoadingState(itemsLoaded, itemsTotal, error)
         );
       };
 
       manager.onProgress = function(url, itemsLoaded, itemsTotal) {
+        console.log("onProgress", error);
+        globalItemsLoaded = itemsLoaded;
+        globalItemsTotal = itemsTotal;
+
         setLoadingState(
-          resourcesLoadingState.setProgress(itemsLoaded, itemsTotal)
+          new ResourcesLoadingState(itemsLoaded, itemsTotal, error)
         );
       };
 
       manager.onError = function(url: string) {
-        console.log("There was an error loading " + url);
+        error = new ResourceLoadError(url);
+        props.exceptionHandler.captureException(
+          props.loggerBreadcrumbs.add("threeLoadingManager.onError"),
+          error
+        );
+
+        setLoadingState(
+          new ResourcesLoadingState(globalItemsLoaded, globalItemsTotal, error)
+        );
       };
 
       return function() {

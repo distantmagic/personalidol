@@ -20,6 +20,37 @@ it("has adequate progress percentage", () => {
   expect(state.getProgressPercentage()).toBe(20);
 });
 
+it("can fail", () => {
+  const state1 = new ResourcesLoadingState(1, 10);
+
+  expect(state1.isFailed()).toBe(false);
+  expect(state1.isLoading()).toBe(true);
+
+  const state2 = state1.setError(new Error(":("));
+
+  expect(state2.isFailed()).toBe(true);
+  expect(state2.isLoading()).toBe(false);
+  expect(state2.getItemsLoaded()).toBe(1);
+  expect(state2.getItemsTotal()).toBe(10);
+});
+
+it("propagates failure", () => {
+  const state1 = new ResourcesLoadingState(1, 10);
+
+  expect(state1.isFailed()).toBe(false);
+
+  const state2 = state1.setError(new Error(":("));
+
+  expect(state2.isFailed()).toBe(true);
+
+  const state3 = state2.setProgress(2, 10);
+
+  expect(state3.isLoading()).toBe(false);
+  expect(state3.isFailed()).toBe(true);
+  expect(state3.getItemsLoaded()).toBe(2);
+  expect(state3.getItemsTotal()).toBe(10);
+});
+
 it("is equatable", () => {
   const state1 = new ResourcesLoadingState();
   const state2 = state1.setProgress(2, 10);

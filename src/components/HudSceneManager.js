@@ -52,6 +52,11 @@ export default function HudSceneManager(props: Props) {
 
   return (
     <div className="dd__scene dd__scene--hud dd__scene--canvas" ref={setScene}>
+      {props.resourcesLoadingState.isFailed() && (
+        <div className="dd__loader dd__loader--error dd__scene__loader">
+          Failed loading assets.
+        </div>
+      )}
       {props.resourcesLoadingState.isLoading() && (
         <div className="dd__loader dd__scene__loader">
           Loading asset {props.resourcesLoadingState.getItemsLoaded()}
