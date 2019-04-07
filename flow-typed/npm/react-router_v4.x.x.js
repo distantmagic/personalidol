@@ -99,7 +99,6 @@ declare module "react-router" {
     strict?: boolean
   |}> {}
 
-
   declare export class Route extends React$Component<{|
     component?: React$ComponentType<*>,
     render?: (router: ContextRouter) => React$Node,

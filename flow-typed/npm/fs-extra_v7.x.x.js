@@ -115,8 +115,14 @@ declare module "fs-extra" {
     callback: (err: Error) => void
   ): void;
   declare export function createFileSync(file: string): void;
-  declare export function createReadStream(path: string, options?: Object): ReadStream;
-  declare export function createWriteStream(path: string, options?: Object): WriteStream;
+  declare export function createReadStream(
+    path: string,
+    options?: Object
+  ): ReadStream;
+  declare export function createWriteStream(
+    path: string,
+    options?: Object
+  ): WriteStream;
 
   declare export function ensureDir(path: string): Promise<void>;
   declare export function ensureDir(
@@ -126,7 +132,10 @@ declare module "fs-extra" {
   declare export function ensureDirSync(path: string): void;
 
   declare export function exists(path: string): Promise<boolean>;
-  declare export function exists(path: string, callback?: (exists: boolean) => void): void;
+  declare export function exists(
+    path: string,
+    callback?: (exists: boolean) => void
+  ): void;
 
   declare export function mkdirs(dir: string): Promise<void>;
   declare export function mkdirs(

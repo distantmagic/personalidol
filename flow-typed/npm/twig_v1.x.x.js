@@ -12,20 +12,20 @@
  * https://github.com/flowtype/flow-typed
  */
 
-declare module 'twig' {
+declare module "twig" {
   declare type TwigRendererData = {
     [string]: any
   };
 
   declare type TwigRenderer = {|
-    renderAsync: (data: TwigRendererData) => Promise<string>,
+    renderAsync: (data: TwigRendererData) => Promise<string>
   |};
 
   declare type Twig = {|
     twig: ({|
       data: string,
       rethrow: boolean,
-      strict_variables: boolean,
+      strict_variables: boolean
     |}) => TwigRenderer
   |};
 

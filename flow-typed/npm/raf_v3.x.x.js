@@ -13,13 +13,13 @@
  * https://github.com/flowtype/flow-typed
  */
 
-declare module 'raf' {
+declare module "raf" {
   declare type RafCallback = () => any;
   declare type RafId = number;
 
   declare type raf = {
-    (RafCallback): RafId;
-    cancel(RafId): void;
+    (RafCallback): RafId,
+    cancel(RafId): void
   };
 
   declare module.exports: raf;
@@ -31,9 +31,9 @@ declare module 'raf' {
  * needed.
  */
 // Filename aliases
-declare module 'raf/index' {
-  declare module.exports: $Exports<'raf'>;
+declare module "raf/index" {
+  declare module.exports: $Exports<"raf">;
 }
-declare module 'raf/index.js' {
-  declare module.exports: $Exports<'raf'>;
+declare module "raf/index.js" {
+  declare module.exports: $Exports<"raf">;
 }

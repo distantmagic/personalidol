@@ -1,7 +1,7 @@
 // flow-typed signature: 16e18f452841067c6716a49b2a0f30ca
 // flow-typed version: <<STUB>>/yn_v3.0.0/flow_v0.89.0
 
-declare module 'yn' {
+declare module "yn" {
   declare type Options = {|
     default?: boolean | null,
     lenient?: boolean
@@ -13,7 +13,10 @@ declare module 'yn' {
   declare function yn(true, ?Options): true;
   declare function yn(false, ?Options): false;
 
-  declare function yn(string, {| default: boolean, lenient?: boolean |}): boolean;
+  declare function yn(
+    string,
+    {| default: boolean, lenient?: boolean |}
+  ): boolean;
   declare function yn(string, ?Options): boolean | null;
 
   declare function yn(any, {| default: true, lenient?: boolean |}): true;
@@ -24,10 +27,10 @@ declare module 'yn' {
 }
 
 // Filename aliases
-declare module 'yn/index' {
-  declare module.exports: $Exports<'yn'>;
+declare module "yn/index" {
+  declare module.exports: $Exports<"yn">;
 }
 
-declare module 'yn/index.js' {
-  declare module.exports: $Exports<'yn'>;
+declare module "yn/index.js" {
+  declare module.exports: $Exports<"yn">;
 }

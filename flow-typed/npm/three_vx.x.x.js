@@ -13,7 +13,7 @@
  * https://github.com/flowtype/flow-typed
  */
 
-declare module 'three' {
+declare module "three" {
   declare type RepeatWrapping = 1000;
 
   declare interface AmbientLight extends Light {
@@ -29,8 +29,7 @@ declare module 'three' {
     play(): void;
   }
 
-  declare interface AnimationClip {
-  }
+  declare interface AnimationClip {}
 
   declare interface AnimationMixer {
     constructor(Object3D): void;
@@ -47,7 +46,7 @@ declare module 'three' {
       height: number,
       heightSegments: number,
       width: number,
-      widthSegments: number,
+      widthSegments: number
     |};
 
     constructor(
@@ -107,8 +106,7 @@ declare module 'three' {
     onStart?: (url: string, itemsLoaded: number, itemsTotal: number) => void;
   }
 
-  declare interface Material extends Geometry {
-  }
+  declare interface Material extends Geometry {}
 
   declare interface Mesh extends Object3D {
     constructor(Geometry, Material): void;
@@ -116,7 +114,7 @@ declare module 'three' {
 
   declare interface MeshBasicMaterial extends Material {
     constructor({|
-      map?: Texture,
+      map?: Texture
     |}): void;
   }
 
@@ -127,7 +125,7 @@ declare module 'three' {
   declare interface MeshPhongMaterial extends Material {
     constructor({|
       color?: number,
-      map?: Texture,
+      map?: Texture
     |}): void;
   }
 
@@ -160,23 +158,28 @@ declare module 'three' {
   declare interface PerspectiveCamera extends Camera {
     aspect: number;
 
-    constructor(
-      fov: number,
-      aspect: number,
-      near: number,
-      far: number
-    ): void;
+    constructor(fov: number, aspect: number, near: number, far: number): void;
   }
 
   declare interface PlaneGeometry extends Geometry {
-    constructor(width: number, height: number, widthSegments: number, heightSegments: number): void;
+    constructor(
+      width: number,
+      height: number,
+      widthSegments: number,
+      heightSegments: number
+    ): void;
   }
 
   declare interface PointLight extends Light {
     +isPointLight: true;
     +position: Vector3;
 
-    constructor(color?: number, intensity?: number, distance?: number, decay?: number): void;
+    constructor(
+      color?: number,
+      intensity?: number,
+      distance?: number,
+      decay?: number
+    ): void;
   }
 
   declare interface Renderer {
@@ -184,7 +187,7 @@ declare module 'three' {
 
     getSize(): {|
       height: number,
-      width: number,
+      width: number
     |};
 
     setPixelRatio(number): void;
@@ -212,7 +215,12 @@ declare module 'three' {
   declare interface TextureLoader {
     constructor(?LoadingManager): void;
 
-    load(url: string, onLoad?: Function, onProgress?: Function, onError?: Function): Texture;
+    load(
+      url: string,
+      onLoad?: Function,
+      onProgress?: Function,
+      onError?: Function
+    ): Texture;
   }
 
   declare interface Vector3 {
@@ -235,7 +243,7 @@ declare module 'three' {
       powerPreference?: "high-performance" | "low-power" | "default",
       precision?: "highp" | "mediump" | "lowp",
       premultipliedAlpha?: boolean,
-      stencil?: boolean,
+      stencil?: boolean
     |}): void;
   }
 
@@ -255,6 +263,6 @@ declare module 'three' {
     RepeatWrapping: RepeatWrapping,
     Scene: Scene,
     TextureLoader: TextureLoader,
-    WebGLRenderer: WebGLRenderer,
+    WebGLRenderer: WebGLRenderer
   |};
 }

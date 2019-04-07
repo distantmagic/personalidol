@@ -13,6 +13,6 @@
  * https://github.com/flowtype/flow-typed
  */
 
-declare module 'resize-observer-polyfill' {
+declare module "resize-observer-polyfill" {
   declare module.exports: ResizeObserver;
 }

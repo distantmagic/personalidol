@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import clamp from "clamp";
-import {Howl} from 'howler';
+import { Howl, Howler } from "howler";
 
 import FBXLoader from "../three/FBXLoader";
 
@@ -14,6 +14,7 @@ const planeSide = 128;
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;
+  +clock: THREE.Clock;
   +geometry: THREE.Geometry;
   +light: THREE.SpotLight;
   +material: THREE.Material;
@@ -29,15 +30,18 @@ export default class CanvasLocationComplex implements CanvasController {
   };
   guy: ?THREE.Object3D;
   mixer: ?THREE.AnimationMixer;
-  sound: any;
+  sound: Howl;
 
   constructor(threeLoadingManager: THREE.LoadingManager) {
     autoBind(this);
 
+    this.clock = new THREE.Clock();
     this.sound = new Howl({
-      src: [
-        '/assets/track-crusade.mp3',
-      ]
+      distanceModel: "exponential",
+      loop: true,
+      rolloffFactor: 0.5,
+      src: ["/assets/track-lithium.mp3"]
+      // volume: 0.1,
     });
 
     this.actions = {};
@@ -66,7 +70,7 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.camera.position.y = 20;
     // this.camera.position.z = 40;
 
-    this.geometry = new THREE.BoxGeometry(1, 1, 1);
+    this.geometry = new THREE.BoxGeometry(2, 2, 2);
     this.texture = new THREE.TextureLoader(threeLoadingManager).load(
       "/assets/texture-blood-marble-512.png"
     );
@@ -86,7 +90,8 @@ export default class CanvasLocationComplex implements CanvasController {
     document.addEventListener("keydown", this.onKeyDown);
     document.addEventListener("keyup", this.onKeyUp);
 
-    // this.sound.play();
+    this.sound.pos(0, 0, 0);
+    this.sound.play();
 
     // const guy = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
     const guy = await new Promise((resolve, reject) => {
@@ -138,7 +143,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
     const guy = this.guy;
 
-    // this.sound.stop();
+    this.sound.stop();
 
     if (guy) {
       this.scene.remove(guy);
@@ -262,6 +267,8 @@ export default class CanvasLocationComplex implements CanvasController {
         planeSide / 2
       );
 
+      Howler.pos(guy.position.x, guy.position.z, 0);
+
       this.camera.position.set(
         1 * guy.position.x + 16,
         20,
@@ -272,7 +279,13 @@ export default class CanvasLocationComplex implements CanvasController {
     // console.log(delta);
     // this.light.position.y += 0.1;
 
-    // this.mesh.position.z += 1;
+    // this.clock.getDelta();
+
+    // this.mesh.position.x = Math.sin(this.clock.elapsedTime) * 32;
+    // this.mesh.position.z = Math.cos(this.clock.elapsedTime) * 16;
+
+    // this.sound.pos(this.mesh.position.x, this.mesh.position.z, 0);
+
     this.mesh.rotation.x += 0.01;
     this.mesh.rotation.y += 0.02;
     // this.mesh.scale.x = ((this.mesh.scale.x + 0.05) % 32);

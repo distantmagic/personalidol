@@ -162,7 +162,7 @@ declare module "lodash" {
 
   declare type NestedArray<T> = Array<Array<T>>;
 
-  declare type matchesIterateeShorthand = {[key: any]: any};
+  declare type matchesIterateeShorthand = { [key: any]: any };
   declare type matchesPropertyIterateeShorthand = [string, any];
   declare type propertyIterateeShorthand = string;
 
@@ -440,8 +440,14 @@ declare module "lodash" {
       comparator?: Comparator<T>
     ): Array<T>;
     uniq<T>(array?: ?$ReadOnlyArray<T>): Array<T>;
-    uniqBy<T>(array?: ?$ReadOnlyArray<T>, iteratee?: ?ValueOnlyIteratee<T>): Array<T>;
-    uniqWith<T>(array?: ?$ReadOnlyArray<T>, comparator?: ?Comparator<T>): Array<T>;
+    uniqBy<T>(
+      array?: ?$ReadOnlyArray<T>,
+      iteratee?: ?ValueOnlyIteratee<T>
+    ): Array<T>;
+    uniqWith<T>(
+      array?: ?$ReadOnlyArray<T>,
+      comparator?: ?Comparator<T>
+    ): Array<T>;
     unzip<T>(array?: ?Array<T>): Array<T>;
     unzipWith<T>(array: ?Array<T>, iteratee?: ?Iteratee<T>): Array<T>;
     without<T>(array?: ?$ReadOnlyArray<T>, ...values?: Array<?T>): Array<T>;
@@ -780,12 +786,20 @@ declare module "lodash" {
     after(n: number, fn: Function): Function;
     ary(func: Function, n?: number): Function;
     before(n: number, fn: Function): Function;
-    bind<F:(...any[]) => any>(func: F, thisArg: any, ...partials: Array<any>): F;
+    bind<F: (...any[]) => any>(
+      func: F,
+      thisArg: any,
+      ...partials: Array<any>
+    ): F;
     bindKey(obj?: ?Object, key?: ?string, ...partials?: Array<?any>): Function;
     curry: Curry;
     curry(func: Function, arity?: number): Function;
     curryRight(func: Function, arity?: number): Function;
-    debounce<F: (...any[]) => any>(func: F, wait?: number, options?: DebounceOptions): F;
+    debounce<F: (...any[]) => any>(
+      func: F,
+      wait?: number,
+      options?: DebounceOptions
+    ): F;
     defer(func: (...any[]) => any, ...args?: Array<any>): TimeoutID;
     delay(func: Function, wait: number, ...args?: Array<any>): TimeoutID;
     flip<R>(func: (...any[]) => R): (...any[]) => R;
@@ -795,8 +809,14 @@ declare module "lodash" {
     overArgs(func?: ?Function, ...transforms?: Array<Function>): Function;
     overArgs(func?: ?Function, transforms?: ?Array<Function>): Function;
     partial<R>(func: (...any[]) => R, ...partials: any[]): (...any[]) => R;
-    partialRight<R>(func: (...any[]) => R, ...partials: Array<any>): (...any[]) => R;
-    partialRight<R>(func: (...any[]) => R, partials: Array<any>): (...any[]) => R;
+    partialRight<R>(
+      func: (...any[]) => R,
+      ...partials: Array<any>
+    ): (...any[]) => R;
+    partialRight<R>(
+      func: (...any[]) => R,
+      partials: Array<any>
+    ): (...any[]) => R;
     rearg(func: Function, ...indexes: Array<number>): Function;
     rearg(func: Function, indexes: Array<number>): Function;
     rest(func: Function, start?: number): Function;
@@ -1174,11 +1194,7 @@ declare module "lodash" {
     invert(object: void | null, multiVal?: ?boolean): {};
     invertBy(object: Object, iteratee?: ?Function): Object;
     invertBy(object: void | null, iteratee?: ?Function): {};
-    invoke(
-      object?: ?Object,
-      path?: ?Path,
-      ...args?: Array<any>
-    ): any;
+    invoke(object?: ?Object, path?: ?Path, ...args?: Array<any>): any;
     keys<K>(object?: ?{ [key: K]: any }): Array<K>;
     keys(object?: ?Object): Array<string>;
     keysIn(object?: ?Object): Array<string>;
@@ -1251,17 +1267,9 @@ declare module "lodash" {
       predicate?: ?OPredicate<A, T>
     ): Object;
     pickBy<A, T>(object: void | null, predicate?: ?OPredicate<A, T>): {};
-    result(
-      object?: ?Object,
-      path?: ?Path,
-      defaultValue?: any
-    ): any;
+    result(object?: ?Object, path?: ?Path, defaultValue?: any): any;
     set(object: Object, path?: ?Path, value: any): Object;
-    set<T: void | null>(
-      object: T,
-      path?: ?Path,
-      value?: ?any
-    ): T;
+    set<T: void | null>(object: T, path?: ?Path, value?: ?any): T;
     setWith<T>(
       object: T,
       path?: ?Path,
@@ -1289,11 +1297,7 @@ declare module "lodash" {
     unset(object: void | null, path?: ?Path): true;
     unset(object: Object, path?: ?Path): boolean;
     update(object: Object, path: Path, updater: Function): Object;
-    update<T: void | null>(
-      object: T,
-      path?: ?Path,
-      updater?: ?Function
-    ): T;
+    update<T: void | null>(object: T, path?: ?Path, updater?: ?Function): T;
     updateWith(
       object: Object,
       path?: ?Path,
@@ -1397,10 +1401,7 @@ declare module "lodash" {
     conforms(source?: ?Object): Function;
     constant<T>(value: T): () => T;
     defaultTo<T1: void | null, T2>(value: T1, defaultValue: T2): T2;
-    defaultTo<T1: string | boolean, T2>(
-      value: T1,
-      defaultValue: T2
-    ): T1;
+    defaultTo<T1: string | boolean, T2>(value: T1, defaultValue: T2): T1;
     // NaN is a number instead of its own type, otherwise it would behave like null/void
     defaultTo<T1: number, T2>(value: T1, defaultValue: T2): T1 | T2;
     flow: $ComposeReverse & ((funcs: Array<Function>) => Function);
@@ -1612,7 +1613,7 @@ declare module "lodash/fp" {
 
   declare type NestedArray<T> = Array<Array<T>>;
 
-  declare type matchesIterateeShorthand = {[string | number]: any};
+  declare type matchesIterateeShorthand = { [string | number]: any };
   declare type matchesPropertyIterateeShorthand = [string, any];
   declare type propertyIterateeShorthand = string;
 
@@ -2385,7 +2386,7 @@ declare module "lodash/fp" {
     spreadFrom(start: number, func: Function): Function;
     throttle<A, R>(wait: number): (func: (...A) => R) => (...A) => R;
     throttle<A, R>(wait: number, func: (...A) => R): (...A) => R;
-    unary<T, R>(func: (T, ...any[]) => R): (T) => R;
+    unary<T, R>(func: (T, ...any[]) => R): T => R;
     wrap(wrapper: Function): (value: any) => Function;
     wrap(wrapper: Function, value: any): Function;
 
@@ -2800,23 +2801,15 @@ declare module "lodash/fp" {
     get(
       path: Path
     ): (object: Object | $ReadOnlyArray<any> | void | null) => any;
-    get(
-      path: Path,
-      object: Object | $ReadOnlyArray<any> | void | null
-    ): any;
+    get(path: Path, object: Object | $ReadOnlyArray<any> | void | null): any;
     prop(path: Path): (object: Object | Array<any>) => any;
     prop(path: Path, object: Object | Array<any>): any;
     path(path: Path): (object: Object | Array<any>) => any;
     path(path: Path, object: Object | Array<any>): any;
     getOr(
       defaultValue: any
-    ): ((
-      path: Path
-    ) => (object: Object | Array<any>) => any) &
-      ((
-        path: Path,
-        object: Object | $ReadOnlyArray<any> | void | null
-      ) => any);
+    ): ((path: Path) => (object: Object | Array<any>) => any) &
+      ((path: Path, object: Object | $ReadOnlyArray<any> | void | null) => any);
     getOr(
       defaultValue: any,
       path: Path
@@ -2828,34 +2821,16 @@ declare module "lodash/fp" {
     ): any;
     propOr(
       defaultValue: any
-    ): ((
-      path: Path
-    ) => (object: Object | Array<any>) => any) &
+    ): ((path: Path) => (object: Object | Array<any>) => any) &
       ((path: Path, object: Object | Array<any>) => any);
-    propOr(
-      defaultValue: any,
-      path: Path
-    ): (object: Object | Array<any>) => any;
-    propOr(
-      defaultValue: any,
-      path: Path,
-      object: Object | Array<any>
-    ): any;
+    propOr(defaultValue: any, path: Path): (object: Object | Array<any>) => any;
+    propOr(defaultValue: any, path: Path, object: Object | Array<any>): any;
     pathOr(
       defaultValue: any
-    ): ((
-      path: Path
-    ) => (object: Object | Array<any>) => any) &
+    ): ((path: Path) => (object: Object | Array<any>) => any) &
       ((path: Path, object: Object | Array<any>) => any);
-    pathOr(
-      defaultValue: any,
-      path: Path
-    ): (object: Object | Array<any>) => any;
-    pathOr(
-      defaultValue: any,
-      path: Path,
-      object: Object | Array<any>
-    ): any;
+    pathOr(defaultValue: any, path: Path): (object: Object | Array<any>) => any;
+    pathOr(defaultValue: any, path: Path, object: Object | Array<any>): any;
     has(path: Path): (object: Object) => boolean;
     has(path: Path, object: Object): boolean;
     hasIn(path: Path): (object: Object) => boolean;
@@ -2870,15 +2845,8 @@ declare module "lodash/fp" {
       path: Path
     ): ((object: Object) => (args: Array<any>) => any) &
       ((object: Object, args: Array<any>) => any);
-    invokeArgs(
-      path: Path,
-      object: Object
-    ): (args: Array<any>) => any;
-    invokeArgs(
-      path: Path,
-      object: Object,
-      args: Array<any>
-    ): any;
+    invokeArgs(path: Path, object: Object): (args: Array<any>) => any;
+    invokeArgs(path: Path, object: Object, args: Array<any>): any;
     keys<K>(object: { [key: K]: any }): Array<K>;
     keys(object: Object): Array<string>;
     keysIn(object: Object): Array<string>;
@@ -2972,10 +2940,7 @@ declare module "lodash/fp" {
       path: Path
     ): ((value: any) => (object: Object) => Object) &
       ((value: any, object: Object) => Object);
-    assocPath(
-      path: Path,
-      value: any
-    ): (object: Object) => Object;
+    assocPath(path: Path, value: any): (object: Object) => Object;
     assocPath(path: Path, value: any, object: Object): Object;
     setWith<T>(
       customizer: (nsValue: any, key: string, nsObject: T) => any
@@ -3028,10 +2993,7 @@ declare module "lodash/fp" {
       path: Path
     ): ((updater: Function) => (object: Object) => Object) &
       ((updater: Function, object: Object) => Object);
-    update(
-      path: Path,
-      updater: Function
-    ): (object: Object) => Object;
+    update(path: Path, updater: Function): (object: Object) => Object;
     update(path: Path, updater: Function, object: Object): Object;
     updateWith(
       customizer: Function
@@ -3039,10 +3001,7 @@ declare module "lodash/fp" {
       path: Path
     ) => ((updater: Function) => (object: Object) => Object) &
       ((updater: Function, object: Object) => Object)) &
-      ((
-        path: Path,
-        updater: Function
-      ) => (object: Object) => Object) &
+      ((path: Path, updater: Function) => (object: Object) => Object) &
       ((path: Path, updater: Function, object: Object) => Object);
     updateWith(
       customizer: Function,
@@ -3159,13 +3118,8 @@ declare module "lodash/fp" {
     always<T>(value: T): () => T;
     defaultTo<T1: void | null, T2>(defaultValue: T2): (value: T1) => T2;
     defaultTo<T1: void | null, T2>(defaultValue: T2, value: T1): T2;
-    defaultTo<T1: string | boolean, T2>(
-      defaultValue: T2
-    ): (value: T1) => T1;
-    defaultTo<T1: string | boolean, T2>(
-      defaultValue: T2,
-      value: T1
-    ): T1;
+    defaultTo<T1: string | boolean, T2>(defaultValue: T2): (value: T1) => T1;
+    defaultTo<T1: string | boolean, T2>(defaultValue: T2, value: T1): T1;
     // NaN is a number instead of its own type, otherwise it would behave like null/void
     defaultTo<T1: number, T2>(defaultValue: T2): (value: T1) => T1 | T2;
     defaultTo<T1: number, T2>(defaultValue: T2, value: T1): T1 | T2;
@@ -3208,9 +3162,7 @@ declare module "lodash/fp" {
     allPass(predicates: Array<Function>): Function;
     overSome(predicates: Array<Function>): Function;
     anyPass(predicates: Array<Function>): Function;
-    property(
-      path: Path
-    ): (object: Object | Array<any>) => any;
+    property(path: Path): (object: Object | Array<any>) => any;
     property(path: Path, object: Object | Array<any>): any;
     propertyOf(object: Object): (path: Path) => Function;
     propertyOf(object: Object, path: Path): Function;
