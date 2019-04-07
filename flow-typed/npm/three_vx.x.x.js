@@ -24,6 +24,8 @@ declare module 'three' {
   }
 
   declare interface AnimationAction {
+    crossFadeTo(AnimationAction, durationInSeconds: number): AnimationAction;
+
     play(): void;
   }
 
@@ -124,6 +126,7 @@ declare module 'three' {
 
   declare interface MeshPhongMaterial extends Material {
     constructor({|
+      color?: number,
       map?: Texture,
     |}): void;
   }
@@ -165,6 +168,10 @@ declare module 'three' {
     ): void;
   }
 
+  declare interface PlaneGeometry extends Geometry {
+    constructor(width: number, height: number, widthSegments: number, heightSegments: number): void;
+  }
+
   declare interface PointLight extends Light {
     +isPointLight: true;
     +position: Vector3;
@@ -191,6 +198,10 @@ declare module 'three' {
     add(Object3D): void;
 
     remove(Object3D): void;
+  }
+
+  declare interface SpotLight extends Light {
+    constructor(color?: number): void;
   }
 
   declare interface Texture extends Geometry {
@@ -239,6 +250,7 @@ declare module 'three' {
     MeshPhongMaterial: MeshPhongMaterial,
     LoadingManager: LoadingManager,
     PerspectiveCamera: PerspectiveCamera,
+    PlaneGeometry: PlaneGeometry,
     PointLight: PointLight,
     RepeatWrapping: RepeatWrapping,
     Scene: Scene,

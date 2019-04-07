@@ -26,6 +26,9 @@ export default class SceneManager implements SceneManagerInterface {
       alpha: true,
       canvas: canvas
     });
+    // renderer.shadowMap.enabled = true;
+    // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
     this.renderer = renderer;
 
     this.mainLoop.setDraw(interpolationPercentage => {
