@@ -1,8 +1,9 @@
 // @flow
 
+import * as THREE from "three";
 import autoBind from "auto-bind";
 import clamp from "clamp";
-import * as THREE from "three";
+import {Howl} from 'howler';
 
 import FBXLoader from "../three/FBXLoader";
 
@@ -28,9 +29,16 @@ export default class CanvasLocationComplex implements CanvasController {
   };
   guy: ?THREE.Object3D;
   mixer: ?THREE.AnimationMixer;
+  sound: any;
 
   constructor(threeLoadingManager: THREE.LoadingManager) {
     autoBind(this);
+
+    this.sound = new Howl({
+      src: [
+        '/assets/track-crusade.mp3',
+      ]
+    });
 
     this.actions = {};
     this.keys = {};
@@ -77,6 +85,8 @@ export default class CanvasLocationComplex implements CanvasController {
   async attach(renderer: THREE.WebGLRenderer): Promise<void> {
     document.addEventListener("keydown", this.onKeyDown);
     document.addEventListener("keyup", this.onKeyUp);
+
+    // this.sound.play();
 
     // const guy = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
     const guy = await new Promise((resolve, reject) => {
@@ -127,6 +137,8 @@ export default class CanvasLocationComplex implements CanvasController {
     document.removeEventListener("keyup", this.onKeyUp);
 
     const guy = this.guy;
+
+    // this.sound.stop();
 
     if (guy) {
       this.scene.remove(guy);
