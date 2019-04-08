@@ -177,11 +177,7 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   end(fps: number, isPanicked: boolean): void {
-    const state = this.debug.getState();
-
-    this.debug.setState(
-      state.set(this.loggerBreadcrumbs.add("end").add("fps"), fps)
-    );
+    this.debug.updateState(this.loggerBreadcrumbs.add("end").add("fps"), fps);
   }
 
   onKeyDown(evt: KeyboardEvent) {

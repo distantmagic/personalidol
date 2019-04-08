@@ -41,4 +41,13 @@ export default class Debugger implements DebuggerInterface {
       callback(state);
     }
   }
+
+  updateState(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    value: DebuggerStateValue
+  ): void {
+    const state = this.getState();
+
+    return this.setState(state.set(loggerBreadcrumbs, value));
+  }
 }

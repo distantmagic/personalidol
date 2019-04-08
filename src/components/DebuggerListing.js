@@ -20,6 +20,10 @@ export default React.memo<Props>(function DebuggerListing(props: Props) {
 
   React.useEffect(
     function() {
+      if (!debuggerElement) {
+        return;
+      }
+
       const debug = props.debug;
 
       debug.onStateChange(setDebuggetState);
@@ -28,7 +32,7 @@ export default React.memo<Props>(function DebuggerListing(props: Props) {
         debug.offStateChange(setDebuggetState);
       };
     },
-    [props.debug]
+    [debuggerElement, props.debug]
   );
 
   if (!debuggerElement || debuggerState.isEmpty()) {
