@@ -65,6 +65,16 @@ export default class ResourcesLoadingState
     itemsLoaded: number,
     itemsTotal: number
   ): ResourcesLoadingStateInterface {
-    return new ResourcesLoadingState(itemsLoaded, itemsTotal, this.error);
+    const updated = new ResourcesLoadingState(
+      itemsLoaded,
+      itemsTotal,
+      this.error
+    );
+
+    if (this.isEqual(updated)) {
+      return this;
+    }
+
+    return updated;
   }
 }

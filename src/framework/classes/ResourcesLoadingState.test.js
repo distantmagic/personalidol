@@ -76,6 +76,13 @@ it("is immutable", () => {
   expect(state1).not.toBe(state2);
 });
 
+it("is immutable and preserves objects", () => {
+  const state1 = new ResourcesLoadingState(2, 10);
+  const state2 = state1.setProgress(2, 10);
+
+  expect(state1).toBe(state2);
+});
+
 it("throws when arguments make no sense", () => {
   expect(function() {
     new ResourcesLoadingState(10, 2);
