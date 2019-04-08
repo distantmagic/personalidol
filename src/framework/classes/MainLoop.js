@@ -19,6 +19,10 @@ let instance;
 
 export default class MainLoop implements MainLoopInterface {
   static getInstance(): MainLoop {
+    if (!instance) {
+      instance = new MainLoop();
+    }
+
     return instance;
   }
 
@@ -60,12 +64,15 @@ export default class MainLoop implements MainLoopInterface {
     VendorMainLoop.setEnd(callback);
   }
 
+  setMaxAllowedFPS(fps: number): void {
+    VendorMainLoop.setMaxAllowedFPS(fps);
+  }
+
   setUpdate(callback: UpdateCallback): void {
     VendorMainLoop.setUpdate(callback);
   }
 
   start(): void {
-    VendorMainLoop.setMaxAllowedFPS(30);
     VendorMainLoop.start();
   }
 
@@ -73,6 +80,3 @@ export default class MainLoop implements MainLoopInterface {
     VendorMainLoop.stop();
   }
 }
-
-// https://11xnewride.com/tutorials/javascript/how-to-make-javascript-singleton
-instance = new MainLoop();

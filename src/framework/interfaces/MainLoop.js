@@ -21,6 +21,8 @@ export interface MainLoop {
 
   setEnd(EndCallback): void;
 
+  setMaxAllowedFPS(number): void;
+
   setUpdate(UpdateCallback): void;
 
   start(): void;

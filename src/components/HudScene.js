@@ -12,6 +12,7 @@ import SceneManager from "../framework/classes/SceneManager";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
+import type { FPSAdaptive } from "../framework/interfaces/FPSAdaptive";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { MainLoop } from "../framework/interfaces/MainLoop";
 import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../framework/interfaces/ResourcesLoadingState";
@@ -20,6 +21,7 @@ import type { SceneManager as SceneManagerInterface } from "../framework/interfa
 type Props = {|
   debug: Debugger,
   exceptionHandler: ExceptionHandler,
+  fpsAdaptive: FPSAdaptive,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   mainLoop: MainLoop
 |};
@@ -46,6 +48,7 @@ export default React.memo<Props>(function HudScene(props: Props) {
           props.mainLoop,
           new CanvasLocationComplex(
             threeLoadingManager,
+            props.fpsAdaptive,
             props.loggerBreadcrumbs.add("CanvasLocationComplex"),
             props.debug
           )

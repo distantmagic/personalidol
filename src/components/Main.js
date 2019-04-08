@@ -11,6 +11,7 @@ import DialogueLoader from "./DialogueLoader";
 import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
+import FPSAdaptive from "../framework/classes/FPSAdaptive";
 import HudAside from "./HudAside";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
@@ -39,6 +40,7 @@ export default function Main(props: Props) {
   );
   const [expressionBus] = React.useState(new ExpressionBus());
   const [expressionContext] = React.useState(new ExpressionContext());
+  const [fpsAdaptive] = React.useState(new FPSAdaptive());
   const [isDocumentHidden, setIsDocumentHidden] = React.useState(
     document.hidden
   );
@@ -76,6 +78,14 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
+      fpsAdaptive.setExpectedFPS(30);
+      mainLoop.setMaxAllowedFPS(30);
+    },
+    [mainLoop]
+  );
+
+  React.useEffect(
+    function() {
       const cancelToken = new CancelToken();
 
       queryBusController.interval(cancelToken);
@@ -105,6 +115,7 @@ export default function Main(props: Props) {
           <HudScene
             debug={debug}
             exceptionHandler={props.exceptionHandler}
+            fpsAdaptive={fpsAdaptive}
             loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
             mainLoop={mainLoop}
           />
