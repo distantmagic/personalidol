@@ -6,7 +6,7 @@ import HudToolbarScrollbar from "./HudToolbarScrollbar";
 
 type Props = {||};
 
-export default function HudToolbar(props: Props) {
+export default React.memo<Props>(function HudToolbar(props: Props) {
   return (
     <HudToolbarScrollbar
       className="dd__frame dd__toolbar dd__toolbar--hud"
@@ -36,4 +36,4 @@ export default function HudToolbar(props: Props) {
       <div className="dd__toolbar__scroll-indicator" />
     </HudToolbarScrollbar>
   );
-}
+});

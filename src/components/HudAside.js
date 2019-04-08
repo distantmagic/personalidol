@@ -6,7 +6,7 @@ import HudAsidePortrait from "./HudAsidePortrait";
 
 type Props = {||};
 
-export default function HudAside(props: Props) {
+export default React.memo<Props>(function HudAside(props: Props) {
   return (
     <div className="dd__aside dd__aside--hud dd__frame">
       <HudAsidePortrait
@@ -26,4 +26,4 @@ export default function HudAside(props: Props) {
       />
     </div>
   );
-}
+});

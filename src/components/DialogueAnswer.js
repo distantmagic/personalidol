@@ -16,8 +16,8 @@ type Props = {|
 |};
 
 export default function DialogueAnswer(props: Props) {
-  const [actor, setActor] = React.useState(null);
-  const [prompt, setPrompt] = React.useState(null);
+  const [actor, setActor] = React.useState<?string>(null);
+  const [prompt, setPrompt] = React.useState<?string>(null);
 
   React.useEffect(
     function() {

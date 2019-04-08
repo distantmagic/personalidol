@@ -7,7 +7,7 @@ import { default as DialogueClass } from "../framework/classes/Dialogue";
 import { default as DialogueTurnComponent } from "./DialogueTurn";
 
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
-// import type { DialogueTurn } from "../framework/interfaces/DialogueTurn";
+import type { DialogueTurn } from "../framework/interfaces/DialogueTurn";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Identifiable } from "../framework/interfaces/Identifiable";
 import type { Logger } from "../framework/interfaces/Logger";
@@ -20,11 +20,11 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  onDialogueEnd: () => any
+  onDialogueEnd: boolean => any
 |};
 
 export default function Dialogue(props: Props) {
-  const [dialogueTurn, setDialogueTurn] = React.useState(null);
+  const [dialogueTurn, setDialogueTurn] = React.useState<?DialogueTurn>(null);
 
   async function onAnswerClick(message: DialogueMessage): Promise<void> {
     if (!dialogueTurn) {
@@ -37,7 +37,7 @@ export default function Dialogue(props: Props) {
       setDialogueTurn(nextDialogueTurn);
     } else {
       setDialogueTurn(null);
-      props.onDialogueEnd();
+      props.onDialogueEnd(true);
     }
   }
 

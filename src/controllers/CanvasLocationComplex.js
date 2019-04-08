@@ -30,10 +30,16 @@ export default class CanvasLocationComplex implements CanvasController {
   };
   guy: ?THREE.Object3D;
   mixer: ?THREE.AnimationMixer;
+  setDebuggerState: any;
   sound: Howl;
 
-  constructor(threeLoadingManager: THREE.LoadingManager) {
+  constructor(
+    threeLoadingManager: THREE.LoadingManager,
+    setDebuggerState: ({ [string]: number | string }) => void
+  ) {
     autoBind(this);
+
+    this.setDebuggerState = setDebuggerState;
 
     this.clock = new THREE.Clock();
     this.sound = new Howl({
@@ -91,7 +97,7 @@ export default class CanvasLocationComplex implements CanvasController {
     document.addEventListener("keyup", this.onKeyUp);
 
     this.sound.pos(0, 0, 0);
-    this.sound.play();
+    // this.sound.play();
 
     // const guy = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
     const guy = await new Promise((resolve, reject) => {
@@ -143,7 +149,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
     const guy = this.guy;
 
-    this.sound.stop();
+    // this.sound.stop();
 
     if (guy) {
       this.scene.remove(guy);
@@ -165,7 +171,11 @@ export default class CanvasLocationComplex implements CanvasController {
     renderer.render(this.scene, this.camera);
   }
 
-  end(fps: number, isPanicked: boolean): void {}
+  end(fps: number, isPanicked: boolean): void {
+    this.setDebuggerState({
+      fps: fps
+    });
+  }
 
   onKeyDown(evt: KeyboardEvent) {
     this.keys[evt.key] = true;

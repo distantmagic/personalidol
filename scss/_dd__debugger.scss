@@ -1,0 +1,46 @@
+.dd__debugger {
+  display: block;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: $z-index-dd-debugger;
+}
+
+.dd__debugger__popup {
+  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  border-radius: unset;
+  box-shadow: 0 0 16px black;
+  display: grid;
+  // grid-row-gap: 1rem;
+  grid-template-rows: 1.6rem 1fr;
+  // height: 300px;
+  left: 0;
+  pointer-events: all;
+  position: absolute;
+  top: 0;
+  width: 300px;
+
+  &.dd__debugger__popup--dragging {
+    cursor: $cursor-grabbing;
+    opacity: 0.9;
+
+    .dd__debugger__popup__handle {
+      cursor: $cursor-grabbing;
+    }
+  }
+}
+
+.dd__debugger__popup__content {
+  padding: 0.5rem;
+}
+
+.dd__debugger__popup__handle {
+  align-items: center;
+  cursor: $cursor-grab;
+  display: flex;
+  padding: 0 0.5rem;
+}

@@ -19,10 +19,11 @@ import type { SceneManager as SceneManagerInterface } from "../framework/interfa
 type Props = {|
   exceptionHandler: ExceptionHandler,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  mainLoop: MainLoop
+  mainLoop: MainLoop,
+  setDebuggerState: ({ [string]: number | string }) => any
 |};
 
-export default function HudScene(props: Props) {
+export default React.memo<Props>(function HudScene(props: Props) {
   const [
     resourcesLoadingState,
     setLoadingState
@@ -42,7 +43,7 @@ export default function HudScene(props: Props) {
       setSceneManager(
         new SceneManager(
           props.mainLoop,
-          new CanvasLocationComplex(threeLoadingManager)
+          new CanvasLocationComplex(threeLoadingManager, props.setDebuggerState)
         )
       );
     },
@@ -113,4 +114,4 @@ export default function HudScene(props: Props) {
       sceneManager={sceneManager}
     />
   );
-}
+});

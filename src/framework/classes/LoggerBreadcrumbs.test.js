@@ -22,3 +22,14 @@ it("is immutable", function() {
   expect(breadcrumbsFoo.asString()).toBe("root/foo");
   expect(breadcrumbsFooBar.asString()).toBe("root/foo/bar");
 });
+
+it("is memoized", function() {
+  const breadcrumbs = new LoggerBreadcrumbs();
+
+  const breadcrumbsFoo1 = breadcrumbs.add("foo");
+  const breadcrumbsFoo2 = breadcrumbs.add("foo");
+
+  // this one is important when passed as a React component prop
+  // same object does not cause redraws
+  expect(breadcrumbsFoo1).toBe(breadcrumbsFoo2);
+});

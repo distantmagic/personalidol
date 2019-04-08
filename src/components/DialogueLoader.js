@@ -29,9 +29,9 @@ type Props = {|
   queryBus: QueryBus
 |};
 
-export default function DialogueLoader(props: Props) {
+export default React.memo<Props>(function DialogueLoader(props: Props) {
   const [dialogue, setDialogue] = React.useState(null);
-  const [isDialogueEnded, setIsDialogueEnded] = React.useState(false);
+  const [isDialogueEnded, setIsDialogueEnded] = React.useState<boolean>(false);
 
   React.useEffect(
     function() {
@@ -85,4 +85,4 @@ export default function DialogueLoader(props: Props) {
       loggerBreadcrumbs={props.loggerBreadcrumbs.add("Dialogue")}
     />
   );
-}
+});

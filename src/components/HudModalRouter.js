@@ -17,7 +17,7 @@ type Props = {|
   queryBus: QueryBus
 |};
 
-export default function HudModalRouter(props: Props) {
+export default React.memo<Props>(function HudModalRouter(props: Props) {
   return (
     <HashRouter>
       <Route
@@ -35,4 +35,4 @@ export default function HudModalRouter(props: Props) {
       />
     </HashRouter>
   );
-}
+});

@@ -26,7 +26,9 @@ function updateScrollDelta(ref: HTMLElement, delta: number): void {
 }
 
 export default function HudToolbarScrollbar(props: Props) {
-  const [containerElement, setContainerElement] = React.useState(null);
+  const [containerElement, setContainerElement] = React.useState<?HTMLElement>(
+    null
+  );
 
   React.useEffect(
     function() {

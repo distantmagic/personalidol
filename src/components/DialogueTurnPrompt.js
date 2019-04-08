@@ -19,7 +19,7 @@ type Props = {|
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
-  onDialogueEnd: () => any,
+  onDialogueEnd: boolean => any,
   prompt: string
 |};
 
@@ -27,7 +27,7 @@ export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
   function onDialogueEndClick(evt: SyntheticEvent<any>): void {
     evt.preventDefault();
 
-    props.onDialogueEnd();
+    props.onDialogueEnd(true);
   }
 
   return (

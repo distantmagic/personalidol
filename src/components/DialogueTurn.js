@@ -21,7 +21,7 @@ type Props = {|
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
-  onDialogueEnd: () => any
+  onDialogueEnd: boolean => any
 |};
 
 function updateScrollDelta(
@@ -39,8 +39,10 @@ function updateScrollDelta(
 }
 
 function useScrollPercentageState() {
-  const [scrollPercentage, setScrollPercentage] = React.useState(0);
-  const [containerElement, setContainerElement] = React.useState(null);
+  const [scrollPercentage, setScrollPercentage] = React.useState<number>(0);
+  const [containerElement, setContainerElement] = React.useState<?HTMLElement>(
+    null
+  );
 
   React.useEffect(
     function() {

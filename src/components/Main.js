@@ -5,6 +5,7 @@ import classnames from "classnames";
 
 import BusClock from "../framework/classes/BusClock";
 import CancelToken from "../framework/classes/CancelToken";
+import Debugger from "./Debugger";
 import DialogueLoader from "./DialogueLoader";
 import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import ExpressionBus from "../framework/classes/ExpressionBus";
@@ -30,6 +31,15 @@ type Props = {|
 |};
 
 export default function Main(props: Props) {
+  const [debuggerState, setDebuggerState] = React.useState<{
+    [string]: number | string
+  }>({
+    fps: 0
+  });
+  const [dialogueInitiator] = React.useState(new Person("Laelaps"));
+  const [dialogueResourceReference] = React.useState(
+    new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
+  );
   const [expressionBus] = React.useState(new ExpressionBus());
   const [expressionContext] = React.useState(new ExpressionContext());
   const [isDocumentHidden, setIsDocumentHidden] = React.useState(
@@ -81,38 +91,40 @@ export default function Main(props: Props) {
   );
 
   return (
-    <div className={classnames("dd__container", "dd__hud")}>
-      <HudAside />
-      <DialogueLoader
-        dialogueResourceReference={
-          new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
-        }
-        dialogueInitiator={new Person("Laelaps")}
-        exceptionHandler={props.exceptionHandler}
-        expressionBus={expressionBus}
-        expressionContext={expressionContext}
-        logger={props.logger}
-        loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
-        queryBus={queryBus}
-      />
-      {!isDocumentHidden && (
-        <HudScene
+    <React.Fragment>
+      <div className={classnames("dd__container", "dd__hud")}>
+        <HudAside />
+        <DialogueLoader
+          dialogueResourceReference={dialogueResourceReference}
+          dialogueInitiator={dialogueInitiator}
           exceptionHandler={props.exceptionHandler}
-          loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
-          mainLoop={mainLoop}
+          expressionBus={expressionBus}
+          expressionContext={expressionContext}
+          logger={props.logger}
+          loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
+          queryBus={queryBus}
         />
-      )}
-      <div className="dd__frame dd__statusbar dd__statusbar--hud">
-        Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
-        będzie przyjaźnie nastawiony.
+        {!isDocumentHidden && (
+          <HudScene
+            exceptionHandler={props.exceptionHandler}
+            loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
+            mainLoop={mainLoop}
+            setDebuggerState={setDebuggerState}
+          />
+        )}
+        <div className="dd__frame dd__statusbar dd__statusbar--hud">
+          Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
+          będzie przyjaźnie nastawiony.
+        </div>
+        <HudToolbar />
+        <HudModalRouter
+          exceptionHandler={props.exceptionHandler}
+          logger={props.logger}
+          loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")}
+          queryBus={queryBus}
+        />
       </div>
-      <HudToolbar />
-      <HudModalRouter
-        exceptionHandler={props.exceptionHandler}
-        logger={props.logger}
-        loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")}
-        queryBus={queryBus}
-      />
-    </div>
+      <Debugger debuggerState={debuggerState} />
+    </React.Fragment>
   );
 }

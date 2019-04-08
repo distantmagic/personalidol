@@ -18,9 +18,9 @@ type Props = {|
 |};
 
 export default function HudSceneCanvas(props: Props) {
-  const [scene, setScene] = React.useState(null);
-  const [isAttaching, setIsAttaching] = React.useState(true);
-  const [canvas, setCanvas] = React.useState(null);
+  const [canvas, setCanvas] = React.useState<?HTMLCanvasElement>(null);
+  const [isAttaching, setIsAttaching] = React.useState<boolean>(true);
+  const [scene, setScene] = React.useState<?HTMLElement>(null);
 
   React.useEffect(
     function() {
