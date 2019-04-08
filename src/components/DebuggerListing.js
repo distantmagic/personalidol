@@ -44,12 +44,12 @@ export default React.memo<Props>(function DebuggerListing(props: Props) {
       }}
       handle=".dd__debugger__popup__handle"
     >
-      <div className="dd__debugger__popup dd__frame dd__frame--status">
-        <div className="dd__debugger__popup__handle dd__frame">
+      <div className="dd__frame dd__debugger__popup">
+        <div className="dd__debugger__popup__handle">
           Debugger State Listing
         </div>
         <div className="dd__debugger__popup__content">
-          <table>
+          <table className="dd__table">
             <tbody>
               {debuggerState.toArray().map(([breadcrumbs, value]) => (
                 <tr key={breadcrumbs.asString()}>

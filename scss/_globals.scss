@@ -237,6 +237,47 @@ button {
     url("/assets/texture-cod-gray-marble-512.png");
 }
 
+.dd__table {
+  // background-image: url("/assets/image-nobody-knows-anybody.png"),
+  //   url("/assets/texture-navy-blue-marble-512.jpg");
+  // background-blend-mode: multiply;
+  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  // background-position: 100% 100%, center;
+  // background-repeat: no-repeat, repeat;
+  background-repeat: repeat;
+  // background-size: contain, auto;
+  background-size: auto;
+  border-collapse: collapse;
+  // margin: 1rem 0;
+  table-layout: fixed;
+  // width: 100%;
+
+  td,
+  th {
+    border: 1px solid white;
+    border-color: rgba(55, 55, 55, 0.4);
+    border-style: outset;
+    border-width: $dd-frame-border-width + 1px;
+    overflow: hidden;
+    padding: #{2 * $dd-frame-padding} $dd-frame-padding;
+
+    &:last-child {
+      border-right-color: rgb(35, 35, 35);
+      border-right-style: solid;
+      border-right-width: 1px;
+    }
+  }
+
+  tr:last-child {
+    td,
+    th {
+      border-bottom-color: rgb(35, 35, 35);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+    }
+  }
+}
+
 .dd__tooltip {
   align-items: center;
   background-color: rgba(black, 0.85);

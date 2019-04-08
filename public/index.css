@@ -534,6 +534,31 @@ button {
 .dd__frame.dd__frame--tab:not(.dd__frame--active) {
   background-image: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.3)), url("/assets/texture-cod-gray-marble-512.png"); }
 
+.dd__table {
+  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  background-repeat: repeat;
+  background-size: auto;
+  border-collapse: collapse;
+  table-layout: fixed; }
+  .dd__table td,
+  .dd__table th {
+    border: 1px solid white;
+    border-color: rgba(55, 55, 55, 0.4);
+    border-style: outset;
+    border-width: 3px;
+    overflow: hidden;
+    padding: 12px 6px; }
+    .dd__table td:last-child,
+    .dd__table th:last-child {
+      border-right-color: #232323;
+      border-right-style: solid;
+      border-right-width: 1px; }
+  .dd__table tr:last-child td,
+  .dd__table tr:last-child th {
+    border-bottom-color: #232323;
+    border-bottom-style: solid;
+    border-bottom-width: 1px; }
+
 .dd__tooltip {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.85);
@@ -859,11 +884,9 @@ button {
   z-index: 6; }
 
 .dd__debugger__popup {
-  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
-  border-radius: unset;
   box-shadow: 0 0 16px black;
   display: grid;
-  grid-template-rows: 1.6rem 1fr;
+  grid-template-rows: 2rem 1fr;
   left: 0;
   min-width: 300px;
   pointer-events: all;
@@ -874,9 +897,6 @@ button {
     opacity: 0.9; }
     .dd__debugger__popup.dd__debugger__popup--dragging .dd__debugger__popup__handle {
       cursor: url("/assets/cursor-rpg-hand-grabbing-32-48.png") 3 4, grabbing; }
-
-.dd__debugger__popup__content {
-  padding: 0.5rem; }
 
 .dd__debugger__popup__handle {
   align-items: center;
@@ -1124,44 +1144,6 @@ button {
 .dd__scene.dd__scene--text {
   overflow-y: auto;
   padding: 1rem; }
-
-.scene__interactions {
-  background-image: url("/assets/image-nobody-knows-anybody.png"), url("/assets/texture-navy-blue-marble-512.jpg");
-  background-blend-mode: multiply;
-  background-position: 100% 100%, center;
-  background-repeat: no-repeat, repeat;
-  background-size: contain, auto;
-  border-collapse: collapse;
-  margin: 1rem 0;
-  table-layout: fixed;
-  width: 100%; }
-  .scene__interactions td,
-  .scene__interactions th {
-    border: 1px solid white;
-    border-color: rgba(55, 55, 55, 0.4);
-    border-style: outset;
-    border-width: 3px;
-    overflow: hidden;
-    padding: 12px 6px; }
-    .scene__interactions td:last-child,
-    .scene__interactions th:last-child {
-      border-right-color: #232323;
-      border-right-style: solid;
-      border-right-width: 1px; }
-  .scene__interactions tr:last-child td,
-  .scene__interactions tr:last-child th {
-    border-bottom-color: #232323;
-    border-bottom-style: solid;
-    border-bottom-width: 1px; }
-
-.scene__interactions__entity-header {
-  width: 30%; }
-
-.scene__interactions__interaction-header {
-  width: 10%; }
-
-.scene__interactions__state-header {
-  width: 10%; }
 
 .dd__statusbar {
   align-items: center;

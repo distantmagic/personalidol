@@ -27,60 +27,24 @@ export default function HudSceneLocationRoom(props: Props) {
           </p>
         </div>
         <h2 className="dd-tp__heading-h2">Dostępne interakcje</h2>
-        <table className="scene__interactions">
+        <table className="dd__table">
           <thead>
             <tr>
-              <th
-                className="scene__interactions__entity-header"
-                rowSpan="2"
-                scope="col"
-              >
+              <th rowSpan="2" scope="col">
                 Encja
               </th>
-              <th className="scene__interactions__state-header" rowSpan="2">
-                Stan
-              </th>
+              <th rowSpan="2">Stan</th>
               <th colSpan="6" scope="col">
                 Działanie
               </th>
             </tr>
             <tr>
-              <th
-                className="scene__interactions__interaction-header"
-                scope="col"
-              >
-                Rozmowa
-              </th>
-              <th
-                className="scene__interactions__interaction-header"
-                scope="col"
-              >
-                Brutalna siła
-              </th>
-              <th
-                className="scene__interactions__interaction-header"
-                scope="col"
-              >
-                Czar
-              </th>
-              <th
-                className="scene__interactions__interaction-header"
-                scope="col"
-              >
-                Modlitwa
-              </th>
-              <th
-                className="scene__interactions__interaction-header"
-                scope="col"
-              >
-                Ekwipunek
-              </th>
-              <th
-                className="scene__interactions__interaction-header"
-                scope="col"
-              >
-                Umiejętność specjalna
-              </th>
+              <th scope="col">Rozmowa</th>
+              <th scope="col">Brutalna siła</th>
+              <th scope="col">Czar</th>
+              <th scope="col">Modlitwa</th>
+              <th scope="col">Ekwipunek</th>
+              <th scope="col">Umiejętność specjalna</th>
             </tr>
           </thead>
           <tbody>
