@@ -33,3 +33,13 @@ it("is memoized", function() {
   // same object does not cause redraws
   expect(breadcrumbsFoo1).toBe(breadcrumbsFoo2);
 });
+
+it("is memoized and distinguishes branches", function() {
+  const breadcrumbs = new LoggerBreadcrumbs();
+
+  const breadcrumbsFoo1 = breadcrumbs.add("foo");
+  const breadcrumbsFoo2 = breadcrumbs.add("bar");
+
+  expect(breadcrumbsFoo2.asString()).toBe("root/bar");
+  expect(breadcrumbsFoo1).not.toBe(breadcrumbsFoo2);
+});

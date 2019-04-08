@@ -865,10 +865,10 @@ button {
   display: grid;
   grid-template-rows: 1.6rem 1fr;
   left: 0;
+  min-width: 300px;
   pointer-events: all;
   position: absolute;
-  top: 0;
-  width: 300px; }
+  top: 0; }
   .dd__debugger__popup.dd__debugger__popup--dragging {
     cursor: url("/assets/cursor-rpg-hand-grabbing-32-48.png") 3 4, grabbing;
     opacity: 0.9; }

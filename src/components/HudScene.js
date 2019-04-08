@@ -10,6 +10,7 @@ import ResourceLoadError from "../framework/classes/Exception/ResourceLoadError"
 import ResourcesLoadingState from "../framework/classes/ResourcesLoadingState";
 import SceneManager from "../framework/classes/SceneManager";
 
+import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { MainLoop } from "../framework/interfaces/MainLoop";
@@ -17,10 +18,10 @@ import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "..
 import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
 
 type Props = {|
+  debug: Debugger,
   exceptionHandler: ExceptionHandler,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  mainLoop: MainLoop,
-  setDebuggerState: ({ [string]: number | string }) => any
+  mainLoop: MainLoop
 |};
 
 export default React.memo<Props>(function HudScene(props: Props) {
@@ -43,7 +44,11 @@ export default React.memo<Props>(function HudScene(props: Props) {
       setSceneManager(
         new SceneManager(
           props.mainLoop,
-          new CanvasLocationComplex(threeLoadingManager, props.setDebuggerState)
+          new CanvasLocationComplex(
+            threeLoadingManager,
+            props.loggerBreadcrumbs.add("CanvasLocationComplex"),
+            props.debug
+          )
         )
       );
     },

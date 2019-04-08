@@ -8,6 +8,8 @@ import { Howl, Howler } from "howler";
 import FBXLoader from "../three/FBXLoader";
 
 import type { CanvasController } from "../framework/interfaces/CanvasController";
+import type { Debugger } from "../framework/interfaces/Debugger";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { ElementSize } from "../framework/interfaces/ElementSize";
 
 const planeSide = 128;
@@ -15,11 +17,14 @@ const planeSide = 128;
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;
   +clock: THREE.Clock;
+  +debug: Debugger;
   +geometry: THREE.Geometry;
   +light: THREE.SpotLight;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +material: THREE.Material;
   +mesh: THREE.Mesh;
   +scene: THREE.Scene;
+  +sound: Howl;
   +texture: THREE.Texture;
   +threeLoadingManager: THREE.LoadingManager;
   actions: {
@@ -30,16 +35,16 @@ export default class CanvasLocationComplex implements CanvasController {
   };
   guy: ?THREE.Object3D;
   mixer: ?THREE.AnimationMixer;
-  setDebuggerState: any;
-  sound: Howl;
 
   constructor(
     threeLoadingManager: THREE.LoadingManager,
-    setDebuggerState: ({ [string]: number | string }) => void
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    debug: Debugger
   ) {
     autoBind(this);
 
-    this.setDebuggerState = setDebuggerState;
+    this.debug = debug;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
 
     this.clock = new THREE.Clock();
     this.sound = new Howl({
@@ -172,9 +177,11 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   end(fps: number, isPanicked: boolean): void {
-    this.setDebuggerState({
-      fps: fps
-    });
+    const state = this.debug.getState();
+
+    this.debug.setState(
+      state.set(this.loggerBreadcrumbs.add("end").add("fps"), fps)
+    );
   }
 
   onKeyDown(evt: KeyboardEvent) {

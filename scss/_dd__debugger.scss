@@ -19,10 +19,10 @@
   grid-template-rows: 1.6rem 1fr;
   // height: 300px;
   left: 0;
+  min-width: 300px;
   pointer-events: all;
   position: absolute;
   top: 0;
-  width: 300px;
 
   &.dd__debugger__popup--dragging {
     cursor: $cursor-grabbing;

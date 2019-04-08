@@ -5,7 +5,8 @@ import classnames from "classnames";
 
 import BusClock from "../framework/classes/BusClock";
 import CancelToken from "../framework/classes/CancelToken";
-import Debugger from "./Debugger";
+import Debugger from "../framework/classes/Debugger";
+import DebuggerListing from "./DebuggerListing";
 import DialogueLoader from "./DialogueLoader";
 import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import ExpressionBus from "../framework/classes/ExpressionBus";
@@ -31,11 +32,7 @@ type Props = {|
 |};
 
 export default function Main(props: Props) {
-  const [debuggerState, setDebuggerState] = React.useState<{
-    [string]: number | string
-  }>({
-    fps: 0
-  });
+  const [debug] = React.useState<Debugger>(new Debugger());
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState(
     new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
@@ -106,10 +103,10 @@ export default function Main(props: Props) {
         />
         {!isDocumentHidden && (
           <HudScene
+            debug={debug}
             exceptionHandler={props.exceptionHandler}
             loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
             mainLoop={mainLoop}
-            setDebuggerState={setDebuggerState}
           />
         )}
         <div className="dd__frame dd__statusbar dd__statusbar--hud">
@@ -124,7 +121,7 @@ export default function Main(props: Props) {
           queryBus={queryBus}
         />
       </div>
-      <Debugger debuggerState={debuggerState} />
+      <DebuggerListing debug={debug} />
     </React.Fragment>
   );
 }

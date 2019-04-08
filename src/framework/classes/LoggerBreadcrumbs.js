@@ -15,17 +15,17 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
   }
 
   add(breadcrumb: string): LoggerBreadcrumbsInterface {
-    const asString = this.asString();
+    const added = new LoggerBreadcrumbs(
+      this.breadcrumbs.concat(breadcrumb),
+      this.loggerBreadCrumbsMemo
+    );
+
+    const asString = added.asString();
     const memoized = this.loggerBreadCrumbsMemo.get(asString);
 
     if (memoized) {
       return memoized;
     }
-
-    const added = new LoggerBreadcrumbs(
-      this.breadcrumbs.concat(breadcrumb),
-      this.loggerBreadCrumbsMemo
-    );
 
     this.loggerBreadCrumbsMemo.set(asString, added);
 
@@ -34,5 +34,9 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
 
   asString(): string {
     return this.breadcrumbs.join("/");
+  }
+
+  isEqual(other: LoggerBreadcrumbsInterface): boolean {
+    return this.asString() === other.asString();
   }
 }
