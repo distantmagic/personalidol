@@ -47,6 +47,7 @@ export default class CanvasLocationComplex implements CanvasController {
     autoBind(this);
 
     this.debug = debug;
+    this.fpsAdaptive = fpsAdaptive;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
 
     this.clock = new THREE.Clock();
