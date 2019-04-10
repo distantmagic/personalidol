@@ -54,7 +54,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.sound = new Howl({
       distanceModel: "exponential",
       loop: true,
-      rolloffFactor: 0.5,
+      rolloffFactor: 0.2,
       src: ["/assets/track-lithium.mp3"]
       // volume: 0.1,
     });
@@ -97,6 +97,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.position.set(0, 2, 0);
 
+    // this.light = new THREE.HemisphereLight(0xffffbb, 0x080820);
     this.light = new THREE.SpotLight(0xffffff);
     this.light.position.set(planeSide / 2, planeSide / 2, planeSide / 2);
   }
@@ -105,14 +106,14 @@ export default class CanvasLocationComplex implements CanvasController {
     document.addEventListener("keydown", this.onKeyDown);
     document.addEventListener("keyup", this.onKeyUp);
 
-    this.sound.pos(0, 0, 0);
+    // this.sound.pos(0, 0, 0);
     // this.sound.play();
 
     // const guy = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
     const guy = await new Promise((resolve, reject) => {
       const loader = new FBXLoader(this.threeLoadingManager);
 
-      loader.load("/assets/mesh-lp-guy.fbx", resolve, null, reject);
+      loader.load("/assets/mesh-mouse.fbx", resolve, null, reject);
     });
 
     this.guy = guy;
@@ -121,11 +122,11 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.mixer = mixer;
 
-    this.actions.idle = mixer.clipAction(guy.animations[2]);
-    this.actions.run = mixer.clipAction(guy.animations[8]);
+    // this.actions.idle = mixer.clipAction(guy.animations[2]);
+    // this.actions.run = mixer.clipAction(guy.animations[8]);
 
-    this.actions.current = mixer.clipAction(guy.animations[2]);
-    this.actions.current.play();
+    // this.actions.current = mixer.clipAction(guy.animations[2]);
+    // this.actions.current.play();
 
     // // guy.traverse( function ( child ) {
     // //   if ( child.isMesh ) {
@@ -133,7 +134,7 @@ export default class CanvasLocationComplex implements CanvasController {
     // //   }
     // } );
     guy.position.set(0, 0, 0);
-    guy.scale.set(0.05, 0.05, 0.05);
+    guy.scale.set(0.1, 0.1, 0.1);
 
     this.scene.add(guy);
     this.scene.add(this.mesh);
@@ -199,8 +200,8 @@ export default class CanvasLocationComplex implements CanvasController {
     const width = elementSize.getWidth();
 
     this.camera.left = (-1 * width) / zoom;
-    this.camera.far = 84;
-    this.camera.near = -15;
+    this.camera.far = 95;
+    this.camera.near = -25;
     this.camera.right = width / zoom;
     this.camera.top = height / zoom;
     this.camera.bottom = (-1 * height) / zoom;
@@ -208,17 +209,15 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   idle(): void {
-    this.actions.run.play();
-    this.actions.idle.play();
-
-    this.actions.current.crossFadeTo(this.actions.idle, 0.3);
+    // this.actions.run.play();
+    // this.actions.idle.play();
+    // this.actions.current.crossFadeTo(this.actions.idle, 0.3);
   }
 
   run(): void {
-    this.actions.run.play();
-    this.actions.idle.play();
-
-    this.actions.current.crossFadeTo(this.actions.run, 0.3);
+    // this.actions.run.play();
+    // this.actions.idle.play();
+    // this.actions.current.crossFadeTo(this.actions.run, 0.3);
   }
 
   update(delta: number): void {

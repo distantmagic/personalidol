@@ -40,11 +40,11 @@ export default function Main(props: Props) {
   );
   const [expressionBus] = React.useState(new ExpressionBus());
   const [expressionContext] = React.useState(new ExpressionContext());
-  const [fpsAdaptive] = React.useState(new FPSAdaptive());
   const [isDocumentHidden, setIsDocumentHidden] = React.useState(
     document.hidden
   );
   const [mainLoop] = React.useState(MainLoop.getInstance());
+  const [fpsAdaptive] = React.useState(new FPSAdaptive(mainLoop));
   const [queryBus] = React.useState(new QueryBus());
   const [queryBusController] = React.useState(
     new QueryBusController(new BusClock(), queryBus)
@@ -78,10 +78,9 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
-      const maxAllowedFPS = 30;
+      const maxAllowedFPS = 50;
 
       fpsAdaptive.setExpectedFPS(maxAllowedFPS);
-      mainLoop.setMaxAllowedFPS(maxAllowedFPS);
     },
     [mainLoop]
   );
