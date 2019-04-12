@@ -12,8 +12,8 @@ type Total = {
 };
 
 class Foo implements Query<number> {
-  reference: number;
-  total: Total;
+  +reference: number;
+  +total: Total;
 
   constructor(total: Total, reference: number) {
     this.reference = reference;
@@ -31,7 +31,7 @@ class Foo implements Query<number> {
   }
 }
 
-it("executes similar queries only once", async () => {
+it("executes similar queries only once", async function() {
   const cancelToken = new CancelToken();
   const queryBus = new QueryBus();
   const total: Total = {

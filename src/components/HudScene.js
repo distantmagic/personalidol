@@ -118,6 +118,8 @@ export default React.memo<Props>(function HudScene(props: Props) {
 
   return (
     <HudSceneCanvas
+      exceptionHandler={props.exceptionHandler}
+      loggerBreadcrumbs={props.loggerBreadcrumbs}
       resourcesLoadingState={resourcesLoadingState}
       sceneManager={sceneManager}
     />

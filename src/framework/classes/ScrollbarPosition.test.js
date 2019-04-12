@@ -2,7 +2,7 @@
 
 import ScrollbarPosition from "../classes/ScrollbarPosition";
 
-it("orients scroll position", async () => {
+it("orients scroll position", function() {
   const scrollbar = new ScrollbarPosition(1000, 200, 75, 500);
 
   expect(scrollbar.isChanged()).toBe(false);

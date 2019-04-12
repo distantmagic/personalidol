@@ -4,7 +4,7 @@ import DialogueMessage from "./DialogueMessage";
 import ExpressionBus from "./ExpressionBus";
 import ExpressionContext from "./ExpressionContext";
 
-it("determines if message is an answer to something else", async () => {
+it("determines if message is an answer to something else", async function() {
   const context = new ExpressionContext();
   const expressionBus = new ExpressionBus();
 

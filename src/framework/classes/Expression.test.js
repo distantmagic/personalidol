@@ -3,7 +3,7 @@
 import Expression from "./Expression";
 import ExpressionContext from "./ExpressionContext";
 
-it("performs math calculations", () => {
+it("performs math calculations", function() {
   const context = new ExpressionContext();
   const expression = new Expression("{{ 2 + 2 }}", context);
   const result = expression.execute();
@@ -11,7 +11,7 @@ it("performs math calculations", () => {
   expect(result).resolves.toBe("4");
 });
 
-it("uses variables", () => {
+it("uses variables", function() {
   const context = new ExpressionContext({
     foo: 3
   });
@@ -21,10 +21,14 @@ it("uses variables", () => {
   expect(result).resolves.toBe("5");
 });
 
-it("uses objects", () => {
+it("uses objects", function() {
   const context = new ExpressionContext({
     character: {
-      player: () => ({ name: "CHARNAME" })
+      player() {
+        return {
+          name: "CHARNAME"
+        };
+      }
     }
   });
   const expression = new Expression(
@@ -36,12 +40,14 @@ it("uses objects", () => {
   expect(result).resolves.toBe("Greetings CHARNAME");
 });
 
-it("uses promises", () => {
+it("uses promises", function() {
   const context = new ExpressionContext({
     character: {
-      player: () => ({
-        name: Promise.resolve("CHARNAME")
-      })
+      player() {
+        return {
+          name: Promise.resolve("CHARNAME")
+        };
+      }
     }
   });
   const expression = new Expression(
@@ -53,13 +59,19 @@ it("uses promises", () => {
   expect(result).resolves.toBe("Greetings CHARNAME");
 });
 
-it("resolves conditions with promises", () => {
+it("resolves conditions with promises", function() {
   const context = new ExpressionContext({
     character: {
-      player: () => ({
-        aims: () => Promise.resolve(true),
-        knows: () => Promise.resolve(false)
-      })
+      player() {
+        return {
+          aims() {
+            return Promise.resolve(true);
+          },
+          knows() {
+            return Promise.resolve(false);
+          }
+        };
+      }
     }
   });
   const expression = new Expression(

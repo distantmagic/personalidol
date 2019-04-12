@@ -3,7 +3,7 @@
 import BusClock from "./BusClock";
 import CancelToken from "./CancelToken";
 
-it("ticks", async () => {
+it("ticks", async function() {
   let ticks = 0;
   const cancelToken = new CancelToken();
   const clock = new BusClock(20);

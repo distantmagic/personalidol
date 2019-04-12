@@ -16,7 +16,7 @@ class Foo implements Equatable<Foo> {
   }
 }
 
-it("makes collection immutable", () => {
+it("makes collection immutable", function() {
   const collection = new Collection<Foo>();
   const foo = new Foo("test");
 
@@ -27,7 +27,7 @@ it("makes collection immutable", () => {
   expect(newColleciton.includesSimilar(foo)).toBe(true);
 });
 
-it("uses equatable to find objects", () => {
+it("uses equatable to find objects", function() {
   const collection = new Collection<Foo>();
   const foo = new Foo("test");
   const other = new Foo("test");
@@ -35,7 +35,7 @@ it("uses equatable to find objects", () => {
   expect(collection.add(foo).includesSimilar(other)).toBe(true);
 });
 
-it("does not find object", () => {
+it("does not find object", function() {
   const collection = new Collection<Foo>();
   const foo = new Foo("test");
   const other = new Foo("test2");
@@ -43,7 +43,7 @@ it("does not find object", () => {
   expect(collection.add(foo).includesSimilar(other)).toBe(false);
 });
 
-it("returns unique list", () => {
+it("returns unique list", function() {
   const foo1 = new Foo("foo1");
   const foo2 = new Foo("foo1");
   const foo3 = new Foo("foo2");

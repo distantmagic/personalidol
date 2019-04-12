@@ -3,7 +3,7 @@
 import CancelToken from "../classes/CancelToken";
 import timeout from "./timeout";
 
-it("supports cancel token", async () => {
+it("supports cancel token", async function() {
   const cancelToken = new CancelToken();
 
   setTimeout(function() {
@@ -14,9 +14,9 @@ it("supports cancel token", async () => {
   const tick = await timeout(cancelToken, 10000);
 
   expect(tick.isCancelled()).toBeTruthy();
-});
+}, 1000);
 
-it("is immediately stopped with already paused cancel token", async () => {
+it("is immediately stopped with already paused cancel token", async function() {
   const cancelToken = new CancelToken();
 
   cancelToken.cancel();
@@ -24,4 +24,4 @@ it("is immediately stopped with already paused cancel token", async () => {
   const tick = await timeout(cancelToken, 10000);
 
   expect(tick.isCancelled()).toBeTruthy();
-});
+}, 1000);

@@ -9,13 +9,13 @@ import Person from "./Entity/Person";
 
 const testContext = {};
 
-beforeEach(async () => {
+beforeEach(async function() {
   testContext.dialogueScript = await fixtures.dialogue(
     "0001-basic-dialogue.yml"
   );
 });
 
-it("switches dialogue turns", async () => {
+it("switches dialogue turns", async function() {
   const expressionBus = new ExpressionBus();
   const expressionContext = new ExpressionContext();
 

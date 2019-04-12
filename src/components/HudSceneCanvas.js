@@ -8,18 +8,87 @@ import ResizeObserver from "resize-observer-polyfill";
 import CancelToken from "../framework/classes/CancelToken";
 import ElementSize from "../framework/classes/ElementSize";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
+import HudSceneCanvasOverlay from "./HudSceneCanvasOverlay";
 
+import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
+import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { ResourcesLoadingState } from "../framework/interfaces/ResourcesLoadingState";
 import type { SceneManager } from "../framework/interfaces/SceneManager";
 
 type Props = {|
+  exceptionHandler: ExceptionHandler,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   resourcesLoadingState: ResourcesLoadingState,
   sceneManager: SceneManager
 |};
 
+function useScene(props: Props, canvas: ?HTMLCanvasElement) {
+  const [sceneLoadingState, setSceneLoadingState] = React.useState<{|
+    isAttaching: boolean,
+    isFailed: boolean
+  |}>({
+    isAttaching: false,
+    isFailed: false
+  });
+
+  React.useEffect(
+    function() {
+      if (!canvas) {
+        return;
+      }
+
+      const cancelToken = new CancelToken();
+      const sceneManager = props.sceneManager;
+
+      setSceneLoadingState({
+        isAttaching: true,
+        isFailed: false
+      });
+
+      sceneManager
+        .attach(canvas)
+        .then(function() {
+          if (cancelToken.isCancelled()) {
+            return;
+          }
+
+          setSceneLoadingState({
+            isAttaching: false,
+            isFailed: false
+          });
+
+          return sceneManager.loop(cancelToken);
+        })
+        .catch(function(err: Error) {
+          props.exceptionHandler.captureException(
+            props.loggerBreadcrumbs.add("sceneManager.attach.catch"),
+            err
+          );
+
+          if (cancelToken.isCancelled()) {
+            return;
+          }
+
+          setSceneLoadingState({
+            isAttaching: false,
+            isFailed: true
+          });
+        });
+
+      return function() {
+        cancelToken.cancel();
+        sceneManager.detach();
+      };
+    },
+    [props.sceneManager, canvas]
+  );
+
+  return [sceneLoadingState.isFailed, sceneLoadingState.isAttaching];
+}
+
 export default function HudSceneCanvas(props: Props) {
   const [canvas, setCanvas] = React.useState<?HTMLCanvasElement>(null);
-  const [isAttaching, setIsAttaching] = React.useState<boolean>(true);
+  const [isFailed, isAttaching] = useScene(props, canvas);
   const [scene, setScene] = React.useState<?HTMLElement>(null);
 
   React.useEffect(
@@ -53,49 +122,15 @@ export default function HudSceneCanvas(props: Props) {
     [props.sceneManager, scene]
   );
 
-  React.useEffect(
-    function() {
-      if (!canvas) {
-        return;
-      }
-
-      const cancelToken = new CancelToken();
-      const sceneManager = props.sceneManager;
-
-      setIsAttaching(true);
-      sceneManager.attach(canvas).then(function() {
-        if (!cancelToken.isCancelled()) {
-          setIsAttaching(false);
-        }
-        sceneManager.loop(cancelToken);
-      });
-
-      return function() {
-        cancelToken.cancel();
-        sceneManager.detach();
-      };
-    },
-    [props.sceneManager, canvas]
-  );
-
   return (
     <div className="dd__scene dd__scene--hud dd__scene--canvas" ref={setScene}>
-      {props.resourcesLoadingState.isFailed() && (
-        <div className="dd__loader dd__loader--error dd__scene__loader">
-          Failed loading assets.
-        </div>
-      )}
-      {props.resourcesLoadingState.isLoading() && (
-        <div className="dd__loader dd__scene__loader">
-          Loading asset {props.resourcesLoadingState.getItemsLoaded()}
-          {" of "}
-          {props.resourcesLoadingState.getItemsTotal()}
-          ...
-        </div>
-      )}
-      {!props.resourcesLoadingState.isLoading() && isAttaching && (
-        <div className="dd__loader dd__scene__loader">Loading scene...</div>
-      )}
+      <HudSceneCanvasOverlay
+        isFailed={isFailed || props.resourcesLoadingState.isFailed()}
+        isAttaching={isAttaching}
+        isLoading={props.resourcesLoadingState.isLoading()}
+        itemsLoaded={props.resourcesLoadingState.getItemsLoaded()}
+        itemsTotal={props.resourcesLoadingState.getItemsTotal()}
+      />
       <canvas
         className={classnames("dd__scene__canvas", {
           "dd__scene__canvas--attaching": isAttaching,

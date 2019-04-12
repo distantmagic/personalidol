@@ -78,7 +78,7 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
-      const maxAllowedFPS = 50;
+      const maxAllowedFPS = 40;
 
       fpsAdaptive.setExpectedFPS(maxAllowedFPS);
     },

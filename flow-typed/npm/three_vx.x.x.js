@@ -40,7 +40,7 @@ declare module "three" {
   }
 
   declare interface BoxGeometry extends Geometry {
-    parameters: {|
+    +parameters: {|
       depth: number,
       depthSegments: number,
       height: number,
@@ -81,7 +81,7 @@ declare module "three" {
   }
 
   declare interface Geometry {
-    isGeometry: true;
+    +isGeometry: true;
 
     constructor(): void;
 
@@ -90,6 +90,12 @@ declare module "three" {
     scale(x: number, y: number, z: number): Geometry;
 
     translate(x: number, y: number, z: number): Geometry;
+  }
+
+  declare interface Group extends Object3D {
+    +type: "group";
+
+    constructor(): void;
   }
 
   declare interface Light extends Object3D {
@@ -130,9 +136,14 @@ declare module "three" {
   }
 
   declare interface Object3D {
+    +children: Array<Object3D>;
     +position: Vector3;
     +rotation: Euler;
     +scale: Vector3;
+
+    add(Object3D): void;
+
+    remove(Object3D): void;
 
     lookAt(Vector3): void;
   }
@@ -197,10 +208,6 @@ declare module "three" {
 
   declare interface Scene extends Object3D {
     constructor(): void;
-
-    add(Object3D): void;
-
-    remove(Object3D): void;
   }
 
   declare interface SpotLight extends Light {
@@ -252,6 +259,7 @@ declare module "three" {
     AnimationMixer: AnimationMixer,
     BoxGeometry: BoxGeometry,
     Clock: Clock,
+    Group: Group,
     Mesh: Mesh,
     MeshBasicMaterial: MeshBasicMaterial,
     MeshNormalMaterial: MeshNormalMaterial,

@@ -4,7 +4,7 @@ import Expression from "./Expression";
 import ExpressionContext from "./ExpressionContext";
 import UnexpectedOverride from "./Exception/UnexpectedOverride";
 
-it("is immutable", () => {
+it("is immutable", function() {
   const context = new ExpressionContext();
   const updated = context.set("foo", "bar");
 
@@ -12,10 +12,10 @@ it("is immutable", () => {
   expect(context.has("foo")).toBeFalsy();
 });
 
-it("cannot override values", () => {
+it("cannot override values", function() {
   const context = new ExpressionContext();
 
-  expect(() => {
+  expect(function() {
     context.set("foo", "bar").set("foo", "baz");
   }).toThrow(UnexpectedOverride);
 });

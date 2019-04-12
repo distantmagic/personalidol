@@ -19,10 +19,6 @@ let instance;
 
 export default class MainLoop implements MainLoopInterface {
   static getInstance(): MainLoop {
-    if (!instance) {
-      instance = new MainLoop();
-    }
-
     return instance;
   }
 
@@ -80,3 +76,5 @@ export default class MainLoop implements MainLoopInterface {
     VendorMainLoop.stop();
   }
 }
+
+instance = new MainLoop();

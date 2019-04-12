@@ -2,25 +2,25 @@
 
 import ResourcesLoadingState from "./ResourcesLoadingState";
 
-it("is not loading by default", () => {
+it("is not loading by default", function() {
   const resourcesLoadingState = new ResourcesLoadingState();
 
   expect(resourcesLoadingState.isLoading()).toBe(false);
 });
 
-it("has 100% by default", () => {
+it("has 100% by default", function() {
   const state = new ResourcesLoadingState();
 
   expect(state.getProgressPercentage()).toBe(100);
 });
 
-it("has adequate progress percentage", () => {
+it("has adequate progress percentage", function() {
   const state = new ResourcesLoadingState(2, 10);
 
   expect(state.getProgressPercentage()).toBe(20);
 });
 
-it("can fail", () => {
+it("can fail", function() {
   const state1 = new ResourcesLoadingState(1, 10);
 
   expect(state1.isFailed()).toBe(false);
@@ -34,7 +34,7 @@ it("can fail", () => {
   expect(state2.getItemsTotal()).toBe(10);
 });
 
-it("propagates failure", () => {
+it("propagates failure", function() {
   const state1 = new ResourcesLoadingState(1, 10);
 
   expect(state1.isFailed()).toBe(false);
@@ -51,7 +51,7 @@ it("propagates failure", () => {
   expect(state3.getItemsTotal()).toBe(10);
 });
 
-it("is equatable", () => {
+it("is equatable", function() {
   const state1 = new ResourcesLoadingState();
   const state2 = state1.setProgress(2, 10);
   const state3 = state1.setProgress(4, 20);
@@ -63,27 +63,27 @@ it("is equatable", () => {
   expect(state3.isEqual(state4)).toBe(true);
 });
 
-it("is loading when there are items left", () => {
+it("is loading when there are items left", function() {
   const state = new ResourcesLoadingState(2, 10);
 
   expect(state.isLoading()).toBe(true);
 });
 
-it("is immutable", () => {
+it("is immutable", function() {
   const state1 = new ResourcesLoadingState();
   const state2 = state1.setProgress(2, 10);
 
   expect(state1).not.toBe(state2);
 });
 
-it("is immutable and preserves objects", () => {
+it("is immutable and preserves objects", function() {
   const state1 = new ResourcesLoadingState(2, 10);
   const state2 = state1.setProgress(2, 10);
 
   expect(state1).toBe(state2);
 });
 
-it("throws when arguments make no sense", () => {
+it("throws when arguments make no sense", function() {
   expect(function() {
     new ResourcesLoadingState(10, 2);
   }).toThrow();

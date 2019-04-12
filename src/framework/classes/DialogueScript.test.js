@@ -7,13 +7,13 @@ import ExpressionContext from "./ExpressionContext";
 
 const testContext = {};
 
-beforeEach(async () => {
+beforeEach(async function() {
   testContext.dialogueScript = await fixtures.dialogue(
     "0001-basic-dialogue.yml"
   );
 });
 
-it("loads dialogue messages", async () => {
+it("loads dialogue messages", async function() {
   const dialogueScript = new DialogueScript(
     new ExpressionBus(),
     new ExpressionContext(),

@@ -3,7 +3,7 @@
 import CancelToken from "../classes/CancelToken";
 import interval from "./interval";
 
-it("produces interval events generator", async () => {
+it("produces interval events generator", async function() {
   const cancelToken = new CancelToken();
   const ticks = [];
   const expectedTicks = 2;
@@ -17,9 +17,9 @@ it("produces interval events generator", async () => {
   }
 
   expect(ticks).toHaveLength(expectedTicks);
-});
+}, 1000);
 
-it("ticks infinitely", async () => {
+it("ticks infinitely", async function() {
   const cancelToken = new CancelToken();
   const expectedTicks = 10;
   let ticksCount = 0;
@@ -33,9 +33,9 @@ it("ticks infinitely", async () => {
   }
 
   expect(ticksCount).toBe(expectedTicks);
-});
+}, 1000);
 
-it("is immediately stopped with already paused cancel token", async () => {
+it("is immediately stopped with already paused cancel token", async function() {
   const cancelToken = new CancelToken();
   const ticks = [];
 
@@ -46,4 +46,4 @@ it("is immediately stopped with already paused cancel token", async () => {
   }
 
   expect(ticks).toHaveLength(0);
-});
+}, 1000);

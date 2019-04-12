@@ -99,28 +99,54 @@ export default class CanvasLocationComplex implements CanvasController {
 
     // this.light = new THREE.HemisphereLight(0xffffbb, 0x080820);
     this.light = new THREE.SpotLight(0xffffff);
-    this.light.position.set(planeSide / 2, planeSide / 2, planeSide / 2);
+    // this.light.position.set(planeSide / 2, planeSide / 2, planeSide / 2);
+    this.light.position.set(planeSide, planeSide, planeSide);
   }
 
   async attach(renderer: THREE.WebGLRenderer): Promise<void> {
-    document.addEventListener("keydown", this.onKeyDown);
-    document.addEventListener("keyup", this.onKeyUp);
-
     // this.sound.pos(0, 0, 0);
     // this.sound.play();
 
     // const guy = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
-    const guy = await new Promise((resolve, reject) => {
-      const loader = new FBXLoader(this.threeLoadingManager);
+    const loader = new FBXLoader(this.threeLoadingManager);
 
-      loader.load("/assets/mesh-mouse.fbx", resolve, null, reject);
+    const defaultCharacter = await new Promise((resolve, reject) => {
+      loader.load("/assets/mesh-default-character.fbx", resolve, null, reject);
     });
+    // const attack = await new Promise((resolve, reject) => {
+    //   loader.load("/assets/animation-attack-01.fbx", resolve, null, reject);
+    // });
+    const idle = await new Promise((resolve, reject) => {
+      loader.load(
+        "/assets/animation-idle-normal-01.fbx",
+        resolve,
+        null,
+        reject
+      );
+    });
+
+    const guy = new THREE.Group();
+
+    const bones = defaultCharacter.children[0];
+
+    guy.add(bones);
+
+    const body = defaultCharacter.children[1];
+
+    guy.add(body);
+
+    const head = defaultCharacter.children[13];
+
+    guy.add(head);
 
     this.guy = guy;
 
     const mixer = new THREE.AnimationMixer(guy);
 
     this.mixer = mixer;
+
+    const action = mixer.clipAction(idle.animations[0]);
+    action.play();
 
     // this.actions.idle = mixer.clipAction(guy.animations[2]);
     // this.actions.run = mixer.clipAction(guy.animations[8]);
@@ -154,9 +180,6 @@ export default class CanvasLocationComplex implements CanvasController {
   begin(): void {}
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
-    document.removeEventListener("keydown", this.onKeyDown);
-    document.removeEventListener("keyup", this.onKeyUp);
-
     const guy = this.guy;
 
     // this.sound.stop();
@@ -200,8 +223,8 @@ export default class CanvasLocationComplex implements CanvasController {
     const width = elementSize.getWidth();
 
     this.camera.left = (-1 * width) / zoom;
-    this.camera.far = 95;
-    this.camera.near = -25;
+    this.camera.far = 195;
+    this.camera.near = -125;
     this.camera.right = width / zoom;
     this.camera.top = height / zoom;
     this.camera.bottom = (-1 * height) / zoom;
@@ -220,6 +243,16 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.actions.current.crossFadeTo(this.actions.run, 0.3);
   }
 
+  async start(): Promise<void> {
+    document.addEventListener("keydown", this.onKeyDown);
+    document.addEventListener("keyup", this.onKeyUp);
+  }
+
+  async stop(): Promise<void> {
+    document.removeEventListener("keydown", this.onKeyDown);
+    document.removeEventListener("keyup", this.onKeyUp);
+  }
+
   update(delta: number): void {
     const mixer = this.mixer;
 
@@ -232,6 +265,10 @@ export default class CanvasLocationComplex implements CanvasController {
     const stepSize = 1;
 
     if (guy) {
+      // guy.rotation.x = -1 * Math.PI / 2;
+      // guy.rotation.x += 0.01;
+      guy.rotation.x = 0;
+
       if (this.keys.ArrowLeft) {
         guy.position.x -= stepSize;
         guy.rotation.y = (-1 * Math.PI) / 2;

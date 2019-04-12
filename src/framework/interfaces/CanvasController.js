@@ -8,5 +8,9 @@ import type { Resizeable } from "./Resizeable";
 export interface CanvasController extends Animatable, Resizeable {
   attach(THREE.WebGLRenderer): Promise<void>;
 
+  start(THREE.WebGLRenderer): Promise<void>;
+
   detach(THREE.WebGLRenderer): Promise<void>;
+
+  stop(THREE.WebGLRenderer): Promise<void>;
 }
