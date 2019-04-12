@@ -14,11 +14,17 @@
  */
 
 declare module "javascript-state-machine" {
-  declare type TransitionsConfiguration<States, Transitions> = Array<{|
+  declare export type TransitionsConfiguration<States, Transitions> = Array<{|
     name: $Keys<Transitions>,
     from: States,
     to: States
   |}>;
+
+  declare export type TransitionEvent<States, Transitions> = {|
+    from: States,
+    to: States,
+    transition: $Keys<Transitions> | "init"
+  |};
 
   declare type GenericTransitionCallback<States, Transitions> = (
     transition: $Keys<Transitions>,
@@ -41,6 +47,7 @@ declare module "javascript-state-machine" {
   |};
 
   declare type StateMachineClass<States, Transitions, Data> = {|
+    ...$Exact<Data>,
     ...$Exact<Transitions>,
     ...$Exact<HelperMethods<States, Transitions>>,
 
@@ -53,8 +60,10 @@ declare module "javascript-state-machine" {
     methods: {|
       ...$Exact<Methods>,
 
+      onAfterTransition?: (evt: TransitionEvent<States, Transitions>) => void,
       onInvalidTransition?: GenericTransitionCallback<States, Transitions>,
-      onPendingTransition?: GenericTransitionCallback<States, Transitions>
+      onPendingTransition?: GenericTransitionCallback<States, Transitions>,
+      onTransition?: (evt: TransitionEvent<States, Transitions>) => void
     |}
   |};
 
@@ -81,7 +90,7 @@ declare module "javascript-state-machine" {
     data: (...args: ConstructorArguments) => Data
   |};
 
-  declare class StateMachineConstructor<
+  declare export class StateMachineConstructor<
     States,
     Transitions,
     Data,
@@ -92,7 +101,12 @@ declare module "javascript-state-machine" {
     ): StateMachineClass<States, Transitions, Data>;
   }
 
-  declare class StateMachine<States, Transitions, Methods, Data> {
+  declare export default class StateMachine<
+    States,
+    Transitions,
+    Methods,
+    Data
+  > {
     static factory<
       TStates,
       TTransitions,
@@ -120,6 +134,4 @@ declare module "javascript-state-machine" {
       StateMachineConfigurationClass<States, Transitions, Methods, Data>
     ): StateMachineClass<States, Transitions, Data>;
   }
-
-  declare module.exports: typeof StateMachine;
 }

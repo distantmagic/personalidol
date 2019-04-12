@@ -1,6 +1,6 @@
 // @flow
 
-import StateMachine from "javascript-state-machine";
+import fsm from "../framework/helpers/fsm";
 
 type States =
   | "attached"
@@ -24,31 +24,8 @@ type Transitions = {
   started: () => void
 };
 
-type Methods = {|
-  onAttached: () => void
-|};
-
-type Data = {|
-  foo: string,
-  bar: string
-|};
-
-type ConstructorArguments = [string, string];
-
-export default StateMachine.factory<
-  States,
-  Transitions,
-  Methods,
-  Data,
-  ConstructorArguments
->({
+export default fsm<States, Transitions>({
   init: "none",
-  data: function(foo: string, bar: string) {
-    return {
-      foo: foo,
-      bar: bar
-    };
-  },
   transitions: [
     { name: "attach", from: "none", to: "attaching" },
     { name: "attached", from: "attaching", to: "attached" },
@@ -57,10 +34,5 @@ export default StateMachine.factory<
     { name: "start", from: "loaded", to: "starting" },
     { name: "started", from: "starting", to: "started" },
     { name: "loop", from: "started", to: "looping" }
-  ],
-  methods: {
-    onAttached(): void {
-      console.log("I melted");
-    }
-  }
+  ]
 });

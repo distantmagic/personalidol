@@ -192,10 +192,7 @@ export default function HudSceneCanvas(props: Props) {
     props,
     loadingManager
   );
-  const [sceneManager] = useSceneManager(
-    props,
-    loadingManager
-  );
+  const [sceneManager] = useSceneManager(props, loadingManager);
   const [isFailed, isAttaching] = useScene(props, sceneManager, canvas);
   const [scene, setScene] = React.useState<?HTMLElement>(null);
 
