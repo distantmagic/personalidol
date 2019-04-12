@@ -14,22 +14,24 @@
  */
 
 declare module "javascript-state-machine" {
+  declare type InternalStates<States> = States & string;
+
   declare export type TransitionsConfiguration<States, Transitions> = Array<{|
     name: $Keys<Transitions>,
-    from: States,
-    to: States
+    from: InternalStates<States>,
+    to: InternalStates<States>
   |}>;
 
   declare export type TransitionEvent<States, Transitions> = {|
-    from: States,
-    to: States,
+    from: InternalStates<States>,
+    to: InternalStates<States>,
     transition: $Keys<Transitions> | "init"
   |};
 
   declare type GenericTransitionCallback<States, Transitions> = (
     transition: $Keys<Transitions>,
-    from: States,
-    to: States
+    from: InternalStates<States>,
+    to: InternalStates<States>
   ) => void;
 
   declare type HelperMethods<States, Transitions> = {|
@@ -51,11 +53,11 @@ declare module "javascript-state-machine" {
     ...$Exact<Transitions>,
     ...$Exact<HelperMethods<States, Transitions>>,
 
-    +state: States
+    +state: InternalStates<States>
   |};
 
   declare type StateMachineConfigurationBase<States, Transitions, Methods> = {|
-    init?: States,
+    init?: InternalStates<States>,
     transitions: TransitionsConfiguration<States, Transitions>,
     methods: {|
       ...$Exact<Methods>,

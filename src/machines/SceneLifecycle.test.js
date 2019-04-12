@@ -6,9 +6,12 @@ it("keeps scene state", function() {
   const scene = new SceneLifecycle();
 
   const promise = new Promise(function(resolve) {
-    scene.events.on("attaching", function(evt) {
+    function listener(evt) {
+      scene.off("attaching", listener);
       resolve(evt.to);
-    });
+    }
+
+    scene.on("attaching", listener);
   });
 
   scene.attach();
