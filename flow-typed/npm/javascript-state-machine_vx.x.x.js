@@ -20,6 +20,12 @@ declare module "javascript-state-machine" {
     to: States
   |}>;
 
+  declare type GenericTransitionCallback<States, Transitions> = (
+    transition: $Keys<Transitions>,
+    from: States,
+    to: States
+  ) => void;
+
   declare type HelperMethods<States, Transitions> = {|
     allStates(): Array<States>,
 
@@ -34,32 +40,85 @@ declare module "javascript-state-machine" {
     transitions(): Array<$Keys<Transitions>>
   |};
 
-  declare type StateMachineClass<States, Transitions> = {|
+  declare type StateMachineClass<States, Transitions, Data> = {|
     ...$Exact<Transitions>,
     ...$Exact<HelperMethods<States, Transitions>>,
-    ...$Exact<{|
-      state: States
-    |}>
+
+    +state: States
   |};
 
-  declare type StateMachineConfiguration<States, Transitions, Methods> = {|
-    init: States,
+  declare type StateMachineConfigurationBase<States, Transitions, Methods> = {|
+    init?: States,
     transitions: TransitionsConfiguration<States, Transitions>,
-    methods: Methods
+    methods: {|
+      ...$Exact<Methods>,
+
+      onInvalidTransition?: GenericTransitionCallback<States, Transitions>,
+      onPendingTransition?: GenericTransitionCallback<States, Transitions>
+    |}
   |};
 
-  declare class StateMachineConstructor<States, Transitions> {
-    constructor(): StateMachineClass<States, Transitions>;
+  declare type StateMachineConfigurationClass<
+    States,
+    Transitions,
+    Methods,
+    Data
+  > = {|
+    ...$Exact<StateMachineConfigurationBase<States, Transitions, Methods>>,
+
+    data: Data
+  |};
+
+  declare type StateMachineConfigurationFactory<
+    States,
+    Transitions,
+    Methods,
+    Data,
+    ConstructorArguments
+  > = {|
+    ...$Exact<StateMachineConfigurationBase<States, Transitions, Methods>>,
+
+    data: (...args: ConstructorArguments) => Data
+  |};
+
+  declare class StateMachineConstructor<
+    States,
+    Transitions,
+    Data,
+    ConstructorArguments
+  > {
+    constructor(
+      ...args: ConstructorArguments
+    ): StateMachineClass<States, Transitions, Data>;
   }
 
-  declare class StateMachine<States, Transitions, Methods> {
-    static factory<TStates, TTransitions, TMethods>(
-      StateMachineConfiguration<TStates, TTransitions, TMethods>
-    ): Class<StateMachineConstructor<TStates, TTransitions, TMethods>>;
+  declare class StateMachine<States, Transitions, Methods, Data> {
+    static factory<
+      TStates,
+      TTransitions,
+      TMethods,
+      TData,
+      TConstructorArguments
+    >(
+      StateMachineConfigurationFactory<
+        TStates,
+        TTransitions,
+        TMethods,
+        TData,
+        TConstructorArguments
+      >
+    ): Class<
+      StateMachineConstructor<
+        TStates,
+        TTransitions,
+        TData,
+        TConstructorArguments
+      >
+    >;
 
     constructor(
-      StateMachineConfiguration<States, Transitions, Methods>
-    ): StateMachineClass<States, Transitions>;
+      StateMachineConfigurationClass<States, Transitions, Methods, Data>
+    ): StateMachineClass<States, Transitions, Data>;
   }
 
   declare module.exports: typeof StateMachine;

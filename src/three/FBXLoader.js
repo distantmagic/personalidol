@@ -126,6 +126,7 @@ FBXTreeParser.prototype = {
     connections = this.parseConnections();
 
     var images = this.parseImages();
+    console.log(images);
     var textures = this.parseTextures(images);
     var materials = this.parseMaterials(textures);
     var deformers = this.parseDeformers();

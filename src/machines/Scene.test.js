@@ -2,4 +2,6 @@
 
 import Scene from "./Scene";
 
-it("infers result from other cancel token query", () => {});
+it("keeps scene state", function() {
+  const scene = new Scene("foo", "bar");
+});

@@ -2,39 +2,65 @@
 
 import StateMachine from "javascript-state-machine";
 
-type States = "gas" | "liquid" | "solid";
+type States =
+  | "attached"
+  | "attaching"
+  | "loaded"
+  | "loading"
+  | "looping"
+  | "none"
+  | "starting"
+  | "started"
+  | "stopping"
+  | "stopped";
 
 type Transitions = {
-  freeze: () => void,
-  melt: () => void,
-  vaporize: () => void,
-  condense: () => void
+  attach: () => void,
+  attached: () => void,
+  load: () => void,
+  loaded: () => void,
+  loop: () => void,
+  start: () => void,
+  started: () => void
 };
 
 type Methods = {|
-  onMelt: () => string
+  onAttached: () => void
 |};
 
-export default StateMachine.factory<States, Transitions, Methods>({
-  init: "solid",
+type Data = {|
+  foo: string,
+  bar: string
+|};
+
+type ConstructorArguments = [string, string];
+
+export default StateMachine.factory<
+  States,
+  Transitions,
+  Methods,
+  Data,
+  ConstructorArguments
+>({
+  init: "none",
+  data: function(foo: string, bar: string) {
+    return {
+      foo: foo,
+      bar: bar
+    };
+  },
   transitions: [
-    { name: "melt", from: "solid", to: "liquid" },
-    { name: "freeze", from: "liquid", to: "solid" },
-    { name: "vaporize", from: "liquid", to: "gas" },
-    { name: "condense", from: "gas", to: "liquid" }
+    { name: "attach", from: "none", to: "attaching" },
+    { name: "attached", from: "attaching", to: "attached" },
+    { name: "load", from: "attached", to: "loading" },
+    { name: "loaded", from: "loading", to: "loaded" },
+    { name: "start", from: "loaded", to: "starting" },
+    { name: "started", from: "starting", to: "started" },
+    { name: "loop", from: "started", to: "looping" }
   ],
   methods: {
-    onMelt(): string {
-      return "I melted";
+    onAttached(): void {
+      console.log("I melted");
     }
-    // onFreeze() {
-    //   console.log('I froze')
-    // },
-    // onVaporize() {
-    //   console.log('I vaporized')
-    // },
-    // onCondense() {
-    //   console.log('I condensed')
-    // }
   }
 });

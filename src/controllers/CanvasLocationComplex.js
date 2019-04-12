@@ -22,13 +22,13 @@ export default class CanvasLocationComplex implements CanvasController {
   +fpsAdaptive: FPSAdaptive;
   +geometry: THREE.Geometry;
   +light: THREE.SpotLight;
+  +loadingManager: THREE.LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +material: THREE.Material;
   +mesh: THREE.Mesh;
   +scene: THREE.Scene;
   +sound: Howl;
   +texture: THREE.Texture;
-  +threeLoadingManager: THREE.LoadingManager;
   actions: {
     [string]: THREE.AnimationAction
   };
@@ -39,7 +39,7 @@ export default class CanvasLocationComplex implements CanvasController {
   mixer: ?THREE.AnimationMixer;
 
   constructor(
-    threeLoadingManager: THREE.LoadingManager,
+    loadingManager: THREE.LoadingManager,
     fpsAdaptive: FPSAdaptive,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     debug: Debugger
@@ -86,10 +86,10 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.camera.position.z = 40;
 
     this.geometry = new THREE.BoxGeometry(2, 2, 2);
-    this.texture = new THREE.TextureLoader(threeLoadingManager).load(
+    this.texture = new THREE.TextureLoader(loadingManager).load(
       "/assets/texture-blood-marble-512.png"
     );
-    this.threeLoadingManager = threeLoadingManager;
+    this.loadingManager = loadingManager;
     this.material = new THREE.MeshPhongMaterial({
       map: this.texture
     });
@@ -108,7 +108,9 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.sound.play();
 
     // const guy = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
-    const loader = new FBXLoader(this.threeLoadingManager);
+    const loader = new FBXLoader(this.loadingManager);
+
+    loader.setResourcePath("/assets/mesh-default-character/");
 
     const defaultCharacter = await new Promise((resolve, reject) => {
       loader.load("/assets/mesh-default-character.fbx", resolve, null, reject);
@@ -131,11 +133,11 @@ export default class CanvasLocationComplex implements CanvasController {
 
     guy.add(bones);
 
-    const body = defaultCharacter.children[1];
+    const body = defaultCharacter.children[7];
 
     guy.add(body);
 
-    const head = defaultCharacter.children[13];
+    const head = defaultCharacter.children[14];
 
     guy.add(head);
 
