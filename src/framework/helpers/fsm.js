@@ -3,11 +3,16 @@
 import EventEmitter from "eventemitter3";
 import StateMachine from "javascript-state-machine";
 
+import InvalidTransitionException from "../classes/Exception/StateMachine/InvalidTransition";
+
 import type {
   StateMachineConstructor,
   TransitionsConfiguration,
   TransitionEvent
 } from "javascript-state-machine";
+
+import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 type Methods = {||};
 
@@ -21,11 +26,13 @@ type TransitionEventSubscriber<States, Transitions> = (
 ) => void;
 
 type Data<States, Transitions> = {|
+  exceptionHandler: ExceptionHandler,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   off: TransitionEventSubscriber<States, Transitions>,
   on: TransitionEventSubscriber<States, Transitions>
 |};
 
-type ConstructorArguments = [];
+type ConstructorArguments = [ExceptionHandler, LoggerBreadcrumbs];
 
 export default function fsm<States, Transitions: {}>(config: {|
   init: States & string,
@@ -48,15 +55,21 @@ export default function fsm<States, Transitions: {}>(config: {|
     ConstructorArguments
   >({
     init: config.init,
-    data: function() {
+    data: function(
+      exceptionHandler: ExceptionHandler,
+      loggerBreadcrumbs: LoggerBreadcrumbs
+    ) {
       return {
-        off(
+        exceptionHandler: exceptionHandler,
+        loggerBreadcrumbs: loggerBreadcrumbs,
+
+        off: function(
           state: States & string,
           callback: TransitionEventCallback<States, Transitions>
         ) {
           events.off(state, callback);
         },
-        on(
+        on: function(
           state: States & string,
           callback: TransitionEventCallback<States, Transitions>
         ) {
@@ -66,15 +79,23 @@ export default function fsm<States, Transitions: {}>(config: {|
     },
     transitions: config.transitions,
     methods: {
-      onAfterTransition(evt: TransitionEvent<States, Transitions>): void {
+      onAfterTransition: function(
+        evt: TransitionEvent<States, Transitions>
+      ): void {
         events.emit(evt.to, evt);
       },
-      onInvalidTransition(
+      onInvalidTransition: function(
         transition: $Keys<Transitions>,
-        from: States,
-        to: States
+        from: States & string,
+        to: States & string
       ): void {
-        console.log(transition, from, to);
+        const exceptionHandler: ExceptionHandler = this.exceptionHandler;
+        const loggerBreadcrumbs: LoggerBreadcrumbs = this.loggerBreadcrumbs;
+        const error = new InvalidTransitionException(transition, from, to);
+
+        exceptionHandler.captureException(loggerBreadcrumbs, error);
+
+        throw error;
       }
     }
   });
