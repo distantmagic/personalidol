@@ -8,5 +8,5 @@ export interface ExceptionHandler {
 
   captureException(LoggerBreadcrumbs, Error): Promise<void>;
 
-  // captureExceptionCurry(LoggerBreadcrumbs): (Error) => Promise<void>;
+  expectException(LoggerBreadcrumbs): Error => Promise<void>;
 }

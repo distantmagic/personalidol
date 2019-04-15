@@ -14,19 +14,23 @@ import type { Scheduler } from "../interfaces/Scheduler";
 
 export default class SceneManager implements SceneManagerInterface {
   +controller: CanvasController;
+  +exceptionHandler: ExceptionHandler;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +scheduler: Scheduler;
   drawCallback: ?DrawCallback;
   renderer: ?THREE.WebGLRenderer;
 
   constructor(
-    exceptionHandler: ExceptionHandler,
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    exceptionHandler: ExceptionHandler,
     scheduler: Scheduler,
     controller: CanvasController
   ) {
     autoBind(this);
 
     this.controller = controller;
+    this.exceptionHandler = exceptionHandler;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.scheduler = scheduler;
   }
 
@@ -38,11 +42,14 @@ export default class SceneManager implements SceneManagerInterface {
     // renderer.shadowMap.enabled = true;
     // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    this.renderer = renderer;
-
-    this.drawCallback = interpolationPercentage => {
+    const drawCallback = interpolationPercentage => {
       return this.controller.draw(renderer, interpolationPercentage);
     };
+
+    this.renderer = renderer;
+    this.drawCallback = drawCallback;
+
+    this.scheduler.onDraw(drawCallback);
 
     await this.controller.attach(renderer);
   }
@@ -53,6 +60,16 @@ export default class SceneManager implements SceneManagerInterface {
     if (!renderer) {
       throw new Error("Renderer should be present while detaching controller.");
     }
+
+    const drawCallback = this.drawCallback;
+
+    if (!drawCallback) {
+      throw new Error(
+        "Invalid scene lifecycle. Draw callback was expected while detaching."
+      );
+    }
+
+    this.scheduler.offDraw(drawCallback);
 
     await this.controller.detach(renderer);
 
@@ -70,16 +87,7 @@ export default class SceneManager implements SceneManagerInterface {
   }
 
   async start(): Promise<void> {
-    const drawCallback = this.drawCallback;
-
-    if (!drawCallback) {
-      throw new Error(
-        "Invalid scene lifecycle. Draw callback was expected while starting."
-      );
-    }
-
     this.scheduler.onBegin(this.controller.begin);
-    this.scheduler.onDraw(drawCallback);
     this.scheduler.onEnd(this.controller.end);
     this.scheduler.onUpdate(this.controller.update);
 
@@ -87,12 +95,6 @@ export default class SceneManager implements SceneManagerInterface {
   }
 
   async stop(): Promise<void> {
-    const drawCallback = this.drawCallback;
-
-    if (drawCallback) {
-      this.scheduler.offDraw(drawCallback);
-    }
-
     // if scene manager is stopped, do not detach controller, but also do not
     // provide any updates
     this.scheduler.offBegin(this.controller.begin);

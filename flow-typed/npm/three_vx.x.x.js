@@ -16,6 +16,22 @@
 declare module "three" {
   declare type RepeatWrapping = 1000;
 
+  declare type LoadingManagerOnErrorCallback = (url: string) => void;
+
+  declare type LoadingManagerOnLoadCallback = () => void;
+
+  declare type LoadingManagerOnProgressCallback = (
+    url: string,
+    itemsLoaded: number,
+    itemsTotal: number
+  ) => void;
+
+  declare type LoadingManagerOnStartCallback = (
+    url: string,
+    itemsLoaded: number,
+    itemsTotal: number
+  ) => void;
+
   declare interface AmbientLight extends Light {
     +isAmbientLight: true;
     castShadow: boolean;
@@ -106,10 +122,10 @@ declare module "three" {
   declare interface LoadingManager {
     constructor(): void;
 
-    onError?: (url: string) => void;
-    onLoad?: () => void;
-    onProgress?: (url: string, itemsLoaded: number, itemsTotal: number) => void;
-    onStart?: (url: string, itemsLoaded: number, itemsTotal: number) => void;
+    onError?: LoadingManagerOnErrorCallback;
+    onLoad?: LoadingManagerOnLoadCallback;
+    onProgress?: LoadingManagerOnProgressCallback;
+    onStart?: LoadingManagerOnStartCallback;
   }
 
   declare interface Material extends Geometry {}

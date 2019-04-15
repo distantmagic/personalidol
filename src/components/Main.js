@@ -16,6 +16,7 @@ import HudAside from "./HudAside";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
 import HudToolbar from "./HudToolbar";
+import KeyboardState from "../framework/classes/KeyboardState";
 import MainLoop from "../framework/classes/MainLoop";
 import Person from "../framework/classes/Entity/Person";
 import QueryBus from "../framework/classes/QueryBus";
@@ -46,6 +47,7 @@ export default function Main(props: Props) {
   );
   const [mainLoop] = React.useState(MainLoop.getInstance());
   const [fpsAdaptive] = React.useState(new FPSAdaptive());
+  const [keyboardState] = React.useState(new KeyboardState());
   const [queryBus] = React.useState(new QueryBus());
   const [queryBusController] = React.useState(
     new QueryBusController(new BusClock(), queryBus)
@@ -92,6 +94,17 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
+      keyboardState.observe();
+
+      return function() {
+        keyboardState.disconnect();
+      };
+    },
+    [keyboardState]
+  );
+
+  React.useEffect(
+    function() {
       const cancelToken = new CancelToken();
 
       queryBusController.interval(cancelToken);
@@ -121,6 +134,7 @@ export default function Main(props: Props) {
           <HudScene
             debug={debug}
             exceptionHandler={props.exceptionHandler}
+            keyboardState={keyboardState}
             loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
             scheduler={scheduler}
           />

@@ -10,7 +10,9 @@ import FBXLoader from "../three/FBXLoader";
 import type { CanvasController } from "../framework/interfaces/CanvasController";
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ElementSize } from "../framework/interfaces/ElementSize";
+import type { KeyboardState } from "../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
 
 const planeSide = 128;
 
@@ -19,32 +21,32 @@ export default class CanvasLocationComplex implements CanvasController {
   +clock: THREE.Clock;
   +debug: Debugger;
   +geometry: THREE.Geometry;
+  +keyboardState: KeyboardState;
   +light: THREE.SpotLight;
-  +loadingManager: THREE.LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +material: THREE.Material;
   +mesh: THREE.Mesh;
   +scene: THREE.Scene;
   +sound: Howl;
   +texture: THREE.Texture;
-  actions: {
-    [string]: THREE.AnimationAction
-  };
-  keys: {
-    [string]: boolean
-  };
+  +threeLoadingManager: THREELoadingManager;
   guy: ?THREE.Object3D;
   mixer: ?THREE.AnimationMixer;
 
   constructor(
-    loadingManager: THREE.LoadingManager,
+    threeLoadingManager: THREELoadingManager,
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    keyboardState: KeyboardState,
     debug: Debugger
   ) {
     autoBind(this);
 
     this.debug = debug;
+    this.keyboardState = keyboardState;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.threeLoadingManager = threeLoadingManager;
+
+    const loadingManager = threeLoadingManager.getLoadingManager();
 
     this.clock = new THREE.Clock();
     this.sound = new Howl({
@@ -54,9 +56,6 @@ export default class CanvasLocationComplex implements CanvasController {
       src: ["/assets/track-lithium.mp3"]
       // volume: 0.1,
     });
-
-    this.actions = {};
-    this.keys = {};
 
     this.scene = new THREE.Scene();
 
@@ -85,7 +84,6 @@ export default class CanvasLocationComplex implements CanvasController {
     this.texture = new THREE.TextureLoader(loadingManager).load(
       "/assets/texture-blood-marble-512.png"
     );
-    this.loadingManager = loadingManager;
     this.material = new THREE.MeshPhongMaterial({
       map: this.texture
     });
@@ -104,7 +102,7 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.sound.play();
 
     // const guy = await props.assetLoader.load("/assets/mesh-lp-guy.fbx");
-    const loader = new FBXLoader(this.loadingManager);
+    const loader = new FBXLoader(this.threeLoadingManager.getLoadingManager());
 
     loader.setResourcePath("/assets/mesh-default-character/");
 
@@ -146,17 +144,6 @@ export default class CanvasLocationComplex implements CanvasController {
     const action = mixer.clipAction(idle.animations[0]);
     action.play();
 
-    // this.actions.idle = mixer.clipAction(guy.animations[2]);
-    // this.actions.run = mixer.clipAction(guy.animations[8]);
-
-    // this.actions.current = mixer.clipAction(guy.animations[2]);
-    // this.actions.current.play();
-
-    // // guy.traverse( function ( child ) {
-    // //   if ( child.isMesh ) {
-    // //     child.receiveShadow = true;
-    // //   }
-    // } );
     guy.position.set(0, 0, 0);
     guy.scale.set(0.1, 0.1, 0.1);
 
@@ -206,14 +193,6 @@ export default class CanvasLocationComplex implements CanvasController {
     this.debug.updateState(this.loggerBreadcrumbs.add("end").add("fps"), fps);
   }
 
-  onKeyDown(evt: KeyboardEvent) {
-    this.keys[evt.key] = true;
-  }
-
-  onKeyUp(evt: KeyboardEvent) {
-    this.keys[evt.key] = false;
-  }
-
   resize(elementSize: ElementSize): void {
     const zoom = 20;
     const height = elementSize.getHeight();
@@ -240,15 +219,9 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.actions.current.crossFadeTo(this.actions.run, 0.3);
   }
 
-  async start(): Promise<void> {
-    document.addEventListener("keydown", this.onKeyDown);
-    document.addEventListener("keyup", this.onKeyUp);
-  }
+  async start(): Promise<void> {}
 
-  async stop(): Promise<void> {
-    document.removeEventListener("keydown", this.onKeyDown);
-    document.removeEventListener("keyup", this.onKeyUp);
-  }
+  async stop(): Promise<void> {}
 
   update(delta: number): void {
     const mixer = this.mixer;
@@ -266,41 +239,48 @@ export default class CanvasLocationComplex implements CanvasController {
       // guy.rotation.x += 0.01;
       guy.rotation.x = 0;
 
-      if (this.keys.ArrowLeft) {
+      if (this.keyboardState.isPressed("ArrowLeft")) {
         guy.position.x -= stepSize;
         guy.rotation.y = (-1 * Math.PI) / 2;
       }
-      if (this.keys.ArrowRight) {
+      if (this.keyboardState.isPressed("ArrowRight")) {
         guy.position.x += stepSize;
         guy.rotation.y = Math.PI / 2;
       }
-      if (this.keys.ArrowUp) {
+      if (this.keyboardState.isPressed("ArrowUp")) {
         guy.position.z -= stepSize;
         guy.rotation.y = Math.PI;
       }
-      if (this.keys.ArrowUp && this.keys.ArrowLeft) {
+      if (
+        this.keyboardState.isPressed("ArrowUp") &&
+        this.keyboardState.isPressed("ArrowLeft")
+      ) {
         guy.rotation.y = -1 * Math.PI * 0.75;
       }
-      if (this.keys.ArrowUp && this.keys.ArrowRight) {
+      if (
+        this.keyboardState.isPressed("ArrowUp") &&
+        this.keyboardState.isPressed("ArrowRight")
+      ) {
         guy.rotation.y = Math.PI * 0.75;
       }
-      if (this.keys.ArrowDown) {
+      if (this.keyboardState.isPressed("ArrowDown")) {
         guy.position.z += stepSize;
         guy.rotation.y = 0;
       }
-      if (this.keys.ArrowDown && this.keys.ArrowLeft) {
+      if (
+        this.keyboardState.isPressed("ArrowDown") &&
+        this.keyboardState.isPressed("ArrowLeft")
+      ) {
         guy.rotation.y = (-1 * Math.PI) / 4;
       }
-      if (this.keys.ArrowDown && this.keys.ArrowRight) {
+      if (
+        this.keyboardState.isPressed("ArrowDown") &&
+        this.keyboardState.isPressed("ArrowRight")
+      ) {
         guy.rotation.y = Math.PI / 4;
       }
 
-      if (
-        this.keys.ArrowDown ||
-        this.keys.ArrowLeft ||
-        this.keys.ArrowRight ||
-        this.keys.ArrowUp
-      ) {
+      if (this.keyboardState.isArrowPressed()) {
         // console.log('key pressed');
         this.idle();
       } else {
@@ -327,20 +307,7 @@ export default class CanvasLocationComplex implements CanvasController {
       );
     }
 
-    // console.log(delta);
-    // this.light.position.y += 0.1;
-
-    // this.clock.getDelta();
-
-    // this.mesh.position.x = Math.sin(this.clock.elapsedTime) * 32;
-    // this.mesh.position.z = Math.cos(this.clock.elapsedTime) * 16;
-
-    // this.sound.pos(this.mesh.position.x, this.mesh.position.z, 0);
-
     this.mesh.rotation.x += 0.01;
     this.mesh.rotation.y += 0.02;
-    // this.mesh.scale.x = ((this.mesh.scale.x + 0.05) % 32);
-    // this.mesh.scale.y = ((this.mesh.scale.y + 0.05) % 32);
-    // this.mesh.scale.z = ((this.mesh.scale.z + 0.05) % 32);
   }
 }

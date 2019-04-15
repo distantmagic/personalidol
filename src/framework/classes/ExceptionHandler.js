@@ -28,4 +28,10 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
 
     this.logger.error(breadcrumbs, message);
   }
+
+  expectException(breadcrumbs: LoggerBreadcrumbs): Error => Promise<void> {
+    return (error: Error) => {
+      return this.captureException(breadcrumbs, error);
+    };
+  }
 }
