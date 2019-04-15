@@ -104,8 +104,6 @@ FBXLoader.prototype = {
       fbxTree = new TextParser().parse(FBXText);
     }
 
-    // console.log( fbxTree );
-
     var textureLoader = new THREE.TextureLoader(this.manager)
       .setPath(this.resourcePath || path)
       .setCrossOrigin(this.crossOrigin);
@@ -126,7 +124,6 @@ FBXTreeParser.prototype = {
     connections = this.parseConnections();
 
     var images = this.parseImages();
-    console.log(images);
     var textures = this.parseTextures(images);
     var materials = this.parseMaterials(textures);
     var deformers = this.parseDeformers();

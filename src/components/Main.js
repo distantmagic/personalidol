@@ -20,6 +20,7 @@ import MainLoop from "../framework/classes/MainLoop";
 import Person from "../framework/classes/Entity/Person";
 import QueryBus from "../framework/classes/QueryBus";
 import QueryBusController from "../framework/classes/QueryBusController";
+import Scheduler from "../framework/classes/Scheduler";
 
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Logger } from "../framework/interfaces/Logger";
@@ -44,11 +45,12 @@ export default function Main(props: Props) {
     document.hidden
   );
   const [mainLoop] = React.useState(MainLoop.getInstance());
-  const [fpsAdaptive] = React.useState(new FPSAdaptive(mainLoop));
+  const [fpsAdaptive] = React.useState(new FPSAdaptive());
   const [queryBus] = React.useState(new QueryBus());
   const [queryBusController] = React.useState(
     new QueryBusController(new BusClock(), queryBus)
   );
+  const [scheduler] = React.useState(new Scheduler());
 
   React.useEffect(
     function() {
@@ -80,9 +82,12 @@ export default function Main(props: Props) {
     function() {
       const maxAllowedFPS = 40;
 
+      mainLoop.setMaxAllowedFPS(maxAllowedFPS);
+      mainLoop.attachScheduler(scheduler);
+
       fpsAdaptive.setExpectedFPS(maxAllowedFPS);
     },
-    [mainLoop]
+    [fpsAdaptive, mainLoop, scheduler]
   );
 
   React.useEffect(
@@ -116,9 +121,8 @@ export default function Main(props: Props) {
           <HudScene
             debug={debug}
             exceptionHandler={props.exceptionHandler}
-            fpsAdaptive={fpsAdaptive}
             loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
-            mainLoop={mainLoop}
+            scheduler={scheduler}
           />
         )}
         <div className="dd__frame dd__statusbar dd__statusbar--hud">

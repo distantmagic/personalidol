@@ -8,7 +8,7 @@ it("performs math calculations", function() {
   const expression = new Expression("{{ 2 + 2 }}", context);
   const result = expression.execute();
 
-  expect(result).resolves.toBe("4");
+  return expect(result).resolves.toBe("4");
 });
 
 it("uses variables", function() {
@@ -18,7 +18,7 @@ it("uses variables", function() {
   const expression = new Expression("{{ 2 + foo }}", context);
   const result = expression.execute();
 
-  expect(result).resolves.toBe("5");
+  return expect(result).resolves.toBe("5");
 });
 
 it("uses objects", function() {
@@ -37,7 +37,7 @@ it("uses objects", function() {
   );
   const result = expression.execute();
 
-  expect(result).resolves.toBe("Greetings CHARNAME");
+  return expect(result).resolves.toBe("Greetings CHARNAME");
 });
 
 it("uses promises", function() {
@@ -56,7 +56,7 @@ it("uses promises", function() {
   );
   const result = expression.execute();
 
-  expect(result).resolves.toBe("Greetings CHARNAME");
+  return expect(result).resolves.toBe("Greetings CHARNAME");
 });
 
 it("resolves conditions with promises", function() {
@@ -80,5 +80,5 @@ it("resolves conditions with promises", function() {
   );
   const result = expression.execute();
 
-  expect(result).resolves.toBe("true");
+  return expect(result).resolves.toBe("true");
 });

@@ -14,6 +14,7 @@ import type {
 } from "mainloop.js";
 
 import type { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
+import type { Scheduler } from "../interfaces/Scheduler";
 
 let instance;
 
@@ -32,6 +33,13 @@ export default class MainLoop implements MainLoopInterface {
     autoBind(this);
   }
 
+  attachScheduler(scheduler: Scheduler): void {
+    this.setBegin(scheduler.notifyBegin);
+    this.setDraw(scheduler.notifyDraw);
+    this.setEnd(scheduler.notifyEnd);
+    this.setUpdate(scheduler.notifyUpdate);
+  }
+
   clear(): void {
     VendorMainLoop.setBegin(noop);
     VendorMainLoop.setUpdate(noop);
@@ -40,12 +48,20 @@ export default class MainLoop implements MainLoopInterface {
     this.clearEnd();
   }
 
+  clearBegin(): void {
+    VendorMainLoop.setBegin(noop);
+  }
+
   clearDraw(): void {
     VendorMainLoop.setDraw(noop);
   }
 
   clearEnd(): void {
     VendorMainLoop.setEnd(noop);
+  }
+
+  clearUpdate(): void {
+    VendorMainLoop.setUpdate(noop);
   }
 
   setBegin(callback: BeginCallback): void {

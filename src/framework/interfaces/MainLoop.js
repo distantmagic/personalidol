@@ -7,13 +7,21 @@ import type {
   UpdateCallback
 } from "mainloop.js";
 
+import type { Scheduler } from "./Scheduler";
+
 export interface MainLoop {
+  attachScheduler(Scheduler): void;
+
   // unset all callbacks
   clear(): void;
+
+  clearBegin(): void;
 
   clearDraw(): void;
 
   clearEnd(): void;
+
+  clearUpdate(): void;
 
   setBegin(BeginCallback): void;
 

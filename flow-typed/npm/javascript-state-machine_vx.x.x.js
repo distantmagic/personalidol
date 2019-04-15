@@ -48,7 +48,7 @@ declare module "javascript-state-machine" {
     transitions(): Array<$Keys<Transitions>>
   |};
 
-  declare type StateMachineClass<States, Transitions, Data> = {|
+  declare export type StateMachineInstance<States, Transitions, Data> = {|
     ...$Exact<Data>,
     ...$Exact<Transitions>,
     ...$Exact<HelperMethods<States, Transitions>>,
@@ -92,7 +92,7 @@ declare module "javascript-state-machine" {
     data: (...args: ConstructorArguments) => Data
   |};
 
-  declare export class StateMachineConstructor<
+  declare export class StateMachineFactoryClass<
     States,
     Transitions,
     Data,
@@ -100,7 +100,7 @@ declare module "javascript-state-machine" {
   > {
     constructor(
       ...args: ConstructorArguments
-    ): StateMachineClass<States, Transitions, Data>;
+    ): StateMachineInstance<States, Transitions, Data>;
   }
 
   declare export default class StateMachine<
@@ -124,7 +124,7 @@ declare module "javascript-state-machine" {
         TConstructorArguments
       >
     ): Class<
-      StateMachineConstructor<
+      StateMachineFactoryClass<
         TStates,
         TTransitions,
         TData,
@@ -134,6 +134,6 @@ declare module "javascript-state-machine" {
 
     constructor(
       StateMachineConfigurationClass<States, Transitions, Methods, Data>
-    ): StateMachineClass<States, Transitions, Data>;
+    ): StateMachineInstance<States, Transitions, Data>;
   }
 }

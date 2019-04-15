@@ -7,16 +7,14 @@ import HudSceneCanvas from "./HudSceneCanvas";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { FPSAdaptive } from "../framework/interfaces/FPSAdaptive";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { MainLoop } from "../framework/interfaces/MainLoop";
+import type { Scheduler } from "../framework/interfaces/Scheduler";
 
 type Props = {|
   debug: Debugger,
   exceptionHandler: ExceptionHandler,
-  fpsAdaptive: FPSAdaptive,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  mainLoop: MainLoop
+  scheduler: Scheduler
 |};
 
 export default React.memo<Props>(function HudScene(props: Props) {
@@ -24,9 +22,8 @@ export default React.memo<Props>(function HudScene(props: Props) {
     <HudSceneCanvas
       debug={props.debug}
       exceptionHandler={props.exceptionHandler}
-      fpsAdaptive={props.fpsAdaptive}
       loggerBreadcrumbs={props.loggerBreadcrumbs}
-      mainLoop={props.mainLoop}
+      scheduler={props.scheduler}
     />
   );
 });

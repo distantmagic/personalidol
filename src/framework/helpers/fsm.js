@@ -6,53 +6,30 @@ import StateMachine from "javascript-state-machine";
 import InvalidTransitionException from "../classes/Exception/StateMachine/InvalidTransition";
 
 import type {
-  StateMachineConstructor,
   TransitionsConfiguration,
   TransitionEvent
 } from "javascript-state-machine";
 
 import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
+import type { FSMDefaultData } from "../types/FSMDefaultData";
+import type { FSMDefaultConstructorArguments } from "../types/FSMDefaultConstructorArguments";
+import type { FSMDefaultFactoryClass } from "../interfaces/FSMDefaultFactoryClass";
+import type { FSMDefaultMethods } from "../types/FSMDefaultMethods";
+import type { FSMTransitionEventCallback } from "../types/FSMTransitionEventCallback";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-
-type Methods = {||};
-
-type TransitionEventCallback<States, Transitions> = (
-  TransitionEvent<States, Transitions>
-) => void;
-
-type TransitionEventSubscriber<States, Transitions> = (
-  States & string,
-  TransitionEventCallback<States, Transitions>
-) => void;
-
-type Data<States, Transitions> = {|
-  exceptionHandler: ExceptionHandler,
-  loggerBreadcrumbs: LoggerBreadcrumbs,
-  off: TransitionEventSubscriber<States, Transitions>,
-  on: TransitionEventSubscriber<States, Transitions>
-|};
-
-type ConstructorArguments = [ExceptionHandler, LoggerBreadcrumbs];
 
 export default function fsm<States, Transitions: {}>(config: {|
   init: States & string,
   transitions: TransitionsConfiguration<States, Transitions>
-|}): Class<
-  StateMachineConstructor<
-    States,
-    Transitions,
-    Data<States, Transitions>,
-    ConstructorArguments
-  >
-> {
+|}): Class<FSMDefaultFactoryClass<States, Transitions>> {
   const events = new EventEmitter();
 
   return StateMachine.factory<
     States,
     Transitions,
-    Methods,
-    Data<States, Transitions>,
-    ConstructorArguments
+    FSMDefaultMethods,
+    FSMDefaultData<States, Transitions>,
+    FSMDefaultConstructorArguments
   >({
     init: config.init,
     data: function(
@@ -65,13 +42,13 @@ export default function fsm<States, Transitions: {}>(config: {|
 
         off: function(
           state: States & string,
-          callback: TransitionEventCallback<States, Transitions>
+          callback: FSMTransitionEventCallback<States, Transitions>
         ) {
           events.off(state, callback);
         },
         on: function(
           state: States & string,
-          callback: TransitionEventCallback<States, Transitions>
+          callback: FSMTransitionEventCallback<States, Transitions>
         ) {
           events.on(state, callback);
         }

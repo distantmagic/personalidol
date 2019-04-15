@@ -3,22 +3,31 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import type { CancelToken } from "../interfaces/CancelToken";
+import type { DrawCallback } from "mainloop.js";
+
 import type { CanvasController } from "../interfaces/CanvasController";
 import type { ElementSize } from "../interfaces/ElementSize";
-import type { MainLoop } from "../interfaces/MainLoop";
+import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { SceneManager as SceneManagerInterface } from "../interfaces/SceneManager";
+import type { Scheduler } from "../interfaces/Scheduler";
 
 export default class SceneManager implements SceneManagerInterface {
   +controller: CanvasController;
-  +mainLoop: MainLoop;
+  +scheduler: Scheduler;
+  drawCallback: ?DrawCallback;
   renderer: ?THREE.WebGLRenderer;
 
-  constructor(mainLoop: MainLoop, controller: CanvasController) {
+  constructor(
+    exceptionHandler: ExceptionHandler,
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    scheduler: Scheduler,
+    controller: CanvasController
+  ) {
     autoBind(this);
 
     this.controller = controller;
-    this.mainLoop = mainLoop;
+    this.scheduler = scheduler;
   }
 
   async attach(canvas: HTMLCanvasElement): Promise<void> {
@@ -31,12 +40,11 @@ export default class SceneManager implements SceneManagerInterface {
 
     this.renderer = renderer;
 
-    this.mainLoop.setDraw(interpolationPercentage => {
+    this.drawCallback = interpolationPercentage => {
       return this.controller.draw(renderer, interpolationPercentage);
-    });
-    this.mainLoop.setEnd(this.controller.end);
+    };
 
-    return this.controller.attach(renderer);
+    await this.controller.attach(renderer);
   }
 
   async detach(): Promise<void> {
@@ -46,23 +54,9 @@ export default class SceneManager implements SceneManagerInterface {
       throw new Error("Renderer should be present while detaching controller.");
     }
 
-    this.mainLoop.clearDraw();
-    this.mainLoop.clearEnd();
-
     await this.controller.detach(renderer);
 
     this.renderer = null;
-  }
-
-  async loop(cancelToken: CancelToken): Promise<void> {
-    cancelToken.onCancelled(this.mainLoop.clear);
-
-    if (cancelToken.isCancelled()) {
-      return;
-    }
-
-    this.mainLoop.setBegin(this.controller.begin);
-    this.mainLoop.setUpdate(this.controller.update);
   }
 
   resize(elementSize: ElementSize): void {
@@ -73,5 +67,38 @@ export default class SceneManager implements SceneManagerInterface {
     if (renderer) {
       renderer.setSize(elementSize.getWidth(), elementSize.getHeight());
     }
+  }
+
+  async start(): Promise<void> {
+    const drawCallback = this.drawCallback;
+
+    if (!drawCallback) {
+      throw new Error(
+        "Invalid scene lifecycle. Draw callback was expected while starting."
+      );
+    }
+
+    this.scheduler.onBegin(this.controller.begin);
+    this.scheduler.onDraw(drawCallback);
+    this.scheduler.onEnd(this.controller.end);
+    this.scheduler.onUpdate(this.controller.update);
+
+    await this.controller.start();
+  }
+
+  async stop(): Promise<void> {
+    const drawCallback = this.drawCallback;
+
+    if (drawCallback) {
+      this.scheduler.offDraw(drawCallback);
+    }
+
+    // if scene manager is stopped, do not detach controller, but also do not
+    // provide any updates
+    this.scheduler.offBegin(this.controller.begin);
+    this.scheduler.offEnd(this.controller.end);
+    this.scheduler.offUpdate(this.controller.update);
+
+    await this.controller.stop();
   }
 }

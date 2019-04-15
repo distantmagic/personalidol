@@ -17,7 +17,7 @@ declare module "mainloop.js" {
   declare export type BeginCallback = () => void;
   declare export type DrawCallback = (interpolationPercentage: number) => void;
   declare export type EndCallback = (fps: number, isPanicked: boolean) => void;
-  declare export type UpdateCallback = number => void;
+  declare export type UpdateCallback = (delta: number) => void;
 
   declare class MainLoop {
     // Returns the exponential moving average of the frames per second.

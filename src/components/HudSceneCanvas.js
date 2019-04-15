@@ -3,12 +3,10 @@
 import * as React from "react";
 import * as THREE from "three";
 import classnames from "classnames";
-import debounce from "lodash/debounce";
-import ResizeObserver from "resize-observer-polyfill";
 
 import CancelToken from "../framework/classes/CancelToken";
 import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
-import ElementSize from "../framework/classes/ElementSize";
+import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
 import HudSceneCanvasOverlay from "./HudSceneCanvasOverlay";
 import ResourceLoadError from "../framework/classes/Exception/ResourceLoadError";
@@ -17,23 +15,22 @@ import SceneManager from "../framework/classes/SceneManager";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { FPSAdaptive } from "../framework/interfaces/FPSAdaptive";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { MainLoop } from "../framework/interfaces/MainLoop";
 import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../framework/interfaces/ResourcesLoadingState";
 import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
+import type { Scheduler } from "../framework/interfaces/Scheduler";
 
 type Props = {|
   debug: Debugger,
   exceptionHandler: ExceptionHandler,
-  fpsAdaptive: FPSAdaptive,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  mainLoop: MainLoop
+  scheduler: Scheduler
 |};
 
 function useResourcesLoadingState(
   props: Props,
-  loadingManager: THREE.LoadingManager
+  loadingManager: THREE.LoadingManager,
+  sceneManager: ?SceneManagerInterface
 ) {
   const [
     resourcesLoadingState,
@@ -44,19 +41,34 @@ function useResourcesLoadingState(
 
   React.useEffect(
     function() {
+      if (!sceneManager) {
+        return;
+      }
+
       // keep the old reference
-      const manager = loadingManager;
+      const loadingManagerReference = loadingManager;
+      const sceneManagerReference = sceneManager;
+
       let globalItemsLoaded = 0;
       let globalItemsTotal = 0;
       let error = null;
 
-      manager.onStart = function(url, itemsLoaded, itemsTotal) {
+      loadingManagerReference.onLoad = function() {
+        sceneManagerReference.start();
+      };
+
+      loadingManagerReference.onStart = function(url, itemsLoaded, itemsTotal) {
         setLoadingState(
           new ResourcesLoadingState(itemsLoaded, itemsTotal, error)
         );
       };
 
-      manager.onProgress = function(url, itemsLoaded, itemsTotal) {
+      loadingManagerReference.onProgress = function(
+        url,
+        itemsLoaded,
+        itemsTotal
+      ) {
+        sceneManagerReference.stop();
         globalItemsLoaded = itemsLoaded;
         globalItemsTotal = itemsTotal;
 
@@ -65,7 +77,9 @@ function useResourcesLoadingState(
         );
       };
 
-      manager.onError = function(url: string) {
+      loadingManagerReference.onError = function(url: string) {
+        sceneManagerReference.stop();
+
         error = new ResourceLoadError(url);
         props.exceptionHandler.captureException(
           props.loggerBreadcrumbs.add("loadingManager.onError"),
@@ -78,12 +92,12 @@ function useResourcesLoadingState(
       };
 
       return function() {
-        delete manager.onError;
-        delete manager.onProgress;
-        delete manager.onStart;
+        delete loadingManagerReference.onError;
+        delete loadingManagerReference.onProgress;
+        delete loadingManagerReference.onStart;
       };
     },
-    [loadingManager]
+    [loadingManager, sceneManager]
   );
 
   return [resourcesLoadingState];
@@ -119,16 +133,10 @@ function useScene(
       manager
         .attach(canvas)
         .then(function() {
-          if (cancelToken.isCancelled()) {
-            return;
-          }
-
           setSceneLoadingState({
             isAttaching: false,
             isFailed: false
           });
-
-          return manager.loop(cancelToken);
         })
         .catch(function(err: Error) {
           props.exceptionHandler.captureException(
@@ -167,17 +175,18 @@ function useSceneManager(props: Props, loadingManager: THREE.LoadingManager) {
     function() {
       setSceneManager(
         new SceneManager(
-          props.mainLoop,
+          props.exceptionHandler,
+          props.loggerBreadcrumbs.add("SceneManager"),
+          props.scheduler,
           new CanvasLocationComplex(
             loadingManager,
-            props.fpsAdaptive,
             props.loggerBreadcrumbs.add("CanvasLocationComplex"),
             props.debug
           )
         )
       );
     },
-    [props.mainLoop, loadingManager]
+    [props.scheduler, loadingManager]
   );
 
   return [sceneManager];
@@ -188,12 +197,13 @@ export default function HudSceneCanvas(props: Props) {
   const [loadingManager] = React.useState<THREE.LoadingManager>(
     new THREE.LoadingManager()
   );
-  const [resourcesLoadingState] = useResourcesLoadingState(
-    props,
-    loadingManager
-  );
   const [sceneManager] = useSceneManager(props, loadingManager);
   const [isFailed, isAttaching] = useScene(props, sceneManager, canvas);
+  const [resourcesLoadingState] = useResourcesLoadingState(
+    props,
+    loadingManager,
+    sceneManager
+  );
   const [scene, setScene] = React.useState<?HTMLElement>(null);
 
   React.useEffect(
@@ -202,23 +212,12 @@ export default function HudSceneCanvas(props: Props) {
         return;
       }
 
-      const element = scene;
-      const resizeObserver = new ResizeObserver(
-        debounce(function(mutationList) {
-          for (let mutation of mutationList) {
-            const contentRect = mutation.contentRect;
-            const elementSize = new ElementSize(
-              contentRect.width,
-              contentRect.height
-            );
+      const resizeObserver = new HTMLElementResizeObserver(scene);
 
-            sceneManager.resize(elementSize);
-          }
-        }, 300)
-      );
+      resizeObserver.notify(sceneManager);
+      resizeObserver.observe();
 
-      sceneManager.resize(new HTMLElementSize(element));
-      resizeObserver.observe(element);
+      sceneManager.resize(new HTMLElementSize(scene));
 
       return function() {
         resizeObserver.disconnect();

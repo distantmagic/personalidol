@@ -10,7 +10,6 @@ import FBXLoader from "../three/FBXLoader";
 import type { CanvasController } from "../framework/interfaces/CanvasController";
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ElementSize } from "../framework/interfaces/ElementSize";
-import type { FPSAdaptive } from "../framework/interfaces/FPSAdaptive";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 
 const planeSide = 128;
@@ -19,7 +18,6 @@ export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;
   +clock: THREE.Clock;
   +debug: Debugger;
-  +fpsAdaptive: FPSAdaptive;
   +geometry: THREE.Geometry;
   +light: THREE.SpotLight;
   +loadingManager: THREE.LoadingManager;
@@ -40,14 +38,12 @@ export default class CanvasLocationComplex implements CanvasController {
 
   constructor(
     loadingManager: THREE.LoadingManager,
-    fpsAdaptive: FPSAdaptive,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     debug: Debugger
   ) {
     autoBind(this);
 
     this.debug = debug;
-    this.fpsAdaptive = fpsAdaptive;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
 
     this.clock = new THREE.Clock();
@@ -207,7 +203,6 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   end(fps: number, isPanicked: boolean): void {
-    this.fpsAdaptive.setActualFPS(fps);
     this.debug.updateState(this.loggerBreadcrumbs.add("end").add("fps"), fps);
   }
 
