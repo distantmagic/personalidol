@@ -4,4 +4,5 @@ export type KeyboardKeyNames =
   | "ArrowDown"
   | "ArrowLeft"
   | "ArrowRight"
-  | "ArrowUp";
+  | "ArrowUp"
+  | "Shift";

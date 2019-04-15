@@ -18,14 +18,14 @@ declare module "javascript-state-machine" {
 
   declare export type TransitionsConfiguration<States, Transitions> = Array<{|
     name: $Keys<Transitions>,
-    from: InternalStates<States>,
+    from: InternalStates<States> | "*",
     to: InternalStates<States>
   |}>;
 
   declare export type TransitionEvent<States, Transitions> = {|
     from: InternalStates<States>,
     to: InternalStates<States>,
-    transition: $Keys<Transitions> | "init"
+    transition: $Keys<Transitions>
   |};
 
   declare type GenericTransitionCallback<States, Transitions> = (

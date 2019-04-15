@@ -40,17 +40,27 @@ export default function fsm<States, Transitions: {}>(config: {|
         exceptionHandler: exceptionHandler,
         loggerBreadcrumbs: loggerBreadcrumbs,
 
-        off: function(
+        addEventListener: function(
+          state: States & string,
+          callback: FSMTransitionEventCallback<States, Transitions>
+        ) {
+          events.on(state, callback);
+        },
+        addEventListenerAny: function(
+          callback: FSMTransitionEventCallback<States, Transitions>
+        ) {
+          events.on("any", callback);
+        },
+        removeEventListener: function(
           state: States & string,
           callback: FSMTransitionEventCallback<States, Transitions>
         ) {
           events.off(state, callback);
         },
-        on: function(
-          state: States & string,
+        removeEventListenerAny: function(
           callback: FSMTransitionEventCallback<States, Transitions>
         ) {
-          events.on(state, callback);
+          events.off("any", callback);
         }
       };
     },
@@ -59,6 +69,11 @@ export default function fsm<States, Transitions: {}>(config: {|
       onAfterTransition: function(
         evt: TransitionEvent<States, Transitions>
       ): void {
+        if (evt.to === evt.from) {
+          return;
+        }
+
+        events.emit("any", evt);
         events.emit(evt.to, evt);
       },
       onInvalidTransition: function(

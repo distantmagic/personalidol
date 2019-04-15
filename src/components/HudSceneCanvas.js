@@ -199,8 +199,9 @@ function useSceneManager(
           props.exceptionHandler,
           props.scheduler,
           new CanvasLocationComplex(
-            threeLoadingManager,
+            props.exceptionHandler,
             props.loggerBreadcrumbs.add("CanvasLocationComplex"),
+            threeLoadingManager,
             props.keyboardState,
             props.debug
           )

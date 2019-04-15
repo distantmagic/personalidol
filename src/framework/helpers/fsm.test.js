@@ -33,11 +33,11 @@ it("keeps state", function() {
 
   const promise = new Promise(function(resolve) {
     function listener(evt) {
-      phases.off("liquid", listener);
+      phases.removeEventListener("liquid", listener);
       resolve(evt.to);
     }
 
-    phases.on("liquid", listener);
+    phases.addEventListener("liquid", listener);
   });
 
   phases.melt();
@@ -56,4 +56,27 @@ it("handles errors", function() {
   expect(function() {
     phases.melt();
   }).toThrow(InvalidTransitionException);
+});
+
+it("notifies about any kind of event", function() {
+  const logger = new SilentLogger();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const exceptionHandler = new ExceptionHandler(logger);
+  const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
+  const transitions = [];
+
+  function onAny(evt) {
+    transitions.push([evt.from, evt.to]);
+  }
+
+  phases.addEventListenerAny(onAny);
+
+  phases.melt();
+  phases.vaporize();
+
+  phases.removeEventListenerAny(onAny);
+
+  phases.condense();
+
+  expect(transitions).toEqual([["solid", "liquid"], ["liquid", "gas"]]);
 });

@@ -40,9 +40,13 @@ declare module "three" {
   }
 
   declare interface AnimationAction {
+    enabled: boolean;
+
     crossFadeTo(AnimationAction, durationInSeconds: number): AnimationAction;
 
-    play(): void;
+    play(): AnimationAction;
+
+    setEffectiveWeight(number): void;
   }
 
   declare interface AnimationClip {}
