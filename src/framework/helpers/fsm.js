@@ -69,12 +69,10 @@ export default function fsm<States, Transitions: {}>(config: {|
       onAfterTransition: function(
         evt: TransitionEvent<States, Transitions>
       ): void {
-        if (evt.to === evt.from) {
-          return;
+        if (evt.to !== evt.from) {
+          events.emit("any", evt);
+          events.emit(evt.to, evt);
         }
-
-        events.emit("any", evt);
-        events.emit(evt.to, evt);
       },
       onInvalidTransition: function(
         transition: $Keys<Transitions>,

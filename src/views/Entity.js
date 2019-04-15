@@ -19,15 +19,18 @@ export default class Entity implements CanvasView {
   +keyboardState: KeyboardState;
   +personAnimationState: PersonAnimationInstance;
   +threeLoadingManager: THREELoadingManager;
-  +threeScene: THREE.Scene;
+  +scene: THREE.Scene;
+  rotationY: number;
+  velocityX: number;
+  velocityZ: number;
   guy: THREE.Object3D;
   mixer: ?THREE.AnimationMixer;
 
   constructor(
     exceptionHandler: ExceptionHandler,
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    scene: THREE.Scene,
     threeLoadingManager: THREELoadingManager,
-    threeScene: THREE.Scene,
     keyboardState: KeyboardState
   ) {
     this.guy = new THREE.Group();
@@ -36,8 +39,9 @@ export default class Entity implements CanvasView {
       loggerBreadcrumbs
     );
     this.keyboardState = keyboardState;
+    this.rotationY = 0;
     this.threeLoadingManager = threeLoadingManager;
-    this.threeScene = threeScene;
+    this.scene = scene;
   }
 
   async attach(renderer: THREE.WebGLRenderer): Promise<void> {
@@ -45,36 +49,43 @@ export default class Entity implements CanvasView {
 
     loader.setResourcePath("/assets/mesh-default-character/");
 
-    const defaultCharacter = await new Promise((resolve, reject) => {
-      loader.load("/assets/mesh-default-character.fbx", resolve, null, reject);
-    });
     // const attack = await new Promise((resolve, reject) => {
     //   loader.load("/assets/animation-attack-01.fbx", resolve, null, reject);
     // });
-    const idle = await new Promise((resolve, reject) => {
-      loader.load(
-        "/assets/animation-idle-normal-01.fbx",
-        resolve,
-        null,
-        reject
-      );
-    });
-    const run = await new Promise((resolve, reject) => {
-      loader.load(
-        "/assets/animation-run-forward-normal-01.fbx",
-        resolve,
-        null,
-        reject
-      );
-    });
-    const walk = await new Promise((resolve, reject) => {
-      loader.load(
-        "/assets/animation-walk-forward-normal-01.fbx",
-        resolve,
-        null,
-        reject
-      );
-    });
+    const [defaultCharacter, idle, run, walk] = await Promise.all([
+      new Promise((resolve, reject) => {
+        loader.load(
+          "/assets/mesh-default-character.fbx",
+          resolve,
+          null,
+          reject
+        );
+      }),
+      new Promise((resolve, reject) => {
+        loader.load(
+          "/assets/animation-idle-normal-01.fbx",
+          resolve,
+          null,
+          reject
+        );
+      }),
+      new Promise((resolve, reject) => {
+        loader.load(
+          "/assets/animation-run-forward-normal-01.fbx",
+          resolve,
+          null,
+          reject
+        );
+      }),
+      new Promise((resolve, reject) => {
+        loader.load(
+          "/assets/animation-walk-forward-normal-01.fbx",
+          resolve,
+          null,
+          reject
+        );
+      })
+    ]);
     const bones = defaultCharacter.children[0];
 
     this.guy.add(bones);
@@ -83,7 +94,7 @@ export default class Entity implements CanvasView {
 
     this.guy.add(body);
 
-    const head = defaultCharacter.children[9];
+    const head = defaultCharacter.children[11];
 
     this.guy.add(head);
 
@@ -119,18 +130,81 @@ export default class Entity implements CanvasView {
     this.guy.position.set(0, 0, 0);
     this.guy.scale.set(0.1, 0.1, 0.1);
 
-    this.threeScene.add(this.guy);
+    this.scene.add(this.guy);
   }
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
-    this.threeScene.remove(this.guy);
+    this.scene.remove(this.guy);
   }
 
   async start(): Promise<void> {}
 
   async stop(): Promise<void> {}
 
-  begin(): void {}
+  begin(): void {
+    // const stepSize = 0.4;
+    const stepSize = this.keyboardState.isPressed("Shift") ? 0.1 : 0.8;
+
+    this.velocityX = 0;
+    this.velocityZ = 0;
+
+    if (this.keyboardState.isPressed("ArrowLeft")) {
+      this.velocityX -= stepSize;
+    }
+    if (this.keyboardState.isPressed("ArrowRight")) {
+      this.velocityX += stepSize;
+    }
+    if (this.keyboardState.isPressed("ArrowUp")) {
+      this.velocityZ -= stepSize;
+    }
+    if (this.keyboardState.isPressed("ArrowDown")) {
+      this.velocityZ += stepSize;
+    }
+
+    if (this.velocityX && this.velocityZ) {
+      this.velocityX /= Math.sqrt(2);
+      this.velocityZ /= Math.sqrt(2);
+    }
+
+    if (
+      this.keyboardState.isArrowPressed() &&
+      (this.velocityX || this.velocityZ)
+    ) {
+      if (this.keyboardState.isPressed("Shift")) {
+        this.personAnimationState.walk();
+      } else {
+        this.personAnimationState.run();
+      }
+    } else {
+      this.personAnimationState.idle();
+    }
+
+    if (this.velocityX < 0 && this.velocityZ === 0) {
+      // left
+      this.rotationY = (-1 * Math.PI) / 2;
+    } else if (this.velocityX > 0 && this.velocityZ === 0) {
+      // right
+      this.rotationY = Math.PI / 2;
+    } else if (this.velocityX === 0 && this.velocityZ < 0) {
+      // up
+      this.rotationY = Math.PI;
+    } else if (this.velocityX === 0 && this.velocityZ > 0) {
+      // down
+      this.rotationY = 0;
+    } else if (this.velocityX < 0 && this.velocityZ < 0) {
+      // left + up
+      this.rotationY = -1 * Math.PI * 0.75;
+    } else if (this.velocityX > 0 && this.velocityZ < 0) {
+      // right + up
+      this.rotationY = Math.PI * 0.75;
+    } else if (this.velocityX < 0 && this.velocityZ > 0) {
+      // left + down
+      this.rotationY = (-1 * Math.PI) / 4;
+    } else if (this.velocityX > 0 && this.velocityZ > 0) {
+      // right + down
+      this.rotationY = Math.PI / 4;
+    }
+  }
 
   update(delta: number): void {
     const mixer = this.mixer;
@@ -139,71 +213,18 @@ export default class Entity implements CanvasView {
       mixer.update(delta / 1000);
     }
 
-    // const stepSize = 0.4;
-    const stepSize = this.keyboardState.isPressed("Shift") ? 0.6 : 0.1;
-
     // this.guy.rotation.x = -1 * Math.PI / 2;
     // this.guy.rotation.x += 0.01;
     this.guy.rotation.x = 0;
 
-    if (this.keyboardState.isArrowPressed()) {
-      if (this.keyboardState.isPressed("Shift")) {
-        this.personAnimationState.run();
-      } else {
-        this.personAnimationState.walk();
-      }
-    } else {
-      this.personAnimationState.idle();
-    }
-
-    if (this.keyboardState.isPressed("ArrowLeft")) {
-      this.guy.position.x -= stepSize;
-      this.guy.rotation.y = (-1 * Math.PI) / 2;
-    }
-    if (this.keyboardState.isPressed("ArrowRight")) {
-      this.guy.position.x += stepSize;
-      this.guy.rotation.y = Math.PI / 2;
-    }
-    if (this.keyboardState.isPressed("ArrowUp")) {
-      this.guy.position.z -= stepSize;
-      this.guy.rotation.y = Math.PI;
-    }
-    if (
-      this.keyboardState.isPressed("ArrowUp") &&
-      this.keyboardState.isPressed("ArrowLeft")
-    ) {
-      this.guy.rotation.y = -1 * Math.PI * 0.75;
-    }
-    if (
-      this.keyboardState.isPressed("ArrowUp") &&
-      this.keyboardState.isPressed("ArrowRight")
-    ) {
-      this.guy.rotation.y = Math.PI * 0.75;
-    }
-    if (this.keyboardState.isPressed("ArrowDown")) {
-      this.guy.position.z += stepSize;
-      this.guy.rotation.y = 0;
-    }
-    if (
-      this.keyboardState.isPressed("ArrowDown") &&
-      this.keyboardState.isPressed("ArrowLeft")
-    ) {
-      this.guy.rotation.y = (-1 * Math.PI) / 4;
-    }
-    if (
-      this.keyboardState.isPressed("ArrowDown") &&
-      this.keyboardState.isPressed("ArrowRight")
-    ) {
-      this.guy.rotation.y = Math.PI / 4;
-    }
-
+    this.guy.rotation.y = this.rotationY;
     this.guy.position.x = clamp(
-      this.guy.position.x,
+      this.guy.position.x + this.velocityX,
       -1 * (planeSide / 2),
       planeSide / 2
     );
     this.guy.position.z = clamp(
-      this.guy.position.z,
+      this.guy.position.z + this.velocityZ,
       -1 * (planeSide / 2),
       planeSide / 2
     );

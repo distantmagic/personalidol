@@ -20,6 +20,7 @@ const Phases = fsm<States, Transitions>({
   transitions: [
     { name: "melt", from: "solid", to: "liquid" },
     { name: "freeze", from: "liquid", to: "solid" },
+    { name: "freeze", from: "solid", to: "solid" },
     { name: "vaporize", from: "liquid", to: "gas" },
     { name: "condense", from: "gas", to: "liquid" }
   ]
@@ -79,4 +80,22 @@ it("notifies about any kind of event", function() {
   phases.condense();
 
   expect(transitions).toEqual([["solid", "liquid"], ["liquid", "gas"]]);
+});
+
+it("does not notify when state is not changed", function() {
+  const logger = new SilentLogger();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const exceptionHandler = new ExceptionHandler(logger);
+  const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
+  const transitions = [];
+
+  function onAny(evt) {
+    transitions.push([evt.from, evt.to]);
+  }
+
+  phases.addEventListenerAny(onAny);
+
+  phases.freeze();
+
+  expect(transitions).toEqual([]);
 });

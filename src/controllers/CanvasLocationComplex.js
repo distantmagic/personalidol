@@ -4,7 +4,9 @@ import * as THREE from "three";
 import autoBind from "auto-bind";
 import { Howl, Howler } from "howler";
 
+import { default as CubeView } from "../views/Cube";
 import { default as EntityView } from "../views/Entity";
+import { default as PlaneView } from "../views/Plane";
 
 import type { CanvasController } from "../framework/interfaces/CanvasController";
 import type { Debugger } from "../framework/interfaces/Debugger";
@@ -18,17 +20,15 @@ const planeSide = 128;
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;
+  +cubeView: CubeView;
   +debug: Debugger;
   +entityView: EntityView;
-  +geometry: THREE.Geometry;
   +keyboardState: KeyboardState;
   +light: THREE.SpotLight;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +material: THREE.Material;
-  +mesh: THREE.Mesh;
+  +planeView: PlaneView;
   +scene: THREE.Scene;
   +sound: Howl;
-  +texture: THREE.Texture;
   +threeLoadingManager: THREELoadingManager;
 
   constructor(
@@ -46,15 +46,25 @@ export default class CanvasLocationComplex implements CanvasController {
     this.threeLoadingManager = threeLoadingManager;
 
     this.scene = new THREE.Scene();
+
+    this.cubeView = new CubeView(
+      exceptionHandler,
+      loggerBreadcrumbs.add("CubeView"),
+      this.scene,
+      threeLoadingManager
+    );
     this.entityView = new EntityView(
       exceptionHandler,
-      loggerBreadcrumbs,
-      threeLoadingManager,
+      loggerBreadcrumbs.add("EntityView"),
       this.scene,
+      threeLoadingManager,
       keyboardState
     );
-
-    const loadingManager = threeLoadingManager.getLoadingManager();
+    this.planeView = new PlaneView(
+      exceptionHandler,
+      loggerBreadcrumbs.add("PlaneView"),
+      this.scene
+    );
 
     this.sound = new Howl({
       distanceModel: "exponential",
@@ -64,37 +74,9 @@ export default class CanvasLocationComplex implements CanvasController {
       // volume: 0.1,
     });
 
-    // const geometry = new THREE.PlaneGeometry(32, 32, 1, 1);
-    const geometry = new THREE.PlaneGeometry(planeSide, planeSide, 1, 1);
-    const material = new THREE.MeshPhongMaterial({
-      color: 0xcccccc
-      // roughness: 1,
-      // side: THREE.DoubleSide
-    });
-    const plane = new THREE.Mesh(geometry, material);
-
-    plane.rotation.x = (-1 * Math.PI) / 2;
-    plane.rotation.y = 0;
-    plane.rotation.z = Math.PI / 2;
-
-    this.scene.add(plane);
-
     this.camera = new THREE.OrthographicCamera();
     this.camera.position.set(20, 20, 20);
     this.camera.lookAt(this.scene.position);
-    // this.camera.position.y = 20;
-    // this.camera.position.z = 40;
-
-    this.geometry = new THREE.BoxGeometry(2, 2, 2);
-    this.texture = new THREE.TextureLoader(loadingManager).load(
-      "/assets/texture-blood-marble-512.png"
-    );
-    this.material = new THREE.MeshPhongMaterial({
-      map: this.texture
-    });
-
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.position.set(0, 2, 0);
 
     // this.light = new THREE.HemisphereLight(0xffffbb, 0x080820);
     this.light = new THREE.SpotLight(0xffffff);
@@ -107,7 +89,6 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.sound.play();
 
     // this.scene.add(guy);
-    this.scene.add(this.mesh);
     this.scene.add(this.light);
 
     // const geo = new THREE.EdgesGeometry( this.geometry ); // or WireframeGeometry( geometry )
@@ -120,20 +101,27 @@ export default class CanvasLocationComplex implements CanvasController {
 
     // this.scene.add( wireframe );
 
-    await this.entityView.attach(renderer);
+    await Promise.all([
+      this.cubeView.attach(renderer),
+      this.entityView.attach(renderer),
+      this.planeView.attach(renderer)
+    ]);
   }
 
-  begin(): void {}
+  begin(): void {
+    this.cubeView.begin();
+    this.entityView.begin();
+    this.planeView.begin();
+  }
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
     this.scene.remove(this.light);
-    this.scene.remove(this.mesh);
 
-    this.geometry.dispose();
-    this.material.dispose();
-    this.texture.dispose();
-
-    await this.entityView.detach(renderer);
+    await Promise.all([
+      this.cubeView.detach(renderer),
+      this.entityView.detach(renderer),
+      this.planeView.detach(renderer)
+    ]);
   }
 
   draw(renderer: THREE.WebGLRenderer, interpolationPercentage: number): void {
@@ -167,18 +155,16 @@ export default class CanvasLocationComplex implements CanvasController {
   async stop(): Promise<void> {}
 
   update(delta: number): void {
-    this.mesh.position.z = 10;
-    this.mesh.rotation.x += 0.01;
-    this.mesh.rotation.y += 0.02;
-
     // Howler.pos(guy.position.x, guy.position.z, 0);
 
-    // this.camera.position.set(
-    //   1 * guy.position.x + 16,
-    //   20,
-    //   1 * guy.position.z + 16
-    // );
-
+    this.cubeView.update(delta);
     this.entityView.update(delta);
+    this.planeView.update(delta);
+
+    this.camera.position.set(
+      1 * this.entityView.guy.position.x + 16,
+      20,
+      1 * this.entityView.guy.position.z + 16
+    );
   }
 }
