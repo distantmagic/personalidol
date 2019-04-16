@@ -1,6 +1,6 @@
 // @flow
 
-import EventEmitter from "eventemitter3";
+import { EventDispatcher } from "three";
 import StateMachine from "javascript-state-machine";
 
 import InvalidTransitionException from "../classes/Exception/StateMachine/InvalidTransition";
@@ -18,11 +18,11 @@ import type { FSMDefaultMethods } from "../types/FSMDefaultMethods";
 import type { FSMTransitionEventCallback } from "../types/FSMTransitionEventCallback";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
-export default function fsm<States, Transitions: {}>(config: {|
-  init: States & string,
+export default function fsm<States: string, Transitions: {}>(config: {|
+  init: States,
   transitions: TransitionsConfiguration<States, Transitions>
 |}): Class<FSMDefaultFactoryClass<States, Transitions>> {
-  const events = new EventEmitter();
+  const events = new EventDispatcher<States | "any">();
 
   return StateMachine.factory<
     States,
@@ -41,26 +41,26 @@ export default function fsm<States, Transitions: {}>(config: {|
         loggerBreadcrumbs: loggerBreadcrumbs,
 
         addEventListener: function(
-          state: States & string,
+          state: States,
           callback: FSMTransitionEventCallback<States, Transitions>
         ) {
-          events.on(state, callback);
+          events.addEventListener(state, callback);
         },
         addEventListenerAny: function(
           callback: FSMTransitionEventCallback<States, Transitions>
         ) {
-          events.on("any", callback);
+          events.addEventListener("any", callback);
         },
         removeEventListener: function(
-          state: States & string,
+          state: States,
           callback: FSMTransitionEventCallback<States, Transitions>
         ) {
-          events.off(state, callback);
+          events.removeEventListener(state, callback);
         },
         removeEventListenerAny: function(
           callback: FSMTransitionEventCallback<States, Transitions>
         ) {
-          events.off("any", callback);
+          events.removeEventListener("any", callback);
         }
       };
     },
@@ -69,15 +69,26 @@ export default function fsm<States, Transitions: {}>(config: {|
       onAfterTransition: function(
         evt: TransitionEvent<States, Transitions>
       ): void {
-        if (evt.to !== evt.from) {
-          events.emit("any", evt);
-          events.emit(evt.to, evt);
+        if (evt.to === evt.from) {
+          return;
         }
+        events.dispatchEvent<TransitionEvent<States, Transitions>>({
+          from: evt.from,
+          to: evt.to,
+          transition: evt.transition,
+          type: "any"
+        });
+        events.dispatchEvent<TransitionEvent<States, Transitions>>({
+          from: evt.from,
+          to: evt.to,
+          transition: evt.transition,
+          type: evt.to
+        });
       },
       onInvalidTransition: function(
         transition: $Keys<Transitions>,
-        from: States & string,
-        to: States & string
+        from: States,
+        to: States
       ): void {
         const exceptionHandler: ExceptionHandler = this.exceptionHandler;
         const loggerBreadcrumbs: LoggerBreadcrumbs = this.loggerBreadcrumbs;

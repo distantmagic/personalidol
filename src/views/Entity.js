@@ -13,11 +13,10 @@ import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumb
 import type { PersonAnimationInstance } from "../framework/types/PersonAnimationInstance";
 import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
 
-const planeSide = 128;
-
 export default class Entity implements CanvasView {
   +keyboardState: KeyboardState;
   +personAnimationState: PersonAnimationInstance;
+  +planeSide: number;
   +threeLoadingManager: THREELoadingManager;
   +scene: THREE.Scene;
   rotationY: number;
@@ -31,17 +30,19 @@ export default class Entity implements CanvasView {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     scene: THREE.Scene,
     threeLoadingManager: THREELoadingManager,
-    keyboardState: KeyboardState
+    keyboardState: KeyboardState,
+    planeSide: number
   ) {
     this.guy = new THREE.Group();
+    this.keyboardState = keyboardState;
     this.personAnimationState = new PersonAnimation(
       exceptionHandler,
       loggerBreadcrumbs
     );
-    this.keyboardState = keyboardState;
+    this.planeSide = planeSide;
     this.rotationY = 0;
-    this.threeLoadingManager = threeLoadingManager;
     this.scene = scene;
+    this.threeLoadingManager = threeLoadingManager;
   }
 
   async attach(renderer: THREE.WebGLRenderer): Promise<void> {
@@ -143,7 +144,7 @@ export default class Entity implements CanvasView {
 
   begin(): void {
     // const stepSize = 0.4;
-    const stepSize = this.keyboardState.isPressed("Shift") ? 0.1 : 0.8;
+    const stepSize = this.keyboardState.isPressed("Shift") ? 0.1 : 2;
 
     this.velocityX = 0;
     this.velocityZ = 0;
@@ -220,13 +221,13 @@ export default class Entity implements CanvasView {
     this.guy.rotation.y = this.rotationY;
     this.guy.position.x = clamp(
       this.guy.position.x + this.velocityX,
-      -1 * (planeSide / 2),
-      planeSide / 2
+      -1 * (this.planeSide * 5),
+      this.planeSide * 5
     );
     this.guy.position.z = clamp(
       this.guy.position.z + this.velocityZ,
-      -1 * (planeSide / 2),
-      planeSide / 2
+      -1 * (this.planeSide * 5),
+      this.planeSide * 5
     );
   }
 }

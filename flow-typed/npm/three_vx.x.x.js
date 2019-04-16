@@ -14,6 +14,16 @@
  */
 
 declare module "three" {
+  declare type Event<Events: string, Data> = {|
+    ...$Exact<Data>,
+
+    type: Events
+  |};
+
+  declare type EventCallback<Events: string, Data> = (
+    Event<Events, Data>
+  ) => void;
+
   declare type RepeatWrapping = 1000;
 
   declare type LoadingManagerOnErrorCallback = (url: string) => void;
@@ -32,14 +42,14 @@ declare module "three" {
     itemsTotal: number
   ) => void;
 
-  declare interface AmbientLight extends Light {
+  declare export interface AmbientLight extends Light {
     +isAmbientLight: true;
     castShadow: boolean;
 
     constructor(color?: number, intensity?: number): void;
   }
 
-  declare interface AnimationAction {
+  declare export interface AnimationAction {
     enabled: boolean;
 
     crossFadeTo(AnimationAction, durationInSeconds: number): AnimationAction;
@@ -49,9 +59,9 @@ declare module "three" {
     setEffectiveWeight(number): void;
   }
 
-  declare interface AnimationClip {}
+  declare export interface AnimationClip {}
 
-  declare interface AnimationMixer {
+  declare export interface AnimationMixer {
     constructor(Object3D): void;
 
     clipAction(AnimationClip, optionalRoot: ?Object3D): AnimationAction;
@@ -59,7 +69,15 @@ declare module "three" {
     update(delta: number): void;
   }
 
-  declare interface BoxGeometry extends Geometry {
+  declare export interface BaseGeometry {
+    dispose(): void;
+
+    scale(x: number, y: number, z: number): Geometry;
+
+    translate(x: number, y: number, z: number): Geometry;
+  }
+
+  declare export interface BoxGeometry extends Geometry {
     +parameters: {|
       depth: number,
       depthSegments: number,
@@ -79,7 +97,7 @@ declare module "three" {
     ): void;
   }
 
-  declare interface Camera extends Object3D {
+  declare export interface Camera extends Object3D {
     +isCamera: true;
 
     constructor(): void;
@@ -87,7 +105,7 @@ declare module "three" {
     updateProjectionMatrix(): void;
   }
 
-  declare interface Euler {
+  declare export interface Euler {
     +isEuler: true;
     x: number;
     y: number;
@@ -96,34 +114,59 @@ declare module "three" {
     constructor(number, number, number): void;
   }
 
-  declare interface Clock {
+  declare export interface Clock {
     constructor(autoStart?: boolean): void;
   }
 
-  declare interface Geometry {
-    +isGeometry: true;
-
-    constructor(): void;
-
-    dispose(): void;
-
-    scale(x: number, y: number, z: number): Geometry;
-
-    translate(x: number, y: number, z: number): Geometry;
+  declare export interface Color {
+    set(number): void;
   }
 
-  declare interface Group extends Object3D {
+  declare export interface EdgesGeometry extends BufferGeometry {
+    constructor(Geometry, thresholdAngle?: number): void;
+  }
+
+  declare export interface BufferGeometry extends BaseGeometry {
+    +isBufferGeometry: true;
+  }
+
+  declare export interface EventDispatcher<Events: string> {
+    constructor(): void;
+
+    dispatchEvent<Data>(Event<Events, Data>): void;
+
+    addEventListener<Data>(Events, EventCallback<Events, Data>): void;
+
+    removeEventListener<Data>(Events, EventCallback<Events, Data>): void;
+  }
+
+  declare export interface Geometry extends BaseGeometry {
+    +isGeometry: true;
+  }
+
+  declare export interface Group extends Object3D {
     +type: "group";
 
     constructor(): void;
   }
 
-  declare interface Light extends Object3D {
+  declare export interface Light extends Object3D {
     +isLight: true;
     intensity: number;
   }
 
-  declare interface LoadingManager {
+  declare export interface LineBasicMaterial extends Material {
+    constructor({|
+      color: number,
+      linewidth: number
+    |}): void;
+  }
+
+  declare export interface LineSegments extends Object3D {
+    constructor(BaseGeometry, Material): void;
+  }
+
+  declare export interface LoadingManager {
     constructor(): void;
 
     onError?: LoadingManagerOnErrorCallback;
@@ -132,31 +175,34 @@ declare module "three" {
     onStart?: LoadingManagerOnStartCallback;
   }
 
-  declare interface Material extends Geometry {}
+  declare export interface Material extends Geometry {
+    +color: Color;
+  }
 
-  declare interface Mesh extends Object3D {
+  declare export interface Mesh extends Object3D {
     constructor(Geometry, Material): void;
   }
 
-  declare interface MeshBasicMaterial extends Material {
+  declare export interface MeshBasicMaterial extends Material {
     constructor({|
       map?: Texture
     |}): void;
   }
 
-  declare interface MeshNormalMaterial extends Material {
+  declare export interface MeshNormalMaterial extends Material {
     constructor(): void;
   }
 
-  declare interface MeshPhongMaterial extends Material {
+  declare export interface MeshPhongMaterial extends Material {
     constructor({|
       color?: number,
       map?: Texture
     |}): void;
   }
 
-  declare interface Object3D {
+  declare export interface Object3D {
     +children: Array<Object3D>;
+    +material: Material;
     +position: Vector3;
     +rotation: Euler;
     +scale: Vector3;
@@ -168,7 +214,7 @@ declare module "three" {
     lookAt(Vector3): void;
   }
 
-  declare interface OrthographicCamera extends Camera {
+  declare export interface OrthographicCamera extends Camera {
     bottom: number;
     far: number;
     left: number;
@@ -186,22 +232,22 @@ declare module "three" {
     ): void;
   }
 
-  declare interface PerspectiveCamera extends Camera {
+  declare export interface PerspectiveCamera extends Camera {
     aspect: number;
 
     constructor(fov: number, aspect: number, near: number, far: number): void;
   }
 
-  declare interface PlaneGeometry extends Geometry {
+  declare export interface PlaneGeometry extends Geometry {
     constructor(
       width: number,
       height: number,
-      widthSegments: number,
-      heightSegments: number
+      widthSegments?: number,
+      heightSegments?: number
     ): void;
   }
 
-  declare interface PointLight extends Light {
+  declare export interface PointLight extends Light {
     +isPointLight: true;
     +position: Vector3;
 
@@ -213,7 +259,21 @@ declare module "three" {
     ): void;
   }
 
-  declare interface Renderer {
+  declare export interface Raycaster {
+    constructor(): void;
+
+    setFromCamera(Vector2, Camera): void;
+
+    intersectObjects(
+      objects: Array<Object3D>,
+      recursive?: boolean
+    ): Array<{|
+      distance: number,
+      object: Object3D
+    |}>;
+  }
+
+  declare export interface Renderer {
     render(Scene, Camera): void;
 
     getSize(): {|
@@ -226,20 +286,20 @@ declare module "three" {
     setSize(number, number, ?boolean): void;
   }
 
-  declare interface Scene extends Object3D {
+  declare export interface Scene extends Object3D {
     constructor(): void;
   }
 
-  declare interface SpotLight extends Light {
+  declare export interface SpotLight extends Light {
     constructor(color?: number): void;
   }
 
-  declare interface Texture extends Geometry {
+  declare export interface Texture extends Geometry {
     wrapS: RepeatWrapping;
     wrapT: RepeatWrapping;
   }
 
-  declare interface TextureLoader {
+  declare export interface TextureLoader {
     constructor(?LoadingManager): void;
 
     load(
@@ -250,18 +310,34 @@ declare module "three" {
     ): Texture;
   }
 
-  declare interface Vector3 {
-    +isVector: true;
+  declare export interface Vector2 {
+    +isVector2: true;
+    x: number;
+    y: number;
+
+    constructor(x?: number, y?: number): void;
+
+    clone(): Vector2;
+
+    set(number, number): Vector2;
+  }
+
+  declare export interface Vector3 {
+    +isVector3: true;
     x: number;
     y: number;
     z: number;
 
-    constructor(number, number, number): void;
+    constructor(x?: number, y?: number, z?: number): void;
+
+    clone(): Vector3;
 
     set(number, number, number): Vector3;
   }
 
-  declare interface WebGLRenderer extends Renderer {
+  declare export interface WebGLRenderer extends Renderer {
+    +domElement: HTMLCanvasElement;
+
     constructor({|
       alpha?: boolean,
       canvas?: HTMLCanvasElement,
@@ -273,24 +349,4 @@ declare module "three" {
       stencil?: boolean
     |}): void;
   }
-
-  declare module.exports: {|
-    AmbientLight: AmbientLight,
-    AnimationMixer: AnimationMixer,
-    BoxGeometry: BoxGeometry,
-    Clock: Clock,
-    Group: Group,
-    Mesh: Mesh,
-    MeshBasicMaterial: MeshBasicMaterial,
-    MeshNormalMaterial: MeshNormalMaterial,
-    MeshPhongMaterial: MeshPhongMaterial,
-    LoadingManager: LoadingManager,
-    PerspectiveCamera: PerspectiveCamera,
-    PlaneGeometry: PlaneGeometry,
-    PointLight: PointLight,
-    RepeatWrapping: RepeatWrapping,
-    Scene: Scene,
-    TextureLoader: TextureLoader,
-    WebGLRenderer: WebGLRenderer
-  |};
 }

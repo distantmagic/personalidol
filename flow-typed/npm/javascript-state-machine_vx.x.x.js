@@ -14,27 +14,28 @@
  */
 
 declare module "javascript-state-machine" {
-  declare type InternalStates<States> = States & string;
-
-  declare export type TransitionsConfiguration<States, Transitions> = Array<{|
+  declare export type TransitionsConfiguration<
+    States: string,
+    Transitions
+  > = Array<{|
     name: $Keys<Transitions>,
-    from: InternalStates<States> | "*",
-    to: InternalStates<States>
+    from: States | "*",
+    to: States
   |}>;
 
-  declare export type TransitionEvent<States, Transitions> = {|
-    from: InternalStates<States>,
-    to: InternalStates<States>,
+  declare export type TransitionEvent<States: string, Transitions> = {|
+    from: States,
+    to: States,
     transition: $Keys<Transitions>
   |};
 
-  declare type GenericTransitionCallback<States, Transitions> = (
+  declare type GenericTransitionCallback<States: string, Transitions> = (
     transition: $Keys<Transitions>,
-    from: InternalStates<States>,
-    to: InternalStates<States>
+    from: States,
+    to: States
   ) => void;
 
-  declare type HelperMethods<States, Transitions> = {|
+  declare type HelperMethods<States: string, Transitions> = {|
     allStates(): Array<States>,
 
     allTransitions(): Array<$Keys<Transitions>>,
@@ -48,16 +49,24 @@ declare module "javascript-state-machine" {
     transitions(): Array<$Keys<Transitions>>
   |};
 
-  declare export type StateMachineInstance<States, Transitions, Data> = {|
+  declare export type StateMachineInstance<
+    States: string,
+    Transitions,
+    Data
+  > = {|
     ...$Exact<Data>,
     ...$Exact<Transitions>,
     ...$Exact<HelperMethods<States, Transitions>>,
 
-    +state: InternalStates<States>
+    +state: States
   |};
 
-  declare type StateMachineConfigurationBase<States, Transitions, Methods> = {|
-    init?: InternalStates<States>,
+  declare type StateMachineConfigurationBase<
+    States: string,
+    Transitions,
+    Methods
+  > = {|
+    init?: States,
     transitions: TransitionsConfiguration<States, Transitions>,
     methods: {|
       ...$Exact<Methods>,
@@ -70,7 +79,7 @@ declare module "javascript-state-machine" {
   |};
 
   declare type StateMachineConfigurationClass<
-    States,
+    States: string,
     Transitions,
     Methods,
     Data
@@ -81,7 +90,7 @@ declare module "javascript-state-machine" {
   |};
 
   declare type StateMachineConfigurationFactory<
-    States,
+    States: string,
     Transitions,
     Methods,
     Data,
@@ -93,7 +102,7 @@ declare module "javascript-state-machine" {
   |};
 
   declare export class StateMachineFactoryClass<
-    States,
+    States: string,
     Transitions,
     Data,
     ConstructorArguments
@@ -104,7 +113,7 @@ declare module "javascript-state-machine" {
   }
 
   declare export default class StateMachine<
-    States,
+    States: string,
     Transitions,
     Methods,
     Data

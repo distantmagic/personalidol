@@ -1130,7 +1130,7 @@ button {
 
 .dd__scene__canvas.dd__scene__canvas--attaching,
 .dd__scene__canvas.dd__scene__canvas--loading {
-  display: none; }
+  pointer-events: none; }
 
 .dd__scene__loader {
   background-blend-mode: color-burn;
