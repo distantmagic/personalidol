@@ -71,6 +71,13 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
+      keyboardState.reset();
+    },
+    [isDocumentHidden, keyboardState]
+  );
+
+  React.useEffect(
+    function() {
       if (isDocumentHidden) {
         mainLoop.stop();
       } else {

@@ -564,7 +564,7 @@ button {
   background-color: rgba(0, 0, 0, 0.85);
   border-radius: 4px;
   cursor: url("/assets/cursor-rpg-hand-point-32-48.png") 1 1, default;
-  display: flex;
+  display: none;
   filter: drop-shadow(12px 12px 24px rgba(0, 0, 0, 0.6));
   flex-direction: column;
   justify-content: center;
@@ -906,8 +906,8 @@ button {
 
 .dd__hud {
   display: grid;
-  grid-template-areas: "aside dialogue scene" "aside dialogue toolbar" "aside dialogue statusbar";
-  grid-template-columns: 128px 524px calc(100vw - 128px - 524px);
+  grid-template-areas: "dialogue scene aside" "dialogue toolbar aside" "dialogue statusbar aside";
+  grid-template-columns: 524px calc(100vw - 128px - 524px) 128px;
   grid-template-rows: calc(100vh - 80px - 50px) 80px 50px;
   height: 100vh;
   position: relative; }
@@ -1104,7 +1104,7 @@ button {
   display: flex;
   height: 100%;
   justify-content: center;
-  left: 128px;
+  left: 0;
   perspective: 100px;
   position: absolute;
   top: 0;

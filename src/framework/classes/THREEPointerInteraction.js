@@ -3,9 +3,7 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import ElementSize from "./ElementSize";
-
-import type { Camera, Raycaster, Scene, Vector2, WebGLRenderer } from "three";
+import type { Camera, Raycaster, Vector2, WebGLRenderer } from "three";
 
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../interfaces/THREEPointerInteraction";
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
@@ -71,11 +69,5 @@ export default class THREEPointerInteraction
 
   update(delta: number): void {
     this.raycaster.setFromCamera(this.mouseVector, this.camera);
-
-    // const intersects = this.raycaster.intersectObjects(this.scene.children);
-
-    // for (let intersect of intersects) {
-    //   intersect.object.material.color.set( 0x333333 );
-    // }
   }
 }

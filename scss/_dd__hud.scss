@@ -6,13 +6,13 @@ $dd-hud-aside-width: 128px;
 .dd__hud {
   display: grid;
   grid-template-areas:
-    "aside dialogue scene"
-    "aside dialogue toolbar"
-    "aside dialogue statusbar";
+    "dialogue scene aside"
+    "dialogue toolbar aside"
+    "dialogue statusbar aside";
   grid-template-columns:
-    $dd-hud-aside-width
     $dd-hud-dialogue-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width});
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
+    $dd-hud-aside-width;
   grid-template-rows:
     calc(100vh - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
     $dd-hud-toolbar-height

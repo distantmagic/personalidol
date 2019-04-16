@@ -2,18 +2,18 @@
 
 import autoBind from "auto-bind";
 
-import type { KeyboardKeyNames } from "../types/KeyboardKeyNames";
+import type { KeyboardButtonNames } from "../types/KeyboardButtonNames";
 import type { KeyboardState as KeyboardStateInterface } from "../interfaces/KeyboardState";
 
 export default class KeyboardState implements KeyboardStateInterface {
-  +keys: {
+  keys: {
     [string]: boolean
   };
 
   constructor() {
     autoBind(this);
 
-    this.keys = {};
+    this.reset();
   }
 
   disconnect(): void {
@@ -30,20 +30,29 @@ export default class KeyboardState implements KeyboardStateInterface {
     );
   }
 
-  isPressed(code: KeyboardKeyNames): boolean {
+  isPressed(code: KeyboardButtonNames): boolean {
     return !!this.keys[code];
   }
 
   observe(): void {
-    document.addEventListener("keydown", this.onKeyDown);
-    document.addEventListener("keyup", this.onKeyUp);
+    const config = {
+      capture: true,
+      passive: true
+    };
+
+    document.addEventListener("keydown", this.onKeyDown, config);
+    document.addEventListener("keyup", this.onKeyUp, config);
   }
 
-  onKeyDown(evt: KeyboardEvent) {
+  onKeyDown(evt: KeyboardEvent): void {
     this.keys[evt.key] = true;
   }
 
-  onKeyUp(evt: KeyboardEvent) {
+  onKeyUp(evt: KeyboardEvent): void {
     this.keys[evt.key] = false;
+  }
+
+  reset(): void {
+    this.keys = {};
   }
 }

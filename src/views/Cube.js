@@ -23,7 +23,7 @@ export default class Cube implements CanvasView {
   ) {
     this.scene = scene;
 
-    this.geometry = new THREE.BoxGeometry(2, 2, 2);
+    this.geometry = new THREE.BoxGeometry(0.3, 0.3, 0.3);
     this.texture = new THREE.TextureLoader(
       threeLoadingManager.getLoadingManager()
     ).load("/assets/texture-blood-marble-512.png");
@@ -32,7 +32,7 @@ export default class Cube implements CanvasView {
     });
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.position.set(0, 2, 0);
+    this.mesh.position.set(0, 0.5, 0);
   }
 
   async attach(renderer: THREE.WebGLRenderer): Promise<void> {

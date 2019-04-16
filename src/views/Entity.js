@@ -129,7 +129,7 @@ export default class Entity implements CanvasView {
     actions.idling.play();
 
     this.guy.position.set(0, 0, 0);
-    this.guy.scale.set(0.1, 0.1, 0.1);
+    this.guy.scale.set(0.01, 0.01, 0.01);
 
     this.scene.add(this.guy);
   }
@@ -144,7 +144,8 @@ export default class Entity implements CanvasView {
 
   begin(): void {
     // const stepSize = 0.4;
-    const stepSize = this.keyboardState.isPressed("Shift") ? 0.1 : 2;
+    // const stepSize = this.keyboardState.isPressed("Shift") ? 0.1 : 2;
+    const stepSize = this.keyboardState.isPressed("Shift") ? 0.01 : 0.08;
 
     this.velocityX = 0;
     this.velocityZ = 0;
@@ -163,8 +164,8 @@ export default class Entity implements CanvasView {
     }
 
     if (this.velocityX && this.velocityZ) {
-      this.velocityX /= Math.sqrt(2);
-      this.velocityZ /= Math.sqrt(2);
+      this.velocityX /= Math.SQRT2;
+      this.velocityZ /= Math.SQRT2;
     }
 
     if (

@@ -1,6 +1,6 @@
 // @flow
 
-export type KeyboardKeyNames =
+export type KeyboardButtonNames =
   | "ArrowDown"
   | "ArrowLeft"
   | "ArrowRight"

@@ -284,7 +284,8 @@ button {
   // background-image: url('assets/texture-paper-1-512.jpg');
   border-radius: $dd-frame-border-radius;
   cursor: $cursor-default;
-  display: flex;
+  // display: flex;
+  display: none;
   filter: drop-shadow(12px 12px 24px rgba(black, 0.6));
   flex-direction: column;
   // height: 100%;

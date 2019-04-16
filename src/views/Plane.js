@@ -6,21 +6,30 @@ import random from "lodash/random";
 import type { CanvasView } from "../framework/interfaces/CanvasView";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import type { PointerState } from "../framework/interfaces/PointerState";
+import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
 
 export default class Plane implements CanvasView {
   +plane: THREE.Group;
   +planeSide: number;
+  +pointerState: PointerState;
   +scene: THREE.Scene;
+  +threePointerInteraction: THREEPointerInteraction;
+  +wireframe: THREE.LineSegments;
 
   constructor(
     exceptionHandler: ExceptionHandler,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     scene: THREE.Scene,
-    planeSide: number
+    planeSide: number,
+    pointerState: PointerState,
+    threePointerInteraction: THREEPointerInteraction
   ) {
+    this.pointerState = pointerState;
     this.scene = scene;
+    this.threePointerInteraction = threePointerInteraction;
 
-    const geometrySide = 10;
+    const geometrySide = 1;
     const geometry = new THREE.PlaneGeometry(geometrySide, geometrySide);
 
     this.plane = new THREE.Group();
@@ -46,11 +55,8 @@ export default class Plane implements CanvasView {
       }
     }
 
-    // this.scene.add(plane);
-  }
-
-  async attach(renderer: THREE.WebGLRenderer): Promise<void> {
-    const boxGeometry = new THREE.BoxGeometry(10, 16, 10);
+    // const boxGeometry = new THREE.BoxGeometry(10, 16, 10);
+    const boxGeometry = new THREE.BoxGeometry(1, 0.6, 1);
 
     const geo = new THREE.EdgesGeometry(boxGeometry); // or WireframeGeometry( geometry )
     const mat = new THREE.LineBasicMaterial({
@@ -60,13 +66,15 @@ export default class Plane implements CanvasView {
     const wireframe = new THREE.LineSegments(geo, mat);
 
     wireframe.position.x = 0;
-    wireframe.position.y = 8.1;
+    // wireframe.position.y = 8.1;
+    wireframe.position.y = 0.31;
     wireframe.position.z = 0;
-    // wireframe.rotation.y = Math.PI / 3;
-    // wireframe.scale.set(10, 10, 10);
 
-    this.scene.add(wireframe);
+    this.wireframe = wireframe;
+  }
 
+  async attach(renderer: THREE.WebGLRenderer): Promise<void> {
+    this.scene.add(this.wireframe);
     this.scene.add(this.plane);
   }
 
@@ -80,5 +88,27 @@ export default class Plane implements CanvasView {
 
   begin(): void {}
 
-  update(delta: number): void {}
+  update(delta: number): void {
+    if (!this.pointerState.isPressed("Primary")) {
+      this.scene.remove(this.wireframe);
+
+      return;
+    }
+
+    const intersects = this.threePointerInteraction
+      .getCameraRaycaster()
+      .intersectObjects(this.plane.children);
+    if (intersects.length < 1) {
+      this.scene.remove(this.wireframe);
+    } else {
+      this.scene.add(this.wireframe);
+    }
+
+    for (let intersect of intersects) {
+      // console.log(intersects.length);
+      this.wireframe.position.x = intersect.object.position.x;
+      this.wireframe.position.z = intersect.object.position.z;
+      // intersect.object.material.color.set( 0x333333 );
+    }
+  }
 }

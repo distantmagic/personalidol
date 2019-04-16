@@ -7,6 +7,7 @@ import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
 import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
 import HudSceneCanvasOverlay from "./HudSceneCanvasOverlay";
+import PointerState from "../framework/classes/PointerState";
 import ResourcesLoadingState from "../framework/classes/ResourcesLoadingState";
 import SceneManager from "../framework/classes/SceneManager";
 import THREELoadingManager from "../framework/classes/THREELoadingManager";
@@ -15,6 +16,7 @@ import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { KeyboardState } from "../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import type { PointerState as PointerStateInterface } from "../framework/interfaces/PointerState";
 import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../framework/interfaces/ResourcesLoadingState";
 import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
 import type { Scheduler } from "../framework/interfaces/Scheduler";
@@ -184,6 +186,7 @@ function useScene(
 
 function useSceneManager(
   props: Props,
+  pointerState: ?PointerStateInterface,
   threeLoadingManager: THREELoadingManagerInterface
 ) {
   const [
@@ -193,6 +196,10 @@ function useSceneManager(
 
   React.useEffect(
     function() {
+      if (!pointerState) {
+        return;
+      }
+
       setSceneManager(
         new SceneManager(
           props.loggerBreadcrumbs.add("SceneManager"),
@@ -203,12 +210,13 @@ function useSceneManager(
             props.loggerBreadcrumbs.add("CanvasLocationComplex"),
             threeLoadingManager,
             props.keyboardState,
+            pointerState,
             props.debug
           )
         )
       );
     },
-    [props.scheduler, threeLoadingManager]
+    [pointerState, props.scheduler, threeLoadingManager]
   );
 
   return [sceneManager];
@@ -222,7 +230,15 @@ export default function HudSceneCanvas(props: Props) {
       props.exceptionHandler
     )
   );
-  const [sceneManager] = useSceneManager(props, threeLoadingManager);
+  const [
+    pointerState,
+    setPointerState
+  ] = React.useState<?PointerStateInterface>(null);
+  const [sceneManager] = useSceneManager(
+    props,
+    pointerState,
+    threeLoadingManager
+  );
   const [isFailed, isAttaching] = useScene(props, sceneManager, canvas);
   const [resourcesLoadingState] = useResourcesLoadingState(
     props,
@@ -230,6 +246,25 @@ export default function HudSceneCanvas(props: Props) {
     sceneManager
   );
   const [scene, setScene] = React.useState<?HTMLElement>(null);
+
+  React.useEffect(
+    function() {
+      if (!scene) {
+        return;
+      }
+
+      const pointerState = new PointerState(scene);
+
+      pointerState.observe();
+
+      setPointerState(pointerState);
+
+      return function() {
+        pointerState.disconnect();
+      };
+    },
+    [scene]
+  );
 
   React.useEffect(
     function() {
@@ -251,32 +286,30 @@ export default function HudSceneCanvas(props: Props) {
     [sceneManager, scene]
   );
 
-  if (!sceneManager) {
-    return (
-      <div className="dd__scene dd__scene--hud dd__scene--canvas">
+  return (
+    <div className="dd__scene dd__scene--hud dd__scene--canvas" ref={setScene}>
+      {sceneManager ? (
+        <React.Fragment>
+          <HudSceneCanvasOverlay
+            isFailed={isFailed || resourcesLoadingState.isFailed()}
+            isAttaching={isAttaching}
+            isLoading={resourcesLoadingState.isLoading()}
+            itemsLoaded={resourcesLoadingState.getItemsLoaded()}
+            itemsTotal={resourcesLoadingState.getItemsTotal()}
+          />
+          <canvas
+            className={classnames("dd__scene__canvas", {
+              "dd__scene__canvas--attaching": isAttaching,
+              "dd__scene__canvas--loading": resourcesLoadingState.isLoading()
+            })}
+            ref={setCanvas}
+          />
+        </React.Fragment>
+      ) : (
         <div className="dd__loader dd__scene__loader">
           Initializing scene...
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="dd__scene dd__scene--hud dd__scene--canvas" ref={setScene}>
-      <HudSceneCanvasOverlay
-        isFailed={isFailed || resourcesLoadingState.isFailed()}
-        isAttaching={isAttaching}
-        isLoading={resourcesLoadingState.isLoading()}
-        itemsLoaded={resourcesLoadingState.getItemsLoaded()}
-        itemsTotal={resourcesLoadingState.getItemsTotal()}
-      />
-      <canvas
-        className={classnames("dd__scene__canvas", {
-          "dd__scene__canvas--attaching": isAttaching,
-          "dd__scene__canvas--loading": resourcesLoadingState.isLoading()
-        })}
-        ref={setCanvas}
-      />
+      )}
     </div>
   );
 }

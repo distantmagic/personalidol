@@ -7,6 +7,7 @@ import {
   // Howler
 } from "howler";
 
+import CanvasViewGroup from "../framework/classes/CanvasViewGroup";
 import THREEPointerInteraction from "../framework/classes/THREEPointerInteraction";
 import { default as CubeView } from "../views/Cube";
 import { default as EntityView } from "../views/Entity";
@@ -18,19 +19,21 @@ import type { ElementSize } from "../framework/interfaces/ElementSize";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { KeyboardState } from "../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import type { PointerState } from "../framework/interfaces/PointerState";
 import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
+import type { CanvasViewGroup as CanvasViewGroupInterface } from "../framework/interfaces/CanvasViewGroup";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../framework/interfaces/THREEPointerInteraction";
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;
-  +cubeView: CubeView;
+  +canvasViewGroup: CanvasViewGroupInterface;
+  +exceptionHandler: ExceptionHandler;
   +debug: Debugger;
-  +entityView: EntityView;
   +keyboardState: KeyboardState;
   +light: THREE.SpotLight;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +planeSide: number;
-  +planeView: PlaneView;
+  +pointerState: PointerState;
   +scene: THREE.Scene;
   +sound: Howl;
   +threeLoadingManager: THREELoadingManager;
@@ -41,15 +44,19 @@ export default class CanvasLocationComplex implements CanvasController {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     threeLoadingManager: THREELoadingManager,
     keyboardState: KeyboardState,
+    pointerState: PointerState,
     debug: Debugger
   ) {
     autoBind(this);
 
+    this.canvasViewGroup = new CanvasViewGroup();
     this.debug = debug;
+    this.exceptionHandler = exceptionHandler;
     this.keyboardState = keyboardState;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     // (36x36), (72x72), (108x108), (144x144), (216,216), (252, 252)
     this.planeSide = 108;
+    this.pointerState = pointerState;
     this.threeLoadingManager = threeLoadingManager;
     this.scene = new THREE.Scene();
     // this.scene.rotation.y = Math.PI / 1.6;
@@ -70,30 +77,9 @@ export default class CanvasLocationComplex implements CanvasController {
     this.light = new THREE.SpotLight(0xffffff);
     // this.light.position.set(planeSide / 2, planeSide / 2, planeSide / 2);
     this.light.position.set(
-      this.planeSide * 2,
-      this.planeSide * 2,
-      this.planeSide * 2
-    );
-
-    this.cubeView = new CubeView(
-      exceptionHandler,
-      loggerBreadcrumbs.add("CubeView"),
-      this.scene,
-      threeLoadingManager
-    );
-    this.entityView = new EntityView(
-      exceptionHandler,
-      loggerBreadcrumbs.add("EntityView"),
-      this.scene,
-      threeLoadingManager,
-      keyboardState,
-      this.planeSide
-    );
-    this.planeView = new PlaneView(
-      exceptionHandler,
-      loggerBreadcrumbs.add("PlaneView"),
-      this.scene,
-      this.planeSide
+      (this.planeSide * 10) / 2,
+      (this.planeSide * 10) / 2,
+      (this.planeSide * 10) / 2
     );
   }
 
@@ -111,23 +97,46 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.scene.add(this.light);
 
-    await Promise.all([
-      this.cubeView.attach(renderer),
-      this.entityView.attach(renderer),
-      this.planeView.attach(renderer)
-    ]);
+    this.canvasViewGroup.add(
+      new CubeView(
+        this.exceptionHandler,
+        this.loggerBreadcrumbs.add("CubeView"),
+        this.scene,
+        this.threeLoadingManager
+      )
+    );
+    this.canvasViewGroup.add(
+      new EntityView(
+        this.exceptionHandler,
+        this.loggerBreadcrumbs.add("EntityView"),
+        this.scene,
+        this.threeLoadingManager,
+        this.keyboardState,
+        this.planeSide
+      )
+    );
+    this.canvasViewGroup.add(
+      new PlaneView(
+        this.exceptionHandler,
+        this.loggerBreadcrumbs.add("PlaneView"),
+        this.scene,
+        this.planeSide,
+        this.pointerState,
+        threePointerInteraction
+      )
+    );
+
+    await this.canvasViewGroup.attach(renderer);
   }
 
   begin(): void {
-    this.cubeView.begin();
-    this.entityView.begin();
-    this.planeView.begin();
-
     const threePointerInteraction = this.threePointerInteraction;
 
     if (threePointerInteraction) {
       threePointerInteraction.begin();
     }
+
+    this.canvasViewGroup.begin();
   }
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
@@ -143,11 +152,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.scene.remove(this.light);
 
-    await Promise.all([
-      this.cubeView.detach(renderer),
-      this.entityView.detach(renderer),
-      this.planeView.detach(renderer)
-    ]);
+    await this.canvasViewGroup.detach(renderer);
   }
 
   draw(renderer: THREE.WebGLRenderer, interpolationPercentage: number): void {
@@ -163,13 +168,13 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   resize(elementSize: ElementSize): void {
-    const zoom = 20;
+    const zoom = 200;
     const height = elementSize.getHeight();
     const width = elementSize.getWidth();
 
-    this.camera.left = (-1 * width) / zoom;
-    this.camera.far = 195;
-    this.camera.near = -195;
+    this.camera.left = -1 * (width / zoom);
+    this.camera.far = 50;
+    this.camera.near = 0;
     this.camera.right = width / zoom;
     this.camera.top = height / zoom;
     this.camera.bottom = (-1 * height) / zoom;
@@ -182,27 +187,31 @@ export default class CanvasLocationComplex implements CanvasController {
     }
   }
 
-  async start(): Promise<void> {}
+  async start(): Promise<void> {
+    await this.canvasViewGroup.start();
+  }
 
-  async stop(): Promise<void> {}
+  async stop(): Promise<void> {
+    await this.canvasViewGroup.stop();
+  }
 
   update(delta: number): void {
-    // Howler.pos(guy.position.x, guy.position.z, 0);
-
-    this.cubeView.update(delta);
-    this.entityView.update(delta);
-    this.planeView.update(delta);
-
-    this.camera.position.set(
-      1 * this.entityView.guy.position.x + 16,
-      20,
-      1 * this.entityView.guy.position.z + 16
-    );
-
     const threePointerInteraction = this.threePointerInteraction;
 
     if (threePointerInteraction) {
+      // update pointer interaction first, as it may be used internally by
+      // other views
       threePointerInteraction.update(delta);
     }
+
+    // Howler.pos(guy.position.x, guy.position.z, 0);
+
+    this.canvasViewGroup.update(delta);
+
+    // this.camera.position.set(
+    //   1 * this.entityView.guy.position.x + 16,
+    //   20,
+    //   1 * this.entityView.guy.position.z + 16
+    // );
   }
 }

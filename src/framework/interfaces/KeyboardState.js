@@ -1,10 +1,8 @@
 // @flow
 
-import type { KeyboardKeyNames } from "../types/KeyboardKeyNames";
-import type { Observer } from "./Observer";
+import type { InputDeviceState } from "./InputDeviceState";
+import type { KeyboardButtonNames } from "../types/KeyboardButtonNames";
 
-export interface KeyboardState extends Observer {
+export interface KeyboardState extends InputDeviceState<KeyboardButtonNames> {
   isArrowPressed(): boolean;
-
-  isPressed(KeyboardKeyNames): boolean;
 }
