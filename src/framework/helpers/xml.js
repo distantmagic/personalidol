@@ -7,18 +7,22 @@
  * source: https://developer.mozilla.org/en-US/docs/Web/API/DOMParser
  */
 
-export function extractParseError(doc: Document): Error {
+import { default as XMLDocumentException } from "../classes/Exception/XMLDocument";
+
+export function extractParseError(doc: Document): XMLDocumentException {
   const documentElement = doc.documentElement;
 
   if (!documentElement) {
-    throw new Error("Missing documentElement in XML file.");
+    throw new XMLDocumentException("Missing documentElement in XML file.");
   }
 
   if ("parsererror" !== documentElement.nodeName) {
-    throw new Error("Expected 'parsererror' XML document, got something else.");
+    throw new XMLDocumentException(
+      "Expected 'parsererror' XML document, got something else."
+    );
   }
 
-  return new Error(documentElement.textContent);
+  return new XMLDocumentException(documentElement.textContent);
 }
 
 export function isParseError(doc: Document): boolean {
@@ -35,7 +39,7 @@ export function getAttribute(element: HTMLElement, name: string): Attr {
   const attr = element.attributes.getNamedItem(name);
 
   if (!attr) {
-    throw new Error(`Document is missing attribute: ${name}`);
+    throw new XMLDocumentException(`Document is missing attribute: ${name}`);
   }
 
   return attr;
@@ -45,7 +49,9 @@ export function getNumberAttribute(element: HTMLElement, name: string): number {
   const value = parseInt(getStringAttribute(element, name), 10);
 
   if (isNaN(value)) {
-    throw new Error(`Document attribute is not numeric: "${name}"`);
+    throw new XMLDocumentException(
+      `Document attribute is not numeric: "${name}"`
+    );
   }
 
   return value;

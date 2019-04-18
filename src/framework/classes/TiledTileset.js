@@ -1,5 +1,7 @@
 // @flow
 
+import { default as TiledTilesetException } from "./Exception/Tiled/Tileset";
+
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledTile } from "../interfaces/TiledTile";
 import type { TiledTileset as TiledTilesetInterface } from "../interfaces/TiledTileset";
@@ -23,7 +25,7 @@ export default class TiledTileset implements TiledTilesetInterface {
     const tile = this.tiles.get(id);
 
     if (!tile) {
-      throw new Error(`Tile not found: "${id}".`);
+      throw new TiledTilesetException(`Tile not found: "${id}".`);
     }
 
     return tile;

@@ -6,6 +6,7 @@ import TiledTile from "./TiledTile";
 import TiledTileImage from "./TiledTileImage";
 import TiledTileParser from "./TiledTileParser";
 import TiledTileset from "./TiledTileset";
+import { default as TiledTilesetException } from "./Exception/Tiled/Tileset";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { TiledTile as TiledTileInterface } from "../interfaces/TiledTile";
@@ -35,7 +36,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     const grid: ?HTMLElement = doc.querySelector("grid");
 
     if (!grid) {
-      throw new Error("Tileset file is issing grid metadata.");
+      throw new TiledTilesetException("Tileset file is issing grid metadata.");
     }
 
     const tiles: NodeList<HTMLElement> = doc.querySelectorAll("tile");
@@ -44,7 +45,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     // console.log(grid.attributes.getNamedItem("height").value);
     // console.log(grid.attributes.getNamedItem("width").value);
     if (!tiles) {
-      throw new Error("Tileset tiles data is missing.");
+      throw new TiledTilesetException("Tileset tiles data is missing.");
     }
 
     const expectedTileCount = xml.getNumberAttribute(
@@ -53,7 +54,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     );
 
     if (tiles.length !== expectedTileCount) {
-      throw new Error(
+      throw new TiledTilesetException(
         "Inconsistent tileset data: expected tile count does not match actual tiles number."
       );
     }
@@ -70,7 +71,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     for (let tileElement of tiles.values()) {
       const tileParser = new TiledTileParser(tileElement);
 
-      tiledTilePromises.push(tileParser.parse());
+      tiledTilePromises.push(tileParser.parse(cancelToken));
     }
 
     for (let tiledTile of await Promise.all(tiledTilePromises)) {

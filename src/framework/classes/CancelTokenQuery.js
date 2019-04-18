@@ -1,5 +1,7 @@
 // @flow
 
+import { default as CancelTokenException } from "./Exception/CancelToken";
+
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
 import type { Query } from "../interfaces/Query";
@@ -25,7 +27,9 @@ export default class CancelTokenQuery<T>
 
   execute(): Promise<?T> {
     if (this.isExecuting() || this.isExecuted()) {
-      throw new Error("You cannot execute query more than once.");
+      throw new CancelTokenException(
+        "You cannot execute query more than once."
+      );
     }
 
     this._isExecuting = true;
@@ -43,13 +47,17 @@ export default class CancelTokenQuery<T>
 
   getResult(): T {
     if (this.isExecuting()) {
-      throw new Error("Query is still executing.");
+      throw new CancelTokenException("Query is still executing.");
     }
     if (!this.isExecuted()) {
-      throw new Error("Query must be executed before asking for a result.");
+      throw new CancelTokenException(
+        "Query must be executed before asking for a result."
+      );
     }
     if (!this._result) {
-      throw new Error("Execution result is not set and it was expected.");
+      throw new CancelTokenException(
+        "Execution result is not set and it was expected."
+      );
     }
 
     return this._result;
@@ -80,7 +88,7 @@ export default class CancelTokenQuery<T>
 
   setExecuted(result: ?T): void {
     if (this.isExecuted()) {
-      throw new Error("Query is already executed.");
+      throw new CancelTokenException("Query is already executed.");
     }
 
     this._isExecuted = true;
