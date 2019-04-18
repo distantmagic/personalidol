@@ -1,0 +1,14 @@
+// @flow
+
+import type { ElementSize } from "../interfaces/ElementSize";
+import type { TiledTileImage as TiledTileImageInterface } from "../interfaces/TiledTileImage";
+
+export default class TiledTileImage implements TiledTileImageInterface {
+  +elementSize: ElementSize;
+  +source: string;
+
+  constructor(source: string, elementSize: ElementSize): void {
+    this.elementSize = elementSize;
+    this.source = source;
+  }
+}

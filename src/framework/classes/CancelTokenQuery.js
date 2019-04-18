@@ -64,7 +64,7 @@ export default class CancelTokenQuery<T>
     this._isExecuted = true;
     this._result = result;
 
-    for (let [callback] of this.callbacks.entries()) {
+    for (let callback of this.callbacks.values()) {
       callback(result);
     }
     this.callbacks.clear();

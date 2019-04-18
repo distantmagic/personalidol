@@ -27,25 +27,25 @@ export default class Scheduler implements SchedulerInterface {
   }
 
   notifyBegin(): void {
-    for (let [callback] of this.beginCallbacks.entries()) {
+    for (let callback of this.beginCallbacks.values()) {
       callback();
     }
   }
 
   notifyDraw(interpolationPercentage: number): void {
-    for (let [callback] of this.drawCallbacks.entries()) {
+    for (let callback of this.drawCallbacks.values()) {
       callback(interpolationPercentage);
     }
   }
 
   notifyEnd(fps: number, isPanicked: boolean): void {
-    for (let [callback] of this.endCallbacks.entries()) {
+    for (let callback of this.endCallbacks.values()) {
       callback(fps, isPanicked);
     }
   }
 
   notifyUpdate(delta: number): void {
-    for (let [callback] of this.updateCallbacks.entries()) {
+    for (let callback of this.updateCallbacks.values()) {
       callback(delta);
     }
   }

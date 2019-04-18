@@ -5,7 +5,6 @@ import * as React from "react";
 import CancelToken from "../framework/classes/CancelToken";
 import Dialogue from "./Dialogue";
 import DialogueQuery from "../framework/classes/Query/Dialogue";
-import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import DialogueSpinner from "./DialogueSpinner";
 // import { default as DialogueClass } from "../framework/classes/Dialogue";
 
@@ -20,7 +19,7 @@ import type { Speaks } from "../framework/interfaces/Sentient/Speaks";
 
 type Props = {|
   dialogueInitiator: Identifiable & Speaks,
-  dialogueResourceReference: DialogueResourceReference,
+  dialogueResourceReference: string,
   exceptionHandler: ExceptionHandler,
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,

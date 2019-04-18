@@ -17,6 +17,7 @@ export default class Entity implements CanvasView {
   +keyboardState: KeyboardState;
   +personAnimationState: PersonAnimationInstance;
   +planeSide: number;
+  +spotLight: THREE.SpotLight;
   +threeLoadingManager: THREELoadingManager;
   +scene: THREE.Scene;
   rotationY: number;
@@ -43,6 +44,16 @@ export default class Entity implements CanvasView {
     this.rotationY = 0;
     this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
+
+    // this.spotLight = new THREE.SpotLight(
+    //   0xffffff,
+    //   0.4,
+    //   0,
+    //   Math.PI,
+    //   0.6,
+    // );
+    // this.spotLight.target = this.guy;
+    // this.spotLight.position.y = 2;
   }
 
   async attach(renderer: THREE.WebGLRenderer): Promise<void> {
@@ -132,6 +143,8 @@ export default class Entity implements CanvasView {
     this.guy.scale.set(0.01, 0.01, 0.01);
 
     this.scene.add(this.guy);
+
+    // this.scene.add(this.spotLight);
   }
 
   async detach(renderer: THREE.WebGLRenderer): Promise<void> {
@@ -230,5 +243,8 @@ export default class Entity implements CanvasView {
       -1 * (this.planeSide * 5),
       this.planeSide * 5
     );
+
+    // this.spotLight.position.x = this.guy.position.x;
+    // this.spotLight.position.z = this.guy.position.z;
   }
 }

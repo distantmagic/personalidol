@@ -28,7 +28,7 @@ export default class HTMLElementResizeObserver
             contentRect.height
           );
 
-          for (let [callback] of notifiable.entries()) {
+          for (let callback of notifiable.values()) {
             callback.resize(elementSize);
           }
         }

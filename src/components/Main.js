@@ -8,7 +8,6 @@ import CancelToken from "../framework/classes/CancelToken";
 import Debugger from "../framework/classes/Debugger";
 import DebuggerListing from "./DebuggerListing";
 import DialogueLoader from "./DialogueLoader";
-import DialogueResourceReference from "../framework/classes/ResourceReference/Dialogue";
 import ExpressionBus from "../framework/classes/ExpressionBus";
 import ExpressionContext from "../framework/classes/ExpressionContext";
 import FPSAdaptive from "../framework/classes/FPSAdaptive";
@@ -38,7 +37,7 @@ export default function Main(props: Props) {
   const [debug] = React.useState<Debugger>(new Debugger());
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState(
-    new DialogueResourceReference("/data/dialogues/hermit-intro.yml")
+    "/data/dialogues/hermit-intro.yml"
   );
   const [expressionBus] = React.useState(new ExpressionBus());
   const [expressionContext] = React.useState(new ExpressionContext());

@@ -18,7 +18,7 @@ export default class CancelToken implements CancelTokenInterface {
   cancel(): void {
     this._isCancelled = true;
 
-    for (let [callback] of this.callbacks.entries()) {
+    for (let callback of this.callbacks.values()) {
       callback(new Cancelled("Token is cancelled."));
     }
     this.callbacks.clear();

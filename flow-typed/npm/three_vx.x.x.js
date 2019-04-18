@@ -291,6 +291,8 @@ declare module "three" {
   }
 
   declare export interface SpotLight extends Light {
+    target: Object3D;
+
     constructor(color?: number): void;
   }
 

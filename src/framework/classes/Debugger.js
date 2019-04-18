@@ -37,7 +37,7 @@ export default class Debugger implements DebuggerInterface {
     }
 
     this.state = state;
-    for (let [callback] of this.callbacks.entries()) {
+    for (let callback of this.callbacks.values()) {
       callback(state);
     }
   }

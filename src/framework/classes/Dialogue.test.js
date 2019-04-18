@@ -1,6 +1,6 @@
 // @flow
 
-import * as fixtures from "../fixtures";
+import * as fixtures from "../../fixtures";
 import Dialogue from "./Dialogue";
 import DialogueScript from "./DialogueScript";
 import ExpressionBus from "./ExpressionBus";
@@ -10,9 +10,7 @@ import Person from "./Entity/Person";
 const testContext = {};
 
 beforeEach(async function() {
-  testContext.dialogueScript = await fixtures.dialogue(
-    "0001-basic-dialogue.yml"
-  );
+  testContext.dialogueScript = await fixtures.dialogue("dialogue-basic.yml");
 });
 
 it("switches dialogue turns", async function() {

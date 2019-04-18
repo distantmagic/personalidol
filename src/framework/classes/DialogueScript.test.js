@@ -1,6 +1,6 @@
 // @flow
 
-import * as fixtures from "../fixtures";
+import * as fixtures from "../../fixtures";
 import DialogueScript from "./DialogueScript";
 import ExpressionBus from "./ExpressionBus";
 import ExpressionContext from "./ExpressionContext";
@@ -8,9 +8,7 @@ import ExpressionContext from "./ExpressionContext";
 const testContext = {};
 
 beforeEach(async function() {
-  testContext.dialogueScript = await fixtures.dialogue(
-    "0001-basic-dialogue.yml"
-  );
+  testContext.dialogueScript = await fixtures.dialogue("dialogue-basic.yml");
 });
 
 it("loads dialogue messages", async function() {

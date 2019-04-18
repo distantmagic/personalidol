@@ -53,9 +53,7 @@ export default class THREELoadingManager
         this.resourcesLoadError
       );
 
-      for (let [
-        callback
-      ] of this.resourcesLoadingStateChangeCallbacks.entries()) {
+      for (let callback of this.resourcesLoadingStateChangeCallbacks.values()) {
         callback(event);
       }
     };
@@ -71,12 +69,12 @@ export default class THREELoadingManager
       this.resourcesLoadError = error;
 
       notifyResourcesLoadingStateChange();
-      for (let [callback] of this.errorCallbacks.entries()) {
+      for (let callback of this.errorCallbacks.values()) {
         callback(url);
       }
     };
     this.threeLoadingManager.onLoad = (): void => {
-      for (let [callback] of this.loadCallbacks.entries()) {
+      for (let callback of this.loadCallbacks.values()) {
         callback();
       }
     };
@@ -89,7 +87,7 @@ export default class THREELoadingManager
       this.itemsTotal = itemsTotal;
 
       notifyResourcesLoadingStateChange();
-      for (let [callback] of this.progressCallbacks.entries()) {
+      for (let callback of this.progressCallbacks.values()) {
         callback(url, itemsLoaded, itemsTotal);
       }
     };
@@ -102,7 +100,7 @@ export default class THREELoadingManager
       this.itemsTotal = itemsTotal;
 
       notifyResourcesLoadingStateChange();
-      for (let [callback] of this.startCallbacks.entries()) {
+      for (let callback of this.startCallbacks.values()) {
         callback(url, itemsLoaded, itemsTotal);
       }
     };

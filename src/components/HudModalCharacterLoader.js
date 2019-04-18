@@ -5,7 +5,6 @@ import { Redirect } from "react-router-dom";
 
 import CancelToken from "../framework/classes/CancelToken";
 import CharacterQuery from "../framework/classes/Query/Character";
-import CharacterResourceReference from "../framework/classes/ResourceReference/Character";
 import HudModalCharacter from "./HudModalCharacter";
 import HudModalLoader from "./HudModalLoader";
 
@@ -44,9 +43,7 @@ export default function HudModalCharacterLoader(props: Props) {
       }
 
       const cancelToken = new CancelToken();
-      const query = new CharacterQuery(
-        new CharacterResourceReference(characterId)
-      );
+      const query = new CharacterQuery(characterId);
 
       props.queryBus
         .enqueue(cancelToken, query)
