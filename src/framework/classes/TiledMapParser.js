@@ -2,10 +2,11 @@
 
 import * as xml from "../helpers/xml";
 import ElementSize from "./ElementSize";
+import TiledMap from "./TiledMap";
 import TiledMapLayerParser from "./TiledMapLayerParser";
 
 import type { CancelToken } from "../interfaces/CancelToken";
-import type { TiledMap } from "../interfaces/TiledMap";
+import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledTilesetLoader } from "../interfaces/TiledTilesetLoader";
 import type { TiledMapParser as TiledMapParserInterface } from "../interfaces/TiledMapParser";
 
@@ -26,7 +27,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
     this.tiledTilesetLoader = tiledTilesetLoader;
   }
 
-  async parse(cancelToken: CancelToken): Promise<TiledMap> {
+  async parse(cancelToken: CancelToken): Promise<TiledMapInterface> {
     const doc: Document = this.domParser.parseFromString(
       this.content,
       "application/xml"
@@ -62,6 +63,8 @@ export default class TiledMapParser implements TiledMapParserInterface {
       throw new Error("No layers found in map document.");
     }
 
+    const tiledMap = new TiledMap();
+
     for (let layerElement of layerElements.values()) {
       const tiledMapLayerParser = new TiledMapLayerParser(
         layerElement,
@@ -69,7 +72,9 @@ export default class TiledMapParser implements TiledMapParserInterface {
       );
       const tiledMapLayer = await tiledMapLayerParser.parse(cancelToken);
 
-      console.log(tiledMapLayer);
+      tiledMap.addLayer(tiledMapLayer);
     }
+
+    return tiledMap;
   }
 }

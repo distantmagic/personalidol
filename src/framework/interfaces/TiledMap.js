@@ -1,3 +1,7 @@
 // @flow
 
-export interface TiledMap {}
+import { TiledMapLayer } from "./TiledMapLayer";
+
+export interface TiledMap {
+  addLayer(TiledMapLayer): void;
+}

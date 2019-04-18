@@ -42,7 +42,13 @@ export function getAttribute(element: HTMLElement, name: string): Attr {
 }
 
 export function getNumberAttribute(element: HTMLElement, name: string): number {
-  return parseInt(getStringAttribute(element, name), 10);
+  const value = parseInt(getStringAttribute(element, name), 10);
+
+  if (isNaN(value)) {
+    throw new Error(`Document attribute is not numeric: "${name}"`);
+  }
+
+  return value;
 }
 
 export function getStringAttribute(element: HTMLElement, name: string): string {

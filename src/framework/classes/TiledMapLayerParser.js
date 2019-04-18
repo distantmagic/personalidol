@@ -2,8 +2,8 @@
 
 import * as xml from "../helpers/xml";
 import ElementSize from "./ElementSize";
-import TiledMapLayerCSVDataParser from "./TiledMapLayerCSVDataParser";
 import TiledMapLayer from "./TiledMapLayer";
+import TiledMapLayerGridCSVParser from "./TiledMapLayerGridCSVParser";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
@@ -35,14 +35,18 @@ export default class TiledMapLayerParser
       );
     }
 
-    const tiledMapLayerCSVDataParser = new TiledMapLayerCSVDataParser(
+    const tiledMapLayerCSVDataParser = new TiledMapLayerGridCSVParser(
       dataElement.textContent,
       this.mapSize
     );
-    const layerData = await tiledMapLayerCSVDataParser.parse(cancelToken);
+    const tiledMapGrid = await tiledMapLayerCSVDataParser.parse(cancelToken);
+    const layerId = xml.getNumberAttribute(this.layerElement, "id");
+    const layerName = xml.getStringAttribute(this.layerElement, "name");
+    const layerSize = new ElementSize(
+      xml.getNumberAttribute(this.layerElement, "width"),
+      xml.getNumberAttribute(this.layerElement, "height")
+    );
 
-    console.log(layerData);
-
-    return new TiledMapLayer();
+    return new TiledMapLayer(layerId, layerName, tiledMapGrid, layerSize);
   }
 }
