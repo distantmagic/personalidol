@@ -23,7 +23,7 @@ export default class TiledTileParser {
 
     const tiledImage = new TiledTileImage(
       xml.getStringAttribute(imageElement, "source"),
-      new ElementSize(
+      new ElementSize<"px">(
         xml.getNumberAttribute(imageElement, "width"),
         xml.getNumberAttribute(imageElement, "height")
       )

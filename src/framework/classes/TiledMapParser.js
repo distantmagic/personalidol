@@ -44,7 +44,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
       throw new Error("Tileset data is missing in map document.");
     }
 
-    const mapSize = new ElementSize(
+    const mapSize = new ElementSize<"tile">(
       xml.getNumberAttribute(documentElement, "width"),
       xml.getNumberAttribute(documentElement, "height")
     );

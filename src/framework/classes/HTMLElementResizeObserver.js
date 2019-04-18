@@ -23,7 +23,7 @@ export default class HTMLElementResizeObserver
       debounce(function(mutationList) {
         for (let mutation of mutationList) {
           const contentRect = mutation.contentRect;
-          const elementSize = new ElementSize(
+          const elementSize = new ElementSize<"px">(
             contentRect.width,
             contentRect.height
           );

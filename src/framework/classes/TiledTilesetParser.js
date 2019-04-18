@@ -60,7 +60,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
 
     const tiledTileset = new TiledTileset(
       expectedTileCount,
-      new ElementSize(
+      new ElementSize<"px">(
         xml.getNumberAttribute(documentElement, "tilewidth"),
         xml.getNumberAttribute(documentElement, "tileheight")
       )
