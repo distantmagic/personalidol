@@ -3,7 +3,7 @@
 import * as fixtures from "../../fixtures";
 import Cancelled from "./Exception/Cancelled";
 import CancelToken from "./CancelToken";
-import FixturesTiledTilesetQueryBuilder from "./FixturesTiledTilesetQueryBuilder";
+import FixturesFileQueryBuilder from "./FixturesFileQueryBuilder";
 import ForcedTick from "./ForcedTick";
 import QueryBus from "./QueryBus";
 import TiledMapParser from "./TiledMapParser";
@@ -18,7 +18,7 @@ async function prepare(): Promise<
 > {
   const cancelToken = new CancelToken();
   const mapFilename = "map-fixture-01.tmx";
-  const queryBuilder = new FixturesTiledTilesetQueryBuilder();
+  const queryBuilder = new FixturesFileQueryBuilder();
   const queryBus = new QueryBus();
 
   const mockedEnqueuedCallback = jest.fn(function() {

@@ -2,14 +2,14 @@
 
 import * as fixtures from "../../fixtures";
 import CancelToken from "./CancelToken";
-import FixturesTiledTilesetQueryBuilder from "./FixturesTiledTilesetQueryBuilder";
+import FixturesFileQueryBuilder from "./FixturesFileQueryBuilder";
 import ForcedTick from "./ForcedTick";
 import QueryBus from "./QueryBus";
 import TiledTilesetLoader from "./TiledTilesetLoader";
 
 it("loads and parses tileset files", async function() {
   const cancelToken = new CancelToken();
-  const queryBuilder = new FixturesTiledTilesetQueryBuilder();
+  const queryBuilder = new FixturesFileQueryBuilder();
   const queryBus = new QueryBus();
 
   const mockedEnqueuedCallback = jest.fn(function() {

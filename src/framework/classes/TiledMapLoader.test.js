@@ -2,8 +2,7 @@
 
 import * as fixtures from "../../fixtures";
 import CancelToken from "./CancelToken";
-import FixturesTiledMapQueryBuilder from "./FixturesTiledMapQueryBuilder";
-import FixturesTiledTilesetQueryBuilder from "./FixturesTiledTilesetQueryBuilder";
+import FixturesFileQueryBuilder from "./FixturesFileQueryBuilder";
 import ForcedTick from "./ForcedTick";
 import QueryBus from "./QueryBus";
 import TiledMapLoader from "./TiledMapLoader";
@@ -11,14 +10,15 @@ import TiledTilesetLoader from "./TiledTilesetLoader";
 
 it("loads and parses map files", async function() {
   const cancelToken = new CancelToken();
+  const fixturesFileQueryBuilder = new FixturesFileQueryBuilder();
   const queryBus = new QueryBus();
   const tiledTilesetLoader = new TiledTilesetLoader(
     queryBus,
-    new FixturesTiledTilesetQueryBuilder()
+    fixturesFileQueryBuilder
   );
   const tiledMapLoader = new TiledMapLoader(
     queryBus,
-    new FixturesTiledMapQueryBuilder(),
+    fixturesFileQueryBuilder,
     tiledTilesetLoader
   );
 
