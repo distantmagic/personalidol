@@ -13,7 +13,7 @@ it("supports cancel token", async function() {
 
   setTimeout(function() {
     cancelToken.cancel();
-  }, 10);
+  });
 
   await controller.interval(cancelToken);
 });

@@ -21,6 +21,15 @@ async function prepare(): Promise<
   const queryBuilder = new FixturesTiledTilesetQueryBuilder();
   const queryBus = new QueryBus();
 
+  const mockedEnqueuedCallback = jest.fn(function() {
+    queryBus.tick(new ForcedTick(false));
+
+    // should be done in one tick
+    queryBus.offEnqueued(mockedEnqueuedCallback);
+  });
+
+  queryBus.onEnqueued(mockedEnqueuedCallback);
+
   const tiledTilesetLoader = new TiledTilesetLoader(queryBus, queryBuilder);
   const parser = new TiledMapParser(
     mapFilename,
@@ -36,21 +45,13 @@ async function prepare(): Promise<
 it("parses map file", async function() {
   const [cancelToken, queryBus, tiledMapPromise] = await prepare();
 
-  setTimeout(function() {
-    queryBus.tick(new ForcedTick(false));
-  });
-
-  const tiledMap = await tiledMapPromise;
+  return expect(tiledMapPromise).resolves.toBeDefined();
 });
 
 it("can be cancelled gracefully", async function() {
   const [cancelToken, queryBus, tiledMapPromise] = await prepare();
 
   cancelToken.cancel();
-
-  setTimeout(function() {
-    queryBus.tick(new ForcedTick(false));
-  });
 
   return expect(tiledMapPromise).rejects.toThrow(Cancelled);
 });

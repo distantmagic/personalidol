@@ -1,6 +1,6 @@
 // @flow
 
+import type { AsyncParser } from "./AsyncParser";
 import type { TiledMapGrid } from "./TiledMapGrid";
-import type { Parser } from "./Parser";
 
-export interface TiledMapLayerGridCSVParser extends Parser<TiledMapGrid> {}
+export interface TiledMapLayerGridCSVParser extends AsyncParser<TiledMapGrid> {}

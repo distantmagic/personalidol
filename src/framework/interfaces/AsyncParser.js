@@ -2,6 +2,6 @@
 
 import { CancelToken } from "./CancelToken";
 
-export interface Parser<T> {
+export interface AsyncParser<T> {
   parse(CancelToken): Promise<T>;
 }
