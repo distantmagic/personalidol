@@ -167,7 +167,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.debug.updateState(this.loggerBreadcrumbs.add("end").add("fps"), fps);
   }
 
-  resize(elementSize: ElementSize): void {
+  resize(elementSize: ElementSize<"px">): void {
     const zoom = 200;
     const height = elementSize.getHeight();
     const width = elementSize.getWidth();

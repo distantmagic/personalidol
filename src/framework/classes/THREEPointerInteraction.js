@@ -18,7 +18,6 @@ export default class THREEPointerInteraction
   canvasOffsetLeft: number;
   canvasOffsetTop: number;
   canvasWidth: number;
-  elementSize: ElementSizeInterface;
 
   constructor(renderer: WebGLRenderer, camera: Camera) {
     autoBind(this);
@@ -58,7 +57,7 @@ export default class THREEPointerInteraction
     this.mouseVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
   }
 
-  resize(elementSize: ElementSizeInterface): void {
+  resize(elementSize: ElementSizeInterface<"px">): void {
     const boundingRect = this.renderer.domElement.getBoundingClientRect();
 
     this.canvasHeight = elementSize.getHeight();

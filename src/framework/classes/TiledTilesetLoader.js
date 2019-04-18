@@ -26,12 +26,7 @@ export default class TiledTilesetLoader implements TiledTilesetLoaderInterface {
     tilesetPath: string
   ): Promise<TiledTileset> {
     const tilesetQuery = await this.queryBuilder.build(tilesetPath);
-    const tilesetContent = await this.queryBus.enqueue(
-      cancelToken,
-      tilesetQuery
-    );
-    const tiledTilesetParser = new TiledTilesetParser(tilesetContent);
 
-    return tiledTilesetParser.parse(cancelToken);
+    return await this.queryBus.enqueue(cancelToken, tilesetQuery);
   }
 }

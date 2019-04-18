@@ -27,5 +27,5 @@ it("parses map file", async function() {
     queryBus.tick(new ForcedTick(false));
   });
 
-  return resultPromise;
+  const tiledMap = await resultPromise;
 });

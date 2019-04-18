@@ -7,9 +7,9 @@ import type { TiledTileset as TiledTilesetInterface } from "../interfaces/TiledT
 export default class TiledTileset implements TiledTilesetInterface {
   +expectedTileCount: number;
   +tiles: Map<string, TiledTile>;
-  +tileSize: ElementSize;
+  +tileSize: ElementSize<"px">;
 
-  constructor(expectedTileCount: number, tileSize: ElementSize): void {
+  constructor(expectedTileCount: number, tileSize: ElementSize<"px">): void {
     this.expectedTileCount = expectedTileCount;
     this.tiles = new Map<string, TiledTile>();
     this.tileSize = tileSize;

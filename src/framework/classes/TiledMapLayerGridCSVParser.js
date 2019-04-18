@@ -19,9 +19,9 @@ import type { TiledMapLayerGridCSVParser as TiledMapLayerGridCSVParserInterface 
 export default class TiledMapLayerGridCSVParser
   implements TiledMapLayerGridCSVParserInterface {
   +data: string;
-  +mapSize: ElementSize;
+  +mapSize: ElementSize<"tile">;
 
-  constructor(data: string, mapSize: ElementSize) {
+  constructor(data: string, mapSize: ElementSize<"tile">) {
     this.data = data;
     this.mapSize = mapSize;
   }

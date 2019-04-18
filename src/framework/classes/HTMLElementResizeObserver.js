@@ -10,12 +10,12 @@ import type { Resizeable } from "../interfaces/Resizeable";
 
 export default class HTMLElementResizeObserver
   implements HTMLElementResizeObserverInterface {
-  +notifiable: Set<Resizeable>;
+  +notifiable: Set<Resizeable<"px">>;
   +element: HTMLElement;
   +nativeResizeObserver: ResizeObserver;
 
   constructor(element: HTMLElement) {
-    const notifiable = new Set<Resizeable>();
+    const notifiable = new Set<Resizeable<"px">>();
 
     this.element = element;
     this.notifiable = notifiable;
@@ -40,7 +40,7 @@ export default class HTMLElementResizeObserver
     this.nativeResizeObserver.disconnect();
   }
 
-  notify(resizeable: Resizeable): void {
+  notify(resizeable: Resizeable<"px">): void {
     this.notifiable.add(resizeable);
   }
 

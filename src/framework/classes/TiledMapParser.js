@@ -50,12 +50,10 @@ export default class TiledMapParser implements TiledMapParserInterface {
     );
 
     const tilesetFilename = xml.getStringAttribute(tilesetElement, "source");
-    const tileset = await this.tiledTilesetLoader.load(
+    const tiledTileset = await this.tiledTilesetLoader.load(
       cancelToken,
       tilesetFilename
     );
-
-    // console.log(tileset);
 
     const layerElements = documentElement.querySelectorAll("layer");
 
@@ -63,7 +61,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
       throw new Error("No layers found in map document.");
     }
 
-    const tiledMap = new TiledMap();
+    const tiledMap = new TiledMap(mapSize, tiledTileset);
 
     for (let layerElement of layerElements.values()) {
       const tiledMapLayerParser = new TiledMapLayerParser(

@@ -76,7 +76,7 @@ export default class SceneManager implements SceneManagerInterface {
     this.renderer = null;
   }
 
-  resize(elementSize: ElementSize): void {
+  resize(elementSize: ElementSize<"px">): void {
     this.controller.resize(elementSize);
 
     const renderer = this.renderer;

@@ -13,9 +13,12 @@ import type { TiledMapLayerParser as TiledMapLayerParserInterface } from "../int
 export default class TiledMapLayerParser
   implements TiledMapLayerParserInterface {
   +layerElement: HTMLElement;
-  +mapSize: ElementSizeInterface;
+  +mapSize: ElementSizeInterface<"tile">;
 
-  constructor(layerElement: HTMLElement, mapSize: ElementSizeInterface) {
+  constructor(
+    layerElement: HTMLElement,
+    mapSize: ElementSizeInterface<"tile">
+  ) {
     this.layerElement = layerElement;
     this.mapSize = mapSize;
   }

@@ -5,7 +5,7 @@ import type { TiledMapGrid } from "../interfaces/TiledMapGrid";
 import type { TiledMapLayer as TiledMapLayerInterface } from "../interfaces/TiledMapLayer";
 
 export default class TiledMapLayer implements TiledMapLayerInterface {
-  +elementSize: ElementSize;
+  +elementSize: ElementSize<"tile">;
   +id: number;
   +name: string;
   +tiledMapGrid: TiledMapGrid;
@@ -14,7 +14,7 @@ export default class TiledMapLayer implements TiledMapLayerInterface {
     id: number,
     name: string,
     tiledMapGrid: TiledMapGrid,
-    elementSize: ElementSize
+    elementSize: ElementSize<"tile">
   ): void {
     this.elementSize = elementSize;
     this.id = id;

@@ -9,7 +9,7 @@ import type { Resizeable } from "./Resizeable";
 export interface THREEPointerInteraction
   extends Animatable,
     Observer,
-    Resizeable {
+    Resizeable<"px"> {
   constructor(WebGLRenderer, Camera): void;
 
   getCameraRaycaster(): Raycaster;

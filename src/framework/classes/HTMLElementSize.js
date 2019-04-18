@@ -1,6 +1,7 @@
 // @flow
 
 import type { ElementSize } from "../interfaces/ElementSize";
+import type { ElementSizeUnit } from "../types/ElementSizeUnit";
 import type { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";
 
 export default class HTMLElementSize implements HTMLElementSizeInterface {
@@ -28,6 +29,10 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
     return this.htmlElementHeight;
   }
 
+  getUnit(): ElementSizeUnit {
+    return "px";
+  }
+
   getScrollHeight(): number {
     return this.htmlElementScrollHeight;
   }
@@ -36,7 +41,7 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
     return this.htmlElementWidth;
   }
 
-  isEqual(other: ElementSize): boolean {
+  isEqual(other: ElementSize<"px">): boolean {
     return (
       this.getHeight() === other.getHeight() &&
       this.getWidth() === other.getWidth()
