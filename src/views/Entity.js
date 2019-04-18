@@ -6,6 +6,7 @@ import clamp from "clamp";
 import FBXLoader from "../three/FBXLoader";
 import PersonAnimation from "../framework/machines/PersonAnimation";
 
+import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasView } from "../framework/interfaces/CanvasView";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { KeyboardState } from "../framework/interfaces/KeyboardState";
@@ -56,7 +57,10 @@ export default class Entity implements CanvasView {
     // this.spotLight.position.y = 2;
   }
 
-  async attach(renderer: THREE.WebGLRenderer): Promise<void> {
+  async attach(
+    cancelToken: CancelToken,
+    renderer: THREE.WebGLRenderer
+  ): Promise<void> {
     const loader = new FBXLoader(this.threeLoadingManager.getLoadingManager());
 
     loader.setResourcePath("/assets/mesh-default-character/");
@@ -147,7 +151,10 @@ export default class Entity implements CanvasView {
     // this.scene.add(this.spotLight);
   }
 
-  async detach(renderer: THREE.WebGLRenderer): Promise<void> {
+  async detach(
+    cancelToken: CancelToken,
+    renderer: THREE.WebGLRenderer
+  ): Promise<void> {
     this.scene.remove(this.guy);
   }
 

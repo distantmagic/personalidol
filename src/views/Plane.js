@@ -3,6 +3,7 @@
 import * as THREE from "three";
 import random from "lodash/random";
 
+import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasView } from "../framework/interfaces/CanvasView";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
@@ -73,12 +74,18 @@ export default class Plane implements CanvasView {
     this.wireframe = wireframe;
   }
 
-  async attach(renderer: THREE.WebGLRenderer): Promise<void> {
+  async attach(
+    cancelToken: CancelToken,
+    renderer: THREE.WebGLRenderer
+  ): Promise<void> {
     this.scene.add(this.wireframe);
     this.scene.add(this.plane);
   }
 
-  async detach(renderer: THREE.WebGLRenderer): Promise<void> {
+  async detach(
+    cancelToken: CancelToken,
+    renderer: THREE.WebGLRenderer
+  ): Promise<void> {
     this.scene.remove(this.plane);
   }
 

@@ -3,8 +3,11 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
+import Cancelled from "./Exception/Cancelled";
+
 import type { DrawCallback } from "mainloop.js";
 
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasController } from "../interfaces/CanvasController";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
@@ -34,7 +37,14 @@ export default class SceneManager implements SceneManagerInterface {
     this.scheduler = scheduler;
   }
 
-  async attach(canvas: HTMLCanvasElement): Promise<void> {
+  async attach(
+    cancelToken: CancelToken,
+    canvas: HTMLCanvasElement
+  ): Promise<void> {
+    if (cancelToken.isCancelled()) {
+      throw new Cancelled("Cancel token was cancelled before attaching scene.");
+    }
+
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       canvas: canvas
@@ -51,10 +61,10 @@ export default class SceneManager implements SceneManagerInterface {
 
     this.scheduler.onDraw(drawCallback);
 
-    await this.controller.attach(renderer);
+    await this.controller.attach(cancelToken, renderer);
   }
 
-  async detach(): Promise<void> {
+  async detach(cancelToken: CancelToken): Promise<void> {
     const renderer = this.renderer;
 
     if (!renderer) {
@@ -69,9 +79,13 @@ export default class SceneManager implements SceneManagerInterface {
       );
     }
 
+    if (cancelToken.isCancelled()) {
+      throw new Cancelled("Cancel token was cancelled before detaching scene.");
+    }
+
     this.scheduler.offDraw(drawCallback);
 
-    await this.controller.detach(renderer);
+    await this.controller.detach(cancelToken, renderer);
 
     this.renderer = null;
   }

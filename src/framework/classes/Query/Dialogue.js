@@ -25,8 +25,10 @@ export default class Dialogue implements Query<DialogueModel> {
     this.ref = ref;
   }
 
-  async execute(cancelToken?: CancelToken): Promise<DialogueModel> {
-    const response = await fetch(this.ref);
+  async execute(cancelToken: CancelToken): Promise<DialogueModel> {
+    const response = await fetch(this.ref, {
+      signal: cancelToken.getAbortSignal()
+    });
     const dialogue = await response.text();
 
     return new DialogueModel(

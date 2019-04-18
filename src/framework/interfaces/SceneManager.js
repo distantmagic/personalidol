@@ -2,12 +2,13 @@
 
 import type { LoadingManager } from "three";
 
+import type { CancelToken } from "./CancelToken";
 import type { Resizeable } from "./Resizeable";
 
 export interface SceneManager extends Resizeable<"px"> {
-  attach(HTMLCanvasElement): Promise<void>;
+  attach(CancelToken, HTMLCanvasElement): Promise<void>;
 
-  detach(): Promise<void>;
+  detach(CancelToken): Promise<void>;
 
   start(): Promise<void>;
 

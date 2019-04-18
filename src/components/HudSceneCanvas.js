@@ -3,6 +3,7 @@
 import * as React from "react";
 import classnames from "classnames";
 
+import CancelToken from "../framework/classes/CancelToken";
 import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
 import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
@@ -17,6 +18,7 @@ import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler"
 import type { KeyboardState } from "../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { PointerState as PointerStateInterface } from "../framework/interfaces/PointerState";
+import type { QueryBus } from "../framework/interfaces/QueryBus";
 import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../framework/interfaces/ResourcesLoadingState";
 import type { SceneManager as SceneManagerInterface } from "../framework/interfaces/SceneManager";
 import type { Scheduler } from "../framework/interfaces/Scheduler";
@@ -27,7 +29,8 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   keyboardState: KeyboardState,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  scheduler: Scheduler
+  scheduler: Scheduler,
+  queryBus: QueryBus
 |};
 
 function useResourcesLoadingState(
@@ -141,6 +144,7 @@ function useScene(
         return;
       }
 
+      const attachCancelToken = new CancelToken();
       const manager = sceneManager;
 
       setSceneLoadingState({
@@ -149,8 +153,12 @@ function useScene(
       });
 
       manager
-        .attach(canvas)
+        .attach(attachCancelToken, canvas)
         .then(function() {
+          if (attachCancelToken.isCancelled()) {
+            return;
+          }
+
           setSceneLoadingState({
             isAttaching: false,
             isFailed: false
@@ -162,6 +170,10 @@ function useScene(
             err
           );
 
+          if (attachCancelToken.isCancelled()) {
+            return;
+          }
+
           setSceneLoadingState({
             isAttaching: false,
             isFailed: true
@@ -169,8 +181,12 @@ function useScene(
         });
 
       return function() {
+        attachCancelToken.cancel();
+
         manager
-          .detach()
+          // currently there is no scenario where detach should be cancelled,
+          // but nonetheless this one should be here for consistency
+          .detach(new CancelToken())
           .catch(
             props.exceptionHandler.expectException(
               props.loggerBreadcrumbs.add("sceneManager.detach.catch")
@@ -211,6 +227,7 @@ function useSceneManager(
             threeLoadingManager,
             props.keyboardState,
             pointerState,
+            props.queryBus,
             props.debug
           )
         )

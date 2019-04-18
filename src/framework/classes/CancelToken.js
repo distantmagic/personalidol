@@ -7,21 +7,29 @@ import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelTo
 import type { CancelTokenCallback } from "../types/CancelTokenCallback";
 
 export default class CancelToken implements CancelTokenInterface {
-  _isCancelled: boolean;
+  +abortController: AbortController;
   +callbacks: Set<CancelTokenCallback>;
+  _isCancelled: boolean;
 
   constructor() {
     this._isCancelled = false;
+    this.abortController = new AbortController();
     this.callbacks = new Set();
   }
 
   cancel(): void {
+    this.abortController.abort();
     this._isCancelled = true;
 
     for (let callback of this.callbacks.values()) {
       callback(new Cancelled("Token is cancelled."));
     }
+
     this.callbacks.clear();
+  }
+
+  getAbortSignal(): AbortSignal {
+    return this.abortController.signal;
   }
 
   isCancelled(): boolean {

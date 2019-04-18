@@ -7,21 +7,24 @@ import {
   // Howler
 } from "howler";
 
+import Cancelled from "../framework/classes/Exception/Cancelled";
 import CanvasViewGroup from "../framework/classes/CanvasViewGroup";
 import THREEPointerInteraction from "../framework/classes/THREEPointerInteraction";
 import { default as CubeView } from "../views/Cube";
 import { default as EntityView } from "../views/Entity";
 import { default as PlaneView } from "../views/Plane";
 
+import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasController } from "../framework/interfaces/CanvasController";
+import type { CanvasViewGroup as CanvasViewGroupInterface } from "../framework/interfaces/CanvasViewGroup";
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ElementSize } from "../framework/interfaces/ElementSize";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { KeyboardState } from "../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { PointerState } from "../framework/interfaces/PointerState";
+import type { QueryBus } from "../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
-import type { CanvasViewGroup as CanvasViewGroupInterface } from "../framework/interfaces/CanvasViewGroup";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../framework/interfaces/THREEPointerInteraction";
 
 export default class CanvasLocationComplex implements CanvasController {
@@ -45,6 +48,7 @@ export default class CanvasLocationComplex implements CanvasController {
     threeLoadingManager: THREELoadingManager,
     keyboardState: KeyboardState,
     pointerState: PointerState,
+    queryBus: QueryBus,
     debug: Debugger
   ) {
     autoBind(this);
@@ -83,7 +87,16 @@ export default class CanvasLocationComplex implements CanvasController {
     );
   }
 
-  async attach(renderer: THREE.WebGLRenderer): Promise<void> {
+  async attach(
+    cancelToken: CancelToken,
+    renderer: THREE.WebGLRenderer
+  ): Promise<void> {
+    if (cancelToken.isCancelled()) {
+      throw new Cancelled(
+        "Cancel token was cancelled before attaching canvas location controller."
+      );
+    }
+
     // this.sound.pos(0, 0, 0);
     // this.sound.play();
 
@@ -126,7 +139,7 @@ export default class CanvasLocationComplex implements CanvasController {
       )
     );
 
-    await this.canvasViewGroup.attach(renderer);
+    return this.canvasViewGroup.attach(cancelToken, renderer);
   }
 
   begin(): void {
@@ -139,7 +152,10 @@ export default class CanvasLocationComplex implements CanvasController {
     this.canvasViewGroup.begin();
   }
 
-  async detach(renderer: THREE.WebGLRenderer): Promise<void> {
+  async detach(
+    cancelToken: CancelToken,
+    renderer: THREE.WebGLRenderer
+  ): Promise<void> {
     const threePointerInteraction = this.threePointerInteraction;
 
     if (!threePointerInteraction) {
@@ -148,11 +164,17 @@ export default class CanvasLocationComplex implements CanvasController {
       );
     }
 
+    if (cancelToken.isCancelled()) {
+      throw new Cancelled(
+        "Cancel token was cancelled before detaching canvas location controller."
+      );
+    }
+
     threePointerInteraction.disconnect();
 
     this.scene.remove(this.light);
 
-    await this.canvasViewGroup.detach(renderer);
+    return this.canvasViewGroup.detach(cancelToken, renderer);
   }
 
   draw(renderer: THREE.WebGLRenderer, interpolationPercentage: number): void {

@@ -142,6 +142,7 @@ export default function Main(props: Props) {
             exceptionHandler={props.exceptionHandler}
             keyboardState={keyboardState}
             loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
+            queryBus={queryBus}
             scheduler={scheduler}
           />
         )}

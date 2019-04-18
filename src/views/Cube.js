@@ -2,6 +2,7 @@
 
 import * as THREE from "three";
 
+import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasView } from "../framework/interfaces/CanvasView";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
@@ -35,11 +36,17 @@ export default class Cube implements CanvasView {
     this.mesh.position.set(0, 0.5, 0);
   }
 
-  async attach(renderer: THREE.WebGLRenderer): Promise<void> {
+  async attach(
+    cancelToken: CancelToken,
+    renderer: THREE.WebGLRenderer
+  ): Promise<void> {
     this.scene.add(this.mesh);
   }
 
-  async detach(renderer: THREE.WebGLRenderer): Promise<void> {
+  async detach(
+    cancelToken: CancelToken,
+    renderer: THREE.WebGLRenderer
+  ): Promise<void> {
     this.scene.remove(this.mesh);
 
     this.geometry.dispose();
