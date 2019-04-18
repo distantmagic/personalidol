@@ -15,7 +15,7 @@ export default class QueryBusController {
 
   async interval(cancelToken: CancelToken): Promise<void> {
     for await (let tick of this.clock.interval(cancelToken)) {
-      this.queryBus.tick(tick);
+      await this.queryBus.tick(tick);
     }
   }
 }

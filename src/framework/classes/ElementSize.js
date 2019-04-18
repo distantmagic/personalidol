@@ -3,8 +3,8 @@
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 import type { ElementSizeUnit } from "../types/ElementSizeUnit";
 
-export default class ElementSize<T: ElementSizeUnit>
-  implements ElementSizeInterface<T> {
+export default class ElementSize<Unit: ElementSizeUnit>
+  implements ElementSizeInterface<Unit> {
   +height: number;
   +width: number;
 
@@ -25,7 +25,7 @@ export default class ElementSize<T: ElementSizeUnit>
     return this.width;
   }
 
-  isEqual(other: ElementSizeInterface<T>): boolean {
+  isEqual(other: ElementSizeInterface<Unit>): boolean {
     return (
       this.getHeight() === other.getHeight() &&
       this.getWidth() === other.getWidth()

@@ -10,7 +10,6 @@ import Entity from "../Entity";
 
 import type { Aimable } from "../../interfaces/Memorizable/Aimable";
 import type { Aims } from "../../interfaces/Sentient/Aims";
-import type { Collection } from "../../interfaces/Collection";
 import type { Hears } from "../../interfaces/Sentient/Perceives/Hears";
 import type { Identifiable } from "../../interfaces/Identifiable";
 import type { Memorizable } from "../../interfaces/Memorizable";
@@ -68,7 +67,7 @@ export default class Person extends Entity
     // this.commandBus.source(new LearnMemorizable(this, memorizable));
   }
 
-  async tell(beings: Collection<Perceives>, message: Message): Promise<void> {
+  async tell(beings: Set<Perceives>, message: Message): Promise<void> {
     beings.forEach(being => {
       // this.commandBus.source(new TellMessage(being, message));
     });

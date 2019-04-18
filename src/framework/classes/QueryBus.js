@@ -1,7 +1,6 @@
 // @flow
 
 import CancelTokenQuery from "./CancelTokenQuery";
-import Collection from "./Collection";
 import QueryBatch from "./QueryBatch";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -14,14 +13,14 @@ export default class QueryBus implements QueryBusInterface {
   collection: QueryBusQueueCollection;
 
   constructor() {
-    this.collection = new Collection();
+    this.collection = [];
   }
 
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<?T> {
     const pickedQuery = this.findSimilarQuery(query) || query;
     const cancelTokenQuery = new CancelTokenQuery(cancelToken, pickedQuery);
 
-    this.collection = this.collection.add(cancelTokenQuery);
+    this.collection.push(cancelTokenQuery);
 
     return cancelTokenQuery.onExecuted();
   }
@@ -37,7 +36,8 @@ export default class QueryBus implements QueryBusInterface {
   flush(): QueryBatch {
     const queryBatch = new QueryBatch(this.collection);
 
-    this.collection = this.collection.clear();
+    // clear collection
+    this.collection = [];
 
     return queryBatch;
   }

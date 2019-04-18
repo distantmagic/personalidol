@@ -17,6 +17,8 @@ export interface CancelTokenQuery<T> extends Equatable<CancelTokenQuery<T>> {
 
   isExecuted(): boolean;
 
+  isExecuting(): boolean;
+
   onExecuted(): Promise<?T>;
 
   setExecuted(result: ?T): void;

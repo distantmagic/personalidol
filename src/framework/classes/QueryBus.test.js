@@ -1,8 +1,8 @@
 // @flow
 
 import CancelToken from "./CancelToken";
+import ForcedTick from "./ForcedTick";
 import QueryBus from "./QueryBus";
-import TimeoutTick from "./TimeoutTick";
 
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 import type { Query } from "../interfaces/Query";
@@ -48,10 +48,10 @@ it("executes similar queries only once", async function() {
     queryBus.enqueue(cancelToken, new Foo(total, 4))
   ]);
 
-  queryBus.tick(new TimeoutTick(false));
+  await queryBus.tick(new ForcedTick(false));
 
   const results = await promises;
 
   expect(total.executed).toBe(4);
   expect(results).toEqual([1, 1, 2, 3, 4, 4, 4]);
-});
+}, 300);

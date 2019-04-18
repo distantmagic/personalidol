@@ -9,19 +9,27 @@ type CancelTokenQueryCallback<U> = (?U) => any;
 export default class CancelTokenQuery<T>
   implements CancelTokenQueryInterface<T> {
   _isExecuted: boolean;
+  _isExecuting: boolean;
   _result: ?T;
   +cancelToken: CancelToken;
   +callbacks: Set<CancelTokenQueryCallback<T>>;
   +query: Query<T>;
 
   constructor(cancelToken: CancelToken, query: Query<T>) {
+    this._isExecuted = false;
+    this._isExecuting = false;
     this.callbacks = new Set();
     this.cancelToken = cancelToken;
-    this._isExecuted = false;
     this.query = query;
   }
 
   execute(): Promise<?T> {
+    if (this.isExecuting() || this.isExecuted()) {
+      throw new Error("You cannot execute query more than once.");
+    }
+
+    this._isExecuting = true;
+
     return this.query.execute(this.cancelToken).then(result => {
       this.setExecuted(result);
 
@@ -34,6 +42,12 @@ export default class CancelTokenQuery<T>
   }
 
   getResult(): T {
+    if (this.isExecuting()) {
+      throw new Error("Query is still executing.");
+    }
+    if (!this.isExecuted()) {
+      throw new Error("Query must be executed before asking for a result.");
+    }
     if (!this._result) {
       throw new Error("Execution result is not set and it was expected.");
     }
@@ -53,6 +67,10 @@ export default class CancelTokenQuery<T>
     return this._isExecuted;
   }
 
+  isExecuting(): boolean {
+    return this._isExecuting;
+  }
+
   onExecuted(): Promise<?T> {
     return new Promise<?T>((resolve, reject) => {
       this.cancelToken.onCancelled(reject);
@@ -61,7 +79,12 @@ export default class CancelTokenQuery<T>
   }
 
   setExecuted(result: ?T): void {
+    if (this.isExecuted()) {
+      throw new Error("Query is already executed.");
+    }
+
     this._isExecuted = true;
+    this._isExecuting = false;
     this._result = result;
 
     for (let callback of this.callbacks.values()) {
