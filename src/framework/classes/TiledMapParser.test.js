@@ -32,7 +32,7 @@ async function prepare(): Promise<
 
   const tiledTilesetLoader = new TiledTilesetLoader(queryBus, queryBuilder);
   const parser = new TiledMapParser(
-    mapFilename,
+    fixtures.findPath(mapFilename),
     await fixtures.file(mapFilename),
     tiledTilesetLoader
   );

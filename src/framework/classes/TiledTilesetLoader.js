@@ -7,7 +7,6 @@ import type { QueryBus } from "../interfaces/QueryBus";
 import type { TiledTileset } from "../interfaces/TiledTileset";
 import type { TiledTilesetLoader as TiledTilesetLoaderInterface } from "../interfaces/TiledTilesetLoader";
 import type { TiledTilesetLoaderQueryBuilder } from "../interfaces/TiledTilesetLoaderQueryBuilder";
-import type { TiledTilesetParser as TiledTilesetParserInterface } from "../interfaces/TiledTilesetParser";
 
 export default class TiledTilesetLoader implements TiledTilesetLoaderInterface {
   +tiledTilesetLoaderQueryBuilder: TiledTilesetLoaderQueryBuilder;
@@ -32,7 +31,10 @@ export default class TiledTilesetLoader implements TiledTilesetLoaderInterface {
       cancelToken,
       tilesetQuery
     );
-    const tiledTilesetParser = new TiledTilesetParser(tilesetContent);
+    const tiledTilesetParser = new TiledTilesetParser(
+      tilesetPath,
+      tilesetContent
+    );
 
     return tiledTilesetParser.parse(cancelToken);
   }

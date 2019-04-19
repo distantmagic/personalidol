@@ -10,6 +10,9 @@ import {
 import Cancelled from "../framework/classes/Exception/Cancelled";
 import CanvasViewGroup from "../framework/classes/CanvasViewGroup";
 import THREEPointerInteraction from "../framework/classes/THREEPointerInteraction";
+import TiledMapLoader from "../framework/classes/TiledMapLoader";
+import TiledTilesetLoader from "../framework/classes/TiledTilesetLoader";
+import URLTextContentQueryBuilder from "../framework/classes/URLTextContentQueryBuilder";
 import { default as CubeView } from "../views/Cube";
 import { default as EntityView } from "../views/Entity";
 import { default as PlaneView } from "../views/Plane";
@@ -37,6 +40,7 @@ export default class CanvasLocationComplex implements CanvasController {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +planeSide: number;
   +pointerState: PointerState;
+  +queryBus: QueryBus;
   +scene: THREE.Scene;
   +sound: Howl;
   +threeLoadingManager: THREELoadingManager;
@@ -61,6 +65,7 @@ export default class CanvasLocationComplex implements CanvasController {
     // (36x36), (72x72), (108x108), (144x144), (216,216), (252, 252)
     this.planeSide = 108;
     this.pointerState = pointerState;
+    this.queryBus = queryBus;
     this.threeLoadingManager = threeLoadingManager;
     this.scene = new THREE.Scene();
     // this.scene.rotation.y = Math.PI / 1.6;
@@ -128,6 +133,24 @@ export default class CanvasLocationComplex implements CanvasController {
         this.planeSide
       )
     );
+
+    const queryBuilder = new URLTextContentQueryBuilder();
+    const tiledTilesetLoader = new TiledTilesetLoader(
+      this.queryBus,
+      queryBuilder
+    );
+    const tiledMapLoader = new TiledMapLoader(
+      this.queryBus,
+      queryBuilder,
+      tiledTilesetLoader
+    );
+    const tiledMap = await tiledMapLoader.load(
+      cancelToken,
+      "/assets/map-outlands-01.tmx"
+    );
+
+    console.log(tiledMap);
+
     this.canvasViewGroup.add(
       new PlaneView(
         this.exceptionHandler,

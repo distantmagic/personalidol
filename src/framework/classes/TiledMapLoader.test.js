@@ -11,6 +11,7 @@ import TiledTilesetLoader from "./TiledTilesetLoader";
 it("loads and parses map files", async function() {
   const cancelToken = new CancelToken();
   const fixturesFileQueryBuilder = new FixturesFileQueryBuilder();
+  const mapFilename = fixtures.findPath("map-fixture-01.tmx");
   const queryBus = new QueryBus();
   const tiledTilesetLoader = new TiledTilesetLoader(
     queryBus,
@@ -28,7 +29,7 @@ it("loads and parses map files", async function() {
 
   queryBus.onEnqueued(mockedEnqueuedCallback);
 
-  const tiledMap = tiledMapLoader.load(cancelToken, "map-fixture-01.tmx");
+  const tiledMap = tiledMapLoader.load(cancelToken, mapFilename);
 
   await expect(tiledMap).resolves.toBeDefined();
 

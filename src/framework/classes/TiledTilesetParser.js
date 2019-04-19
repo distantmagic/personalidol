@@ -2,23 +2,22 @@
 
 import * as xml from "../helpers/xml";
 import ElementSize from "./ElementSize";
-import TiledTile from "./TiledTile";
-import TiledTileImage from "./TiledTileImage";
 import TiledTileParser from "./TiledTileParser";
 import TiledTileset from "./TiledTileset";
 import { default as TiledTilesetException } from "./Exception/Tiled/Tileset";
 
 import type { CancelToken } from "../interfaces/CancelToken";
-import type { TiledTile as TiledTileInterface } from "../interfaces/TiledTile";
 import type { TiledTileset as TiledTilesetInterface } from "../interfaces/TiledTileset";
 import type { TiledTilesetParser as TiledTilesetParserInterface } from "../interfaces/TiledTilesetParser";
 
 export default class TiledTilesetParser implements TiledTilesetParserInterface {
   +content: string;
+  +filename: string;
   +domParser: DOMParser;
 
-  constructor(content: string) {
+  constructor(filename: string, content: string) {
     this.content = content;
+    this.filename = filename;
     this.domParser = new DOMParser();
   }
 
@@ -36,7 +35,9 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     const grid: ?HTMLElement = doc.querySelector("grid");
 
     if (!grid) {
-      throw new TiledTilesetException("Tileset file is issing grid metadata.");
+      throw new TiledTilesetException(
+        `Tileset file is issing grid metadata: "${this.filename}"`
+      );
     }
 
     const tiles: NodeList<HTMLElement> = doc.querySelectorAll("tile");
@@ -45,7 +46,9 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     // console.log(grid.attributes.getNamedItem("height").value);
     // console.log(grid.attributes.getNamedItem("width").value);
     if (!tiles) {
-      throw new TiledTilesetException("Tileset tiles data is missing.");
+      throw new TiledTilesetException(
+        `Tileset tiles data is missing: "${this.filename}"`
+      );
     }
 
     const expectedTileCount = xml.getNumberAttribute(
@@ -55,7 +58,9 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
 
     if (tiles.length !== expectedTileCount) {
       throw new TiledTilesetException(
-        "Inconsistent tileset data: expected tile count does not match actual tiles number."
+        `Inconsistent tileset data: expected tile count does not match actual tiles number: "${
+          this.filename
+        }"`
       );
     }
 

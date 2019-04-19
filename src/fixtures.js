@@ -15,5 +15,5 @@ export async function file(filename: string): Promise<string> {
 }
 
 export function findPath(filename: string): string {
-  return path.join(__dirname, "../fixtures/", filename);
+  return path.resolve(__dirname, "../fixtures/", filename);
 }
