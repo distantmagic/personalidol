@@ -69,5 +69,6 @@ it("generates skinned layers and tiles", async function() {
     }
   }
 
-  expect(skinnedTiles).toHaveLength(4);
+  // there are 4 tiles in total, but one is blank
+  expect(skinnedTiles).toHaveLength(3);
 });
