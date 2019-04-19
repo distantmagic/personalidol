@@ -33,7 +33,7 @@ export default class Entity implements CanvasView {
     scene: THREE.Scene,
     threeLoadingManager: THREELoadingManager,
     keyboardState: KeyboardState,
-    camera: THREE.Camera,
+    camera: THREE.Camera
   ) {
     this.camera = camera;
     this.guy = new THREE.Group();

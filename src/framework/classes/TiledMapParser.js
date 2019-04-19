@@ -5,7 +5,7 @@ import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
 import TiledMap from "./TiledMap";
 import TiledMapLayerParser from "./TiledMapLayerParser";
-import TiledMapTilesetFilename from "./TiledMapTilesetFilename";
+import TiledRelativeFilename from "./TiledRelativeFilename";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -14,18 +14,18 @@ import type { TiledTilesetLoader } from "../interfaces/TiledTilesetLoader";
 import type { TiledMapParser as TiledMapParserInterface } from "../interfaces/TiledMapParser";
 
 export default class TiledMapParser implements TiledMapParserInterface {
-  +filename: string;
   +content: string;
   +domParser: DOMParser;
+  +mapFilename: string;
   +tiledTilesetLoader: TiledTilesetLoader;
 
   constructor(
-    filename: string,
+    mapFilename: string,
     content: string,
     tiledTilesetLoader: TiledTilesetLoader
   ) {
     this.content = content;
-    this.filename = filename;
+    this.mapFilename = mapFilename;
     this.domParser = new DOMParser();
     this.tiledTilesetLoader = tiledTilesetLoader;
   }
@@ -54,8 +54,8 @@ export default class TiledMapParser implements TiledMapParserInterface {
     const tilesetFilename = xml.getStringAttribute(tilesetElement, "source");
     const tiledTileset = await this.tiledTilesetLoader.load(
       cancelToken,
-      // tileset URL is relative to map filename
-      new TiledMapTilesetFilename(this.filename, tilesetFilename).asString()
+      // tileset URL is relative to map mapFilename
+      new TiledRelativeFilename(this.mapFilename, tilesetFilename).asString()
     );
 
     const layerElements = documentElement.querySelectorAll("layer");

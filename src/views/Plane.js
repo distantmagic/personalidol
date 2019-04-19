@@ -71,9 +71,7 @@ export default class Plane implements CanvasView {
         tile.getId(),
         new THREE.MeshPhongMaterial({
           // color: [0xcccccc, 0xdddddd, 0xaaaaaa, 0x999999][random(0, 3)]
-          map: textureLoader.load(
-            "/assets/" + tile.getTiledTileImage().getSource()
-          ),
+          map: textureLoader.load(tile.getTiledTileImage().getSource())
           // roughness: 1,
           // side: THREE.DoubleSide
         })

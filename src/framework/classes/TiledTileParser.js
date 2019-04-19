@@ -3,6 +3,7 @@
 import * as xml from "../helpers/xml";
 import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
+import TiledRelativeFilename from "./TiledRelativeFilename";
 import TiledTile from "./TiledTile";
 import TiledTileImage from "./TiledTileImage";
 import { default as TiledTileException } from "./Exception/Tiled/Tile";
@@ -13,9 +14,11 @@ import type { TiledTileParser as TiledTileParserInterface } from "../interfaces/
 
 export default class TiledTileParser implements TiledTileParserInterface {
   +tileElement: HTMLElement;
+  +tilesetPath: string;
 
-  constructor(tileElement: HTMLElement) {
+  constructor(tilesetPath: string, tileElement: HTMLElement) {
     this.tileElement = tileElement;
+    this.tilesetPath = tilesetPath;
   }
 
   async parse(cancelToken: CancelToken): Promise<TiledTileInterface> {
@@ -32,7 +35,10 @@ export default class TiledTileParser implements TiledTileParserInterface {
     }
 
     const tiledImage = new TiledTileImage(
-      xml.getStringAttribute(imageElement, "source"),
+      new TiledRelativeFilename(
+        this.tilesetPath,
+        xml.getStringAttribute(imageElement, "source")
+      ).asString(),
       new ElementSize<"px">(
         xml.getNumberAttribute(imageElement, "width"),
         xml.getNumberAttribute(imageElement, "height")

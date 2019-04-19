@@ -12,12 +12,12 @@ import type { TiledTilesetParser as TiledTilesetParserInterface } from "../inter
 
 export default class TiledTilesetParser implements TiledTilesetParserInterface {
   +content: string;
-  +filename: string;
+  +tilesetPath: string;
   +domParser: DOMParser;
 
-  constructor(filename: string, content: string) {
+  constructor(tilesetPath: string, content: string) {
     this.content = content;
-    this.filename = filename;
+    this.tilesetPath = tilesetPath;
     this.domParser = new DOMParser();
   }
 
@@ -36,7 +36,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
 
     if (!grid) {
       throw new TiledTilesetException(
-        `Tileset file is issing grid metadata: "${this.filename}"`
+        `Tileset file is issing grid metadata: "${this.tilesetPath}"`
       );
     }
 
@@ -47,7 +47,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     // console.log(grid.attributes.getNamedItem("width").value);
     if (!tiles) {
       throw new TiledTilesetException(
-        `Tileset tiles data is missing: "${this.filename}"`
+        `Tileset tiles data is missing: "${this.tilesetPath}"`
       );
     }
 
@@ -59,7 +59,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     if (tiles.length !== expectedTileCount) {
       throw new TiledTilesetException(
         `Inconsistent tileset data: expected tile count does not match actual tiles number: "${
-          this.filename
+          this.tilesetPath
         }"`
       );
     }
@@ -74,7 +74,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
 
     const tiledTilePromises = [];
     for (let tileElement of tiles.values()) {
-      const tileParser = new TiledTileParser(tileElement);
+      const tileParser = new TiledTileParser(this.tilesetPath, tileElement);
 
       tiledTilePromises.push(tileParser.parse(cancelToken));
     }
