@@ -1,7 +1,9 @@
 // @flow
 
+import Cancelled from "./Exception/Cancelled";
 import TiledSkinnedTile from "./TiledSkinnedTile";
 
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
@@ -24,14 +26,18 @@ export default class TiledMapSkinnedLayer
     this.tiledTileset = tiledTileset;
   }
 
-  async *generateSkinnedTiles(): AsyncGenerator<
-    TiledSkinnedTileInterface,
-    void,
-    void
-  > {
+  async *generateSkinnedTiles(
+    cancelToken: CancelToken
+  ): AsyncGenerator<TiledSkinnedTileInterface, void, void> {
     const tiledMapGrid = this.tiledMapLayer.getTiledMapGrid();
 
     for await (let positionedTile of tiledMapGrid.generatePositionedTiles()) {
+      if (cancelToken.isCancelled()) {
+        throw new Cancelled(
+          "Cancel token was cancelled while generating skinned tiles."
+        );
+      }
+
       const tileTypeId = positionedTile.getId();
 
       yield new TiledSkinnedTile(

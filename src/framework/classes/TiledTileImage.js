@@ -11,4 +11,8 @@ export default class TiledTileImage implements TiledTileImageInterface {
     this.elementSize = elementSize;
     this.source = source;
   }
+
+  getSource(): string {
+    return this.source;
+  }
 }

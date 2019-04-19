@@ -15,4 +15,8 @@ export default class TiledTile implements TiledTileInterface {
   getId(): number {
     return this.id;
   }
+
+  getTiledTileImage(): TiledTileImage {
+    return this.image;
+  }
 }

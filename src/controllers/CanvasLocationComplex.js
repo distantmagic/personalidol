@@ -147,6 +147,7 @@ export default class CanvasLocationComplex implements CanvasController {
         this.loggerBreadcrumbs.add("PlaneView"),
         this.scene,
         this.pointerState,
+        this.threeLoadingManager,
         threePointerInteraction,
         tiledMap
       )

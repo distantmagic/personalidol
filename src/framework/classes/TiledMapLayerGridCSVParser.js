@@ -27,6 +27,8 @@ export default class TiledMapLayerGridCSVParser
    *   2. CSV is comma-separated
    *   3. there might be trailing coma at the end of a line
    *   4. CSV holds map sized array
+   *   5. I have on idea why, but tile id's in map file are incremented by 1
+   *      over those from tileset file
    */
   async parse(cancelToken: CancelToken): Promise<TiledMapGridInterface> {
     if (cancelToken.isCancelled()) {
@@ -40,7 +42,7 @@ export default class TiledMapLayerGridCSVParser
     const lines = split(layerData, "\n", this.mapSize.getHeight());
     const grid = lines.map(function(line: string): Array<number> {
       return split(line, ",", layerLineWidth).map(function(id: string): number {
-        return parseInt(id, 10);
+        return parseInt(id, 10) - 1;
       });
     });
 

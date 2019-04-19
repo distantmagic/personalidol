@@ -61,8 +61,10 @@ it("generates skinned layers and tiles", async function() {
   const tiledMap = await tiledMapPromise;
   const skinnedTiles = [];
 
-  for await (let skinnedLayer of tiledMap.generateSkinnedLayers()) {
-    for await (let skinnedTile of skinnedLayer.generateSkinnedTiles()) {
+  for await (let skinnedLayer of tiledMap.generateSkinnedLayers(cancelToken)) {
+    for await (let skinnedTile of skinnedLayer.generateSkinnedTiles(
+      cancelToken
+    )) {
       skinnedTiles.push(skinnedTile);
     }
   }

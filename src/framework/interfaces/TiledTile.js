@@ -7,4 +7,6 @@ export interface TiledTile {
   constructor(id: number, image: TiledTileImage): void;
 
   getId(): number;
+
+  getTiledTileImage(): TiledTileImage;
 }

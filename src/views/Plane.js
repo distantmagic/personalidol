@@ -1,12 +1,14 @@
 // @flow
 
 import * as THREE from "three";
+import random from "lodash/random";
 
 import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasView } from "../framework/interfaces/CanvasView";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { PointerState } from "../framework/interfaces/PointerState";
+import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
 import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
 import type { TiledMap } from "../framework/interfaces/TiledMap";
 
@@ -14,6 +16,7 @@ export default class Plane implements CanvasView {
   +plane: THREE.Group;
   +pointerState: PointerState;
   +scene: THREE.Scene;
+  +threeLoadingManager: THREELoadingManager;
   +threePointerInteraction: THREEPointerInteraction;
   +tiledMap: TiledMap;
   +wireframe: THREE.LineSegments;
@@ -23,11 +26,13 @@ export default class Plane implements CanvasView {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     scene: THREE.Scene,
     pointerState: PointerState,
+    threeLoadingManager: THREELoadingManager,
     threePointerInteraction: THREEPointerInteraction,
     tiledMap: TiledMap
   ) {
     this.pointerState = pointerState;
     this.scene = scene;
+    this.threeLoadingManager = threeLoadingManager;
     this.threePointerInteraction = threePointerInteraction;
     this.tiledMap = tiledMap;
 
@@ -55,25 +60,49 @@ export default class Plane implements CanvasView {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
-    // for await (let layer of this.tiledMap.generateSkinnedLayers()) {
-    //   for await (let tile of layer.generateSkinnedTiles()) {
-    //     console.log(tile);
-    //     // const material = new THREE.MeshPhongMaterial({
-    //     //   color: [0xcccccc, 0xdddddd, 0xaaaaaa, 0x999999][random(0, 3)]
-    //     //   // roughness: 1,
-    //     //   // side: THREE.DoubleSide
-    //     // });
-    //     // const tile = new THREE.Mesh(geometry, material);
+    const geometry = new THREE.PlaneGeometry(1, 1);
+    const textureLoader = new THREE.TextureLoader(
+      this.threeLoadingManager.getLoadingManager()
+    );
+    const tiledTileset = this.tiledMap.getTiledTileset();
+    const tileMaterials = new Map<number, THREE.Material>();
 
-    //     // tile.position.x = x * geometrySide;
-    //     // tile.position.z = z * geometrySide;
-    //     // tile.rotation.x = (-1 * Math.PI) / 2;
-    //     // tile.rotation.y = 0;
-    //     // tile.rotation.z = Math.PI / 2;
+    for (let tile of tiledTileset.getTiles().values()) {
+      tileMaterials.set(
+        tile.getId(),
+        new THREE.MeshPhongMaterial({
+          // color: [0xcccccc, 0xdddddd, 0xaaaaaa, 0x999999][random(0, 3)]
+          map: textureLoader.load(
+            "/assets/" + tile.getTiledTileImage().getSource()
+          )
+          // roughness: 1,
+          // side: THREE.DoubleSide
+        })
+      );
+    }
 
-    //     // this.plane.add(tile);
-    //   }
-    // }
+    for await (let layer of this.tiledMap.generateSkinnedLayers(cancelToken)) {
+      for await (let tile of layer.generateSkinnedTiles(cancelToken)) {
+        const material = tileMaterials.get(tile.getId());
+
+        if (!material) {
+          throw new Error(
+            `Tile material does not exist but was expected: ${tile.getId()}`
+          );
+        }
+
+        const tileMesh = new THREE.Mesh(geometry, material);
+        const tilePosition = tile.getElementPosition();
+
+        tileMesh.position.x = tilePosition.getX();
+        tileMesh.position.z = tilePosition.getY();
+        tileMesh.rotation.x = (-1 * Math.PI) / 2;
+        tileMesh.rotation.y = 0;
+        tileMesh.rotation.z = Math.PI / 2;
+
+        this.plane.add(tileMesh);
+      }
+    }
 
     this.scene.add(this.wireframe);
     this.scene.add(this.plane);

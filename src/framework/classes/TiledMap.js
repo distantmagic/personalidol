@@ -1,7 +1,9 @@
 // @flow
 
+import Cancelled from "./Exception/Cancelled";
 import TiledMapSkinnedLayer from "./TiledMapSkinnedLayer";
 
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
@@ -29,12 +31,16 @@ export default class TiledMap implements TiledMapInterface {
     this.tiledMapLayers.push(tiledMapLayer);
   }
 
-  async *generateSkinnedLayers(): AsyncGenerator<
-    TiledMapSkinnedLayerInterface,
-    void,
-    void
-  > {
+  async *generateSkinnedLayers(
+    cancelToken: CancelToken
+  ): AsyncGenerator<TiledMapSkinnedLayerInterface, void, void> {
     for (let layer of this.getLayers()) {
+      if (cancelToken.isCancelled()) {
+        throw new Cancelled(
+          "Cancel token was cancelled while generating skinned layers."
+        );
+      }
+
       yield new TiledMapSkinnedLayer(layer, this.tileSize, this.tiledTileset);
     }
   }
@@ -49,5 +55,9 @@ export default class TiledMap implements TiledMapInterface {
 
   getTileSize(): ElementSize<"px"> {
     return this.tileSize;
+  }
+
+  getTiledTileset(): TiledTileset {
+    return this.tiledTileset;
   }
 }

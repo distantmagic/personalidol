@@ -1,5 +1,6 @@
 // @flow
 
+import type { CancelToken } from "./CancelToken";
 import type { ElementSize } from "./ElementSize";
 import type { TiledMapLayer } from "./TiledMapLayer";
 import type { TiledSkinnedTile } from "./TiledSkinnedTile";
@@ -12,5 +13,7 @@ export interface TiledMapSkinnedLayer {
     TiledTileset
   ): void;
 
-  generateSkinnedTiles(): AsyncGenerator<TiledSkinnedTile, void, void>;
+  generateSkinnedTiles(
+    CancelToken
+  ): AsyncGenerator<TiledSkinnedTile, void, void>;
 }
