@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import random from "lodash/random";
 
 import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasView } from "../framework/interfaces/CanvasView";
@@ -9,52 +8,30 @@ import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler"
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { PointerState } from "../framework/interfaces/PointerState";
 import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
+import type { TiledMap } from "../framework/interfaces/TiledMap";
 
 export default class Plane implements CanvasView {
   +plane: THREE.Group;
-  +planeSide: number;
   +pointerState: PointerState;
   +scene: THREE.Scene;
   +threePointerInteraction: THREEPointerInteraction;
+  +tiledMap: TiledMap;
   +wireframe: THREE.LineSegments;
 
   constructor(
     exceptionHandler: ExceptionHandler,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     scene: THREE.Scene,
-    planeSide: number,
     pointerState: PointerState,
-    threePointerInteraction: THREEPointerInteraction
+    threePointerInteraction: THREEPointerInteraction,
+    tiledMap: TiledMap
   ) {
     this.pointerState = pointerState;
     this.scene = scene;
     this.threePointerInteraction = threePointerInteraction;
-
-    const geometrySide = 1;
-    const geometry = new THREE.PlaneGeometry(geometrySide, geometrySide);
+    this.tiledMap = tiledMap;
 
     this.plane = new THREE.Group();
-
-    const halfSide = planeSide / 2;
-
-    for (let x = -1 * halfSide; x < halfSide; x += 1) {
-      for (let z = -1 * halfSide; z < halfSide; z += 1) {
-        const material = new THREE.MeshPhongMaterial({
-          color: [0xcccccc, 0xdddddd, 0xaaaaaa, 0x999999][random(0, 3)]
-          // roughness: 1,
-          // side: THREE.DoubleSide
-        });
-        const tile = new THREE.Mesh(geometry, material);
-
-        tile.position.x = x * geometrySide;
-        tile.position.z = z * geometrySide;
-        tile.rotation.x = (-1 * Math.PI) / 2;
-        tile.rotation.y = 0;
-        tile.rotation.z = Math.PI / 2;
-
-        this.plane.add(tile);
-      }
-    }
 
     // const boxGeometry = new THREE.BoxGeometry(10, 16, 10);
     const boxGeometry = new THREE.BoxGeometry(1, 0.6, 1);
@@ -78,6 +55,26 @@ export default class Plane implements CanvasView {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
+    // for await (let layer of this.tiledMap.generateSkinnedLayers()) {
+    //   for await (let tile of layer.generateSkinnedTiles()) {
+    //     console.log(tile);
+    //     // const material = new THREE.MeshPhongMaterial({
+    //     //   color: [0xcccccc, 0xdddddd, 0xaaaaaa, 0x999999][random(0, 3)]
+    //     //   // roughness: 1,
+    //     //   // side: THREE.DoubleSide
+    //     // });
+    //     // const tile = new THREE.Mesh(geometry, material);
+
+    //     // tile.position.x = x * geometrySide;
+    //     // tile.position.z = z * geometrySide;
+    //     // tile.rotation.x = (-1 * Math.PI) / 2;
+    //     // tile.rotation.y = 0;
+    //     // tile.rotation.z = Math.PI / 2;
+
+    //     // this.plane.add(tile);
+    //   }
+    // }
+
     this.scene.add(this.wireframe);
     this.scene.add(this.plane);
   }

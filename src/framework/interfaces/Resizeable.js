@@ -1,8 +1,8 @@
 // @flow
 
 import type { ElementSize } from "./ElementSize";
-import type { ElementSizeUnit } from "../types/ElementSizeUnit";
+import type { ElementSpatialUnit } from "../types/ElementSpatialUnit";
 
-export interface Resizeable<T> {
+export interface Resizeable<T: ElementSpatialUnit> {
   resize(ElementSize<T>): void;
 }

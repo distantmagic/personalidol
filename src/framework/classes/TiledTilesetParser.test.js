@@ -11,6 +11,6 @@ it("parses tileset files", async function() {
   const tiledTilesetParser = new TiledTilesetParser(tilesetFilename, content);
   const tiledTileset = await tiledTilesetParser.parse(cancelToken);
 
-  expect(tiledTileset.getTileById("1")).toBeDefined();
-  expect(tiledTileset.getTileById("2")).toBeDefined();
+  expect(tiledTileset.getTileById(1)).toBeDefined();
+  expect(tiledTileset.getTileById(2)).toBeDefined();
 });

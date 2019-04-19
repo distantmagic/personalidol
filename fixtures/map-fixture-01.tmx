@@ -3,8 +3,8 @@
  <tileset firstgid="1" source="tileset-fixture-01.tsx"/>
  <layer id="1" name="Tile Layer 1" width="2" height="2">
   <data encoding="csv">
-3,3,
-2,3
+1,2,
+1,2
 </data>
  </layer>
  <objectgroup id="2" name="objects">

@@ -38,7 +38,6 @@ export default class CanvasLocationComplex implements CanvasController {
   +keyboardState: KeyboardState;
   +light: THREE.SpotLight;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +planeSide: number;
   +pointerState: PointerState;
   +queryBus: QueryBus;
   +scene: THREE.Scene;
@@ -63,7 +62,6 @@ export default class CanvasLocationComplex implements CanvasController {
     this.keyboardState = keyboardState;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     // (36x36), (72x72), (108x108), (144x144), (216,216), (252, 252)
-    this.planeSide = 108;
     this.pointerState = pointerState;
     this.queryBus = queryBus;
     this.threeLoadingManager = threeLoadingManager;
@@ -84,12 +82,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
     // this.light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
     this.light = new THREE.SpotLight(0xffffff);
-    // this.light.position.set(planeSide / 2, planeSide / 2, planeSide / 2);
-    this.light.position.set(
-      (this.planeSide * 10) / 2,
-      (this.planeSide * 10) / 2,
-      (this.planeSide * 10) / 2
-    );
+    this.light.position.set(512, 512, 512);
   }
 
   async attach(
@@ -129,8 +122,7 @@ export default class CanvasLocationComplex implements CanvasController {
         this.loggerBreadcrumbs.add("EntityView"),
         this.scene,
         this.threeLoadingManager,
-        this.keyboardState,
-        this.planeSide
+        this.keyboardState
       )
     );
 
@@ -149,16 +141,14 @@ export default class CanvasLocationComplex implements CanvasController {
       "/assets/map-outlands-01.tmx"
     );
 
-    console.log(tiledMap);
-
     this.canvasViewGroup.add(
       new PlaneView(
         this.exceptionHandler,
         this.loggerBreadcrumbs.add("PlaneView"),
         this.scene,
-        this.planeSide,
         this.pointerState,
-        threePointerInteraction
+        threePointerInteraction,
+        tiledMap
       )
     );
 

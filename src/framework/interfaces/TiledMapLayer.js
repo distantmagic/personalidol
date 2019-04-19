@@ -12,4 +12,6 @@ export interface TiledMapLayer {
   ): void;
 
   getId(): number;
+
+  getTiledMapGrid(): TiledMapGrid;
 }

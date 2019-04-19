@@ -1,9 +1,9 @@
 // @flow
 
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
-import type { ElementSizeUnit } from "../types/ElementSizeUnit";
+import type { ElementSpatialUnit } from "../types/ElementSpatialUnit";
 
-export default class ElementSize<Unit: ElementSizeUnit>
+export default class ElementSize<Unit: ElementSpatialUnit>
   implements ElementSizeInterface<Unit> {
   +height: number;
   +width: number;

@@ -8,12 +8,12 @@ import type { TiledTileset as TiledTilesetInterface } from "../interfaces/TiledT
 
 export default class TiledTileset implements TiledTilesetInterface {
   +expectedTileCount: number;
-  +tiles: Map<string, TiledTile>;
+  +tiles: Map<number, TiledTile>;
   +tileSize: ElementSize<"px">;
 
   constructor(expectedTileCount: number, tileSize: ElementSize<"px">): void {
     this.expectedTileCount = expectedTileCount;
-    this.tiles = new Map<string, TiledTile>();
+    this.tiles = new Map<number, TiledTile>();
     this.tileSize = tileSize;
   }
 
@@ -21,7 +21,7 @@ export default class TiledTileset implements TiledTilesetInterface {
     this.tiles.set(tile.getId(), tile);
   }
 
-  getTileById(id: string): TiledTile {
+  getTileById(id: number): TiledTile {
     const tile = this.tiles.get(id);
 
     if (!tile) {

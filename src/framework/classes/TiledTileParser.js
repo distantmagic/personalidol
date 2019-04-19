@@ -40,7 +40,7 @@ export default class TiledTileParser implements TiledTileParserInterface {
     );
 
     return new TiledTile(
-      xml.getStringAttribute(this.tileElement, "id"),
+      xml.getNumberAttribute(this.tileElement, "id"),
       tiledImage
     );
   }

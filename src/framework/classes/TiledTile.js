@@ -4,15 +4,15 @@ import type { TiledTile as TiledTileInterface } from "../interfaces/TiledTile";
 import type { TiledTileImage } from "../interfaces/TiledTileImage";
 
 export default class TiledTile implements TiledTileInterface {
-  +id: string;
+  +id: number;
   +image: TiledTileImage;
 
-  constructor(id: string, image: TiledTileImage) {
+  constructor(id: number, image: TiledTileImage) {
     this.id = id;
     this.image = image;
   }
 
-  getId(): string {
+  getId(): number {
     return this.id;
   }
 }

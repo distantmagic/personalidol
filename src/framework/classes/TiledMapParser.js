@@ -51,11 +51,6 @@ export default class TiledMapParser implements TiledMapParserInterface {
       throw new TiledMapException("Tileset data is missing in map document.");
     }
 
-    const mapSize = new ElementSize<"tile">(
-      xml.getNumberAttribute(documentElement, "width"),
-      xml.getNumberAttribute(documentElement, "height")
-    );
-
     const tilesetFilename = xml.getStringAttribute(tilesetElement, "source");
     const tiledTileset = await this.tiledTilesetLoader.load(
       cancelToken,
@@ -69,7 +64,16 @@ export default class TiledMapParser implements TiledMapParserInterface {
       throw new TiledMapException("No layers found in map document.");
     }
 
-    const tiledMap = new TiledMap(mapSize, tiledTileset);
+    const mapSize = new ElementSize<"tile">(
+      xml.getNumberAttribute(documentElement, "width"),
+      xml.getNumberAttribute(documentElement, "height")
+    );
+    const tileSize = new ElementSize<"px">(
+      xml.getNumberAttribute(documentElement, "tilewidth"),
+      xml.getNumberAttribute(documentElement, "tileheight")
+    );
+
+    const tiledMap = new TiledMap(mapSize, tileSize, tiledTileset);
 
     for (let layerElement of layerElements.values()) {
       if (cancelToken.isCancelled()) {

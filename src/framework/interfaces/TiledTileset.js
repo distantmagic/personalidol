@@ -8,7 +8,7 @@ export interface TiledTileset {
 
   add(TiledTile): void;
 
-  getTileById(id: string): TiledTile;
+  getTileById(id: number): TiledTile;
 
   getTiles(): Set<TiledTile>;
 }

@@ -44,6 +44,6 @@ export default class TiledMapLayerGridCSVParser
       });
     });
 
-    return new TiledMapGrid(grid);
+    return new TiledMapGrid(grid, this.mapSize);
   }
 }

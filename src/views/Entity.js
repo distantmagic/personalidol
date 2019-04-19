@@ -1,7 +1,7 @@
 // @flow
 
 import * as THREE from "three";
-import clamp from "clamp";
+// import clamp from "clamp";
 
 import FBXLoader from "../three/FBXLoader";
 import PersonAnimation from "../framework/machines/PersonAnimation";
@@ -17,7 +17,6 @@ import type { THREELoadingManager } from "../framework/interfaces/THREELoadingMa
 export default class Entity implements CanvasView {
   +keyboardState: KeyboardState;
   +personAnimationState: PersonAnimationInstance;
-  +planeSide: number;
   +spotLight: THREE.SpotLight;
   +threeLoadingManager: THREELoadingManager;
   +scene: THREE.Scene;
@@ -32,8 +31,7 @@ export default class Entity implements CanvasView {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     scene: THREE.Scene,
     threeLoadingManager: THREELoadingManager,
-    keyboardState: KeyboardState,
-    planeSide: number
+    keyboardState: KeyboardState
   ) {
     this.guy = new THREE.Group();
     this.keyboardState = keyboardState;
@@ -41,7 +39,6 @@ export default class Entity implements CanvasView {
       exceptionHandler,
       loggerBreadcrumbs
     );
-    this.planeSide = planeSide;
     this.rotationY = 0;
     this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
@@ -240,16 +237,18 @@ export default class Entity implements CanvasView {
     this.guy.rotation.x = 0;
 
     this.guy.rotation.y = this.rotationY;
-    this.guy.position.x = clamp(
-      this.guy.position.x + this.velocityX,
-      -1 * (this.planeSide * 5),
-      this.planeSide * 5
-    );
-    this.guy.position.z = clamp(
-      this.guy.position.z + this.velocityZ,
-      -1 * (this.planeSide * 5),
-      this.planeSide * 5
-    );
+    // this.guy.position.x = clamp(
+    //   this.guy.position.x + this.velocityX,
+    //   -1 * (this.planeSide * 5),
+    //   this.planeSide * 5
+    // );
+    this.guy.position.x += this.velocityX;
+    // this.guy.position.z = clamp(
+    //   this.guy.position.z + this.velocityZ,
+    //   -1 * (this.planeSide * 5),
+    //   this.planeSide * 5
+    // );
+    this.guy.position.z += this.velocityZ;
 
     // this.spotLight.position.x = this.guy.position.x;
     // this.spotLight.position.z = this.guy.position.z;

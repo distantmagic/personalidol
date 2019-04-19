@@ -1,7 +1,6 @@
 // @flow
 
 import type { ElementSize } from "../interfaces/ElementSize";
-import type { ElementSizeUnit } from "../types/ElementSizeUnit";
 import type { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";
 
 export default class HTMLElementSize implements HTMLElementSizeInterface {
@@ -27,10 +26,6 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
 
   getHeight(): number {
     return this.htmlElementHeight;
-  }
-
-  getUnit(): ElementSizeUnit {
-    return "px";
   }
 
   getScrollHeight(): number {
