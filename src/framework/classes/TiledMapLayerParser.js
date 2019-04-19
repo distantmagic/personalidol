@@ -51,13 +51,12 @@ export default class TiledMapLayerParser
       this.mapSize
     );
     const tiledMapGrid = await tiledMapLayerCSVDataParser.parse(cancelToken);
-    const layerId = xml.getNumberAttribute(this.layerElement, "id");
     const layerName = xml.getStringAttribute(this.layerElement, "name");
     const layerSize = new ElementSize<"tile">(
       xml.getNumberAttribute(this.layerElement, "width"),
       xml.getNumberAttribute(this.layerElement, "height")
     );
 
-    return new TiledMapLayer(layerId, layerName, tiledMapGrid, layerSize);
+    return new TiledMapLayer(layerName, tiledMapGrid, layerSize);
   }
 }
