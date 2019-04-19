@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import random from "lodash/random";
 
 import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasView } from "../framework/interfaces/CanvasView";
@@ -74,7 +73,7 @@ export default class Plane implements CanvasView {
           // color: [0xcccccc, 0xdddddd, 0xaaaaaa, 0x999999][random(0, 3)]
           map: textureLoader.load(
             "/assets/" + tile.getTiledTileImage().getSource()
-          )
+          ),
           // roughness: 1,
           // side: THREE.DoubleSide
         })

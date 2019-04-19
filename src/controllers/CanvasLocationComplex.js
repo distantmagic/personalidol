@@ -122,7 +122,8 @@ export default class CanvasLocationComplex implements CanvasController {
         this.loggerBreadcrumbs.add("EntityView"),
         this.scene,
         this.threeLoadingManager,
-        this.keyboardState
+        this.keyboardState,
+        this.camera
       )
     );
 
