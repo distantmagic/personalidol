@@ -5,6 +5,7 @@ import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
 import TiledMap from "./TiledMap";
 import TiledMapLayerParser from "./TiledMapLayerParser";
+import TiledMapObjectElementChecker from "./TiledMapObjectElementChecker";
 import TiledMapObjectParser from "./TiledMapObjectParser";
 import TiledRelativeFilename from "./TiledRelativeFilename";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
@@ -101,14 +102,24 @@ export default class TiledMapParser implements TiledMapParserInterface {
     const objectElements = documentElement.querySelectorAll("object");
 
     for (let objectElement of objectElements.values()) {
-      const tiledMapObjectParser = new TiledMapObjectParser(
-        this.mapFilename,
-        objectElement,
-        tileSize
-      );
-      const tiledMapObject = await tiledMapObjectParser.parse(cancelToken);
+      const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(objectElement);
+      switch(true) {
+        case tiledMapObjectElementChecker.isEllipse():
+        break;
+        case tiledMapObjectElementChecker.isPolygon():
+        break;
+        case tiledMapObjectElementChecker.isRectangle():
+        break;
+      }
 
-      tiledMap.addObject(tiledMapObject);
+      // const tiledMapObjectParser = new TiledMapObjectParser(
+      //   this.mapFilename,
+      //   objectElement,
+      //   tileSize
+      // );
+      // const tiledMapObject = await tiledMapObjectParser.parse(cancelToken);
+
+      // tiledMap.addObject(tiledMapObject);
     }
 
     return tiledMap;

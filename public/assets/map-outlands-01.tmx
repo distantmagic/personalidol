@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="108" height="108" tilewidth="128" tileheight="128" infinite="0" nextlayerid="5" nextobjectid="21">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="108" height="108" tilewidth="128" tileheight="128" infinite="0" nextlayerid="5" nextobjectid="24">
  <tileset firstgid="1" source="tileset-outlands.tsx"/>
  <layer id="3" name="ground" width="108" height="108">
   <data encoding="csv">
@@ -119,7 +119,7 @@
     <property name="depth" type="int" value="256"/>
    </properties>
   </object>
-  <object id="6" name="Barn" x="276" y="908.848" width="384" height="384" rotation="-30">
+  <object id="6" name="Barn" x="850" y="800.848" width="384" height="384" rotation="-30">
    <properties>
     <property name="depth" type="int" value="32"/>
    </properties>
@@ -128,6 +128,18 @@
    <properties>
     <property name="depth" type="int" value="128"/>
    </properties>
+  </object>
+  <object id="21" name="Well" x="594" y="42" width="256" height="256">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="23" name="Crater" x="302" y="574">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+   </properties>
+   <polygon points="0,0 318,66 180,204 358,216 112,352 270,354 -58,492 58,388 -70,372 96,276 -54,252 58,166"/>
   </object>
  </objectgroup>
 </map>

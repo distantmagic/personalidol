@@ -79,7 +79,9 @@ it("generates skinned layers and tiles", async function() {
 
   const tiledMapObjects = tiledMap.getObjects();
 
-  expect(tiledMapObjects).toHaveLength(2);
+  expect(tiledMapObjects).toHaveLength(4);
   expect(tiledMapObjects[0]).toBeDefined();
   expect(tiledMapObjects[1]).toBeDefined();
+  expect(tiledMapObjects[2]).toBeDefined();
+  expect(tiledMapObjects[3]).toBeDefined();
 });
