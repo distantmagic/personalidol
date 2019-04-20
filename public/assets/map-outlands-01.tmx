@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="108" height="108" tilewidth="128" tileheight="128" infinite="0" nextlayerid="5" nextobjectid="13">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="108" height="108" tilewidth="128" tileheight="128" infinite="0" nextlayerid="5" nextobjectid="21">
  <tileset firstgid="1" source="tileset-outlands.tsx"/>
  <layer id="3" name="ground" width="108" height="108">
   <data encoding="csv">
@@ -114,17 +114,17 @@
 </data>
  </layer>
  <objectgroup id="2" name="objects">
-  <object id="1" name="Cottage" x="807.839" y="128.219" width="384" height="128" rotation="30">
+  <object id="1" name="Cottage" x="1075.17" y="191.734" width="384" height="128" rotation="30">
    <properties>
     <property name="depth" type="int" value="256"/>
    </properties>
   </object>
-  <object id="6" name="Barn" x="512" y="1024" width="384" height="384" rotation="-45">
+  <object id="6" name="Barn" x="276" y="908.848" width="384" height="384" rotation="-30">
    <properties>
     <property name="depth" type="int" value="32"/>
    </properties>
   </object>
-  <object id="9" name="Lantern" x="64" y="0" width="128" height="128" rotation="45">
+  <object id="9" name="Lantern" x="127.333" y="37.3333" width="128" height="128" rotation="45">
    <properties>
     <property name="depth" type="int" value="128"/>
    </properties>

@@ -146,7 +146,7 @@ export default class Entity implements CanvasView {
     this.guy.position.set(1.5, 0, 1.5);
     this.guy.scale.set(0.01, 0.01, 0.01);
 
-    this.camera.position.set(this.guy.position.x, 20, this.guy.position.z + 16);
+    this.updateCameraPosition();
     this.camera.lookAt(this.guy.position);
 
     this.scene.add(this.guy);
@@ -256,17 +256,21 @@ export default class Entity implements CanvasView {
     // );
     this.guy.position.z += this.velocityZ;
 
-    // top-down
-    this.camera.position.set(this.guy.position.x, 20, this.guy.position.z + 16);
-
-    // angled
-    // this.camera.position.set(
-    //   this.guy.position.x + 20,
-    //   20,
-    //   this.guy.position.z + 20
-    // );
+    this.updateCameraPosition();
 
     // this.spotLight.position.x = this.guy.position.x;
     // this.spotLight.position.z = this.guy.position.z;
+  }
+
+  updateCameraPosition(): void {
+    // top-down
+    // this.camera.position.set(this.guy.position.x, 20, this.guy.position.z + 16);
+
+    // angled
+    this.camera.position.set(
+      this.guy.position.x + 20,
+      20,
+      this.guy.position.z + 20
+    );
   }
 }

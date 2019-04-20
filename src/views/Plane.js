@@ -40,6 +40,9 @@ export default class Plane implements CanvasView {
     // const boxGeometry = new THREE.BoxGeometry(10, 16, 10);
     const boxGeometry = new THREE.BoxGeometry(1, 0.6, 1);
     const geo = new THREE.EdgesGeometry(boxGeometry); // or WireframeGeometry( geometry )
+
+    geo.translate(0.5, 0, 0.5);
+
     const mat = new THREE.LineBasicMaterial({
       color: 0xffffff,
       linewidth: 2
@@ -115,7 +118,11 @@ export default class Plane implements CanvasView {
         tiledMapObjectSize.getHeight()
       );
 
-      tiledMapObjectGeometry.translate(0, tiledMapObjectSize.getDepth() / 2, 0);
+      tiledMapObjectGeometry.translate(
+        tiledMapObjectSize.getWidth() / 2,
+        tiledMapObjectSize.getDepth() / 2,
+        tiledMapObjectSize.getHeight() / 2
+      );
 
       const tiledMapObjectMesh = new THREE.Mesh(
         tiledMapObjectGeometry,

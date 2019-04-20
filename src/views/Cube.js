@@ -33,7 +33,7 @@ export default class Cube implements CanvasView {
     });
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.position.set(0, 0.5, 0);
+    this.mesh.position.set(2.5, 0.5, 2.5);
   }
 
   async attach(
