@@ -1,9 +1,9 @@
 // @flow
 
+import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 import type { Equatable } from "./Equatable";
-import type { ElementSpatialUnit } from "../types/ElementSpatialUnit";
 
-export interface ElementPosition<Unit: ElementSpatialUnit>
+export interface ElementPosition<Unit: ElementPositionUnit>
   extends Equatable<ElementPosition<Unit>> {
   getX(): number;
 

@@ -45,7 +45,15 @@ export function getAttribute(element: HTMLElement, name: string): Attr {
   return attr;
 }
 
-export function getNumberAttribute(element: HTMLElement, name: string): number {
+export function getNumberAttribute(
+  element: HTMLElement,
+  name: string,
+  def?: number
+): number {
+  if ("number" === typeof def && !element.attributes.getNamedItem(name)) {
+    return def;
+  }
+
   const value = parseInt(getStringAttribute(element, name), 10);
 
   if (isNaN(value)) {

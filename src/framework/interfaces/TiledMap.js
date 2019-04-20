@@ -3,6 +3,7 @@
 import type { CancelToken } from "./CancelToken";
 import type { ElementSize } from "./ElementSize";
 import type { TiledMapLayer } from "./TiledMapLayer";
+import type { TiledMapObject } from "./TiledMapObject";
 import type { TiledMapSkinnedLayer } from "./TiledMapSkinnedLayer";
 import type { TiledTileset } from "./TiledTileset";
 
@@ -11,6 +12,8 @@ export interface TiledMap {
 
   addLayer(TiledMapLayer): void;
 
+  addObject(TiledMapObject): void;
+
   generateSkinnedLayers(
     CancelToken
   ): AsyncGenerator<TiledMapSkinnedLayer, void, void>;
@@ -18,6 +21,8 @@ export interface TiledMap {
   getLayers(): Array<TiledMapLayer>;
 
   getMapSize(): ElementSize<"tile">;
+
+  getObjects(): Array<TiledMapObject>;
 
   getTileSize(): ElementSize<"px">;
 

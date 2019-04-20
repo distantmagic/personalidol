@@ -7,6 +7,7 @@ import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
+import type { TiledMapObject } from "../interfaces/TiledMapObject";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
 import type { TiledTileset } from "../interfaces/TiledTileset";
 
@@ -14,6 +15,7 @@ export default class TiledMap implements TiledMapInterface {
   +mapSize: ElementSize<"tile">;
   +tileSize: ElementSize<"px">;
   +tiledMapLayers: Array<TiledMapLayer>;
+  +tiledMapObjects: Array<TiledMapObject>;
   +tiledTileset: TiledTileset;
 
   constructor(
@@ -23,12 +25,17 @@ export default class TiledMap implements TiledMapInterface {
   ) {
     this.mapSize = mapSize;
     this.tiledMapLayers = [];
+    this.tiledMapObjects = [];
     this.tiledTileset = tiledTileset;
     this.tileSize = tileSize;
   }
 
   addLayer(tiledMapLayer: TiledMapLayer): void {
     this.tiledMapLayers.push(tiledMapLayer);
+  }
+
+  addObject(tiledMapObject: TiledMapObject): void {
+    this.tiledMapObjects.push(tiledMapObject);
   }
 
   async *generateSkinnedLayers(
@@ -51,6 +58,10 @@ export default class TiledMap implements TiledMapInterface {
 
   getMapSize(): ElementSize<"tile"> {
     return this.mapSize;
+  }
+
+  getObjects(): Array<TiledMapObject> {
+    return this.tiledMapObjects.slice(0);
   }
 
   getTileSize(): ElementSize<"px"> {

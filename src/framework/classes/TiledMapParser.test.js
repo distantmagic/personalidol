@@ -71,4 +71,15 @@ it("generates skinned layers and tiles", async function() {
 
   // there are 4 tiles in total, but one is blank
   expect(skinnedTiles).toHaveLength(3);
+
+  const tiledMapLayers = tiledMap.getLayers();
+
+  expect(tiledMapLayers).toHaveLength(1);
+  expect(tiledMapLayers[0]).toBeDefined();
+
+  const tiledMapObjects = tiledMap.getObjects();
+
+  expect(tiledMapObjects).toHaveLength(2);
+  expect(tiledMapObjects[0]).toBeDefined();
+  expect(tiledMapObjects[1]).toBeDefined();
 });

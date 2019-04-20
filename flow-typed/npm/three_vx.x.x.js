@@ -69,6 +69,10 @@ declare module "three" {
     update(delta: number): void;
   }
 
+  declare export interface AxesHelper extends Object3D {
+    constructor(size: number): void;
+  }
+
   declare export interface BaseGeometry {
     dispose(): void;
 
@@ -112,6 +116,8 @@ declare module "three" {
     z: number;
 
     constructor(number, number, number): void;
+
+    set(x: number, y: number, z: number): void;
   }
 
   declare export interface Clock {
@@ -142,6 +148,10 @@ declare module "three" {
 
   declare export interface Geometry extends BaseGeometry {
     +isGeometry: true;
+  }
+
+  declare export interface GridHelper extends Object3D {
+    constructor(size: number, divisions: number): void;
   }
 
   declare export interface Group extends Object3D {
@@ -202,6 +212,7 @@ declare module "three" {
 
   declare export interface Object3D {
     +children: Array<Object3D>;
+    +geometry: Geometry;
     +material: Material;
     +position: Vector3;
     +rotation: Euler;

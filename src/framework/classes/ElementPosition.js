@@ -1,9 +1,9 @@
 // @flow
 
 import type { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
-import type { ElementSpatialUnit } from "../types/ElementSpatialUnit";
+import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 
-export default class ElementPosition<Unit: ElementSpatialUnit>
+export default class ElementPosition<Unit: ElementPositionUnit>
   implements ElementPositionInterface<Unit> {
   +x: number;
   +y: number;

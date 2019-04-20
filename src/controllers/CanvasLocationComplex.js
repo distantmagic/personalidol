@@ -16,6 +16,7 @@ import URLTextContentQueryBuilder from "../framework/classes/URLTextContentQuery
 import { default as CubeView } from "../views/Cube";
 import { default as EntityView } from "../views/Entity";
 import { default as PlaneView } from "../views/Plane";
+import { default as THREEHelpersView } from "../views/THREEHelpers";
 
 import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasController } from "../framework/interfaces/CanvasController";
@@ -150,6 +151,15 @@ export default class CanvasLocationComplex implements CanvasController {
         this.pointerState,
         this.threeLoadingManager,
         threePointerInteraction,
+        tiledMap
+      )
+    );
+
+    this.canvasViewGroup.add(
+      new THREEHelpersView(
+        this.exceptionHandler,
+        this.loggerBreadcrumbs.add("THREEHelpersView"),
+        this.scene,
         tiledMap
       )
     );

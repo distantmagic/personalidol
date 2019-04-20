@@ -5,6 +5,7 @@ import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
 import TiledMap from "./TiledMap";
 import TiledMapLayerParser from "./TiledMapLayerParser";
+import TiledMapObjectParser from "./TiledMapObjectParser";
 import TiledRelativeFilename from "./TiledRelativeFilename";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
 
@@ -35,6 +36,8 @@ export default class TiledMapParser implements TiledMapParserInterface {
       throw new Cancelled("Cancel token was cancelled before parsing began.");
     }
 
+    // xml
+
     const doc: Document = this.domParser.parseFromString(
       this.content,
       "application/xml"
@@ -44,6 +47,8 @@ export default class TiledMapParser implements TiledMapParserInterface {
     if (!documentElement || xml.isParseError(doc)) {
       throw xml.extractParseError(doc);
     }
+
+    // tileset
 
     const tilesetElement = documentElement.querySelector("tileset");
 
@@ -75,6 +80,8 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     const tiledMap = new TiledMap(mapSize, tileSize, tiledTileset);
 
+    // layers
+
     for (let layerElement of layerElements.values()) {
       if (cancelToken.isCancelled()) {
         throw new Cancelled("Cancel token was cancelled while parsing layers.");
@@ -87,6 +94,21 @@ export default class TiledMapParser implements TiledMapParserInterface {
       const tiledMapLayer = await tiledMapLayerParser.parse(cancelToken);
 
       tiledMap.addLayer(tiledMapLayer);
+    }
+
+    // objects
+
+    const objectElements = documentElement.querySelectorAll("object");
+
+    for (let objectElement of objectElements.values()) {
+      const tiledMapObjectParser = new TiledMapObjectParser(
+        this.mapFilename,
+        objectElement,
+        tileSize
+      );
+      const tiledMapObject = await tiledMapObjectParser.parse(cancelToken);
+
+      tiledMap.addObject(tiledMapObject);
     }
 
     return tiledMap;

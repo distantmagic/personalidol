@@ -39,7 +39,6 @@ export default class Plane implements CanvasView {
 
     // const boxGeometry = new THREE.BoxGeometry(10, 16, 10);
     const boxGeometry = new THREE.BoxGeometry(1, 0.6, 1);
-
     const geo = new THREE.EdgesGeometry(boxGeometry); // or WireframeGeometry( geometry )
     const mat = new THREE.LineBasicMaterial({
       color: 0xffffff,
@@ -59,7 +58,10 @@ export default class Plane implements CanvasView {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
-    const geometry = new THREE.PlaneGeometry(1, 1);
+    const tileGeometry = new THREE.PlaneGeometry(1, 1);
+
+    tileGeometry.translate(-0.5, -0.5, 0);
+
     const textureLoader = new THREE.TextureLoader(
       this.threeLoadingManager.getLoadingManager()
     );
@@ -80,15 +82,15 @@ export default class Plane implements CanvasView {
 
     for await (let layer of this.tiledMap.generateSkinnedLayers(cancelToken)) {
       for await (let tile of layer.generateSkinnedTiles(cancelToken)) {
-        const material = tileMaterials.get(tile.getId());
+        const tileMaterial = tileMaterials.get(tile.getId());
 
-        if (!material) {
+        if (!tileMaterial) {
           throw new Error(
             `Tile material does not exist but was expected: ${tile.getId()}`
           );
         }
 
-        const tileMesh = new THREE.Mesh(geometry, material);
+        const tileMesh = new THREE.Mesh(tileGeometry, tileMaterial);
         const tilePosition = tile.getElementPosition();
 
         tileMesh.position.x = tilePosition.getX();
@@ -99,6 +101,42 @@ export default class Plane implements CanvasView {
 
         this.plane.add(tileMesh);
       }
+    }
+
+    const tiledMapObjectMaterial = new THREE.MeshPhongMaterial({
+      color: 0xff0000
+    });
+
+    for (let tiledMapObject of this.tiledMap.getObjects()) {
+      const tiledMapObjectSize = tiledMapObject.getElementSize();
+      const tiledMapObjectGeometry = new THREE.BoxGeometry(
+        tiledMapObjectSize.getWidth(),
+        tiledMapObjectSize.getDepth(),
+        tiledMapObjectSize.getHeight()
+      );
+
+      tiledMapObjectGeometry.translate(0, tiledMapObjectSize.getDepth() / 2, 0);
+
+      const tiledMapObjectMesh = new THREE.Mesh(
+        tiledMapObjectGeometry,
+        tiledMapObjectMaterial
+      );
+
+      const tiledMapObjectPosition = tiledMapObject.getElementPosition();
+      tiledMapObjectMesh.position.set(
+        tiledMapObjectPosition.getX(),
+        tiledMapObjectPosition.getZ(),
+        tiledMapObjectPosition.getY()
+      );
+
+      const tiledMapObjectRotation = tiledMapObject.getElementRotation();
+      tiledMapObjectMesh.rotation.set(
+        tiledMapObjectRotation.getRotationX(),
+        tiledMapObjectRotation.getRotationZ(),
+        tiledMapObjectRotation.getRotationY()
+      );
+
+      this.scene.add(tiledMapObjectMesh);
     }
 
     this.scene.add(this.wireframe);
