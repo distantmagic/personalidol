@@ -4,6 +4,7 @@ import * as xml from "../helpers/xml";
 import ElementSize from "./ElementSize";
 import TiledMapBlockObject from "./TiledMapBlockObject";
 import TiledMapPositionedObjectParser from "./TiledMapPositionedObjectParser";
+import TiledRelativeFilename from "./TiledRelativeFilename";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
@@ -27,6 +28,13 @@ export default class TiledMapBlockObjectParser
   }
 
   async parse(cancelToken: CancelToken): Promise<TiledMapBlockObjectInterface> {
+    const tileHeightPixels = this.tileSize.getHeight();
+    const tileWidthPixels = this.tileSize.getWidth();
+
+    if (tileHeightPixels !== tileWidthPixels) {
+      throw new Error("Non-square tiles are not supported with 3D objects.");
+    }
+
     const objectDepthElement = this.objectElement.querySelector(
       "property[name=depth][type=int]"
     );
@@ -48,17 +56,14 @@ export default class TiledMapBlockObjectParser
       "width"
     );
 
-    const tileHeightPixels = this.tileSize.getHeight();
-    const tileWidthPixels = this.tileSize.getWidth();
-
-    if (tileHeightPixels !== tileWidthPixels) {
-      throw new Error("Non-square tiles are not supported with 3D objects.");
-    }
-
     const tiledMapPositionedObjectParser = new TiledMapPositionedObjectParser(
       this.mapFilename,
       this.objectElement,
       this.tileSize
+    );
+
+    const objectSourceElement = this.objectElement.querySelector(
+      "property[name=source]"
     );
 
     return new TiledMapBlockObject(
@@ -67,7 +72,13 @@ export default class TiledMapBlockObjectParser
         objectWidthPixels / tileWidthPixels,
         objectHeightPixels / tileHeightPixels,
         objectDepthPixels / tileHeightPixels
-      )
+      ),
+      objectSourceElement
+        ? new TiledRelativeFilename(
+            this.mapFilename,
+            xml.getStringAttribute(objectSourceElement, "value")
+          ).asString()
+        : null
     );
   }
 }

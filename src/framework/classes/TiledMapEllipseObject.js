@@ -44,4 +44,12 @@ export default class TiledMapEllipseObject
   getName(): string {
     return this.tiledMapBlockObject.getName();
   }
+
+  getSource(): string {
+    return this.tiledMapBlockObject.getSource();
+  }
+
+  hasSource(): boolean {
+    return this.tiledMapBlockObject.hasSource();
+  }
 }

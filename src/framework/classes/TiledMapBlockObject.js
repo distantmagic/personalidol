@@ -9,14 +9,17 @@ import type { TiledMapPositionedObject } from "../interfaces/TiledMapPositionedO
 export default class TiledMapBlockObject
   implements TiledMapBlockObjectInterface {
   +elementSize: ElementSize<"tile">;
+  +source: ?string;
   +tiledMapPositionedObject: TiledMapPositionedObject;
 
   constructor(
     tiledMapPositionedObject: TiledMapPositionedObject,
-    elementSize: ElementSize<"tile">
+    elementSize: ElementSize<"tile">,
+    source: ?string
   ): void {
     this.elementSize = elementSize;
     this.tiledMapPositionedObject = tiledMapPositionedObject;
+    this.source = source;
   }
 
   getElementPosition(): ElementPosition<"tile"> {
@@ -33,5 +36,19 @@ export default class TiledMapBlockObject
 
   getName(): string {
     return this.tiledMapPositionedObject.getName();
+  }
+
+  getSource(): string {
+    const source = this.source;
+
+    if (!source) {
+      throw new Error("Block object source is not specified but was expected.");
+    }
+
+    return source;
+  }
+
+  hasSource(): boolean {
+    return !!this.source;
   }
 }

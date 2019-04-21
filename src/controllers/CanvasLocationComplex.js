@@ -15,7 +15,7 @@ import TiledTilesetLoader from "../framework/classes/TiledTilesetLoader";
 import URLTextContentQueryBuilder from "../framework/classes/URLTextContentQueryBuilder";
 import { default as CubeView } from "../views/Cube";
 import { default as EntityView } from "../views/Entity";
-import { default as PlaneView } from "../views/Plane";
+import { default as GameboardView } from "../views/Gameboard";
 // import { default as THREEHelpersView } from "../views/THREEHelpers";
 
 import type { CancelToken } from "../framework/interfaces/CancelToken";
@@ -144,9 +144,9 @@ export default class CanvasLocationComplex implements CanvasController {
     );
 
     this.canvasViewGroup.add(
-      new PlaneView(
+      new GameboardView(
         this.exceptionHandler,
-        this.loggerBreadcrumbs.add("PlaneView"),
+        this.loggerBreadcrumbs.add("GameboardView"),
         this.scene,
         this.pointerState,
         this.threeLoadingManager,

@@ -35,8 +35,14 @@ export default class THREEPointerInteraction
   begin(): void {}
 
   disconnect(): void {
-    this.renderer.domElement.removeEventListener("mousedown", this.onMouseChange);
-    this.renderer.domElement.removeEventListener("mousemove", this.onMouseChange);
+    this.renderer.domElement.removeEventListener(
+      "mousedown",
+      this.onMouseChange
+    );
+    this.renderer.domElement.removeEventListener(
+      "mousemove",
+      this.onMouseChange
+    );
   }
 
   getCameraRaycaster(): Raycaster {

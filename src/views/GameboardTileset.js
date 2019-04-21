@@ -4,38 +4,32 @@ import * as THREE from "three";
 
 import type { CancelToken } from "../framework/interfaces/CancelToken";
 import type { CanvasView } from "../framework/interfaces/CanvasView";
-import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { PointerState } from "../framework/interfaces/PointerState";
+import type { TiledMap } from "../framework/interfaces/TiledMap";
 import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
 import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
-import type { TiledMap } from "../framework/interfaces/TiledMap";
-import type { TiledMapBlockObject } from "../framework/interfaces/TiledMapBlockObject";
-import type { TiledMapPositionedObject } from "../framework/interfaces/TiledMapPositionedObject";
 
-export default class Plane implements CanvasView {
+export default class GameboardTileset implements CanvasView {
   +plane: THREE.Group;
   +pointerState: PointerState;
   +scene: THREE.Scene;
+  +tiledMap: TiledMap;
   +threeLoadingManager: THREELoadingManager;
   +threePointerInteraction: THREEPointerInteraction;
-  +tiledMap: TiledMap;
   +wireframe: THREE.LineSegments;
 
   constructor(
-    exceptionHandler: ExceptionHandler,
-    loggerBreadcrumbs: LoggerBreadcrumbs,
     scene: THREE.Scene,
     pointerState: PointerState,
+    tiledMap: TiledMap,
     threeLoadingManager: THREELoadingManager,
-    threePointerInteraction: THREEPointerInteraction,
-    tiledMap: TiledMap
+    threePointerInteraction: THREEPointerInteraction
   ) {
-    this.pointerState = pointerState;
     this.scene = scene;
+    this.pointerState = pointerState;
+    this.tiledMap = tiledMap;
     this.threeLoadingManager = threeLoadingManager;
     this.threePointerInteraction = threePointerInteraction;
-    this.tiledMap = tiledMap;
 
     this.plane = new THREE.Group();
 
@@ -59,53 +53,10 @@ export default class Plane implements CanvasView {
     this.wireframe = wireframe;
   }
 
-  addTiledMapBlockGeometry(
-    tiledMapObject: TiledMapBlockObject,
-    tiledMapObjectGeometry: THREE.Geometry,
-    tiledMapObjectMaterial: THREE.Material
-  ): void {
-    const tiledMapObjectSize = tiledMapObject.getElementSize();
-    tiledMapObjectGeometry.translate(
-      tiledMapObjectSize.getWidth() / 2,
-      tiledMapObjectSize.getDepth() / 2,
-      tiledMapObjectSize.getHeight() / 2
-    );
-
-    const tiledMapObjectMesh = new THREE.Mesh(
-      tiledMapObjectGeometry,
-      tiledMapObjectMaterial
-    );
-
-    this.addTiledMapPositionedMesh(tiledMapObject, tiledMapObjectMesh);
-  }
-
-  addTiledMapPositionedMesh(
-    tiledMapObject: TiledMapPositionedObject,
-    tiledMapObjectMesh: THREE.Mesh
-  ) {
-    const tiledMapObjectPosition = tiledMapObject.getElementPosition();
-    tiledMapObjectMesh.position.set(
-      tiledMapObjectPosition.getX(),
-      tiledMapObjectPosition.getZ(),
-      tiledMapObjectPosition.getY()
-    );
-
-    const tiledMapObjectRotation = tiledMapObject.getElementRotation();
-    tiledMapObjectMesh.rotation.set(
-      tiledMapObjectRotation.getRotationX(),
-      tiledMapObjectRotation.getRotationZ(),
-      tiledMapObjectRotation.getRotationY()
-    );
-
-    this.scene.add(tiledMapObjectMesh);
-  }
-
   async attach(
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
-    // tiles
-
     const tileGeometry = new THREE.PlaneGeometry(1, 1);
 
     tileGeometry.translate(-0.5, -0.5, 0);
@@ -149,72 +100,6 @@ export default class Plane implements CanvasView {
 
         this.plane.add(tileMesh);
       }
-    }
-
-    // ellipses
-
-    const tiledMapObjectMaterial = new THREE.MeshPhongMaterial({
-      color: 0xff0000
-    });
-
-    for (let tiledMapObject of this.tiledMap.getEllipseObjects()) {
-      const tiledMapObjectSize = tiledMapObject.getElementSize();
-      const tiledMapObjectGeometry = new THREE.CylinderGeometry(
-        tiledMapObjectSize.getWidth() / 2,
-        tiledMapObjectSize.getWidth() / 2,
-        tiledMapObjectSize.getDepth(),
-        16
-      );
-
-      this.addTiledMapBlockGeometry(
-        tiledMapObject,
-        tiledMapObjectGeometry,
-        tiledMapObjectMaterial
-      );
-    }
-
-    // rectangles
-
-    for (let tiledMapObject of this.tiledMap.getRectangleObjects()) {
-      const tiledMapObjectSize = tiledMapObject.getElementSize();
-      const tiledMapObjectGeometry = new THREE.BoxGeometry(
-        tiledMapObjectSize.getWidth(),
-        tiledMapObjectSize.getDepth(),
-        tiledMapObjectSize.getHeight()
-      );
-
-      this.addTiledMapBlockGeometry(
-        tiledMapObject,
-        tiledMapObjectGeometry,
-        tiledMapObjectMaterial
-      );
-    }
-
-    // polygons
-
-    for (let tiledMapObject of this.tiledMap.getPolygonObjects()) {
-      const shape = new THREE.Shape();
-
-      for (let polygonPoint of tiledMapObject.getPolygonPoints()) {
-        // inversed, because otherwise is mirrored after geometry rotation
-        shape.lineTo(polygonPoint.getY(), polygonPoint.getX());
-      }
-
-      // const geometry = new THREE.ShapeGeometry(shape);
-      const geometry = new THREE.ExtrudeGeometry(shape, {
-        amount: tiledMapObject.getDepth(),
-        bevelEnabled: false
-        // steps: 2,
-      });
-
-      // rotate so the only side available is up
-      geometry.rotateX((-1 * Math.PI) / 2);
-      // now it is aligned correctly
-      geometry.rotateY((-1 * Math.PI) / 2);
-
-      const mesh = new THREE.Mesh(geometry, tiledMapObjectMaterial);
-
-      this.addTiledMapPositionedMesh(tiledMapObject, mesh);
     }
 
     this.scene.add(this.wireframe);
