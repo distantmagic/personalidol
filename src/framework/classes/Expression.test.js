@@ -2,9 +2,11 @@
 
 import Expression from "./Expression";
 import ExpressionContext from "./ExpressionContext";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
 it("performs math calculations", function() {
-  const context = new ExpressionContext();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const context = new ExpressionContext(loggerBreadcrumbs);
   const expression = new Expression("{{ 2 + 2 }}", context);
   const result = expression.execute();
 
@@ -12,7 +14,8 @@ it("performs math calculations", function() {
 });
 
 it("uses variables", function() {
-  const context = new ExpressionContext({
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const context = new ExpressionContext(loggerBreadcrumbs, {
     foo: 3
   });
   const expression = new Expression("{{ 2 + foo }}", context);
@@ -22,7 +25,8 @@ it("uses variables", function() {
 });
 
 it("uses objects", function() {
-  const context = new ExpressionContext({
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {
       player() {
         return {
@@ -41,7 +45,8 @@ it("uses objects", function() {
 });
 
 it("uses promises", function() {
-  const context = new ExpressionContext({
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {
       player() {
         return {
@@ -60,7 +65,8 @@ it("uses promises", function() {
 });
 
 it("resolves conditions with promises", function() {
-  const context = new ExpressionContext({
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {
       player() {
         return {

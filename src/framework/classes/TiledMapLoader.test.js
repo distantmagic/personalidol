@@ -4,20 +4,24 @@ import * as fixtures from "../../fixtures";
 import CancelToken from "./CancelToken";
 import FixturesFileQueryBuilder from "./FixturesFileQueryBuilder";
 import ForcedTick from "./ForcedTick";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBus from "./QueryBus";
 import TiledMapLoader from "./TiledMapLoader";
 import TiledTilesetLoader from "./TiledTilesetLoader";
 
 it("loads and parses map files", async function() {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
   const fixturesFileQueryBuilder = new FixturesFileQueryBuilder();
   const mapFilename = fixtures.findPath("map-fixture-01.tmx");
-  const queryBus = new QueryBus();
+  const queryBus = new QueryBus(loggerBreadcrumbs);
   const tiledTilesetLoader = new TiledTilesetLoader(
+    loggerBreadcrumbs,
     queryBus,
     fixturesFileQueryBuilder
   );
   const tiledMapLoader = new TiledMapLoader(
+    loggerBreadcrumbs,
     queryBus,
     fixturesFileQueryBuilder,
     tiledTilesetLoader

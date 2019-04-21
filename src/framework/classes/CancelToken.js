@@ -5,16 +5,19 @@ import Cancelled from "./Exception/Cancelled";
 // import type { Cancelled as CancelledInterface } from "../interfaces/Exception/Cancelled";
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 import type { CancelTokenCallback } from "../types/CancelTokenCallback";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class CancelToken implements CancelTokenInterface {
   +abortController: AbortController;
   +callbacks: Set<CancelTokenCallback>;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   _isCancelled: boolean;
 
-  constructor() {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this._isCancelled = false;
     this.abortController = new AbortController();
     this.callbacks = new Set();
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
   cancel(): void {
@@ -22,7 +25,7 @@ export default class CancelToken implements CancelTokenInterface {
     this._isCancelled = true;
 
     for (let callback of this.callbacks.values()) {
-      callback(new Cancelled("Token is cancelled."));
+      callback(new Cancelled(this.loggerBreadcrumbs, "Token is cancelled."));
     }
 
     this.callbacks.clear();
@@ -38,7 +41,9 @@ export default class CancelToken implements CancelTokenInterface {
 
   onCancelled(callback: CancelTokenCallback): void {
     if (this._isCancelled) {
-      callback(new Cancelled("Token is already cancelled."));
+      callback(
+        new Cancelled(this.loggerBreadcrumbs, "Token is already cancelled.")
+      );
     } else {
       this.callbacks.add(callback);
     }

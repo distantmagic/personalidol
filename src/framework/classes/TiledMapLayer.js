@@ -19,6 +19,10 @@ export default class TiledMapLayer implements TiledMapLayerInterface {
     this.tiledMapGrid = tiledMapGrid;
   }
 
+  getName(): string {
+    return this.name;
+  }
+
   getTiledMapGrid(): TiledMapGrid {
     return this.tiledMapGrid;
   }

@@ -5,6 +5,7 @@ import Cancelled from "./Exception/Cancelled";
 import CancelToken from "./CancelToken";
 import FixturesFileQueryBuilder from "./FixturesFileQueryBuilder";
 import ForcedTick from "./ForcedTick";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBus from "./QueryBus";
 import TiledMapParser from "./TiledMapParser";
 import TiledTilesetLoader from "./TiledTilesetLoader";
@@ -16,10 +17,11 @@ import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
 async function prepare(): Promise<
   [CancelTokenInterface, QueryBusInterface, Promise<TiledMapInterface>]
 > {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
   const mapFilename = "map-fixture-01.tmx";
   const queryBuilder = new FixturesFileQueryBuilder();
-  const queryBus = new QueryBus();
+  const queryBus = new QueryBus(loggerBreadcrumbs);
 
   const mockedEnqueuedCallback = jest.fn(function() {
     queryBus.tick(new ForcedTick(false));
@@ -30,8 +32,13 @@ async function prepare(): Promise<
 
   queryBus.onEnqueued(mockedEnqueuedCallback);
 
-  const tiledTilesetLoader = new TiledTilesetLoader(queryBus, queryBuilder);
+  const tiledTilesetLoader = new TiledTilesetLoader(
+    loggerBreadcrumbs,
+    queryBus,
+    queryBuilder
+  );
   const parser = new TiledMapParser(
+    loggerBreadcrumbs,
     fixtures.findPath(mapFilename),
     await fixtures.file(mapFilename),
     tiledTilesetLoader

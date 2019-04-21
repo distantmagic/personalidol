@@ -7,4 +7,6 @@ export interface LoggerBreadcrumbs
   extends Equatable<LoggerBreadcrumbs>,
     Stringable {
   add(breadcrumb: string): LoggerBreadcrumbs;
+
+  addVariable(breadcrumb: string): LoggerBreadcrumbs;
 }

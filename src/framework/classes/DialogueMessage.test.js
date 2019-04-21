@@ -3,9 +3,11 @@
 import DialogueMessage from "./DialogueMessage";
 import ExpressionBus from "./ExpressionBus";
 import ExpressionContext from "./ExpressionContext";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
 it("determines if message is an answer to something else", async function() {
-  const context = new ExpressionContext();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const context = new ExpressionContext(loggerBreadcrumbs);
   const expressionBus = new ExpressionBus();
 
   const m1 = new DialogueMessage(expressionBus, context, "foo", {

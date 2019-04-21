@@ -42,7 +42,9 @@ export default function HudModalCharacterLoader(props: Props) {
         return;
       }
 
-      const cancelToken = new CancelToken();
+      const cancelToken = new CancelToken(
+        props.loggerBreadcrumbs.add("CharacterQuery")
+      );
       const query = new CharacterQuery(characterId);
 
       props.queryBus

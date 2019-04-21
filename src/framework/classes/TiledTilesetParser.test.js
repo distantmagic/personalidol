@@ -2,14 +2,17 @@
 
 import * as fixtures from "../../fixtures";
 import CancelToken from "./CancelToken";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import TiledTilesetParser from "./TiledTilesetParser";
 
 it("parses tileset files", async function() {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
   const tilesetFilename = "tileset-fixture-01.tsx";
   const tilesetFilenameAbsolute = fixtures.findPath(tilesetFilename);
   const content = await fixtures.file(tilesetFilename);
   const tiledTilesetParser = new TiledTilesetParser(
+    loggerBreadcrumbs,
     tilesetFilenameAbsolute,
     content
   );

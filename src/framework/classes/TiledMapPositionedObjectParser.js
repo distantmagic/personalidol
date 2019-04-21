@@ -7,21 +7,28 @@ import TiledMapPositionedObject from "./TiledMapPositionedObject";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMapPositionedObject as TiledMapPositionedObjectInterface } from "../interfaces/TiledMapPositionedObject";
 import type { TiledMapPositionedObjectParser as TiledMapPositionedObjectParserInterface } from "../interfaces/TiledMapPositionedObjectParser";
 
 export default class TiledMapPositionedObjectParser
   implements TiledMapPositionedObjectParserInterface {
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapFilename: string;
+  +objectName: string;
   +objectElement: HTMLElement;
   +tileSize: ElementSizeInterface<"px">;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
     mapFilename: string,
+    objectName: string,
     objectElement: HTMLElement,
     tileSize: ElementSizeInterface<"px">
   ) {
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapFilename = mapFilename;
+    this.objectName = objectName;
     this.objectElement = objectElement;
     this.tileSize = tileSize;
   }
@@ -29,16 +36,20 @@ export default class TiledMapPositionedObjectParser
   async parse(
     cancelToken: CancelToken
   ): Promise<TiledMapPositionedObjectInterface> {
-    const objectName = xml.getStringAttribute(this.objectElement, "name");
+    const breadcrumbsObjectName = this.loggerBreadcrumbs.add("parse");
+
     const objectPositionXPixels = xml.getNumberAttribute(
+      breadcrumbsObjectName,
       this.objectElement,
       "x"
     );
     const objectPositionYPixels = xml.getNumberAttribute(
+      breadcrumbsObjectName,
       this.objectElement,
       "y"
     );
     const objectRotationYDegrees = xml.getNumberAttribute(
+      breadcrumbsObjectName,
       this.objectElement,
       "rotation",
       0
@@ -48,7 +59,7 @@ export default class TiledMapPositionedObjectParser
     const tileWidthPixels = this.tileSize.getWidth();
 
     return new TiledMapPositionedObject(
-      objectName,
+      this.objectName,
       new ElementPosition<"tile">(
         objectPositionXPixels / tileWidthPixels,
         objectPositionYPixels / tileHeightPixels

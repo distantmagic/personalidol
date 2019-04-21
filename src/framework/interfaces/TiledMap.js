@@ -10,8 +10,6 @@ import type { TiledMapSkinnedLayer } from "./TiledMapSkinnedLayer";
 import type { TiledTileset } from "./TiledTileset";
 
 export interface TiledMap {
-  constructor(ElementSize<"tile">, ElementSize<"px">, TiledTileset): void;
-
   addLayer(TiledMapLayer): void;
 
   addEllipseObject(TiledMapEllipseObject): void;

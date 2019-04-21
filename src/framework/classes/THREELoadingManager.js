@@ -59,12 +59,10 @@ export default class THREELoadingManager
     };
 
     this.threeLoadingManager.onError = (url: string): void => {
-      const error = new ResourceLoadError(url);
+      const breadcrumbs = loggerBreadcrumbs.add("threeLoadingManager.onError");
+      const error = new ResourceLoadError(breadcrumbs, url);
 
-      exceptionHandler.captureException(
-        loggerBreadcrumbs.add("threeLoadingManager.onError"),
-        error
-      );
+      exceptionHandler.captureException(breadcrumbs, error);
 
       this.resourcesLoadError = error;
 

@@ -22,9 +22,8 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
     const message = [
       "/DD/EXCEPTION_HANDLER:/",
       breadcrumbs.asString(),
-      error.message,
       error.stack
-    ].join("");
+    ].join(" ");
 
     this.logger.error(breadcrumbs, message);
   }

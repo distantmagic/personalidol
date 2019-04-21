@@ -2,9 +2,11 @@
 
 import CancelToken from "../classes/CancelToken";
 import interval from "./interval";
+import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
 
 it("produces interval events generator", async function() {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
   const ticks = [];
   const expectedTicks = 2;
 
@@ -20,7 +22,8 @@ it("produces interval events generator", async function() {
 }, 1000);
 
 it("ticks infinitely", async function() {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
   const expectedTicks = 10;
   let ticksCount = 0;
 
@@ -36,7 +39,8 @@ it("ticks infinitely", async function() {
 }, 1000);
 
 it("is immediately stopped with already paused cancel token", async function() {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
   const ticks = [];
 
   cancelToken.cancel();

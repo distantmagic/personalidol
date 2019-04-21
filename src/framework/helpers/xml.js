@@ -9,20 +9,32 @@
 
 import { default as XMLDocumentException } from "../classes/Exception/XMLDocument";
 
-export function extractParseError(doc: Document): XMLDocumentException {
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+
+export function extractParseError(
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  doc: Document
+): XMLDocumentException {
   const documentElement = doc.documentElement;
 
   if (!documentElement) {
-    throw new XMLDocumentException("Missing documentElement in XML file.");
+    throw new XMLDocumentException(
+      loggerBreadcrumbs,
+      "Missing documentElement in XML file."
+    );
   }
 
   if ("parsererror" !== documentElement.nodeName) {
     throw new XMLDocumentException(
+      loggerBreadcrumbs,
       "Expected 'parsererror' XML document, got something else."
     );
   }
 
-  return new XMLDocumentException(documentElement.textContent);
+  return new XMLDocumentException(
+    loggerBreadcrumbs,
+    documentElement.textContent
+  );
 }
 
 export function isParseError(doc: Document): boolean {
@@ -35,17 +47,25 @@ export function isParseError(doc: Document): boolean {
   return false;
 }
 
-export function getAttribute(element: HTMLElement, name: string): Attr {
+export function getAttribute(
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  element: HTMLElement,
+  name: string
+): Attr {
   const attr = element.attributes.getNamedItem(name);
 
   if (!attr) {
-    throw new XMLDocumentException(`Document is missing attribute: ${name}`);
+    throw new XMLDocumentException(
+      loggerBreadcrumbs,
+      `Document is missing attribute: ${name}`
+    );
   }
 
   return attr;
 }
 
 export function getNumberAttribute(
+  loggerBreadcrumbs: LoggerBreadcrumbs,
   element: HTMLElement,
   name: string,
   def?: number
@@ -54,10 +74,14 @@ export function getNumberAttribute(
     return def;
   }
 
-  const value = parseInt(getStringAttribute(element, name), 10);
+  const value = parseInt(
+    getStringAttribute(loggerBreadcrumbs, element, name),
+    10
+  );
 
   if (isNaN(value)) {
     throw new XMLDocumentException(
+      loggerBreadcrumbs,
       `Document attribute is not numeric: "${name}"`
     );
   }
@@ -65,6 +89,10 @@ export function getNumberAttribute(
   return value;
 }
 
-export function getStringAttribute(element: HTMLElement, name: string): string {
-  return getAttribute(element, name).value;
+export function getStringAttribute(
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  element: HTMLElement,
+  name: string
+): string {
+  return getAttribute(loggerBreadcrumbs, element, name).value;
 }

@@ -7,11 +7,11 @@ import type { TiledSkinnedTile } from "./TiledSkinnedTile";
 import type { TiledTileset } from "./TiledTileset";
 
 export interface TiledMapSkinnedLayer {
-  constructor(
-    TiledMapLayer,
-    mapTileSize: ElementSize<"px">,
-    TiledTileset
-  ): void;
+  // constructor(
+  //   TiledMapLayer,
+  //   mapTileSize: ElementSize<"px">,
+  //   TiledTileset
+  // ): void;
 
   generateSkinnedTiles(
     CancelToken

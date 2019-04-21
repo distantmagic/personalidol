@@ -2,6 +2,7 @@
 
 import CancelToken from "./CancelToken";
 import ForcedTick from "./ForcedTick";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBus from "./QueryBus";
 
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
@@ -32,8 +33,9 @@ class Foo implements Query<number> {
 }
 
 it("executes similar queries only once", async function() {
-  const cancelToken = new CancelToken();
-  const queryBus = new QueryBus();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
+  const queryBus = new QueryBus(loggerBreadcrumbs);
   const total: Total = {
     executed: 0
   };

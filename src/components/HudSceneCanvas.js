@@ -144,7 +144,9 @@ function useScene(
         return;
       }
 
-      const attachCancelToken = new CancelToken();
+      const attachCancelToken = new CancelToken(
+        props.loggerBreadcrumbs.add("useScene.sceneManager.attach")
+      );
       const manager = sceneManager;
 
       setSceneLoadingState({
@@ -186,7 +188,11 @@ function useScene(
         manager
           // currently there is no scenario where detach should be cancelled,
           // but nonetheless this one should be here for consistency
-          .detach(new CancelToken())
+          .detach(
+            new CancelToken(
+              props.loggerBreadcrumbs.add("useScene.sceneManager.detach")
+            )
+          )
           .catch(
             props.exceptionHandler.expectException(
               props.loggerBreadcrumbs.add("sceneManager.detach.catch")

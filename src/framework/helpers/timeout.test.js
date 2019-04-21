@@ -1,10 +1,12 @@
 // @flow
 
 import CancelToken from "../classes/CancelToken";
+import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
 import timeout from "./timeout";
 
 it("supports cancel token", async function() {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
 
   setTimeout(function() {
     cancelToken.cancel();
@@ -17,7 +19,8 @@ it("supports cancel token", async function() {
 }, 1000);
 
 it("is immediately stopped with already paused cancel token", async function() {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
 
   cancelToken.cancel();
 

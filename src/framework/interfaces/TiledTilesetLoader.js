@@ -6,7 +6,6 @@ import type { TiledTileset } from "./TiledTileset";
 import type { TiledTilesetLoaderQueryBuilder } from "./TiledTilesetLoaderQueryBuilder";
 
 export interface TiledTilesetLoader {
-  constructor(QueryBus, TiledTilesetLoaderQueryBuilder): void;
-
+  // constructor(QueryBus, TiledTilesetLoaderQueryBuilder): void;
   load(CancelToken, filename: string): Promise<TiledTileset>;
 }

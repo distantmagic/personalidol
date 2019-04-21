@@ -6,5 +6,7 @@ import type { TiledMapGrid } from "./TiledMapGrid";
 export interface TiledMapLayer {
   constructor(name: string, TiledMapGrid, ElementSize<"tile">): void;
 
+  getName(): string;
+
   getTiledMapGrid(): TiledMapGrid;
 }

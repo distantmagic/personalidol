@@ -39,13 +39,17 @@ export default function Main(props: Props) {
     "/data/dialogues/hermit-intro.yml"
   );
   const [expressionBus] = React.useState(new ExpressionBus());
-  const [expressionContext] = React.useState(new ExpressionContext());
+  const [expressionContext] = React.useState(
+    new ExpressionContext(props.loggerBreadcrumbs.add("ExpressionContext"))
+  );
   const [isDocumentHidden, setIsDocumentHidden] = React.useState(
     document.hidden
   );
   const [mainLoop] = React.useState(MainLoop.getInstance());
   const [fpsAdaptive] = React.useState(new FPSAdaptive());
-  const [queryBus] = React.useState(new QueryBus());
+  const [queryBus] = React.useState(
+    new QueryBus(props.loggerBreadcrumbs.add("QueryBus"))
+  );
   const [queryBusController] = React.useState(
     new QueryBusController(new BusClock(), queryBus)
   );
@@ -91,7 +95,9 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
-      const cancelToken = new CancelToken();
+      const cancelToken = new CancelToken(
+        props.loggerBreadcrumbs.add("queryBusController.interval")
+      );
 
       queryBusController.interval(cancelToken);
 

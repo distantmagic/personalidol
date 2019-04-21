@@ -34,7 +34,9 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
 
   React.useEffect(
     function() {
-      const cancelToken = new CancelToken();
+      const cancelToken = new CancelToken(
+        props.loggerBreadcrumbs.add("DialogueQuery")
+      );
       const query = new DialogueQuery(
         props.expressionBus,
         props.expressionContext,

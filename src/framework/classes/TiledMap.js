@@ -5,6 +5,7 @@ import TiledMapSkinnedLayer from "./TiledMapSkinnedLayer";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize } from "../interfaces/ElementSize";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledMapEllipseObject } from "../interfaces/TiledMapEllipseObject";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
@@ -14,6 +15,7 @@ import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../i
 import type { TiledTileset } from "../interfaces/TiledTileset";
 
 export default class TiledMap implements TiledMapInterface {
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapSize: ElementSize<"tile">;
   +tiledMapEllipseObjects: Array<TiledMapEllipseObject>;
   +tiledMapLayers: Array<TiledMapLayer>;
@@ -23,10 +25,12 @@ export default class TiledMap implements TiledMapInterface {
   +tileSize: ElementSize<"px">;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
     mapSize: ElementSize<"tile">,
     tileSize: ElementSize<"px">,
     tiledTileset: TiledTileset
   ) {
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapSize = mapSize;
     this.tiledMapLayers = [];
     this.tiledMapEllipseObjects = [];
@@ -58,11 +62,19 @@ export default class TiledMap implements TiledMapInterface {
     for (let layer of this.getLayers()) {
       if (cancelToken.isCancelled()) {
         throw new Cancelled(
+          this.loggerBreadcrumbs
+            .add("generateSkinnedLayers")
+            .add(layer.getName()),
           "Cancel token was cancelled while generating skinned layers."
         );
       }
 
-      yield new TiledMapSkinnedLayer(layer, this.tileSize, this.tiledTileset);
+      yield new TiledMapSkinnedLayer(
+        this.loggerBreadcrumbs,
+        layer,
+        this.tileSize,
+        this.tiledTileset
+      );
     }
   }
 

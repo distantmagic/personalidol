@@ -7,16 +7,23 @@ import TiledMapGrid from "./TiledMapGrid";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize } from "../interfaces/ElementSize";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMapGrid as TiledMapGridInterface } from "../interfaces/TiledMapGrid";
 import type { TiledMapLayerGridCSVParser as TiledMapLayerGridCSVParserInterface } from "../interfaces/TiledMapLayerGridCSVParser";
 
 export default class TiledMapLayerGridCSVParser
   implements TiledMapLayerGridCSVParserInterface {
   +data: string;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapSize: ElementSize<"tile">;
 
-  constructor(data: string, mapSize: ElementSize<"tile">) {
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    data: string,
+    mapSize: ElementSize<"tile">
+  ) {
     this.data = data;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapSize = mapSize;
   }
 
@@ -33,6 +40,7 @@ export default class TiledMapLayerGridCSVParser
   async parse(cancelToken: CancelToken): Promise<TiledMapGridInterface> {
     if (cancelToken.isCancelled()) {
       throw new Cancelled(
+        this.loggerBreadcrumbs.add("parse"),
         "Cancel token was cancelled before parsing layer grid."
       );
     }

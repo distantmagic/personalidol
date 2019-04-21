@@ -7,7 +7,6 @@ import type { TiledMapLoaderQueryBuilder } from "./TiledMapLoaderQueryBuilder";
 import type { TiledTilesetLoader } from "./TiledTilesetLoader";
 
 export interface TiledMapLoader {
-  constructor(QueryBus, TiledMapLoaderQueryBuilder, TiledTilesetLoader): void;
-
+  // constructor(QueryBus, TiledMapLoaderQueryBuilder, TiledTilesetLoader): void;
   load(CancelToken, filename: string): Promise<TiledMap>;
 }

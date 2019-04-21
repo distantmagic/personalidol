@@ -32,6 +32,11 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     return added;
   }
 
+  addVariable(breadcrumb: string): LoggerBreadcrumbsInterface {
+    // do not memoize this one, variable content may lead to memory leaks
+    return new LoggerBreadcrumbs(this.breadcrumbs.concat(`"${breadcrumb}"`));
+  }
+
   asString(): string {
     return this.breadcrumbs.join("/");
   }

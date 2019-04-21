@@ -7,12 +7,15 @@ import type { WebGLRenderer } from "three";
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasView } from "../interfaces/CanvasView";
 import type { CanvasViewGroup as CanvasViewGroupInterface } from "../interfaces/CanvasViewGroup";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class CanvasViewGroup implements CanvasViewGroupInterface {
   +children: Array<CanvasView>;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor() {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.children = [];
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
   add(view: CanvasView): void {
@@ -27,6 +30,7 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
       this.children.map(function(child) {
         if (cancelToken.isCancelled()) {
           throw new Cancelled(
+            this.loggerBreadcrumbs.add("attach"),
             "Cancel token was cancelled while attaching views group."
           );
         }
@@ -44,6 +48,7 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
       this.children.map(function(child) {
         if (cancelToken.isCancelled()) {
           throw new Cancelled(
+            this.loggerBreadcrumbs.add("detach"),
             "Cancel token was cancelled while detaching views group."
           );
         }

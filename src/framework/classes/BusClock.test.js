@@ -2,10 +2,12 @@
 
 import BusClock from "./BusClock";
 import CancelToken from "./CancelToken";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
 it("ticks", async function() {
   let ticks = 0;
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
   const clock = new BusClock(20);
   const expectedTicks = 2;
 

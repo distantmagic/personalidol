@@ -92,7 +92,12 @@ export default function fsm<States: string, Transitions: {}>(config: {|
       ): void {
         const exceptionHandler: ExceptionHandler = this.exceptionHandler;
         const loggerBreadcrumbs: LoggerBreadcrumbs = this.loggerBreadcrumbs;
-        const error = new InvalidTransitionException(transition, from, to);
+        const error = new InvalidTransitionException(
+          loggerBreadcrumbs,
+          transition,
+          from,
+          to
+        );
 
         exceptionHandler.captureException(loggerBreadcrumbs, error);
 

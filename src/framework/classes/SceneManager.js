@@ -42,7 +42,10 @@ export default class SceneManager implements SceneManagerInterface {
     canvas: HTMLCanvasElement
   ): Promise<void> {
     if (cancelToken.isCancelled()) {
-      throw new Cancelled("Cancel token was cancelled before attaching scene.");
+      throw new Cancelled(
+        this.loggerBreadcrumbs.add("attach"),
+        "Cancel token was cancelled before attaching scene."
+      );
     }
 
     const renderer = new THREE.WebGLRenderer({
@@ -80,7 +83,10 @@ export default class SceneManager implements SceneManagerInterface {
     }
 
     if (cancelToken.isCancelled()) {
-      throw new Cancelled("Cancel token was cancelled before detaching scene.");
+      throw new Cancelled(
+        this.loggerBreadcrumbs.add("detach"),
+        "Cancel token was cancelled before detaching scene."
+      );
     }
 
     this.scheduler.offDraw(drawCallback);

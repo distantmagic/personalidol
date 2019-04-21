@@ -5,6 +5,7 @@ import Dialogue from "./Dialogue";
 import DialogueScript from "./DialogueScript";
 import ExpressionBus from "./ExpressionBus";
 import ExpressionContext from "./ExpressionContext";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import Person from "./Entity/Person";
 
 const testContext = {};
@@ -14,8 +15,9 @@ beforeEach(async function() {
 });
 
 it("switches dialogue turns", async function() {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const expressionBus = new ExpressionBus();
-  const expressionContext = new ExpressionContext();
+  const expressionContext = new ExpressionContext(loggerBreadcrumbs);
 
   const dialogue = new Dialogue(
     expressionBus,

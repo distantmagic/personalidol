@@ -18,6 +18,7 @@ import type { TiledMap } from "../framework/interfaces/TiledMap";
 
 export default class Gameboard implements CanvasView {
   +canvasViewGroup: CanvasViewGroupInterface;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +pointerState: PointerState;
   +scene: THREE.Scene;
   +threeLoadingManager: THREELoadingManager;
@@ -33,7 +34,8 @@ export default class Gameboard implements CanvasView {
     threePointerInteraction: THREEPointerInteraction,
     tiledMap: TiledMap
   ) {
-    this.canvasViewGroup = new CanvasViewGroup();
+    this.canvasViewGroup = new CanvasViewGroup(loggerBreadcrumbs);
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.pointerState = pointerState;
     this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;

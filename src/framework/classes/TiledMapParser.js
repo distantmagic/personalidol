@@ -14,6 +14,7 @@ import TiledRelativeFilename from "./TiledRelativeFilename";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
 
 import type { CancelToken } from "../interfaces/CancelToken";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledTilesetLoader } from "../interfaces/TiledTilesetLoader";
 import type { TiledMapParser as TiledMapParserInterface } from "../interfaces/TiledMapParser";
@@ -21,23 +22,33 @@ import type { TiledMapParser as TiledMapParserInterface } from "../interfaces/Ti
 export default class TiledMapParser implements TiledMapParserInterface {
   +content: string;
   +domParser: DOMParser;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapFilename: string;
   +tiledTilesetLoader: TiledTilesetLoader;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
     mapFilename: string,
     content: string,
     tiledTilesetLoader: TiledTilesetLoader
   ) {
     this.content = content;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapFilename = mapFilename;
     this.domParser = new DOMParser();
     this.tiledTilesetLoader = tiledTilesetLoader;
   }
 
   async parse(cancelToken: CancelToken): Promise<TiledMapInterface> {
+    const breadcrumbs = this.loggerBreadcrumbs
+      .add("parse")
+      .addVariable(this.mapFilename);
+
     if (cancelToken.isCancelled()) {
-      throw new Cancelled("Cancel token was cancelled before parsing began.");
+      throw new Cancelled(
+        breadcrumbs,
+        "Cancel token was cancelled before parsing began."
+      );
     }
 
     // xml
@@ -49,7 +60,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
     const documentElement = doc.documentElement;
 
     if (!documentElement || xml.isParseError(doc)) {
-      throw xml.extractParseError(doc);
+      throw xml.extractParseError(breadcrumbs, doc);
     }
 
     // tileset
@@ -57,10 +68,17 @@ export default class TiledMapParser implements TiledMapParserInterface {
     const tilesetElement = documentElement.querySelector("tileset");
 
     if (!tilesetElement) {
-      throw new TiledMapException("Tileset data is missing in map document.");
+      throw new TiledMapException(
+        breadcrumbs,
+        "Tileset data is missing in map document."
+      );
     }
 
-    const tilesetFilename = xml.getStringAttribute(tilesetElement, "source");
+    const tilesetFilename = xml.getStringAttribute(
+      breadcrumbs,
+      tilesetElement,
+      "source"
+    );
     const tiledTileset = await this.tiledTilesetLoader.load(
       cancelToken,
       // tileset URL is relative to map mapFilename
@@ -70,28 +88,40 @@ export default class TiledMapParser implements TiledMapParserInterface {
     const layerElements = documentElement.querySelectorAll("layer");
 
     if (layerElements.length < 1) {
-      throw new TiledMapException("No layers found in map document.");
+      throw new TiledMapException(
+        breadcrumbs,
+        "No layers found in map document."
+      );
     }
 
     const mapSize = new ElementSize<"tile">(
-      xml.getNumberAttribute(documentElement, "width"),
-      xml.getNumberAttribute(documentElement, "height")
+      xml.getNumberAttribute(breadcrumbs, documentElement, "width"),
+      xml.getNumberAttribute(breadcrumbs, documentElement, "height")
     );
     const tileSize = new ElementSize<"px">(
-      xml.getNumberAttribute(documentElement, "tilewidth"),
-      xml.getNumberAttribute(documentElement, "tileheight")
+      xml.getNumberAttribute(breadcrumbs, documentElement, "tilewidth"),
+      xml.getNumberAttribute(breadcrumbs, documentElement, "tileheight")
     );
 
-    const tiledMap = new TiledMap(mapSize, tileSize, tiledTileset);
+    const tiledMap = new TiledMap(
+      breadcrumbs.add("TiledMap"),
+      mapSize,
+      tileSize,
+      tiledTileset
+    );
 
     // layers
 
     for (let layerElement of layerElements.values()) {
       if (cancelToken.isCancelled()) {
-        throw new Cancelled("Cancel token was cancelled while parsing layers.");
+        throw new Cancelled(
+          breadcrumbs,
+          "Cancel token was cancelled while parsing layers."
+        );
       }
 
       const tiledMapLayerParser = new TiledMapLayerParser(
+        breadcrumbs,
         layerElement,
         mapSize
       );
@@ -114,6 +144,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
         tiledMapObjectElementChecker.isRectangle()
       ) {
         const tiledMapObjectParser = new TiledMapBlockObjectParser(
+          breadcrumbs.add("TiledMapBlockObjectParser"),
           this.mapFilename,
           objectElement,
           tileSize
@@ -134,6 +165,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
         // polygon
       } else {
         const tiledMapPolygonObjectParser = new TiledMapPolygonObjectParser(
+          breadcrumbs.add("TiledMapPolygonObjectParser"),
           this.mapFilename,
           objectElement,
           tileSize

@@ -57,7 +57,7 @@ export default class CanvasLocationComplex implements CanvasController {
   ) {
     autoBind(this);
 
-    this.canvasViewGroup = new CanvasViewGroup();
+    this.canvasViewGroup = new CanvasViewGroup(loggerBreadcrumbs);
     this.debug = debug;
     this.exceptionHandler = exceptionHandler;
     this.keyboardState = keyboardState;
@@ -90,8 +90,11 @@ export default class CanvasLocationComplex implements CanvasController {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
+    const breadcrumbs = this.loggerBreadcrumbs.add("attach");
+
     if (cancelToken.isCancelled()) {
       throw new Cancelled(
+        breadcrumbs,
         "Cancel token was cancelled before attaching canvas location controller."
       );
     }
@@ -112,7 +115,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.canvasViewGroup.add(
       new CubeView(
         this.exceptionHandler,
-        this.loggerBreadcrumbs.add("CubeView"),
+        breadcrumbs.add("CubeView"),
         this.scene,
         this.threeLoadingManager
       )
@@ -120,7 +123,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.canvasViewGroup.add(
       new EntityView(
         this.exceptionHandler,
-        this.loggerBreadcrumbs.add("EntityView"),
+        breadcrumbs.add("EntityView"),
         this.scene,
         this.threeLoadingManager,
         this.keyboardState,
@@ -130,10 +133,12 @@ export default class CanvasLocationComplex implements CanvasController {
 
     const queryBuilder = new URLTextContentQueryBuilder();
     const tiledTilesetLoader = new TiledTilesetLoader(
+      breadcrumbs.add("TiledTilesetLoader"),
       this.queryBus,
       queryBuilder
     );
     const tiledMapLoader = new TiledMapLoader(
+      breadcrumbs.add("TiledMapLoader"),
       this.queryBus,
       queryBuilder,
       tiledTilesetLoader
@@ -146,7 +151,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.canvasViewGroup.add(
       new GameboardView(
         this.exceptionHandler,
-        this.loggerBreadcrumbs.add("GameboardView"),
+        breadcrumbs.add("GameboardView"),
         this.scene,
         this.pointerState,
         this.threeLoadingManager,
@@ -158,7 +163,7 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.canvasViewGroup.add(
     //   new THREEHelpersView(
     //     this.exceptionHandler,
-    //     this.loggerBreadcrumbs.add("THREEHelpersView"),
+    //     breadcrumbs.add("THREEHelpersView"),
     //     this.scene,
     //     tiledMap
     //   )
@@ -181,6 +186,7 @@ export default class CanvasLocationComplex implements CanvasController {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
+    const breadcrumbs = this.loggerBreadcrumbs.add("detach");
     const threePointerInteraction = this.threePointerInteraction;
 
     if (!threePointerInteraction) {
@@ -191,6 +197,7 @@ export default class CanvasLocationComplex implements CanvasController {
 
     if (cancelToken.isCancelled()) {
       throw new Cancelled(
+        breadcrumbs,
         "Cancel token was cancelled before detaching canvas location controller."
       );
     }

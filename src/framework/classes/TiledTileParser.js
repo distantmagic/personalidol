@@ -9,21 +9,33 @@ import TiledTileImage from "./TiledTileImage";
 import { default as TiledTileException } from "./Exception/Tiled/Tile";
 
 import type { CancelToken } from "../interfaces/CancelToken";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledTile as TiledTileInterface } from "../interfaces/TiledTile";
 import type { TiledTileParser as TiledTileParserInterface } from "../interfaces/TiledTileParser";
 
 export default class TiledTileParser implements TiledTileParserInterface {
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tileElement: HTMLElement;
   +tilesetPath: string;
 
-  constructor(tilesetPath: string, tileElement: HTMLElement) {
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    tilesetPath: string,
+    tileElement: HTMLElement
+  ) {
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tileElement = tileElement;
     this.tilesetPath = tilesetPath;
   }
 
   async parse(cancelToken: CancelToken): Promise<TiledTileInterface> {
+    const breadcrumbs = this.loggerBreadcrumbs
+      .add("parse")
+      .add(this.tilesetPath);
+
     if (cancelToken.isCancelled()) {
       throw new Cancelled(
+        breadcrumbs,
         "Cancel token was cancelled before parsing map tile."
       );
     }
@@ -31,22 +43,22 @@ export default class TiledTileParser implements TiledTileParserInterface {
     const imageElement = this.tileElement.querySelector("image");
 
     if (!imageElement) {
-      throw new TiledTileException("Tile is missing image data");
+      throw new TiledTileException(breadcrumbs, "Tile is missing image data");
     }
 
     const tiledImage = new TiledTileImage(
       new TiledRelativeFilename(
         this.tilesetPath,
-        xml.getStringAttribute(imageElement, "source")
+        xml.getStringAttribute(breadcrumbs, imageElement, "source")
       ).asString(),
       new ElementSize<"px">(
-        xml.getNumberAttribute(imageElement, "width"),
-        xml.getNumberAttribute(imageElement, "height")
+        xml.getNumberAttribute(breadcrumbs, imageElement, "width"),
+        xml.getNumberAttribute(breadcrumbs, imageElement, "height")
       )
     );
 
     return new TiledTile(
-      xml.getNumberAttribute(this.tileElement, "id"),
+      xml.getNumberAttribute(breadcrumbs, this.tileElement, "id"),
       tiledImage
     );
   }

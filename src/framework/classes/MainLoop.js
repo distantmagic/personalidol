@@ -4,6 +4,7 @@ import autoBind from "auto-bind";
 import noop from "lodash/noop";
 import { default as VendorMainLoop } from "mainloop.js";
 
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import SingletonException from "./Exception/Singleton";
 
 import type {
@@ -26,6 +27,7 @@ export default class MainLoop implements MainLoopInterface {
   constructor() {
     if (instance) {
       throw new SingletonException(
+        new LoggerBreadcrumbs(["root", "MainLoop"]),
         "MainLoop is a singleton. Use `getInstance()` instead."
       );
     }

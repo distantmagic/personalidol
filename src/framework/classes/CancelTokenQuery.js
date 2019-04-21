@@ -4,6 +4,7 @@ import { default as CancelTokenException } from "./Exception/CancelToken";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { Query } from "../interfaces/Query";
 
 type CancelTokenQueryCallback<U> = (?U) => any;
@@ -15,12 +16,18 @@ export default class CancelTokenQuery<T>
   _result: ?T;
   +cancelToken: CancelToken;
   +callbacks: Set<CancelTokenQueryCallback<T>>;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +query: Query<T>;
 
-  constructor(cancelToken: CancelToken, query: Query<T>) {
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    cancelToken: CancelToken,
+    query: Query<T>
+  ) {
     this._isExecuted = false;
     this._isExecuting = false;
     this.callbacks = new Set();
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.cancelToken = cancelToken;
     this.query = query;
   }
@@ -28,6 +35,7 @@ export default class CancelTokenQuery<T>
   execute(): Promise<?T> {
     if (this.isExecuting() || this.isExecuted()) {
       throw new CancelTokenException(
+        this.loggerBreadcrumbs.add("execute"),
         "You cannot execute query more than once."
       );
     }
@@ -47,15 +55,20 @@ export default class CancelTokenQuery<T>
 
   getResult(): T {
     if (this.isExecuting()) {
-      throw new CancelTokenException("Query is still executing.");
+      throw new CancelTokenException(
+        this.loggerBreadcrumbs.add("getResult"),
+        "Query is still executing."
+      );
     }
     if (!this.isExecuted()) {
       throw new CancelTokenException(
+        this.loggerBreadcrumbs.add("getResult"),
         "Query must be executed before asking for a result."
       );
     }
     if (!this._result) {
       throw new CancelTokenException(
+        this.loggerBreadcrumbs.add("getResult"),
         "Execution result is not set and it was expected."
       );
     }
@@ -88,7 +101,10 @@ export default class CancelTokenQuery<T>
 
   setExecuted(result: ?T): void {
     if (this.isExecuted()) {
-      throw new CancelTokenException("Query is already executed.");
+      throw new CancelTokenException(
+        this.loggerBreadcrumbs.add("setExecuted"),
+        "Query is already executed."
+      );
     }
 
     this._isExecuted = true;

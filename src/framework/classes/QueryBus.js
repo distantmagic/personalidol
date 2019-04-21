@@ -5,6 +5,7 @@ import QueryBatch from "./QueryBatch";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ClockTick } from "../interfaces/ClockTick";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { Query } from "../interfaces/Query";
 import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
 import type { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCallback";
@@ -12,16 +13,22 @@ import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
 export default class QueryBus implements QueryBusInterface {
   +enqueuedCallbacks: Set<QueryBusOnEnqueuedCallback>;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   collection: QueryBusQueueCollection;
 
-  constructor() {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.collection = [];
     this.enqueuedCallbacks = new Set<QueryBusOnEnqueuedCallback>();
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<?T> {
     const pickedQuery = this.findSimilarQuery(query) || query;
-    const cancelTokenQuery = new CancelTokenQuery(cancelToken, pickedQuery);
+    const cancelTokenQuery = new CancelTokenQuery(
+      this.loggerBreadcrumbs.add("enqueue"),
+      cancelToken,
+      pickedQuery
+    );
 
     this.collection.push(cancelTokenQuery);
 

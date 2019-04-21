@@ -1,26 +1,31 @@
 // @flow
 
 import * as xml from "../helpers/xml";
+import Exception from "./Exception";
 import TiledMapPolygonObject from "./TiledMapPolygonObject";
 import TiledMapPolygonPointsParser from "./TiledMapPolygonPointsParser";
 import TiledMapPositionedObjectParser from "./TiledMapPositionedObjectParser";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize } from "../interfaces/ElementSize";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMapPolygonObject as TiledMapPolygonObjectInterface } from "../interfaces/TiledMapPolygonObject";
 import type { TiledMapPolygonObjectParser as TiledMapPolygonObjectParserInterface } from "../interfaces/TiledMapPolygonObjectParser";
 
 export default class TiledMapPolygonObjectParser
   implements TiledMapPolygonObjectParserInterface {
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapFilename: string;
   +objectElement: HTMLElement;
   +tileSize: ElementSize<"px">;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
     mapFilename: string,
     objectElement: HTMLElement,
     tileSize: ElementSize<"px">
   ) {
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapFilename = mapFilename;
     this.objectElement = objectElement;
     this.tileSize = tileSize;
@@ -29,19 +34,30 @@ export default class TiledMapPolygonObjectParser
   async parse(
     cancelToken: CancelToken
   ): Promise<TiledMapPolygonObjectInterface> {
+    const breadcrumbs = this.loggerBreadcrumbs.add("parse");
+    const objectName = xml.getStringAttribute(
+      breadcrumbs,
+      this.objectElement,
+      "name"
+    );
+    const breadcrumbsObjectName = breadcrumbs.addVariable(objectName);
+
     const polygonElement = this.objectElement.querySelector("polygon[points]");
 
     if (!polygonElement) {
-      throw new Error("Polygon points element is not defined");
+      throw new Exception(breadcrumbs, "Polygon points element is not defined");
     }
 
     const tiledMapPositionedObjectParser = new TiledMapPositionedObjectParser(
+      breadcrumbsObjectName.add("TiledMapPositionedObjectParser"),
       this.mapFilename,
+      objectName,
       this.objectElement,
       this.tileSize
     );
     const tiledMapPolygonPointsParser = new TiledMapPolygonPointsParser(
-      xml.getStringAttribute(polygonElement, "points"),
+      breadcrumbsObjectName.add("TiledMapPolygonPointsParser"),
+      xml.getStringAttribute(breadcrumbsObjectName, polygonElement, "points"),
       this.tileSize
     );
 
@@ -50,14 +66,20 @@ export default class TiledMapPolygonObjectParser
     );
 
     if (!objectDepthElement) {
-      throw new Error("Object depth is not specified.");
+      throw new Exception(
+        breadcrumbsObjectName,
+        "Object depth is not specified."
+      );
     }
 
     return new TiledMapPolygonObject(
       await tiledMapPositionedObjectParser.parse(cancelToken),
       await tiledMapPolygonPointsParser.parse(cancelToken),
-      xml.getNumberAttribute(objectDepthElement, "value") /
-        this.tileSize.getWidth()
+      xml.getNumberAttribute(
+        breadcrumbsObjectName,
+        objectDepthElement,
+        "value"
+      ) / this.tileSize.getWidth()
     );
   }
 }

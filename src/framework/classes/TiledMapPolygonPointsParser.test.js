@@ -2,13 +2,16 @@
 
 import CancelToken from "./CancelToken";
 import ElementSize from "./ElementSize";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import TiledMapPolygonPointsParser from "./TiledMapPolygonPointsParser";
 
 it("parses polygon points", async function() {
-  const cancelToken = new CancelToken();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
   const tileSize = new ElementSize<"px">(128, 128);
   const points = "0,0 128,128 128,256 256,512";
   const tiledMapPolygonPointsParser = new TiledMapPolygonPointsParser(
+    loggerBreadcrumbs,
     points,
     tileSize
   );
