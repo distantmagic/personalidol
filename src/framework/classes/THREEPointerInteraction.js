@@ -35,7 +35,8 @@ export default class THREEPointerInteraction
   begin(): void {}
 
   disconnect(): void {
-    this.renderer.domElement.removeEventListener("mousemove", this.onMouseMove);
+    this.renderer.domElement.removeEventListener("mousedown", this.onMouseChange);
+    this.renderer.domElement.removeEventListener("mousemove", this.onMouseChange);
   }
 
   getCameraRaycaster(): Raycaster {
@@ -43,13 +44,17 @@ export default class THREEPointerInteraction
   }
 
   observe(): void {
-    this.renderer.domElement.addEventListener("mousemove", this.onMouseMove, {
+    this.renderer.domElement.addEventListener("mousedown", this.onMouseChange, {
+      capture: true,
+      passive: true
+    });
+    this.renderer.domElement.addEventListener("mousemove", this.onMouseChange, {
       capture: true,
       passive: true
     });
   }
 
-  onMouseMove(evt: MouseEvent): void {
+  onMouseChange(evt: MouseEvent): void {
     const relativeX = evt.clientX - this.canvasOffsetLeft;
     const relativeY = evt.clientY - this.canvasOffsetTop;
 
