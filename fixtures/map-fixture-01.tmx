@@ -35,7 +35,7 @@
   <!-- polygon -->
   <object id="4" name="Crater" x="768" y="256">
    <properties>
-    <property name="depth" type="int" value="32" />
+    <property name="depth" type="int" value="384" />
    </properties>
    <polygon points="0,0 318,66 180,204 358,216 112,352 270,354 -58,492 58,388 -70,372 96,276 -54,252 58,166" />
   </object>

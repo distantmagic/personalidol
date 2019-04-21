@@ -11,6 +11,7 @@ import type { THREELoadingManager } from "../framework/interfaces/THREELoadingMa
 import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
 import type { TiledMap } from "../framework/interfaces/TiledMap";
 import type { TiledMapBlockObject } from "../framework/interfaces/TiledMapBlockObject";
+import type { TiledMapPositionedObject } from "../framework/interfaces/TiledMapPositionedObject";
 
 export default class Plane implements CanvasView {
   +plane: THREE.Group;
@@ -75,6 +76,13 @@ export default class Plane implements CanvasView {
       tiledMapObjectMaterial
     );
 
+    this.addTiledMapPositionedMesh(tiledMapObject, tiledMapObjectMesh);
+  }
+
+  addTiledMapPositionedMesh(
+    tiledMapObject: TiledMapPositionedObject,
+    tiledMapObjectMesh: THREE.Mesh
+  ) {
     const tiledMapObjectPosition = tiledMapObject.getElementPosition();
     tiledMapObjectMesh.position.set(
       tiledMapObjectPosition.getX(),
@@ -96,6 +104,8 @@ export default class Plane implements CanvasView {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
+    // tiles
+
     const tileGeometry = new THREE.PlaneGeometry(1, 1);
 
     tileGeometry.translate(-0.5, -0.5, 0);
@@ -141,6 +151,8 @@ export default class Plane implements CanvasView {
       }
     }
 
+    // ellipses
+
     const tiledMapObjectMaterial = new THREE.MeshPhongMaterial({
       color: 0xff0000
     });
@@ -161,6 +173,8 @@ export default class Plane implements CanvasView {
       );
     }
 
+    // rectangles
+
     for (let tiledMapObject of this.tiledMap.getRectangleObjects()) {
       const tiledMapObjectSize = tiledMapObject.getElementSize();
       const tiledMapObjectGeometry = new THREE.BoxGeometry(
@@ -174,6 +188,33 @@ export default class Plane implements CanvasView {
         tiledMapObjectGeometry,
         tiledMapObjectMaterial
       );
+    }
+
+    // polygons
+
+    for (let tiledMapObject of this.tiledMap.getPolygonObjects()) {
+      const shape = new THREE.Shape();
+
+      for (let polygonPoint of tiledMapObject.getPolygonPoints()) {
+        // inversed, because otherwise is mirrored after geometry rotation
+        shape.lineTo(polygonPoint.getY(), polygonPoint.getX());
+      }
+
+      // const geometry = new THREE.ShapeGeometry(shape);
+      const geometry = new THREE.ExtrudeGeometry(shape, {
+        amount: tiledMapObject.getDepth(),
+        bevelEnabled: false
+        // steps: 2,
+      });
+
+      // rotate so the only side available is up
+      geometry.rotateX((-1 * Math.PI) / 2);
+      // now it is aligned correctly
+      geometry.rotateY((-1 * Math.PI) / 2);
+
+      const mesh = new THREE.Mesh(geometry, tiledMapObjectMaterial);
+
+      this.addTiledMapPositionedMesh(tiledMapObject, mesh);
     }
 
     this.scene.add(this.wireframe);

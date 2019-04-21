@@ -45,9 +45,19 @@ export default class TiledMapPolygonObjectParser
       this.tileSize
     );
 
+    const objectDepthElement = this.objectElement.querySelector(
+      "property[name=depth][type=int]"
+    );
+
+    if (!objectDepthElement) {
+      throw new Error("Object depth is not specified.");
+    }
+
     return new TiledMapPolygonObject(
       await tiledMapPositionedObjectParser.parse(cancelToken),
-      await tiledMapPolygonPointsParser.parse(cancelToken)
+      await tiledMapPolygonPointsParser.parse(cancelToken),
+      xml.getNumberAttribute(objectDepthElement, "value") /
+        this.tileSize.getWidth()
     );
   }
 }

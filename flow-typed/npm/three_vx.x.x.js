@@ -76,6 +76,12 @@ declare module "three" {
   declare export interface BaseGeometry {
     dispose(): void;
 
+    rotateX(number): Geometry;
+
+    rotateY(number): Geometry;
+
+    rotateZ(number): Geometry;
+
     scale(x: number, y: number, z: number): Geometry;
 
     translate(x: number, y: number, z: number): Geometry;
@@ -157,6 +163,35 @@ declare module "three" {
     addEventListener<Data>(Events, EventCallback<Events, Data>): void;
 
     removeEventListener<Data>(Events, EventCallback<Events, Data>): void;
+  }
+
+  declare export interface ExtrudeGeometry extends Geometry {
+    constructor(
+      Shape,
+      {
+        // int. Number of points on the curves. Default is 12.
+        curveSegments?: number,
+        // int. Number of points used for subdividing segments along the
+        // depth of the extruded spline. Default is 1.
+        steps?: number,
+        // float. Depth to extrude the shape. Default is 100.
+        depth?: number,
+        // bool. Apply beveling to the shape. Default is true.
+        bevelEnabled?: boolean,
+        // float. How deep into the original shape the bevel goes. Default is 6.
+        bevelThickness?: number,
+        // float. Distance from the shape outline that the bevel extends.
+        // Default is bevelThickness - 2.
+        bevelSize?: number,
+        // int. Number of bevel layers. Default is 3.
+        bevelSegments?: number
+        // THREE.CurvePath. A 3D spline path along which the shape
+        // should be extruded.
+        // extrudePath? :
+        // Object. object that provides UV generator functions
+        // UVGenerator:
+      }
+    ): void;
   }
 
   declare export interface Geometry extends BaseGeometry {
@@ -312,6 +347,18 @@ declare module "three" {
 
   declare export interface Scene extends Object3D {
     constructor(): void;
+  }
+
+  declare export interface Shape {
+    constructor(): void;
+
+    lineTo(number, number): void;
+
+    moveTo(number, number): void;
+  }
+
+  declare export interface ShapeGeometry extends Geometry {
+    constructor(Shape): void;
   }
 
   declare export interface SpotLight extends Light {

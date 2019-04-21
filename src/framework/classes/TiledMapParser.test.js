@@ -110,6 +110,7 @@ it("generates skinned layers and tiles", async function() {
   expect(tiledMapPolygonObjects[0].getElementRotation().getRotationZ()).toBe(
     -0
   );
+  expect(tiledMapPolygonObjects[0].getDepth()).toBe(3);
   expect(tiledMapPolygonObjects[0].getName()).toBe("Crater");
 
   // rectangles
