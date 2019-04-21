@@ -7,7 +7,6 @@ import type { PointerState as PointerStateInterface } from "../interfaces/Pointe
 
 export default class PointerState implements PointerStateInterface {
   +element: HTMLElement;
-
   keys: {
     [PointerButtonNames]: boolean
   };

@@ -32,13 +32,13 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
       throw xml.extractParseError(doc);
     }
 
-    // const grid: ?HTMLElement = doc.querySelector("grid");
+    const grid: ?HTMLElement = doc.querySelector("grid");
 
-    // if (!grid) {
-    //   throw new TiledTilesetException(
-    //     `Tileset file is issing grid metadata: "${this.tilesetPath}"`
-    //   );
-    // }
+    if (!grid) {
+      throw new TiledTilesetException(
+        `Tileset file is missing grid metadata: "${this.tilesetPath}"`
+      );
+    }
 
     const tiles: NodeList<HTMLElement> = doc.querySelectorAll("tile");
 

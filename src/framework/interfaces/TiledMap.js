@@ -2,8 +2,10 @@
 
 import type { CancelToken } from "./CancelToken";
 import type { ElementSize } from "./ElementSize";
+import type { TiledMapEllipseObject } from "./TiledMapEllipseObject";
+import type { TiledMapPolygonObject } from "./TiledMapPolygonObject";
+import type { TiledMapRectangleObject } from "./TiledMapRectangleObject";
 import type { TiledMapLayer } from "./TiledMapLayer";
-import type { TiledMapObject } from "./TiledMapObject";
 import type { TiledMapSkinnedLayer } from "./TiledMapSkinnedLayer";
 import type { TiledTileset } from "./TiledTileset";
 
@@ -12,7 +14,11 @@ export interface TiledMap {
 
   addLayer(TiledMapLayer): void;
 
-  addObject(TiledMapObject): void;
+  addEllipseObject(TiledMapEllipseObject): void;
+
+  addPolygonObject(TiledMapPolygonObject): void;
+
+  addRectangleObject(TiledMapRectangleObject): void;
 
   generateSkinnedLayers(
     CancelToken
@@ -22,7 +28,11 @@ export interface TiledMap {
 
   getMapSize(): ElementSize<"tile">;
 
-  getObjects(): Array<TiledMapObject>;
+  getEllipseObjects(): Array<TiledMapEllipseObject>;
+
+  getPolygonObjects(): Array<TiledMapPolygonObject>;
+
+  getRectangleObjects(): Array<TiledMapRectangleObject>;
 
   getTileSize(): ElementSize<"px">;
 

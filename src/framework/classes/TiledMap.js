@@ -6,17 +6,21 @@ import TiledMapSkinnedLayer from "./TiledMapSkinnedLayer";
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
+import type { TiledMapEllipseObject } from "../interfaces/TiledMapEllipseObject";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
-import type { TiledMapObject } from "../interfaces/TiledMapObject";
+import type { TiledMapPolygonObject } from "../interfaces/TiledMapPolygonObject";
+import type { TiledMapRectangleObject } from "../interfaces/TiledMapRectangleObject";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
 import type { TiledTileset } from "../interfaces/TiledTileset";
 
 export default class TiledMap implements TiledMapInterface {
   +mapSize: ElementSize<"tile">;
-  +tileSize: ElementSize<"px">;
+  +tiledMapEllipseObjects: Array<TiledMapEllipseObject>;
   +tiledMapLayers: Array<TiledMapLayer>;
-  +tiledMapObjects: Array<TiledMapObject>;
+  +tiledMapPolygonObjects: Array<TiledMapPolygonObject>;
+  +tiledMapRectangleObjects: Array<TiledMapRectangleObject>;
   +tiledTileset: TiledTileset;
+  +tileSize: ElementSize<"px">;
 
   constructor(
     mapSize: ElementSize<"tile">,
@@ -25,7 +29,9 @@ export default class TiledMap implements TiledMapInterface {
   ) {
     this.mapSize = mapSize;
     this.tiledMapLayers = [];
-    this.tiledMapObjects = [];
+    this.tiledMapEllipseObjects = [];
+    this.tiledMapPolygonObjects = [];
+    this.tiledMapRectangleObjects = [];
     this.tiledTileset = tiledTileset;
     this.tileSize = tileSize;
   }
@@ -34,8 +40,16 @@ export default class TiledMap implements TiledMapInterface {
     this.tiledMapLayers.push(tiledMapLayer);
   }
 
-  addObject(tiledMapObject: TiledMapObject): void {
-    this.tiledMapObjects.push(tiledMapObject);
+  addEllipseObject(tiledMapEllipseObject: TiledMapEllipseObject): void {
+    this.tiledMapEllipseObjects.push(tiledMapEllipseObject);
+  }
+
+  addPolygonObject(tiledMapPolygonObject: TiledMapPolygonObject): void {
+    this.tiledMapPolygonObjects.push(tiledMapPolygonObject);
+  }
+
+  addRectangleObject(tiledMapRectangleObject: TiledMapRectangleObject): void {
+    this.tiledMapRectangleObjects.push(tiledMapRectangleObject);
   }
 
   async *generateSkinnedLayers(
@@ -60,8 +74,16 @@ export default class TiledMap implements TiledMapInterface {
     return this.mapSize;
   }
 
-  getObjects(): Array<TiledMapObject> {
-    return this.tiledMapObjects.slice(0);
+  getEllipseObjects(): Array<TiledMapEllipseObject> {
+    return this.tiledMapEllipseObjects.slice(0);
+  }
+
+  getPolygonObjects(): Array<TiledMapPolygonObject> {
+    return this.tiledMapPolygonObjects.slice(0);
+  }
+
+  getRectangleObjects(): Array<TiledMapRectangleObject> {
+    return this.tiledMapRectangleObjects.slice(0);
   }
 
   getTileSize(): ElementSize<"px"> {

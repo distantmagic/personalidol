@@ -10,6 +10,7 @@ import type { PointerState } from "../framework/interfaces/PointerState";
 import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
 import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
 import type { TiledMap } from "../framework/interfaces/TiledMap";
+import type { TiledMapBlockObject } from "../framework/interfaces/TiledMapBlockObject";
 
 export default class Plane implements CanvasView {
   +plane: THREE.Group;
@@ -55,6 +56,40 @@ export default class Plane implements CanvasView {
     wireframe.position.z = 0;
 
     this.wireframe = wireframe;
+  }
+
+  addTiledMapBlockGeometry(
+    tiledMapObject: TiledMapBlockObject,
+    tiledMapObjectGeometry: THREE.Geometry,
+    tiledMapObjectMaterial: THREE.Material
+  ): void {
+    const tiledMapObjectSize = tiledMapObject.getElementSize();
+    tiledMapObjectGeometry.translate(
+      tiledMapObjectSize.getWidth() / 2,
+      tiledMapObjectSize.getDepth() / 2,
+      tiledMapObjectSize.getHeight() / 2
+    );
+
+    const tiledMapObjectMesh = new THREE.Mesh(
+      tiledMapObjectGeometry,
+      tiledMapObjectMaterial
+    );
+
+    const tiledMapObjectPosition = tiledMapObject.getElementPosition();
+    tiledMapObjectMesh.position.set(
+      tiledMapObjectPosition.getX(),
+      tiledMapObjectPosition.getZ(),
+      tiledMapObjectPosition.getY()
+    );
+
+    const tiledMapObjectRotation = tiledMapObject.getElementRotation();
+    tiledMapObjectMesh.rotation.set(
+      tiledMapObjectRotation.getRotationX(),
+      tiledMapObjectRotation.getRotationZ(),
+      tiledMapObjectRotation.getRotationY()
+    );
+
+    this.scene.add(tiledMapObjectMesh);
   }
 
   async attach(
@@ -110,7 +145,23 @@ export default class Plane implements CanvasView {
       color: 0xff0000
     });
 
-    for (let tiledMapObject of this.tiledMap.getObjects()) {
+    for (let tiledMapObject of this.tiledMap.getEllipseObjects()) {
+      const tiledMapObjectSize = tiledMapObject.getElementSize();
+      const tiledMapObjectGeometry = new THREE.CylinderGeometry(
+        tiledMapObjectSize.getWidth() / 2,
+        tiledMapObjectSize.getWidth() / 2,
+        tiledMapObjectSize.getDepth(),
+        16
+      );
+
+      this.addTiledMapBlockGeometry(
+        tiledMapObject,
+        tiledMapObjectGeometry,
+        tiledMapObjectMaterial
+      );
+    }
+
+    for (let tiledMapObject of this.tiledMap.getRectangleObjects()) {
       const tiledMapObjectSize = tiledMapObject.getElementSize();
       const tiledMapObjectGeometry = new THREE.BoxGeometry(
         tiledMapObjectSize.getWidth(),
@@ -118,32 +169,11 @@ export default class Plane implements CanvasView {
         tiledMapObjectSize.getHeight()
       );
 
-      tiledMapObjectGeometry.translate(
-        tiledMapObjectSize.getWidth() / 2,
-        tiledMapObjectSize.getDepth() / 2,
-        tiledMapObjectSize.getHeight() / 2
-      );
-
-      const tiledMapObjectMesh = new THREE.Mesh(
+      this.addTiledMapBlockGeometry(
+        tiledMapObject,
         tiledMapObjectGeometry,
         tiledMapObjectMaterial
       );
-
-      const tiledMapObjectPosition = tiledMapObject.getElementPosition();
-      tiledMapObjectMesh.position.set(
-        tiledMapObjectPosition.getX(),
-        tiledMapObjectPosition.getZ(),
-        tiledMapObjectPosition.getY()
-      );
-
-      const tiledMapObjectRotation = tiledMapObject.getElementRotation();
-      tiledMapObjectMesh.rotation.set(
-        tiledMapObjectRotation.getRotationX(),
-        tiledMapObjectRotation.getRotationZ(),
-        tiledMapObjectRotation.getRotationY()
-      );
-
-      this.scene.add(tiledMapObjectMesh);
     }
 
     this.scene.add(this.wireframe);

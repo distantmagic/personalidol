@@ -101,12 +101,41 @@ declare module "three" {
     ): void;
   }
 
+  declare export interface BufferGeometry extends BaseGeometry {
+    +isBufferGeometry: true;
+  }
+
   declare export interface Camera extends Object3D {
     +isCamera: true;
 
     constructor(): void;
 
     updateProjectionMatrix(): void;
+  }
+
+  declare export interface Clock {
+    constructor(autoStart?: boolean): void;
+  }
+
+  declare export interface Color {
+    set(number): void;
+  }
+
+  declare export interface CylinderGeometry extends Geometry {
+    constructor(
+      radiusTop: ?number,
+      radiusBottom: ?number,
+      height: ?number,
+      radialSegments: ?number,
+      heightSegments: ?number,
+      openEnded: ?boolean,
+      thetaStart: ?number,
+      thetaLength: ?number
+    ): void;
+  }
+
+  declare export interface EdgesGeometry extends BufferGeometry {
+    constructor(Geometry, thresholdAngle?: number): void;
   }
 
   declare export interface Euler {
@@ -118,22 +147,6 @@ declare module "three" {
     constructor(number, number, number): void;
 
     set(x: number, y: number, z: number): void;
-  }
-
-  declare export interface Clock {
-    constructor(autoStart?: boolean): void;
-  }
-
-  declare export interface Color {
-    set(number): void;
-  }
-
-  declare export interface EdgesGeometry extends BufferGeometry {
-    constructor(Geometry, thresholdAngle?: number): void;
-  }
-
-  declare export interface BufferGeometry extends BaseGeometry {
-    +isBufferGeometry: true;
   }
 
   declare export interface EventDispatcher<Events: string> {

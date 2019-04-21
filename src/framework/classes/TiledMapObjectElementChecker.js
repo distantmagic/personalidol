@@ -1,8 +1,9 @@
 // @flow
 
-import type { TiledMapObjectElementChecker as TiledMapObjectElementCheckerInterface } from "../interfaces/TiledMapObjectElementChecker"
+import type { TiledMapObjectElementChecker as TiledMapObjectElementCheckerInterface } from "../interfaces/TiledMapObjectElementChecker";
 
-export default class TiledMapObjectElementChecker implements TiledMapObjectElementCheckerInterface {
+export default class TiledMapObjectElementChecker
+  implements TiledMapObjectElementCheckerInterface {
   +objectElement: HTMLElement;
 
   constructor(objectElement: HTMLElement) {
@@ -10,11 +11,11 @@ export default class TiledMapObjectElementChecker implements TiledMapObjectEleme
   }
 
   isEllipse(): boolean {
-    return !!this.objectElement.querySelector("ellipse")
+    return !!this.objectElement.querySelector("ellipse");
   }
 
   isPolygon(): boolean {
-    return !!this.objectElement.querySelector("polygon")
+    return !!this.objectElement.querySelector("polygon");
   }
 
   isRectangle(): boolean {

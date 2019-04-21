@@ -1,9 +1,9 @@
 // @flow
 
-import type { TiledMapObject } from "./TiledMapObject";
+import type { TiledMapPositionedObject } from "./TiledMapPositionedObject";
 
-export interface TiledMapPolygonObject extends TiledMapObject {
-  // isEllipse: false;
-  isPolygon: true;
-  // isRectangel: false;
+export interface TiledMapPolygonObject extends TiledMapPositionedObject {
+  +isEllipse: false;
+  +isPolygon: true;
+  +isRectangle: false;
 }

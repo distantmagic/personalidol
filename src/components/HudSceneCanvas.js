@@ -7,6 +7,7 @@ import CancelToken from "../framework/classes/CancelToken";
 import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
 import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
+import KeyboardState from "../framework/classes/KeyboardState";
 import HudSceneCanvasOverlay from "./HudSceneCanvasOverlay";
 import PointerState from "../framework/classes/PointerState";
 import ResourcesLoadingState from "../framework/classes/ResourcesLoadingState";
@@ -15,7 +16,7 @@ import THREELoadingManager from "../framework/classes/THREELoadingManager";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { KeyboardState } from "../framework/interfaces/KeyboardState";
+import type { KeyboardState as KeyboardStateInterface } from "../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { PointerState as PointerStateInterface } from "../framework/interfaces/PointerState";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
@@ -27,7 +28,6 @@ import type { THREELoadingManager as THREELoadingManagerInterface } from "../fra
 type Props = {|
   debug: Debugger,
   exceptionHandler: ExceptionHandler,
-  keyboardState: KeyboardState,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   scheduler: Scheduler,
   queryBus: QueryBus
@@ -202,6 +202,7 @@ function useScene(
 
 function useSceneManager(
   props: Props,
+  keyboardState: ?KeyboardStateInterface,
   pointerState: ?PointerStateInterface,
   threeLoadingManager: THREELoadingManagerInterface
 ) {
@@ -212,7 +213,7 @@ function useSceneManager(
 
   React.useEffect(
     function() {
-      if (!pointerState) {
+      if (!keyboardState || !pointerState) {
         return;
       }
 
@@ -225,7 +226,7 @@ function useSceneManager(
             props.exceptionHandler,
             props.loggerBreadcrumbs.add("CanvasLocationComplex"),
             threeLoadingManager,
-            props.keyboardState,
+            keyboardState,
             pointerState,
             props.queryBus,
             props.debug
@@ -248,11 +249,16 @@ export default function HudSceneCanvas(props: Props) {
     )
   );
   const [
+    keyboardState,
+    setKeyboardState
+  ] = React.useState<?KeyboardStateInterface>(null);
+  const [
     pointerState,
     setPointerState
   ] = React.useState<?PointerStateInterface>(null);
   const [sceneManager] = useSceneManager(
     props,
+    keyboardState,
     pointerState,
     threeLoadingManager
   );
@@ -270,13 +276,18 @@ export default function HudSceneCanvas(props: Props) {
         return;
       }
 
+      const keyboardState = new KeyboardState();
+
+      keyboardState.observe();
+      setKeyboardState(keyboardState);
+
       const pointerState = new PointerState(scene);
 
       pointerState.observe();
-
       setPointerState(pointerState);
 
       return function() {
+        pointerState.disconnect();
         pointerState.disconnect();
       };
     },

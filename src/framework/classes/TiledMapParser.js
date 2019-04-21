@@ -4,9 +4,12 @@ import * as xml from "../helpers/xml";
 import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
 import TiledMap from "./TiledMap";
+import TiledMapBlockObjectParser from "./TiledMapBlockObjectParser";
+import TiledMapEllipseObject from "./TiledMapEllipseObject";
 import TiledMapLayerParser from "./TiledMapLayerParser";
 import TiledMapObjectElementChecker from "./TiledMapObjectElementChecker";
-import TiledMapObjectParser from "./TiledMapObjectParser";
+import TiledMapPolygonObjectParser from "./TiledMapPolygonObjectParser";
+import TiledMapRectangleObject from "./TiledMapRectangleObject";
 import TiledRelativeFilename from "./TiledRelativeFilename";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
 
@@ -102,24 +105,45 @@ export default class TiledMapParser implements TiledMapParserInterface {
     const objectElements = documentElement.querySelectorAll("object");
 
     for (let objectElement of objectElements.values()) {
-      const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(objectElement);
-      switch(true) {
-        case tiledMapObjectElementChecker.isEllipse():
-        break;
-        case tiledMapObjectElementChecker.isPolygon():
-        break;
-        case tiledMapObjectElementChecker.isRectangle():
-        break;
+      const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(
+        objectElement
+      );
+      // ellipse or rectangle
+      if (
+        tiledMapObjectElementChecker.isEllipse() ||
+        tiledMapObjectElementChecker.isRectangle()
+      ) {
+        const tiledMapObjectParser = new TiledMapBlockObjectParser(
+          this.mapFilename,
+          objectElement,
+          tileSize
+        );
+        const tiledMapBlockObject = await tiledMapObjectParser.parse(
+          cancelToken
+        );
+
+        if (tiledMapObjectElementChecker.isEllipse()) {
+          tiledMap.addEllipseObject(
+            new TiledMapEllipseObject(tiledMapBlockObject)
+          );
+        } else {
+          tiledMap.addRectangleObject(
+            new TiledMapRectangleObject(tiledMapBlockObject)
+          );
+        }
+        // polygon
+      } else {
+        const tiledMapPolygonObjectParser = new TiledMapPolygonObjectParser(
+          this.mapFilename,
+          objectElement,
+          tileSize
+        );
+        const tiledMapPolygonObject = await tiledMapPolygonObjectParser.parse(
+          cancelToken
+        );
+
+        tiledMap.addPolygonObject(tiledMapPolygonObject);
       }
-
-      // const tiledMapObjectParser = new TiledMapObjectParser(
-      //   this.mapFilename,
-      //   objectElement,
-      //   tileSize
-      // );
-      // const tiledMapObject = await tiledMapObjectParser.parse(cancelToken);
-
-      // tiledMap.addObject(tiledMapObject);
     }
 
     return tiledMap;

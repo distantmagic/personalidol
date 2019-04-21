@@ -2,24 +2,21 @@
 
 import type { ElementPosition } from "../interfaces/ElementPosition";
 import type { ElementRotation } from "../interfaces/ElementRotation";
-import type { ElementSize } from "../interfaces/ElementSize";
-import type { TiledMapObject as TiledMapObjectInterface } from "../interfaces/TiledMapObject";
+import type { TiledMapPositionedObject as TiledMapPositionedObjectInterface } from "../interfaces/TiledMapPositionedObject";
 
-export default class TiledMapObject implements TiledMapObjectInterface {
+export default class TiledMapPositionedObject
+  implements TiledMapPositionedObjectInterface {
   +elementPosition: ElementPosition<"tile">;
   +elementRotation: ElementRotation<"radians">;
-  +elementSize: ElementSize<"tile">;
   +name: string;
 
   constructor(
     name: string,
     elementPosition: ElementPosition<"tile">,
-    elementRotation: ElementRotation<"radians">,
-    elementSize: ElementSize<"tile">
+    elementRotation: ElementRotation<"radians">
   ): void {
     this.elementPosition = elementPosition;
     this.elementRotation = elementRotation;
-    this.elementSize = elementSize;
     this.name = name;
   }
 
@@ -29,10 +26,6 @@ export default class TiledMapObject implements TiledMapObjectInterface {
 
   getElementRotation(): ElementRotation<"radians"> {
     return this.elementRotation;
-  }
-
-  getElementSize(): ElementSize<"tile"> {
-    return this.elementSize;
   }
 
   getName(): string {

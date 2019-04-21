@@ -1,12 +1,9 @@
 // @flow
 
-import type { ElementSize } from "./ElementSize";
-import type { TiledMapObject } from "./TiledMapObject";
+import type { TiledMapBlockObject } from "./TiledMapBlockObject";
 
-export interface TiledMapRectangleObject extends TiledMapObject {
-  // isEllipse: false;
-  // isPolygon: false;
-  isRectangle: true;
-
-  getElementSize(): ElementSize<"tile">;
+export interface TiledMapRectangleObject extends TiledMapBlockObject {
+  +isEllipse: false;
+  +isPolygon: false;
+  +isRectangle: true;
 }
