@@ -9,4 +9,6 @@ export interface LoggerBreadcrumbs
   add(breadcrumb: string): LoggerBreadcrumbs;
 
   addVariable(breadcrumb: string): LoggerBreadcrumbs;
+
+  getBreadcrumbs(): Array<string>;
 }

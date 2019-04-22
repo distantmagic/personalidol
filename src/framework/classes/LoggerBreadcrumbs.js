@@ -41,6 +41,10 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     return this.breadcrumbs.join("/");
   }
 
+  getBreadcrumbs(): Array<string> {
+    return this.breadcrumbs.slice(0);
+  }
+
   isEqual(other: LoggerBreadcrumbsInterface): boolean {
     return this.asString() === other.asString();
   }
