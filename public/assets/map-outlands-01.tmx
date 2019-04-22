@@ -143,6 +143,7 @@
   </object>
   <object id="25" name="Tree" x="0" y="128" width="128" height="128">
    <properties>
+    <property name="depth" type="int" value="128"/>
     <property name="source" value="mesh-tree-01.fbx"/>
    </properties>
   </object>
