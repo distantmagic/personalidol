@@ -141,8 +141,8 @@ export default class GameboardTiledObjects implements CanvasView {
 
       // const geometry = new THREE.ShapeGeometry(shape);
       const geometry = new THREE.ExtrudeGeometry(shape, {
-        amount: tiledMapObject.getDepth(),
-        bevelEnabled: false
+        bevelEnabled: false,
+        depth: tiledMapObject.getDepth(),
         // steps: 2,
       });
 

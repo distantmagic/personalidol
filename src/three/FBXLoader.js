@@ -1617,9 +1617,9 @@ GeometryParser.prototype = {
 
         if (weights.length > 4) {
           if (!displayedWeightsWarning) {
-            console.warn(
-              "THREE.FBXLoader: Vertex has more than 4 skinning weights assigned to vertex. Deleting additional weights."
-            );
+            // console.warn(
+            //   "THREE.FBXLoader: Vertex has more than 4 skinning weights assigned to vertex. Deleting additional weights."
+            // );
             displayedWeightsWarning = true;
           }
 
@@ -2908,7 +2908,7 @@ BinaryParser.prototype = {
 
     var version = reader.getUint32();
 
-    console.log("THREE.FBXLoader: FBX binary version: " + version);
+    // console.log("THREE.FBXLoader: FBX binary version: " + version);
 
     var allNodes = new FBXTree();
 
