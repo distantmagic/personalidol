@@ -13,8 +13,9 @@ import THREEPointerInteraction from "../../framework/classes/THREEPointerInterac
 import TiledMapLoader from "../../framework/classes/TiledMapLoader";
 import TiledTilesetLoader from "../../framework/classes/TiledTilesetLoader";
 import URLTextContentQueryBuilder from "../../framework/classes/URLTextContentQueryBuilder";
-import { default as EntityView } from "../views/Entity";
 import { default as GameboardView } from "../views/Gameboard";
+import { default as PlayerModel } from "../models/Player";
+import { default as PlayerView } from "../views/Player";
 // import { default as THREEHelpersView } from "../views/THREEHelpers";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
@@ -25,6 +26,7 @@ import type { ElementSize } from "../../framework/interfaces/ElementSize";
 import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandler";
 import type { KeyboardState } from "../../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
+import type { Player as PlayerModelInterface } from "../models/Player.type";
 import type { PointerState } from "../../framework/interfaces/PointerState";
 import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
@@ -38,6 +40,7 @@ export default class CanvasLocationComplex implements CanvasController {
   +keyboardState: KeyboardState;
   +light: THREE.SpotLight;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +playerModel: PlayerModelInterface;
   +pointerState: PointerState;
   +queryBus: QueryBus;
   +scene: THREE.Scene;
@@ -61,6 +64,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.exceptionHandler = exceptionHandler;
     this.keyboardState = keyboardState;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.playerModel = new PlayerModel();
     // (36x36), (72x72), (108x108), (144x144), (216,216), (252, 252)
     this.pointerState = pointerState;
     this.queryBus = queryBus;
@@ -112,13 +116,13 @@ export default class CanvasLocationComplex implements CanvasController {
     this.scene.add(this.light);
 
     this.canvasViewGroup.add(
-      new EntityView(
+      new PlayerView(
         this.exceptionHandler,
-        breadcrumbs.add("EntityView"),
+        breadcrumbs.add("PlayerView"),
+        this.playerModel,
         this.scene,
         this.threeLoadingManager,
-        this.keyboardState,
-        this.camera
+        this.keyboardState
       )
     );
 
@@ -151,6 +155,9 @@ export default class CanvasLocationComplex implements CanvasController {
         tiledMap
       )
     );
+
+    this.updateCameraPosition();
+    // this.camera.lookAt(this.playerModel.position);
 
     // this.canvasViewGroup.add(
     //   new THREEHelpersView(
@@ -249,5 +256,20 @@ export default class CanvasLocationComplex implements CanvasController {
     }
 
     this.canvasViewGroup.update(delta);
+    this.updateCameraPosition();
+  }
+
+  updateCameraPosition(): void {
+    const currentPlayerPosition = this.playerModel.getCurrentPosition();
+
+    // top-down
+    // this.camera.position.set(this.player.position.x, 20, this.player.position.z + 16);
+
+    // angled
+    this.camera.position.set(
+      currentPlayerPosition.x + 8,
+      8,
+      currentPlayerPosition.z + 8
+    );
   }
 }

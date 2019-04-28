@@ -1,18 +1,17 @@
 // @flow
 
+import * as THREE from "three";
+
 import type { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 
-export default class ElementPosition<Unit: ElementPositionUnit>
-  implements ElementPositionInterface<Unit> {
-  +x: number;
-  +y: number;
-  +z: number;
-
-  constructor(x: number, y: number, z: number = 0) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
+export default class ElementPosition<Unit: ElementPositionUnit> extends THREE.Vector3 implements ElementPositionInterface<Unit> {
+  clone(): ElementPositionInterface<Unit> {
+    return new ElementPosition<Unit>(
+      this.getX(),
+      this.getY(),
+      this.getZ(),
+    );
   }
 
   getX(): number {

@@ -12,31 +12,32 @@ import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandl
 import type { KeyboardState } from "../../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
 import type { PersonAnimationInstance } from "../../framework/types/PersonAnimationInstance";
+import type { Player as PlayerModelInterface } from "../models/Player.type";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 
-export default class Entity implements CanvasView {
-  +camera: THREE.Camera;
+export default class Player implements CanvasView {
   +keyboardState: KeyboardState;
   +personAnimationState: PersonAnimationInstance;
+  +playerModel: PlayerModelInterface;
   // +spotLight: THREE.SpotLight;
   +threeLoadingManager: THREELoadingManager;
   +scene: THREE.Scene;
   rotationY: number;
   velocityX: number;
   velocityZ: number;
-  guy: THREE.Object3D;
+  player: THREE.Object3D;
   mixer: ?THREE.AnimationMixer;
 
   constructor(
     exceptionHandler: ExceptionHandler,
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    playerModel: PlayerModelInterface,
     scene: THREE.Scene,
     threeLoadingManager: THREELoadingManager,
     keyboardState: KeyboardState,
-    camera: THREE.Camera
   ) {
-    this.camera = camera;
-    this.guy = new THREE.Group();
+    this.player = new THREE.Group();
+    this.playerModel = playerModel;
     this.keyboardState = keyboardState;
     this.personAnimationState = new PersonAnimation(
       exceptionHandler,
@@ -53,7 +54,7 @@ export default class Entity implements CanvasView {
     //   Math.PI,
     //   0.6,
     // );
-    // this.spotLight.target = this.guy;
+    // this.spotLight.target = this.player;
     // this.spotLight.position.y = 2;
   }
 
@@ -104,17 +105,17 @@ export default class Entity implements CanvasView {
     ]);
     const bones = defaultCharacter.children[0];
 
-    this.guy.add(bones);
+    this.player.add(bones);
 
     const body = defaultCharacter.children[7];
 
-    this.guy.add(body);
+    this.player.add(body);
 
     const head = defaultCharacter.children[11];
 
-    this.guy.add(head);
+    this.player.add(head);
 
-    const mixer = new THREE.AnimationMixer(this.guy);
+    const mixer = new THREE.AnimationMixer(this.player);
 
     this.mixer = mixer;
 
@@ -143,13 +144,10 @@ export default class Entity implements CanvasView {
 
     actions.idling.play();
 
-    this.guy.position.set(1.5, 0, 1.5);
-    this.guy.scale.set(0.01, 0.01, 0.01);
+    this.player.position.set(1.5, 0, 1.5);
+    this.player.scale.set(0.01, 0.01, 0.01);
 
-    this.updateCameraPosition();
-    this.camera.lookAt(this.guy.position);
-
-    this.scene.add(this.guy);
+    this.scene.add(this.player);
 
     // this.scene.add(this.spotLight);
   }
@@ -158,7 +156,7 @@ export default class Entity implements CanvasView {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
-    this.scene.remove(this.guy);
+    this.scene.remove(this.player);
   }
 
   async start(): Promise<void> {}
@@ -166,24 +164,22 @@ export default class Entity implements CanvasView {
   async stop(): Promise<void> {}
 
   begin(): void {
-    // const stepSize = 0.4;
-    // const stepSize = this.keyboardState.isPressed("Shift") ? 0.1 : 2;
-    const stepSize = this.keyboardState.isPressed("Shift") ? 0.01 : 0.08;
+    const speed = this.keyboardState.isPressed("Shift") ? 0.01 : 0.08;
 
     this.velocityX = 0;
     this.velocityZ = 0;
 
     if (this.keyboardState.isPressed("ArrowLeft")) {
-      this.velocityX -= stepSize;
+      this.velocityX -= speed;
     }
     if (this.keyboardState.isPressed("ArrowRight")) {
-      this.velocityX += stepSize;
+      this.velocityX += speed;
     }
     if (this.keyboardState.isPressed("ArrowUp")) {
-      this.velocityZ -= stepSize;
+      this.velocityZ -= speed;
     }
     if (this.keyboardState.isPressed("ArrowDown")) {
-      this.velocityZ += stepSize;
+      this.velocityZ += speed;
     }
 
     if (this.velocityX && this.velocityZ) {
@@ -238,39 +234,21 @@ export default class Entity implements CanvasView {
       mixer.update(delta / 1000);
     }
 
-    // this.guy.rotation.x = -1 * Math.PI / 2;
-    // this.guy.rotation.x += 0.01;
-    this.guy.rotation.x = 0;
+    const currentPlayerPosition = this.playerModel.getCurrentPosition();
 
-    this.guy.rotation.y = this.rotationY;
-    // this.guy.position.x = clamp(
-    //   this.guy.position.x + this.velocityX,
-    //   -1 * (this.planeSide * 5),
-    //   this.planeSide * 5
-    // );
-    this.guy.position.x += this.velocityX;
-    // this.guy.position.z = clamp(
-    //   this.guy.position.z + this.velocityZ,
-    //   -1 * (this.planeSide * 5),
-    //   this.planeSide * 5
-    // );
-    this.guy.position.z += this.velocityZ;
+    this.player.rotation.x = 0;
+    this.player.rotation.y = this.rotationY;
 
-    this.updateCameraPosition();
+    currentPlayerPosition.set(
+      currentPlayerPosition.x + this.velocityX,
+      currentPlayerPosition.y,
+      currentPlayerPosition.z + this.velocityZ,
+    );
 
-    // this.spotLight.position.x = this.guy.position.x;
-    // this.spotLight.position.z = this.guy.position.z;
-  }
-
-  updateCameraPosition(): void {
-    // top-down
-    // this.camera.position.set(this.guy.position.x, 20, this.guy.position.z + 16);
-
-    // angled
-    this.camera.position.set(
-      this.guy.position.x + 8,
-      8,
-      this.guy.position.z + 8
+    this.player.position.set(
+      currentPlayerPosition.x,
+      currentPlayerPosition.y,
+      currentPlayerPosition.z,
     );
   }
 }

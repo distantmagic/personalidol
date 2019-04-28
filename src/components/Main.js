@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import TWEEN from "@tweenjs/tween.js";
 import classnames from "classnames";
 
 import BusClock from "../framework/classes/BusClock";
@@ -91,6 +92,23 @@ export default function Main(props: Props) {
       fpsAdaptive.setExpectedFPS(maxAllowedFPS);
     },
     [fpsAdaptive, mainLoop, scheduler]
+  );
+
+  React.useEffect(
+    function() {
+      const schedulerReference = scheduler;
+
+      function schedulerOnUpdate() {
+        TWEEN.update();
+      }
+
+      schedulerReference.onUpdate(schedulerOnUpdate);
+
+      return function () {
+        schedulerReference.offUpdate(schedulerOnUpdate);
+      };
+    },
+    [scheduler]
   );
 
   React.useEffect(

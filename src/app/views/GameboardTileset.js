@@ -59,7 +59,6 @@ export default class GameboardTileset implements CanvasView {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
-    console.log(this.camera);
     const tileGeometry = new THREE.PlaneBufferGeometry(1, 1);
 
     tileGeometry.translate(-0.5, -0.5, 0);
