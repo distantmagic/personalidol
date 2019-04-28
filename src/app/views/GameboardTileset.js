@@ -2,12 +2,12 @@
 
 import * as THREE from "three";
 
-import type { CancelToken } from "../framework/interfaces/CancelToken";
-import type { CanvasView } from "../framework/interfaces/CanvasView";
-import type { PointerState } from "../framework/interfaces/PointerState";
-import type { TiledMap } from "../framework/interfaces/TiledMap";
-import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
-import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
+import type { CancelToken } from "../../framework/interfaces/CancelToken";
+import type { CanvasView } from "../../framework/interfaces/CanvasView";
+import type { PointerState } from "../../framework/interfaces/PointerState";
+import type { TiledMap } from "../../framework/interfaces/TiledMap";
+import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
+import type { THREEPointerInteraction } from "../../framework/interfaces/THREEPointerInteraction";
 
 export default class GameboardTileset implements CanvasView {
   +camera: THREE.Camera;
@@ -140,7 +140,6 @@ export default class GameboardTileset implements CanvasView {
     }
 
     for (let intersect of intersects) {
-      // console.log(intersects.length);
       this.wireframe.position.x = intersect.object.position.x;
       this.wireframe.position.z = intersect.object.position.z;
       // intersect.object.material.color.set( 0x333333 );

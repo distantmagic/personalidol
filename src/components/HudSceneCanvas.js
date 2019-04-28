@@ -4,7 +4,7 @@ import * as React from "react";
 import classnames from "classnames";
 
 import CancelToken from "../framework/classes/CancelToken";
-import CanvasLocationComplex from "../controllers/CanvasLocationComplex";
+import CanvasLocationComplex from "../app/controllers/CanvasLocationComplex";
 import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
 import KeyboardState from "../framework/classes/KeyboardState";

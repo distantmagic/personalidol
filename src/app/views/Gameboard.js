@@ -2,19 +2,19 @@
 
 import * as THREE from "three";
 
-import CanvasViewGroup from "../framework/classes/CanvasViewGroup";
+import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
 import GameboardTileset from "./GameboardTileset";
 import GameboardTiledObjects from "./GameboardTiledObjects";
 
-import type { CancelToken } from "../framework/interfaces/CancelToken";
-import type { CanvasView } from "../framework/interfaces/CanvasView";
-import type { CanvasViewGroup as CanvasViewGroupInterface } from "../framework/interfaces/CanvasViewGroup";
-import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { PointerState } from "../framework/interfaces/PointerState";
-import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
-import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
-import type { TiledMap } from "../framework/interfaces/TiledMap";
+import type { CancelToken } from "../../framework/interfaces/CancelToken";
+import type { CanvasView } from "../../framework/interfaces/CanvasView";
+import type { CanvasViewGroup as CanvasViewGroupInterface } from "../../framework/interfaces/CanvasViewGroup";
+import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandler";
+import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
+import type { PointerState } from "../../framework/interfaces/PointerState";
+import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
+import type { THREEPointerInteraction } from "../../framework/interfaces/THREEPointerInteraction";
+import type { TiledMap } from "../../framework/interfaces/TiledMap";
 
 export default class Gameboard implements CanvasView {
   +camera: THREE.Camera;

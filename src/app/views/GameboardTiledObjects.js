@@ -2,14 +2,14 @@
 
 import * as THREE from "three";
 
-import FBXLoader from "../three/FBXLoader";
+import FBXLoader from "../../three/FBXLoader";
 
-import type { CancelToken } from "../framework/interfaces/CancelToken";
-import type { CanvasView } from "../framework/interfaces/CanvasView";
-import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
-import type { TiledMap } from "../framework/interfaces/TiledMap";
-import type { TiledMapBlockObject } from "../framework/interfaces/TiledMapBlockObject";
-import type { TiledMapPositionedObject } from "../framework/interfaces/TiledMapPositionedObject";
+import type { CancelToken } from "../../framework/interfaces/CancelToken";
+import type { CanvasView } from "../../framework/interfaces/CanvasView";
+import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
+import type { TiledMap } from "../../framework/interfaces/TiledMap";
+import type { TiledMapBlockObject } from "../../framework/interfaces/TiledMapBlockObject";
+import type { TiledMapPositionedObject } from "../../framework/interfaces/TiledMapPositionedObject";
 
 export default class GameboardTiledObjects implements CanvasView {
   +tiledMap: TiledMap;

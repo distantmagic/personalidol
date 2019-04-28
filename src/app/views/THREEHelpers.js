@@ -2,11 +2,11 @@
 
 import * as THREE from "three";
 
-import type { CancelToken } from "../framework/interfaces/CancelToken";
-import type { CanvasView } from "../framework/interfaces/CanvasView";
-import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { TiledMap } from "../framework/interfaces/TiledMap";
+import type { CancelToken } from "../../framework/interfaces/CancelToken";
+import type { CanvasView } from "../../framework/interfaces/CanvasView";
+import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandler";
+import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
+import type { TiledMap } from "../../framework/interfaces/TiledMap";
 
 export default class THREEHelpers implements CanvasView {
   +scene: THREE.Scene;

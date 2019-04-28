@@ -3,16 +3,16 @@
 import * as THREE from "three";
 // import clamp from "clamp";
 
-import FBXLoader from "../three/FBXLoader";
-import PersonAnimation from "../framework/machines/PersonAnimation";
+import FBXLoader from "../../three/FBXLoader";
+import PersonAnimation from "../../framework/machines/PersonAnimation";
 
-import type { CancelToken } from "../framework/interfaces/CancelToken";
-import type { CanvasView } from "../framework/interfaces/CanvasView";
-import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { KeyboardState } from "../framework/interfaces/KeyboardState";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { PersonAnimationInstance } from "../framework/types/PersonAnimationInstance";
-import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
+import type { CancelToken } from "../../framework/interfaces/CancelToken";
+import type { CanvasView } from "../../framework/interfaces/CanvasView";
+import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandler";
+import type { KeyboardState } from "../../framework/interfaces/KeyboardState";
+import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
+import type { PersonAnimationInstance } from "../../framework/types/PersonAnimationInstance";
+import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 
 export default class Entity implements CanvasView {
   +camera: THREE.Camera;

@@ -7,29 +7,28 @@ import {
   // Howler
 } from "howler";
 
-import Cancelled from "../framework/classes/Exception/Cancelled";
-import CanvasViewGroup from "../framework/classes/CanvasViewGroup";
-import THREEPointerInteraction from "../framework/classes/THREEPointerInteraction";
-import TiledMapLoader from "../framework/classes/TiledMapLoader";
-import TiledTilesetLoader from "../framework/classes/TiledTilesetLoader";
-import URLTextContentQueryBuilder from "../framework/classes/URLTextContentQueryBuilder";
-import { default as CubeView } from "../views/Cube";
+import Cancelled from "../../framework/classes/Exception/Cancelled";
+import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
+import THREEPointerInteraction from "../../framework/classes/THREEPointerInteraction";
+import TiledMapLoader from "../../framework/classes/TiledMapLoader";
+import TiledTilesetLoader from "../../framework/classes/TiledTilesetLoader";
+import URLTextContentQueryBuilder from "../../framework/classes/URLTextContentQueryBuilder";
 import { default as EntityView } from "../views/Entity";
 import { default as GameboardView } from "../views/Gameboard";
 // import { default as THREEHelpersView } from "../views/THREEHelpers";
 
-import type { CancelToken } from "../framework/interfaces/CancelToken";
-import type { CanvasController } from "../framework/interfaces/CanvasController";
-import type { CanvasViewGroup as CanvasViewGroupInterface } from "../framework/interfaces/CanvasViewGroup";
-import type { Debugger } from "../framework/interfaces/Debugger";
-import type { ElementSize } from "../framework/interfaces/ElementSize";
-import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { KeyboardState } from "../framework/interfaces/KeyboardState";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { PointerState } from "../framework/interfaces/PointerState";
-import type { QueryBus } from "../framework/interfaces/QueryBus";
-import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
-import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../framework/interfaces/THREEPointerInteraction";
+import type { CancelToken } from "../../framework/interfaces/CancelToken";
+import type { CanvasController } from "../../framework/interfaces/CanvasController";
+import type { CanvasViewGroup as CanvasViewGroupInterface } from "../../framework/interfaces/CanvasViewGroup";
+import type { Debugger } from "../../framework/interfaces/Debugger";
+import type { ElementSize } from "../../framework/interfaces/ElementSize";
+import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandler";
+import type { KeyboardState } from "../../framework/interfaces/KeyboardState";
+import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
+import type { PointerState } from "../../framework/interfaces/PointerState";
+import type { QueryBus } from "../../framework/interfaces/QueryBus";
+import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
+import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../framework/interfaces/THREEPointerInteraction";
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;
@@ -112,14 +111,6 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.scene.add(this.light);
 
-    this.canvasViewGroup.add(
-      new CubeView(
-        this.exceptionHandler,
-        breadcrumbs.add("CubeView"),
-        this.scene,
-        this.threeLoadingManager
-      )
-    );
     this.canvasViewGroup.add(
       new EntityView(
         this.exceptionHandler,
@@ -211,8 +202,6 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   draw(renderer: THREE.WebGLRenderer, interpolationPercentage: number): void {
-    // renderer.setPixelRatio(window.devicePixelRatio / 2);
-    // renderer.setPixelRatio(window.devicePixelRatio * 2);
     // renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setPixelRatio(1);
     renderer.render(this.scene, this.camera);
@@ -259,14 +248,6 @@ export default class CanvasLocationComplex implements CanvasController {
       threePointerInteraction.update(delta);
     }
 
-    // Howler.pos(guy.position.x, guy.position.z, 0);
-
     this.canvasViewGroup.update(delta);
-
-    // this.camera.position.set(
-    //   1 * this.entityView.guy.position.x + 16,
-    //   20,
-    //   1 * this.entityView.guy.position.z + 16
-    // );
   }
 }
