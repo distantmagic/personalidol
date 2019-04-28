@@ -78,7 +78,7 @@ export default class CanvasLocationComplex implements CanvasController {
     });
 
     this.camera = new THREE.OrthographicCamera();
-    this.camera.position.set(20, 20, 20);
+    this.camera.position.set(32, 32, 32);
     this.camera.lookAt(this.scene.position);
 
     // this.light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
@@ -154,6 +154,7 @@ export default class CanvasLocationComplex implements CanvasController {
         breadcrumbs.add("GameboardView"),
         this.scene,
         this.pointerState,
+        this.camera,
         this.threeLoadingManager,
         threePointerInteraction,
         tiledMap
@@ -227,11 +228,11 @@ export default class CanvasLocationComplex implements CanvasController {
     const width = elementSize.getWidth();
 
     this.camera.left = -1 * (width / zoom);
-    this.camera.far = 50;
+    this.camera.far = 100;
     this.camera.near = 0;
     this.camera.right = width / zoom;
     this.camera.top = height / zoom;
-    this.camera.bottom = (-1 * height) / zoom;
+    this.camera.bottom = -1 * (height / zoom);
     this.camera.updateProjectionMatrix();
 
     const threePointerInteraction = this.threePointerInteraction;

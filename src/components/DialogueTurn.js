@@ -52,13 +52,14 @@ function useScrollPercentageState() {
 
       const element = containerElement;
       const containerHTMLElementSize = new HTMLElementSize(element);
-      const onWheelBound = function() {
+
+      function onWheelBound() {
         return updateScrollDelta(
           element,
           containerHTMLElementSize,
           setScrollPercentage
         );
-      };
+      }
 
       element.addEventListener("wheel", onWheelBound, {
         capture: true,
@@ -110,7 +111,7 @@ export default function DialogueTurn(props: Props) {
           );
         });
     },
-    [props.dialogueTurn]
+    [props.dialogueTurn, props.exceptionHandler, props.loggerBreadcrumbs]
   );
 
   if (state.isLoading) {

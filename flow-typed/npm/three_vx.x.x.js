@@ -87,7 +87,13 @@ declare module "three" {
     translate(x: number, y: number, z: number): Geometry;
   }
 
-  declare export interface BoxGeometry extends Geometry {
+  declare export interface BoxBufferGeometry
+    extends BoxGeometryBase,
+      BufferGeometry {}
+
+  declare export interface BoxGeometry extends BoxGeometryBase, Geometry {}
+
+  declare export interface BoxGeometryBase {
     +parameters: {|
       depth: number,
       depthSegments: number,
@@ -141,7 +147,7 @@ declare module "three" {
   }
 
   declare export interface EdgesGeometry extends BufferGeometry {
-    constructor(Geometry, thresholdAngle?: number): void;
+    constructor(BufferGeometry | Geometry, thresholdAngle?: number): void;
   }
 
   declare export interface Euler {
@@ -238,7 +244,7 @@ declare module "three" {
   }
 
   declare export interface Mesh extends Object3D {
-    constructor(Geometry, Material): void;
+    constructor(BufferGeometry | Geometry, Material): void;
   }
 
   declare export interface MeshBasicMaterial extends Material {
@@ -297,7 +303,13 @@ declare module "three" {
     constructor(fov: number, aspect: number, near: number, far: number): void;
   }
 
-  declare export interface PlaneGeometry extends Geometry {
+  declare export interface PlaneBufferGeometry
+    extends BufferGeometry,
+      PlaneGeometryBase {}
+
+  declare export interface PlaneGeometry extends Geometry, PlaneGeometryBase {}
+
+  declare export interface PlaneGeometryBase {
     constructor(
       width: number,
       height: number,

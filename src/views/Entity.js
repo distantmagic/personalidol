@@ -268,9 +268,9 @@ export default class Entity implements CanvasView {
 
     // angled
     this.camera.position.set(
-      this.guy.position.x + 20,
-      20,
-      this.guy.position.z + 20
+      this.guy.position.x + 8,
+      8,
+      this.guy.position.z + 8
     );
   }
 }

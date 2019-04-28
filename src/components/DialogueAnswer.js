@@ -40,7 +40,7 @@ export default function DialogueAnswer(props: Props) {
           );
         });
     },
-    [props.dialogueMessage]
+    [props.dialogueMessage, props.exceptionHandler, props.loggerBreadcrumbs]
   );
 
   function onAnswerClick(evt: SyntheticEvent<any>): void {

@@ -53,7 +53,12 @@ export default function Dialogue(props: Props) {
           );
         });
     },
-    [props.dialogue, props.dialogueInitiator]
+    [
+      props.dialogue,
+      props.dialogueInitiator,
+      props.exceptionHandler,
+      props.loggerBreadcrumbs
+    ]
   );
 
   if (!dialogueTurn) {

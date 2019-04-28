@@ -119,7 +119,12 @@ function useResourcesLoadingState(
         loadingManagerReference.offStart(onStart);
       };
     },
-    [threeLoadingManager, sceneManager]
+    [
+      props.exceptionHandler,
+      props.loggerBreadcrumbs,
+      threeLoadingManager,
+      sceneManager
+    ]
   );
 
   return [resourcesLoadingState];
@@ -200,7 +205,7 @@ function useScene(
           );
       };
     },
-    [sceneManager, canvas]
+    [props.exceptionHandler, props.loggerBreadcrumbs, sceneManager, canvas]
   );
 
   return [sceneLoadingState.isFailed, sceneLoadingState.isAttaching];
@@ -240,7 +245,16 @@ function useSceneManager(
         )
       );
     },
-    [pointerState, props.scheduler, threeLoadingManager]
+    [
+      keyboardState,
+      pointerState,
+      props.debug,
+      props.exceptionHandler,
+      props.loggerBreadcrumbs,
+      props.queryBus,
+      props.scheduler,
+      threeLoadingManager
+    ]
   );
 
   return [sceneManager];

@@ -10,6 +10,7 @@ import type { THREELoadingManager } from "../framework/interfaces/THREELoadingMa
 import type { THREEPointerInteraction } from "../framework/interfaces/THREEPointerInteraction";
 
 export default class GameboardTileset implements CanvasView {
+  +camera: THREE.Camera;
   +plane: THREE.Group;
   +pointerState: PointerState;
   +scene: THREE.Scene;
@@ -21,10 +22,12 @@ export default class GameboardTileset implements CanvasView {
   constructor(
     scene: THREE.Scene,
     pointerState: PointerState,
+    camera: THREE.Camera,
     tiledMap: TiledMap,
     threeLoadingManager: THREELoadingManager,
     threePointerInteraction: THREEPointerInteraction
   ) {
+    this.camera = camera;
     this.scene = scene;
     this.pointerState = pointerState;
     this.tiledMap = tiledMap;
@@ -33,9 +36,8 @@ export default class GameboardTileset implements CanvasView {
 
     this.plane = new THREE.Group();
 
-    // const boxGeometry = new THREE.BoxGeometry(10, 16, 10);
-    const boxGeometry = new THREE.BoxGeometry(1, 0.6, 1);
-    const geo = new THREE.EdgesGeometry(boxGeometry); // or WireframeGeometry( geometry )
+    const boxGeometry = new THREE.BoxBufferGeometry(1, 0.6, 1);
+    const geo = new THREE.EdgesGeometry(boxGeometry);
 
     geo.translate(0.5, 0, 0.5);
 
@@ -57,7 +59,8 @@ export default class GameboardTileset implements CanvasView {
     cancelToken: CancelToken,
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
-    const tileGeometry = new THREE.PlaneGeometry(1, 1);
+    console.log(this.camera);
+    const tileGeometry = new THREE.PlaneBufferGeometry(1, 1);
 
     tileGeometry.translate(-0.5, -0.5, 0);
 
@@ -129,6 +132,7 @@ export default class GameboardTileset implements CanvasView {
     const intersects = this.threePointerInteraction
       .getCameraRaycaster()
       .intersectObjects(this.plane.children);
+
     if (intersects.length < 1) {
       this.scene.remove(this.wireframe);
     } else {

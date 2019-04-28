@@ -66,7 +66,12 @@ export default function HudModalCharacterLoader(props: Props) {
         cancelToken.cancel();
       };
     },
-    [props.match.params.characterId, props.queryBus]
+    [
+      props.exceptionHandler,
+      props.loggerBreadcrumbs,
+      props.match.params.characterId,
+      props.queryBus
+    ]
   );
 
   if (state.isLoading) {

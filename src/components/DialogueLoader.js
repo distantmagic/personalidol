@@ -60,7 +60,10 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
     [
       props.dialogueResourceReference,
       props.expressionBus,
-      props.expressionContext
+      props.exceptionHandler,
+      props.expressionContext,
+      props.loggerBreadcrumbs,
+      props.queryBus
     ]
   );
 

@@ -105,7 +105,7 @@ export default function Main(props: Props) {
         cancelToken.cancel();
       };
     },
-    [queryBusController]
+    [props.loggerBreadcrumbs, queryBusController]
   );
 
   return (
