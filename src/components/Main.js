@@ -104,7 +104,7 @@ export default function Main(props: Props) {
 
       schedulerReference.onUpdate(schedulerOnUpdate);
 
-      return function () {
+      return function() {
         schedulerReference.offUpdate(schedulerOnUpdate);
       };
     },

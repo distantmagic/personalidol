@@ -67,7 +67,9 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     // tileset
 
-    const tilesetElement = documentElement.getElementsByTagName("tileset").item(0);
+    const tilesetElement = documentElement
+      .getElementsByTagName("tileset")
+      .item(0);
 
     if (!tilesetElement) {
       throw new TiledMapException(
@@ -114,11 +116,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     // layers
 
-    for (
-      let i = 0;
-      i < layerElements.length;
-      i += 1
-    ) {
+    for (let i = 0; i < layerElements.length; i += 1) {
       const layerElement = layerElements.item(i);
 
       if (!layerElement) {
@@ -146,11 +144,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     const objectElements = documentElement.getElementsByTagName("object");
 
-    for (
-      let i = 0;
-      i < objectElements.length;
-      i += 1
-    ) {
+    for (let i = 0; i < objectElements.length; i += 1) {
       const objectElement = objectElements.item(i);
 
       if (!objectElement) {

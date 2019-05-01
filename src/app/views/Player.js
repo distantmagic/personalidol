@@ -34,7 +34,7 @@ export default class Player implements CanvasView {
     playerModel: PlayerModelInterface,
     scene: THREE.Scene,
     threeLoadingManager: THREELoadingManager,
-    keyboardState: KeyboardState,
+    keyboardState: KeyboardState
   ) {
     this.player = new THREE.Group();
     this.playerModel = playerModel;
@@ -242,13 +242,13 @@ export default class Player implements CanvasView {
     currentPlayerPosition.set(
       currentPlayerPosition.x + this.velocityX,
       currentPlayerPosition.y,
-      currentPlayerPosition.z + this.velocityZ,
+      currentPlayerPosition.z + this.velocityZ
     );
 
     this.player.position.set(
       currentPlayerPosition.x,
       currentPlayerPosition.y,
-      currentPlayerPosition.z,
+      currentPlayerPosition.z
     );
   }
 }

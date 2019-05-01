@@ -42,7 +42,9 @@ export default class TiledMapPolygonObjectParser
     );
     const breadcrumbsObjectName = breadcrumbs.addVariable(objectName);
 
-    const polygonElement = this.objectElement.getElementsByTagName("polygon").item(0);
+    const polygonElement = this.objectElement
+      .getElementsByTagName("polygon")
+      .item(0);
 
     if (!polygonElement) {
       throw new Exception(breadcrumbs, "Polygon points element is not defined");

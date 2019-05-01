@@ -50,7 +50,7 @@ export default class SceneManager implements SceneManagerInterface {
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      canvas: canvas,
+      canvas: canvas
       // context: canvas.getContext("webgl2"),
     });
     // renderer.shadowMap.enabled = true;

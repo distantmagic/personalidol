@@ -97,7 +97,7 @@ export default class TiledMapBlockObjectParser
       this.objectElement,
       "property",
       {
-        name: "source",
+        name: "source"
       }
     );
 

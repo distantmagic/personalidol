@@ -136,8 +136,7 @@ export default class GameboardTileset implements CanvasView {
 
     const intersects = this.threePointerInteraction
       .getCameraRaycaster()
-      .intersectObjects(this.plane.children)
-    ;
+      .intersectObjects(this.plane.children);
     const intersect = head(intersects);
 
     if (!intersect) {

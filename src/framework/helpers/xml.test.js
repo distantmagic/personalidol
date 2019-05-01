@@ -5,7 +5,7 @@ import { DOMParser } from "xmldom";
 import * as xml from "./xml";
 import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
 
-it("finds element with attribute names", function () {
+it("finds element with attribute names", function() {
   const domParser = new DOMParser();
   const doc = domParser.parseFromString(
     `
@@ -24,7 +24,7 @@ it("finds element with attribute names", function () {
     "property",
     {
       type: "foo",
-      value: "1",
+      value: "1"
     }
   );
 
@@ -36,7 +36,7 @@ it("finds element with attribute names", function () {
     "property",
     {
       type: "bar",
-      value: "1",
+      value: "1"
     }
   );
 
@@ -48,7 +48,7 @@ it("finds element with attribute names", function () {
     "property",
     {
       type: "bar",
-      value: "2",
+      value: "2"
     }
   );
 

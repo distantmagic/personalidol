@@ -12,7 +12,10 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()
   ) {
     this.breadcrumbs = breadcrumbs;
-    this.loggerBreadcrumbsLocalCache = new Map<string, LoggerBreadcrumbsInterface>();
+    this.loggerBreadcrumbsLocalCache = new Map<
+      string,
+      LoggerBreadcrumbsInterface
+    >();
     this.loggerBreadcrumbsMemo = loggerBreadcrumbsMemo;
   }
 

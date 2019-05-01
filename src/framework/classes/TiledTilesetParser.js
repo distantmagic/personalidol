@@ -90,11 +90,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     );
 
     const tiledTilePromises = [];
-    for (
-      let i = 0;
-      i < tiles.length;
-      i += 1
-    ) {
+    for (let i = 0; i < tiles.length; i += 1) {
       const tileElement = tiles.item(i);
 
       if (!tileElement) {

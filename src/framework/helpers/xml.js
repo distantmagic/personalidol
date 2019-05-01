@@ -69,19 +69,18 @@ export function getElementWithAttributes(
   element: HTMLElement,
   name: string,
   attributes: {
-    [string]: string,
+    [string]: string
   }
 ): ?HTMLElement {
   const foundElements = element.getElementsByTagName(name);
 
-  for (
-    let i = 0;
-    i < foundElements.length;
-    i += 1
-  ) {
+  for (let i = 0; i < foundElements.length; i += 1) {
     const foundElement = foundElements.item(i);
 
-    if (foundElement && hasAllAttributes(loggerBreadcrumbs, foundElement, attributes)) {
+    if (
+      foundElement &&
+      hasAllAttributes(loggerBreadcrumbs, foundElement, attributes)
+    ) {
       return foundElement;
     }
   }
@@ -124,7 +123,7 @@ export function hasAllAttributes(
   loggerBreadcrumbs: LoggerBreadcrumbs,
   element: HTMLElement,
   attributes: {
-    [string]: string,
+    [string]: string
   }
 ) {
   for (let attributeName of Object.keys(attributes)) {

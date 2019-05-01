@@ -13,7 +13,7 @@
  * https://github.com/flowtype/flow-typed
  */
 
-declare module '@tweenjs/tween.js' {
+declare module "@tweenjs/tween.js" {
   declare module.exports: any;
 }
 
@@ -22,46 +22,52 @@ declare module '@tweenjs/tween.js' {
  * require those files directly. Feel free to delete any files that aren't
  * needed.
  */
-declare module '@tweenjs/tween.js/benchmarks/additionWithoutStart' {
+declare module "@tweenjs/tween.js/benchmarks/additionWithoutStart" {
   declare module.exports: any;
 }
 
-declare module '@tweenjs/tween.js/benchmarks/additionWithStart' {
+declare module "@tweenjs/tween.js/benchmarks/additionWithStart" {
   declare module.exports: any;
 }
 
-declare module '@tweenjs/tween.js/benchmarks/additionWithUpdate' {
+declare module "@tweenjs/tween.js/benchmarks/additionWithUpdate" {
   declare module.exports: any;
 }
 
-declare module '@tweenjs/tween.js/benchmarks/updateMany' {
+declare module "@tweenjs/tween.js/benchmarks/updateMany" {
   declare module.exports: any;
 }
 
-declare module '@tweenjs/tween.js/src/Tween' {
+declare module "@tweenjs/tween.js/src/Tween" {
   declare module.exports: any;
 }
 
-declare module '@tweenjs/tween.js/src/TweenThree' {
+declare module "@tweenjs/tween.js/src/TweenThree" {
   declare module.exports: any;
 }
 
 // Filename aliases
-declare module '@tweenjs/tween.js/benchmarks/additionWithoutStart.js' {
-  declare module.exports: $Exports<'@tweenjs/tween.js/benchmarks/additionWithoutStart'>;
+declare module "@tweenjs/tween.js/benchmarks/additionWithoutStart.js" {
+  declare module.exports: $Exports<
+    "@tweenjs/tween.js/benchmarks/additionWithoutStart"
+  >;
 }
-declare module '@tweenjs/tween.js/benchmarks/additionWithStart.js' {
-  declare module.exports: $Exports<'@tweenjs/tween.js/benchmarks/additionWithStart'>;
+declare module "@tweenjs/tween.js/benchmarks/additionWithStart.js" {
+  declare module.exports: $Exports<
+    "@tweenjs/tween.js/benchmarks/additionWithStart"
+  >;
 }
-declare module '@tweenjs/tween.js/benchmarks/additionWithUpdate.js' {
-  declare module.exports: $Exports<'@tweenjs/tween.js/benchmarks/additionWithUpdate'>;
+declare module "@tweenjs/tween.js/benchmarks/additionWithUpdate.js" {
+  declare module.exports: $Exports<
+    "@tweenjs/tween.js/benchmarks/additionWithUpdate"
+  >;
 }
-declare module '@tweenjs/tween.js/benchmarks/updateMany.js' {
-  declare module.exports: $Exports<'@tweenjs/tween.js/benchmarks/updateMany'>;
+declare module "@tweenjs/tween.js/benchmarks/updateMany.js" {
+  declare module.exports: $Exports<"@tweenjs/tween.js/benchmarks/updateMany">;
 }
-declare module '@tweenjs/tween.js/src/Tween.js' {
-  declare module.exports: $Exports<'@tweenjs/tween.js/src/Tween'>;
+declare module "@tweenjs/tween.js/src/Tween.js" {
+  declare module.exports: $Exports<"@tweenjs/tween.js/src/Tween">;
 }
-declare module '@tweenjs/tween.js/src/TweenThree.js' {
-  declare module.exports: $Exports<'@tweenjs/tween.js/src/TweenThree'>;
+declare module "@tweenjs/tween.js/src/TweenThree.js" {
+  declare module.exports: $Exports<"@tweenjs/tween.js/src/TweenThree">;
 }
