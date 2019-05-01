@@ -42,7 +42,7 @@ export default class TiledMapPolygonObjectParser
     );
     const breadcrumbsObjectName = breadcrumbs.addVariable(objectName);
 
-    const polygonElement = this.objectElement.querySelector("polygon[points]");
+    const polygonElement = this.objectElement.getElementsByTagName("polygon").item(0);
 
     if (!polygonElement) {
       throw new Exception(breadcrumbs, "Polygon points element is not defined");
@@ -61,8 +61,14 @@ export default class TiledMapPolygonObjectParser
       this.tileSize
     );
 
-    const objectDepthElement = this.objectElement.querySelector(
-      "property[name=depth][type=int]"
+    const objectDepthElement = xml.getElementWithAttributes(
+      breadcrumbsObjectName,
+      this.objectElement,
+      "property",
+      {
+        name: "depth",
+        type: "int"
+      }
     );
 
     if (!objectDepthElement) {

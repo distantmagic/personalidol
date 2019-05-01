@@ -11,11 +11,11 @@ export default class TiledMapObjectElementChecker
   }
 
   isEllipse(): boolean {
-    return !!this.objectElement.querySelector("ellipse");
+    return this.objectElement.getElementsByTagName("ellipse").length > 0;
   }
 
   isPolygon(): boolean {
-    return !!this.objectElement.querySelector("polygon");
+    return this.objectElement.getElementsByTagName("polygon").length > 0;
   }
 
   isRectangle(): boolean {

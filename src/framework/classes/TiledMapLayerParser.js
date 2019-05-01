@@ -45,7 +45,7 @@ export default class TiledMapLayerParser
       "name"
     );
     const breadcrumbsLayerName = breadcrumbs.addVariable(layerName);
-    const dataElement = this.layerElement.querySelector("data");
+    const dataElement = this.layerElement.getElementsByTagName("data").item(0);
 
     if (!dataElement) {
       throw new TiledMapLayerException(

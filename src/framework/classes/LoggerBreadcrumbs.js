@@ -4,30 +4,39 @@ import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfa
 
 export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
   +breadcrumbs: Array<string>;
-  +loggerBreadCrumbsMemo: Map<string, LoggerBreadcrumbsInterface>;
+  +loggerBreadcrumbsLocalCache: Map<string, LoggerBreadcrumbsInterface>;
+  +loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface>;
 
   constructor(
     breadcrumbs: Array<string> = ["root"],
-    loggerBreadCrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()
+    loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()
   ) {
     this.breadcrumbs = breadcrumbs;
-    this.loggerBreadCrumbsMemo = loggerBreadCrumbsMemo;
+    this.loggerBreadcrumbsLocalCache = new Map<string, LoggerBreadcrumbsInterface>();
+    this.loggerBreadcrumbsMemo = loggerBreadcrumbsMemo;
   }
 
   add(breadcrumb: string): LoggerBreadcrumbsInterface {
+    const localCached = this.loggerBreadcrumbsLocalCache.get(breadcrumb);
+
+    if (localCached) {
+      return localCached;
+    }
+
     const added = new LoggerBreadcrumbs(
       this.breadcrumbs.concat(breadcrumb),
-      this.loggerBreadCrumbsMemo
+      this.loggerBreadcrumbsMemo
     );
 
     const asString = added.asString();
-    const memoized = this.loggerBreadCrumbsMemo.get(asString);
+    const memoized = this.loggerBreadcrumbsMemo.get(asString);
 
     if (memoized) {
       return memoized;
     }
 
-    this.loggerBreadCrumbsMemo.set(asString, added);
+    this.loggerBreadcrumbsLocalCache.set(breadcrumb, added);
+    this.loggerBreadcrumbsMemo.set(asString, added);
 
     return added;
   }

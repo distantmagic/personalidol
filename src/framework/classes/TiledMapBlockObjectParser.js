@@ -51,8 +51,14 @@ export default class TiledMapBlockObjectParser
     );
     const breadcrumbsObjectName = breadcrumbs.addVariable(objectName);
 
-    const objectDepthElement = this.objectElement.querySelector(
-      "property[name=depth][type=int]"
+    const objectDepthElement = xml.getElementWithAttributes(
+      breadcrumbsObjectName,
+      this.objectElement,
+      "property",
+      {
+        name: "depth",
+        type: "int"
+      }
     );
 
     if (!objectDepthElement) {
@@ -86,8 +92,13 @@ export default class TiledMapBlockObjectParser
       this.tileSize
     );
 
-    const objectSourceElement = this.objectElement.querySelector(
-      "property[name=source]"
+    const objectSourceElement = xml.getElementWithAttributes(
+      breadcrumbsObjectName,
+      this.objectElement,
+      "property",
+      {
+        name: "source",
+      }
     );
 
     return new TiledMapBlockObject(

@@ -1,5 +1,7 @@
 // @flow
 
+import { DOMParser } from "xmldom";
+
 import * as xml from "../helpers/xml";
 import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
@@ -65,7 +67,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     // tileset
 
-    const tilesetElement = documentElement.querySelector("tileset");
+    const tilesetElement = documentElement.getElementsByTagName("tileset").item(0);
 
     if (!tilesetElement) {
       throw new TiledMapException(
@@ -85,7 +87,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
       new TiledRelativeFilename(this.mapFilename, tilesetFilename).asString()
     );
 
-    const layerElements = documentElement.querySelectorAll("layer");
+    const layerElements = documentElement.getElementsByTagName("layer");
 
     if (layerElements.length < 1) {
       throw new TiledMapException(
@@ -112,7 +114,17 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     // layers
 
-    for (let layerElement of layerElements.values()) {
+    for (
+      let i = 0;
+      i < layerElements.length;
+      i += 1
+    ) {
+      const layerElement = layerElements.item(i);
+
+      if (!layerElement) {
+        continue;
+      }
+
       if (cancelToken.isCancelled()) {
         throw new Cancelled(
           breadcrumbs,
@@ -132,9 +144,19 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     // objects
 
-    const objectElements = documentElement.querySelectorAll("object");
+    const objectElements = documentElement.getElementsByTagName("object");
 
-    for (let objectElement of objectElements.values()) {
+    for (
+      let i = 0;
+      i < objectElements.length;
+      i += 1
+    ) {
+      const objectElement = objectElements.item(i);
+
+      if (!objectElement) {
+        continue;
+      }
+
       const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(
         objectElement
       );

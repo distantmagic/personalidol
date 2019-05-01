@@ -40,7 +40,7 @@ export default class TiledTileParser implements TiledTileParserInterface {
       );
     }
 
-    const imageElement = this.tileElement.querySelector("image");
+    const imageElement = this.tileElement.getElementsByTagName("image").item(0);
 
     if (!imageElement) {
       throw new TiledTileException(breadcrumbs, "Tile is missing image data");

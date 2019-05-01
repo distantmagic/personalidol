@@ -64,6 +64,29 @@ export function getAttribute(
   return attr;
 }
 
+export function getElementWithAttributes(
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  element: HTMLElement,
+  name: string,
+  attributes: {
+    [string]: string,
+  }
+): ?HTMLElement {
+  const foundElements = element.getElementsByTagName(name);
+
+  for (
+    let i = 0;
+    i < foundElements.length;
+    i += 1
+  ) {
+    const foundElement = foundElements.item(i);
+
+    if (foundElement && hasAllAttributes(loggerBreadcrumbs, foundElement, attributes)) {
+      return foundElement;
+    }
+  }
+}
+
 export function getNumberAttribute(
   loggerBreadcrumbs: LoggerBreadcrumbs,
   element: HTMLElement,
@@ -95,4 +118,21 @@ export function getStringAttribute(
   name: string
 ): string {
   return getAttribute(loggerBreadcrumbs, element, name).value;
+}
+
+export function hasAllAttributes(
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  element: HTMLElement,
+  attributes: {
+    [string]: string,
+  }
+) {
+  for (let attributeName of Object.keys(attributes)) {
+    const attribute = element.attributes.getNamedItem(attributeName);
+    if (!attribute || attribute.value !== attributes[attributeName]) {
+      return false;
+    }
+  }
+
+  return true;
 }

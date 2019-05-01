@@ -1,5 +1,7 @@
 // @flow
 
+import { DOMParser } from "xmldom";
+
 import * as xml from "../helpers/xml";
 import ElementSize from "./ElementSize";
 import TiledTileParser from "./TiledTileParser";
@@ -42,7 +44,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
       throw xml.extractParseError(breadcrumbs, doc);
     }
 
-    const grid: ?HTMLElement = doc.querySelector("grid");
+    const grid = doc.getElementsByTagName("grid").item(0);
 
     if (!grid) {
       throw new TiledTilesetException(
@@ -51,7 +53,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
       );
     }
 
-    const tiles: NodeList<HTMLElement> = doc.querySelectorAll("tile");
+    const tiles: HTMLCollection<HTMLElement> = doc.getElementsByTagName("tile");
 
     // console.log(grid.attributes.getNamedItem("orientation").value);
     // console.log(grid.attributes.getNamedItem("height").value);
@@ -88,7 +90,17 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     );
 
     const tiledTilePromises = [];
-    for (let tileElement of tiles.values()) {
+    for (
+      let i = 0;
+      i < tiles.length;
+      i += 1
+    ) {
+      const tileElement = tiles.item(i);
+
+      if (!tileElement) {
+        continue;
+      }
+
       const tileParser = new TiledTileParser(
         breadcrumbs.add("TiledTileParser"),
         this.tilesetPath,
