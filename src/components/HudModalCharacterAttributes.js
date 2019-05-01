@@ -54,17 +54,11 @@ export default function HudModalCharacterAttributes(props: Props) {
         <dd>20/0-100</dd>
         <dt>Obżarstwo</dt>
         <dd>20/0-100</dd>
-        <dt>
-          Rozpusta i nieczystość
-          {/*Cnotliwość i czystość cielesna*/}
-        </dt>
+        <dt>Rozpusta i nieczystość</dt>
         <dd>20/0-100</dd>
         <dt>Chciwość</dt>
         <dd>20/0-100</dd>
-        <dt>
-          Materializm
-          {/*Wolność od materializmu*/}
-        </dt>
+        <dt>Materializm</dt>
         <dd>20/0-100</dd>
         <dt>Brak poczucia rzeczywistości i hipokryzja</dt>
         <dd>20/0-100</dd>
@@ -74,15 +68,9 @@ export default function HudModalCharacterAttributes(props: Props) {
         <dd>20/0-100</dd>
         <dt>Pycha (zawyżone poczucie własnej wartości)</dt>
         <dd>20/0-100</dd>
-        <dt>
-          Podłość, matactwa i chaos
-          {/*Łagodność i ład wewnętrzny*/}
-        </dt>
+        <dt>Podłość, matactwa i chaos</dt>
         <dd>20/0-100</dd>
-        <dt>
-          Brak rozsądku (umiejętności odróżniania dobra od zła)
-          {/*Łagodność i ład wewnętrzny*/}
-        </dt>
+        <dt>Brak rozsądku (umiejętności odróżniania dobra od zła)</dt>
         <dd>20/0-100</dd>
       </dl>
     </div>

@@ -1,9 +1,11 @@
 // @flow
 
 import * as THREE from "three";
+import head from "lodash/head";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { CanvasView } from "../../framework/interfaces/CanvasView";
+import type { Player as PlayerModelInterface } from "../models/Player.type";
 import type { PointerState } from "../../framework/interfaces/PointerState";
 import type { TiledMap } from "../../framework/interfaces/TiledMap";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
@@ -12,6 +14,7 @@ import type { THREEPointerInteraction } from "../../framework/interfaces/THREEPo
 export default class GameboardTileset implements CanvasView {
   +camera: THREE.Camera;
   +plane: THREE.Group;
+  +playerModel: PlayerModelInterface;
   +pointerState: PointerState;
   +scene: THREE.Scene;
   +tiledMap: TiledMap;
@@ -20,6 +23,7 @@ export default class GameboardTileset implements CanvasView {
   +wireframe: THREE.LineSegments;
 
   constructor(
+    playerModel: PlayerModelInterface,
     scene: THREE.Scene,
     pointerState: PointerState,
     camera: THREE.Camera,
@@ -28,11 +32,12 @@ export default class GameboardTileset implements CanvasView {
     threePointerInteraction: THREEPointerInteraction
   ) {
     this.camera = camera;
-    this.scene = scene;
+    this.playerModel = playerModel;
     this.pointerState = pointerState;
-    this.tiledMap = tiledMap;
+    this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
     this.threePointerInteraction = threePointerInteraction;
+    this.tiledMap = tiledMap;
 
     this.plane = new THREE.Group();
 
@@ -113,6 +118,7 @@ export default class GameboardTileset implements CanvasView {
     renderer: THREE.WebGLRenderer
   ): Promise<void> {
     this.scene.remove(this.plane);
+    this.scene.remove(this.wireframe);
   }
 
   async start(): Promise<void> {}
@@ -123,25 +129,26 @@ export default class GameboardTileset implements CanvasView {
 
   update(delta: number): void {
     if (!this.pointerState.isPressed("Primary")) {
-      this.scene.remove(this.wireframe);
+      this.wireframe.visible = false;
 
       return;
     }
 
     const intersects = this.threePointerInteraction
       .getCameraRaycaster()
-      .intersectObjects(this.plane.children);
+      .intersectObjects(this.plane.children)
+    ;
+    const intersect = head(intersects);
 
-    if (intersects.length < 1) {
-      this.scene.remove(this.wireframe);
-    } else {
-      this.scene.add(this.wireframe);
+    if (!intersect) {
+      this.wireframe.visible = false;
+
+      return;
     }
 
-    for (let intersect of intersects) {
-      this.wireframe.position.x = intersect.object.position.x;
-      this.wireframe.position.z = intersect.object.position.z;
-      // intersect.object.material.color.set( 0x333333 );
-    }
+    this.wireframe.visible = true;
+
+    this.wireframe.position.x = intersect.object.position.x;
+    this.wireframe.position.z = intersect.object.position.z;
   }
 }

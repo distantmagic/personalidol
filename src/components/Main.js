@@ -84,7 +84,7 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
-      const maxAllowedFPS = 40;
+      const maxAllowedFPS = 8;
 
       mainLoop.setMaxAllowedFPS(maxAllowedFPS);
       mainLoop.attachScheduler(scheduler);

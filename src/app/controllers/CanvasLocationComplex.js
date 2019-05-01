@@ -147,6 +147,7 @@ export default class CanvasLocationComplex implements CanvasController {
       new GameboardView(
         this.exceptionHandler,
         breadcrumbs.add("GameboardView"),
+        this.playerModel,
         this.scene,
         this.pointerState,
         this.camera,
