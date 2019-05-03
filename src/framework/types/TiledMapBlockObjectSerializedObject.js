@@ -3,11 +3,10 @@
 import type { ElementPositionSerializedObject } from "./ElementPositionSerializedObject";
 import type { ElementRotationSerializedObject } from "./ElementRotationSerializedObject";
 import type { ElementSizeSerializedObject } from "./ElementSizeSerializedObject";
+import type { TiledMapPositionedObjectSerializedObject } from "./TiledMapPositionedObjectSerializedObject";
 
 export type TiledMapBlockObjectSerializedObject = {|
-  elementPosition: ElementPositionSerializedObject<"tile">,
-  elementRotation: ElementRotationSerializedObject<"radians">,
   elementSize: ElementSizeSerializedObject<"tile">,
-  name: string,
   source: ?string,
+  tiledMapPositionedObject: TiledMapPositionedObjectSerializedObject
 |};

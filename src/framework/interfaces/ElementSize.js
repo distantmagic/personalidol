@@ -6,10 +6,8 @@ import type { ElementSizeSerializedObject } from "../types/ElementSizeSerialized
 import type { JsonSerializable } from "./JsonSerializable";
 
 export interface ElementSize<Unit: ElementPositionUnit>
-  extends
-    Equatable<ElementSize<Unit>>,
-    JsonSerializable<ElementSizeSerializedObject<Unit>>
-{
+  extends Equatable<ElementSize<Unit>>,
+    JsonSerializable<ElementSizeSerializedObject<Unit>> {
   getAspect(): number;
 
   getDepth(): number;

@@ -1,13 +1,12 @@
 // @flow
 
-import type { ElementPosition } from "../interfaces/ElementPosition";
-import type { ElementRotation } from "../interfaces/ElementRotation";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMapBlockObject as TiledMapBlockObjectInterface } from "../interfaces/TiledMapBlockObject";
 import type { TiledMapBlockObjectSerializedObject } from "../types/TiledMapBlockObjectSerializedObject";
 import type { TiledMapPositionedObject } from "../interfaces/TiledMapPositionedObject";
 
-export default class TiledMapBlockObject implements TiledMapBlockObjectInterface {
+export default class TiledMapBlockObject
+  implements TiledMapBlockObjectInterface {
   +elementSize: ElementSize<"tile">;
   +source: ?string;
   +tiledMapPositionedObject: TiledMapPositionedObject;
@@ -28,28 +27,18 @@ export default class TiledMapBlockObject implements TiledMapBlockObjectInterface
 
   asObject(): TiledMapBlockObjectSerializedObject {
     return {
-      elementPosition: this.getElementPosition().asObject(),
-      elementRotation: this.getElementRotation().asObject(),
       elementSize: this.getElementSize().asObject(),
-      name: this.getName(),
       source: this.hasSource() ? this.getSource() : null,
+      tiledMapPositionedObject: this.getTiledMapPositionedObject().asObject()
     };
-  }
-
-  getElementPosition(): ElementPosition<"tile"> {
-    return this.tiledMapPositionedObject.getElementPosition();
-  }
-
-  getElementRotation(): ElementRotation<"radians"> {
-    return this.tiledMapPositionedObject.getElementRotation();
   }
 
   getElementSize(): ElementSize<"tile"> {
     return this.elementSize;
   }
 
-  getName(): string {
-    return this.tiledMapPositionedObject.getName();
+  getTiledMapPositionedObject(): TiledMapPositionedObject {
+    return this.tiledMapPositionedObject;
   }
 
   getSource(): string {

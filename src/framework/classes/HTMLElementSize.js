@@ -25,7 +25,7 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
     return {
       depth: this.getDepth(),
       height: this.getHeight(),
-      width: this.getWidth(),
+      width: this.getWidth()
     };
   }
 

@@ -6,10 +6,8 @@ import type { Equatable } from "./Equatable";
 import type { JsonSerializable } from "./JsonSerializable";
 
 export interface ElementRotation<Unit: ElementRotationUnit>
-  extends
-    Equatable<ElementRotation<Unit>>,
-    JsonSerializable<ElementRotationSerializedObject<Unit>>
-{
+  extends Equatable<ElementRotation<Unit>>,
+    JsonSerializable<ElementRotationSerializedObject<Unit>> {
   getRotationX(): number;
 
   getRotationY(): number;

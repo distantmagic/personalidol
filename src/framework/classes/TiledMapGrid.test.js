@@ -32,3 +32,15 @@ it("generates positioned tiles", async function() {
   expect(positionedTiles[3].getElementPosition().getX()).toBe(1);
   expect(positionedTiles[3].getElementPosition().getY()).toBe(1);
 });
+
+it("is serializable as JSON", function() {
+  const tiledMapGrid = new TiledMapGrid(
+    [[1, 2], [3, 4]],
+    new ElementSize<"tile">(2, 2)
+  );
+  const serialized = tiledMapGrid.asJson();
+
+  expect(function() {
+    JSON.parse(serialized);
+  }).not.toThrow();
+});

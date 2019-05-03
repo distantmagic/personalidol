@@ -9,18 +9,18 @@ it("is comparable with other element sizes", function() {
   expect(elementSize1.isEqual(elementSize2)).toBe(true);
 });
 
-it("is serializable as JSON", function () {
+it("is serializable as JSON", function() {
   const elementSize = new ElementSize(10, 20);
   const serialized = elementSize.asJson();
   let result;
 
-  expect(function () {
+  expect(function() {
     result = JSON.parse(serialized);
   }).not.toThrow();
 
   expect(result).toEqual({
     depth: 0,
     height: 20,
-    width: 10,
+    width: 10
   });
 });

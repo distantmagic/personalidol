@@ -1,8 +1,5 @@
 // @flow
 
-import type { ElementPosition } from "../interfaces/ElementPosition";
-import type { ElementRotation } from "../interfaces/ElementRotation";
-import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMapBlockObject } from "../interfaces/TiledMapBlockObject";
 import type { TiledMapRectangleObject as TiledMapRectangleObjectInterface } from "../interfaces/TiledMapRectangleObject";
 import type { TiledMapRectangleObjectSerializedObject } from "../types/TiledMapRectangleObjectSerializedObject";
@@ -31,7 +28,7 @@ export default class TiledMapRectangleObject
       isEllipse: false,
       isPolygon: false,
       isRectangle: true,
-      tiledMapBlockObject: this.tiledMapBlockObject.asObject(),
+      tiledMapBlockObject: this.tiledMapBlockObject.asObject()
     };
   }
 

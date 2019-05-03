@@ -1,20 +1,63 @@
 // @flow
 
-import tiledMapParser from "../fixtures/tiledMapParser";
+import * as fixtures from "../../fixtures";
 import Cancelled from "./Exception/Cancelled";
+import CancelToken from "./CancelToken";
+import FixturesFileQueryBuilder from "./FixturesFileQueryBuilder";
+import ForcedTick from "./ForcedTick";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import QueryBus from "./QueryBus";
+import TiledMapParser from "./TiledMapParser";
+import TiledMapUnserializer from "./TiledMapUnserializer";
+import TiledTilesetLoader from "./TiledTilesetLoader";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { TiledMap } from "../interfaces/TiledMap";
-import type { QueryBus } from "../interfaces/QueryBus";
+import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
+import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
+import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
+
+async function prepare(): Promise<
+  [CancelTokenInterface, QueryBusInterface, Promise<TiledMapInterface>]
+> {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
+  const queryBuilder = new FixturesFileQueryBuilder();
+  const queryBus = new QueryBus(loggerBreadcrumbs);
+  const mapFilename = "map-fixture-01.tmx";
+
+  const mockedEnqueuedCallback = jest.fn(function() {
+    queryBus.tick(new ForcedTick(false));
+
+    // should be done in one tick
+    queryBus.offEnqueued(mockedEnqueuedCallback);
+  });
+
+  queryBus.onEnqueued(mockedEnqueuedCallback);
+
+  const tiledTilesetLoader = new TiledTilesetLoader(
+    loggerBreadcrumbs,
+    queryBus,
+    queryBuilder
+  );
+  const parser = new TiledMapParser(
+    loggerBreadcrumbs,
+    fixtures.findPath(mapFilename),
+    await fixtures.file(mapFilename),
+    tiledTilesetLoader
+  );
+
+  const tiledMapPromise = parser.parse(cancelToken);
+
+  return [cancelToken, queryBus, tiledMapPromise];
+}
 
 it("parses map file", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParser();
+  const [cancelToken, queryBus, tiledMapPromise] = await prepare();
 
   return expect(tiledMapPromise).resolves.toBeDefined();
 });
 
 it("can be cancelled gracefully", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParser();
+  const [cancelToken, queryBus, tiledMapPromise] = await prepare();
 
   cancelToken.cancel();
 
@@ -23,10 +66,10 @@ it("can be cancelled gracefully", async function() {
 
 it("generates skinned layers and tiles", async function() {
   const [cancelToken, queryBus, tiledMapPromise]: [
-    CancelToken,
-    QueryBus,
-    Promise<TiledMap>,
-  ] = await tiledMapParser();
+    CancelTokenInterface,
+    QueryBusInterface,
+    Promise<TiledMapInterface>
+  ] = await prepare();
   const tiledMap = await tiledMapPromise;
   const skinnedTiles = [];
 
@@ -54,19 +97,18 @@ it("generates skinned layers and tiles", async function() {
   expect(tiledMapEllipseObjects[0]).toBeDefined();
 
   const tiledMapEllipseBlockObject = tiledMapEllipseObjects[0].getTiledMapBlockObject();
+  const tiledMapEllipsePosition = tiledMapEllipseBlockObject.getTiledMapPositionedObject();
 
-  expect(tiledMapEllipseBlockObject.getElementPosition().getX()).toBe(4);
-  expect(tiledMapEllipseBlockObject.getElementPosition().getY()).toBe(1);
-  expect(tiledMapEllipseBlockObject.getElementPosition().getZ()).toBe(0);
-  expect(tiledMapEllipseBlockObject.getElementRotation().getRotationX()).toBe(0);
-  expect(tiledMapEllipseBlockObject.getElementRotation().getRotationY()).toBe(0);
-  expect(tiledMapEllipseBlockObject.getElementRotation().getRotationZ()).toBe(
-    -0
-  );
+  expect(tiledMapEllipsePosition.getElementPosition().getX()).toBe(4);
+  expect(tiledMapEllipsePosition.getElementPosition().getY()).toBe(1);
+  expect(tiledMapEllipsePosition.getElementPosition().getZ()).toBe(0);
+  expect(tiledMapEllipsePosition.getElementRotation().getRotationX()).toBe(0);
+  expect(tiledMapEllipsePosition.getElementRotation().getRotationY()).toBe(0);
+  expect(tiledMapEllipsePosition.getElementRotation().getRotationZ()).toBe(-0);
+  expect(tiledMapEllipsePosition.getName()).toBe("Well");
   expect(tiledMapEllipseBlockObject.getElementSize().getDepth()).toBe(0.5);
   expect(tiledMapEllipseBlockObject.getElementSize().getHeight()).toBe(2);
   expect(tiledMapEllipseBlockObject.getElementSize().getWidth()).toBe(2);
-  expect(tiledMapEllipseBlockObject.getName()).toBe("Well");
 
   // polygons
 
@@ -75,16 +117,16 @@ it("generates skinned layers and tiles", async function() {
   expect(tiledMapPolygonObjects).toHaveLength(1);
   expect(tiledMapPolygonObjects[0]).toBeDefined();
 
-  expect(tiledMapPolygonObjects[0].getElementPosition().getX()).toBe(6);
-  expect(tiledMapPolygonObjects[0].getElementPosition().getY()).toBe(2);
-  expect(tiledMapPolygonObjects[0].getElementPosition().getZ()).toBe(0);
-  expect(tiledMapPolygonObjects[0].getElementRotation().getRotationX()).toBe(0);
-  expect(tiledMapPolygonObjects[0].getElementRotation().getRotationY()).toBe(0);
-  expect(tiledMapPolygonObjects[0].getElementRotation().getRotationZ()).toBe(
-    -0
-  );
+  const tiledMapPolygonPosition = tiledMapPolygonObjects[0].getTiledMapPositionedObject();
+
+  expect(tiledMapPolygonPosition.getElementPosition().getX()).toBe(6);
+  expect(tiledMapPolygonPosition.getElementPosition().getY()).toBe(2);
+  expect(tiledMapPolygonPosition.getElementPosition().getZ()).toBe(0);
+  expect(tiledMapPolygonPosition.getElementRotation().getRotationX()).toBe(0);
+  expect(tiledMapPolygonPosition.getElementRotation().getRotationY()).toBe(0);
+  expect(tiledMapPolygonPosition.getElementRotation().getRotationZ()).toBe(-0);
   expect(tiledMapPolygonObjects[0].getDepth()).toBe(3);
-  expect(tiledMapPolygonObjects[0].getName()).toBe("Crater");
+  expect(tiledMapPolygonPosition.getName()).toBe("Crater");
 
   // rectangles
 
@@ -95,42 +137,64 @@ it("generates skinned layers and tiles", async function() {
   expect(tiledMapRectangleObjects[0]).toBeDefined();
 
   const tiledMapRectangleBlockObject1 = tiledMapRectangleObjects[0].getTiledMapBlockObject();
+  const tiledMapRectanglePosition1 = tiledMapRectangleBlockObject1.getTiledMapPositionedObject();
 
-  expect(tiledMapRectangleBlockObject1.getElementPosition().getX()).toBe(0);
-  expect(tiledMapRectangleBlockObject1.getElementPosition().getY()).toBe(0);
-  expect(tiledMapRectangleBlockObject1.getElementPosition().getZ()).toBe(0);
-  expect(tiledMapRectangleBlockObject1.getElementRotation().getRotationX()).toBe(
+  expect(tiledMapRectanglePosition1.getElementPosition().getX()).toBe(0);
+  expect(tiledMapRectanglePosition1.getElementPosition().getY()).toBe(0);
+  expect(tiledMapRectanglePosition1.getElementPosition().getZ()).toBe(0);
+  expect(tiledMapRectanglePosition1.getElementRotation().getRotationX()).toBe(
     0
   );
-  expect(tiledMapRectangleBlockObject1.getElementRotation().getRotationY()).toBe(
+  expect(tiledMapRectanglePosition1.getElementRotation().getRotationY()).toBe(
     0
   );
   expect(
-    Math.round(tiledMapRectangleBlockObject1.getElementRotation().getRotationZ())
+    Math.round(tiledMapRectanglePosition1.getElementRotation().getRotationZ())
   ).toBe(-1);
   expect(tiledMapRectangleBlockObject1.getElementSize().getDepth()).toBe(3);
   expect(tiledMapRectangleBlockObject1.getElementSize().getHeight()).toBe(1);
   expect(tiledMapRectangleBlockObject1.getElementSize().getWidth()).toBe(1);
-  expect(tiledMapRectangleBlockObject1.getName()).toBe("Cottage");
+  expect(tiledMapRectanglePosition1.getName()).toBe("Cottage");
 
   expect(tiledMapRectangleObjects[1]).toBeDefined();
 
   const tiledMapRectangleBlockObject2 = tiledMapRectangleObjects[1].getTiledMapBlockObject();
+  const tiledMapRectanglePosition2 = tiledMapRectangleBlockObject2.getTiledMapPositionedObject();
 
-  expect(tiledMapRectangleBlockObject2.getElementPosition().getX()).toBe(3);
-  expect(tiledMapRectangleBlockObject2.getElementPosition().getY()).toBe(5);
-  expect(tiledMapRectangleBlockObject2.getElementPosition().getZ()).toBe(0);
-  expect(tiledMapRectangleBlockObject2.getElementRotation().getRotationX()).toBe(
+  expect(tiledMapRectanglePosition2.getElementPosition().getX()).toBe(3);
+  expect(tiledMapRectanglePosition2.getElementPosition().getY()).toBe(5);
+  expect(tiledMapRectanglePosition2.getElementPosition().getZ()).toBe(0);
+  expect(tiledMapRectanglePosition2.getElementRotation().getRotationX()).toBe(
     0
   );
-  expect(tiledMapRectangleBlockObject2.getElementRotation().getRotationY()).toBe(
+  expect(tiledMapRectanglePosition2.getElementRotation().getRotationY()).toBe(
     0
   );
-  expect(tiledMapRectangleBlockObject2.getElementRotation().getRotationZ()).toBe(
+  expect(tiledMapRectanglePosition2.getElementRotation().getRotationZ()).toBe(
     -0
   );
   expect(tiledMapRectangleBlockObject2.getElementSize().getDepth()).toBe(4);
   expect(tiledMapRectangleBlockObject2.getElementSize().getHeight()).toBe(2);
   expect(tiledMapRectangleBlockObject2.getElementSize().getWidth()).toBe(3);
-  expect(tiledMapRectangleBlockObject2.getName()).toBe("Barn");
+  expect(tiledMapRectanglePosition2.getName()).toBe("Barn");
+});
+
+it("is serializable", async function() {
+  const [cancelToken, queryBus, tiledMapPromise] = await prepare();
+  const tiledMap = await tiledMapPromise;
+
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const serialized = tiledMap.asJson();
+
+  expect(function() {
+    JSON.parse(serialized);
+  }).not.toThrow();
+
+  const tiledMapUnserializer = new TiledMapUnserializer(
+    loggerBreadcrumbs,
+    serialized
+  );
+  const unserialized = tiledMapUnserializer.fromJson();
+
+  expect(tiledMap.isEqual(unserialized)).toBe(true);
 });

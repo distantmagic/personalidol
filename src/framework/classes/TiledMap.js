@@ -11,6 +11,7 @@ import type { TiledMapEllipseObject } from "../interfaces/TiledMapEllipseObject"
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
 import type { TiledMapPolygonObject } from "../interfaces/TiledMapPolygonObject";
 import type { TiledMapRectangleObject } from "../interfaces/TiledMapRectangleObject";
+import type { TiledMapSerializedObject } from "../types/TiledMapSerializedObject";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
 import type { TiledTileset } from "../interfaces/TiledTileset";
 
@@ -54,6 +55,26 @@ export default class TiledMap implements TiledMapInterface {
 
   addRectangleObject(tiledMapRectangleObject: TiledMapRectangleObject): void {
     this.tiledMapRectangleObjects.push(tiledMapRectangleObject);
+  }
+
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): TiledMapSerializedObject {
+    return {
+      ellipseObjects: this.getEllipseObjects().map(ellipseObject =>
+        ellipseObject.asObject()
+      ),
+      layers: this.getLayers().map(layer => layer.asObject()),
+      mapSize: this.getMapSize().asObject(),
+      polygonObjects: this.getPolygonObjects().map(polygonObject =>
+        polygonObject.asObject()
+      ),
+      rectangleObjects: this.getRectangleObjects().map(rectangleObject =>
+        rectangleObject.asObject()
+      )
+    };
   }
 
   async *generateSkinnedLayers(

@@ -17,7 +17,7 @@ export default class ElementPosition<Unit: ElementPositionUnit>
     return {
       x: this.getX(),
       y: this.getY(),
-      z: this.getZ(),
+      z: this.getZ()
     };
   }
 

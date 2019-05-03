@@ -24,7 +24,7 @@ export default class ElementSize<Unit: ElementPositionUnit>
     return {
       depth: this.getDepth(),
       height: this.getHeight(),
-      width: this.getWidth(),
+      width: this.getWidth()
     };
   }
 

@@ -3,14 +3,18 @@
 import type { CancelToken } from "./CancelToken";
 import type { ElementSize } from "./ElementSize";
 import type { Equatable } from "./Equatable";
+import type { JsonSerializable } from "./JsonSerializable";
 import type { TiledMapEllipseObject } from "./TiledMapEllipseObject";
 import type { TiledMapPolygonObject } from "./TiledMapPolygonObject";
 import type { TiledMapRectangleObject } from "./TiledMapRectangleObject";
 import type { TiledMapLayer } from "./TiledMapLayer";
+import type { TiledMapSerializedObject } from "../types/TiledMapSerializedObject";
 import type { TiledMapSkinnedLayer } from "./TiledMapSkinnedLayer";
 import type { TiledTileset } from "./TiledTileset";
 
-export interface TiledMap extends Equatable<TiledMap> {
+export interface TiledMap
+  extends Equatable<TiledMap>,
+    JsonSerializable<TiledMapSerializedObject> {
   addLayer(TiledMapLayer): void;
 
   addEllipseObject(TiledMapEllipseObject): void;

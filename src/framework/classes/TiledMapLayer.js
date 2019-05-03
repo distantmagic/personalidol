@@ -3,20 +3,33 @@
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMapGrid } from "../interfaces/TiledMapGrid";
 import type { TiledMapLayer as TiledMapLayerInterface } from "../interfaces/TiledMapLayer";
+import type { TiledMapLayerSerializedObject } from "../types/TiledMapLayerSerializedObject";
 
 export default class TiledMapLayer implements TiledMapLayerInterface {
-  +elementSize: ElementSize<"tile">;
+  +layerSize: ElementSize<"tile">;
   +name: string;
   +tiledMapGrid: TiledMapGrid;
 
   constructor(
     name: string,
     tiledMapGrid: TiledMapGrid,
-    elementSize: ElementSize<"tile">
+    layerSize: ElementSize<"tile">
   ): void {
-    this.elementSize = elementSize;
+    this.layerSize = layerSize;
     this.name = name;
     this.tiledMapGrid = tiledMapGrid;
+  }
+
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): TiledMapLayerSerializedObject {
+    return {
+      layerSize: this.layerSize.asObject(),
+      name: this.name,
+      tiledMapGrid: this.tiledMapGrid.asObject()
+    };
   }
 
   getName(): string {

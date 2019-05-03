@@ -22,10 +22,7 @@ it("is equatable", function() {
     "/assets/map.tmx",
     "/assets/tileset.tsx"
   );
-  const filename2 = new TiledRelativeFilename(
-    "/assets/map.tmx",
-    "tileset.tsx"
-  );
+  const filename2 = new TiledRelativeFilename("/assets/map.tmx", "tileset.tsx");
 
   return expect(filename1.isEqual(filename2)).toBe(true);
 });

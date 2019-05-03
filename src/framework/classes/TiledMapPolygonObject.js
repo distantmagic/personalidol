@@ -1,8 +1,8 @@
 // @flow
 
 import type { ElementPosition } from "../interfaces/ElementPosition";
-import type { ElementRotation } from "../interfaces/ElementRotation";
 import type { TiledMapPolygonObject as TiledMapPolygonObjectInterface } from "../interfaces/TiledMapPolygonObject";
+import type { TiledMapPolygonObjectSerializedObject } from "../types/TiledMapPolygonObjectSerializedObject";
 import type { TiledMapPositionedObject } from "../interfaces/TiledMapPositionedObject";
 
 export default class TiledMapPolygonObject
@@ -28,23 +28,29 @@ export default class TiledMapPolygonObject
     this.tiledMapPositionedObject = tiledMapPositionedObject;
   }
 
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): TiledMapPolygonObjectSerializedObject {
+    return {
+      depth: this.depth,
+      polygonPoints: this.polygonPoints.map(polygonPoint =>
+        polygonPoint.asObject()
+      ),
+      tiledMapPositionedObject: this.getTiledMapPositionedObject().asObject()
+    };
+  }
+
   getDepth(): number {
     return this.depth;
   }
 
-  getElementPosition(): ElementPosition<"tile"> {
-    return this.tiledMapPositionedObject.getElementPosition();
-  }
-
-  getElementRotation(): ElementRotation<"radians"> {
-    return this.tiledMapPositionedObject.getElementRotation();
-  }
-
-  getName(): string {
-    return this.tiledMapPositionedObject.getName();
-  }
-
   getPolygonPoints(): Array<ElementPosition<"tile">> {
     return this.polygonPoints;
+  }
+
+  getTiledMapPositionedObject(): TiledMapPositionedObject {
+    return this.tiledMapPositionedObject;
   }
 }

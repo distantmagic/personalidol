@@ -6,12 +6,13 @@ import type { JsonSerializable } from "./JsonSerializable";
 import type { TiledMapBlockObjectSerializedObject } from "../types/TiledMapBlockObjectSerializedObject";
 import type { TiledMapPositionedObject } from "./TiledMapPositionedObject";
 
-export interface TiledMapBlockObject extends JsonSerializable<TiledMapBlockObjectSerializedObject>, TiledMapPositionedObject {
-  getElementRotation(): ElementRotation<"radians">;
-
+export interface TiledMapBlockObject
+  extends JsonSerializable<TiledMapBlockObjectSerializedObject> {
   getElementSize(): ElementSize<"tile">;
 
   getSource(): string;
+
+  getTiledMapPositionedObject(): TiledMapPositionedObject;
 
   hasSource(): boolean;
 }

@@ -5,17 +5,28 @@ import TiledPositionedTile from "./TiledPositionedTile";
 
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMapGrid as TiledMapGridInterface } from "../interfaces/TiledMapGrid";
+import type { TiledMapGridArray } from "../types/TiledMapGridArray";
+import type { TiledMapGridSerializedObject } from "../types/TiledMapGridSerializedObject";
 import type { TiledPositionedTile as TiledPositionedTileInterface } from "../interfaces/TiledPositionedTile";
 
-type TiledMapArray = Array<Array<number>>;
-
 export default class TiledMapGrid implements TiledMapGridInterface {
-  +grid: TiledMapArray;
+  +grid: TiledMapGridArray;
   +gridSize: ElementSize<"tile">;
 
-  constructor(grid: TiledMapArray, gridSize: ElementSize<"tile">): void {
+  constructor(grid: TiledMapGridArray, gridSize: ElementSize<"tile">): void {
     this.grid = grid;
     this.gridSize = gridSize;
+  }
+
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): TiledMapGridSerializedObject {
+    return {
+      grid: this.grid,
+      gridSize: this.gridSize.asObject()
+    };
   }
 
   async *generatePositionedTiles(): AsyncGenerator<

@@ -3,6 +3,7 @@
 import type { ElementPosition } from "../interfaces/ElementPosition";
 import type { ElementRotation } from "../interfaces/ElementRotation";
 import type { TiledMapPositionedObject as TiledMapPositionedObjectInterface } from "../interfaces/TiledMapPositionedObject";
+import type { TiledMapPositionedObjectSerializedObject } from "../types/TiledMapPositionedObjectSerializedObject";
 
 export default class TiledMapPositionedObject
   implements TiledMapPositionedObjectInterface {
@@ -18,6 +19,18 @@ export default class TiledMapPositionedObject
     this.elementPosition = elementPosition;
     this.elementRotation = elementRotation;
     this.name = name;
+  }
+
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): TiledMapPositionedObjectSerializedObject {
+    return {
+      elementPosition: this.elementPosition.asObject(),
+      elementRotation: this.elementRotation.asObject(),
+      name: this.name
+    };
   }
 
   getElementPosition(): ElementPosition<"tile"> {

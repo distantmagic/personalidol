@@ -8,14 +8,12 @@ import type { JsonUnserializable } from "../interfaces/JsonUnserializable";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 
-export default class TiledMapSerializer implements JsonUnserializable<TiledMapInterface> {
+export default class TiledMapSerializer
+  implements JsonUnserializable<TiledMapInterface> {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +serialized: string;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    serialized: string
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, serialized: string) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.serialized = serialized;
   }
@@ -25,11 +23,7 @@ export default class TiledMapSerializer implements JsonUnserializable<TiledMapIn
       this.loggerBreadcrumbs,
       new ElementSize<"tile">(10, 10),
       new ElementSize<"px">(10, 10),
-      new TiledTileset(
-        this.loggerBreadcrumbs,
-        1,
-        new ElementSize<"px">(10, 10),
-      )
+      new TiledTileset(this.loggerBreadcrumbs, 1, new ElementSize<"px">(10, 10))
     );
   }
 }

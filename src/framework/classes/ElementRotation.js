@@ -24,7 +24,7 @@ export default class ElementRotation<Unit: ElementRotationUnit>
     return {
       x: this.getRotationX(),
       y: this.getRotationY(),
-      z: this.getRotationZ(),
+      z: this.getRotationZ()
     };
   }
 

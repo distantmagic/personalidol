@@ -6,5 +6,5 @@ export type TiledMapRectangleObjectSerializedObject = {|
   isEllipse: false,
   isPolygon: false,
   isRectangle: true,
-  tiledMapBlockObject: TiledMapBlockObjectSerializedObject,
+  tiledMapBlockObject: TiledMapBlockObjectSerializedObject
 |};

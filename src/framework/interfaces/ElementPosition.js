@@ -8,11 +8,9 @@ import type { Equatable } from "./Equatable";
 import type { JsonSerializable } from "./JsonSerializable";
 
 export interface ElementPosition<Unit: ElementPositionUnit>
-  extends
-    Equatable<ElementPosition<Unit>>,
+  extends Equatable<ElementPosition<Unit>>,
     JsonSerializable<ElementPositionSerializedObject<Unit>>,
-    Vector3
-{
+    Vector3 {
   getX(): number;
 
   getY(): number;
