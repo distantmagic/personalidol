@@ -17,4 +17,8 @@ export default class TiledRelativeFilename
   asString() {
     return path.resolve(path.dirname(this.base), this.relative);
   }
+
+  isEqual(other: TiledRelativeFilenameInterface): boolean {
+    return this.asString() === other.asString();
+  }
 }

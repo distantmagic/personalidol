@@ -1,6 +1,7 @@
 // @flow
 
 import type { ElementRotation as ElementRotationInterface } from "../interfaces/ElementRotation";
+import type { ElementRotationSerializedObject } from "../types/ElementRotationSerializedObject";
 import type { ElementRotationUnit } from "../types/ElementRotationUnit";
 
 export default class ElementRotation<Unit: ElementRotationUnit>
@@ -13,6 +14,18 @@ export default class ElementRotation<Unit: ElementRotationUnit>
     this.x = x;
     this.y = y;
     this.z = z;
+  }
+
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): ElementRotationSerializedObject<Unit> {
+    return {
+      x: this.getRotationX(),
+      y: this.getRotationY(),
+      z: this.getRotationZ(),
+    };
   }
 
   getRotationX(): number {

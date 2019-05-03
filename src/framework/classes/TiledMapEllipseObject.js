@@ -5,9 +5,9 @@ import type { ElementRotation } from "../interfaces/ElementRotation";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMapBlockObject } from "../interfaces/TiledMapBlockObject";
 import type { TiledMapEllipseObject as TiledMapEllipseObjectInterface } from "../interfaces/TiledMapEllipseObject";
+import type { TiledMapEllipseObjectSerializedObject } from "../types/TiledMapEllipseObjectSerializedObject";
 
-export default class TiledMapEllipseObject
-  implements TiledMapEllipseObjectInterface {
+export default class TiledMapEllipseObject implements TiledMapEllipseObjectInterface {
   +isEllipse: true;
   +isPolygon: false;
   +isRectangle: false;
@@ -29,27 +29,20 @@ export default class TiledMapEllipseObject
     this.tiledMapBlockObject = tiledMapBlockObject;
   }
 
-  getElementPosition(): ElementPosition<"tile"> {
-    return this.tiledMapBlockObject.getElementPosition();
+  asJson(): string {
+    return JSON.stringify(this.asObject());
   }
 
-  getElementRotation(): ElementRotation<"radians"> {
-    return this.tiledMapBlockObject.getElementRotation();
+  asObject(): TiledMapEllipseObjectSerializedObject {
+    return {
+      isEllipse: true,
+      isPolygon: false,
+      isRectangle: false,
+      tiledMapBlockObject: this.tiledMapBlockObject.asObject(),
+    };
   }
 
-  getElementSize(): ElementSize<"tile"> {
-    return this.tiledMapBlockObject.getElementSize();
-  }
-
-  getName(): string {
-    return this.tiledMapBlockObject.getName();
-  }
-
-  getSource(): string {
-    return this.tiledMapBlockObject.getSource();
-  }
-
-  hasSource(): boolean {
-    return this.tiledMapBlockObject.hasSource();
+  getTiledMapBlockObject(): TiledMapBlockObject {
+    return this.tiledMapBlockObject;
   }
 }

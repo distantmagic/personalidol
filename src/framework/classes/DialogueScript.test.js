@@ -9,7 +9,7 @@ import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 const testContext = {};
 
 beforeEach(async function() {
-  testContext.dialogueScript = await fixtures.dialogue("dialogue-basic.yml");
+  testContext.dialogueScript = await fixtures.yamlFile("dialogue-basic.yml");
 });
 
 it("loads dialogue messages", async function() {

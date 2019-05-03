@@ -5,6 +5,7 @@ import type { ElementRotation } from "../interfaces/ElementRotation";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMapBlockObject } from "../interfaces/TiledMapBlockObject";
 import type { TiledMapRectangleObject as TiledMapRectangleObjectInterface } from "../interfaces/TiledMapRectangleObject";
+import type { TiledMapRectangleObjectSerializedObject } from "../types/TiledMapRectangleObjectSerializedObject";
 
 export default class TiledMapRectangleObject
   implements TiledMapRectangleObjectInterface {
@@ -21,27 +22,20 @@ export default class TiledMapRectangleObject
     this.tiledMapBlockObject = tiledMapBlockObject;
   }
 
-  getElementPosition(): ElementPosition<"tile"> {
-    return this.tiledMapBlockObject.getElementPosition();
+  asJson(): string {
+    return JSON.stringify(this.asObject());
   }
 
-  getElementRotation(): ElementRotation<"radians"> {
-    return this.tiledMapBlockObject.getElementRotation();
+  asObject(): TiledMapRectangleObjectSerializedObject {
+    return {
+      isEllipse: false,
+      isPolygon: false,
+      isRectangle: true,
+      tiledMapBlockObject: this.tiledMapBlockObject.asObject(),
+    };
   }
 
-  getElementSize(): ElementSize<"tile"> {
-    return this.tiledMapBlockObject.getElementSize();
-  }
-
-  getName(): string {
-    return this.tiledMapBlockObject.getName();
-  }
-
-  getSource(): string {
-    return this.tiledMapBlockObject.getSource();
-  }
-
-  hasSource(): boolean {
-    return this.tiledMapBlockObject.hasSource();
+  getTiledMapBlockObject(): TiledMapBlockObject {
+    return this.tiledMapBlockObject;
   }
 }

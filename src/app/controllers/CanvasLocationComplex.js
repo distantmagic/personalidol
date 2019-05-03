@@ -13,7 +13,7 @@ import THREEPointerInteraction from "../../framework/classes/THREEPointerInterac
 import TiledMapLoader from "../../framework/classes/TiledMapLoader";
 import TiledTilesetLoader from "../../framework/classes/TiledTilesetLoader";
 import URLTextContentQueryBuilder from "../../framework/classes/URLTextContentQueryBuilder";
-import { default as GameboardView } from "../views/Gameboard";
+// import { default as GameboardView } from "../views/Gameboard";
 import { default as PlayerModel } from "../models/Player";
 import { default as PlayerView } from "../views/Player";
 // import { default as THREEHelpersView } from "../views/THREEHelpers";
@@ -145,19 +145,19 @@ export default class CanvasLocationComplex implements CanvasController {
       "/assets/map-outlands-01.tmx"
     );
 
-    this.canvasViewGroup.add(
-      new GameboardView(
-        this.exceptionHandler,
-        breadcrumbs.add("GameboardView"),
-        this.playerModel,
-        this.scene,
-        this.pointerState,
-        this.camera,
-        this.threeLoadingManager,
-        threePointerInteraction,
-        tiledMap
-      )
-    );
+    // this.canvasViewGroup.add(
+    //   new GameboardView(
+    //     this.exceptionHandler,
+    //     breadcrumbs.add("GameboardView"),
+    //     this.playerModel,
+    //     this.scene,
+    //     this.pointerState,
+    //     this.camera,
+    //     this.threeLoadingManager,
+    //     threePointerInteraction,
+    //     tiledMap
+    //   )
+    // );
 
     // this.camera.lookAt(this.playerModel.position);
     this.updateCameraPosition();

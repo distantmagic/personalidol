@@ -4,10 +4,10 @@ import type { ElementPosition } from "../interfaces/ElementPosition";
 import type { ElementRotation } from "../interfaces/ElementRotation";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledMapBlockObject as TiledMapBlockObjectInterface } from "../interfaces/TiledMapBlockObject";
+import type { TiledMapBlockObjectSerializedObject } from "../types/TiledMapBlockObjectSerializedObject";
 import type { TiledMapPositionedObject } from "../interfaces/TiledMapPositionedObject";
 
-export default class TiledMapBlockObject
-  implements TiledMapBlockObjectInterface {
+export default class TiledMapBlockObject implements TiledMapBlockObjectInterface {
   +elementSize: ElementSize<"tile">;
   +source: ?string;
   +tiledMapPositionedObject: TiledMapPositionedObject;
@@ -20,6 +20,20 @@ export default class TiledMapBlockObject
     this.elementSize = elementSize;
     this.tiledMapPositionedObject = tiledMapPositionedObject;
     this.source = source;
+  }
+
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): TiledMapBlockObjectSerializedObject {
+    return {
+      elementPosition: this.getElementPosition().asObject(),
+      elementRotation: this.getElementRotation().asObject(),
+      elementSize: this.getElementSize().asObject(),
+      name: this.getName(),
+      source: this.hasSource() ? this.getSource() : null,
+    };
   }
 
   getElementPosition(): ElementPosition<"tile"> {

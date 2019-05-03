@@ -20,4 +20,8 @@ export default class TiledPositionedTile
   getId(): number {
     return this.id;
   }
+
+  isEqual(other: TiledPositionedTileInterface): boolean {
+    return this.getId() === other.getId() && this.getElementPosition().isEqual(other.getElementPosition());
+  }
 }

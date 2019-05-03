@@ -105,4 +105,8 @@ export default class TiledMap implements TiledMapInterface {
   getTiledTileset(): TiledTileset {
     return this.tiledTileset;
   }
+
+  isEqual(other: TiledMapInterface): boolean {
+    return false;
+  }
 }

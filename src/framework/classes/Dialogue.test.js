@@ -11,7 +11,7 @@ import Person from "./Entity/Person";
 const testContext = {};
 
 beforeEach(async function() {
-  testContext.dialogueScript = await fixtures.dialogue("dialogue-basic.yml");
+  testContext.dialogueScript = await fixtures.yamlFile("dialogue-basic.yml");
 });
 
 it("switches dialogue turns", async function() {

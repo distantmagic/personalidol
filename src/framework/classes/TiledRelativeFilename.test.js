@@ -16,3 +16,16 @@ it("resolves tileset filename with absolute paths", function() {
 
   return expect(filename.asString()).toBe("/assets/tileset.tsx");
 });
+
+it("is equatable", function() {
+  const filename1 = new TiledRelativeFilename(
+    "/assets/map.tmx",
+    "/assets/tileset.tsx"
+  );
+  const filename2 = new TiledRelativeFilename(
+    "/assets/map.tmx",
+    "tileset.tsx"
+  );
+
+  return expect(filename1.isEqual(filename2)).toBe(true);
+});
