@@ -6,19 +6,23 @@ import TiledTileset from "./TiledTileset";
 
 import type { JsonUnserializable } from "../interfaces/JsonUnserializable";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import type { TiledMapUnserializer as TiledMapUnserializerInterface } from "../interfaces/TiledMapUnserializer";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
+import type { TiledMapSerializedObject } from "../types/TiledMapSerializedObject";
 
-export default class TiledMapSerializer
-  implements JsonUnserializable<TiledMapInterface> {
+export default class TiledMapUnserializer
+  implements TiledMapUnserializerInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +serialized: string;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, serialized: string) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.serialized = serialized;
   }
 
-  fromJson(): TiledMapInterface {
+  fromJson(serialized: string): TiledMapInterface {
+    return this.fromObject(JSON.parse(serialized));
+  }
+
+  fromObject(parsed: TiledMapSerializedObject) {
     return new TiledMap(
       this.loggerBreadcrumbs,
       new ElementSize<"tile">(10, 10),

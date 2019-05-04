@@ -46,4 +46,35 @@ export default class TiledMapGrid implements TiledMapGridInterface {
       }
     }
   }
+
+  getGrid(): TiledMapGridArray {
+    return this.grid;
+  }
+
+  getGridSize(): ElementSize<"tile"> {
+    return this.gridSize;
+  }
+
+  isEqual(other: TiledMapGridInterface): boolean {
+    if (!this.getGridSize().isEqual(other.getGridSize())) {
+      return false;
+    }
+
+    const grid = this.getGrid();
+    const gridSize = this.getGridSize();
+    const gridWidth = gridSize.getWidth();
+    const gridHeight = gridSize.getHeight();
+
+    const otherGrid = other.getGrid();
+
+    for (let y = 0; y < gridHeight; y += 1) {
+      for (let x = 0; x < gridWidth; x += 1) {
+        if (grid[x][y] !== otherGrid[x][y]) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 }

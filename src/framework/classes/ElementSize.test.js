@@ -1,6 +1,7 @@
 // @flow
 
 import ElementSize from "./ElementSize";
+import ElementSizeUnserializer from "./ElementSizeUnserializer";
 
 it("is comparable with other element sizes", function() {
   const elementSize1 = new ElementSize(10, 10);
@@ -12,15 +13,8 @@ it("is comparable with other element sizes", function() {
 it("is serializable as JSON", function() {
   const elementSize = new ElementSize(10, 20);
   const serialized = elementSize.asJson();
-  let result;
+  const unserializer = new ElementSizeUnserializer();
+  const unserialized = unserializer.fromJson(serialized);
 
-  expect(function() {
-    result = JSON.parse(serialized);
-  }).not.toThrow();
-
-  expect(result).toEqual({
-    depth: 0,
-    height: 20,
-    width: 10
-  });
+  expect(elementSize.isEqual(unserialized)).toBe(true);
 });

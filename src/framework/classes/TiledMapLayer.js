@@ -32,11 +32,23 @@ export default class TiledMapLayer implements TiledMapLayerInterface {
     };
   }
 
+  getLayerSize(): ElementSize<"tile"> {
+    return this.layerSize;
+  }
+
   getName(): string {
     return this.name;
   }
 
   getTiledMapGrid(): TiledMapGrid {
     return this.tiledMapGrid;
+  }
+
+  isEqual(other: TiledMapLayerInterface): boolean {
+    return (
+      this.name === other.getName() &&
+      this.layerSize.isEqual(other.getLayerSize()) &&
+      this.tiledMapGrid.isEqual(other.getTiledMapGrid())
+    );
   }
 }

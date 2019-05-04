@@ -190,11 +190,8 @@ it("is serializable", async function() {
     JSON.parse(serialized);
   }).not.toThrow();
 
-  const tiledMapUnserializer = new TiledMapUnserializer(
-    loggerBreadcrumbs,
-    serialized
-  );
-  const unserialized = tiledMapUnserializer.fromJson();
+  const tiledMapUnserializer = new TiledMapUnserializer(loggerBreadcrumbs);
+  const unserialized = tiledMapUnserializer.fromJson(serialized);
 
   expect(tiledMap.isEqual(unserialized)).toBe(true);
 });

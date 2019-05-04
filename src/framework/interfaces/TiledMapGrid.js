@@ -1,16 +1,18 @@
 // @flow
 
 import type { ElementSize } from "./ElementSize";
+import type { Equatable } from "./Equatable";
 import type { JsonSerializable } from "./JsonSerializable";
+import type { TiledMapGridArray } from "../types/TiledMapGridArray";
 import type { TiledMapGridSerializedObject } from "../types/TiledMapGridSerializedObject";
 import type { TiledPositionedTile } from "./TiledPositionedTile";
 
 export interface TiledMapGrid
-  extends JsonSerializable<TiledMapGridSerializedObject> {
-  constructor(
-    grid: Array<Array<number>>,
-    elementSize: ElementSize<"tile">
-  ): void;
-
+  extends Equatable<TiledMapGrid>,
+    JsonSerializable<TiledMapGridSerializedObject> {
   generatePositionedTiles(): AsyncGenerator<TiledPositionedTile, void, void>;
+
+  getGrid(): TiledMapGridArray;
+
+  getGridSize(): ElementSize<"tile">;
 }
