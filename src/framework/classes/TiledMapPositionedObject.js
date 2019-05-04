@@ -44,4 +44,12 @@ export default class TiledMapPositionedObject
   getName(): string {
     return this.name;
   }
+
+  isEqual(other: TiledMapPositionedObjectInterface): boolean {
+    return (
+      this.getName() === other.getName() &&
+      this.getElementPosition().isEqual(other.getElementPosition()) &&
+      this.getElementRotation().isEqual(other.getElementRotation())
+    );
+  }
 }

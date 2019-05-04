@@ -73,7 +73,9 @@ export default class TiledMap implements TiledMapInterface {
       ),
       rectangleObjects: this.getRectangleObjects().map(rectangleObject =>
         rectangleObject.asObject()
-      )
+      ),
+      tiledTileset: this.getTiledTileset().asObject(),
+      tileSize: this.getTileSize().asObject()
     };
   }
 
@@ -128,6 +130,47 @@ export default class TiledMap implements TiledMapInterface {
   }
 
   isEqual(other: TiledMapInterface): boolean {
-    return false;
+    if (!this.getMapSize().isEqual(other.getMapSize())) {
+      return false;
+    }
+
+    if (!this.getTileSize().isEqual(other.getTileSize())) {
+      return false;
+    }
+
+    if (!this.getTiledTileset().isEqual(other.getTiledTileset())) {
+      return false;
+    }
+
+    const layers = this.getLayers();
+    const otherLayers = other.getLayers();
+
+    if (layers.length !== otherLayers.length) {
+      return false;
+    }
+
+    for (let i = 0; i < layers.length; i += 1) {
+      if (!layers[i].isEqual(otherLayers[i])) {
+        return false;
+      }
+    }
+
+    const ellipseObjects = this.getEllipseObjects();
+    const otherEllipseObjects = other.getEllipseObjects();
+
+    if (ellipseObjects.length !== otherEllipseObjects.length) {
+      return false;
+    }
+
+    for (let i = 0; i < ellipseObjects.length; i += 1) {
+      if (!ellipseObjects[i].isEqual(otherEllipseObjects[i])) {
+        return false;
+      }
+    }
+
+    // this.tiledMapPolygonObjects = [];
+    // this.tiledMapRectangleObjects = [];
+
+    return true;
   }
 }

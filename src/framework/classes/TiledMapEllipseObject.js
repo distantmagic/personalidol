@@ -43,4 +43,10 @@ export default class TiledMapEllipseObject
   getTiledMapBlockObject(): TiledMapBlockObject {
     return this.tiledMapBlockObject;
   }
+
+  isEqual(other: TiledMapEllipseObjectInterface): boolean {
+    return this.getTiledMapBlockObject().isEqual(
+      other.getTiledMapBlockObject()
+    );
+  }
 }

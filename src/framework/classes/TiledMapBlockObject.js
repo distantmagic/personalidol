@@ -54,4 +54,21 @@ export default class TiledMapBlockObject
   hasSource(): boolean {
     return !!this.source;
   }
+
+  isEqual(other: TiledMapBlockObjectInterface): boolean {
+    if (this.hasSource() !== other.hasSource()) {
+      return false;
+    }
+
+    if (this.hasSource() && this.getSource() !== other.getSource()) {
+      return false;
+    }
+
+    return (
+      this.getElementSize().isEqual(other.getElementSize()) &&
+      this.getTiledMapPositionedObject().isEqual(
+        other.getTiledMapPositionedObject()
+      )
+    );
+  }
 }
