@@ -6,6 +6,7 @@ import type { ElementSize } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledTile } from "../interfaces/TiledTile";
 import type { TiledTileset as TiledTilesetInterface } from "../interfaces/TiledTileset";
+import type { TiledTilesetSerializedObject } from "../types/TiledTilesetSerializedObject";
 
 export default class TiledTileset implements TiledTilesetInterface {
   +expectedTileCount: number;
@@ -28,6 +29,28 @@ export default class TiledTileset implements TiledTilesetInterface {
     this.tiles.set(tile.getId(), tile);
   }
 
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): TiledTilesetSerializedObject {
+    const serializedTiles = [];
+
+    for (let tile of this.getTiles().values()) {
+      serializedTiles.push(tile.asObject());
+    }
+
+    return {
+      expectedTileCount: this.getExpectedTileCount(),
+      tiles: serializedTiles,
+      tileSize: this.getTileSize().asObject()
+    };
+  }
+
+  getExpectedTileCount(): number {
+    return this.expectedTileCount;
+  }
+
   getTileById(id: number): TiledTile {
     const tile = this.tiles.get(id);
 
@@ -41,7 +64,36 @@ export default class TiledTileset implements TiledTilesetInterface {
     return tile;
   }
 
+  getTileSize(): ElementSize<"px"> {
+    return this.tileSize;
+  }
+
   getTiles(): Set<TiledTile> {
     return new Set(this.tiles.values());
+  }
+
+  isEqual(other: TiledTilesetInterface): boolean {
+    if (this.getExpectedTileCount() !== other.getExpectedTileCount()) {
+      return false;
+    }
+
+    if (!this.getTileSize().isEqual(other.getTileSize())) {
+      return false;
+    }
+
+    const tiles = this.getTiles();
+    const otherTiles = other.getTiles();
+
+    if (tiles.size !== otherTiles.size) {
+      return false;
+    }
+
+    for (let tile of tiles.values()) {
+      if (!tile.isEqual(other.getTileById(tile.getId()))) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
