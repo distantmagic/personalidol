@@ -35,4 +35,10 @@ export default class TiledMapRectangleObject
   getTiledMapBlockObject(): TiledMapBlockObject {
     return this.tiledMapBlockObject;
   }
+
+  isEqual(other: TiledMapRectangleObjectInterface): boolean {
+    return this.getTiledMapBlockObject().isEqual(
+      other.getTiledMapBlockObject()
+    );
+  }
 }

@@ -169,7 +169,19 @@ export default class TiledMap implements TiledMapInterface {
     }
 
     // this.tiledMapPolygonObjects = [];
-    // this.tiledMapRectangleObjects = [];
+
+    const rectangleObjects = this.getRectangleObjects();
+    const otherRectangleObjects = other.getRectangleObjects();
+
+    if (rectangleObjects.length !== otherRectangleObjects.length) {
+      return false;
+    }
+
+    for (let i = 0; i < rectangleObjects.length; i += 1) {
+      if (!rectangleObjects[i].isEqual(otherRectangleObjects[i])) {
+        return false;
+      }
+    }
 
     return true;
   }
