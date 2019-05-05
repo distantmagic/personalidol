@@ -48,6 +48,12 @@ export default class Logger implements LoggerInterface {
     severity: LogSeverityEnum,
     message: string
   ): void {
-    console.log(`[DD][${severity}]`, message);
+    const baseMessage = `[DD][${severity}] ${message}`;
+
+    if ("debug" === severity) {
+      console.info(`%c${baseMessage}`, "background-color: #222; color: tomato");
+    } else {
+      console.log(baseMessage);
+    }
   }
 }

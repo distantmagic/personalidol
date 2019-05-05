@@ -21,19 +21,17 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     error: Error
   ): Promise<void> {
-    const consoleFormat = "background-color: #222; color: tomato";
-
-    console.log("%c🧯 ExceptionHandler", consoleFormat);
+    this.logger.debug(loggerBreadcrumbs, "ExceptionHandler");
 
     for (let breadcrumb of loggerBreadcrumbs.getBreadcrumbs()) {
-      console.log(`%c🔥 ${breadcrumb}`, consoleFormat);
+      this.logger.debug(loggerBreadcrumbs, `${breadcrumb}`);
     }
     if (error instanceof Exception) {
       for (let breadcrumb of error.loggerBreadcrumbs.getBreadcrumbs()) {
-        console.log(`%c🦶 ${breadcrumb}`, consoleFormat);
+        this.logger.debug(loggerBreadcrumbs, `${breadcrumb}`);
       }
     }
-    console.log(`%c📝 ${error.message}`, consoleFormat);
+    this.logger.debug(loggerBreadcrumbs, `${error.message}`);
 
     const message = [
       "/DD/EXCEPTION_HANDLER:/",
