@@ -53,4 +53,33 @@ export default class TiledMapPolygonObject
   getTiledMapPositionedObject(): TiledMapPositionedObject {
     return this.tiledMapPositionedObject;
   }
+
+  isEqual(other: TiledMapPolygonObjectInterface): boolean {
+    if (this.getDepth() !== other.getDepth()) {
+      return false;
+    }
+
+    if (
+      !this.getTiledMapPositionedObject().isEqual(
+        other.getTiledMapPositionedObject()
+      )
+    ) {
+      return false;
+    }
+
+    const polygonPoints = this.getPolygonPoints();
+    const otherPolygonPoints = other.getPolygonPoints();
+
+    if (polygonPoints.length !== otherPolygonPoints.length) {
+      return false;
+    }
+
+    for (let i = 0; i < polygonPoints.length; i += 1) {
+      if (!polygonPoints[i].isEqual(otherPolygonPoints[i])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }

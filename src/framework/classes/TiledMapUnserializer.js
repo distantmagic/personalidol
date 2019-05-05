@@ -5,6 +5,7 @@ import ElementSizeUnserializer from "./ElementSizeUnserializer";
 import TiledMap from "./TiledMap";
 import TiledMapEllipseObjectUnserializer from "./TiledMapEllipseObjectUnserializer";
 import TiledMapLayerUnserializer from "./TiledMapLayerUnserializer";
+import TiledMapPolygonObjectUnserializer from "./TiledMapPolygonObjectUnserializer";
 import TiledMapRectangleObjectUnserializer from "./TiledMapRectangleObjectUnserializer";
 import TiledTileset from "./TiledTileset";
 import TiledTilesetUnserializer from "./TiledTilesetUnserializer";
@@ -15,6 +16,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledMapEllipseObjectUnserializer as TiledMapEllipseObjectUnserializerInterface } from "../interfaces/TiledMapEllipseObjectUnserializer";
 import type { TiledMapLayerUnserializer as TiledMapLayerUnserializerInterface } from "../interfaces/TiledMapLayerUnserializer";
+import type { TiledMapPolygonObjectUnserializer as TiledMapPolygonObjectUnserializerInterface } from "../interfaces/TiledMapPolygonObjectUnserializer";
 import type { TiledMapRectangleObjectUnserializer as TiledMapRectangleObjectUnserializerInterface } from "../interfaces/TiledMapRectangleObjectUnserializer";
 import type { TiledMapSerializedObject } from "../types/TiledMapSerializedObject";
 import type { TiledMapUnserializer as TiledMapUnserializerInterface } from "../interfaces/TiledMapUnserializer";
@@ -27,6 +29,7 @@ export default class TiledMapUnserializer
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tiledMapEllipseObjectUnserializer: TiledMapEllipseObjectUnserializerInterface;
   +tiledMapLayerUnserializer: TiledMapLayerUnserializerInterface;
+  +tiledMapPolygonObjectUnserializer: TiledMapPolygonObjectUnserializerInterface;
   +tiledMapRectangleObjectUnserializer: TiledMapRectangleObjectUnserializerInterface;
   +tiledTilesetUnserializer: TiledTilesetUnserializerInterface;
 
@@ -36,6 +39,7 @@ export default class TiledMapUnserializer
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tiledMapEllipseObjectUnserializer = new TiledMapEllipseObjectUnserializer();
     this.tiledMapLayerUnserializer = new TiledMapLayerUnserializer();
+    this.tiledMapPolygonObjectUnserializer = new TiledMapPolygonObjectUnserializer();
     this.tiledMapRectangleObjectUnserializer = new TiledMapRectangleObjectUnserializer();
     this.tiledTilesetUnserializer = new TiledTilesetUnserializer(
       loggerBreadcrumbs
@@ -61,6 +65,12 @@ export default class TiledMapUnserializer
     for (let ellipseObject of parsed.ellipseObjects) {
       tiledMap.addEllipseObject(
         this.tiledMapEllipseObjectUnserializer.fromObject(ellipseObject)
+      );
+    }
+
+    for (let polygonObject of parsed.polygonObjects) {
+      tiledMap.addPolygonObject(
+        this.tiledMapPolygonObjectUnserializer.fromObject(polygonObject)
       );
     }
 
