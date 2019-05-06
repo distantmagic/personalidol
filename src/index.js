@@ -1,9 +1,9 @@
 // @flow
 
-import "core-js/es6/map";
-import "core-js/es6/set";
-import "core-js/es6/promise";
-import "core-js/es6/object";
+import "core-js/features/map";
+import "core-js/features/set";
+import "core-js/features/promise";
+import "core-js/features/object";
 
 // import * as Sentry from "@sentry/browser";
 import React from "react";

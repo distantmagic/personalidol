@@ -14,8 +14,10 @@ import THREEPointerInteraction from "../../framework/classes/THREEPointerInterac
 // import TiledTilesetLoader from "../../framework/classes/TiledTilesetLoader";
 // import URLTextContentQueryBuilder from "../../framework/classes/URLTextContentQueryBuilder";
 // import { default as GameboardView } from "../views/Gameboard";
+import WorkerClientController from "../../framework/classes/WorkerClientController";
 import { default as PlayerModel } from "../models/Player";
 import { default as PlayerView } from "../views/Player";
+import { default as TiledWorker } from "../workers/Tiled.worker";
 // import { default as THREEHelpersView } from "../views/THREEHelpers";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
@@ -102,6 +104,15 @@ export default class CanvasLocationComplex implements CanvasController {
         "Cancel token was cancelled before attaching canvas location controller."
       );
     }
+
+    this.tiledWorker = new TiledWorker();
+
+    const workerController = new WorkerClientController(this.tiledWorker);
+    const workerResponse = await workerController.request("foo", {
+      bar: "baz"
+    });
+
+    console.log(workerResponse);
 
     // this.sound.pos(0, 0, 0);
     // this.sound.play();
