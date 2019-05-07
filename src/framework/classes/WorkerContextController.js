@@ -4,25 +4,30 @@ import autoBind from "auto-bind";
 import jsonrpc from "jsonrpc-lite";
 
 import CancelToken from "./CancelToken";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import { isJsonRpcRequest } from "../helpers/jsonrpc";
 
 import type { JsonRpcRequest } from "jsonrpc-lite";
 
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { WorkerContextController as WorkerContextControllerInterface } from "../interfaces/WorkerContextController";
 import type { WorkerContextMethods } from "../types/WorkerContextMethods";
 
 export default class WorkerContextController<T: WorkerContextMethods>
   implements WorkerContextControllerInterface<T> {
   +cancelTokens: Map<string, CancelTokenInterface>;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +workerContext: DedicatedWorkerGlobalScope;
   methods: T;
 
-  constructor(workerContext: DedicatedWorkerGlobalScope) {
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    workerContext: DedicatedWorkerGlobalScope
+  ) {
     autoBind(this);
 
     this.cancelTokens = new Map<string, CancelTokenInterface>();
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.workerContext = workerContext;
   }
 
@@ -61,7 +66,11 @@ export default class WorkerContextController<T: WorkerContextMethods>
       });
 
       try {
-        responseData = await method(cancelToken, rpcRequest.params);
+        responseData = await method.call(
+          this.methods,
+          cancelToken,
+          rpcRequest.params
+        );
       } catch (err) {
         if (cancelToken.isCancelled()) {
           return resolve();
@@ -93,7 +102,6 @@ export default class WorkerContextController<T: WorkerContextMethods>
       return;
     }
 
-    const loggerBreadcrumbs = new LoggerBreadcrumbs();
     // double assignment just for typechecking
     const rpcRequest: JsonRpcRequest<any, any> = data;
 
@@ -111,7 +119,7 @@ export default class WorkerContextController<T: WorkerContextMethods>
         // already cancelled token, so incoming request will be cancelled
         // immediately
         // token will be cancelled after method is actually called
-        const cancelledCancelToken = new CancelToken(loggerBreadcrumbs);
+        const cancelledCancelToken = new CancelToken(this.loggerBreadcrumbs);
 
         this.cancelTokens.set(cancelledRequestId, cancelledCancelToken);
 
@@ -119,7 +127,7 @@ export default class WorkerContextController<T: WorkerContextMethods>
       }
     }
 
-    const cancelToken = new CancelToken(loggerBreadcrumbs);
+    const cancelToken = new CancelToken(this.loggerBreadcrumbs);
 
     this.cancelTokens.set(rpcRequest.id, cancelToken);
 

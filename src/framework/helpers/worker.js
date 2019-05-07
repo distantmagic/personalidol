@@ -1,8 +1,15 @@
 // @flow
 
+import BusClock from "../classes/BusClock";
+import CancelToken from "../classes/CancelToken";
+import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
+import QueryBus from "../classes/QueryBus";
+import QueryBusController from "../classes/QueryBusController";
 import WorkerContextController from "../classes/WorkerContextController";
 import WorkerMock from "../mocks/Worker";
 
+import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
+import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
 import type { WorkerContextController as WorkerContextControllerInterface } from "../interfaces/WorkerContextController";
 import type { WorkerContextMethods } from "../types/WorkerContextMethods";
 
@@ -16,12 +23,22 @@ class WorkerHack extends WorkerClass {
 }
 
 export default function worker<T: WorkerContextMethods>(
-  methods: T
+  builder: (LoggerBreadcrumbsInterface, QueryBusInterface) => T
 ): Class<WorkerHack> {
-  const workerContextController = new WorkerContextController<T>(self);
+  const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker"]);
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
+  const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
+  const queryBusController = new QueryBusController(new BusClock(), queryBus);
+  const workerContextController = new WorkerContextController<T>(
+    loggerBreadcrumbs,
+    self
+  );
+  const methods: T = builder(loggerBreadcrumbs, queryBus);
 
   workerContextController.setMethods(methods);
   workerContextController.attach();
+
+  queryBusController.interval(cancelToken);
 
   // this one will actually never be used as Babel worker-loader overrides
   // worker file exports

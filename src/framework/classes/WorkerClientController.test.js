@@ -23,6 +23,7 @@ it("hooks up into worker client", function() {
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
   const workerContextController = new WorkerContextController<Methods>(
+    loggerBreadcrumbs,
     workerContext
   );
   const workerController = new WorkerClientController<Methods>(worker);
@@ -51,6 +52,7 @@ it("handles worker exceptions", function() {
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
   const workerContextController = new WorkerContextController<Methods>(
+    loggerBreadcrumbs,
     workerContext
   );
   const workerController = new WorkerClientController<Methods>(worker);
@@ -82,6 +84,7 @@ it("allows to cancel requests", function() {
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
   const workerContextController = new WorkerContextController<Methods>(
+    loggerBreadcrumbs,
     workerContext
   );
   const workerController = new WorkerClientController<Methods>(worker);
@@ -117,6 +120,7 @@ it("does not send request when cancel token is already cancelled", function() {
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
   const workerContextController = new WorkerContextController<Methods>(
+    loggerBreadcrumbs,
     workerContext
   );
   const workerController = new WorkerClientController<Methods>(worker);
@@ -133,5 +137,42 @@ it("does not send request when cancel token is already cancelled", function() {
   return expect(response).rejects.toEqual({
     code: 1,
     message: "Token has been cancelled before sending request."
+  });
+}, 300);
+
+it("binds request methods", function() {
+  class Methods {
+    +test: string;
+
+    constructor() {
+      this.test = "foo";
+    }
+
+    async someMethod(cancelToken: CancelTokenInterface, params) {
+      return {
+        baz: this.test + params.foo
+      };
+    }
+  }
+
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
+  const worker = new WorkerMock("https://example.com/worker.js");
+  const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
+  const workerContextController = new WorkerContextController<Methods>(
+    loggerBreadcrumbs,
+    workerContext
+  );
+  const workerController = new WorkerClientController<Methods>(worker);
+
+  workerContextController.setMethods(new Methods());
+  workerContextController.attach();
+
+  const response = workerController.request(cancelToken, "someMethod", {
+    foo: "bar"
+  });
+
+  return expect(response).resolves.toEqual({
+    baz: "foobar"
   });
 }, 300);
