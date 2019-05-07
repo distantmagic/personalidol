@@ -57,12 +57,8 @@ export default class WorkerClientController<T: WorkerContextMethods>
     return new Promise((resolve, reject) => {
       if (cancelToken.isCancelled()) {
         return void reject({
-          error: {
-            code: 0,
-            message: "Cancelled"
-          },
-          id: requestId,
-          jsonrpc: "2.0"
+          code: 1,
+          message: "Token has been cancelled before sending request."
         });
       }
 

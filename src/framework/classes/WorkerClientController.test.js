@@ -102,3 +102,36 @@ it("allows to cancel requests", function() {
     message: "Token is cancelled."
   });
 }, 300);
+
+it("does not send request when cancel token is already cancelled", function() {
+  class Methods {
+    async someMethod(cancelToken: CancelTokenInterface, params) {
+      return new Promise(function(resolve) {
+        setTimeout(resolve, 10000);
+      });
+    }
+  }
+
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
+  const worker = new WorkerMock("https://example.com/worker.js");
+  const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
+  const workerContextController = new WorkerContextController<Methods>(
+    workerContext
+  );
+  const workerController = new WorkerClientController<Methods>(worker);
+
+  workerContextController.setMethods(new Methods());
+  workerContextController.attach();
+
+  cancelToken.cancel();
+
+  const response = workerController.request(cancelToken, "someMethod", {
+    foo: "bar"
+  });
+
+  return expect(response).rejects.toEqual({
+    code: 1,
+    message: "Token has been cancelled before sending request."
+  });
+}, 300);
