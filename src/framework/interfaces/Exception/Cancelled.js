@@ -1,3 +1,5 @@
 // @flow
 
-export interface Cancelled {}
+export interface Cancelled {
+  +message: string;
+}

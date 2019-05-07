@@ -27,7 +27,7 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
     renderer: WebGLRenderer
   ): Promise<void> {
     return void (await Promise.all(
-      this.children.map(function(child) {
+      this.children.map(child => {
         if (cancelToken.isCancelled()) {
           throw new Cancelled(
             this.loggerBreadcrumbs.add("attach"),
@@ -45,7 +45,7 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
     renderer: WebGLRenderer
   ): Promise<void> {
     return void (await Promise.all(
-      this.children.map(function(child) {
+      this.children.map(child => {
         if (cancelToken.isCancelled()) {
           throw new Cancelled(
             this.loggerBreadcrumbs.add("detach"),

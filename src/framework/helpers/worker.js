@@ -1,13 +1,15 @@
 // @flow
 
 import WorkerContextController from "../classes/WorkerContextController";
+import WorkerMock from "../mocks/Worker";
 
 import type { WorkerContextController as WorkerContextControllerInterface } from "../interfaces/WorkerContextController";
 import type { WorkerContextMethods } from "../types/WorkerContextMethods";
 
 declare var self: DedicatedWorkerGlobalScope;
 
-class WorkerHack extends Worker {
+const WorkerClass = "undefined" === typeof Worker ? WorkerMock : Worker;
+class WorkerHack extends WorkerClass {
   constructor() {
     super("https://example.com");
   }

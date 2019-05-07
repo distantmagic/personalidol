@@ -10,10 +10,6 @@ import {
 import Cancelled from "../../framework/classes/Exception/Cancelled";
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
 import THREEPointerInteraction from "../../framework/classes/THREEPointerInteraction";
-// import TiledMapLoader from "../../framework/classes/TiledMapLoader";
-// import TiledTilesetLoader from "../../framework/classes/TiledTilesetLoader";
-// import URLTextContentQueryBuilder from "../../framework/classes/URLTextContentQueryBuilder";
-// import { default as GameboardView } from "../views/Gameboard";
 import WorkerClientController from "../../framework/classes/WorkerClientController";
 import { default as PlayerModel } from "../models/Player";
 import { default as PlayerView } from "../views/Player";
@@ -108,7 +104,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.tiledWorker = new TiledWorker();
 
     const workerController = new WorkerClientController(this.tiledWorker);
-    const workerResponse = await workerController.request("foo", {
+    const workerResponse = await workerController.request(cancelToken, "load", {
       bar: "baz"
     });
 
@@ -137,24 +133,6 @@ export default class CanvasLocationComplex implements CanvasController {
         this.keyboardState
       )
     );
-
-    // const queryBuilder = new URLTextContentQueryBuilder();
-    // const tiledTilesetLoader = new TiledTilesetLoader(
-    //   breadcrumbs.add("TiledTilesetLoader"),
-    //   this.queryBus,
-    //   queryBuilder
-    // );
-    // const tiledMapLoader = new TiledMapLoader(
-    //   breadcrumbs.add("TiledMapLoader"),
-    //   this.queryBus,
-    //   queryBuilder,
-    //   tiledTilesetLoader
-    // );
-
-    // const tiledMap = await tiledMapLoader.load(
-    //   cancelToken,
-    //   "/assets/map-outlands-01.tmx"
-    // );
 
     // this.canvasViewGroup.add(
     //   new GameboardView(

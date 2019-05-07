@@ -1,5 +1,7 @@
 // @flow
 
+import type { CancelToken } from "../interfaces/CancelToken";
+
 export type WorkerContextMethods = {
-  [string]: (any) => Promise<any>
+  [string]: (CancelToken, any) => Promise<any>
 };

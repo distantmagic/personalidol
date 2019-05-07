@@ -14,6 +14,7 @@ import type {
   JsonRpcSuccessResponse
 } from "jsonrpc-lite";
 
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { WorkerClientController as WorkerClientControllerInterface } from "../interfaces/WorkerClientController";
 import type { WorkerContextMethods } from "../types/WorkerContextMethods";
 
@@ -27,15 +28,44 @@ export default class WorkerClientController<T: WorkerContextMethods>
     this.worker = worker;
   }
 
-  request<Method: $Keys<T>, Params, Return>(
-    methodName: Method,
-    params: Params
-  ): Promise<Return> {
+  async cancel(cancelledRequestId: string): Promise<void> {
+    const requestId = this.getNextRequestId();
+    const request = jsonrpc.request<
+      "_:cancel",
+      {
+        id: string
+      }
+    >(requestId, "_:cancel", {
+      id: cancelledRequestId
+    });
+    this.worker.postMessage(request);
+  }
+
+  getNextRequestId(): string {
     jsonRpcCurrentRequestId += 1;
 
-    const requestId = String(jsonRpcCurrentRequestId);
+    return String(jsonRpcCurrentRequestId);
+  }
+
+  request<Method: $Keys<T>, Params, Return>(
+    cancelToken: CancelToken,
+    methodName: Method,
+    params: Params
+  ): Promise<JsonRpcErrorResponse | JsonRpcSuccessResponse<Return>> {
+    const requestId = this.getNextRequestId();
 
     return new Promise((resolve, reject) => {
+      if (cancelToken.isCancelled()) {
+        return void reject({
+          error: {
+            code: 0,
+            message: "Cancelled"
+          },
+          id: requestId,
+          jsonrpc: "2.0"
+        });
+      }
+
       const onMessage = (evt: MessageEvent): void => {
         const data: any = evt.data;
 
@@ -74,8 +104,11 @@ export default class WorkerClientController<T: WorkerContextMethods>
         methodName,
         params
       );
-
       this.worker.postMessage(request);
+
+      cancelToken.onCancelled(() => {
+        this.cancel(requestId);
+      });
     });
   }
 }

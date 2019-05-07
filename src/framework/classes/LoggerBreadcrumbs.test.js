@@ -1,6 +1,7 @@
 // @flow
 
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import LoggerBreadcrumbsUnserializer from "./LoggerBreadcrumbsUnserializer";
 
 it("has root breadcrumb", function() {
   const breadcrumbs = new LoggerBreadcrumbs();
@@ -42,4 +43,13 @@ it("is memoized and distinguishes branches", function() {
 
   expect(breadcrumbsFoo2.asString()).toBe("root/bar");
   expect(breadcrumbsFoo1).not.toBe(breadcrumbsFoo2);
+});
+
+it("is serializable as JSON", function() {
+  const breadcrumbs = new LoggerBreadcrumbs(["foo", "bar", "baz"]);
+  const serialized = breadcrumbs.asJson();
+  const unserializer = new LoggerBreadcrumbsUnserializer();
+  const unserialized = unserializer.fromJson(serialized);
+
+  expect(breadcrumbs.isEqual(unserialized)).toBe(true);
 });

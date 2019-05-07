@@ -1,6 +1,7 @@
 // @flow
 
 import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
+import type { LoggerBreadcrumbsSerializedObject } from "../types/LoggerBreadcrumbsSerializedObject";
 
 export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
   +breadcrumbs: Array<string>;
@@ -47,6 +48,20 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
   addVariable(breadcrumb: string): LoggerBreadcrumbsInterface {
     // do not memoize this one, variable content may lead to memory leaks
     return new LoggerBreadcrumbs(this.breadcrumbs.concat(`"${breadcrumb}"`));
+  }
+
+  asArray(): Array<string> {
+    return this.breadcrumbs;
+  }
+
+  asJson(): string {
+    return JSON.stringify(this.asObject());
+  }
+
+  asObject(): LoggerBreadcrumbsSerializedObject {
+    return {
+      breadcrumbs: this.asArray()
+    };
   }
 
   asString(): string {
