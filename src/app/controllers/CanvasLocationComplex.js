@@ -29,6 +29,9 @@ import type { PointerState } from "../../framework/interfaces/PointerState";
 import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../framework/interfaces/THREEPointerInteraction";
+import type { TiledMapSerializedObject } from "../../framework/types/TiledMapSerializedObject";
+import type { TiledWorker as TiledWorkerInterface } from "../interfaces/TiledWorker";
+import type { TiledWorkerLoadParams } from "../types/TiledWorkerLoadParams";
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;
@@ -103,9 +106,9 @@ export default class CanvasLocationComplex implements CanvasController {
 
     this.tiledWorker = new TiledWorker();
 
-    const workerController = new WorkerClientController(this.tiledWorker);
-    const workerResponse = await workerController.request(cancelToken, "load", {
-      bar: "baz"
+    const workerController = new WorkerClientController<TiledWorkerInterface>(this.tiledWorker);
+    const workerResponse = await workerController.request<TiledWorkerLoadParams, TiledMapSerializedObject>(cancelToken, "load", {
+      filename: "/assets/map-outlands-01.tmx",
     });
 
     console.log(workerResponse);

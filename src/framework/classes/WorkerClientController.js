@@ -47,9 +47,9 @@ export default class WorkerClientController<T: WorkerContextMethods>
     return String(jsonRpcCurrentRequestId);
   }
 
-  request<Method: $Keys<T>, Params, Return>(
+  request<Params, Return>(
     cancelToken: CancelToken,
-    methodName: Method,
+    methodName: $Keys<T>,
     params: Params
   ): Promise<JsonRpcErrorResponse | JsonRpcSuccessResponse<Return>> {
     const requestId = this.getNextRequestId();
@@ -95,7 +95,7 @@ export default class WorkerClientController<T: WorkerContextMethods>
 
       this.worker.addEventListener("message", onMessage);
 
-      const request = jsonrpc.request<Method, Params>(
+      const request = jsonrpc.request<$Keys<T>, Params>(
         requestId,
         methodName,
         params

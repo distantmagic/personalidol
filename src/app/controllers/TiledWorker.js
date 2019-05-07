@@ -8,6 +8,8 @@ import URLTextContentQueryBuilder from "../../framework/classes/URLTextContentQu
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../../framework/interfaces/QueryBus";
+import type { TiledMapSerializedObject } from "../../framework/types/TiledMapSerializedObject";
+import type { TiledWorkerLoadParams } from "../types/TiledWorkerLoadParams";
 
 export default class TiledWorker {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -18,7 +20,7 @@ export default class TiledWorker {
     this.queryBus = queryBus;
   }
 
-  async load(cancelToken: CancelToken): Promise<{ foo: string }> {
+  async load(cancelToken: CancelToken, params: TiledWorkerLoadParams): Promise<TiledMapSerializedObject> {
     const queryBuilder = new URLTextContentQueryBuilder();
     const tiledTilesetLoader = new TiledTilesetLoader(
       this.loggerBreadcrumbs.add("TiledTilesetLoader"),
@@ -34,11 +36,9 @@ export default class TiledWorker {
 
     const tiledMap = await tiledMapLoader.load(
       cancelToken,
-      "/assets/map-outlands-01.tmx"
+      params.filename
     );
 
-    return {
-      foo: "barzzzzz"
-    };
+    return tiledMap.asObject();
   }
 }
