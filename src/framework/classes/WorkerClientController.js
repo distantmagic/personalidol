@@ -51,7 +51,7 @@ export default class WorkerClientController<T: WorkerContextMethods>
     cancelToken: CancelToken,
     methodName: $Keys<T>,
     params: Params
-  ): Promise<JsonRpcErrorResponse | JsonRpcSuccessResponse<Return>> {
+  ): Promise<Return> {
     const requestId = this.getNextRequestId();
 
     return new Promise((resolve, reject) => {

@@ -13,5 +13,5 @@ export interface WorkerClientController<T: WorkerContextMethods> {
     CancelToken,
     methodName: $Keys<T>,
     params: Params
-  ): Promise<JsonRpcErrorResponse | JsonRpcSuccessResponse<Return>>;
+  ): Promise<Return>;
 }

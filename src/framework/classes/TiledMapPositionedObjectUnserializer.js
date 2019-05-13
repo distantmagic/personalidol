@@ -1,8 +1,6 @@
 // @flow
 
-import ElementPosition from "./ElementPosition";
 import ElementPositionUnserializer from "./ElementPositionUnserializer";
-import ElementRotation from "./ElementRotation";
 import ElementRotationUnserializer from "./ElementRotationUnserializer";
 import TiledMapPositionedObject from "./TiledMapPositionedObject";
 

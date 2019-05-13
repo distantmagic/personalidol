@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="3" height="3" tilewidth="128" tileheight="128" infinite="0" nextlayerid="3" nextobjectid="1">
+ <tileset firstgid="1" source="tileset-fixture-01.tsx"/>
+ <tileset firstgid="4" source="tileset-fixture-02-walkable.tsx"/>
+ <layer id="1" name="ground" width="3" height="3">
+  <data encoding="csv">
+3,3,3,
+2,3,2,
+3,3,2
+</data>
+ </layer>
+ <layer id="2" name="walkable" width="3" height="3">
+  <data encoding="csv">
+4,4,4,
+0,4,0,
+4,4,0
+</data>
+ </layer>
+</map>

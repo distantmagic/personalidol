@@ -81,8 +81,8 @@ it("generates skinned layers and tiles", async function() {
     }
   }
 
-  // there are 4 tiles in total, but one is blank
-  expect(skinnedTiles).toHaveLength(3);
+  // there are 1024 tiles in total, but 9 are blank
+  expect(skinnedTiles).toHaveLength(1024 - 9);
 
   const tiledMapLayers = tiledMap.getLayers();
 
@@ -100,15 +100,15 @@ it("generates skinned layers and tiles", async function() {
   const tiledMapEllipsePosition = tiledMapEllipseBlockObject.getTiledMapPositionedObject();
 
   expect(tiledMapEllipsePosition.getElementPosition().getX()).toBe(4);
-  expect(tiledMapEllipsePosition.getElementPosition().getY()).toBe(1);
+  expect(tiledMapEllipsePosition.getElementPosition().getY()).toBe(13);
   expect(tiledMapEllipsePosition.getElementPosition().getZ()).toBe(0);
   expect(tiledMapEllipsePosition.getElementRotation().getRotationX()).toBe(0);
   expect(tiledMapEllipsePosition.getElementRotation().getRotationY()).toBe(0);
   expect(tiledMapEllipsePosition.getElementRotation().getRotationZ()).toBe(-0);
-  expect(tiledMapEllipsePosition.getName()).toBe("Well");
-  expect(tiledMapEllipseBlockObject.getElementSize().getDepth()).toBe(0.5);
-  expect(tiledMapEllipseBlockObject.getElementSize().getHeight()).toBe(2);
-  expect(tiledMapEllipseBlockObject.getElementSize().getWidth()).toBe(2);
+  expect(tiledMapEllipsePosition.getName()).toBe("Ellipse");
+  expect(tiledMapEllipseBlockObject.getElementSize().getDepth()).toBe(0.125);
+  expect(tiledMapEllipseBlockObject.getElementSize().getHeight()).toBe(5);
+  expect(tiledMapEllipseBlockObject.getElementSize().getWidth()).toBe(5);
 
   // polygons
 
@@ -119,14 +119,14 @@ it("generates skinned layers and tiles", async function() {
 
   const tiledMapPolygonPosition = tiledMapPolygonObjects[0].getTiledMapPositionedObject();
 
-  expect(tiledMapPolygonPosition.getElementPosition().getX()).toBe(6);
-  expect(tiledMapPolygonPosition.getElementPosition().getY()).toBe(2);
+  expect(tiledMapPolygonPosition.getElementPosition().getX()).toBe(13);
+  expect(tiledMapPolygonPosition.getElementPosition().getY()).toBe(16);
   expect(tiledMapPolygonPosition.getElementPosition().getZ()).toBe(0);
   expect(tiledMapPolygonPosition.getElementRotation().getRotationX()).toBe(0);
   expect(tiledMapPolygonPosition.getElementRotation().getRotationY()).toBe(0);
   expect(tiledMapPolygonPosition.getElementRotation().getRotationZ()).toBe(-0);
-  expect(tiledMapPolygonObjects[0].getDepth()).toBe(3);
-  expect(tiledMapPolygonPosition.getName()).toBe("Crater");
+  expect(tiledMapPolygonObjects[0].getDepth()).toBe(0.125);
+  expect(tiledMapPolygonPosition.getName()).toBe("Polygon");
 
   // rectangles
 
@@ -139,8 +139,8 @@ it("generates skinned layers and tiles", async function() {
   const tiledMapRectangleBlockObject1 = tiledMapRectangleObjects[0].getTiledMapBlockObject();
   const tiledMapRectanglePosition1 = tiledMapRectangleBlockObject1.getTiledMapPositionedObject();
 
-  expect(tiledMapRectanglePosition1.getElementPosition().getX()).toBe(0);
-  expect(tiledMapRectanglePosition1.getElementPosition().getY()).toBe(0);
+  expect(tiledMapRectanglePosition1.getElementPosition().getX()).toBe(8);
+  expect(tiledMapRectanglePosition1.getElementPosition().getY()).toBe(1);
   expect(tiledMapRectanglePosition1.getElementPosition().getZ()).toBe(0);
   expect(tiledMapRectanglePosition1.getElementRotation().getRotationX()).toBe(
     0
@@ -151,18 +151,18 @@ it("generates skinned layers and tiles", async function() {
   expect(
     Math.round(tiledMapRectanglePosition1.getElementRotation().getRotationZ())
   ).toBe(-1);
-  expect(tiledMapRectangleBlockObject1.getElementSize().getDepth()).toBe(3);
-  expect(tiledMapRectangleBlockObject1.getElementSize().getHeight()).toBe(1);
-  expect(tiledMapRectangleBlockObject1.getElementSize().getWidth()).toBe(1);
-  expect(tiledMapRectanglePosition1.getName()).toBe("Cottage");
+  expect(tiledMapRectangleBlockObject1.getElementSize().getDepth()).toBe(0.25);
+  expect(tiledMapRectangleBlockObject1.getElementSize().getHeight()).toBe(2);
+  expect(tiledMapRectangleBlockObject1.getElementSize().getWidth()).toBe(5);
+  expect(tiledMapRectanglePosition1.getName()).toBe("Rectangle with rotation");
 
   expect(tiledMapRectangleObjects[1]).toBeDefined();
 
   const tiledMapRectangleBlockObject2 = tiledMapRectangleObjects[1].getTiledMapBlockObject();
   const tiledMapRectanglePosition2 = tiledMapRectangleBlockObject2.getTiledMapPositionedObject();
 
-  expect(tiledMapRectanglePosition2.getElementPosition().getX()).toBe(3);
-  expect(tiledMapRectanglePosition2.getElementPosition().getY()).toBe(5);
+  expect(tiledMapRectanglePosition2.getElementPosition().getX()).toBe(13);
+  expect(tiledMapRectanglePosition2.getElementPosition().getY()).toBe(2);
   expect(tiledMapRectanglePosition2.getElementPosition().getZ()).toBe(0);
   expect(tiledMapRectanglePosition2.getElementRotation().getRotationX()).toBe(
     0
@@ -173,10 +173,10 @@ it("generates skinned layers and tiles", async function() {
   expect(tiledMapRectanglePosition2.getElementRotation().getRotationZ()).toBe(
     -0
   );
-  expect(tiledMapRectangleBlockObject2.getElementSize().getDepth()).toBe(4);
+  expect(tiledMapRectangleBlockObject2.getElementSize().getDepth()).toBe(0.25);
   expect(tiledMapRectangleBlockObject2.getElementSize().getHeight()).toBe(2);
-  expect(tiledMapRectangleBlockObject2.getElementSize().getWidth()).toBe(3);
-  expect(tiledMapRectanglePosition2.getName()).toBe("Barn");
+  expect(tiledMapRectangleBlockObject2.getElementSize().getWidth()).toBe(9);
+  expect(tiledMapRectanglePosition2.getName()).toBe("Rectangle with source");
 });
 
 it("is serializable", async function() {

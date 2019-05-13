@@ -10,6 +10,7 @@ import {
 import Cancelled from "../../framework/classes/Exception/Cancelled";
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
 import THREEPointerInteraction from "../../framework/classes/THREEPointerInteraction";
+import TiledMapUnserializer from "../../framework/classes/TiledMapUnserializer";
 import WorkerClientController from "../../framework/classes/WorkerClientController";
 import { default as PlayerModel } from "../models/Player";
 import { default as PlayerView } from "../views/Player";
@@ -104,14 +105,9 @@ export default class CanvasLocationComplex implements CanvasController {
       );
     }
 
-    this.tiledWorker = new TiledWorker();
+    const tiledWorker = new TiledWorker();
 
-    const workerController = new WorkerClientController<TiledWorkerInterface>(this.tiledWorker);
-    const workerResponse = await workerController.request<TiledWorkerLoadParams, TiledMapSerializedObject>(cancelToken, "load", {
-      filename: "/assets/map-outlands-01.tmx",
-    });
-
-    console.log(workerResponse);
+    this.tiledWorker = tiledWorker;
 
     // this.sound.pos(0, 0, 0);
     // this.sound.play();
@@ -136,6 +132,15 @@ export default class CanvasLocationComplex implements CanvasController {
         this.keyboardState
       )
     );
+
+    const workerController = new WorkerClientController<TiledWorkerInterface>(tiledWorker);
+    const workerResponse = await workerController.request<TiledWorkerLoadParams, TiledMapSerializedObject>(cancelToken, "load", {
+      filename: "/assets/map-outlands-01.tmx",
+    });
+    const tiledMapUnserializer = new TiledMapUnserializer(this.loggerBreadcrumbs);
+    const tiledMap = await tiledMapUnserializer.fromObject(workerResponse);
+
+    console.log(tiledMap);
 
     // this.canvasViewGroup.add(
     //   new GameboardView(
@@ -222,7 +227,7 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   resize(elementSize: ElementSize<"px">): void {
-    const zoom = 200;
+    const zoom = 120;
     const height = elementSize.getHeight();
     const width = elementSize.getWidth();
 

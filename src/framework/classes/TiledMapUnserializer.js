@@ -1,17 +1,14 @@
 // @flow
 
-import ElementSize from "./ElementSize";
 import ElementSizeUnserializer from "./ElementSizeUnserializer";
 import TiledMap from "./TiledMap";
 import TiledMapEllipseObjectUnserializer from "./TiledMapEllipseObjectUnserializer";
 import TiledMapLayerUnserializer from "./TiledMapLayerUnserializer";
 import TiledMapPolygonObjectUnserializer from "./TiledMapPolygonObjectUnserializer";
 import TiledMapRectangleObjectUnserializer from "./TiledMapRectangleObjectUnserializer";
-import TiledTileset from "./TiledTileset";
 import TiledTilesetUnserializer from "./TiledTilesetUnserializer";
 
 import type { ElementSizeUnserializer as ElementSizeUnserializerInterface } from "../interfaces/ElementSizeUnserializer";
-import type { JsonUnserializable } from "../interfaces/JsonUnserializable";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledMapEllipseObjectUnserializer as TiledMapEllipseObjectUnserializerInterface } from "../interfaces/TiledMapEllipseObjectUnserializer";
@@ -50,7 +47,7 @@ export default class TiledMapUnserializer
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(parsed: TiledMapSerializedObject) {
+  fromObject(parsed: TiledMapSerializedObject): TiledMapInterface {
     const tiledMap = new TiledMap(
       this.loggerBreadcrumbs,
       this.elementSizeUnserializerTile.fromObject(parsed.mapSize),
