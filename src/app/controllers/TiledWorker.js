@@ -20,7 +20,10 @@ export default class TiledWorker {
     this.queryBus = queryBus;
   }
 
-  async load(cancelToken: CancelToken, params: TiledWorkerLoadParams): Promise<TiledMapSerializedObject> {
+  async load(
+    cancelToken: CancelToken,
+    params: TiledWorkerLoadParams
+  ): Promise<TiledMapSerializedObject> {
     const queryBuilder = new URLTextContentQueryBuilder();
     const tiledTilesetLoader = new TiledTilesetLoader(
       this.loggerBreadcrumbs.add("TiledTilesetLoader"),
@@ -34,10 +37,7 @@ export default class TiledWorker {
       tiledTilesetLoader
     );
 
-    const tiledMap = await tiledMapLoader.load(
-      cancelToken,
-      params.filename
-    );
+    const tiledMap = await tiledMapLoader.load(cancelToken, params.filename);
 
     return tiledMap.asObject();
   }

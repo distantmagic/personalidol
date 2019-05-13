@@ -15,5 +15,5 @@ export interface LoggerBreadcrumbs
 
   addVariable(breadcrumb: string): LoggerBreadcrumbs;
 
-  getBreadcrumbs(): Array<string>;
+  getBreadcrumbs(): $ReadOnlyArray<string>;
 }

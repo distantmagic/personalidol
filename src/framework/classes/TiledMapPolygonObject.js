@@ -11,7 +11,7 @@ export default class TiledMapPolygonObject
   +isEllipse: false;
   +isPolygon: true;
   +isRectangle: false;
-  +polygonPoints: Array<ElementPosition<"tile">>;
+  +polygonPoints: $ReadOnlyArray<ElementPosition<"tile">>;
   +tiledMapPositionedObject: TiledMapPositionedObject;
 
   isEllipse = false;
@@ -20,7 +20,7 @@ export default class TiledMapPolygonObject
 
   constructor(
     tiledMapPositionedObject: TiledMapPositionedObject,
-    polygonPoints: Array<ElementPosition<"tile">>,
+    polygonPoints: $ReadOnlyArray<ElementPosition<"tile">>,
     depth: number
   ) {
     this.depth = depth;
@@ -46,7 +46,7 @@ export default class TiledMapPolygonObject
     return this.depth;
   }
 
-  getPolygonPoints(): Array<ElementPosition<"tile">> {
+  getPolygonPoints(): $ReadOnlyArray<ElementPosition<"tile">> {
     return this.polygonPoints;
   }
 

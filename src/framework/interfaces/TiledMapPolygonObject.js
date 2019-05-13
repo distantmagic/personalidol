@@ -15,7 +15,7 @@ export interface TiledMapPolygonObject
 
   getDepth(): number;
 
-  getPolygonPoints(): Array<ElementPosition<"tile">>;
+  getPolygonPoints(): $ReadOnlyArray<ElementPosition<"tile">>;
 
   getTiledMapPositionedObject(): TiledMapPositionedObject;
 }

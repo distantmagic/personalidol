@@ -4,12 +4,12 @@ import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfa
 import type { LoggerBreadcrumbsSerializedObject } from "../types/LoggerBreadcrumbsSerializedObject";
 
 export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
-  +breadcrumbs: Array<string>;
+  +breadcrumbs: $ReadOnlyArray<string>;
   +loggerBreadcrumbsLocalCache: Map<string, LoggerBreadcrumbsInterface>;
   +loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface>;
 
   constructor(
-    breadcrumbs: Array<string> = ["root"],
+    breadcrumbs: $ReadOnlyArray<string> = ["root"],
     loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()
   ) {
     this.breadcrumbs = breadcrumbs;
@@ -50,7 +50,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     return new LoggerBreadcrumbs(this.breadcrumbs.concat(`"${breadcrumb}"`));
   }
 
-  asArray(): Array<string> {
+  asArray(): $ReadOnlyArray<string> {
     return this.breadcrumbs;
   }
 
@@ -68,7 +68,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     return this.breadcrumbs.join("/");
   }
 
-  getBreadcrumbs(): Array<string> {
+  getBreadcrumbs(): $ReadOnlyArray<string> {
     return this.breadcrumbs.slice(0);
   }
 

@@ -1,63 +1,26 @@
 // @flow
 
-import * as fixtures from "../../fixtures";
 import Cancelled from "./Exception/Cancelled";
-import CancelToken from "./CancelToken";
-import FixturesFileQueryBuilder from "./FixturesFileQueryBuilder";
-import ForcedTick from "./ForcedTick";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QueryBus from "./QueryBus";
-import TiledMapParser from "./TiledMapParser";
+import tiledMapParserFixture from "./TiledMapParser.fixture";
 import TiledMapUnserializer from "./TiledMapUnserializer";
-import TiledTilesetLoader from "./TiledTilesetLoader";
 
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 
-async function prepare(): Promise<
-  [CancelTokenInterface, QueryBusInterface, Promise<TiledMapInterface>]
-> {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const queryBuilder = new FixturesFileQueryBuilder();
-  const queryBus = new QueryBus(loggerBreadcrumbs);
-  const mapFilename = "map-fixture-01.tmx";
-
-  const mockedEnqueuedCallback = jest.fn(function() {
-    queryBus.tick(new ForcedTick(false));
-
-    // should be done in one tick
-    queryBus.offEnqueued(mockedEnqueuedCallback);
-  });
-
-  queryBus.onEnqueued(mockedEnqueuedCallback);
-
-  const tiledTilesetLoader = new TiledTilesetLoader(
-    loggerBreadcrumbs,
-    queryBus,
-    queryBuilder
-  );
-  const parser = new TiledMapParser(
-    loggerBreadcrumbs,
-    fixtures.findPath(mapFilename),
-    await fixtures.file(mapFilename),
-    tiledTilesetLoader
-  );
-
-  const tiledMapPromise = parser.parse(cancelToken);
-
-  return [cancelToken, queryBus, tiledMapPromise];
-}
-
 it("parses map file", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await prepare();
+  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture(
+    "map-fixture-01.tmx"
+  );
 
   return expect(tiledMapPromise).resolves.toBeDefined();
 });
 
 it("can be cancelled gracefully", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await prepare();
+  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture(
+    "map-fixture-01.tmx"
+  );
 
   cancelToken.cancel();
 
@@ -69,7 +32,7 @@ it("generates skinned layers and tiles", async function() {
     CancelTokenInterface,
     QueryBusInterface,
     Promise<TiledMapInterface>
-  ] = await prepare();
+  ] = await tiledMapParserFixture("map-fixture-01.tmx");
   const tiledMap = await tiledMapPromise;
   const skinnedTiles = [];
 
@@ -180,7 +143,9 @@ it("generates skinned layers and tiles", async function() {
 });
 
 it("is serializable", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await prepare();
+  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture(
+    "map-fixture-01.tmx"
+  );
   const tiledMap = await tiledMapPromise;
 
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

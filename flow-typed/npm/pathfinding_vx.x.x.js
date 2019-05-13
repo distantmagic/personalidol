@@ -13,6 +13,6 @@
  * https://github.com/flowtype/flow-typed
  */
 
-declare module 'pathfinding' {
+declare module "pathfinding" {
   declare module.exports: any;
 }

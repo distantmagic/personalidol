@@ -27,7 +27,7 @@ export default class TiledMapPolygonPointsParser
 
   async parse(
     cancelToken: CancelToken
-  ): Promise<Array<ElementPositionInterface<"tile">>> {
+  ): Promise<$ReadOnlyArray<ElementPositionInterface<"tile">>> {
     const breadcrumbs = this.loggerBreadcrumbs;
     const points = this.content.trim().split(" ");
     const tileHeightPx = this.tileSize.getHeight();

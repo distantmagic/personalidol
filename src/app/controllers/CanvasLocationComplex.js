@@ -133,11 +133,18 @@ export default class CanvasLocationComplex implements CanvasController {
       )
     );
 
-    const workerController = new WorkerClientController<TiledWorkerInterface>(tiledWorker);
-    const workerResponse = await workerController.request<TiledWorkerLoadParams, TiledMapSerializedObject>(cancelToken, "load", {
-      filename: "/assets/map-outlands-01.tmx",
+    const workerController = new WorkerClientController<TiledWorkerInterface>(
+      tiledWorker
+    );
+    const workerResponse = await workerController.request<
+      TiledWorkerLoadParams,
+      TiledMapSerializedObject
+    >(cancelToken, "load", {
+      filename: "/assets/map-outlands-01.tmx"
     });
-    const tiledMapUnserializer = new TiledMapUnserializer(this.loggerBreadcrumbs);
+    const tiledMapUnserializer = new TiledMapUnserializer(
+      this.loggerBreadcrumbs
+    );
     const tiledMap = await tiledMapUnserializer.fromObject(workerResponse);
 
     console.log(tiledMap);

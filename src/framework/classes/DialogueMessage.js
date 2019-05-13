@@ -33,7 +33,7 @@ export default class DialogueMessage implements DialogueMessageInterface {
     );
   }
 
-  async answerTo(): Promise<Array<string>> {
+  async answerTo(): Promise<$ReadOnlyArray<string>> {
     const answerTo = this.messageScript.answer_to;
 
     if (Array.isArray(answerTo)) {

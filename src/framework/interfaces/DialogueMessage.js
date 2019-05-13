@@ -9,7 +9,7 @@ export interface DialogueMessage extends DialogueFragment {
 
   key(): string;
 
-  answerTo(): Promise<Array<string>>;
+  answerTo(): Promise<$ReadOnlyArray<string>>;
 
   getMessageScript(): DialogueScriptMessage;
 

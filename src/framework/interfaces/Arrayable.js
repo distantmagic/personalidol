@@ -1,5 +1,5 @@
 // @flow
 
 export interface Arrayable<T> {
-  asArray(): Array<T>;
+  asArray(): $ReadOnlyArray<T>;
 }

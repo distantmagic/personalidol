@@ -5,6 +5,6 @@ import type { TiledMapPositionedObjectSerializedObject } from "./TiledMapPositio
 
 export type TiledMapPolygonObjectSerializedObject = {|
   depth: number,
-  polygonPoints: Array<ElementPositionSerializedObject<"tile">>,
+  polygonPoints: $ReadOnlyArray<ElementPositionSerializedObject<"tile">>,
   tiledMapPositionedObject: TiledMapPositionedObjectSerializedObject
 |};

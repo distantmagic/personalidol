@@ -1,5 +1,5 @@
 // @flow
 
 export type LoggerBreadcrumbsSerializedObject = {|
-  breadcrumbs: Array<string>
+  breadcrumbs: $ReadOnlyArray<string>
 |};

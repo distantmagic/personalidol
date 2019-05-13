@@ -5,7 +5,7 @@ import * as React from "react";
 import ScrollbarPosition from "../framework/classes/ScrollbarPosition";
 
 type Props = {|
-  children: Array<any>,
+  children: $ReadOnlyArray<any>,
   className?: string,
   style?: {
     [string]: number | string

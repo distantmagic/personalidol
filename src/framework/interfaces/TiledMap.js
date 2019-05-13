@@ -27,15 +27,15 @@ export interface TiledMap
     CancelToken
   ): AsyncGenerator<TiledMapSkinnedLayer, void, void>;
 
-  getLayers(): Array<TiledMapLayer>;
+  getLayers(): $ReadOnlyArray<TiledMapLayer>;
 
   getMapSize(): ElementSize<"tile">;
 
-  getEllipseObjects(): Array<TiledMapEllipseObject>;
+  getEllipseObjects(): $ReadOnlyArray<TiledMapEllipseObject>;
 
-  getPolygonObjects(): Array<TiledMapPolygonObject>;
+  getPolygonObjects(): $ReadOnlyArray<TiledMapPolygonObject>;
 
-  getRectangleObjects(): Array<TiledMapRectangleObject>;
+  getRectangleObjects(): $ReadOnlyArray<TiledMapRectangleObject>;
 
   getTileSize(): ElementSize<"px">;
 

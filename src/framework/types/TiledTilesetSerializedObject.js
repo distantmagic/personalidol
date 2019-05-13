@@ -5,6 +5,6 @@ import type { TiledTileSerializedObject } from "./TiledTileSerializedObject";
 
 export type TiledTilesetSerializedObject = {|
   expectedTileCount: number,
-  tiles: Array<TiledTileSerializedObject>,
+  tiles: $ReadOnlyArray<TiledTileSerializedObject>,
   tileSize: ElementSizeSerializedObject<"px">
 |};

@@ -48,7 +48,7 @@ export default class TiledMapLayerGridCSVParser
     const layerData = this.data.trim();
     const layerLineWidth = this.mapSize.getWidth();
     const lines = split(layerData, "\n", this.mapSize.getHeight());
-    const grid = lines.map(function(line: string): Array<number> {
+    const grid = lines.map(function(line: string): $ReadOnlyArray<number> {
       return split(line, ",", layerLineWidth).map(function(id: string): number {
         return parseInt(id, 10) - 1;
       });

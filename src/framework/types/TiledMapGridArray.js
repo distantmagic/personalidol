@@ -1,3 +1,3 @@
 // @flow
 
-export type TiledMapGridArray = Array<Array<number>>;
+export type TiledMapGridArray = $ReadOnlyArray<$ReadOnlyArray<number>>;

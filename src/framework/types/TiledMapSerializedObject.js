@@ -8,11 +8,11 @@ import type { TiledMapRectangleObjectSerializedObject } from "./TiledMapRectangl
 import type { TiledTilesetSerializedObject } from "./TiledTilesetSerializedObject";
 
 export type TiledMapSerializedObject = {|
-  ellipseObjects: Array<TiledMapEllipseObjectSerializedObject>,
-  layers: Array<TiledMapLayerSerializedObject>,
+  ellipseObjects: $ReadOnlyArray<TiledMapEllipseObjectSerializedObject>,
+  layers: $ReadOnlyArray<TiledMapLayerSerializedObject>,
   mapSize: ElementSizeSerializedObject<"tile">,
-  polygonObjects: Array<TiledMapPolygonObjectSerializedObject>,
-  rectangleObjects: Array<TiledMapRectangleObjectSerializedObject>,
+  polygonObjects: $ReadOnlyArray<TiledMapPolygonObjectSerializedObject>,
+  rectangleObjects: $ReadOnlyArray<TiledMapRectangleObjectSerializedObject>,
   tiledTileset: TiledTilesetSerializedObject,
   tileSize: ElementSizeSerializedObject<"px">
 |};

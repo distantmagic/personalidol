@@ -1,4 +1,3 @@
 // @flow
 
-export interface Pathfinder {
-}
+export interface Pathfinder {}
