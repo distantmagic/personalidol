@@ -14,12 +14,10 @@ export function findPath(filename: string): string {
 }
 
 export async function xmlFile(filename: string): Promise<Document> {
+  const content = await file(filename);
   const domParser = new DOMParser();
 
-  return this.domParser.parseFromString(
-    await file(filename),
-    "application/xml"
-  );
+  return domParser.parseFromString(content, "application/xml");
 }
 
 export async function yamlFile(filename: string): Promise<Object> {

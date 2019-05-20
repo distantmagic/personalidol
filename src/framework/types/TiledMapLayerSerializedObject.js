@@ -1,10 +1,12 @@
 // @flow
 
-import type { ElementSizeSerializedObject } from "../types/ElementSizeSerializedObject";
-import type { TiledMapGridSerializedObject } from "../types/TiledMapGridSerializedObject";
+import type { ElementSizeSerializedObject } from "./ElementSizeSerializedObject";
+import type { TiledCustomPropertiesSerializedObject } from "./TiledCustomPropertiesSerializedObject";
+import type { TiledMapGridSerializedObject } from "./TiledMapGridSerializedObject";
 
 export type TiledMapLayerSerializedObject = {|
   layerSize: ElementSizeSerializedObject<"tile">,
   name: string,
+  tiledCustomProperties: TiledCustomPropertiesSerializedObject,
   tiledMapGrid: TiledMapGridSerializedObject
 |};

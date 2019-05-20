@@ -9,6 +9,7 @@ import {
 
 import Cancelled from "../../framework/classes/Exception/Cancelled";
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
+import Exception from "../../framework/classes/Exception";
 import THREEPointerInteraction from "../../framework/classes/THREEPointerInteraction";
 import TiledMapUnserializer from "../../framework/classes/TiledMapUnserializer";
 import WorkerClientController from "../../framework/classes/WorkerClientController";
@@ -196,7 +197,8 @@ export default class CanvasLocationComplex implements CanvasController {
     const threePointerInteraction = this.threePointerInteraction;
 
     if (!threePointerInteraction) {
-      throw new Error(
+      throw new Exception(
+        this.loggerBreadcrumbs,
         "Controller lifecycle error: THREEPointerInteraction was expected while unmounting."
       );
     }
@@ -215,7 +217,10 @@ export default class CanvasLocationComplex implements CanvasController {
     const tiledWorker = this.tiledWorker;
 
     if (!tiledWorker) {
-      throw new Error("Tiled worker was expected to be instanciated.");
+      throw new Exception(
+        this.loggerBreadcrumbs,
+        "Tiled worker was expected to be instanciated."
+      );
     }
 
     tiledWorker.terminate();

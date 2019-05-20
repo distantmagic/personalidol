@@ -1,8 +1,10 @@
 // @flow
 
 import * as xml from "../helpers/xml";
+import assert from "../helpers/assert";
 import ElementSize from "./ElementSize";
 import Exception from "./Exception";
+import TiledCustomPropertiesParser from "./TiledCustomPropertiesParser";
 import TiledMapBlockObject from "./TiledMapBlockObject";
 import TiledMapPositionedObjectParser from "./TiledMapPositionedObjectParser";
 import TiledRelativeFilename from "./TiledRelativeFilename";
@@ -50,29 +52,21 @@ export default class TiledMapBlockObjectParser
       "name"
     );
     const breadcrumbsObjectName = breadcrumbs.addVariable(objectName);
-
-    const objectDepthElement = xml.getElementWithAttributes(
-      breadcrumbsObjectName,
-      this.objectElement,
-      "property",
-      {
-        name: "depth",
-        type: "int"
-      }
+    const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
+      breadcrumbs,
+      assert<HTMLElement>(
+        breadcrumbs,
+        this.objectElement.getElementsByTagName("properties").item(0)
+      )
     );
-
-    if (!objectDepthElement) {
-      throw new Exception(
-        breadcrumbsObjectName,
-        "Object depth is not specified."
-      );
-    }
-
-    const objectDepthPixels = xml.getNumberAttribute(
-      breadcrumbsObjectName,
-      objectDepthElement,
-      "value"
+    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(
+      cancelToken
     );
+    const objectDepthProperty = tiledCustomProperties.getPropertyByName(
+      "depth"
+    );
+    const objectDepthPixels = parseInt(objectDepthProperty.getValue(), 10);
+
     const objectHeightPixels = xml.getNumberAttribute(
       breadcrumbsObjectName,
       this.objectElement,

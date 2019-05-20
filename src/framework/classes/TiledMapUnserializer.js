@@ -35,7 +35,9 @@ export default class TiledMapUnserializer
     this.elementSizeUnserializerTile = new ElementSizeUnserializer();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tiledMapEllipseObjectUnserializer = new TiledMapEllipseObjectUnserializer();
-    this.tiledMapLayerUnserializer = new TiledMapLayerUnserializer();
+    this.tiledMapLayerUnserializer = new TiledMapLayerUnserializer(
+      this.loggerBreadcrumbs
+    );
     this.tiledMapPolygonObjectUnserializer = new TiledMapPolygonObjectUnserializer();
     this.tiledMapRectangleObjectUnserializer = new TiledMapRectangleObjectUnserializer();
     this.tiledTilesetUnserializer = new TiledTilesetUnserializer(

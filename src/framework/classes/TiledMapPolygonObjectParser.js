@@ -1,7 +1,9 @@
 // @flow
 
 import * as xml from "../helpers/xml";
+import assert from "../helpers/assert";
 import Exception from "./Exception";
+import TiledCustomPropertiesParser from "./TiledCustomPropertiesParser";
 import TiledMapPolygonObject from "./TiledMapPolygonObject";
 import TiledMapPolygonPointsParser from "./TiledMapPolygonPointsParser";
 import TiledMapPositionedObjectParser from "./TiledMapPositionedObjectParser";
@@ -63,31 +65,25 @@ export default class TiledMapPolygonObjectParser
       this.tileSize
     );
 
-    const objectDepthElement = xml.getElementWithAttributes(
-      breadcrumbsObjectName,
-      this.objectElement,
-      "property",
-      {
-        name: "depth",
-        type: "int"
-      }
+    const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
+      breadcrumbs,
+      assert<HTMLElement>(
+        breadcrumbs,
+        this.objectElement.getElementsByTagName("properties").item(0)
+      )
     );
-
-    if (!objectDepthElement) {
-      throw new Exception(
-        breadcrumbsObjectName,
-        "Object depth is not specified."
-      );
-    }
+    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(
+      cancelToken
+    );
+    const objectDepthProperty = tiledCustomProperties.getPropertyByName(
+      "depth"
+    );
+    const objectDepthPixels = parseInt(objectDepthProperty.getValue(), 10);
 
     return new TiledMapPolygonObject(
       await tiledMapPositionedObjectParser.parse(cancelToken),
       await tiledMapPolygonPointsParser.parse(cancelToken),
-      xml.getNumberAttribute(
-        breadcrumbsObjectName,
-        objectDepthElement,
-        "value"
-      ) / this.tileSize.getWidth()
+      objectDepthPixels / this.tileSize.getWidth()
     );
   }
 }

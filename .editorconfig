@@ -6,7 +6,7 @@
 root = true
 
 # Use bracketed regexp to target specific file types or file locations
-[*.{js,json,scss}]
+[*.{js,json,scss,xml}]
 
 # Use hard or soft tabs ["tab", "space"]
 indent_style = space

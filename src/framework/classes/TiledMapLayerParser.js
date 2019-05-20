@@ -3,6 +3,8 @@
 import * as xml from "../helpers/xml";
 import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
+import TiledCustomProperties from "./TiledCustomProperties";
+import TiledCustomPropertiesParser from "./TiledCustomPropertiesParser";
 import TiledMapLayer from "./TiledMapLayer";
 import TiledMapLayerGridCSVParser from "./TiledMapLayerGridCSVParser";
 import { default as TiledMapLayerException } from "./Exception/Tiled/Map/Layer";
@@ -78,6 +80,32 @@ export default class TiledMapLayerParser
       xml.getNumberAttribute(breadcrumbsLayerName, this.layerElement, "height")
     );
 
-    return new TiledMapLayer(layerName, tiledMapGrid, layerSize);
+    const tiledCustomPropertiesElement = this.layerElement
+      .getElementsByTagName("properties")
+      .item(0);
+
+    if (!tiledCustomPropertiesElement) {
+      return new TiledMapLayer(
+        layerName,
+        tiledMapGrid,
+        layerSize,
+        new TiledCustomProperties(breadcrumbsLayerName)
+      );
+    }
+
+    const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
+      breadcrumbsLayerName,
+      tiledCustomPropertiesElement
+    );
+    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(
+      cancelToken
+    );
+
+    return new TiledMapLayer(
+      layerName,
+      tiledMapGrid,
+      layerSize,
+      tiledCustomProperties
+    );
   }
 }

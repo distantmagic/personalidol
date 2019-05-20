@@ -1,6 +1,7 @@
 // @flow
 
 import type { ElementSize } from "../interfaces/ElementSize";
+import type { TiledCustomProperties } from "../interfaces/TiledCustomProperties";
 import type { TiledMapGrid } from "../interfaces/TiledMapGrid";
 import type { TiledMapLayer as TiledMapLayerInterface } from "../interfaces/TiledMapLayer";
 import type { TiledMapLayerSerializedObject } from "../types/TiledMapLayerSerializedObject";
@@ -8,15 +9,18 @@ import type { TiledMapLayerSerializedObject } from "../types/TiledMapLayerSerial
 export default class TiledMapLayer implements TiledMapLayerInterface {
   +layerSize: ElementSize<"tile">;
   +name: string;
+  +tiledCustomProperties: TiledCustomProperties;
   +tiledMapGrid: TiledMapGrid;
 
   constructor(
     name: string,
     tiledMapGrid: TiledMapGrid,
-    layerSize: ElementSize<"tile">
+    layerSize: ElementSize<"tile">,
+    tiledCustomProperties: TiledCustomProperties
   ): void {
     this.layerSize = layerSize;
     this.name = name;
+    this.tiledCustomProperties = tiledCustomProperties;
     this.tiledMapGrid = tiledMapGrid;
   }
 
@@ -26,9 +30,10 @@ export default class TiledMapLayer implements TiledMapLayerInterface {
 
   asObject(): TiledMapLayerSerializedObject {
     return {
-      layerSize: this.layerSize.asObject(),
-      name: this.name,
-      tiledMapGrid: this.tiledMapGrid.asObject()
+      layerSize: this.getLayerSize().asObject(),
+      name: this.getName(),
+      tiledCustomProperties: this.getTiledCustomProperties().asObject(),
+      tiledMapGrid: this.getTiledMapGrid().asObject()
     };
   }
 
@@ -40,15 +45,22 @@ export default class TiledMapLayer implements TiledMapLayerInterface {
     return this.name;
   }
 
+  getTiledCustomProperties(): TiledCustomProperties {
+    return this.tiledCustomProperties;
+  }
+
   getTiledMapGrid(): TiledMapGrid {
     return this.tiledMapGrid;
   }
 
   isEqual(other: TiledMapLayerInterface): boolean {
     return (
-      this.name === other.getName() &&
-      this.layerSize.isEqual(other.getLayerSize()) &&
-      this.tiledMapGrid.isEqual(other.getTiledMapGrid())
+      this.getLayerSize().isEqual(other.getLayerSize()) &&
+      this.getName() === other.getName() &&
+      this.getTiledCustomProperties().isEqual(
+        other.getTiledCustomProperties()
+      ) &&
+      this.getTiledMapGrid().isEqual(other.getTiledMapGrid())
     );
   }
 }
