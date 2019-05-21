@@ -5,7 +5,4 @@ import type { TiledCustomPropertySerializedObject } from "../types/TiledCustomPr
 import type { JsonUnserializable } from "./JsonUnserializable";
 
 export interface TiledCustomPropertyUnserializer
-  extends JsonUnserializable<
-    TiledCustomProperty,
-    TiledCustomPropertySerializedObject
-  > {}
+  extends JsonUnserializable<TiledCustomProperty, TiledCustomPropertySerializedObject> {}

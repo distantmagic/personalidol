@@ -43,11 +43,7 @@ export default class Logger implements LoggerInterface {
     this.log(breadcrumbs, "debug", message);
   }
 
-  log(
-    breadcrumbs: LoggerBreadcrumbs,
-    severity: LogSeverityEnum,
-    message: string
-  ): void {
+  log(breadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): void {
     const baseMessage = `[DD][${severity}] ${message}`;
 
     if ("debug" === severity) {

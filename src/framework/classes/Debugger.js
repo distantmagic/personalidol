@@ -12,9 +12,7 @@ export default class Debugger implements DebuggerInterface {
   +callbacks: Set<DebuggerStateChangeCallback>;
   state: DebuggerState;
 
-  constructor(
-    state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()
-  ) {
+  constructor(state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
     this.callbacks = new Set();
     this.state = state;
   }
@@ -42,10 +40,7 @@ export default class Debugger implements DebuggerInterface {
     }
   }
 
-  updateState(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    value: DebuggerStateValue
-  ): void {
+  updateState(loggerBreadcrumbs: LoggerBreadcrumbs, value: DebuggerStateValue): void {
     const state = this.getState();
 
     return this.setState(state.set(loggerBreadcrumbs, value));

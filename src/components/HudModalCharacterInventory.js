@@ -6,7 +6,7 @@ import Character from "../framework/classes/Entity/Person/Character";
 import HudModalCharacterInventorySlot from "./HudModalCharacterInventorySlot";
 
 type Props = {|
-  character: Character
+  character: Character,
 |};
 
 export default function HudModalCharacterInventory(props: Props) {
@@ -30,7 +30,7 @@ export default function HudModalCharacterInventory(props: Props) {
     "utility3",
     "utility4",
     "utility5",
-    "weapon"
+    "weapon",
   ];
 
   return (

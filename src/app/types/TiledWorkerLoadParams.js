@@ -1,5 +1,5 @@
 // @flow
 
 export type TiledWorkerLoadParams = {|
-  filename: string
+  filename: string,
 |};

@@ -5,7 +5,4 @@ import type { TiledMapPolygonObjectSerializedObject } from "../types/TiledMapPol
 import type { JsonUnserializable } from "./JsonUnserializable";
 
 export interface TiledMapPolygonObjectUnserializer
-  extends JsonUnserializable<
-    TiledMapPolygonObject,
-    TiledMapPolygonObjectSerializedObject
-  > {}
+  extends JsonUnserializable<TiledMapPolygonObject, TiledMapPolygonObjectSerializedObject> {}

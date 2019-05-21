@@ -21,7 +21,7 @@ declare module "howler" {
       loop?: boolean,
       preload?: boolean,
       rolloffFactor?: number,
-      volume?: number
+      volume?: number,
     |}): void;
 
     pause(): void;
@@ -39,6 +39,6 @@ declare module "howler" {
 
   declare module.exports: {|
     Howl: Howl,
-    Howler: Howler
+    Howler: Howler,
   |};
 }

@@ -20,7 +20,7 @@ export default class TiledTile implements TiledTileInterface {
   asObject(): TiledTileSerializedObject {
     return {
       id: this.id,
-      tiledTileImage: this.getTiledTileImage().asObject()
+      tiledTileImage: this.getTiledTileImage().asObject(),
     };
   }
 
@@ -33,9 +33,6 @@ export default class TiledTile implements TiledTileInterface {
   }
 
   isEqual(other: TiledTileInterface): boolean {
-    return (
-      this.getId() === other.getId() &&
-      this.getTiledTileImage().isEqual(other.getTiledTileImage())
-    );
+    return this.getId() === other.getId() && this.getTiledTileImage().isEqual(other.getTiledTileImage());
   }
 }

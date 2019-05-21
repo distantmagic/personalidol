@@ -7,8 +7,7 @@ import type { TiledCustomProperties as TiledCustomPropertiesInterface } from "..
 import type { TiledCustomPropertiesSerializedObject } from "../types/TiledCustomPropertiesSerializedObject";
 import type { TiledCustomProperty } from "../interfaces/TiledCustomProperty";
 
-export default class TiledCustomProperties
-  implements TiledCustomPropertiesInterface {
+export default class TiledCustomProperties implements TiledCustomPropertiesInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tiledCustomProperties: Map<string, TiledCustomProperty>;
 
@@ -18,10 +17,7 @@ export default class TiledCustomProperties
   }
 
   addProperty(tiledCustomProperty: TiledCustomProperty): void {
-    this.tiledCustomProperties.set(
-      tiledCustomProperty.getName(),
-      tiledCustomProperty
-    );
+    this.tiledCustomProperties.set(tiledCustomProperty.getName(), tiledCustomProperty);
   }
 
   asJson(): string {
@@ -36,17 +32,26 @@ export default class TiledCustomProperties
     }
 
     return {
-      tiledCustomProperties: tiledCustomProperties
+      tiledCustomProperties: tiledCustomProperties,
     };
   }
 
   getPropertyByName(name: string): TiledCustomProperty {
     const tiledCustomProperty = this.tiledCustomProperties.get(name);
 
-    return assert<TiledCustomProperty>(
-      this.loggerBreadcrumbs,
-      tiledCustomProperty
-    );
+    return assert<TiledCustomProperty>(this.loggerBreadcrumbs, tiledCustomProperty);
+  }
+
+  hasProperty(tiledCustomProperty: TiledCustomProperty): boolean {
+    const name = tiledCustomProperty.getName();
+
+    if (!this.hasPropertyByName(name)) {
+      return false;
+    }
+
+    const thisProperty = this.getPropertyByName(name);
+
+    return thisProperty.isEqual(tiledCustomProperty);
   }
 
   hasPropertyByName(name: string): boolean {

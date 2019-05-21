@@ -8,8 +8,7 @@ import type { TiledMapRectangleObjectUnserializer as TiledMapRectangleObjectUnse
 import type { TiledMapBlockObjectUnserializer as TiledMapBlockObjectUnserializerInterface } from "../interfaces/TiledMapBlockObjectUnserializer";
 import type { TiledMapRectangleObjectSerializedObject } from "../types/TiledMapRectangleObjectSerializedObject";
 
-export default class TiledMapRectangleObjectUnserializer
-  implements TiledMapRectangleObjectUnserializerInterface {
+export default class TiledMapRectangleObjectUnserializer implements TiledMapRectangleObjectUnserializerInterface {
   +tiledMapBlockObjectUnserializer: TiledMapBlockObjectUnserializerInterface;
 
   constructor() {
@@ -20,13 +19,7 @@ export default class TiledMapRectangleObjectUnserializer
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(
-    parsed: TiledMapRectangleObjectSerializedObject
-  ): TiledMapRectangleObjectInterface {
-    return new TiledMapRectangleObject(
-      this.tiledMapBlockObjectUnserializer.fromObject(
-        parsed.tiledMapBlockObject
-      )
-    );
+  fromObject(parsed: TiledMapRectangleObjectSerializedObject): TiledMapRectangleObjectInterface {
+    return new TiledMapRectangleObject(this.tiledMapBlockObjectUnserializer.fromObject(parsed.tiledMapBlockObject));
   }
 }

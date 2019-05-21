@@ -30,7 +30,7 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   scheduler: Scheduler,
-  queryBus: QueryBus
+  queryBus: QueryBus,
 |};
 
 function useResourcesLoadingState(
@@ -38,10 +38,7 @@ function useResourcesLoadingState(
   threeLoadingManager: THREELoadingManagerInterface,
   sceneManager: ?SceneManagerInterface
 ) {
-  const [
-    resourcesLoadingState,
-    setLoadingState
-  ] = React.useState<ResourcesLoadingStateInterface>(
+  const [resourcesLoadingState, setLoadingState] = React.useState<ResourcesLoadingStateInterface>(
     new ResourcesLoadingState(0, 0)
   );
 
@@ -62,9 +59,7 @@ function useResourcesLoadingState(
           .stop()
           .catch(
             props.exceptionHandler.expectException(
-              props.loggerBreadcrumbs
-                .add("threeLoadingManager.onError")
-                .add("sceneManager.stop.catch")
+              props.loggerBreadcrumbs.add("threeLoadingManager.onError").add("sceneManager.stop.catch")
             )
           );
       }
@@ -74,9 +69,7 @@ function useResourcesLoadingState(
           .start()
           .catch(
             props.exceptionHandler.expectException(
-              props.loggerBreadcrumbs
-                .add("threeLoadingManager.onLoad")
-                .add("sceneManager.start.catch")
+              props.loggerBreadcrumbs.add("threeLoadingManager.onLoad").add("sceneManager.start.catch")
             )
           );
       }
@@ -86,9 +79,7 @@ function useResourcesLoadingState(
           .stop()
           .catch(
             props.exceptionHandler.expectException(
-              props.loggerBreadcrumbs
-                .add("threeLoadingManager.onProgress")
-                .add("sceneManager.stop.catch")
+              props.loggerBreadcrumbs.add("threeLoadingManager.onProgress").add("sceneManager.stop.catch")
             )
           );
       }
@@ -98,9 +89,7 @@ function useResourcesLoadingState(
           .stop()
           .catch(
             props.exceptionHandler.expectException(
-              props.loggerBreadcrumbs
-                .add("threeLoadingManager.onStart")
-                .add("sceneManager.stop.catch")
+              props.loggerBreadcrumbs.add("threeLoadingManager.onStart").add("sceneManager.stop.catch")
             )
           );
       }
@@ -119,28 +108,19 @@ function useResourcesLoadingState(
         loadingManagerReference.offStart(onStart);
       };
     },
-    [
-      props.exceptionHandler,
-      props.loggerBreadcrumbs,
-      threeLoadingManager,
-      sceneManager
-    ]
+    [props.exceptionHandler, props.loggerBreadcrumbs, threeLoadingManager, sceneManager]
   );
 
   return [resourcesLoadingState];
 }
 
-function useScene(
-  props: Props,
-  sceneManager: ?SceneManagerInterface,
-  canvas: ?HTMLCanvasElement
-): [boolean, boolean] {
+function useScene(props: Props, sceneManager: ?SceneManagerInterface, canvas: ?HTMLCanvasElement): [boolean, boolean] {
   const [sceneLoadingState, setSceneLoadingState] = React.useState<{|
     isAttaching: boolean,
-    isFailed: boolean
+    isFailed: boolean,
   |}>({
     isAttaching: false,
-    isFailed: false
+    isFailed: false,
   });
 
   React.useEffect(
@@ -149,14 +129,12 @@ function useScene(
         return;
       }
 
-      const attachCancelToken = new CancelToken(
-        props.loggerBreadcrumbs.add("useScene.sceneManager.attach")
-      );
+      const attachCancelToken = new CancelToken(props.loggerBreadcrumbs.add("useScene.sceneManager.attach"));
       const manager = sceneManager;
 
       setSceneLoadingState({
         isAttaching: true,
-        isFailed: false
+        isFailed: false,
       });
 
       manager
@@ -168,14 +146,11 @@ function useScene(
 
           setSceneLoadingState({
             isAttaching: false,
-            isFailed: false
+            isFailed: false,
           });
         })
         .catch(function(err: Error) {
-          props.exceptionHandler.captureException(
-            props.loggerBreadcrumbs.add("sceneManager.attach.catch"),
-            err
-          );
+          props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("sceneManager.attach.catch"), err);
 
           if (attachCancelToken.isCancelled()) {
             return;
@@ -183,7 +158,7 @@ function useScene(
 
           setSceneLoadingState({
             isAttaching: false,
-            isFailed: true
+            isFailed: true,
           });
         });
 
@@ -193,16 +168,8 @@ function useScene(
         manager
           // currently there is no scenario where detach should be cancelled,
           // but nonetheless this one should be here for consistency
-          .detach(
-            new CancelToken(
-              props.loggerBreadcrumbs.add("useScene.sceneManager.detach")
-            )
-          )
-          .catch(
-            props.exceptionHandler.expectException(
-              props.loggerBreadcrumbs.add("sceneManager.detach.catch")
-            )
-          );
+          .detach(new CancelToken(props.loggerBreadcrumbs.add("useScene.sceneManager.detach")))
+          .catch(props.exceptionHandler.expectException(props.loggerBreadcrumbs.add("sceneManager.detach.catch")));
       };
     },
     [props.exceptionHandler, props.loggerBreadcrumbs, sceneManager, canvas]
@@ -217,10 +184,7 @@ function useSceneManager(
   pointerState: ?PointerStateInterface,
   threeLoadingManager: THREELoadingManagerInterface
 ) {
-  const [
-    sceneManager,
-    setSceneManager
-  ] = React.useState<?SceneManagerInterface>(null);
+  const [sceneManager, setSceneManager] = React.useState<?SceneManagerInterface>(null);
 
   React.useEffect(
     function() {
@@ -253,7 +217,7 @@ function useSceneManager(
       props.loggerBreadcrumbs,
       props.queryBus,
       props.scheduler,
-      threeLoadingManager
+      threeLoadingManager,
     ]
   );
 
@@ -263,31 +227,13 @@ function useSceneManager(
 export default function HudSceneCanvas(props: Props) {
   const [canvas, setCanvas] = React.useState<?HTMLCanvasElement>(null);
   const [threeLoadingManager] = React.useState<THREELoadingManagerInterface>(
-    new THREELoadingManager(
-      props.loggerBreadcrumbs.add("THREELoadingManager"),
-      props.exceptionHandler
-    )
+    new THREELoadingManager(props.loggerBreadcrumbs.add("THREELoadingManager"), props.exceptionHandler)
   );
-  const [
-    keyboardState,
-    setKeyboardState
-  ] = React.useState<?KeyboardStateInterface>(null);
-  const [
-    pointerState,
-    setPointerState
-  ] = React.useState<?PointerStateInterface>(null);
-  const [sceneManager] = useSceneManager(
-    props,
-    keyboardState,
-    pointerState,
-    threeLoadingManager
-  );
+  const [keyboardState, setKeyboardState] = React.useState<?KeyboardStateInterface>(null);
+  const [pointerState, setPointerState] = React.useState<?PointerStateInterface>(null);
+  const [sceneManager] = useSceneManager(props, keyboardState, pointerState, threeLoadingManager);
   const [isFailed, isAttaching] = useScene(props, sceneManager, canvas);
-  const [resourcesLoadingState] = useResourcesLoadingState(
-    props,
-    threeLoadingManager,
-    sceneManager
-  );
+  const [resourcesLoadingState] = useResourcesLoadingState(props, threeLoadingManager, sceneManager);
   const [scene, setScene] = React.useState<?HTMLElement>(null);
 
   React.useEffect(
@@ -348,15 +294,13 @@ export default function HudSceneCanvas(props: Props) {
           <canvas
             className={classnames("dd__scene__canvas", {
               "dd__scene__canvas--attaching": isAttaching,
-              "dd__scene__canvas--loading": resourcesLoadingState.isLoading()
+              "dd__scene__canvas--loading": resourcesLoadingState.isLoading(),
             })}
             ref={setCanvas}
           />
         </React.Fragment>
       ) : (
-        <div className="dd__loader dd__scene__loader">
-          Initializing scene...
-        </div>
+        <div className="dd__loader dd__scene__loader">Initializing scene...</div>
       )}
     </div>
   );

@@ -40,22 +40,14 @@ export default class DialogueTurn implements DialogueTurnInterface {
     return currentMessage.actor();
   }
 
-  async answer(
-    answer: DialogueMessageInterface
-  ): Promise<?DialogueTurnInterface> {
+  async answer(answer: DialogueMessageInterface): Promise<?DialogueTurnInterface> {
     const followUp = await this.followUpAnswer(answer);
 
     if (!followUp) {
       return;
     }
 
-    return new DialogueTurn(
-      this.expressionBus,
-      this.context,
-      this.script,
-      followUp,
-      this._initiator
-    );
+    return new DialogueTurn(this.expressionBus, this.context, this.script, followUp, this._initiator);
   }
 
   async answers(): Promise<DialogueMessages> {
@@ -69,12 +61,7 @@ export default class DialogueTurn implements DialogueTurnInterface {
       if (!condition || (await this.expressionBus.condition(condition))) {
         ret = ret.set(
           answer.key(),
-          new DialogueMessage(
-            this.expressionBus,
-            this.getExpressionContext(),
-            answer.key(),
-            answer.getMessageScript()
-          )
+          new DialogueMessage(this.expressionBus, this.getExpressionContext(), answer.key(), answer.getMessageScript())
         );
       }
     }
@@ -82,9 +69,7 @@ export default class DialogueTurn implements DialogueTurnInterface {
     return ret;
   }
 
-  async followUpAnswer(
-    answer: DialogueMessageInterface
-  ): Promise<?DialogueMessageInterface> {
+  async followUpAnswer(answer: DialogueMessageInterface): Promise<?DialogueMessageInterface> {
     const answers = await this.script.getAnswers(answer);
 
     return answers.first();

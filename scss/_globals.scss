@@ -39,8 +39,8 @@ body {
   display: grid;
   font-family: $font-family-vesper-libre;
   height: 100vh;
-  text-shadow: rgba(55, 55, 55, 0.6) -1px 0 0, rgba(55, 55, 55, 0.6) 0 -1px 0,
-    rgba(black, 0.6) 0 1px 0, rgba(black, 0.6) 1px 0 0;
+  text-shadow: rgba(55, 55, 55, 0.6) -1px 0 0, rgba(55, 55, 55, 0.6) 0 -1px 0, rgba(black, 0.6) 0 1px 0,
+    rgba(black, 0.6) 1px 0 0;
   width: 100%;
 }
 
@@ -140,8 +140,7 @@ button {
 
   &:active:before {
     filter: brightness(0.8);
-    transform: translateX($dd-frame-border-width)
-      translateY($dd-frame-border-width);
+    transform: translateX($dd-frame-border-width) translateY($dd-frame-border-width);
   }
 
   &:after {
@@ -204,8 +203,7 @@ button {
 
 @each $icon in (backpack, dialogue, magic, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
-    background-image: url("/assets/icon-#{$icon}.png"),
-      url("/assets/texture-mineshaft-marble-512.png");
+    background-image: url("/assets/icon-#{$icon}.png"), url("/assets/texture-mineshaft-marble-512.png");
     background-size: 80%, auto;
   }
 }
@@ -229,11 +227,7 @@ button {
 }
 
 .dd__frame.dd__frame--tab:not(.dd__frame--active) {
-  background-image: linear-gradient(
-      to bottom,
-      transparent 60%,
-      rgba(black, 0.3)
-    ),
+  background-image: linear-gradient(to bottom, transparent 60%, rgba(black, 0.3)),
     url("/assets/texture-cod-gray-marble-512.png");
 }
 

@@ -14,10 +14,7 @@ export default class ExpressionContext implements ExpressionContextInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +map: Map<string, any>;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    elements: ?ExpressionContextInput
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, elements: ?ExpressionContextInput) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.map = Map<string, any>(elements ? elements : {});
   }
@@ -28,16 +25,10 @@ export default class ExpressionContext implements ExpressionContextInterface {
 
   set(key: string, value: any): ExpressionContext {
     if (this.map.has(key)) {
-      throw new UnexpectedOverride(
-        this.loggerBreadcrumbs,
-        `Expression context tried to override key: ${key}`
-      );
+      throw new UnexpectedOverride(this.loggerBreadcrumbs, `Expression context tried to override key: ${key}`);
     }
 
-    return new ExpressionContext(
-      this.loggerBreadcrumbs,
-      this.map.set(key, value)
-    );
+    return new ExpressionContext(this.loggerBreadcrumbs, this.map.set(key, value));
   }
 
   toObject(): TwigRendererData {

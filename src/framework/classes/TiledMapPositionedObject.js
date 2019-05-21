@@ -5,8 +5,7 @@ import type { ElementRotation } from "../interfaces/ElementRotation";
 import type { TiledMapPositionedObject as TiledMapPositionedObjectInterface } from "../interfaces/TiledMapPositionedObject";
 import type { TiledMapPositionedObjectSerializedObject } from "../types/TiledMapPositionedObjectSerializedObject";
 
-export default class TiledMapPositionedObject
-  implements TiledMapPositionedObjectInterface {
+export default class TiledMapPositionedObject implements TiledMapPositionedObjectInterface {
   +elementPosition: ElementPosition<"tile">;
   +elementRotation: ElementRotation<"radians">;
   +name: string;
@@ -29,7 +28,7 @@ export default class TiledMapPositionedObject
     return {
       elementPosition: this.elementPosition.asObject(),
       elementRotation: this.elementRotation.asObject(),
-      name: this.name
+      name: this.name,
     };
   }
 

@@ -6,9 +6,7 @@ import type { JsonSerializable } from "./JsonSerializable";
 import type { TiledTile } from "./TiledTile";
 import type { TiledTilesetSerializedObject } from "../types/TiledTilesetSerializedObject";
 
-export interface TiledTileset
-  extends Equatable<TiledTileset>,
-    JsonSerializable<TiledTilesetSerializedObject> {
+export interface TiledTileset extends Equatable<TiledTileset>, JsonSerializable<TiledTilesetSerializedObject> {
   add(TiledTile): void;
 
   getExpectedTileCount(): number;

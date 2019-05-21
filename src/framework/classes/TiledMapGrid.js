@@ -25,26 +25,27 @@ export default class TiledMapGrid implements TiledMapGridInterface {
   asObject(): TiledMapGridSerializedObject {
     return {
       grid: this.grid,
-      gridSize: this.gridSize.asObject()
+      gridSize: this.gridSize.asObject(),
     };
   }
 
-  async *generatePositionedTiles(): AsyncGenerator<
-    TiledPositionedTileInterface,
-    void,
-    void
-  > {
+  async *generatePositionedTiles(): AsyncGenerator<TiledPositionedTileInterface, void, void> {
     const gridWidth = this.gridSize.getWidth();
     const gridHeight = this.gridSize.getHeight();
 
     for (let y = 0; y < gridHeight; y += 1) {
       for (let x = 0; x < gridWidth; x += 1) {
-        yield new TiledPositionedTile(
-          this.grid[y][x],
-          new ElementPosition(x, y)
-        );
+        yield new TiledPositionedTile(this.grid[y][x], new ElementPosition(x, y));
       }
     }
+  }
+
+  getCoveredGrid(): TiledMapGridArray {
+    return this.getGrid().map(function(gridRow) {
+      return gridRow.map(function(gridCell) {
+        return gridCell <= 0 ? 0 : 1;
+      });
+    });
   }
 
   getGrid(): TiledMapGridArray {

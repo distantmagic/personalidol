@@ -8,8 +8,7 @@ import type { TiledMapGrid as TiledMapGridInterface } from "../interfaces/TiledM
 import type { TiledMapGridUnserializer as TiledMapGridUnserializerInterface } from "../interfaces/TiledMapGridUnserializer";
 import type { TiledMapGridSerializedObject } from "../types/TiledMapGridSerializedObject";
 
-export default class TiledMapGridUnserializer
-  implements TiledMapGridUnserializerInterface {
+export default class TiledMapGridUnserializer implements TiledMapGridUnserializerInterface {
   +elementSizeUnserializer: ElementSizeUnserializerInterface<"tile">;
 
   constructor() {
@@ -23,9 +22,6 @@ export default class TiledMapGridUnserializer
   }
 
   fromObject(parsed: TiledMapGridSerializedObject): TiledMapGridInterface {
-    return new TiledMapGrid(
-      parsed.grid,
-      this.elementSizeUnserializer.fromObject(parsed.gridSize)
-    );
+    return new TiledMapGrid(parsed.grid, this.elementSizeUnserializer.fromObject(parsed.gridSize));
   }
 }

@@ -22,10 +22,7 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
     this.children.push(view);
   }
 
-  async attach(
-    cancelToken: CancelToken,
-    renderer: WebGLRenderer
-  ): Promise<void> {
+  async attach(cancelToken: CancelToken, renderer: WebGLRenderer): Promise<void> {
     return void (await Promise.all(
       this.children.map(child => {
         if (cancelToken.isCancelled()) {
@@ -40,10 +37,7 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
     ));
   }
 
-  async detach(
-    cancelToken: CancelToken,
-    renderer: WebGLRenderer
-  ): Promise<void> {
+  async detach(cancelToken: CancelToken, renderer: WebGLRenderer): Promise<void> {
     return void (await Promise.all(
       this.children.map(child => {
         if (cancelToken.isCancelled()) {

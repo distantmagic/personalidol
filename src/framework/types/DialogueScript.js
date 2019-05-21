@@ -4,9 +4,9 @@ import type { DialogueScriptMessage } from "./DialogueScriptMessage";
 
 export type DialogueScript = {
   messages: {
-    [string]: DialogueScriptMessage
+    [string]: DialogueScriptMessage,
   },
   metadata: {
-    start_message: string
-  }
+    start_message: string,
+  },
 };

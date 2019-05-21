@@ -37,20 +37,14 @@ export default class SceneManager implements SceneManagerInterface {
     this.scheduler = scheduler;
   }
 
-  async attach(
-    cancelToken: CancelToken,
-    canvas: HTMLCanvasElement
-  ): Promise<void> {
+  async attach(cancelToken: CancelToken, canvas: HTMLCanvasElement): Promise<void> {
     if (cancelToken.isCancelled()) {
-      throw new Cancelled(
-        this.loggerBreadcrumbs.add("attach"),
-        "Cancel token was cancelled before attaching scene."
-      );
+      throw new Cancelled(this.loggerBreadcrumbs.add("attach"), "Cancel token was cancelled before attaching scene.");
     }
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      canvas: canvas
+      canvas: canvas,
       // context: canvas.getContext("webgl2"),
     });
     // renderer.shadowMap.enabled = true;
@@ -78,16 +72,11 @@ export default class SceneManager implements SceneManagerInterface {
     const drawCallback = this.drawCallback;
 
     if (!drawCallback) {
-      throw new Error(
-        "Invalid scene lifecycle. Draw callback was expected while detaching."
-      );
+      throw new Error("Invalid scene lifecycle. Draw callback was expected while detaching.");
     }
 
     if (cancelToken.isCancelled()) {
-      throw new Cancelled(
-        this.loggerBreadcrumbs.add("detach"),
-        "Cancel token was cancelled before detaching scene."
-      );
+      throw new Cancelled(this.loggerBreadcrumbs.add("detach"), "Cancel token was cancelled before detaching scene.");
     }
 
     this.scheduler.offDraw(drawCallback);

@@ -3,26 +3,19 @@
 import type { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
 import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
-function findActive(
-  collection: QueryBusQueueCollection
-): QueryBusQueueCollection {
+function findActive(collection: QueryBusQueueCollection): QueryBusQueueCollection {
   return collection.filter(function(query) {
     return !query.isCancelled();
   });
 }
 
-function findSimilar(
-  collection: QueryBusQueueCollection,
-  other: CancelTokenQuery<any>
-): QueryBusQueueCollection {
+function findSimilar(collection: QueryBusQueueCollection, other: CancelTokenQuery<any>): QueryBusQueueCollection {
   return collection.filter(function(element) {
     return element.isEqual(other) && element !== other;
   });
 }
 
-function findUnique(
-  collection: QueryBusQueueCollection
-): QueryBusQueueCollection {
+function findUnique(collection: QueryBusQueueCollection): QueryBusQueueCollection {
   return collection.reduce(function(acc: QueryBusQueueCollection, item) {
     if (!includesSimilar(acc, item)) {
       acc.push(item);
@@ -32,24 +25,15 @@ function findUnique(
   }, []);
 }
 
-function includesSimilar(
-  collection: QueryBusQueueCollection,
-  other: CancelTokenQuery<any>
-): boolean {
+function includesSimilar(collection: QueryBusQueueCollection, other: CancelTokenQuery<any>): boolean {
   return collection.some(function(element) {
     return element.isEqual(other);
   });
 }
 
-function infer(
-  allQueries: QueryBusQueueCollection,
-  executedQueries: QueryBusQueueCollection
-): void {
+function infer(allQueries: QueryBusQueueCollection, executedQueries: QueryBusQueueCollection): void {
   for (let cancelTokenQuery of executedQueries) {
-    const similarQueries = findSimilar(
-      findActive(allQueries),
-      cancelTokenQuery
-    );
+    const similarQueries = findSimilar(findActive(allQueries), cancelTokenQuery);
     for (let similarQuery of similarQueries) {
       similarQuery.setExecuted(cancelTokenQuery.getResult());
     }

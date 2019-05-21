@@ -21,25 +21,22 @@ declare module "jsonrpc-lite" {
   declare export type JsonRpcErrorResponse = JsonRpcResponse & {|
     +error: {|
       +code: number,
-      +message: string
-    |}
+      +message: string,
+    |},
   |};
 
-  declare export type JsonRpcRequest<
-    Method: string,
-    Params
-  > = JsonRpcResponse & {|
+  declare export type JsonRpcRequest<Method: string, Params> = JsonRpcResponse & {|
     +method: Method,
-    +params: Params
+    +params: Params,
   |};
 
   declare export type JsonRpcResponse = {|
     +id: string,
-    +jsonrpc: "2.0"
+    +jsonrpc: "2.0",
   |};
 
   declare export type JsonRpcSuccessResponse<T: Object> = JsonRpcResponse & {|
-    +result: T
+    +result: T,
   |};
 
   declare export default {|
@@ -47,12 +44,8 @@ declare module "jsonrpc-lite" {
 
     error<T>(id: string, JsonRpcError): JsonRpcErrorResponse,
 
-    request<Method: string, Params: Object>(
-      id: string,
-      Method,
-      data: Params
-    ): JsonRpcRequest<Method, Params>,
+    request<Method: string, Params: Object>(id: string, Method, data: Params): JsonRpcRequest<Method, Params>,
 
-    success<T: Object>(id: string, data: T): JsonRpcSuccessResponse<T>
+    success<T: Object>(id: string, data: T): JsonRpcSuccessResponse<T>,
   |};
 }

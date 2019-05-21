@@ -7,8 +7,7 @@ import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementS
 import type { ElementSizeUnserializer as ElementSizeUnserializerInterface } from "../interfaces/ElementSizeUnserializer";
 import type { ElementSizeSerializedObject } from "../types/ElementSizeSerializedObject";
 
-export default class ElementSizeUnserializer<T: ElementPositionUnit>
-  implements ElementSizeUnserializerInterface<T> {
+export default class ElementSizeUnserializer<T: ElementPositionUnit> implements ElementSizeUnserializerInterface<T> {
   fromJson(serialized: string): ElementSizeInterface<T> {
     return this.fromObject(JSON.parse(serialized));
   }

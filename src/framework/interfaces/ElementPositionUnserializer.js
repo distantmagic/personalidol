@@ -6,7 +6,4 @@ import type { ElementPositionSerializedObject } from "../types/ElementPositionSe
 import type { JsonUnserializable } from "./JsonUnserializable";
 
 export interface ElementPositionUnserializer<T: ElementPositionUnit>
-  extends JsonUnserializable<
-    ElementPosition<T>,
-    ElementPositionSerializedObject<T>
-  > {}
+  extends JsonUnserializable<ElementPosition<T>, ElementPositionSerializedObject<T>> {}

@@ -14,11 +14,7 @@ export default class TiledTileset implements TiledTilesetInterface {
   +tiles: Map<number, TiledTile>;
   +tileSize: ElementSize<"px">;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    expectedTileCount: number,
-    tileSize: ElementSize<"px">
-  ): void {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, expectedTileCount: number, tileSize: ElementSize<"px">): void {
     this.expectedTileCount = expectedTileCount;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tiles = new Map<number, TiledTile>();
@@ -43,7 +39,7 @@ export default class TiledTileset implements TiledTilesetInterface {
     return {
       expectedTileCount: this.getExpectedTileCount(),
       tiles: serializedTiles,
-      tileSize: this.getTileSize().asObject()
+      tileSize: this.getTileSize().asObject(),
     };
   }
 
@@ -55,10 +51,7 @@ export default class TiledTileset implements TiledTilesetInterface {
     const tile = this.tiles.get(id);
 
     if (!tile) {
-      throw new TiledTilesetException(
-        this.loggerBreadcrumbs.add("getTileById"),
-        `Tile not found: "${id}".`
-      );
+      throw new TiledTilesetException(this.loggerBreadcrumbs.add("getTileById"), `Tile not found: "${id}".`);
     }
 
     return tile;

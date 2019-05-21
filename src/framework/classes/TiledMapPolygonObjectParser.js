@@ -14,8 +14,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMapPolygonObject as TiledMapPolygonObjectInterface } from "../interfaces/TiledMapPolygonObject";
 import type { TiledMapPolygonObjectParser as TiledMapPolygonObjectParserInterface } from "../interfaces/TiledMapPolygonObjectParser";
 
-export default class TiledMapPolygonObjectParser
-  implements TiledMapPolygonObjectParserInterface {
+export default class TiledMapPolygonObjectParser implements TiledMapPolygonObjectParserInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapFilename: string;
   +objectElement: HTMLElement;
@@ -33,20 +32,12 @@ export default class TiledMapPolygonObjectParser
     this.tileSize = tileSize;
   }
 
-  async parse(
-    cancelToken: CancelToken
-  ): Promise<TiledMapPolygonObjectInterface> {
+  async parse(cancelToken: CancelToken): Promise<TiledMapPolygonObjectInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("parse");
-    const objectName = xml.getStringAttribute(
-      breadcrumbs,
-      this.objectElement,
-      "name"
-    );
+    const objectName = xml.getStringAttribute(breadcrumbs, this.objectElement, "name");
     const breadcrumbsObjectName = breadcrumbs.addVariable(objectName);
 
-    const polygonElement = this.objectElement
-      .getElementsByTagName("polygon")
-      .item(0);
+    const polygonElement = this.objectElement.getElementsByTagName("polygon").item(0);
 
     if (!polygonElement) {
       throw new Exception(breadcrumbs, "Polygon points element is not defined");
@@ -67,17 +58,10 @@ export default class TiledMapPolygonObjectParser
 
     const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
       breadcrumbs,
-      assert<HTMLElement>(
-        breadcrumbs,
-        this.objectElement.getElementsByTagName("properties").item(0)
-      )
+      assert<HTMLElement>(breadcrumbs, this.objectElement.getElementsByTagName("properties").item(0))
     );
-    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(
-      cancelToken
-    );
-    const objectDepthProperty = tiledCustomProperties.getPropertyByName(
-      "depth"
-    );
+    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(cancelToken);
+    const objectDepthProperty = tiledCustomProperties.getPropertyByName("depth");
     const objectDepthPixels = parseInt(objectDepthProperty.getValue(), 10);
 
     return new TiledMapPolygonObject(

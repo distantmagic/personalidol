@@ -15,17 +15,12 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMapLayer as TiledMapLayerInterface } from "../interfaces/TiledMapLayer";
 import type { TiledMapLayerParser as TiledMapLayerParserInterface } from "../interfaces/TiledMapLayerParser";
 
-export default class TiledMapLayerParser
-  implements TiledMapLayerParserInterface {
+export default class TiledMapLayerParser implements TiledMapLayerParserInterface {
   +layerElement: HTMLElement;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapSize: ElementSizeInterface<"tile">;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    layerElement: HTMLElement,
-    mapSize: ElementSizeInterface<"tile">
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, layerElement: HTMLElement, mapSize: ElementSizeInterface<"tile">) {
     this.layerElement = layerElement;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapSize = mapSize;
@@ -35,32 +30,18 @@ export default class TiledMapLayerParser
     const breadcrumbs = this.loggerBreadcrumbs.add("parse");
 
     if (cancelToken.isCancelled()) {
-      throw new Cancelled(
-        breadcrumbs,
-        "Cancel token was cancelled before parsing tiled layer."
-      );
+      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before parsing tiled layer.");
     }
 
-    const layerName = xml.getStringAttribute(
-      breadcrumbs,
-      this.layerElement,
-      "name"
-    );
+    const layerName = xml.getStringAttribute(breadcrumbs, this.layerElement, "name");
     const breadcrumbsLayerName = breadcrumbs.addVariable(layerName);
     const dataElement = this.layerElement.getElementsByTagName("data").item(0);
 
     if (!dataElement) {
-      throw new TiledMapLayerException(
-        breadcrumbsLayerName,
-        "No data found in map layer."
-      );
+      throw new TiledMapLayerException(breadcrumbsLayerName, "No data found in map layer.");
     }
 
-    const dataEncoding = xml.getStringAttribute(
-      breadcrumbsLayerName,
-      dataElement,
-      "encoding"
-    );
+    const dataEncoding = xml.getStringAttribute(breadcrumbsLayerName, dataElement, "encoding");
 
     if ("csv" !== dataEncoding) {
       throw new TiledMapLayerException(
@@ -80,32 +61,18 @@ export default class TiledMapLayerParser
       xml.getNumberAttribute(breadcrumbsLayerName, this.layerElement, "height")
     );
 
-    const tiledCustomPropertiesElement = this.layerElement
-      .getElementsByTagName("properties")
-      .item(0);
+    const tiledCustomPropertiesElement = this.layerElement.getElementsByTagName("properties").item(0);
 
     if (!tiledCustomPropertiesElement) {
-      return new TiledMapLayer(
-        layerName,
-        tiledMapGrid,
-        layerSize,
-        new TiledCustomProperties(breadcrumbsLayerName)
-      );
+      return new TiledMapLayer(layerName, tiledMapGrid, layerSize, new TiledCustomProperties(breadcrumbsLayerName));
     }
 
     const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
       breadcrumbsLayerName,
       tiledCustomPropertiesElement
     );
-    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(
-      cancelToken
-    );
+    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(cancelToken);
 
-    return new TiledMapLayer(
-      layerName,
-      tiledMapGrid,
-      layerSize,
-      tiledCustomProperties
-    );
+    return new TiledMapLayer(layerName, tiledMapGrid, layerSize, tiledCustomProperties);
   }
 }

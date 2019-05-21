@@ -4,8 +4,7 @@ import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementS
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 import type { ElementSizeSerializedObject } from "../types/ElementSizeSerializedObject";
 
-export default class ElementSize<Unit: ElementPositionUnit>
-  implements ElementSizeInterface<Unit> {
+export default class ElementSize<Unit: ElementPositionUnit> implements ElementSizeInterface<Unit> {
   +height: number;
   +depth: number;
   +width: number;
@@ -24,7 +23,7 @@ export default class ElementSize<Unit: ElementPositionUnit>
     return {
       depth: this.getDepth(),
       height: this.getHeight(),
-      width: this.getWidth()
+      width: this.getWidth(),
     };
   }
 

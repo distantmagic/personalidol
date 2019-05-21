@@ -7,12 +7,7 @@ import TiledCustomPropertyUnserializer from "./TiledCustomPropertyUnserializer";
 it("is serializable as JSON", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
 
-  const tiledCustomProperty = new TiledCustomProperty(
-    loggerBreadcrumbs,
-    "foo",
-    "string",
-    "bar"
-  );
+  const tiledCustomProperty = new TiledCustomProperty(loggerBreadcrumbs, "foo", "string", "bar");
   const serialized = tiledCustomProperty.asJson();
 
   const unserializer = new TiledCustomPropertyUnserializer(loggerBreadcrumbs);

@@ -2,12 +2,7 @@
 
 import autoBind from "auto-bind";
 
-import type {
-  BeginCallback,
-  DrawCallback,
-  EndCallback,
-  UpdateCallback
-} from "mainloop.js";
+import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
 
 import type { Scheduler as SchedulerInterface } from "../interfaces/Scheduler";
 

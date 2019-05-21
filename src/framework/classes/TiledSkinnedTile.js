@@ -10,11 +10,7 @@ export default class TiledSkinnedTile implements TiledSkinnedTileInterface {
   +tiledPositionedTile: TiledPositionedTile;
   +tiledTile: TiledTile;
 
-  constructor(
-    id: number,
-    tiledPositionedTile: TiledPositionedTile,
-    tiledTile: TiledTile
-  ) {
+  constructor(id: number, tiledPositionedTile: TiledPositionedTile, tiledTile: TiledTile) {
     this.id = id;
     this.tiledPositionedTile = tiledPositionedTile;
     this.tiledTile = tiledTile;

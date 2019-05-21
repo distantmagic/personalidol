@@ -19,7 +19,7 @@ export default class Expression implements ExpressionInterface {
       data: `${expression}`,
       // debug: process.env.REACT_APP_DEBUG,
       rethrow: true,
-      strict_variables: true
+      strict_variables: true,
     });
   }
 

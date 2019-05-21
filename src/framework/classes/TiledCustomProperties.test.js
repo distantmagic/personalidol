@@ -10,9 +10,7 @@ it("is serializable as JSON", function() {
 
   const tiledCustomProperties = new TiledCustomProperties(loggerBreadcrumbs);
 
-  tiledCustomProperties.addProperty(
-    new TiledCustomProperty(loggerBreadcrumbs, "foo", "string", "bar")
-  );
+  tiledCustomProperties.addProperty(new TiledCustomProperty(loggerBreadcrumbs, "foo", "string", "bar"));
 
   const serialized = tiledCustomProperties.asJson();
 

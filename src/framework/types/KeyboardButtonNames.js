@@ -1,8 +1,3 @@
 // @flow
 
-export type KeyboardButtonNames =
-  | "ArrowDown"
-  | "ArrowLeft"
-  | "ArrowRight"
-  | "ArrowUp"
-  | "Shift";
+export type KeyboardButtonNames = "ArrowDown" | "ArrowLeft" | "ArrowRight" | "ArrowUp" | "Shift";

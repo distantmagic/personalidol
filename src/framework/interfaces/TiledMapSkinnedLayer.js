@@ -13,7 +13,5 @@ export interface TiledMapSkinnedLayer {
   //   TiledTileset
   // ): void;
 
-  generateSkinnedTiles(
-    CancelToken
-  ): AsyncGenerator<TiledSkinnedTile, void, void>;
+  generateSkinnedTiles(CancelToken): AsyncGenerator<TiledSkinnedTile, void, void>;
 }

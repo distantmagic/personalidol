@@ -10,6 +10,6 @@ export default fsm<PersonAnimationStates, PersonAnimationTransitions>({
   transitions: [
     { name: "idle", from: "*", to: "idling" },
     { name: "walk", from: "*", to: "walking" },
-    { name: "run", from: "*", to: "running" }
-  ]
+    { name: "run", from: "*", to: "running" },
+  ],
 });

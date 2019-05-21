@@ -15,10 +15,7 @@ it("is equatable", function() {
 });
 
 it("is JSON serializable", function() {
-  const tiledTileImage = new TiledTileImage(
-    "foo.png",
-    new ElementSize<"px">(10, 10)
-  );
+  const tiledTileImage = new TiledTileImage("foo.png", new ElementSize<"px">(10, 10));
 
   const serialized = tiledTileImage.asJson();
   const unserializer = new TiledTileImageUnserializer();

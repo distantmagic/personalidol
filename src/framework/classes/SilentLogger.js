@@ -21,9 +21,5 @@ export default class SilentLogger implements LoggerInterface {
 
   debug(breadcrumbs: LoggerBreadcrumbs, message: string): void {}
 
-  log(
-    breadcrumbs: LoggerBreadcrumbs,
-    severity: LogSeverityEnum,
-    message: string
-  ): void {}
+  log(breadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): void {}
 }

@@ -17,10 +17,7 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
     this.logger = logger;
   }
 
-  async captureException(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    error: Error
-  ): Promise<void> {
+  async captureException(loggerBreadcrumbs: LoggerBreadcrumbs, error: Error): Promise<void> {
     this.logger.debug(loggerBreadcrumbs, "ExceptionHandler");
 
     for (let breadcrumb of loggerBreadcrumbs.getBreadcrumbs()) {
@@ -36,18 +33,14 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
     const message = [
       "/DD/EXCEPTION_HANDLER:/",
       loggerBreadcrumbs.asString(),
-      error instanceof Exception
-        ? "Reported at: " + error.loggerBreadcrumbs.asString()
-        : "",
-      error.stack
+      error instanceof Exception ? "Reported at: " + error.loggerBreadcrumbs.asString() : "",
+      error.stack,
     ].join(" ");
 
     this.logger.error(loggerBreadcrumbs, message);
   }
 
-  expectException(
-    loggerBreadcrumbs: LoggerBreadcrumbs
-  ): Error => Promise<void> {
+  expectException(loggerBreadcrumbs: LoggerBreadcrumbs): Error => Promise<void> {
     return (error: Error) => {
       return this.captureException(loggerBreadcrumbs, error);
     };

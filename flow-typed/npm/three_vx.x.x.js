@@ -17,12 +17,10 @@ declare module "three" {
   declare type Event<Events: string, Data> = {|
     ...$Exact<Data>,
 
-    type: Events
+    type: Events,
   |};
 
-  declare type EventCallback<Events: string, Data> = (
-    Event<Events, Data>
-  ) => void;
+  declare type EventCallback<Events: string, Data> = (Event<Events, Data>) => void;
 
   declare type RepeatWrapping = 1000;
 
@@ -30,17 +28,9 @@ declare module "three" {
 
   declare type LoadingManagerOnLoadCallback = () => void;
 
-  declare type LoadingManagerOnProgressCallback = (
-    url: string,
-    itemsLoaded: number,
-    itemsTotal: number
-  ) => void;
+  declare type LoadingManagerOnProgressCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
-  declare type LoadingManagerOnStartCallback = (
-    url: string,
-    itemsLoaded: number,
-    itemsTotal: number
-  ) => void;
+  declare type LoadingManagerOnStartCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
   declare export interface AmbientLight extends Light {
     +isAmbientLight: true;
@@ -87,9 +77,7 @@ declare module "three" {
     translate(x: number, y: number, z: number): Geometry;
   }
 
-  declare export interface BoxBufferGeometry
-    extends BoxGeometryBase,
-      BufferGeometry {}
+  declare export interface BoxBufferGeometry extends BoxGeometryBase, BufferGeometry {}
 
   declare export interface BoxGeometry extends BoxGeometryBase, Geometry {}
 
@@ -100,7 +88,7 @@ declare module "three" {
       height: number,
       heightSegments: number,
       width: number,
-      widthSegments: number
+      widthSegments: number,
     |};
 
     constructor(
@@ -190,7 +178,7 @@ declare module "three" {
         // Default is bevelThickness - 2.
         bevelSize?: number,
         // int. Number of bevel layers. Default is 3.
-        bevelSegments?: number
+        bevelSegments?: number,
         // THREE.CurvePath. A 3D spline path along which the shape
         // should be extruded.
         // extrudePath? :
@@ -222,7 +210,7 @@ declare module "three" {
   declare export interface LineBasicMaterial extends Material {
     constructor({|
       color: number,
-      linewidth: number
+      linewidth: number,
     |}): void;
   }
 
@@ -249,7 +237,7 @@ declare module "three" {
 
   declare export interface MeshBasicMaterial extends Material {
     constructor({|
-      map?: Texture
+      map?: Texture,
     |}): void;
   }
 
@@ -260,7 +248,7 @@ declare module "three" {
   declare export interface MeshPhongMaterial extends Material {
     constructor({|
       color?: number,
-      map?: Texture
+      map?: Texture,
     |}): void;
   }
 
@@ -288,14 +276,7 @@ declare module "three" {
     right: number;
     top: number;
 
-    constructor(
-      bottom?: number,
-      far?: number,
-      left?: number,
-      near?: number,
-      right?: number,
-      top?: number
-    ): void;
+    constructor(bottom?: number, far?: number, left?: number, near?: number, right?: number, top?: number): void;
   }
 
   declare export interface PerspectiveCamera extends Camera {
@@ -304,31 +285,19 @@ declare module "three" {
     constructor(fov: number, aspect: number, near: number, far: number): void;
   }
 
-  declare export interface PlaneBufferGeometry
-    extends BufferGeometry,
-      PlaneGeometryBase {}
+  declare export interface PlaneBufferGeometry extends BufferGeometry, PlaneGeometryBase {}
 
   declare export interface PlaneGeometry extends Geometry, PlaneGeometryBase {}
 
   declare export interface PlaneGeometryBase {
-    constructor(
-      width: number,
-      height: number,
-      widthSegments?: number,
-      heightSegments?: number
-    ): void;
+    constructor(width: number, height: number, widthSegments?: number, heightSegments?: number): void;
   }
 
   declare export interface PointLight extends Light {
     +isPointLight: true;
     +position: Vector3;
 
-    constructor(
-      color?: number,
-      intensity?: number,
-      distance?: number,
-      decay?: number
-    ): void;
+    constructor(color?: number, intensity?: number, distance?: number, decay?: number): void;
   }
 
   declare export interface Raycaster {
@@ -341,7 +310,7 @@ declare module "three" {
       recursive?: boolean
     ): Array<{|
       distance: number,
-      object: Object3D
+      object: Object3D,
     |}>;
   }
 
@@ -350,7 +319,7 @@ declare module "three" {
 
     getSize(): {|
       height: number,
-      width: number
+      width: number,
     |};
 
     setPixelRatio(number): void;
@@ -388,12 +357,7 @@ declare module "three" {
   declare export interface TextureLoader {
     constructor(?LoadingManager): void;
 
-    load(
-      url: string,
-      onLoad?: Function,
-      onProgress?: Function,
-      onError?: Function
-    ): Texture;
+    load(url: string, onLoad?: Function, onProgress?: Function, onError?: Function): Texture;
   }
 
   declare export interface Vector2 {
@@ -432,7 +396,7 @@ declare module "three" {
       powerPreference?: "high-performance" | "low-power" | "default",
       precision?: "highp" | "mediump" | "lowp",
       premultipliedAlpha?: boolean,
-      stencil?: boolean
+      stencil?: boolean,
     |}): void;
   }
 }

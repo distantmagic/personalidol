@@ -4,8 +4,7 @@ import path from "path";
 
 import type { TiledRelativeFilename as TiledRelativeFilenameInterface } from "../interfaces/TiledRelativeFilename";
 
-export default class TiledRelativeFilename
-  implements TiledRelativeFilenameInterface {
+export default class TiledRelativeFilename implements TiledRelativeFilenameInterface {
   +base: string;
   +relative: string;
 

@@ -3,8 +3,7 @@
 import type { ElementPosition } from "../interfaces/ElementPosition";
 import type { TiledPositionedTile as TiledPositionedTileInterface } from "../interfaces/TiledPositionedTile";
 
-export default class TiledPositionedTile
-  implements TiledPositionedTileInterface {
+export default class TiledPositionedTile implements TiledPositionedTileInterface {
   +elementPosition: ElementPosition<"tile">;
   +id: number;
 
@@ -22,9 +21,6 @@ export default class TiledPositionedTile
   }
 
   isEqual(other: TiledPositionedTileInterface): boolean {
-    return (
-      this.getId() === other.getId() &&
-      this.getElementPosition().isEqual(other.getElementPosition())
-    );
+    return this.getId() === other.getId() && this.getElementPosition().isEqual(other.getElementPosition());
   }
 }

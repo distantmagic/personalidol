@@ -12,7 +12,7 @@ type Transitions = {|
   condense: () => void,
   freeze: () => void,
   melt: () => void,
-  vaporize: () => void
+  vaporize: () => void,
 |};
 
 const Phases = fsm<States, Transitions>({
@@ -22,8 +22,8 @@ const Phases = fsm<States, Transitions>({
     { name: "freeze", from: "liquid", to: "solid" },
     { name: "freeze", from: "solid", to: "solid" },
     { name: "vaporize", from: "liquid", to: "gas" },
-    { name: "condense", from: "gas", to: "liquid" }
-  ]
+    { name: "condense", from: "gas", to: "liquid" },
+  ],
 });
 
 it("keeps state", function() {

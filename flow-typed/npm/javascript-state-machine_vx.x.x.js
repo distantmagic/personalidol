@@ -14,19 +14,16 @@
  */
 
 declare module "javascript-state-machine" {
-  declare export type TransitionsConfiguration<
-    States: string,
-    Transitions
-  > = Array<{|
+  declare export type TransitionsConfiguration<States: string, Transitions> = Array<{|
     name: $Keys<Transitions>,
     from: States | "*",
-    to: States
+    to: States,
   |}>;
 
   declare export type TransitionEvent<States: string, Transitions> = {|
     from: States,
     to: States,
-    transition: $Keys<Transitions>
+    transition: $Keys<Transitions>,
   |};
 
   declare type GenericTransitionCallback<States: string, Transitions> = (
@@ -46,26 +43,18 @@ declare module "javascript-state-machine" {
 
     is(States): boolean,
 
-    transitions(): Array<$Keys<Transitions>>
+    transitions(): Array<$Keys<Transitions>>,
   |};
 
-  declare export type StateMachineInstance<
-    States: string,
-    Transitions,
-    Data
-  > = {|
+  declare export type StateMachineInstance<States: string, Transitions, Data> = {|
     ...$Exact<Data>,
     ...$Exact<Transitions>,
     ...$Exact<HelperMethods<States, Transitions>>,
 
-    +state: States
+    +state: States,
   |};
 
-  declare type StateMachineConfigurationBase<
-    States: string,
-    Transitions,
-    Methods
-  > = {|
+  declare type StateMachineConfigurationBase<States: string, Transitions, Methods> = {|
     init?: States,
     transitions: TransitionsConfiguration<States, Transitions>,
     methods: {|
@@ -74,72 +63,30 @@ declare module "javascript-state-machine" {
       onAfterTransition?: (evt: TransitionEvent<States, Transitions>) => void,
       onInvalidTransition?: GenericTransitionCallback<States, Transitions>,
       onPendingTransition?: GenericTransitionCallback<States, Transitions>,
-      onTransition?: (evt: TransitionEvent<States, Transitions>) => void
-    |}
+      onTransition?: (evt: TransitionEvent<States, Transitions>) => void,
+    |},
   |};
 
-  declare type StateMachineConfigurationClass<
-    States: string,
-    Transitions,
-    Methods,
-    Data
-  > = {|
+  declare type StateMachineConfigurationClass<States: string, Transitions, Methods, Data> = {|
     ...$Exact<StateMachineConfigurationBase<States, Transitions, Methods>>,
 
-    data: Data
+    data: Data,
   |};
 
-  declare type StateMachineConfigurationFactory<
-    States: string,
-    Transitions,
-    Methods,
-    Data,
-    ConstructorArguments
-  > = {|
+  declare type StateMachineConfigurationFactory<States: string, Transitions, Methods, Data, ConstructorArguments> = {|
     ...$Exact<StateMachineConfigurationBase<States, Transitions, Methods>>,
 
-    data: (...args: ConstructorArguments) => Data
+    data: (...args: ConstructorArguments) => Data,
   |};
 
-  declare export class StateMachineFactoryClass<
-    States: string,
-    Transitions,
-    Data,
-    ConstructorArguments
-  > {
-    constructor(
-      ...args: ConstructorArguments
-    ): StateMachineInstance<States, Transitions, Data>;
+  declare export class StateMachineFactoryClass<States: string, Transitions, Data, ConstructorArguments> {
+    constructor(...args: ConstructorArguments): StateMachineInstance<States, Transitions, Data>;
   }
 
-  declare export default class StateMachine<
-    States: string,
-    Transitions,
-    Methods,
-    Data
-  > {
-    static factory<
-      TStates,
-      TTransitions,
-      TMethods,
-      TData,
-      TConstructorArguments
-    >(
-      StateMachineConfigurationFactory<
-        TStates,
-        TTransitions,
-        TMethods,
-        TData,
-        TConstructorArguments
-      >
-    ): Class<
-      StateMachineFactoryClass<
-        TStates,
-        TTransitions,
-        TData,
-        TConstructorArguments
-      >
-    >;
+  declare export default class StateMachine<States: string, Transitions, Methods, Data> {
+    static factory<TStates, TTransitions, TMethods, TData, TConstructorArguments>(
+      StateMachineConfigurationFactory<TStates, TTransitions, TMethods, TData, TConstructorArguments>
+    ): Class<StateMachineFactoryClass<TStates, TTransitions, TData, TConstructorArguments>>;
 
     constructor(
       StateMachineConfigurationClass<States, Transitions, Methods, Data>

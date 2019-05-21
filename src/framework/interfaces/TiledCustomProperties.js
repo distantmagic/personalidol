@@ -12,6 +12,8 @@ export interface TiledCustomProperties
 
   getPropertyByName(name: string): TiledCustomProperty;
 
+  hasProperty(TiledCustomProperty): boolean;
+
   hasPropertyByName(name: string): boolean;
 
   keys(): $ReadOnlyArray<string>;

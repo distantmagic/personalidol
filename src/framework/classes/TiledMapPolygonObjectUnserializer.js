@@ -10,8 +10,7 @@ import type { TiledMapPolygonObjectSerializedObject } from "../types/TiledMapPol
 import type { TiledMapPolygonObjectUnserializer as TiledMapPolygonObjectUnserializerInterface } from "../interfaces/TiledMapPolygonObjectUnserializer";
 import type { TiledMapPositionedObjectUnserializer as TiledMapPositionedObjectUnserializerInterface } from "../interfaces/TiledMapPositionedObjectUnserializer";
 
-export default class TiledMapPolygonObjectUnserializer
-  implements TiledMapPolygonObjectUnserializerInterface {
+export default class TiledMapPolygonObjectUnserializer implements TiledMapPolygonObjectUnserializerInterface {
   +elementPositionUnserializer: ElementPositionUnserializerInterface<"tile">;
   +tiledMapPositionedObjectUnserializer: TiledMapPositionedObjectUnserializerInterface;
 
@@ -24,21 +23,15 @@ export default class TiledMapPolygonObjectUnserializer
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(
-    parsed: TiledMapPolygonObjectSerializedObject
-  ): TiledMapPolygonObjectInterface {
+  fromObject(parsed: TiledMapPolygonObjectSerializedObject): TiledMapPolygonObjectInterface {
     const polygonPoints = [];
 
     for (let polygonPoint of parsed.polygonPoints) {
-      polygonPoints.push(
-        this.elementPositionUnserializer.fromObject(polygonPoint)
-      );
+      polygonPoints.push(this.elementPositionUnserializer.fromObject(polygonPoint));
     }
 
     return new TiledMapPolygonObject(
-      this.tiledMapPositionedObjectUnserializer.fromObject(
-        parsed.tiledMapPositionedObject
-      ),
+      this.tiledMapPositionedObjectUnserializer.fromObject(parsed.tiledMapPositionedObject),
       polygonPoints,
       parsed.depth
     );

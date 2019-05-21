@@ -2,17 +2,14 @@
 
 import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../interfaces/ResourcesLoadingState";
 
-export default class ResourcesLoadingState
-  implements ResourcesLoadingStateInterface {
+export default class ResourcesLoadingState implements ResourcesLoadingStateInterface {
   +error: ?Error;
   +itemsLoaded: number;
   +itemsTotal: number;
 
   constructor(itemsLoaded: number = 0, itemsTotal: number = 0, error: ?Error) {
     if (itemsLoaded > itemsTotal) {
-      throw new Error(
-        "Invalid resources loading state. There are more loaded items than total items."
-      );
+      throw new Error("Invalid resources loading state. There are more loaded items than total items.");
     }
 
     this.error = error;
@@ -39,10 +36,7 @@ export default class ResourcesLoadingState
   }
 
   isEqual(other: ResourcesLoadingStateInterface): boolean {
-    return (
-      this.getItemsLoaded() === other.getItemsLoaded() &&
-      this.getItemsTotal() === other.getItemsTotal()
-    );
+    return this.getItemsLoaded() === other.getItemsLoaded() && this.getItemsTotal() === other.getItemsTotal();
   }
 
   isFailed(): boolean {
@@ -54,22 +48,11 @@ export default class ResourcesLoadingState
   }
 
   setError(error: Error): ResourcesLoadingStateInterface {
-    return new ResourcesLoadingState(
-      this.getItemsLoaded(),
-      this.getItemsTotal(),
-      error
-    );
+    return new ResourcesLoadingState(this.getItemsLoaded(), this.getItemsTotal(), error);
   }
 
-  setProgress(
-    itemsLoaded: number,
-    itemsTotal: number
-  ): ResourcesLoadingStateInterface {
-    const updated = new ResourcesLoadingState(
-      itemsLoaded,
-      itemsTotal,
-      this.error
-    );
+  setProgress(itemsLoaded: number, itemsTotal: number): ResourcesLoadingStateInterface {
+    const updated = new ResourcesLoadingState(itemsLoaded, itemsTotal, this.error);
 
     if (this.isEqual(updated)) {
       return this;

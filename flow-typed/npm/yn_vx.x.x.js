@@ -16,7 +16,7 @@
 declare module "yn" {
   declare type Options = {|
     default?: boolean | null,
-    lenient?: boolean
+    lenient?: boolean,
   |};
 
   declare function yn(1, ?Options): true;
@@ -25,10 +25,7 @@ declare module "yn" {
   declare function yn(true, ?Options): true;
   declare function yn(false, ?Options): false;
 
-  declare function yn(
-    string,
-    {| default: boolean, lenient?: boolean |}
-  ): boolean;
+  declare function yn(string, {| default: boolean, lenient?: boolean |}): boolean;
   declare function yn(string, ?Options): boolean | null;
 
   declare function yn(any, {| default: true, lenient?: boolean |}): true;

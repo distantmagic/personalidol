@@ -1,9 +1,3 @@
 // @flow
 
-export type TiledCustomPropertyType =
-  | "bool"
-  | "color"
-  | "float"
-  | "file"
-  | "int"
-  | "string";
+export type TiledCustomPropertyType = "bool" | "color" | "float" | "file" | "int" | "string";

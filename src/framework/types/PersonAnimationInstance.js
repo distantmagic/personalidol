@@ -4,7 +4,4 @@ import type { FSMDefaultStateMachineInstance } from "./FSMDefaultStateMachineIns
 import type { PersonAnimationStates } from "./PersonAnimationStates";
 import type { PersonAnimationTransitions } from "./PersonAnimationTransitions";
 
-export type PersonAnimationInstance = FSMDefaultStateMachineInstance<
-  PersonAnimationStates,
-  PersonAnimationTransitions
->;
+export type PersonAnimationInstance = FSMDefaultStateMachineInstance<PersonAnimationStates, PersonAnimationTransitions>;

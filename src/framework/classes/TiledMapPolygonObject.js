@@ -5,8 +5,7 @@ import type { TiledMapPolygonObject as TiledMapPolygonObjectInterface } from "..
 import type { TiledMapPolygonObjectSerializedObject } from "../types/TiledMapPolygonObjectSerializedObject";
 import type { TiledMapPositionedObject } from "../interfaces/TiledMapPositionedObject";
 
-export default class TiledMapPolygonObject
-  implements TiledMapPolygonObjectInterface {
+export default class TiledMapPolygonObject implements TiledMapPolygonObjectInterface {
   +depth: number;
   +isEllipse: false;
   +isPolygon: true;
@@ -35,10 +34,8 @@ export default class TiledMapPolygonObject
   asObject(): TiledMapPolygonObjectSerializedObject {
     return {
       depth: this.depth,
-      polygonPoints: this.polygonPoints.map(polygonPoint =>
-        polygonPoint.asObject()
-      ),
-      tiledMapPositionedObject: this.getTiledMapPositionedObject().asObject()
+      polygonPoints: this.polygonPoints.map(polygonPoint => polygonPoint.asObject()),
+      tiledMapPositionedObject: this.getTiledMapPositionedObject().asObject(),
     };
   }
 
@@ -59,11 +56,7 @@ export default class TiledMapPolygonObject
       return false;
     }
 
-    if (
-      !this.getTiledMapPositionedObject().isEqual(
-        other.getTiledMapPositionedObject()
-      )
-    ) {
+    if (!this.getTiledMapPositionedObject().isEqual(other.getTiledMapPositionedObject())) {
       return false;
     }
 

@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import {
-  Howl
+  Howl,
   // Howler
 } from "howler";
 
@@ -80,7 +80,7 @@ export default class CanvasLocationComplex implements CanvasController {
       distanceModel: "exponential",
       loop: true,
       rolloffFactor: 0.2,
-      src: ["/assets/track-lithium.mp3"]
+      src: ["/assets/track-lithium.mp3"],
       // volume: 0.1,
     });
 
@@ -93,17 +93,11 @@ export default class CanvasLocationComplex implements CanvasController {
     this.light.position.set(512, 512, 512);
   }
 
-  async attach(
-    cancelToken: CancelToken,
-    renderer: THREE.WebGLRenderer
-  ): Promise<void> {
+  async attach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
     const breadcrumbs = this.loggerBreadcrumbs.add("attach");
 
     if (cancelToken.isCancelled()) {
-      throw new Cancelled(
-        breadcrumbs,
-        "Cancel token was cancelled before attaching canvas location controller."
-      );
+      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before attaching canvas location controller.");
     }
 
     const tiledWorker = new TiledWorker();
@@ -113,10 +107,7 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.sound.pos(0, 0, 0);
     // this.sound.play();
 
-    const threePointerInteraction = new THREEPointerInteraction(
-      renderer,
-      this.camera
-    );
+    const threePointerInteraction = new THREEPointerInteraction(renderer, this.camera);
 
     this.threePointerInteraction = threePointerInteraction;
     threePointerInteraction.observe();
@@ -134,18 +125,15 @@ export default class CanvasLocationComplex implements CanvasController {
       )
     );
 
-    const workerController = new WorkerClientController<TiledWorkerInterface>(
-      tiledWorker
+    const workerController = new WorkerClientController<TiledWorkerInterface>(tiledWorker);
+    const workerResponse = await workerController.request<TiledWorkerLoadParams, TiledMapSerializedObject>(
+      cancelToken,
+      "load",
+      {
+        filename: "/assets/map-outlands-01.tmx",
+      }
     );
-    const workerResponse = await workerController.request<
-      TiledWorkerLoadParams,
-      TiledMapSerializedObject
-    >(cancelToken, "load", {
-      filename: "/assets/map-outlands-01.tmx"
-    });
-    const tiledMapUnserializer = new TiledMapUnserializer(
-      this.loggerBreadcrumbs
-    );
+    const tiledMapUnserializer = new TiledMapUnserializer(this.loggerBreadcrumbs);
     const tiledMap = await tiledMapUnserializer.fromObject(workerResponse);
 
     console.log(tiledMap);
@@ -189,10 +177,7 @@ export default class CanvasLocationComplex implements CanvasController {
     this.canvasViewGroup.begin();
   }
 
-  async detach(
-    cancelToken: CancelToken,
-    renderer: THREE.WebGLRenderer
-  ): Promise<void> {
+  async detach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
     const breadcrumbs = this.loggerBreadcrumbs.add("detach");
     const threePointerInteraction = this.threePointerInteraction;
 
@@ -204,10 +189,7 @@ export default class CanvasLocationComplex implements CanvasController {
     }
 
     if (cancelToken.isCancelled()) {
-      throw new Cancelled(
-        breadcrumbs,
-        "Cancel token was cancelled before detaching canvas location controller."
-      );
+      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before detaching canvas location controller.");
     }
 
     threePointerInteraction.disconnect();
@@ -217,10 +199,7 @@ export default class CanvasLocationComplex implements CanvasController {
     const tiledWorker = this.tiledWorker;
 
     if (!tiledWorker) {
-      throw new Exception(
-        this.loggerBreadcrumbs,
-        "Tiled worker was expected to be instanciated."
-      );
+      throw new Exception(this.loggerBreadcrumbs, "Tiled worker was expected to be instanciated.");
     }
 
     tiledWorker.terminate();
@@ -286,10 +265,6 @@ export default class CanvasLocationComplex implements CanvasController {
     // this.camera.position.set(this.player.position.x, 20, this.player.position.z + 16);
 
     // angled
-    this.camera.position.set(
-      currentPlayerPosition.x + 8,
-      8,
-      currentPlayerPosition.z + 8
-    );
+    this.camera.position.set(currentPlayerPosition.x + 8, 8, currentPlayerPosition.z + 8);
   }
 }

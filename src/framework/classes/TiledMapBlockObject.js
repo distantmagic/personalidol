@@ -5,8 +5,7 @@ import type { TiledMapBlockObject as TiledMapBlockObjectInterface } from "../int
 import type { TiledMapBlockObjectSerializedObject } from "../types/TiledMapBlockObjectSerializedObject";
 import type { TiledMapPositionedObject } from "../interfaces/TiledMapPositionedObject";
 
-export default class TiledMapBlockObject
-  implements TiledMapBlockObjectInterface {
+export default class TiledMapBlockObject implements TiledMapBlockObjectInterface {
   +elementSize: ElementSize<"tile">;
   +source: ?string;
   +tiledMapPositionedObject: TiledMapPositionedObject;
@@ -29,7 +28,7 @@ export default class TiledMapBlockObject
     return {
       elementSize: this.getElementSize().asObject(),
       source: this.hasSource() ? this.getSource() : null,
-      tiledMapPositionedObject: this.getTiledMapPositionedObject().asObject()
+      tiledMapPositionedObject: this.getTiledMapPositionedObject().asObject(),
     };
   }
 
@@ -66,9 +65,7 @@ export default class TiledMapBlockObject
 
     return (
       this.getElementSize().isEqual(other.getElementSize()) &&
-      this.getTiledMapPositionedObject().isEqual(
-        other.getTiledMapPositionedObject()
-      )
+      this.getTiledMapPositionedObject().isEqual(other.getTiledMapPositionedObject())
     );
   }
 }

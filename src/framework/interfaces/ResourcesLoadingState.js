@@ -2,8 +2,7 @@
 
 import { Equatable } from "./Equatable";
 
-export interface ResourcesLoadingState
-  extends Equatable<ResourcesLoadingState> {
+export interface ResourcesLoadingState extends Equatable<ResourcesLoadingState> {
   isFailed(): boolean;
 
   isLoading(): boolean;

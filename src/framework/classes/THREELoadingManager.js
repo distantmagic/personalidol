@@ -9,7 +9,7 @@ import type {
   LoadingManagerOnErrorCallback,
   LoadingManagerOnLoadCallback,
   LoadingManagerOnProgressCallback,
-  LoadingManagerOnStartCallback
+  LoadingManagerOnStartCallback,
 } from "three";
 
 import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
@@ -17,8 +17,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { THREELoadingManager as THREELoadingManagerInterface } from "../interfaces/THREELoadingManager";
 import type { THREELoadingManagerResourcesLoadingStateChangeCallback } from "../types/THREELoadingManagerResourcesLoadingStateChangeCallback";
 
-export default class THREELoadingManager
-  implements THREELoadingManagerInterface {
+export default class THREELoadingManager implements THREELoadingManagerInterface {
   +errorCallbacks: Set<LoadingManagerOnErrorCallback>;
   +exceptionHandler: ExceptionHandler;
   +loadCallbacks: Set<LoadingManagerOnLoadCallback>;
@@ -31,10 +30,7 @@ export default class THREELoadingManager
   itemsTotal: number;
   resourcesLoadError: ?ResourceLoadError;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    exceptionHandler: ExceptionHandler
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, exceptionHandler: ExceptionHandler) {
     this.errorCallbacks = new Set<LoadingManagerOnErrorCallback>();
     this.exceptionHandler = exceptionHandler;
     this.itemsLoaded = 0;
@@ -47,11 +43,7 @@ export default class THREELoadingManager
     this.threeLoadingManager = new THREE.LoadingManager();
 
     const notifyResourcesLoadingStateChange = () => {
-      const event = new ResourcesLoadingState(
-        this.itemsLoaded,
-        this.itemsTotal,
-        this.resourcesLoadError
-      );
+      const event = new ResourcesLoadingState(this.itemsLoaded, this.itemsTotal, this.resourcesLoadError);
 
       for (let callback of this.resourcesLoadingStateChangeCallbacks.values()) {
         callback(event);
@@ -76,11 +68,7 @@ export default class THREELoadingManager
         callback();
       }
     };
-    this.threeLoadingManager.onProgress = (
-      url: string,
-      itemsLoaded: number,
-      itemsTotal: number
-    ): void => {
+    this.threeLoadingManager.onProgress = (url: string, itemsLoaded: number, itemsTotal: number): void => {
       this.itemsLoaded = itemsLoaded;
       this.itemsTotal = itemsTotal;
 
@@ -89,11 +77,7 @@ export default class THREELoadingManager
         callback(url, itemsLoaded, itemsTotal);
       }
     };
-    this.threeLoadingManager.onStart = (
-      url: string,
-      itemsLoaded: number,
-      itemsTotal: number
-    ): void => {
+    this.threeLoadingManager.onStart = (url: string, itemsLoaded: number, itemsTotal: number): void => {
       this.itemsLoaded = itemsLoaded;
       this.itemsTotal = itemsTotal;
 
@@ -120,9 +104,7 @@ export default class THREELoadingManager
     this.progressCallbacks.delete(callback);
   }
 
-  offResourcesLoadingStateChange(
-    callback: THREELoadingManagerResourcesLoadingStateChangeCallback
-  ): void {
+  offResourcesLoadingStateChange(callback: THREELoadingManagerResourcesLoadingStateChangeCallback): void {
     this.resourcesLoadingStateChangeCallbacks.delete(callback);
   }
 
@@ -142,9 +124,7 @@ export default class THREELoadingManager
     this.progressCallbacks.add(callback);
   }
 
-  onResourcesLoadingStateChange(
-    callback: THREELoadingManagerResourcesLoadingStateChangeCallback
-  ): void {
+  onResourcesLoadingStateChange(callback: THREELoadingManagerResourcesLoadingStateChangeCallback): void {
     this.resourcesLoadingStateChangeCallbacks.add(callback);
   }
 

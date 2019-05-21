@@ -11,8 +11,7 @@ import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../i
 import type { TiledSkinnedTile as TiledSkinnedTileInterface } from "../interfaces/TiledSkinnedTile";
 import type { TiledTileset } from "../interfaces/TiledTileset";
 
-export default class TiledMapSkinnedLayer
-  implements TiledMapSkinnedLayerInterface {
+export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapTileSize: ElementSize<"px">;
   +tiledMapLayer: TiledMapLayer;
@@ -30,9 +29,7 @@ export default class TiledMapSkinnedLayer
     this.tiledTileset = tiledTileset;
   }
 
-  async *generateSkinnedTiles(
-    cancelToken: CancelToken
-  ): AsyncGenerator<TiledSkinnedTileInterface, void, void> {
+  async *generateSkinnedTiles(cancelToken: CancelToken): AsyncGenerator<TiledSkinnedTileInterface, void, void> {
     const tiledMapGrid = this.tiledMapLayer.getTiledMapGrid();
 
     for await (let positionedTile of tiledMapGrid.generatePositionedTiles()) {
@@ -50,11 +47,7 @@ export default class TiledMapSkinnedLayer
         continue;
       }
 
-      yield new TiledSkinnedTile(
-        tileTypeId,
-        positionedTile,
-        this.tiledTileset.getTileById(tileTypeId)
-      );
+      yield new TiledSkinnedTile(tileTypeId, positionedTile, this.tiledTileset.getTileById(tileTypeId));
     }
   }
 }

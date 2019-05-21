@@ -11,8 +11,7 @@ import type { TiledTileset as TiledTilesetInterface } from "../interfaces/TiledT
 import type { TiledTilesetUnserializer as TiledTilesetUnserializerInterface } from "../interfaces/TiledTilesetUnserializer";
 import type { TiledTilesetSerializedObject } from "../types/TiledTilesetSerializedObject";
 
-export default class TiledTilesetUnserializer
-  implements TiledTilesetUnserializerInterface {
+export default class TiledTilesetUnserializer implements TiledTilesetUnserializerInterface {
   +elementSizeUnserializer: ElementSizeUnserializerInterface<"px">;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tiledTileUnserializer: TiledTileUnserializerInterface;

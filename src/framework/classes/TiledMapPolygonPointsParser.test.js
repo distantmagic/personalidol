@@ -10,15 +10,9 @@ it("parses polygon points", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const tileSize = new ElementSize<"px">(128, 128);
   const points = "0,0 128,128 128,256 256,512";
-  const tiledMapPolygonPointsParser = new TiledMapPolygonPointsParser(
-    loggerBreadcrumbs,
-    points,
-    tileSize
-  );
+  const tiledMapPolygonPointsParser = new TiledMapPolygonPointsParser(loggerBreadcrumbs, points, tileSize);
 
-  const tiledMapPolygonPoints = await tiledMapPolygonPointsParser.parse(
-    cancelToken
-  );
+  const tiledMapPolygonPoints = await tiledMapPolygonPointsParser.parse(cancelToken);
 
   expect(tiledMapPolygonPoints).toHaveLength(4);
 

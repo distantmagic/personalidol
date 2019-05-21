@@ -5,10 +5,7 @@ import TiledMapGrid from "./TiledMapGrid";
 import TiledMapGridUnserializer from "./TiledMapGridUnserializer";
 
 it("generates positioned tiles", async function() {
-  const tiledMapGrid = new TiledMapGrid(
-    [[1, 2], [3, 4]],
-    new ElementSize<"tile">(2, 2)
-  );
+  const tiledMapGrid = new TiledMapGrid([[1, 2], [3, 4]], new ElementSize<"tile">(2, 2));
   const positionedTiles = [];
 
   for await (let positionedTile of tiledMapGrid.generatePositionedTiles()) {
@@ -34,24 +31,22 @@ it("generates positioned tiles", async function() {
   expect(positionedTiles[3].getElementPosition().getY()).toBe(1);
 });
 
+it("generates covered grid", function() {
+  const tiledMapGrid = new TiledMapGrid([[0, 2], [-1, 0]], new ElementSize<"tile">(2, 2));
+  const tiledMapCoveredGrid = tiledMapGrid.getCoveredGrid();
+
+  expect(tiledMapCoveredGrid).toEqual([[0, 1], [0, 0]]);
+});
+
 it("is equatable", function() {
-  const tiledMapGrid1 = new TiledMapGrid(
-    [[1, 2], [3, 4]],
-    new ElementSize<"tile">(2, 2)
-  );
-  const tiledMapGrid2 = new TiledMapGrid(
-    [[1, 2], [3, 3]],
-    new ElementSize<"tile">(2, 2)
-  );
+  const tiledMapGrid1 = new TiledMapGrid([[1, 2], [3, 4]], new ElementSize<"tile">(2, 2));
+  const tiledMapGrid2 = new TiledMapGrid([[1, 2], [3, 3]], new ElementSize<"tile">(2, 2));
 
   expect(tiledMapGrid1.isEqual(tiledMapGrid2)).toBe(false);
 });
 
 it("is serializable as JSON", function() {
-  const tiledMapGrid = new TiledMapGrid(
-    [[1, 2], [3, 4]],
-    new ElementSize<"tile">(2, 2)
-  );
+  const tiledMapGrid = new TiledMapGrid([[1, 2], [3, 4]], new ElementSize<"tile">(2, 2));
   const serialized = tiledMapGrid.asJson();
   const unserializer = new TiledMapGridUnserializer();
   const unserialized = unserializer.fromJson(serialized);

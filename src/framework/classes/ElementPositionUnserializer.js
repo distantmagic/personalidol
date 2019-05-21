@@ -13,9 +13,7 @@ export default class ElementPositionUnserializer<T: ElementPositionUnit>
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(
-    parsed: ElementPositionSerializedObject<T>
-  ): ElementPositionInterface<T> {
+  fromObject(parsed: ElementPositionSerializedObject<T>): ElementPositionInterface<T> {
     return new ElementPosition<T>(parsed.x, parsed.y, parsed.z);
   }
 }

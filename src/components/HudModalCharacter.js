@@ -11,14 +11,14 @@ import HudModalCharacterInventory from "./HudModalCharacterInventory";
 import HudModalLoader from "./HudModalLoader";
 
 type Props = {|
-  character: Character
+  character: Character,
 |};
 
 export default function HudModalCharacter(props: Props) {
   const [state, setState] = React.useState({
     id: null,
     isLoading: true,
-    name: null
+    name: null,
   });
 
   React.useEffect(
@@ -27,7 +27,7 @@ export default function HudModalCharacter(props: Props) {
         setState({
           id: name,
           isLoading: false,
-          name: upperFirst(name)
+          name: upperFirst(name),
         });
       });
     },
@@ -41,11 +41,7 @@ export default function HudModalCharacter(props: Props) {
   return (
     <section className="dd__frame dd__modal__character">
       <div className="dd__modal__character__avatar">
-        <img
-          alt="portrait"
-          className="dd__modal__character__avatar__image"
-          src={`/assets/portrait-${state.id}.jpg`}
-        />
+        <img alt="portrait" className="dd__modal__character__avatar__image" src={`/assets/portrait-${state.id}.jpg`} />
       </div>
       <h1 className="dd__modal__character__name">{state.name}</h1>
       <nav className="dd__modal__character__tabs">
@@ -77,23 +73,17 @@ export default function HudModalCharacter(props: Props) {
           <Route
             exact
             path="/character/:characterId/inventory"
-            component={() => (
-              <HudModalCharacterInventory character={props.character} />
-            )}
+            component={() => <HudModalCharacterInventory character={props.character} />}
           />
           <Route
             exact
             path="/character/:characterId/biography"
-            component={() => (
-              <HudModalCharacterBiography character={props.character} />
-            )}
+            component={() => <HudModalCharacterBiography character={props.character} />}
           />
           <Route
             exact
             path="/character/:characterId"
-            component={() => (
-              <HudModalCharacterAttributes character={props.character} />
-            )}
+            component={() => <HudModalCharacterAttributes character={props.character} />}
           />
         </Switch>
       </div>

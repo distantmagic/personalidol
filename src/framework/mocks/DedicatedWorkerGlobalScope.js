@@ -22,7 +22,7 @@ export default class DedicatedWorkerGlobalScopeMock {
       data: JSON.parse(JSON.stringify(data)),
       origin: null,
       source: null,
-      type: "DedicatedWorkerGlobalScopeWorkerMessageMock"
+      type: "DedicatedWorkerGlobalScopeWorkerMessageMock",
     };
 
     this.worker.emit("message", message);

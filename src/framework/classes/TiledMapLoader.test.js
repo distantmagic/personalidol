@@ -15,17 +15,8 @@ it("loads and parses map files", async function() {
   const fixturesFileQueryBuilder = new FixturesFileQueryBuilder();
   const mapFilename = fixtures.findPath("map-fixture-01.tmx");
   const queryBus = new QueryBus(loggerBreadcrumbs);
-  const tiledTilesetLoader = new TiledTilesetLoader(
-    loggerBreadcrumbs,
-    queryBus,
-    fixturesFileQueryBuilder
-  );
-  const tiledMapLoader = new TiledMapLoader(
-    loggerBreadcrumbs,
-    queryBus,
-    fixturesFileQueryBuilder,
-    tiledTilesetLoader
-  );
+  const tiledTilesetLoader = new TiledTilesetLoader(loggerBreadcrumbs, queryBus, fixturesFileQueryBuilder);
+  const tiledMapLoader = new TiledMapLoader(loggerBreadcrumbs, queryBus, fixturesFileQueryBuilder, tiledTilesetLoader);
 
   const mockedEnqueuedCallback = jest.fn(function() {
     queryBus.tick(new ForcedTick(false));

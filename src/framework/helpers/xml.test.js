@@ -18,39 +18,24 @@ it("finds element with attribute names", function() {
   );
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
 
-  const element1 = xml.getElementWithAttributes(
-    loggerBreadcrumbs,
-    doc,
-    "property",
-    {
-      type: "foo",
-      value: "1"
-    }
-  );
+  const element1 = xml.getElementWithAttributes(loggerBreadcrumbs, doc, "property", {
+    type: "foo",
+    value: "1",
+  });
 
   expect(element1).toBeDefined();
 
-  const element2 = xml.getElementWithAttributes(
-    loggerBreadcrumbs,
-    doc,
-    "property",
-    {
-      type: "bar",
-      value: "1"
-    }
-  );
+  const element2 = xml.getElementWithAttributes(loggerBreadcrumbs, doc, "property", {
+    type: "bar",
+    value: "1",
+  });
 
   expect(element2).toBeUndefined();
 
-  const element3 = xml.getElementWithAttributes(
-    loggerBreadcrumbs,
-    doc,
-    "property",
-    {
-      type: "bar",
-      value: "2"
-    }
-  );
+  const element3 = xml.getElementWithAttributes(loggerBreadcrumbs, doc, "property", {
+    type: "bar",
+    value: "2",
+  });
 
   expect(element3).toBeDefined();
 });

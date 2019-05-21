@@ -5,7 +5,4 @@ import type { TiledMapEllipseObjectSerializedObject } from "../types/TiledMapEll
 import type { JsonUnserializable } from "./JsonUnserializable";
 
 export interface TiledMapEllipseObjectUnserializer
-  extends JsonUnserializable<
-    TiledMapEllipseObject,
-    TiledMapEllipseObjectSerializedObject
-  > {}
+  extends JsonUnserializable<TiledMapEllipseObject, TiledMapEllipseObjectSerializedObject> {}

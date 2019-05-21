@@ -21,28 +21,17 @@ type Props = {|
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
-  onDialogueEnd: boolean => any
+  onDialogueEnd: boolean => any,
 |};
 
-function updateScrollDelta(
-  ref: HTMLElement,
-  refSize: HTMLElementSize,
-  setScrollPercentage
-): void {
-  const scrollPosition = new ScrollbarPosition(
-    ref.scrollHeight,
-    ref.offsetHeight,
-    16,
-    ref.scrollTop
-  );
+function updateScrollDelta(ref: HTMLElement, refSize: HTMLElementSize, setScrollPercentage): void {
+  const scrollPosition = new ScrollbarPosition(ref.scrollHeight, ref.offsetHeight, 16, ref.scrollTop);
   setScrollPercentage(Math.min(100, scrollPosition.scrollPercentage));
 }
 
 function useScrollPercentageState() {
   const [scrollPercentage, setScrollPercentage] = React.useState<number>(0);
-  const [containerElement, setContainerElement] = React.useState<?HTMLElement>(
-    null
-  );
+  const [containerElement, setContainerElement] = React.useState<?HTMLElement>(null);
 
   React.useEffect(
     function() {
@@ -54,16 +43,12 @@ function useScrollPercentageState() {
       const containerHTMLElementSize = new HTMLElementSize(element);
 
       function onWheelBound() {
-        return updateScrollDelta(
-          element,
-          containerHTMLElementSize,
-          setScrollPercentage
-        );
+        return updateScrollDelta(element, containerHTMLElementSize, setScrollPercentage);
       }
 
       element.addEventListener("wheel", onWheelBound, {
         capture: true,
-        passive: true
+        passive: true,
       });
       updateScrollDelta(element, containerHTMLElementSize, setScrollPercentage);
 
@@ -84,7 +69,7 @@ export default function DialogueTurn(props: Props) {
     answers: Map(),
     illustration: null,
     isLoading: true,
-    prompt: null
+    prompt: null,
   });
 
   React.useEffect(
@@ -93,7 +78,7 @@ export default function DialogueTurn(props: Props) {
         props.dialogueTurn.actor(),
         props.dialogueTurn.answers(),
         props.dialogueTurn.getIllustration(),
-        props.dialogueTurn.prompt()
+        props.dialogueTurn.prompt(),
       ])
         .then(([actor, answers, illustration, prompt]) => {
           setState({
@@ -101,14 +86,11 @@ export default function DialogueTurn(props: Props) {
             answers: answers,
             illustration: illustration,
             isLoading: false,
-            prompt: prompt
+            prompt: prompt,
           });
         })
         .catch((error: Error) => {
-          return props.exceptionHandler.captureException(
-            props.loggerBreadcrumbs.add("dialogueTurnDetails"),
-            error
-          );
+          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("dialogueTurnDetails"), error);
         });
     },
     [props.dialogueTurn, props.exceptionHandler, props.loggerBreadcrumbs]
@@ -136,7 +118,7 @@ export default function DialogueTurn(props: Props) {
           <div
             className="dd__dialogue__scrollframe__scrollbar__indicator"
             style={{
-              "--dd-scroll-percentage-normalized": scrollPercentage / 100
+              "--dd-scroll-percentage-normalized": scrollPercentage / 100,
             }}
           />
           <div className="dd__dialogue__scrollframe__scrollbar__track">

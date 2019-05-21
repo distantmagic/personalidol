@@ -15,8 +15,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMapBlockObject as TiledMapBlockObjectInterface } from "../interfaces/TiledMapBlockObject";
 import type { TiledMapBlockObjectParser as TiledMapBlockObjectParserInterface } from "../interfaces/TiledMapBlockObjectParser";
 
-export default class TiledMapBlockObjectParser
-  implements TiledMapBlockObjectParserInterface {
+export default class TiledMapBlockObjectParser implements TiledMapBlockObjectParserInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapFilename: string;
   +objectElement: HTMLElement;
@@ -40,43 +39,21 @@ export default class TiledMapBlockObjectParser
     const tileWidthPixels = this.tileSize.getWidth();
 
     if (tileHeightPixels !== tileWidthPixels) {
-      throw new Exception(
-        breadcrumbs,
-        "Non-square tiles are not supported with 3D objects."
-      );
+      throw new Exception(breadcrumbs, "Non-square tiles are not supported with 3D objects.");
     }
 
-    const objectName = xml.getStringAttribute(
-      breadcrumbs,
-      this.objectElement,
-      "name"
-    );
+    const objectName = xml.getStringAttribute(breadcrumbs, this.objectElement, "name");
     const breadcrumbsObjectName = breadcrumbs.addVariable(objectName);
     const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
       breadcrumbs,
-      assert<HTMLElement>(
-        breadcrumbs,
-        this.objectElement.getElementsByTagName("properties").item(0)
-      )
+      assert<HTMLElement>(breadcrumbs, this.objectElement.getElementsByTagName("properties").item(0))
     );
-    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(
-      cancelToken
-    );
-    const objectDepthProperty = tiledCustomProperties.getPropertyByName(
-      "depth"
-    );
+    const tiledCustomProperties = await tiledCustomPropertiesParser.parse(cancelToken);
+    const objectDepthProperty = tiledCustomProperties.getPropertyByName("depth");
     const objectDepthPixels = parseInt(objectDepthProperty.getValue(), 10);
 
-    const objectHeightPixels = xml.getNumberAttribute(
-      breadcrumbsObjectName,
-      this.objectElement,
-      "height"
-    );
-    const objectWidthPixels = xml.getNumberAttribute(
-      breadcrumbsObjectName,
-      this.objectElement,
-      "width"
-    );
+    const objectHeightPixels = xml.getNumberAttribute(breadcrumbsObjectName, this.objectElement, "height");
+    const objectWidthPixels = xml.getNumberAttribute(breadcrumbsObjectName, this.objectElement, "width");
 
     const tiledMapPositionedObjectParser = new TiledMapPositionedObjectParser(
       breadcrumbsObjectName.add("TiledMapPositionedObjectParser"),
@@ -86,14 +63,9 @@ export default class TiledMapBlockObjectParser
       this.tileSize
     );
 
-    const objectSourceElement = xml.getElementWithAttributes(
-      breadcrumbsObjectName,
-      this.objectElement,
-      "property",
-      {
-        name: "source"
-      }
-    );
+    const objectSourceElement = xml.getElementWithAttributes(breadcrumbsObjectName, this.objectElement, "property", {
+      name: "source",
+    });
 
     return new TiledMapBlockObject(
       await tiledMapPositionedObjectParser.parse(cancelToken),
@@ -105,11 +77,7 @@ export default class TiledMapBlockObjectParser
       objectSourceElement
         ? new TiledRelativeFilename(
             this.mapFilename,
-            xml.getStringAttribute(
-              breadcrumbsObjectName,
-              objectSourceElement,
-              "value"
-            )
+            xml.getStringAttribute(breadcrumbsObjectName, objectSourceElement, "value")
           ).asString()
         : null
     );

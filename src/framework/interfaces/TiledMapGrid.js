@@ -7,10 +7,10 @@ import type { TiledMapGridArray } from "../types/TiledMapGridArray";
 import type { TiledMapGridSerializedObject } from "../types/TiledMapGridSerializedObject";
 import type { TiledPositionedTile } from "./TiledPositionedTile";
 
-export interface TiledMapGrid
-  extends Equatable<TiledMapGrid>,
-    JsonSerializable<TiledMapGridSerializedObject> {
+export interface TiledMapGrid extends Equatable<TiledMapGrid>, JsonSerializable<TiledMapGridSerializedObject> {
   generatePositionedTiles(): AsyncGenerator<TiledPositionedTile, void, void>;
+
+  getCoveredGrid(): TiledMapGridArray;
 
   getGrid(): TiledMapGridArray;
 

@@ -14,7 +14,7 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  queryBus: QueryBus
+  queryBus: QueryBus,
 |};
 
 export default React.memo<Props>(function HudModalRouter(props: Props) {
@@ -26,9 +26,7 @@ export default React.memo<Props>(function HudModalRouter(props: Props) {
           <HudModalRouterDefaultRoute
             exceptionHandler={props.exceptionHandler}
             logger={props.logger}
-            loggerBreadcrumbs={props.loggerBreadcrumbs.add(
-              "HudModalRouterDefaultRoute"
-            )}
+            loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouterDefaultRoute")}
             queryBus={props.queryBus}
           />
         )}

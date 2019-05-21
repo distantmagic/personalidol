@@ -10,8 +10,7 @@ import type { TiledMapPositionedObject as TiledMapPositionedObjectInterface } fr
 import type { TiledMapPositionedObjectSerializedObject } from "../types/TiledMapPositionedObjectSerializedObject";
 import type { TiledMapPositionedObjectUnserializer as TiledMapPositionedObjectUnserializerInterface } from "../interfaces/TiledMapPositionedObjectUnserializer";
 
-export default class TiledMapPositionedObjectUnserializer
-  implements TiledMapPositionedObjectUnserializerInterface {
+export default class TiledMapPositionedObjectUnserializer implements TiledMapPositionedObjectUnserializerInterface {
   +elementPositionUnserializer: ElementPositionUnserializerInterface<"tile">;
   +elementRotationUnserializer: ElementRotationUnserializerInterface<"radians">;
 
@@ -24,9 +23,7 @@ export default class TiledMapPositionedObjectUnserializer
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(
-    parsed: TiledMapPositionedObjectSerializedObject
-  ): TiledMapPositionedObjectInterface {
+  fromObject(parsed: TiledMapPositionedObjectSerializedObject): TiledMapPositionedObjectInterface {
     return new TiledMapPositionedObject(
       parsed.name,
       this.elementPositionUnserializer.fromObject(parsed.elementPosition),

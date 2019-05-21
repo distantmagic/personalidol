@@ -20,7 +20,7 @@ type Props = {|
   loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
   onDialogueEnd: boolean => any,
-  prompt: string
+  prompt: string,
 |};
 
 export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
@@ -48,10 +48,7 @@ export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
       </div>
       <hr className="dd__dialogue__hr" />
       {props.answers.isEmpty() ? (
-        <button
-          className="dd__button dd__button--dialogue-turn-end"
-          onClick={onDialogueEndClick}
-        >
+        <button className="dd__button dd__button--dialogue-turn-end" onClick={onDialogueEndClick}>
           Zakończ dialog
         </button>
       ) : (
@@ -60,17 +57,12 @@ export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
             .toSet()
             .toArray()
             .map(dialogueMessage => (
-              <li
-                className="dd__dialogue__turn__answer"
-                key={dialogueMessage.key()}
-              >
+              <li className="dd__dialogue__turn__answer" key={dialogueMessage.key()}>
                 <DialogueAnswer
                   dialogueMessage={dialogueMessage}
                   exceptionHandler={props.exceptionHandler}
                   logger={props.logger}
-                  loggerBreadcrumbs={props.loggerBreadcrumbs.add(
-                    "DialogueAnswer"
-                  )}
+                  loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueAnswer")}
                   onAnswerClick={props.onAnswerClick}
                 />
               </li>

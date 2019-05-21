@@ -20,7 +20,7 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  onDialogueEnd: boolean => any
+  onDialogueEnd: boolean => any,
 |};
 
 export default function Dialogue(props: Props) {
@@ -47,18 +47,10 @@ export default function Dialogue(props: Props) {
         .initiate(props.dialogueInitiator)
         .then(setDialogueTurn)
         .catch((error: Error) => {
-          return props.exceptionHandler.captureException(
-            props.loggerBreadcrumbs.add("initiateDialogue"),
-            error
-          );
+          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("initiateDialogue"), error);
         });
     },
-    [
-      props.dialogue,
-      props.dialogueInitiator,
-      props.exceptionHandler,
-      props.loggerBreadcrumbs
-    ]
+    [props.dialogue, props.dialogueInitiator, props.exceptionHandler, props.loggerBreadcrumbs]
   );
 
   if (!dialogueTurn) {

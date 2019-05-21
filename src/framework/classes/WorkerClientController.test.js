@@ -13,7 +13,7 @@ it("hooks up into worker client", function() {
   class Methods {
     async someMethod(cancelToken: CancelTokenInterface, params) {
       return {
-        baz: `${params.foo}.wooz`
+        baz: `${params.foo}.wooz`,
       };
     }
   }
@@ -22,21 +22,18 @@ it("hooks up into worker client", function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
-  const workerContextController = new WorkerContextController<Methods>(
-    loggerBreadcrumbs,
-    workerContext
-  );
+  const workerContextController = new WorkerContextController<Methods>(loggerBreadcrumbs, workerContext);
   const workerController = new WorkerClientController<Methods>(worker);
 
   workerContextController.setMethods(new Methods());
   workerContextController.attach();
 
   const response = workerController.request(cancelToken, "someMethod", {
-    foo: "bar"
+    foo: "bar",
   });
 
   return expect(response).resolves.toEqual({
-    baz: "bar.wooz"
+    baz: "bar.wooz",
   });
 }, 300);
 
@@ -51,10 +48,7 @@ it("handles worker exceptions", function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
-  const workerContextController = new WorkerContextController<Methods>(
-    loggerBreadcrumbs,
-    workerContext
-  );
+  const workerContextController = new WorkerContextController<Methods>(loggerBreadcrumbs, workerContext);
   const workerController = new WorkerClientController<Methods>(worker);
 
   workerContextController.setMethods(new Methods());
@@ -64,7 +58,7 @@ it("handles worker exceptions", function() {
 
   return expect(response).rejects.toEqual({
     code: 0,
-    message: "foo"
+    message: "foo",
   });
 }, 300);
 
@@ -83,17 +77,14 @@ it("allows to cancel requests", function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
-  const workerContextController = new WorkerContextController<Methods>(
-    loggerBreadcrumbs,
-    workerContext
-  );
+  const workerContextController = new WorkerContextController<Methods>(loggerBreadcrumbs, workerContext);
   const workerController = new WorkerClientController<Methods>(worker);
 
   workerContextController.setMethods(new Methods());
   workerContextController.attach();
 
   const response = workerController.request(cancelToken, "someMethod", {
-    foo: "bar"
+    foo: "bar",
   });
 
   setTimeout(function() {
@@ -102,7 +93,7 @@ it("allows to cancel requests", function() {
 
   return expect(response).rejects.toEqual({
     code: 1,
-    message: "Token is cancelled."
+    message: "Token is cancelled.",
   });
 }, 300);
 
@@ -119,10 +110,7 @@ it("does not send request when cancel token is already cancelled", function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
-  const workerContextController = new WorkerContextController<Methods>(
-    loggerBreadcrumbs,
-    workerContext
-  );
+  const workerContextController = new WorkerContextController<Methods>(loggerBreadcrumbs, workerContext);
   const workerController = new WorkerClientController<Methods>(worker);
 
   workerContextController.setMethods(new Methods());
@@ -131,12 +119,12 @@ it("does not send request when cancel token is already cancelled", function() {
   cancelToken.cancel();
 
   const response = workerController.request(cancelToken, "someMethod", {
-    foo: "bar"
+    foo: "bar",
   });
 
   return expect(response).rejects.toEqual({
     code: 1,
-    message: "Token has been cancelled before sending request."
+    message: "Token has been cancelled before sending request.",
   });
 }, 300);
 
@@ -150,7 +138,7 @@ it("binds request methods", function() {
 
     async someMethod(cancelToken: CancelTokenInterface, params) {
       return {
-        baz: this.test + params.foo
+        baz: this.test + params.foo,
       };
     }
   }
@@ -159,20 +147,17 @@ it("binds request methods", function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const worker = new WorkerMock("https://example.com/worker.js");
   const workerContext = new DedicatedWorkerGlobalScopeMock(worker);
-  const workerContextController = new WorkerContextController<Methods>(
-    loggerBreadcrumbs,
-    workerContext
-  );
+  const workerContextController = new WorkerContextController<Methods>(loggerBreadcrumbs, workerContext);
   const workerController = new WorkerClientController<Methods>(worker);
 
   workerContextController.setMethods(new Methods());
   workerContextController.attach();
 
   const response = workerController.request(cancelToken, "someMethod", {
-    foo: "bar"
+    foo: "bar",
   });
 
   return expect(response).resolves.toEqual({
-    baz: "foobar"
+    baz: "foobar",
   });
 }, 300);

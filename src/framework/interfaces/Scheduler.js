@@ -1,11 +1,6 @@
 // @flow
 
-import type {
-  BeginCallback,
-  DrawCallback,
-  EndCallback,
-  UpdateCallback
-} from "mainloop.js";
+import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
 
 export interface Scheduler {
   notifyBegin(): void;

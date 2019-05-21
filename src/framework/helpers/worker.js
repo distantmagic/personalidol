@@ -29,10 +29,7 @@ export default function worker<T: WorkerContextMethods>(
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
   const queryBusController = new QueryBusController(new BusClock(), queryBus);
-  const workerContextController = new WorkerContextController<T>(
-    loggerBreadcrumbs,
-    self
-  );
+  const workerContextController = new WorkerContextController<T>(loggerBreadcrumbs, self);
   const methods: T = builder(loggerBreadcrumbs, queryBus);
 
   workerContextController.setMethods(methods);

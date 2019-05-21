@@ -10,15 +10,11 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledCustomProperty as TiledCustomPropertyInterface } from "../interfaces/TiledCustomProperty";
 import type { TiledCustomPropertyParser as TiledCustomPropertyParserInterface } from "../interfaces/TiledCustomPropertyParser";
 
-export default class TiledCustomPropertyParser
-  implements TiledCustomPropertyParserInterface {
+export default class TiledCustomPropertyParser implements TiledCustomPropertyParserInterface {
   +propertyElement: HTMLElement;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    propertyElement: HTMLElement
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, propertyElement: HTMLElement) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.propertyElement = propertyElement;
   }
@@ -38,22 +34,11 @@ export default class TiledCustomPropertyParser
       case "string":
         break;
       default:
-        throw new TiledCustomPropertiesException(
-          this.loggerBreadcrumbs,
-          `Unsupported custom property type: "${type}"`
-        );
+        throw new TiledCustomPropertiesException(this.loggerBreadcrumbs, `Unsupported custom property type: "${type}"`);
     }
 
-    const name = xml.getAttribute(
-      this.loggerBreadcrumbs,
-      this.propertyElement,
-      "name"
-    ).value;
-    const value = xml.getAttribute(
-      this.loggerBreadcrumbs,
-      this.propertyElement,
-      "value"
-    ).value;
+    const name = xml.getAttribute(this.loggerBreadcrumbs, this.propertyElement, "name").value;
+    const value = xml.getAttribute(this.loggerBreadcrumbs, this.propertyElement, "value").value;
 
     return new TiledCustomProperty(this.loggerBreadcrumbs, name, type, value);
   }

@@ -23,15 +23,8 @@ it("loads and parses tileset files", async function() {
 
   queryBus.onEnqueued(mockedEnqueuedCallback);
 
-  const tiledTilesetLoader = new TiledTilesetLoader(
-    loggerBreadcrumbs,
-    queryBus,
-    queryBuilder
-  );
-  const tiledTileset = tiledTilesetLoader.load(
-    cancelToken,
-    "tileset-fixture-01.tsx"
-  );
+  const tiledTilesetLoader = new TiledTilesetLoader(loggerBreadcrumbs, queryBus, queryBuilder);
+  const tiledTileset = tiledTilesetLoader.load(cancelToken, "tileset-fixture-01.tsx");
 
   await expect(tiledTileset).resolves.toBeDefined();
   expect(mockedEnqueuedCallback.mock.calls.length).toBe(1);

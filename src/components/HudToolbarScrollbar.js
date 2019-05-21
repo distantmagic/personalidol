@@ -8,27 +8,20 @@ type Props = {|
   children: $ReadOnlyArray<any>,
   className?: string,
   style?: {
-    [string]: number | string
+    [string]: number | string,
   },
-  type: string
+  type: string,
 |};
 
 function updateScrollDelta(ref: HTMLElement, delta: number): void {
-  const scrollPosition = new ScrollbarPosition(
-    ref.scrollWidth,
-    ref.offsetWidth,
-    0,
-    ref.scrollLeft
-  );
+  const scrollPosition = new ScrollbarPosition(ref.scrollWidth, ref.offsetWidth, 0, ref.scrollLeft);
   const updatedScrollPosition = scrollPosition.adjust(delta);
 
   ref.scrollLeft = updatedScrollPosition.scrollOffset;
 }
 
 export default function HudToolbarScrollbar(props: Props) {
-  const [containerElement, setContainerElement] = React.useState<?HTMLElement>(
-    null
-  );
+  const [containerElement, setContainerElement] = React.useState<?HTMLElement>(null);
 
   React.useEffect(
     function() {
@@ -59,12 +52,12 @@ export default function HudToolbarScrollbar(props: Props) {
     {
       className: props.className,
       style: props.style,
-      ref: setContainerElement
+      ref: setContainerElement,
     },
     [props.children]
   );
 }
 
 HudToolbarScrollbar.defaultProps = {
-  type: "div"
+  type: "div",
 };

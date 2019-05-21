@@ -9,7 +9,7 @@ import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelTo
 import type { Query } from "../interfaces/Query";
 
 type Total = {
-  executed: number
+  executed: number,
 };
 
 class Foo implements Query<number> {
@@ -37,7 +37,7 @@ it("executes similar queries only once", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const queryBus = new QueryBus(loggerBreadcrumbs);
   const total: Total = {
-    executed: 0
+    executed: 0,
   };
 
   const promises = Promise.all([
@@ -47,7 +47,7 @@ it("executes similar queries only once", async function() {
     queryBus.enqueue(cancelToken, new Foo(total, 3)),
     queryBus.enqueue(cancelToken, new Foo(total, 4)),
     queryBus.enqueue(cancelToken, new Foo(total, 4)),
-    queryBus.enqueue(cancelToken, new Foo(total, 4))
+    queryBus.enqueue(cancelToken, new Foo(total, 4)),
   ]);
 
   await queryBus.tick(new ForcedTick(false));

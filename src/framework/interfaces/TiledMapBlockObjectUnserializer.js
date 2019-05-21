@@ -5,7 +5,4 @@ import type { TiledMapBlockObjectSerializedObject } from "../types/TiledMapBlock
 import type { JsonUnserializable } from "./JsonUnserializable";
 
 export interface TiledMapBlockObjectUnserializer
-  extends JsonUnserializable<
-    TiledMapBlockObject,
-    TiledMapBlockObjectSerializedObject
-  > {}
+  extends JsonUnserializable<TiledMapBlockObject, TiledMapBlockObjectSerializedObject> {}

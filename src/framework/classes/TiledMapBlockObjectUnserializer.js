@@ -10,8 +10,7 @@ import type { TiledMapBlockObjectSerializedObject } from "../types/TiledMapBlock
 import type { TiledMapBlockObjectUnserializer as TiledMapBlockObjectUnserializerInterface } from "../interfaces/TiledMapBlockObjectUnserializer";
 import type { TiledMapPositionedObjectUnserializer as TiledMapPositionedObjectUnserializerInterface } from "../interfaces/TiledMapPositionedObjectUnserializer";
 
-export default class TiledMapBlockObjectUnserializer
-  implements TiledMapBlockObjectUnserializerInterface {
+export default class TiledMapBlockObjectUnserializer implements TiledMapBlockObjectUnserializerInterface {
   +elementSizeUnserializer: ElementSizeUnserializerInterface<"tile">;
   +tiledMapPositionedObjectUnserializer: TiledMapPositionedObjectUnserializerInterface;
 
@@ -24,13 +23,9 @@ export default class TiledMapBlockObjectUnserializer
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(
-    parsed: TiledMapBlockObjectSerializedObject
-  ): TiledMapBlockObjectInterface {
+  fromObject(parsed: TiledMapBlockObjectSerializedObject): TiledMapBlockObjectInterface {
     return new TiledMapBlockObject(
-      this.tiledMapPositionedObjectUnserializer.fromObject(
-        parsed.tiledMapPositionedObject
-      ),
+      this.tiledMapPositionedObjectUnserializer.fromObject(parsed.tiledMapPositionedObject),
       this.elementSizeUnserializer.fromObject(parsed.elementSize),
       parsed.source
     );

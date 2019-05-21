@@ -25,7 +25,7 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
     return {
       depth: this.getDepth(),
       height: this.getHeight(),
-      width: this.getWidth()
+      width: this.getWidth(),
     };
   }
 
@@ -54,9 +54,6 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
   }
 
   isEqual(other: ElementSize<"px">): boolean {
-    return (
-      this.getHeight() === other.getHeight() &&
-      this.getWidth() === other.getWidth()
-    );
+    return this.getHeight() === other.getHeight() && this.getWidth() === other.getWidth();
   }
 }

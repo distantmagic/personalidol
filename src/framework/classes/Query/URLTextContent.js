@@ -12,7 +12,7 @@ export default class URLTextContent implements Query<string> {
 
   async execute(cancelToken: CancelToken): Promise<?string> {
     const response = await fetch(this.ref, {
-      signal: cancelToken.getAbortSignal()
+      signal: cancelToken.getAbortSignal(),
     });
 
     return await response.text();

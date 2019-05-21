@@ -1,5 +1,4 @@
-$dd-hud-toolbar-button-side: $dd-hud-toolbar-height - (2 * $dd-frame-padding) -
-  (2 * $dd-frame-border-width);
+$dd-hud-toolbar-button-side: $dd-hud-toolbar-height - (2 * $dd-frame-padding) - (2 * $dd-frame-border-width);
 $dd-hud-toolbar-scroll-indicator-height: 10px;
 
 .dd__toolbar {

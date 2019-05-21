@@ -39,10 +39,7 @@ export default class Player implements CanvasView {
     this.player = new THREE.Group();
     this.playerModel = playerModel;
     this.keyboardState = keyboardState;
-    this.personAnimationState = new PersonAnimation(
-      exceptionHandler,
-      loggerBreadcrumbs
-    );
+    this.personAnimationState = new PersonAnimation(exceptionHandler, loggerBreadcrumbs);
     this.rotationY = 0;
     this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
@@ -58,10 +55,7 @@ export default class Player implements CanvasView {
     // this.spotLight.position.y = 2;
   }
 
-  async attach(
-    cancelToken: CancelToken,
-    renderer: THREE.WebGLRenderer
-  ): Promise<void> {
+  async attach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
     const loader = new FBXLoader(this.threeLoadingManager.getLoadingManager());
 
     loader.setResourcePath("/assets/mesh-default-character/");
@@ -71,37 +65,17 @@ export default class Player implements CanvasView {
     // });
     const [defaultCharacter, idle, run, walk] = await Promise.all([
       new Promise((resolve, reject) => {
-        loader.load(
-          "/assets/mesh-default-character.fbx",
-          resolve,
-          null,
-          reject
-        );
+        loader.load("/assets/mesh-default-character.fbx", resolve, null, reject);
       }),
       new Promise((resolve, reject) => {
-        loader.load(
-          "/assets/animation-idle-normal-01.fbx",
-          resolve,
-          null,
-          reject
-        );
+        loader.load("/assets/animation-idle-normal-01.fbx", resolve, null, reject);
       }),
       new Promise((resolve, reject) => {
-        loader.load(
-          "/assets/animation-run-forward-normal-01.fbx",
-          resolve,
-          null,
-          reject
-        );
+        loader.load("/assets/animation-run-forward-normal-01.fbx", resolve, null, reject);
       }),
       new Promise((resolve, reject) => {
-        loader.load(
-          "/assets/animation-walk-forward-normal-01.fbx",
-          resolve,
-          null,
-          reject
-        );
-      })
+        loader.load("/assets/animation-walk-forward-normal-01.fbx", resolve, null, reject);
+      }),
     ]);
     const bones = defaultCharacter.children[0];
 
@@ -122,7 +96,7 @@ export default class Player implements CanvasView {
     const actions = {
       idling: mixer.clipAction(idle.animations[0]),
       running: mixer.clipAction(run.animations[0]),
-      walking: mixer.clipAction(walk.animations[0])
+      walking: mixer.clipAction(walk.animations[0]),
     };
 
     this.personAnimationState.addEventListenerAny(evt => {
@@ -152,10 +126,7 @@ export default class Player implements CanvasView {
     // this.scene.add(this.spotLight);
   }
 
-  async detach(
-    cancelToken: CancelToken,
-    renderer: THREE.WebGLRenderer
-  ): Promise<void> {
+  async detach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
     this.scene.remove(this.player);
   }
 
@@ -187,10 +158,7 @@ export default class Player implements CanvasView {
       this.velocityZ /= Math.SQRT2;
     }
 
-    if (
-      this.keyboardState.isArrowPressed() &&
-      (this.velocityX || this.velocityZ)
-    ) {
+    if (this.keyboardState.isArrowPressed() && (this.velocityX || this.velocityZ)) {
       if (this.keyboardState.isPressed("Shift")) {
         this.personAnimationState.walk();
       } else {
@@ -245,10 +213,6 @@ export default class Player implements CanvasView {
       currentPlayerPosition.z + this.velocityZ
     );
 
-    this.player.position.set(
-      currentPlayerPosition.x,
-      currentPlayerPosition.y,
-      currentPlayerPosition.z
-    );
+    this.player.position.set(currentPlayerPosition.x, currentPlayerPosition.y, currentPlayerPosition.z);
   }
 }

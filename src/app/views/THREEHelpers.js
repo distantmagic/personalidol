@@ -22,10 +22,7 @@ export default class THREEHelpers implements CanvasView {
     this.tiledMap = tiledMap;
   }
 
-  async attach(
-    cancelToken: CancelToken,
-    renderer: THREE.WebGLRenderer
-  ): Promise<void> {
+  async attach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
     const axesHelper = new THREE.AxesHelper(5);
 
     axesHelper.position.y = 0.2;
@@ -33,10 +30,7 @@ export default class THREEHelpers implements CanvasView {
     this.scene.add(axesHelper);
 
     const tiledMapSize = this.tiledMap.getMapSize();
-    const tiledMapEdgeMax = Math.max(
-      tiledMapSize.getHeight(),
-      tiledMapSize.getWidth()
-    );
+    const tiledMapEdgeMax = Math.max(tiledMapSize.getHeight(), tiledMapSize.getWidth());
     const gridHelper = new THREE.GridHelper(tiledMapEdgeMax, tiledMapEdgeMax);
 
     gridHelper.geometry.translate(tiledMapEdgeMax / 2, 0, tiledMapEdgeMax / 2);
@@ -45,10 +39,7 @@ export default class THREEHelpers implements CanvasView {
     this.scene.add(gridHelper);
   }
 
-  async detach(
-    cancelToken: CancelToken,
-    renderer: THREE.WebGLRenderer
-  ): Promise<void> {}
+  async detach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {}
 
   async start(): Promise<void> {}
 

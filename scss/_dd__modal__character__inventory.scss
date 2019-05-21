@@ -2,84 +2,84 @@ $dd-modal-character-inventory-slot-side-width: 50px;
 $dd-modal-character-inventory-slots: (
   back: (
     5,
-    5
+    5,
   ),
   belt: (
     4,
-    5
+    5,
   ),
   feet: (
     4,
-    10
+    10,
   ),
   head: (
     4,
-    1
+    1,
   ),
   larm: (
     5,
-    3
+    3,
   ),
   legs: (
     4,
-    8
+    8,
   ),
   lhand: (
     5,
-    4
+    4,
   ),
   lring: (
     6,
-    4
+    4,
   ),
   neck: (
     4,
-    2
+    2,
   ),
   rarm: (
     3,
-    3
+    3,
   ),
   rhand: (
     3,
-    4
+    4,
   ),
   rring: (
     2,
-    4
+    4,
   ),
   shield: (
     1,
-    2
+    2,
   ),
   torso: (
     4,
-    3
+    3,
   ),
   utility1: (
     1,
-    6
+    6,
   ),
   utility2: (
     1,
-    7
+    7,
   ),
   utility3: (
     1,
-    8
+    8,
   ),
   utility4: (
     1,
-    9
+    9,
   ),
   utility5: (
     1,
-    10
+    10,
   ),
   weapon: (
     1,
-    1
-  )
+    1,
+  ),
 );
 
 .dd__frame.dd__frame--inventory-slot {
@@ -110,10 +110,7 @@ $dd-modal-character-inventory-slots: (
   align-content: center;
   display: grid;
   // grid-gap: $dd-frame-padding;
-  grid-template-columns: repeat(
-    6,
-    $dd-modal-character-inventory-slot-side-width
-  );
+  grid-template-columns: repeat(6, $dd-modal-character-inventory-slot-side-width);
   grid-template-rows: repeat(10, $dd-modal-character-inventory-slot-side-width);
   justify-content: center;
   position: relative;

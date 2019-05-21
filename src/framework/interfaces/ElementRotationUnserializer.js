@@ -6,7 +6,4 @@ import type { ElementRotationSerializedObject } from "../types/ElementRotationSe
 import type { JsonUnserializable } from "./JsonUnserializable";
 
 export interface ElementRotationUnserializer<T: ElementRotationUnit>
-  extends JsonUnserializable<
-    ElementRotation<T>,
-    ElementRotationSerializedObject<T>
-  > {}
+  extends JsonUnserializable<ElementRotation<T>, ElementRotationSerializedObject<T>> {}

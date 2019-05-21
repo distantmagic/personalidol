@@ -8,8 +8,7 @@ import type { Camera, Raycaster, Vector2, WebGLRenderer } from "three";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../interfaces/THREEPointerInteraction";
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 
-export default class THREEPointerInteraction
-  implements THREEPointerInteractionInterface {
+export default class THREEPointerInteraction implements THREEPointerInteractionInterface {
   +camera: Camera;
   +mouseVector: Vector2;
   +raycaster: Raycaster;
@@ -35,14 +34,8 @@ export default class THREEPointerInteraction
   begin(): void {}
 
   disconnect(): void {
-    this.renderer.domElement.removeEventListener(
-      "mousedown",
-      this.onMouseChange
-    );
-    this.renderer.domElement.removeEventListener(
-      "mousemove",
-      this.onMouseChange
-    );
+    this.renderer.domElement.removeEventListener("mousedown", this.onMouseChange);
+    this.renderer.domElement.removeEventListener("mousemove", this.onMouseChange);
   }
 
   getCameraRaycaster(): Raycaster {
@@ -52,11 +45,11 @@ export default class THREEPointerInteraction
   observe(): void {
     this.renderer.domElement.addEventListener("mousedown", this.onMouseChange, {
       capture: true,
-      passive: true
+      passive: true,
     });
     this.renderer.domElement.addEventListener("mousemove", this.onMouseChange, {
       capture: true,
-      passive: true
+      passive: true,
     });
   }
 

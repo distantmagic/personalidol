@@ -7,16 +7,12 @@ import ReactDOM from "react-dom";
 import type { Debugger } from "../framework/interfaces/Debugger";
 
 type Props = {|
-  debug: Debugger
+  debug: Debugger,
 |};
 
 export default React.memo<Props>(function DebuggerListing(props: Props) {
-  const [debuggerState, setDebuggetState] = React.useState(
-    props.debug.getState()
-  );
-  const [debuggerElement] = React.useState<?HTMLElement>(
-    document.getElementById("debugger")
-  );
+  const [debuggerState, setDebuggetState] = React.useState(props.debug.getState());
+  const [debuggerElement] = React.useState<?HTMLElement>(document.getElementById("debugger"));
 
   React.useEffect(
     function() {
@@ -44,14 +40,12 @@ export default React.memo<Props>(function DebuggerListing(props: Props) {
       defaultClassNameDragging="dd__debugger__popup--dragging"
       defaultPosition={{
         x: 0,
-        y: 0
+        y: 0,
       }}
       handle=".dd__debugger__popup__handle"
     >
       <div className="dd__frame dd__debugger__popup">
-        <div className="dd__debugger__popup__handle">
-          Debugger State Listing
-        </div>
+        <div className="dd__debugger__popup__handle">Debugger State Listing</div>
         <div className="dd__debugger__popup__content">
           <table className="dd__table">
             <tbody>

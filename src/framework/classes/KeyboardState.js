@@ -7,7 +7,7 @@ import type { KeyboardState as KeyboardStateInterface } from "../interfaces/Keyb
 
 export default class KeyboardState implements KeyboardStateInterface {
   keys: {
-    [string]: boolean
+    [string]: boolean,
   };
 
   constructor() {
@@ -37,7 +37,7 @@ export default class KeyboardState implements KeyboardStateInterface {
   observe(): void {
     const config = {
       capture: true,
-      passive: true
+      passive: true,
     };
 
     document.addEventListener("keydown", this.onKeyDown, config);

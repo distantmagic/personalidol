@@ -18,26 +18,17 @@ export default class TiledTileParser implements TiledTileParserInterface {
   +tileElement: HTMLElement;
   +tilesetPath: string;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    tilesetPath: string,
-    tileElement: HTMLElement
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, tilesetPath: string, tileElement: HTMLElement) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tileElement = tileElement;
     this.tilesetPath = tilesetPath;
   }
 
   async parse(cancelToken: CancelToken): Promise<TiledTileInterface> {
-    const breadcrumbs = this.loggerBreadcrumbs
-      .add("parse")
-      .add(this.tilesetPath);
+    const breadcrumbs = this.loggerBreadcrumbs.add("parse").add(this.tilesetPath);
 
     if (cancelToken.isCancelled()) {
-      throw new Cancelled(
-        breadcrumbs,
-        "Cancel token was cancelled before parsing map tile."
-      );
+      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before parsing map tile.");
     }
 
     const imageElement = this.tileElement.getElementsByTagName("image").item(0);
@@ -57,9 +48,6 @@ export default class TiledTileParser implements TiledTileParserInterface {
       )
     );
 
-    return new TiledTile(
-      xml.getNumberAttribute(breadcrumbs, this.tileElement, "id"),
-      tiledImage
-    );
+    return new TiledTile(xml.getNumberAttribute(breadcrumbs, this.tileElement, "id"), tiledImage);
   }
 }

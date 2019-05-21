@@ -5,7 +5,4 @@ import type { LoggerBreadcrumbsSerializedObject } from "../types/LoggerBreadcrum
 import type { JsonUnserializable } from "./JsonUnserializable";
 
 export interface LoggerBreadcrumbsUnserializer
-  extends JsonUnserializable<
-    LoggerBreadcrumbs,
-    LoggerBreadcrumbsSerializedObject
-  > {}
+  extends JsonUnserializable<LoggerBreadcrumbs, LoggerBreadcrumbsSerializedObject> {}

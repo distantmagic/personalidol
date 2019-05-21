@@ -2,8 +2,7 @@
 
 import type { TiledMapObjectElementChecker as TiledMapObjectElementCheckerInterface } from "../interfaces/TiledMapObjectElementChecker";
 
-export default class TiledMapObjectElementChecker
-  implements TiledMapObjectElementCheckerInterface {
+export default class TiledMapObjectElementChecker implements TiledMapObjectElementCheckerInterface {
   +objectElement: HTMLElement;
 
   constructor(objectElement: HTMLElement) {

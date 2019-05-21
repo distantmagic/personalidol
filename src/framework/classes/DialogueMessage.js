@@ -27,10 +27,7 @@ export default class DialogueMessage implements DialogueMessageInterface {
   }
 
   async actor(): Promise<string> {
-    return this.expressionBus.expression(
-      this.messageScript.actor,
-      this.getExpressionContext()
-    );
+    return this.expressionBus.expression(this.messageScript.actor, this.getExpressionContext());
   }
 
   async answerTo(): Promise<$ReadOnlyArray<string>> {
@@ -76,9 +73,6 @@ export default class DialogueMessage implements DialogueMessageInterface {
   }
 
   prompt(): Promise<string> {
-    return this.expressionBus.expression(
-      this.messageScript.prompt,
-      this.getExpressionContext()
-    );
+    return this.expressionBus.expression(this.messageScript.prompt, this.getExpressionContext());
   }
 }

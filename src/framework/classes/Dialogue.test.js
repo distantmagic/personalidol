@@ -22,11 +22,7 @@ it("switches dialogue turns", async function() {
   const dialogue = new Dialogue(
     expressionBus,
     expressionContext,
-    new DialogueScript(
-      expressionBus,
-      expressionContext,
-      testContext.dialogueScript
-    )
+    new DialogueScript(expressionBus, expressionContext, testContext.dialogueScript)
   );
   const person = new Person("TestActor");
   const turn1 = await dialogue.initiate(person);

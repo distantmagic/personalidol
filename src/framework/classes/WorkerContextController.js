@@ -13,17 +13,13 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { WorkerContextController as WorkerContextControllerInterface } from "../interfaces/WorkerContextController";
 import type { WorkerContextMethods } from "../types/WorkerContextMethods";
 
-export default class WorkerContextController<T: WorkerContextMethods>
-  implements WorkerContextControllerInterface<T> {
+export default class WorkerContextController<T: WorkerContextMethods> implements WorkerContextControllerInterface<T> {
   +cancelTokens: Map<string, CancelTokenInterface>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +workerContext: DedicatedWorkerGlobalScope;
   methods: T;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    workerContext: DedicatedWorkerGlobalScope
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, workerContext: DedicatedWorkerGlobalScope) {
     autoBind(this);
 
     this.cancelTokens = new Map<string, CancelTokenInterface>();
@@ -35,19 +31,13 @@ export default class WorkerContextController<T: WorkerContextMethods>
     this.workerContext.onmessage = this.onMessage;
   }
 
-  async callMethod(
-    cancelToken: CancelTokenInterface,
-    rpcRequest: JsonRpcRequest<any, any>
-  ): Promise<void> {
+  async callMethod(cancelToken: CancelTokenInterface, rpcRequest: JsonRpcRequest<any, any>): Promise<void> {
     const method = this.methods[rpcRequest.method];
 
     if (!method) {
       const errorResponse = jsonrpc.error(
         rpcRequest.id,
-        new jsonrpc.JsonRpcError(
-          `Method does not exist: "${rpcRequest.method}"`,
-          1
-        )
+        new jsonrpc.JsonRpcError(`Method does not exist: "${rpcRequest.method}"`, 1)
       );
 
       return void this.workerContext.postMessage(errorResponse);
@@ -57,29 +47,19 @@ export default class WorkerContextController<T: WorkerContextMethods>
       let responseData;
 
       cancelToken.onCancelled(err => {
-        const cancelledResponse = jsonrpc.error(
-          rpcRequest.id,
-          new jsonrpc.JsonRpcError(err.message, 1)
-        );
+        const cancelledResponse = jsonrpc.error(rpcRequest.id, new jsonrpc.JsonRpcError(err.message, 1));
 
         resolve(void this.workerContext.postMessage(cancelledResponse));
       });
 
       try {
-        responseData = await method.call(
-          this.methods,
-          cancelToken,
-          rpcRequest.params
-        );
+        responseData = await method.call(this.methods, cancelToken, rpcRequest.params);
       } catch (err) {
         if (cancelToken.isCancelled()) {
           return resolve();
         }
 
-        const errorResponse = jsonrpc.error(
-          rpcRequest.id,
-          new jsonrpc.JsonRpcError(err.message, err.code)
-        );
+        const errorResponse = jsonrpc.error(rpcRequest.id, new jsonrpc.JsonRpcError(err.message, err.code));
 
         return resolve(void this.workerContext.postMessage(errorResponse));
       }

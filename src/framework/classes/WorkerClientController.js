@@ -2,17 +2,9 @@
 
 import jsonrpc from "jsonrpc-lite";
 
-import {
-  isJsonRpcErrorResponse,
-  isJsonRpcResponse,
-  isJsonRpcSuccessResponse
-} from "../helpers/jsonrpc";
+import { isJsonRpcErrorResponse, isJsonRpcResponse, isJsonRpcSuccessResponse } from "../helpers/jsonrpc";
 
-import type {
-  JsonRpcErrorResponse,
-  JsonRpcResponse,
-  JsonRpcSuccessResponse
-} from "jsonrpc-lite";
+import type { JsonRpcErrorResponse, JsonRpcResponse, JsonRpcSuccessResponse } from "jsonrpc-lite";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { WorkerClientController as WorkerClientControllerInterface } from "../interfaces/WorkerClientController";
@@ -20,8 +12,7 @@ import type { WorkerContextMethods } from "../types/WorkerContextMethods";
 
 let jsonRpcCurrentRequestId = 0;
 
-export default class WorkerClientController<T: WorkerContextMethods>
-  implements WorkerClientControllerInterface<T> {
+export default class WorkerClientController<T: WorkerContextMethods> implements WorkerClientControllerInterface<T> {
   +worker: Worker;
 
   constructor(worker: Worker) {
@@ -33,10 +24,10 @@ export default class WorkerClientController<T: WorkerContextMethods>
     const request = jsonrpc.request<
       "_:cancel",
       {
-        id: string
+        id: string,
       }
     >(requestId, "_:cancel", {
-      id: cancelledRequestId
+      id: cancelledRequestId,
     });
     this.worker.postMessage(request);
   }
@@ -47,18 +38,14 @@ export default class WorkerClientController<T: WorkerContextMethods>
     return String(jsonRpcCurrentRequestId);
   }
 
-  request<Params, Return>(
-    cancelToken: CancelToken,
-    methodName: $Keys<T>,
-    params: Params
-  ): Promise<Return> {
+  request<Params, Return>(cancelToken: CancelToken, methodName: $Keys<T>, params: Params): Promise<Return> {
     const requestId = this.getNextRequestId();
 
     return new Promise((resolve, reject) => {
       if (cancelToken.isCancelled()) {
         return void reject({
           code: 1,
-          message: "Token has been cancelled before sending request."
+          message: "Token has been cancelled before sending request.",
         });
       }
 
@@ -95,11 +82,7 @@ export default class WorkerClientController<T: WorkerContextMethods>
 
       this.worker.addEventListener("message", onMessage);
 
-      const request = jsonrpc.request<$Keys<T>, Params>(
-        requestId,
-        methodName,
-        params
-      );
+      const request = jsonrpc.request<$Keys<T>, Params>(requestId, methodName, params);
       this.worker.postMessage(request);
 
       cancelToken.onCancelled(() => {

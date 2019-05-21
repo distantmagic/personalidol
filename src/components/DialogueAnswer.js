@@ -12,7 +12,7 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  onAnswerClick: DialogueMessage => any
+  onAnswerClick: DialogueMessage => any,
 |};
 
 export default function DialogueAnswer(props: Props) {
@@ -25,19 +25,13 @@ export default function DialogueAnswer(props: Props) {
         .actor()
         .then(setActor)
         .catch((error: Error) => {
-          return props.exceptionHandler.captureException(
-            props.loggerBreadcrumbs.add("dialogueMessageActor"),
-            error
-          );
+          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("dialogueMessageActor"), error);
         });
       props.dialogueMessage
         .prompt()
         .then(setPrompt)
         .catch((error: Error) => {
-          return props.exceptionHandler.captureException(
-            props.loggerBreadcrumbs.add("dialogueMessagePrompt"),
-            error
-          );
+          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("dialogueMessagePrompt"), error);
         });
     },
     [props.dialogueMessage, props.exceptionHandler, props.loggerBreadcrumbs]
@@ -50,10 +44,7 @@ export default function DialogueAnswer(props: Props) {
   }
 
   return (
-    <button
-      className="dd__dialogue__turn__answer__button"
-      onClick={onAnswerClick}
-    >
+    <button className="dd__dialogue__turn__answer__button" onClick={onAnswerClick}>
       {actor} - {prompt}
     </button>
   );

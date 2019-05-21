@@ -15,11 +15,7 @@ export default class Dialogue implements Query<DialogueModel> {
   +expressionBus: ExpressionBus;
   +ref: string;
 
-  constructor(
-    expressionBus: ExpressionBus,
-    context: ExpressionContext,
-    ref: string
-  ) {
+  constructor(expressionBus: ExpressionBus, context: ExpressionContext, ref: string) {
     this.context = context;
     this.expressionBus = expressionBus;
     this.ref = ref;
@@ -27,7 +23,7 @@ export default class Dialogue implements Query<DialogueModel> {
 
   async execute(cancelToken: CancelToken): Promise<DialogueModel> {
     const response = await fetch(this.ref, {
-      signal: cancelToken.getAbortSignal()
+      signal: cancelToken.getAbortSignal(),
     });
     const dialogue = await response.text();
 

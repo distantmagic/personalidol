@@ -23,17 +23,11 @@ export default class ScrollbarPosition {
     this.scrollLength = scrollLength;
     this.scrollOffset = scrollOffset;
 
-    this.scrollPercentage = Math.round(
-      (scrollOffset / (scrollLength - offsetLength)) * 100
-    );
+    this.scrollPercentage = Math.round((scrollOffset / (scrollLength - offsetLength)) * 100);
   }
 
   adjust(delta: number): ScrollbarPosition {
-    const updatedScrollOffset = clamp(
-      this.scrollOffset + delta,
-      0,
-      this.scrollLength - this.offsetLength
-    );
+    const updatedScrollOffset = clamp(this.scrollOffset + delta, 0, this.scrollLength - this.offsetLength);
 
     return new ScrollbarPosition(
       this.scrollLength,

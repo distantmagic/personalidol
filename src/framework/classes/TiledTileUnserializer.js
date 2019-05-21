@@ -8,8 +8,7 @@ import type { TiledTile as TiledTileInterface } from "../interfaces/TiledTile";
 import type { TiledTileUnserializer as TiledTileUnserializerInterface } from "../interfaces/TiledTileUnserializer";
 import type { TiledTileSerializedObject } from "../types/TiledTileSerializedObject";
 
-export default class TiledTileUnserializer
-  implements TiledTileUnserializerInterface {
+export default class TiledTileUnserializer implements TiledTileUnserializerInterface {
   +tiledTileImageUnserializer: TiledTileImageUnserializerInterface;
 
   constructor() {
@@ -21,9 +20,6 @@ export default class TiledTileUnserializer
   }
 
   fromObject(parsed: TiledTileSerializedObject): TiledTileInterface {
-    return new TiledTile(
-      parsed.id,
-      this.tiledTileImageUnserializer.fromObject(parsed.tiledTileImage)
-    );
+    return new TiledTile(parsed.id, this.tiledTileImageUnserializer.fromObject(parsed.tiledTileImage));
   }
 }

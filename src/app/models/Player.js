@@ -10,16 +10,8 @@ export default class Player implements PlayerInterface {
   targetPosition: ElementPositionInterface<"tile">;
 
   constructor(
-    currentPosition: ElementPositionInterface<"tile"> = new ElementPosition(
-      0,
-      0,
-      0
-    ),
-    targetPosition: ElementPositionInterface<"tile"> = new ElementPosition(
-      0,
-      0,
-      0
-    )
+    currentPosition: ElementPositionInterface<"tile"> = new ElementPosition(0, 0, 0),
+    targetPosition: ElementPositionInterface<"tile"> = new ElementPosition(0, 0, 0)
   ) {
     this.currentPosition = currentPosition;
     this.targetPosition = targetPosition;

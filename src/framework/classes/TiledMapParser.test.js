@@ -10,17 +10,13 @@ import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 
 it("parses map file", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture(
-    "map-fixture-01.tmx"
-  );
+  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture("map-fixture-01.tmx");
 
   return expect(tiledMapPromise).resolves.toBeDefined();
 });
 
 it("can be cancelled gracefully", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture(
-    "map-fixture-01.tmx"
-  );
+  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture("map-fixture-01.tmx");
 
   cancelToken.cancel();
 
@@ -31,15 +27,13 @@ it("generates skinned layers and tiles", async function() {
   const [cancelToken, queryBus, tiledMapPromise]: [
     CancelTokenInterface,
     QueryBusInterface,
-    Promise<TiledMapInterface>
+    Promise<TiledMapInterface>,
   ] = await tiledMapParserFixture("map-fixture-01.tmx");
   const tiledMap = await tiledMapPromise;
   const skinnedTiles = [];
 
   for await (let skinnedLayer of tiledMap.generateSkinnedLayers(cancelToken)) {
-    for await (let skinnedTile of skinnedLayer.generateSkinnedTiles(
-      cancelToken
-    )) {
+    for await (let skinnedTile of skinnedLayer.generateSkinnedTiles(cancelToken)) {
       skinnedTiles.push(skinnedTile);
     }
   }
@@ -105,15 +99,9 @@ it("generates skinned layers and tiles", async function() {
   expect(tiledMapRectanglePosition1.getElementPosition().getX()).toBe(8);
   expect(tiledMapRectanglePosition1.getElementPosition().getY()).toBe(1);
   expect(tiledMapRectanglePosition1.getElementPosition().getZ()).toBe(0);
-  expect(tiledMapRectanglePosition1.getElementRotation().getRotationX()).toBe(
-    0
-  );
-  expect(tiledMapRectanglePosition1.getElementRotation().getRotationY()).toBe(
-    0
-  );
-  expect(
-    Math.round(tiledMapRectanglePosition1.getElementRotation().getRotationZ())
-  ).toBe(-1);
+  expect(tiledMapRectanglePosition1.getElementRotation().getRotationX()).toBe(0);
+  expect(tiledMapRectanglePosition1.getElementRotation().getRotationY()).toBe(0);
+  expect(Math.round(tiledMapRectanglePosition1.getElementRotation().getRotationZ())).toBe(-1);
   expect(tiledMapRectangleBlockObject1.getElementSize().getDepth()).toBe(0.25);
   expect(tiledMapRectangleBlockObject1.getElementSize().getHeight()).toBe(2);
   expect(tiledMapRectangleBlockObject1.getElementSize().getWidth()).toBe(5);
@@ -127,15 +115,9 @@ it("generates skinned layers and tiles", async function() {
   expect(tiledMapRectanglePosition2.getElementPosition().getX()).toBe(13);
   expect(tiledMapRectanglePosition2.getElementPosition().getY()).toBe(2);
   expect(tiledMapRectanglePosition2.getElementPosition().getZ()).toBe(0);
-  expect(tiledMapRectanglePosition2.getElementRotation().getRotationX()).toBe(
-    0
-  );
-  expect(tiledMapRectanglePosition2.getElementRotation().getRotationY()).toBe(
-    0
-  );
-  expect(tiledMapRectanglePosition2.getElementRotation().getRotationZ()).toBe(
-    -0
-  );
+  expect(tiledMapRectanglePosition2.getElementRotation().getRotationX()).toBe(0);
+  expect(tiledMapRectanglePosition2.getElementRotation().getRotationY()).toBe(0);
+  expect(tiledMapRectanglePosition2.getElementRotation().getRotationZ()).toBe(-0);
   expect(tiledMapRectangleBlockObject2.getElementSize().getDepth()).toBe(0.25);
   expect(tiledMapRectangleBlockObject2.getElementSize().getHeight()).toBe(2);
   expect(tiledMapRectangleBlockObject2.getElementSize().getWidth()).toBe(9);
@@ -143,9 +125,7 @@ it("generates skinned layers and tiles", async function() {
 });
 
 it("is serializable", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture(
-    "map-fixture-01.tmx"
-  );
+  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture("map-fixture-01.tmx");
   const tiledMap = await tiledMapPromise;
 
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

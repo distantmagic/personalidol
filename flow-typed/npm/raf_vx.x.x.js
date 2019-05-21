@@ -19,7 +19,7 @@ declare module "raf" {
 
   declare type raf = {
     (RafCallback): RafId,
-    cancel(RafId): void
+    cancel(RafId): void,
   };
 
   declare module.exports: raf;

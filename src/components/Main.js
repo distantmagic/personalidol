@@ -30,30 +30,20 @@ import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumb
 type Props = {|
   exceptionHandler: ExceptionHandler,
   logger: Logger,
-  loggerBreadcrumbs: LoggerBreadcrumbs
+  loggerBreadcrumbs: LoggerBreadcrumbs,
 |};
 
 export default function Main(props: Props) {
   const [debug] = React.useState<Debugger>(new Debugger());
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
-  const [dialogueResourceReference] = React.useState(
-    "/data/dialogues/hermit-intro.yml"
-  );
+  const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
   const [expressionBus] = React.useState(new ExpressionBus());
-  const [expressionContext] = React.useState(
-    new ExpressionContext(props.loggerBreadcrumbs.add("ExpressionContext"))
-  );
-  const [isDocumentHidden, setIsDocumentHidden] = React.useState(
-    document.hidden
-  );
+  const [expressionContext] = React.useState(new ExpressionContext(props.loggerBreadcrumbs.add("ExpressionContext")));
+  const [isDocumentHidden, setIsDocumentHidden] = React.useState(document.hidden);
   const [mainLoop] = React.useState(MainLoop.getInstance());
   const [fpsAdaptive] = React.useState(new FPSAdaptive());
-  const [queryBus] = React.useState(
-    new QueryBus(props.loggerBreadcrumbs.add("QueryBus"))
-  );
-  const [queryBusController] = React.useState(
-    new QueryBusController(new BusClock(), queryBus)
-  );
+  const [queryBus] = React.useState(new QueryBus(props.loggerBreadcrumbs.add("QueryBus")));
+  const [queryBusController] = React.useState(new QueryBusController(new BusClock(), queryBus));
   const [scheduler] = React.useState(new Scheduler());
 
   React.useEffect(
@@ -113,9 +103,7 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
-      const cancelToken = new CancelToken(
-        props.loggerBreadcrumbs.add("queryBusController.interval")
-      );
+      const cancelToken = new CancelToken(props.loggerBreadcrumbs.add("queryBusController.interval"));
 
       queryBusController.interval(cancelToken);
 
@@ -150,8 +138,7 @@ export default function Main(props: Props) {
           />
         )}
         <div className="dd__frame dd__statusbar dd__statusbar--hud">
-          Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że
-          będzie przyjaźnie nastawiony.
+          Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że będzie przyjaźnie nastawiony.
         </div>
         <HudToolbar />
         <HudModalRouter

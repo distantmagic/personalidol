@@ -13,9 +13,7 @@ export default class ElementRotationUnserializer<T: ElementRotationUnit>
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(
-    parsed: ElementRotationSerializedObject<T>
-  ): ElementRotationInterface<T> {
+  fromObject(parsed: ElementRotationSerializedObject<T>): ElementRotationInterface<T> {
     return new ElementRotation<T>(parsed.x, parsed.y, parsed.z);
   }
 }

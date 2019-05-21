@@ -7,8 +7,7 @@ import type { TiledCustomProperty as TiledCustomPropertyInterface } from "../int
 import type { TiledCustomPropertyUnserializer as TiledCustomPropertyUnserializerInterface } from "../interfaces/TiledCustomPropertyUnserializer";
 import type { TiledCustomPropertySerializedObject } from "../types/TiledCustomPropertySerializedObject";
 
-export default class TiledCustomPropertyUnserializer
-  implements TiledCustomPropertyUnserializerInterface {
+export default class TiledCustomPropertyUnserializer implements TiledCustomPropertyUnserializerInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
@@ -19,14 +18,7 @@ export default class TiledCustomPropertyUnserializer
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(
-    parsed: TiledCustomPropertySerializedObject
-  ): TiledCustomPropertyInterface {
-    return new TiledCustomProperty(
-      this.loggerBreadcrumbs,
-      parsed.name,
-      parsed.type,
-      parsed.value
-    );
+  fromObject(parsed: TiledCustomPropertySerializedObject): TiledCustomPropertyInterface {
+    return new TiledCustomProperty(this.loggerBreadcrumbs, parsed.name, parsed.type, parsed.value);
   }
 }

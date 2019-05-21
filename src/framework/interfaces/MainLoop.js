@@ -1,11 +1,6 @@
 // @flow
 
-import type {
-  BeginCallback,
-  DrawCallback,
-  EndCallback,
-  UpdateCallback
-} from "mainloop.js";
+import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
 
 import type { Scheduler } from "./Scheduler";
 

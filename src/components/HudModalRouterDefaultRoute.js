@@ -16,7 +16,7 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  queryBus: QueryBus
+  queryBus: QueryBus,
 |};
 
 export default function HudModalRouterDefaultRoute(props: Props) {
@@ -30,9 +30,7 @@ export default function HudModalRouterDefaultRoute(props: Props) {
               <HudModalCharacterLoader
                 exceptionHandler={props.exceptionHandler}
                 logger={props.logger}
-                loggerBreadcrumbs={props.loggerBreadcrumbs.add(
-                  "HudModalCharacterLoader"
-                )}
+                loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalCharacterLoader")}
                 match={routerProps.match}
                 queryBus={props.queryBus}
               />

@@ -7,19 +7,13 @@ import type { TiledCustomProperty as TiledCustomPropertyInterface } from "../int
 import type { TiledCustomPropertySerializedObject } from "../types/TiledCustomPropertySerializedObject";
 import type { TiledCustomPropertyType } from "../types/TiledCustomPropertyType";
 
-export default class TiledCustomProperty
-  implements TiledCustomPropertyInterface {
+export default class TiledCustomProperty implements TiledCustomPropertyInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +name: string;
   +type: TiledCustomPropertyType;
   +value: string;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    name: string,
-    type: TiledCustomPropertyType,
-    value: string
-  ): void {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, name: string, type: TiledCustomPropertyType, value: string): void {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.name = name;
     this.type = type;
@@ -34,7 +28,7 @@ export default class TiledCustomProperty
     return {
       name: this.getName(),
       type: this.getType(),
-      value: this.getValue()
+      value: this.getValue(),
     };
   }
 
@@ -52,9 +46,7 @@ export default class TiledCustomProperty
 
   isEqual(other: TiledCustomPropertyInterface): boolean {
     return (
-      this.getName() === other.getName() &&
-      this.getType() === other.getType() &&
-      this.getValue() === other.getValue()
+      this.getName() === other.getName() && this.getType() === other.getType() && this.getValue() === other.getValue()
     );
   }
 

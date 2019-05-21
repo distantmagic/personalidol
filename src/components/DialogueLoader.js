@@ -25,7 +25,7 @@ type Props = {|
   expressionContext: ExpressionContext,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  queryBus: QueryBus
+  queryBus: QueryBus,
 |};
 
 export default React.memo<Props>(function DialogueLoader(props: Props) {
@@ -34,23 +34,14 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
 
   React.useEffect(
     function() {
-      const cancelToken = new CancelToken(
-        props.loggerBreadcrumbs.add("DialogueQuery")
-      );
-      const query = new DialogueQuery(
-        props.expressionBus,
-        props.expressionContext,
-        props.dialogueResourceReference
-      );
+      const cancelToken = new CancelToken(props.loggerBreadcrumbs.add("DialogueQuery"));
+      const query = new DialogueQuery(props.expressionBus, props.expressionContext, props.dialogueResourceReference);
 
       props.queryBus
         .enqueue(cancelToken, query)
         .then(setDialogue)
         .catch((error: Error) => {
-          return props.exceptionHandler.captureException(
-            props.loggerBreadcrumbs.add("dialogueQuery"),
-            error
-          );
+          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("dialogueQuery"), error);
         });
 
       return function() {
@@ -63,7 +54,7 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
       props.exceptionHandler,
       props.expressionContext,
       props.loggerBreadcrumbs,
-      props.queryBus
+      props.queryBus,
     ]
   );
 

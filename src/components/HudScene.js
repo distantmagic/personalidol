@@ -16,7 +16,7 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 |};
 
 export default React.memo<Props>(function HudScene(props: Props) {

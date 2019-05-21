@@ -17,19 +17,13 @@ export default class DialogueScript implements Contextual {
   +expressionBus: ExpressionBus;
   +script: DialogueScriptFormat;
 
-  constructor(
-    expressionBus: ExpressionBus,
-    context: ExpressionContext,
-    script: DialogueScriptFormat
-  ) {
+  constructor(expressionBus: ExpressionBus, context: ExpressionContext, script: DialogueScriptFormat) {
     this.context = context;
     this.expressionBus = expressionBus;
     this.script = script;
   }
 
-  async getAnswers(
-    prompt: DialogueMessageInterface
-  ): Promise<DialogueMessages> {
+  async getAnswers(prompt: DialogueMessageInterface): Promise<DialogueMessages> {
     const messages = await this.getMessages();
     let ret = Map<string, DialogueMessageInterface>();
 

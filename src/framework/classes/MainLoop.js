@@ -7,12 +7,7 @@ import { default as VendorMainLoop } from "mainloop.js";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import SingletonException from "./Exception/Singleton";
 
-import type {
-  BeginCallback,
-  DrawCallback,
-  EndCallback,
-  UpdateCallback
-} from "mainloop.js";
+import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
 
 import type { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
 import type { Scheduler } from "../interfaces/Scheduler";

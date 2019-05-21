@@ -8,5 +8,5 @@ import type { TiledMapPositionedObjectSerializedObject } from "./TiledMapPositio
 export type TiledMapBlockObjectSerializedObject = {|
   elementSize: ElementSizeSerializedObject<"tile">,
   source: ?string,
-  tiledMapPositionedObject: TiledMapPositionedObjectSerializedObject
+  tiledMapPositionedObject: TiledMapPositionedObjectSerializedObject,
 |};

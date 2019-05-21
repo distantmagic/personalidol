@@ -19,11 +19,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
   +tilesetPath: string;
   +domParser: DOMParser;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    tilesetPath: string,
-    content: string
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, tilesetPath: string, content: string) {
     this.content = content;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tilesetPath = tilesetPath;
@@ -31,13 +27,8 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
   }
 
   async parse(cancelToken: CancelToken): Promise<TiledTilesetInterface> {
-    const breadcrumbs = this.loggerBreadcrumbs
-      .add("parse")
-      .add(this.tilesetPath);
-    const doc: Document = this.domParser.parseFromString(
-      this.content,
-      "application/xml"
-    );
+    const breadcrumbs = this.loggerBreadcrumbs.add("parse").add(this.tilesetPath);
+    const doc: Document = this.domParser.parseFromString(this.content, "application/xml");
     const documentElement = doc.documentElement;
 
     if (!documentElement || xml.isParseError(doc)) {
@@ -47,10 +38,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     const grid = doc.getElementsByTagName("grid").item(0);
 
     if (!grid) {
-      throw new TiledTilesetException(
-        breadcrumbs,
-        `Tileset file is missing grid metadata: "${this.tilesetPath}"`
-      );
+      throw new TiledTilesetException(breadcrumbs, `Tileset file is missing grid metadata: "${this.tilesetPath}"`);
     }
 
     const tiles: HTMLCollection<HTMLElement> = doc.getElementsByTagName("tile");
@@ -59,24 +47,15 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
     // console.log(grid.attributes.getNamedItem("height").value);
     // console.log(grid.attributes.getNamedItem("width").value);
     if (!tiles) {
-      throw new TiledTilesetException(
-        breadcrumbs,
-        `Tileset tiles data is missing: "${this.tilesetPath}"`
-      );
+      throw new TiledTilesetException(breadcrumbs, `Tileset tiles data is missing: "${this.tilesetPath}"`);
     }
 
-    const expectedTileCount = xml.getNumberAttribute(
-      breadcrumbs,
-      documentElement,
-      "tilecount"
-    );
+    const expectedTileCount = xml.getNumberAttribute(breadcrumbs, documentElement, "tilecount");
 
     if (tiles.length !== expectedTileCount) {
       throw new TiledTilesetException(
         breadcrumbs,
-        `Inconsistent tileset data: expected tile count does not match actual tiles number: "${
-          this.tilesetPath
-        }"`
+        `Inconsistent tileset data: expected tile count does not match actual tiles number: "${this.tilesetPath}"`
       );
     }
 
@@ -97,11 +76,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
         continue;
       }
 
-      const tileParser = new TiledTileParser(
-        breadcrumbs.add("TiledTileParser"),
-        this.tilesetPath,
-        tileElement
-      );
+      const tileParser = new TiledTileParser(breadcrumbs.add("TiledTileParser"), this.tilesetPath, tileElement);
 
       tiledTilePromises.push(tileParser.parse(cancelToken));
     }

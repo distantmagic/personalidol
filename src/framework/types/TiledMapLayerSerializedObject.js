@@ -8,5 +8,5 @@ export type TiledMapLayerSerializedObject = {|
   layerSize: ElementSizeSerializedObject<"tile">,
   name: string,
   tiledCustomProperties: TiledCustomPropertiesSerializedObject,
-  tiledMapGrid: TiledMapGridSerializedObject
+  tiledMapGrid: TiledMapGridSerializedObject,
 |};

@@ -19,8 +19,7 @@ import type { TiledMapSerializedObject } from "../types/TiledMapSerializedObject
 import type { TiledMapUnserializer as TiledMapUnserializerInterface } from "../interfaces/TiledMapUnserializer";
 import type { TiledTilesetUnserializer as TiledTilesetUnserializerInterface } from "../interfaces/TiledTilesetUnserializer";
 
-export default class TiledMapUnserializer
-  implements TiledMapUnserializerInterface {
+export default class TiledMapUnserializer implements TiledMapUnserializerInterface {
   +elementSizeUnserializerPx: ElementSizeUnserializerInterface<"px">;
   +elementSizeUnserializerTile: ElementSizeUnserializerInterface<"tile">;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -35,14 +34,10 @@ export default class TiledMapUnserializer
     this.elementSizeUnserializerTile = new ElementSizeUnserializer();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tiledMapEllipseObjectUnserializer = new TiledMapEllipseObjectUnserializer();
-    this.tiledMapLayerUnserializer = new TiledMapLayerUnserializer(
-      this.loggerBreadcrumbs
-    );
+    this.tiledMapLayerUnserializer = new TiledMapLayerUnserializer(this.loggerBreadcrumbs);
     this.tiledMapPolygonObjectUnserializer = new TiledMapPolygonObjectUnserializer();
     this.tiledMapRectangleObjectUnserializer = new TiledMapRectangleObjectUnserializer();
-    this.tiledTilesetUnserializer = new TiledTilesetUnserializer(
-      loggerBreadcrumbs
-    );
+    this.tiledTilesetUnserializer = new TiledTilesetUnserializer(loggerBreadcrumbs);
   }
 
   fromJson(serialized: string): TiledMapInterface {
@@ -62,21 +57,15 @@ export default class TiledMapUnserializer
     }
 
     for (let ellipseObject of parsed.ellipseObjects) {
-      tiledMap.addEllipseObject(
-        this.tiledMapEllipseObjectUnserializer.fromObject(ellipseObject)
-      );
+      tiledMap.addEllipseObject(this.tiledMapEllipseObjectUnserializer.fromObject(ellipseObject));
     }
 
     for (let polygonObject of parsed.polygonObjects) {
-      tiledMap.addPolygonObject(
-        this.tiledMapPolygonObjectUnserializer.fromObject(polygonObject)
-      );
+      tiledMap.addPolygonObject(this.tiledMapPolygonObjectUnserializer.fromObject(polygonObject));
     }
 
     for (let rectangleObject of parsed.rectangleObjects) {
-      tiledMap.addRectangleObject(
-        this.tiledMapRectangleObjectUnserializer.fromObject(rectangleObject)
-      );
+      tiledMap.addRectangleObject(this.tiledMapRectangleObjectUnserializer.fromObject(rectangleObject));
     }
 
     return tiledMap;

@@ -13,10 +13,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()
   ) {
     this.breadcrumbs = breadcrumbs;
-    this.loggerBreadcrumbsLocalCache = new Map<
-      string,
-      LoggerBreadcrumbsInterface
-    >();
+    this.loggerBreadcrumbsLocalCache = new Map<string, LoggerBreadcrumbsInterface>();
     this.loggerBreadcrumbsMemo = loggerBreadcrumbsMemo;
   }
 
@@ -27,10 +24,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
       return localCached;
     }
 
-    const added = new LoggerBreadcrumbs(
-      this.breadcrumbs.concat(breadcrumb),
-      this.loggerBreadcrumbsMemo
-    );
+    const added = new LoggerBreadcrumbs(this.breadcrumbs.concat(breadcrumb), this.loggerBreadcrumbsMemo);
 
     const asString = added.asString();
     const memoized = this.loggerBreadcrumbsMemo.get(asString);
@@ -60,7 +54,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
 
   asObject(): LoggerBreadcrumbsSerializedObject {
     return {
-      breadcrumbs: this.asArray()
+      breadcrumbs: this.asArray(),
     };
   }
 

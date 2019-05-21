@@ -8,8 +8,7 @@ import ElementSize from "../classes/ElementSize";
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../interfaces/HTMLElementResizeObserver";
 import type { Resizeable } from "../interfaces/Resizeable";
 
-export default class HTMLElementResizeObserver
-  implements HTMLElementResizeObserverInterface {
+export default class HTMLElementResizeObserver implements HTMLElementResizeObserverInterface {
   +notifiable: Set<Resizeable<"px">>;
   +element: HTMLElement;
   +nativeResizeObserver: ResizeObserver;
@@ -23,10 +22,7 @@ export default class HTMLElementResizeObserver
       debounce(function(mutationList) {
         for (let mutation of mutationList) {
           const contentRect = mutation.contentRect;
-          const elementSize = new ElementSize<"px">(
-            contentRect.width,
-            contentRect.height
-          );
+          const elementSize = new ElementSize<"px">(contentRect.width, contentRect.height);
 
           for (let callback of notifiable.values()) {
             callback.resize(elementSize);

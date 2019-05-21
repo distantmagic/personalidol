@@ -11,11 +11,7 @@ it("parses tileset files", async function() {
   const tilesetFilename = "tileset-fixture-01.tsx";
   const tilesetFilenameAbsolute = fixtures.findPath(tilesetFilename);
   const content = await fixtures.file(tilesetFilename);
-  const tiledTilesetParser = new TiledTilesetParser(
-    loggerBreadcrumbs,
-    tilesetFilenameAbsolute,
-    content
-  );
+  const tiledTilesetParser = new TiledTilesetParser(loggerBreadcrumbs, tilesetFilenameAbsolute, content);
   const tiledTileset = await tiledTilesetParser.parse(cancelToken);
 
   expect(tiledTileset.getTileById(1)).toBeDefined();

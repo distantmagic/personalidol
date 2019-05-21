@@ -8,8 +8,7 @@ import type { TiledMapEllipseObjectUnserializer as TiledMapEllipseObjectUnserial
 import type { TiledMapBlockObjectUnserializer as TiledMapBlockObjectUnserializerInterface } from "../interfaces/TiledMapBlockObjectUnserializer";
 import type { TiledMapEllipseObjectSerializedObject } from "../types/TiledMapEllipseObjectSerializedObject";
 
-export default class TiledMapEllipseObjectUnserializer
-  implements TiledMapEllipseObjectUnserializerInterface {
+export default class TiledMapEllipseObjectUnserializer implements TiledMapEllipseObjectUnserializerInterface {
   +tiledMapBlockObjectUnserializer: TiledMapBlockObjectUnserializerInterface;
 
   constructor() {
@@ -20,13 +19,7 @@ export default class TiledMapEllipseObjectUnserializer
     return this.fromObject(JSON.parse(serialized));
   }
 
-  fromObject(
-    parsed: TiledMapEllipseObjectSerializedObject
-  ): TiledMapEllipseObjectInterface {
-    return new TiledMapEllipseObject(
-      this.tiledMapBlockObjectUnserializer.fromObject(
-        parsed.tiledMapBlockObject
-      )
-    );
+  fromObject(parsed: TiledMapEllipseObjectSerializedObject): TiledMapEllipseObjectInterface {
+    return new TiledMapEllipseObject(this.tiledMapBlockObjectUnserializer.fromObject(parsed.tiledMapBlockObject));
   }
 }

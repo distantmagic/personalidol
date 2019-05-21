@@ -4,5 +4,5 @@ import type { TiledTileImageSerializedObject } from "./TiledTileImageSerializedO
 
 export type TiledTileSerializedObject = {|
   id: number,
-  tiledTileImage: TiledTileImageSerializedObject
+  tiledTileImage: TiledTileImageSerializedObject,
 |};

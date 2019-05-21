@@ -19,7 +19,7 @@ export default class WorkerMock extends EventEmitter3 {
         data: JSON.parse(JSON.stringify(message)),
         origin: this.url,
         source: null,
-        type: "WorkerMessageEventMock"
+        type: "WorkerMessageEventMock",
       });
     });
   }

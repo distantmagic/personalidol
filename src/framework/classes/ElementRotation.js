@@ -4,8 +4,7 @@ import type { ElementRotation as ElementRotationInterface } from "../interfaces/
 import type { ElementRotationSerializedObject } from "../types/ElementRotationSerializedObject";
 import type { ElementRotationUnit } from "../types/ElementRotationUnit";
 
-export default class ElementRotation<Unit: ElementRotationUnit>
-  implements ElementRotationInterface<Unit> {
+export default class ElementRotation<Unit: ElementRotationUnit> implements ElementRotationInterface<Unit> {
   +x: number;
   +y: number;
   +z: number;
@@ -24,7 +23,7 @@ export default class ElementRotation<Unit: ElementRotationUnit>
     return {
       x: this.getRotationX(),
       y: this.getRotationY(),
-      z: this.getRotationZ()
+      z: this.getRotationZ(),
     };
   }
 

@@ -20,13 +20,13 @@ type Props = {|
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   match: Match,
-  queryBus: QueryBus
+  queryBus: QueryBus,
 |};
 
 export default function HudModalCharacterLoader(props: Props) {
   const [state, setState] = React.useState({
     character: null,
-    isLoading: true
+    isLoading: true,
   });
 
   React.useEffect(
@@ -35,16 +35,14 @@ export default function HudModalCharacterLoader(props: Props) {
 
       setState({
         character: null,
-        isLoading: !!characterId
+        isLoading: !!characterId,
       });
 
       if (!characterId) {
         return;
       }
 
-      const cancelToken = new CancelToken(
-        props.loggerBreadcrumbs.add("CharacterQuery")
-      );
+      const cancelToken = new CancelToken(props.loggerBreadcrumbs.add("CharacterQuery"));
       const query = new CharacterQuery(characterId);
 
       props.queryBus
@@ -52,26 +50,18 @@ export default function HudModalCharacterLoader(props: Props) {
         .then(character =>
           setState({
             character: character,
-            isLoading: false
+            isLoading: false,
           })
         )
         .catch((error: Error) => {
-          return props.exceptionHandler.captureException(
-            props.loggerBreadcrumbs.add("characterQuery"),
-            error
-          );
+          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("characterQuery"), error);
         });
 
       return function() {
         cancelToken.cancel();
       };
     },
-    [
-      props.exceptionHandler,
-      props.loggerBreadcrumbs,
-      props.match.params.characterId,
-      props.queryBus
-    ]
+    [props.exceptionHandler, props.loggerBreadcrumbs, props.match.params.characterId, props.queryBus]
   );
 
   if (state.isLoading) {

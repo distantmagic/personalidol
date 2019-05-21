@@ -14,5 +14,30 @@
  */
 
 declare module "pathfinding" {
-  declare module.exports: any;
+  declare type Path = $ReadOnlyArray<[number, number]>;
+
+  declare interface Finder {
+    findPath(number, number, number, number, Grid): Path;
+  }
+
+  declare export interface BestFirstFinder extends Finder {
+    constructor(options?: {|
+      diagonalMovement?: 1 | 2 | 3 | 4,
+    |}): void;
+  }
+
+  declare export interface Grid {
+    constructor($ReadOnlyArray<$ReadOnlyArray<number>>): void;
+  }
+
+  declare export class DiagonalMovement {
+    static +Always: 1;
+    static +Never: 2;
+    static +IfAtMostOneObstacle: 3;
+    static +OnlyWhenNoObstacles: 4;
+  }
+
+  declare export class Util {
+    static compressPath(Path): Path;
+  }
 }

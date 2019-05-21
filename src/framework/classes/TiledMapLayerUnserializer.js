@@ -13,8 +13,7 @@ import type { TiledMapLayer as TiledMapLayerInterface } from "../interfaces/Tile
 import type { TiledMapLayerSerializedObject } from "../types/TiledMapLayerSerializedObject";
 import type { TiledMapLayerUnserializer as TiledMapLayerUnserializerInterface } from "../interfaces/TiledMapLayerUnserializer";
 
-export default class TiledMapLayerUnserializer
-  implements TiledMapLayerUnserializerInterface {
+export default class TiledMapLayerUnserializer implements TiledMapLayerUnserializerInterface {
   +elementSizeUnserializer: ElementSizeUnserializerInterface<"tile">;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tiledCustomPropertiesUnserializer: TiledCustomPropertiesUnserializerInterface;
@@ -22,9 +21,7 @@ export default class TiledMapLayerUnserializer
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.elementSizeUnserializer = new ElementSizeUnserializer();
-    this.tiledCustomPropertiesUnserializer = new TiledCustomPropertiesUnserializer(
-      loggerBreadcrumbs
-    );
+    this.tiledCustomPropertiesUnserializer = new TiledCustomPropertiesUnserializer(loggerBreadcrumbs);
     this.tiledMapGridUnserializer = new TiledMapGridUnserializer();
   }
 
@@ -37,9 +34,7 @@ export default class TiledMapLayerUnserializer
       parsed.name,
       this.tiledMapGridUnserializer.fromObject(parsed.tiledMapGrid),
       this.elementSizeUnserializer.fromObject(parsed.layerSize),
-      this.tiledCustomPropertiesUnserializer.fromObject(
-        parsed.tiledCustomProperties
-      )
+      this.tiledCustomPropertiesUnserializer.fromObject(parsed.tiledCustomProperties)
     );
   }
 }

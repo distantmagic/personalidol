@@ -15,9 +15,7 @@ import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 
 export default async function tiledMapParserFixture(
   mapFilename: string
-): Promise<
-  [CancelTokenInterface, QueryBusInterface, Promise<TiledMapInterface>]
-> {
+): Promise<[CancelTokenInterface, QueryBusInterface, Promise<TiledMapInterface>]> {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const queryBuilder = new FixturesFileQueryBuilder();
@@ -32,11 +30,7 @@ export default async function tiledMapParserFixture(
 
   queryBus.onEnqueued(mockedEnqueuedCallback);
 
-  const tiledTilesetLoader = new TiledTilesetLoader(
-    loggerBreadcrumbs,
-    queryBus,
-    queryBuilder
-  );
+  const tiledTilesetLoader = new TiledTilesetLoader(loggerBreadcrumbs, queryBus, queryBuilder);
   const parser = new TiledMapParser(
     loggerBreadcrumbs,
     fixtures.findPath(mapFilename),

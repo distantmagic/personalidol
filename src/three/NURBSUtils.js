@@ -312,9 +312,7 @@ export default {
       var v = Aders[k].clone();
 
       for (var i = 1; i <= k; ++i) {
-        v.sub(
-          CK[k - i].clone().multiplyScalar(this.calcKoverI(k, i) * wders[i])
-        );
+        v.sub(CK[k - i].clone().multiplyScalar(this.calcKoverI(k, i) * wders[i]));
       }
 
       CK[k] = v.divideScalar(wders[0]);
@@ -375,5 +373,5 @@ export default {
 
     Sw.divideScalar(Sw.w);
     target.set(Sw.x, Sw.y, Sw.z);
-  }
+  },
 };

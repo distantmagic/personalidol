@@ -24,11 +24,7 @@ export default class QueryBus implements QueryBusInterface {
 
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<?T> {
     const pickedQuery = this.findSimilarQuery(query) || query;
-    const cancelTokenQuery = new CancelTokenQuery(
-      this.loggerBreadcrumbs.add("enqueue"),
-      cancelToken,
-      pickedQuery
-    );
+    const cancelTokenQuery = new CancelTokenQuery(this.loggerBreadcrumbs.add("enqueue"), cancelToken, pickedQuery);
 
     this.collection.push(cancelTokenQuery);
 
@@ -40,9 +36,7 @@ export default class QueryBus implements QueryBusInterface {
   }
 
   findSimilarQuery<T>(other: Query<T>): ?Query<T> {
-    const found = this.collection.find(cancelTokenQuery =>
-      cancelTokenQuery.getQuery().isEqual(other)
-    );
+    const found = this.collection.find(cancelTokenQuery => cancelTokenQuery.getQuery().isEqual(other));
 
     return found ? found.getQuery() : null;
   }

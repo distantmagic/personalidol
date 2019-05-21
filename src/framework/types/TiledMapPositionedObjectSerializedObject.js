@@ -6,5 +6,5 @@ import type { ElementRotationSerializedObject } from "./ElementRotationSerialize
 export type TiledMapPositionedObjectSerializedObject = {|
   elementPosition: ElementPositionSerializedObject<"tile">,
   elementRotation: ElementRotationSerializedObject<"radians">,
-  name: string
+  name: string,
 |};

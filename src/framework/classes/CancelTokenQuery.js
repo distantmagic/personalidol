@@ -9,8 +9,7 @@ import type { Query } from "../interfaces/Query";
 
 type CancelTokenQueryCallback<U> = (?U) => any;
 
-export default class CancelTokenQuery<T>
-  implements CancelTokenQueryInterface<T> {
+export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T> {
   _isExecuted: boolean;
   _isExecuting: boolean;
   _result: ?T;
@@ -19,11 +18,7 @@ export default class CancelTokenQuery<T>
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +query: Query<T>;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    cancelToken: CancelToken,
-    query: Query<T>
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, query: Query<T>) {
     this._isExecuted = false;
     this._isExecuting = false;
     this.callbacks = new Set();
@@ -34,10 +29,7 @@ export default class CancelTokenQuery<T>
 
   execute(): Promise<?T> {
     if (this.isExecuting() || this.isExecuted()) {
-      throw new CancelTokenException(
-        this.loggerBreadcrumbs.add("execute"),
-        "You cannot execute query more than once."
-      );
+      throw new CancelTokenException(this.loggerBreadcrumbs.add("execute"), "You cannot execute query more than once.");
     }
 
     this._isExecuting = true;
@@ -55,10 +47,7 @@ export default class CancelTokenQuery<T>
 
   getResult(): T {
     if (this.isExecuting()) {
-      throw new CancelTokenException(
-        this.loggerBreadcrumbs.add("getResult"),
-        "Query is still executing."
-      );
+      throw new CancelTokenException(this.loggerBreadcrumbs.add("getResult"), "Query is still executing.");
     }
     if (!this.isExecuted()) {
       throw new CancelTokenException(
@@ -101,10 +90,7 @@ export default class CancelTokenQuery<T>
 
   setExecuted(result: ?T): void {
     if (this.isExecuted()) {
-      throw new CancelTokenException(
-        this.loggerBreadcrumbs.add("setExecuted"),
-        "Query is already executed."
-      );
+      throw new CancelTokenException(this.loggerBreadcrumbs.add("setExecuted"), "Query is already executed.");
     }
 
     this._isExecuted = true;

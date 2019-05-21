@@ -6,5 +6,5 @@ export type DialogueScriptMessage = {
   condition?: string,
   expression?: string,
   illustration?: string,
-  prompt: string
+  prompt: string,
 };

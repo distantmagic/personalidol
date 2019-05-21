@@ -8,7 +8,7 @@ import type { PointerState as PointerStateInterface } from "../interfaces/Pointe
 export default class PointerState implements PointerStateInterface {
   +element: HTMLElement;
   keys: {
-    [PointerButtonNames]: boolean
+    [PointerButtonNames]: boolean,
   };
 
   constructor(element: HTMLElement) {
@@ -30,7 +30,7 @@ export default class PointerState implements PointerStateInterface {
   observe(): void {
     const config = {
       capture: true,
-      passive: false
+      passive: false,
     };
 
     this.element.addEventListener("mousedown", this.onMouseChange, config);
@@ -58,7 +58,7 @@ export default class PointerState implements PointerStateInterface {
       Secondary: 0 !== (evt.buttons & 2),
       Auxilary: 0 !== (evt.buttons & 4),
       BrowserBack: 0 !== (evt.buttons & 8),
-      BrowserForward: 0 !== (evt.buttons & 16)
+      BrowserForward: 0 !== (evt.buttons & 16),
     };
   }
 

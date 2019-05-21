@@ -1,11 +1,13 @@
 // @flow
 
 import Cancelled from "./Exception/Cancelled";
+import TiledMapException from "./Exception/Tiled/Map";
 import TiledMapSkinnedLayer from "./TiledMapSkinnedLayer";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import type { TiledCustomProperty } from "../interfaces/TiledCustomProperty";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledMapEllipseObject } from "../interfaces/TiledMapEllipseObject";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
@@ -63,46 +65,44 @@ export default class TiledMap implements TiledMapInterface {
 
   asObject(): TiledMapSerializedObject {
     return {
-      ellipseObjects: this.getEllipseObjects().map(ellipseObject =>
-        ellipseObject.asObject()
-      ),
+      ellipseObjects: this.getEllipseObjects().map(ellipseObject => ellipseObject.asObject()),
       layers: this.getLayers().map(layer => layer.asObject()),
       mapSize: this.getMapSize().asObject(),
-      polygonObjects: this.getPolygonObjects().map(polygonObject =>
-        polygonObject.asObject()
-      ),
-      rectangleObjects: this.getRectangleObjects().map(rectangleObject =>
-        rectangleObject.asObject()
-      ),
+      polygonObjects: this.getPolygonObjects().map(polygonObject => polygonObject.asObject()),
+      rectangleObjects: this.getRectangleObjects().map(rectangleObject => rectangleObject.asObject()),
       tiledTileset: this.getTiledTileset().asObject(),
-      tileSize: this.getTileSize().asObject()
+      tileSize: this.getTileSize().asObject(),
     };
   }
 
-  async *generateSkinnedLayers(
-    cancelToken: CancelToken
-  ): AsyncGenerator<TiledMapSkinnedLayerInterface, void, void> {
+  async *generateSkinnedLayers(cancelToken: CancelToken): AsyncGenerator<TiledMapSkinnedLayerInterface, void, void> {
     for (let layer of this.getLayers()) {
       if (cancelToken.isCancelled()) {
         throw new Cancelled(
-          this.loggerBreadcrumbs
-            .add("generateSkinnedLayers")
-            .add(layer.getName()),
+          this.loggerBreadcrumbs.add("generateSkinnedLayers").add(layer.getName()),
           "Cancel token was cancelled while generating skinned layers."
         );
       }
 
-      yield new TiledMapSkinnedLayer(
-        this.loggerBreadcrumbs,
-        layer,
-        this.tileSize,
-        this.tiledTileset
-      );
+      yield new TiledMapSkinnedLayer(this.loggerBreadcrumbs, layer, this.tileSize, this.tiledTileset);
     }
   }
 
   getLayers(): Array<TiledMapLayer> {
     return this.tiledMapLayers.slice(0);
+  }
+
+  getLayerWithProperty(tiledCustomProperty: TiledCustomProperty): TiledMapLayer {
+    for (let layer of this.getLayers()) {
+      if (layer.getTiledCustomProperties().hasProperty(tiledCustomProperty)) {
+        return layer;
+      }
+    }
+
+    throw new TiledMapException(
+      this.loggerBreadcrumbs,
+      `Layer with property not found, but was expected: "${tiledCustomProperty.getName()}"`
+    );
   }
 
   getMapSize(): ElementSize<"tile"> {
@@ -127,6 +127,16 @@ export default class TiledMap implements TiledMapInterface {
 
   getTiledTileset(): TiledTileset {
     return this.tiledTileset;
+  }
+
+  hasLayerWithProperty(tiledCustomProperty: TiledCustomProperty): boolean {
+    for (let layer of this.getLayers()) {
+      if (layer.getTiledCustomProperties().hasProperty(tiledCustomProperty)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   isEqual(other: TiledMapInterface): boolean {

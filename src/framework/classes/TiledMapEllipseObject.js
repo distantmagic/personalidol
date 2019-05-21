@@ -4,8 +4,7 @@ import type { TiledMapBlockObject } from "../interfaces/TiledMapBlockObject";
 import type { TiledMapEllipseObject as TiledMapEllipseObjectInterface } from "../interfaces/TiledMapEllipseObject";
 import type { TiledMapEllipseObjectSerializedObject } from "../types/TiledMapEllipseObjectSerializedObject";
 
-export default class TiledMapEllipseObject
-  implements TiledMapEllipseObjectInterface {
+export default class TiledMapEllipseObject implements TiledMapEllipseObjectInterface {
   +isEllipse: true;
   +isPolygon: false;
   +isRectangle: false;
@@ -19,9 +18,7 @@ export default class TiledMapEllipseObject
     const elementSize = tiledMapBlockObject.getElementSize();
 
     if (elementSize.getHeight() !== elementSize.getWidth()) {
-      throw new Error(
-        "Ellipses are not supported. You have to use circles instead."
-      );
+      throw new Error("Ellipses are not supported. You have to use circles instead.");
     }
 
     this.tiledMapBlockObject = tiledMapBlockObject;
@@ -36,7 +33,7 @@ export default class TiledMapEllipseObject
       isEllipse: true,
       isPolygon: false,
       isRectangle: false,
-      tiledMapBlockObject: this.tiledMapBlockObject.asObject()
+      tiledMapBlockObject: this.tiledMapBlockObject.asObject(),
     };
   }
 
@@ -45,8 +42,6 @@ export default class TiledMapEllipseObject
   }
 
   isEqual(other: TiledMapEllipseObjectInterface): boolean {
-    return this.getTiledMapBlockObject().isEqual(
-      other.getTiledMapBlockObject()
-    );
+    return this.getTiledMapBlockObject().isEqual(other.getTiledMapBlockObject());
   }
 }

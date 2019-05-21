@@ -11,21 +11,13 @@ export default React.memo<Props>(function HudToolbar(props: Props) {
     <HudToolbarScrollbar
       className="dd__frame dd__toolbar dd__toolbar--hud"
       style={{
-        "--dd-toolbar-elements": 6
+        "--dd-toolbar-elements": 6,
       }}
     >
-      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--dialogue">
-        Rozmowa
-      </button>
-      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">
-        Brutalna siła
-      </button>
-      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">
-        Modlitwa
-      </button>
-      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--magic">
-        Czar
-      </button>
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--dialogue">Rozmowa</button>
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">Brutalna siła</button>
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">Modlitwa</button>
+      <button className="dd__button dd__button--toolbar dd__button--icon dd__button--magic">Czar</button>
       <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--backpack">
         Ekwipunek
       </button>

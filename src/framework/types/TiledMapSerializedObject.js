@@ -14,5 +14,5 @@ export type TiledMapSerializedObject = {|
   polygonObjects: $ReadOnlyArray<TiledMapPolygonObjectSerializedObject>,
   rectangleObjects: $ReadOnlyArray<TiledMapRectangleObjectSerializedObject>,
   tiledTileset: TiledTilesetSerializedObject,
-  tileSize: ElementSizeSerializedObject<"px">
+  tileSize: ElementSizeSerializedObject<"px">,
 |};

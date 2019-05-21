@@ -16,7 +16,7 @@ it("performs math calculations", function() {
 it("uses variables", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
-    foo: 3
+    foo: 3,
   });
   const expression = new Expression("{{ 2 + foo }}", context);
   const result = expression.execute();
@@ -30,15 +30,12 @@ it("uses objects", function() {
     character: {
       player() {
         return {
-          name: "CHARNAME"
+          name: "CHARNAME",
         };
-      }
-    }
+      },
+    },
   });
-  const expression = new Expression(
-    `Greetings {{ character.player().name }}`,
-    context
-  );
+  const expression = new Expression(`Greetings {{ character.player().name }}`, context);
   const result = expression.execute();
 
   return expect(result).resolves.toBe("Greetings CHARNAME");
@@ -50,15 +47,12 @@ it("uses promises", function() {
     character: {
       player() {
         return {
-          name: Promise.resolve("CHARNAME")
+          name: Promise.resolve("CHARNAME"),
         };
-      }
-    }
+      },
+    },
   });
-  const expression = new Expression(
-    `Greetings {{ character.player().name }}`,
-    context
-  );
+  const expression = new Expression(`Greetings {{ character.player().name }}`, context);
   const result = expression.execute();
 
   return expect(result).resolves.toBe("Greetings CHARNAME");
@@ -75,15 +69,12 @@ it("resolves conditions with promises", function() {
           },
           knows() {
             return Promise.resolve(false);
-          }
+          },
         };
-      }
-    }
+      },
+    },
   });
-  const expression = new Expression(
-    `{{ not character.player().knows() and character.player().aims() }}`,
-    context
-  );
+  const expression = new Expression(`{{ not character.player().knows() and character.player().aims() }}`, context);
   const result = expression.execute();
 
   return expect(result).resolves.toBe("true");

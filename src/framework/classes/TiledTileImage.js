@@ -20,7 +20,7 @@ export default class TiledTileImage implements TiledTileImageInterface {
   asObject(): TiledTileImageSerializedObject {
     return {
       elementSize: this.getElementSize().asObject(),
-      source: this.getSource()
+      source: this.getSource(),
     };
   }
 
@@ -33,9 +33,6 @@ export default class TiledTileImage implements TiledTileImageInterface {
   }
 
   isEqual(other: TiledTileImageInterface) {
-    return (
-      this.getSource() === other.getSource() &&
-      this.getElementSize().isEqual(other.getElementSize())
-    );
+    return this.getSource() === other.getSource() && this.getElementSize().isEqual(other.getElementSize());
   }
 }

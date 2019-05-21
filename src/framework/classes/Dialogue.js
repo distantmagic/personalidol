@@ -14,11 +14,7 @@ export default class Dialogue implements Contextual {
   +expressionBus: ExpressionBus;
   +script: DialogueScript;
 
-  constructor(
-    expressionBus: ExpressionBus,
-    context: ExpressionContext,
-    script: DialogueScript
-  ) {
+  constructor(expressionBus: ExpressionBus, context: ExpressionContext, script: DialogueScript) {
     this.context = context;
     this.expressionBus = expressionBus;
     this.script = script;

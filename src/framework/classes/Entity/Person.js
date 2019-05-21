@@ -20,8 +20,7 @@ import type { Sees } from "../../interfaces/Sentient/Perceives/Sees";
 import type { Speaks } from "../../interfaces/Sentient/Speaks";
 import type { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
-export default class Person extends Entity
-  implements Aims, Hears, Identifiable, Memorizes, Sees, Speaks {
+export default class Person extends Entity implements Aims, Hears, Identifiable, Memorizes, Sees, Speaks {
   +_name: string;
 
   constructor(name: string) {

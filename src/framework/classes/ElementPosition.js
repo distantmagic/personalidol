@@ -6,8 +6,7 @@ import type { ElementPosition as ElementPositionInterface } from "../interfaces/
 import type { ElementPositionSerializedObject } from "../types/ElementPositionSerializedObject";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 
-export default class ElementPosition<Unit: ElementPositionUnit>
-  extends THREE.Vector3
+export default class ElementPosition<Unit: ElementPositionUnit> extends THREE.Vector3
   implements ElementPositionInterface<Unit> {
   asJson(): string {
     return JSON.stringify(this.asObject());
@@ -17,7 +16,7 @@ export default class ElementPosition<Unit: ElementPositionUnit>
     return {
       x: this.getX(),
       y: this.getY(),
-      z: this.getZ()
+      z: this.getZ(),
     };
   }
 
@@ -38,10 +37,6 @@ export default class ElementPosition<Unit: ElementPositionUnit>
   }
 
   isEqual(other: ElementPositionInterface<Unit>): boolean {
-    return (
-      this.getX() === other.getX() &&
-      this.getY() === other.getY() &&
-      this.getZ() === other.getZ()
-    );
+    return this.getX() === other.getX() && this.getY() === other.getY() && this.getZ() === other.getZ();
   }
 }

@@ -33,7 +33,7 @@ export default class TiledMapLayer implements TiledMapLayerInterface {
       layerSize: this.getLayerSize().asObject(),
       name: this.getName(),
       tiledCustomProperties: this.getTiledCustomProperties().asObject(),
-      tiledMapGrid: this.getTiledMapGrid().asObject()
+      tiledMapGrid: this.getTiledMapGrid().asObject(),
     };
   }
 
@@ -57,9 +57,7 @@ export default class TiledMapLayer implements TiledMapLayerInterface {
     return (
       this.getLayerSize().isEqual(other.getLayerSize()) &&
       this.getName() === other.getName() &&
-      this.getTiledCustomProperties().isEqual(
-        other.getTiledCustomProperties()
-      ) &&
+      this.getTiledCustomProperties().isEqual(other.getTiledCustomProperties()) &&
       this.getTiledMapGrid().isEqual(other.getTiledMapGrid())
     );
   }

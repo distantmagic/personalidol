@@ -50,14 +50,8 @@ TGALoader.prototype = {
 
         case TGA_TYPE_INDEXED:
         case TGA_TYPE_RLE_INDEXED:
-          if (
-            header.colormap_length > 256 ||
-            header.colormap_size !== 24 ||
-            header.colormap_type !== 1
-          ) {
-            console.error(
-              "THREE.TGALoader: Invalid type colormap data for indexed type."
-            );
+          if (header.colormap_length > 256 || header.colormap_size !== 24 || header.colormap_type !== 1) {
+            console.error("THREE.TGALoader: Invalid type colormap data for indexed type.");
           }
           break;
 
@@ -68,9 +62,7 @@ TGALoader.prototype = {
         case TGA_TYPE_RLE_RGB:
         case TGA_TYPE_RLE_GREY:
           if (header.colormap_type) {
-            console.error(
-              "THREE.TGALoader: Invalid type colormap data for colormap type."
-            );
+            console.error("THREE.TGALoader: Invalid type colormap data for colormap type.");
           }
           break;
 
@@ -82,10 +74,7 @@ TGALoader.prototype = {
         // Invalid type ?
 
         default:
-          console.error(
-            'THREE.TGALoader: Invalid type "%s".',
-            header.image_type
-          );
+          console.error('THREE.TGALoader: Invalid type "%s".', header.image_type);
       }
 
       // check image width and height
@@ -96,16 +85,8 @@ TGALoader.prototype = {
 
       // check image pixel size
 
-      if (
-        header.pixel_size !== 8 &&
-        header.pixel_size !== 16 &&
-        header.pixel_size !== 24 &&
-        header.pixel_size !== 32
-      ) {
-        console.error(
-          'THREE.TGALoader: Invalid pixel size "%s".',
-          header.pixel_size
-        );
+      if (header.pixel_size !== 8 && header.pixel_size !== 16 && header.pixel_size !== 24 && header.pixel_size !== 32) {
+        console.error('THREE.TGALoader: Invalid pixel size "%s".', header.pixel_size);
       }
     }
 
@@ -120,10 +101,7 @@ TGALoader.prototype = {
       // read palettes
 
       if (use_pal) {
-        palettes = data.subarray(
-          offset,
-          (offset += header.colormap_length * (header.colormap_size >> 3))
-        );
+        palettes = data.subarray(offset, (offset += header.colormap_length * (header.colormap_size >> 3)));
       }
 
       // read RLE
@@ -168,29 +146,16 @@ TGALoader.prototype = {
       } else {
         // raw pixels
 
-        pixel_data = data.subarray(
-          offset,
-          (offset += use_pal ? header.width * header.height : pixel_total)
-        );
+        pixel_data = data.subarray(offset, (offset += use_pal ? header.width * header.height : pixel_total));
       }
 
       return {
         pixel_data: pixel_data,
-        palettes: palettes
+        palettes: palettes,
       };
     }
 
-    function tgaGetImageData8bits(
-      imageData,
-      y_start,
-      y_step,
-      y_end,
-      x_start,
-      x_step,
-      x_end,
-      image,
-      palettes
-    ) {
+    function tgaGetImageData8bits(imageData, y_start, y_step, y_end, x_start, x_step, x_end, image, palettes) {
       var colormap = palettes;
       var color,
         i = 0,
@@ -211,16 +176,7 @@ TGALoader.prototype = {
       return imageData;
     }
 
-    function tgaGetImageData16bits(
-      imageData,
-      y_start,
-      y_step,
-      y_end,
-      x_start,
-      x_step,
-      x_end,
-      image
-    ) {
+    function tgaGetImageData16bits(imageData, y_start, y_step, y_end, x_start, x_step, x_end, image) {
       var color,
         i = 0,
         x,
@@ -240,16 +196,7 @@ TGALoader.prototype = {
       return imageData;
     }
 
-    function tgaGetImageData24bits(
-      imageData,
-      y_start,
-      y_step,
-      y_end,
-      x_start,
-      x_step,
-      x_end,
-      image
-    ) {
+    function tgaGetImageData24bits(imageData, y_start, y_step, y_end, x_start, x_step, x_end, image) {
       var i = 0,
         x,
         y;
@@ -267,16 +214,7 @@ TGALoader.prototype = {
       return imageData;
     }
 
-    function tgaGetImageData32bits(
-      imageData,
-      y_start,
-      y_step,
-      y_end,
-      x_start,
-      x_step,
-      x_end,
-      image
-    ) {
+    function tgaGetImageData32bits(imageData, y_start, y_step, y_end, x_start, x_step, x_end, image) {
       var i = 0,
         x,
         y;
@@ -294,16 +232,7 @@ TGALoader.prototype = {
       return imageData;
     }
 
-    function tgaGetImageDataGrey8bits(
-      imageData,
-      y_start,
-      y_step,
-      y_end,
-      x_start,
-      x_step,
-      x_end,
-      image
-    ) {
+    function tgaGetImageDataGrey8bits(imageData, y_start, y_step, y_end, x_start, x_step, x_end, image) {
       var color,
         i = 0,
         x,
@@ -323,16 +252,7 @@ TGALoader.prototype = {
       return imageData;
     }
 
-    function tgaGetImageDataGrey16bits(
-      imageData,
-      y_start,
-      y_step,
-      y_end,
-      x_start,
-      x_step,
-      x_end,
-      image
-    ) {
+    function tgaGetImageDataGrey16bits(imageData, y_start, y_step, y_end, x_start, x_step, x_end, image) {
       var i = 0,
         x,
         y;
@@ -395,29 +315,11 @@ TGALoader.prototype = {
       if (use_grey) {
         switch (header.pixel_size) {
           case 8:
-            tgaGetImageDataGrey8bits(
-              data,
-              y_start,
-              y_step,
-              y_end,
-              x_start,
-              x_step,
-              x_end,
-              image
-            );
+            tgaGetImageDataGrey8bits(data, y_start, y_step, y_end, x_start, x_step, x_end, image);
             break;
 
           case 16:
-            tgaGetImageDataGrey16bits(
-              data,
-              y_start,
-              y_step,
-              y_end,
-              x_start,
-              x_step,
-              x_end,
-              image
-            );
+            tgaGetImageDataGrey16bits(data, y_start, y_step, y_end, x_start, x_step, x_end, image);
             break;
 
           default:
@@ -427,56 +329,19 @@ TGALoader.prototype = {
       } else {
         switch (header.pixel_size) {
           case 8:
-            tgaGetImageData8bits(
-              data,
-              y_start,
-              y_step,
-              y_end,
-              x_start,
-              x_step,
-              x_end,
-              image,
-              palette
-            );
+            tgaGetImageData8bits(data, y_start, y_step, y_end, x_start, x_step, x_end, image, palette);
             break;
 
           case 16:
-            tgaGetImageData16bits(
-              data,
-              y_start,
-              y_step,
-              y_end,
-              x_start,
-              x_step,
-              x_end,
-              image
-            );
+            tgaGetImageData16bits(data, y_start, y_step, y_end, x_start, x_step, x_end, image);
             break;
 
           case 24:
-            tgaGetImageData24bits(
-              data,
-              y_start,
-              y_step,
-              y_end,
-              x_start,
-              x_step,
-              x_end,
-              image
-            );
+            tgaGetImageData24bits(data, y_start, y_step, y_end, x_start, x_step, x_end, image);
             break;
 
           case 32:
-            tgaGetImageData32bits(
-              data,
-              y_start,
-              y_step,
-              y_end,
-              x_start,
-              x_step,
-              x_end,
-              image
-            );
+            tgaGetImageData32bits(data, y_start, y_step, y_end, x_start, x_step, x_end, image);
             break;
 
           default:
@@ -507,8 +372,7 @@ TGALoader.prototype = {
       TGA_ORIGIN_UL = 0x02,
       TGA_ORIGIN_UR = 0x03;
 
-    if (buffer.length < 19)
-      console.error("THREE.TGALoader: Not enough data to contain header.");
+    if (buffer.length < 19) console.error("THREE.TGALoader: Not enough data to contain header.");
 
     var content = new Uint8Array(buffer),
       offset = 0,
@@ -519,14 +383,11 @@ TGALoader.prototype = {
         colormap_index: content[offset++] | (content[offset++] << 8),
         colormap_length: content[offset++] | (content[offset++] << 8),
         colormap_size: content[offset++],
-        origin: [
-          content[offset++] | (content[offset++] << 8),
-          content[offset++] | (content[offset++] << 8)
-        ],
+        origin: [content[offset++] | (content[offset++] << 8), content[offset++] | (content[offset++] << 8)],
         width: content[offset++] | (content[offset++] << 8),
         height: content[offset++] | (content[offset++] << 8),
         pixel_size: content[offset++],
-        flags: content[offset++]
+        flags: content[offset++],
       };
 
     // check tga if it is valid format
@@ -578,9 +439,7 @@ TGALoader.prototype = {
 
     var useOffscreen = typeof OffscreenCanvas !== "undefined";
 
-    var canvas = useOffscreen
-      ? new OffscreenCanvas(header.width, header.height)
-      : document.createElement("canvas");
+    var canvas = useOffscreen ? new OffscreenCanvas(header.width, header.height) : document.createElement("canvas");
     canvas.width = header.width;
     canvas.height = header.height;
 
@@ -588,13 +447,7 @@ TGALoader.prototype = {
     var imageData = context.createImageData(header.width, header.height);
 
     var result = tgaParse(use_rle, use_pal, header, offset, content);
-    var rgbaData = getTgaRGBA(
-      imageData.data,
-      header.width,
-      header.height,
-      result.pixel_data,
-      result.palettes
-    );
+    var rgbaData = getTgaRGBA(imageData.data, header.width, header.height, result.pixel_data, result.palettes);
 
     context.putImageData(imageData, 0, 0);
 
@@ -604,5 +457,5 @@ TGALoader.prototype = {
   setPath: function(value) {
     this.path = value;
     return this;
-  }
+  },
 };

@@ -3,5 +3,5 @@
 import type { TiledCustomPropertySerializedObject } from "./TiledCustomPropertySerializedObject";
 
 export type TiledCustomPropertiesSerializedObject = {|
-  tiledCustomProperties: $ReadOnlyArray<TiledCustomPropertySerializedObject>
+  tiledCustomProperties: $ReadOnlyArray<TiledCustomPropertySerializedObject>,
 |};

@@ -11,21 +11,13 @@ it("is equatable", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const tiledTilesetTileSize = new ElementSize<"px">(10, 10);
 
-  const tiledTileset1 = new TiledTileset(
-    loggerBreadcrumbs,
-    1,
-    tiledTilesetTileSize
-  );
+  const tiledTileset1 = new TiledTileset(loggerBreadcrumbs, 1, tiledTilesetTileSize);
   const tiledTileImageSize1 = new ElementSize<"px">(10, 10);
   const tiledTileImage1 = new TiledTileImage("foo.png", tiledTileImageSize1);
 
   tiledTileset1.add(new TiledTile(1, tiledTileImage1));
 
-  const tiledTileset2 = new TiledTileset(
-    loggerBreadcrumbs,
-    1,
-    tiledTilesetTileSize
-  );
+  const tiledTileset2 = new TiledTileset(loggerBreadcrumbs, 1, tiledTilesetTileSize);
   const tiledTileImageSize2 = new ElementSize<"px">(20, 20);
   const tiledTileImage2 = new TiledTileImage("foo.png", tiledTileImageSize2);
 
@@ -37,11 +29,7 @@ it("is equatable", function() {
 it("is JSON serializable", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
 
-  const tiledTileset = new TiledTileset(
-    loggerBreadcrumbs,
-    1,
-    new ElementSize<"px">(10, 10)
-  );
+  const tiledTileset = new TiledTileset(loggerBreadcrumbs, 1, new ElementSize<"px">(10, 10));
   const tiledTileImageSize = new ElementSize<"px">(10, 10);
   const tiledTileImage = new TiledTileImage("foo.png", tiledTileImageSize);
 
