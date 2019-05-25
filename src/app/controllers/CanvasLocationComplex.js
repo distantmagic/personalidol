@@ -259,12 +259,10 @@ export default class CanvasLocationComplex implements CanvasController {
   }
 
   updateCameraPosition(): void {
-    const currentPlayerPosition = this.playerModel.getCurrentPosition();
-
+    // const currentPlayerPosition = this.playerModel.getCurrentPosition();
     // top-down
     // this.camera.position.set(this.player.position.x, 20, this.player.position.z + 16);
-
     // angled
-    this.camera.position.set(currentPlayerPosition.x + 8, 8, currentPlayerPosition.z + 8);
+    // this.camera.position.set(currentPlayerPosition.x + 8, 8, currentPlayerPosition.z + 8);
   }
 }

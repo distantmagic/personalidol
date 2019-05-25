@@ -33,4 +33,4 @@ it("loads and parses map files", async function() {
   expect(mockedEnqueuedCallback.mock.calls.length).toBe(2);
 
   queryBus.offEnqueued(mockedEnqueuedCallback);
-}, 300);
+}, 1000);

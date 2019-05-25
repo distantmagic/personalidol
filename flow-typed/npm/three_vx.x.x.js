@@ -382,6 +382,8 @@ declare module "three" {
 
     clone(): Vector3;
 
+    distanceTo(Vector3): number;
+
     set(number, number, number): Vector3;
   }
 

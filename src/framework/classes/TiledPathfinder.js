@@ -35,10 +35,9 @@ export default class TiledPathfinder implements TiledPathfinderInterface {
     });
 
     const path = pathfinderFinder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), pathfinderGrid);
-    const compressedPath = PF.Util.compressPath(path);
     const tiledPath = new TiledPath(loggerBreadcrumbs);
 
-    for (let step of compressedPath) {
+    for (let step of path) {
       const elementPosition = new ElementPosition<"tile">(...step);
 
       tiledPath.addStep(elementPosition);

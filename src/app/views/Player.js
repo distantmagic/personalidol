@@ -202,17 +202,23 @@ export default class Player implements CanvasView {
       mixer.update(delta / 1000);
     }
 
-    const currentPlayerPosition = this.playerModel.getCurrentPosition();
+    // const currentPlayerPosition = this.playerModel.getCurrentPosition();
 
     this.player.rotation.x = 0;
     this.player.rotation.y = this.rotationY;
 
-    currentPlayerPosition.set(
-      currentPlayerPosition.x + this.velocityX,
-      currentPlayerPosition.y,
-      currentPlayerPosition.z + this.velocityZ
-    );
+    // this.playerModel.setCurrentPosition();
 
-    this.player.position.set(currentPlayerPosition.x, currentPlayerPosition.y, currentPlayerPosition.z);
+    // currentPlayerPosition.set(
+    //   currentPlayerPosition.getX() + this.velocityX,
+    //   currentPlayerPosition.getY(),
+    //   currentPlayerPosition.getZ() + this.velocityZ
+    // );
+
+    // this.player.position.set(
+    //   currentPlayerPosition.getX(),
+    //   currentPlayerPosition.getY(),
+    //   currentPlayerPosition.getZ()
+    // );
   }
 }
