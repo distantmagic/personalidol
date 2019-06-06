@@ -1,27 +1,27 @@
 // @flow
 
-import { default as CancelTokenException } from "./Exception/CancelToken";
+import CancelTokenException from "./Exception/CancelToken";
+import EventListenerSet from "./EventListenerSet";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
+import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { Query } from "../interfaces/Query";
-
-type CancelTokenQueryCallback<U> = (?U) => any;
 
 export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T> {
   _isExecuted: boolean;
   _isExecuting: boolean;
   _result: ?T;
   +cancelToken: CancelToken;
-  +callbacks: Set<CancelTokenQueryCallback<T>>;
+  +callbacks: EventListenerSetInterface<[?T]>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +query: Query<T>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, query: Query<T>) {
     this._isExecuted = false;
     this._isExecuting = false;
-    this.callbacks = new Set();
+    this.callbacks = new EventListenerSet<[?T]>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.cancelToken = cancelToken;
     this.query = query;
@@ -97,9 +97,7 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     this._isExecuting = false;
     this._result = result;
 
-    for (let callback of this.callbacks.values()) {
-      callback(result);
-    }
+    this.callbacks.notify([result]);
     this.callbacks.clear();
   }
 }

@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import SilentLogger from "../framework/classes/SilentLogger";
 import Main from "./Main";
 
-it("renders without crashing", () => {
+it("renders without crashing", function() {
   // const div = document.createElement("div");
   // ReactDOM.render(<Main logger={new SilentLogger()} />, div);
   // ReactDOM.unmountComponentAtNode(div);

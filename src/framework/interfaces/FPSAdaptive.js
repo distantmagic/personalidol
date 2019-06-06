@@ -1,7 +1,7 @@
 // @flow
 
-export interface FPSAdaptive {
-  setActualFPS(number): void;
+import type { FPSController } from "./FPSController";
 
-  setExpectedFPS(number): void;
+export interface FPSAdaptive extends FPSController {
+  setActualFPS(number): void;
 }

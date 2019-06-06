@@ -9,10 +9,19 @@ import "core-js/features/object";
 import React from "react";
 import ReactDOM from "react-dom";
 
+import CancelToken from "./framework/classes/CancelToken";
+import Debugger from "./framework/classes/Debugger";
 import ExceptionHandler from "./framework/classes/ExceptionHandler";
+import Game from "./framework/classes/Game";
 import Logger from "./framework/classes/Logger";
 import LoggerBreadcrumbs from "./framework/classes/LoggerBreadcrumbs";
 import Main from "./components/Main";
+
+import type { Debugger as DebuggerInterface } from "./framework/interfaces/Debugger";
+import type { ExceptionHandler as ExceptionHandlerInterface } from "./framework/interfaces/ExceptionHandler";
+import type { Game as GameInterface } from "./framework/interfaces/Game";
+import type { Logger as LoggerInterface } from "./framework/interfaces/Logger";
+import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "./framework/interfaces/LoggerBreadcrumbs";
 
 // Sentry.init({
 //   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -20,27 +29,55 @@ import Main from "./components/Main";
 //   release: process.env.REACT_APP_RELEASE
 // });
 
-function render(rootElement: HTMLElement) {
-  const logger = new Logger();
-
+function render(
+  debug: DebuggerInterface,
+  exceptionHandler: ExceptionHandlerInterface,
+  game: GameInterface,
+  logger: LoggerInterface,
+  loggerBreadcrumbs: LoggerBreadcrumbsInterface,
+  rootElement: HTMLElement
+) {
   ReactDOM.render(
     <Main
-      exceptionHandler={new ExceptionHandler(logger)}
+      debug={debug}
+      exceptionHandler={exceptionHandler}
+      game={game}
       logger={logger}
-      loggerBreadcrumbs={new LoggerBreadcrumbs()}
+      loggerBreadcrumbs={loggerBreadcrumbs}
     />,
     rootElement
   );
 }
 
 function init(rootElement: HTMLElement) {
-  document.addEventListener("readystatechange", function() {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const logger = new Logger();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
+  const debug = new Debugger();
+  const exceptionHandler = new ExceptionHandler(logger);
+  const game = new Game(loggerBreadcrumbs.add("Game"), debug, exceptionHandler);
+
+  game.setExpectedFPS(40);
+
+  function onDocumentReadyStateChange() {
     if ("complete" !== document.readyState) {
       return;
     }
 
-    render(rootElement);
-  });
+    render(debug, exceptionHandler, game, logger, loggerBreadcrumbs, rootElement);
+  }
+
+  function onDocumentVisibilityChange() {
+    game.setIsHidden(document.hidden);
+  }
+
+  document.addEventListener("visibilitychange", onDocumentVisibilityChange);
+  onDocumentVisibilityChange();
+
+  document.addEventListener("readystatechange", onDocumentReadyStateChange);
+  onDocumentReadyStateChange();
+
+  return game.run(cancelToken);
 }
 
 const rootElement = document.getElementById("root");

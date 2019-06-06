@@ -8,9 +8,9 @@ import type {
   LoadingManagerOnStartCallback,
 } from "three";
 
-import type { THREELoadingManagerResourcesLoadingStateChangeCallback } from "../types/THREELoadingManagerResourcesLoadingStateChangeCallback";
+import type { ResourcesLoadingStateObserver } from "./ResourcesLoadingStateObserver";
 
-export interface THREELoadingManager {
+export interface THREELoadingManager extends ResourcesLoadingStateObserver {
   getLoadingManager(): LoadingManager;
 
   offError(LoadingManagerOnErrorCallback): void;
@@ -19,8 +19,6 @@ export interface THREELoadingManager {
 
   offProgress(LoadingManagerOnProgressCallback): void;
 
-  offResourcesLoadingStateChange(THREELoadingManagerResourcesLoadingStateChangeCallback): void;
-
   offStart(LoadingManagerOnStartCallback): void;
 
   onError(LoadingManagerOnErrorCallback): void;
@@ -28,8 +26,6 @@ export interface THREELoadingManager {
   onLoad(LoadingManagerOnLoadCallback): void;
 
   onProgress(LoadingManagerOnProgressCallback): void;
-
-  onResourcesLoadingStateChange(THREELoadingManagerResourcesLoadingStateChangeCallback): void;
 
   onStart(LoadingManagerOnStartCallback): void;
 }

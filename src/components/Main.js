@@ -1,118 +1,38 @@
 // @flow
 
 import * as React from "react";
-import TWEEN from "@tweenjs/tween.js";
 import classnames from "classnames";
 
-import BusClock from "../framework/classes/BusClock";
-import CancelToken from "../framework/classes/CancelToken";
-import Debugger from "../framework/classes/Debugger";
 import DebuggerListing from "./DebuggerListing";
 import DialogueLoader from "./DialogueLoader";
-import ExpressionBus from "../framework/classes/ExpressionBus";
-import ExpressionContext from "../framework/classes/ExpressionContext";
-import FPSAdaptive from "../framework/classes/FPSAdaptive";
 import HudAside from "./HudAside";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
 import HudToolbar from "./HudToolbar";
-import MainLoop from "../framework/classes/MainLoop";
 import Person from "../framework/classes/Entity/Person";
-import QueryBus from "../framework/classes/QueryBus";
-import QueryBusController from "../framework/classes/QueryBusController";
-import Scheduler from "../framework/classes/Scheduler";
 
+import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
+import type { Game } from "../framework/interfaces/Game";
 import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 // import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
 
 type Props = {|
+  debug: Debugger,
   exceptionHandler: ExceptionHandler,
+  game: Game,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
 |};
 
 export default function Main(props: Props) {
-  const [debug] = React.useState<Debugger>(new Debugger());
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
-  const [expressionBus] = React.useState(new ExpressionBus());
-  const [expressionContext] = React.useState(new ExpressionContext(props.loggerBreadcrumbs.add("ExpressionContext")));
-  const [isDocumentHidden, setIsDocumentHidden] = React.useState(document.hidden);
-  const [mainLoop] = React.useState(MainLoop.getInstance());
-  const [fpsAdaptive] = React.useState(new FPSAdaptive());
-  const [queryBus] = React.useState(new QueryBus(props.loggerBreadcrumbs.add("QueryBus")));
-  const [queryBusController] = React.useState(new QueryBusController(new BusClock(), queryBus));
-  const [scheduler] = React.useState(new Scheduler());
 
-  React.useEffect(
-    function() {
-      function onHiddenChange() {
-        setIsDocumentHidden(document.hidden);
-      }
-
-      document.addEventListener("visibilitychange", onHiddenChange);
-
-      return function() {
-        document.removeEventListener("visibilitychange", onHiddenChange);
-      };
-    },
-    [isDocumentHidden]
-  );
-
-  React.useEffect(
-    function() {
-      if (isDocumentHidden) {
-        mainLoop.stop();
-      } else {
-        mainLoop.start();
-      }
-    },
-    [isDocumentHidden, mainLoop]
-  );
-
-  React.useEffect(
-    function() {
-      const maxAllowedFPS = 40;
-
-      mainLoop.setMaxAllowedFPS(maxAllowedFPS);
-      mainLoop.attachScheduler(scheduler);
-
-      fpsAdaptive.setExpectedFPS(maxAllowedFPS);
-    },
-    [fpsAdaptive, mainLoop, scheduler]
-  );
-
-  React.useEffect(
-    function() {
-      const schedulerReference = scheduler;
-
-      function schedulerOnUpdate() {
-        TWEEN.update();
-      }
-
-      schedulerReference.onUpdate(schedulerOnUpdate);
-
-      return function() {
-        schedulerReference.offUpdate(schedulerOnUpdate);
-      };
-    },
-    [scheduler]
-  );
-
-  React.useEffect(
-    function() {
-      const cancelToken = new CancelToken(props.loggerBreadcrumbs.add("queryBusController.interval"));
-
-      queryBusController.interval(cancelToken);
-
-      return function() {
-        cancelToken.cancel();
-      };
-    },
-    [props.loggerBreadcrumbs, queryBusController]
-  );
+  const expressionBus = props.game.getExpressionBus();
+  const expressionContext = props.game.getExpressionContext();
+  const queryBus = props.game.getQueryBus();
 
   return (
     <React.Fragment>
@@ -128,15 +48,14 @@ export default function Main(props: Props) {
           loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
           queryBus={queryBus}
         />
-        {!isDocumentHidden && (
-          <HudScene
-            debug={debug}
-            exceptionHandler={props.exceptionHandler}
-            loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
-            queryBus={queryBus}
-            scheduler={scheduler}
-          />
-        )}
+        <HudScene
+          debug={props.debug}
+          exceptionHandler={props.exceptionHandler}
+          game={props.game}
+          loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
+          queryBus={queryBus}
+          scheduler={props.game.getScheduler()}
+        />
         <div className="dd__frame dd__statusbar dd__statusbar--hud">
           Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że będzie przyjaźnie nastawiony.
         </div>
@@ -148,7 +67,7 @@ export default function Main(props: Props) {
           queryBus={queryBus}
         />
       </div>
-      <DebuggerListing debug={debug} />
+      <DebuggerListing debug={props.debug} />
     </React.Fragment>
   );
 }

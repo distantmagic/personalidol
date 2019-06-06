@@ -3,8 +3,9 @@
 import type { BusClock } from "../interfaces/BusClock";
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { QueryBus } from "../interfaces/QueryBus";
+import type { QueryBusController as QueryBusControllerInterface } from "../interfaces/QueryBusController";
 
-export default class QueryBusController {
+export default class QueryBusController implements QueryBusControllerInterface {
   clock: BusClock;
   queryBus: QueryBus;
 

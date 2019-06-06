@@ -1,10 +1,12 @@
 // @flow
 
 import CancelTokenQuery from "./CancelTokenQuery";
+import EventListenerSet from "./EventListenerSet";
 import QueryBatch from "./QueryBatch";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { ClockTick } from "../interfaces/ClockTick";
+import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { Query } from "../interfaces/Query";
 import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
@@ -12,13 +14,13 @@ import type { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCall
 import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
 export default class QueryBus implements QueryBusInterface {
-  +enqueuedCallbacks: Set<QueryBusOnEnqueuedCallback>;
+  +enqueuedCallbacks: EventListenerSetInterface<[Query<any>]>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   collection: QueryBusQueueCollection;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.collection = [];
-    this.enqueuedCallbacks = new Set<QueryBusOnEnqueuedCallback>();
+    this.enqueuedCallbacks = new EventListenerSet<[Query<any>]>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
@@ -27,10 +29,7 @@ export default class QueryBus implements QueryBusInterface {
     const cancelTokenQuery = new CancelTokenQuery(this.loggerBreadcrumbs.add("enqueue"), cancelToken, pickedQuery);
 
     this.collection.push(cancelTokenQuery);
-
-    for (let callback of this.enqueuedCallbacks.values()) {
-      callback(pickedQuery);
-    }
+    this.enqueuedCallbacks.notify([pickedQuery]);
 
     return cancelTokenQuery.onExecuted();
   }

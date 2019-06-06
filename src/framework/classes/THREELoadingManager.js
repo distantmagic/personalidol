@@ -2,6 +2,7 @@
 
 import * as THREE from "three";
 
+import EventListenerSet from "./EventListenerSet";
 import ResourceLoadError from "./Exception/ResourceLoadError";
 import ResourcesLoadingState from "./ResourcesLoadingState";
 
@@ -12,42 +13,49 @@ import type {
   LoadingManagerOnStartCallback,
 } from "three";
 
+import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../interfaces/ResourcesLoadingState";
+import type { ResourcesLoadingStateChangeCallback } from "../types/ResourcesLoadingStateChangeCallback";
 import type { THREELoadingManager as THREELoadingManagerInterface } from "../interfaces/THREELoadingManager";
-import type { THREELoadingManagerResourcesLoadingStateChangeCallback } from "../types/THREELoadingManagerResourcesLoadingStateChangeCallback";
 
 export default class THREELoadingManager implements THREELoadingManagerInterface {
-  +errorCallbacks: Set<LoadingManagerOnErrorCallback>;
+  +errorCallbacks: EventListenerSetInterface<[string]>;
   +exceptionHandler: ExceptionHandler;
-  +loadCallbacks: Set<LoadingManagerOnLoadCallback>;
+  +loadCallbacks: EventListenerSetInterface<[]>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +progressCallbacks: Set<LoadingManagerOnProgressCallback>;
-  +resourcesLoadingStateChangeCallbacks: Set<THREELoadingManagerResourcesLoadingStateChangeCallback>;
-  +startCallbacks: Set<LoadingManagerOnStartCallback>;
+  +progressCallbacks: EventListenerSetInterface<[string, number, number]>;
+  +resourcesLoadingStateChangeCallbacks: EventListenerSetInterface<[ResourcesLoadingStateInterface]>;
+  +startCallbacks: EventListenerSetInterface<[string, number, number]>;
   +threeLoadingManager: THREE.LoadingManager;
   itemsLoaded: number;
   itemsTotal: number;
   resourcesLoadError: ?ResourceLoadError;
+  resourcesLoadingState: ResourcesLoadingStateInterface;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, exceptionHandler: ExceptionHandler) {
-    this.errorCallbacks = new Set<LoadingManagerOnErrorCallback>();
+    this.errorCallbacks = new EventListenerSet<[string]>();
     this.exceptionHandler = exceptionHandler;
     this.itemsLoaded = 0;
     this.itemsTotal = 0;
-    this.loadCallbacks = new Set<LoadingManagerOnLoadCallback>();
+    this.loadCallbacks = new EventListenerSet<[]>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.progressCallbacks = new Set<LoadingManagerOnProgressCallback>();
-    this.resourcesLoadingStateChangeCallbacks = new Set<THREELoadingManagerResourcesLoadingStateChangeCallback>();
-    this.startCallbacks = new Set<LoadingManagerOnStartCallback>();
+    this.progressCallbacks = new EventListenerSet<[string, number, number]>();
+    this.resourcesLoadingState = new ResourcesLoadingState();
+    this.resourcesLoadingStateChangeCallbacks = new EventListenerSet<[ResourcesLoadingStateInterface]>();
+    this.startCallbacks = new EventListenerSet<[string, number, number]>();
     this.threeLoadingManager = new THREE.LoadingManager();
 
     const notifyResourcesLoadingStateChange = () => {
-      const event = new ResourcesLoadingState(this.itemsLoaded, this.itemsTotal, this.resourcesLoadError);
+      const resourcesLoadingState = new ResourcesLoadingState(
+        this.itemsLoaded,
+        this.itemsTotal,
+        this.resourcesLoadError
+      );
 
-      for (let callback of this.resourcesLoadingStateChangeCallbacks.values()) {
-        callback(event);
-      }
+      this.resourcesLoadingState = resourcesLoadingState;
+      this.resourcesLoadingStateChangeCallbacks.notify([resourcesLoadingState]);
     };
 
     this.threeLoadingManager.onError = (url: string): void => {
@@ -59,37 +67,33 @@ export default class THREELoadingManager implements THREELoadingManagerInterface
       this.resourcesLoadError = error;
 
       notifyResourcesLoadingStateChange();
-      for (let callback of this.errorCallbacks.values()) {
-        callback(url);
-      }
+      this.errorCallbacks.notify([url]);
     };
     this.threeLoadingManager.onLoad = (): void => {
-      for (let callback of this.loadCallbacks.values()) {
-        callback();
-      }
+      this.loadCallbacks.notify([]);
     };
     this.threeLoadingManager.onProgress = (url: string, itemsLoaded: number, itemsTotal: number): void => {
       this.itemsLoaded = itemsLoaded;
       this.itemsTotal = itemsTotal;
 
       notifyResourcesLoadingStateChange();
-      for (let callback of this.progressCallbacks.values()) {
-        callback(url, itemsLoaded, itemsTotal);
-      }
+      this.progressCallbacks.notify([url, itemsLoaded, itemsTotal]);
     };
     this.threeLoadingManager.onStart = (url: string, itemsLoaded: number, itemsTotal: number): void => {
       this.itemsLoaded = itemsLoaded;
       this.itemsTotal = itemsTotal;
 
       notifyResourcesLoadingStateChange();
-      for (let callback of this.startCallbacks.values()) {
-        callback(url, itemsLoaded, itemsTotal);
-      }
+      this.startCallbacks.notify([url, itemsLoaded, itemsTotal]);
     };
   }
 
   getLoadingManager(): THREE.LoadingManager {
     return this.threeLoadingManager;
+  }
+
+  getResourcesLoadingState(): ResourcesLoadingStateInterface {
+    return this.resourcesLoadingState;
   }
 
   offError(callback: LoadingManagerOnErrorCallback): void {
@@ -104,7 +108,7 @@ export default class THREELoadingManager implements THREELoadingManagerInterface
     this.progressCallbacks.delete(callback);
   }
 
-  offResourcesLoadingStateChange(callback: THREELoadingManagerResourcesLoadingStateChangeCallback): void {
+  offResourcesLoadingStateChange(callback: ResourcesLoadingStateChangeCallback): void {
     this.resourcesLoadingStateChangeCallbacks.delete(callback);
   }
 
@@ -124,7 +128,7 @@ export default class THREELoadingManager implements THREELoadingManagerInterface
     this.progressCallbacks.add(callback);
   }
 
-  onResourcesLoadingStateChange(callback: THREELoadingManagerResourcesLoadingStateChangeCallback): void {
+  onResourcesLoadingStateChange(callback: ResourcesLoadingStateChangeCallback): void {
     this.resourcesLoadingStateChangeCallbacks.add(callback);
   }
 

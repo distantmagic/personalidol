@@ -10,7 +10,7 @@ type Props = {|
   itemsTotal: number,
 |};
 
-export default function HudSceneCanvasOverlay(props: Props) {
+export default function HudSceneOverlay(props: Props) {
   if (props.isFailed) {
     return <div className="dd__loader dd__loader--error dd__scene__loader">Failed loading assets.</div>;
   }

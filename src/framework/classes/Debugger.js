@@ -2,18 +2,21 @@
 
 import { Map } from "immutable";
 
+import EventListenerSet from "./EventListenerSet";
+
 import type { Debugger as DebuggerInterface } from "../interfaces/Debugger";
 import type { DebuggerState } from "../types/DebuggerState";
 import type { DebuggerStateChangeCallback } from "../types/DebuggerStateChangeCallback";
 import type { DebuggerStateValue } from "../types/DebuggerStateValue";
+import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class Debugger implements DebuggerInterface {
-  +callbacks: Set<DebuggerStateChangeCallback>;
+  +callbacks: EventListenerSetInterface<[DebuggerState]>;
   state: DebuggerState;
 
   constructor(state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
-    this.callbacks = new Set();
+    this.callbacks = new EventListenerSet<[DebuggerState]>();
     this.state = state;
   }
 
@@ -35,9 +38,8 @@ export default class Debugger implements DebuggerInterface {
     }
 
     this.state = state;
-    for (let callback of this.callbacks.values()) {
-      callback(state);
-    }
+
+    this.callbacks.notify([state]);
   }
 
   updateState(loggerBreadcrumbs: LoggerBreadcrumbs, value: DebuggerStateValue): void {

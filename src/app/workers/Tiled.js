@@ -11,7 +11,7 @@ import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { TiledMapSerializedObject } from "../../framework/types/TiledMapSerializedObject";
 import type { TiledWorkerLoadParams } from "../types/TiledWorkerLoadParams";
 
-export default class TiledWorker {
+export default class Tiled {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
 

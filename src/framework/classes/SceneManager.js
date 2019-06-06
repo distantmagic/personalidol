@@ -4,15 +4,18 @@ import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import Cancelled from "./Exception/Cancelled";
+import EventListenerSet from "./EventListenerSet";
 
 import type { DrawCallback } from "mainloop.js";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasController } from "../interfaces/CanvasController";
 import type { ElementSize } from "../interfaces/ElementSize";
+import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { SceneManager as SceneManagerInterface } from "../interfaces/SceneManager";
+import type { SceneManagerChangeCallback } from "../types/SceneManagerChangeCallback";
 import type { Scheduler } from "../interfaces/Scheduler";
 
 export default class SceneManager implements SceneManagerInterface {
@@ -20,6 +23,11 @@ export default class SceneManager implements SceneManagerInterface {
   +exceptionHandler: ExceptionHandler;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +scheduler: Scheduler;
+  +stateChangeCallbacks: EventListenerSetInterface<[SceneManagerInterface]>;
+  _isAttached: boolean;
+  _isAttaching: boolean;
+  _isDetached: boolean;
+  _isDetaching: boolean;
   drawCallback: ?DrawCallback;
   renderer: ?THREE.WebGLRenderer;
 
@@ -31,9 +39,14 @@ export default class SceneManager implements SceneManagerInterface {
   ) {
     autoBind(this);
 
+    this._isAttached = false;
+    this._isAttaching = false;
+    this._isDetached = true;
+    this._isDetaching = false;
     this.controller = controller;
     this.exceptionHandler = exceptionHandler;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.stateChangeCallbacks = new EventListenerSet<[SceneManagerInterface]>();
     this.scheduler = scheduler;
   }
 
@@ -41,6 +54,9 @@ export default class SceneManager implements SceneManagerInterface {
     if (cancelToken.isCancelled()) {
       throw new Cancelled(this.loggerBreadcrumbs.add("attach"), "Cancel token was cancelled before attaching scene.");
     }
+
+    this._isAttaching = true;
+    this.stateChangeCallbacks.notify([this]);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -60,6 +76,10 @@ export default class SceneManager implements SceneManagerInterface {
     this.scheduler.onDraw(drawCallback);
 
     await this.controller.attach(cancelToken, renderer);
+
+    this._isAttaching = false;
+    this._isAttached = true;
+    this.stateChangeCallbacks.notify([this]);
   }
 
   async detach(cancelToken: CancelToken): Promise<void> {
@@ -79,11 +99,42 @@ export default class SceneManager implements SceneManagerInterface {
       throw new Cancelled(this.loggerBreadcrumbs.add("detach"), "Cancel token was cancelled before detaching scene.");
     }
 
+    this._isDetaching = true;
+    this.stateChangeCallbacks.notify([this]);
+
     this.scheduler.offDraw(drawCallback);
 
     await this.controller.detach(cancelToken, renderer);
 
     this.renderer = null;
+
+    this._isDetaching = false;
+    this._isDetached = false;
+    this.stateChangeCallbacks.notify([this]);
+  }
+
+  isAttached(): boolean {
+    return this._isAttached;
+  }
+
+  isAttaching(): boolean {
+    return this._isAttaching;
+  }
+
+  isDetached(): boolean {
+    return this._isDetached;
+  }
+
+  isDetaching(): boolean {
+    return this._isDetaching;
+  }
+
+  onStateChange(callback: SceneManagerChangeCallback): void {
+    this.stateChangeCallbacks.add(callback);
+  }
+
+  offStateChange(callback: SceneManagerChangeCallback): void {
+    this.stateChangeCallbacks.delete(callback);
   }
 
   resize(elementSize: ElementSize<"px">): void {

@@ -2,47 +2,42 @@
 
 import autoBind from "auto-bind";
 
+import EventListenerSet from "./EventListenerSet";
+
 import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
 
+import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { Scheduler as SchedulerInterface } from "../interfaces/Scheduler";
 
 export default class Scheduler implements SchedulerInterface {
-  +beginCallbacks: Set<BeginCallback>;
-  +drawCallbacks: Set<DrawCallback>;
-  +endCallbacks: Set<EndCallback>;
-  +updateCallbacks: Set<UpdateCallback>;
+  +beginCallbacks: EventListenerSetInterface<[]>;
+  +drawCallbacks: EventListenerSetInterface<[number]>;
+  +endCallbacks: EventListenerSetInterface<[number, boolean]>;
+  +updateCallbacks: EventListenerSetInterface<[number]>;
 
   constructor() {
     autoBind(this);
 
-    this.beginCallbacks = new Set<BeginCallback>();
-    this.drawCallbacks = new Set<DrawCallback>();
-    this.endCallbacks = new Set<EndCallback>();
-    this.updateCallbacks = new Set<UpdateCallback>();
+    this.beginCallbacks = new EventListenerSet<[]>();
+    this.drawCallbacks = new EventListenerSet<[number]>();
+    this.endCallbacks = new EventListenerSet<[number, boolean]>();
+    this.updateCallbacks = new EventListenerSet<[number]>();
   }
 
   notifyBegin(): void {
-    for (let callback of this.beginCallbacks.values()) {
-      callback();
-    }
+    this.beginCallbacks.notify([]);
   }
 
   notifyDraw(interpolationPercentage: number): void {
-    for (let callback of this.drawCallbacks.values()) {
-      callback(interpolationPercentage);
-    }
+    this.drawCallbacks.notify([interpolationPercentage]);
   }
 
   notifyEnd(fps: number, isPanicked: boolean): void {
-    for (let callback of this.endCallbacks.values()) {
-      callback(fps, isPanicked);
-    }
+    this.endCallbacks.notify([fps, isPanicked]);
   }
 
   notifyUpdate(delta: number): void {
-    for (let callback of this.updateCallbacks.values()) {
-      callback(delta);
-    }
+    this.updateCallbacks.notify([delta]);
   }
 
   offBegin(callback: BeginCallback): void {
