@@ -37,6 +37,12 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
     ));
   }
 
+  begin(): void {
+    for (let child of this.children) {
+      child.begin();
+    }
+  }
+
   async detach(cancelToken: CancelToken, renderer: WebGLRenderer): Promise<void> {
     return void (await Promise.all(
       this.children.map(child => {
@@ -58,12 +64,6 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
 
   async stop(): Promise<void> {
     await Promise.all(this.children.map(child => child.stop()));
-  }
-
-  begin(): void {
-    for (let child of this.children) {
-      child.begin();
-    }
   }
 
   update(delta: number): void {

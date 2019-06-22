@@ -10,12 +10,19 @@ import type { TiledTilesetSerializedObject } from "../types/TiledTilesetSerializ
 
 export default class TiledTileset implements TiledTilesetInterface {
   +expectedTileCount: number;
+  +firstgid: number;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tiles: Map<number, TiledTile>;
   +tileSize: ElementSize<"px">;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, expectedTileCount: number, tileSize: ElementSize<"px">): void {
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    firstgid: number,
+    expectedTileCount: number,
+    tileSize: ElementSize<"px">
+  ): void {
     this.expectedTileCount = expectedTileCount;
+    this.firstgid = firstgid;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tiles = new Map<number, TiledTile>();
     this.tileSize = tileSize;
@@ -38,6 +45,7 @@ export default class TiledTileset implements TiledTilesetInterface {
 
     return {
       expectedTileCount: this.getExpectedTileCount(),
+      firstgid: this.getFirstgid(),
       tiles: serializedTiles,
       tileSize: this.getTileSize().asObject(),
     };
@@ -45,6 +53,10 @@ export default class TiledTileset implements TiledTilesetInterface {
 
   getExpectedTileCount(): number {
     return this.expectedTileCount;
+  }
+
+  getFirstgid(): number {
+    return this.firstgid;
   }
 
   getTileById(id: number): TiledTile {

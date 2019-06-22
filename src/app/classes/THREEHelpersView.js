@@ -8,7 +8,7 @@ import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandl
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
 import type { TiledMap } from "../../framework/interfaces/TiledMap";
 
-export default class THREEHelpers implements CanvasView {
+export default class THREEHelpersView implements CanvasView {
   +scene: THREE.Scene;
   +tiledMap: TiledMap;
 

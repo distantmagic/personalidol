@@ -24,11 +24,12 @@ export default class TiledTilesetLoader implements TiledTilesetLoaderInterface {
     this.queryBus = queryBus;
   }
 
-  async load(cancelToken: CancelToken, tilesetPath: string): Promise<TiledTileset> {
+  async load(cancelToken: CancelToken, tilesetElement: HTMLElement, tilesetPath: string): Promise<TiledTileset> {
     const tilesetQuery = await this.tiledTilesetLoaderQueryBuilder.build(tilesetPath);
     const tilesetContent = await this.queryBus.enqueue(cancelToken, tilesetQuery);
     const tiledTilesetParser = new TiledTilesetParser(
       this.loggerBreadcrumbs.add("TiledTilesetParser"),
+      tilesetElement,
       tilesetPath,
       tilesetContent
     );

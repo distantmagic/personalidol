@@ -27,7 +27,7 @@ it("generates skinned layers and tiles", async function() {
   const [cancelToken, queryBus, tiledMapPromise]: [
     CancelTokenInterface,
     QueryBusInterface,
-    Promise<TiledMapInterface>,
+    Promise<TiledMapInterface>
   ] = await tiledMapParserFixture("map-fixture-01.tmx");
   const tiledMap = await tiledMapPromise;
   const skinnedTiles = [];

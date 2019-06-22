@@ -2,7 +2,7 @@
 
 import type { ElementPosition } from "../../framework/interfaces/ElementPosition";
 
-export interface Player {
+export interface PlayerModel {
   getCurrentPosition(): ElementPosition<"tile">;
 
   getTargetPosition(): ElementPosition<"tile">;

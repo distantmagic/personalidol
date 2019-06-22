@@ -12,10 +12,10 @@ import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandl
 import type { KeyboardState } from "../../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
 import type { PersonAnimationInstance } from "../../framework/types/PersonAnimationInstance";
-import type { Player as PlayerModelInterface } from "../models/Player.type";
+import type { PlayerModel as PlayerModelInterface } from "../interfaces/PlayerModel";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 
-export default class Player implements CanvasView {
+export default class PlayerView implements CanvasView {
   +keyboardState: KeyboardState;
   +personAnimationState: PersonAnimationInstance;
   +playerModel: PlayerModelInterface;

@@ -16,12 +16,14 @@ import type { TiledTilesetParser as TiledTilesetParserInterface } from "../inter
 export default class TiledTilesetParser implements TiledTilesetParserInterface {
   +content: string;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +tilesetElement: HTMLElement;
   +tilesetPath: string;
   +domParser: DOMParser;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, tilesetPath: string, content: string) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, tilesetElement: HTMLElement, tilesetPath: string, content: string) {
     this.content = content;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.tilesetElement = tilesetElement;
     this.tilesetPath = tilesetPath;
     this.domParser = new DOMParser();
   }
@@ -43,9 +45,6 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
 
     const tiles: HTMLCollection<HTMLElement> = doc.getElementsByTagName("tile");
 
-    // console.log(grid.attributes.getNamedItem("orientation").value);
-    // console.log(grid.attributes.getNamedItem("height").value);
-    // console.log(grid.attributes.getNamedItem("width").value);
     if (!tiles) {
       throw new TiledTilesetException(breadcrumbs, `Tileset tiles data is missing: "${this.tilesetPath}"`);
     }
@@ -61,6 +60,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
 
     const tiledTileset = new TiledTileset(
       breadcrumbs.add("TiledTileset"),
+      xml.getNumberAttribute(breadcrumbs, this.tilesetElement, "firstgid"),
       expectedTileCount,
       new ElementSize<"px">(
         xml.getNumberAttribute(breadcrumbs, documentElement, "tilewidth"),

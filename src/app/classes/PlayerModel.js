@@ -3,9 +3,9 @@
 import ElementPosition from "../../framework/classes/ElementPosition";
 
 import type { ElementPosition as ElementPositionInterface } from "../../framework/interfaces/ElementPosition";
-import type { Player as PlayerInterface } from "./Player.type";
+import type { PlayerModel as PlayerModelInterface } from "../interfaces/PlayerModel";
 
-export default class Player implements PlayerInterface {
+export default class PlayerModel implements PlayerModelInterface {
   currentPosition: ElementPositionInterface<"tile">;
   targetPosition: ElementPositionInterface<"tile">;
 

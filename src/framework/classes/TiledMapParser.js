@@ -68,6 +68,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
     const tilesetFilename = xml.getStringAttribute(breadcrumbs, tilesetElement, "source");
     const tiledTileset = await this.tiledTilesetLoader.load(
       cancelToken,
+      tilesetElement,
       // tileset URL is relative to map mapFilename
       new TiledRelativeFilename(this.mapFilename, tilesetFilename).asString()
     );

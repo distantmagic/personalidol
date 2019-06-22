@@ -10,12 +10,12 @@ import {
 import Cancelled from "../../framework/classes/Exception/Cancelled";
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
 import Exception from "../../framework/classes/Exception";
+import PlayerModel from "./PlayerModel";
+import PlayerView from "./PlayerView";
 import THREEPointerInteraction from "../../framework/classes/THREEPointerInteraction";
 import TiledMapUnserializer from "../../framework/classes/TiledMapUnserializer";
+import TiledWorker from "../../framework/classes/TiledWorker.worker";
 import WorkerClientController from "../../framework/classes/WorkerClientController";
-import { default as PlayerModel } from "../models/Player";
-import { default as PlayerView } from "../views/Player";
-import { default as TiledWorker } from "../workers/Tiled.worker";
 // import { default as THREEHelpersView } from "../views/THREEHelpers";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
@@ -26,14 +26,14 @@ import type { ElementSize } from "../../framework/interfaces/ElementSize";
 import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandler";
 import type { KeyboardState } from "../../framework/interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
-import type { Player as PlayerModelInterface } from "../models/Player.type";
+import type { PlayerModel as PlayerModelInterface } from "../interfaces/PlayerModel";
 import type { PointerState } from "../../framework/interfaces/PointerState";
 import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../framework/interfaces/THREEPointerInteraction";
 import type { TiledMapSerializedObject } from "../../framework/types/TiledMapSerializedObject";
-import type { TiledWorker as TiledWorkerInterface } from "../interfaces/TiledWorker";
-import type { TiledWorkerLoadParams } from "../types/TiledWorkerLoadParams";
+import type { TiledWorker as TiledWorkerInterface } from "../../framework/interfaces/TiledWorker";
+import type { TiledWorkerLoadParams } from "../../framework/types/TiledWorkerLoadParams";
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;
@@ -128,7 +128,7 @@ export default class CanvasLocationComplex implements CanvasController {
     const workerController = new WorkerClientController<TiledWorkerInterface>(tiledWorker);
     const workerResponse = await workerController.request<TiledWorkerLoadParams, TiledMapSerializedObject>(
       cancelToken,
-      "load",
+      "loadMap",
       {
         filename: "/assets/map-outlands-01.tmx",
       }

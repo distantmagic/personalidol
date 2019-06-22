@@ -6,7 +6,7 @@ import classnames from "classnames";
 import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
 import HudSceneOverlay from "./HudSceneOverlay";
-import MainCanvasController from "../app/controllers/Main";
+import MainController from "../app/classes/MainController";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
@@ -37,7 +37,7 @@ export default function HudScene(props: Props) {
   const [sceneManager, setSceneManager] = React.useState<?SceneManager>(
     props.game.hasSceneManager() ? props.game.getSceneManager() : null
   );
-  const [isAttaching, setIsAttaching] = React.useState<boolean>(sceneManager ? sceneManager.isAttaching() : false);
+  const [isAttaching, setIsAttaching] = React.useState<boolean>(sceneManager ? sceneManager.isAttaching() : true);
 
   React.useEffect(
     function() {
@@ -45,9 +45,9 @@ export default function HudScene(props: Props) {
 
       game.onSceneManagerChange(setSceneManager);
       game.setPrimaryController(
-        new MainCanvasController(
+        new MainController(
           game.getExceptionHandler(),
-          props.loggerBreadcrumbs.add("MainCanvasController"),
+          props.loggerBreadcrumbs.add("MainController"),
           threeLoadingManager,
           game.getKeyboardState(),
           game.getPointerState(),
