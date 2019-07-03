@@ -73,6 +73,7 @@
     "sass:postbuild": "postcss < public/index.css > public/index.css.tmp && mv public/index.css.tmp public/index.css",
     "sass:watch": "./node_modules/.bin/node-sass -r -w ./scss -o ./public",
     "start": "PORT=9023 react-app-rewired start",
-    "test": "react-app-rewired test --env=jsdom"
+    "test": "react-app-rewired test --env=jsdom",
+    "test:once": "$npm_execpath run test --watchAll=false"
   }
 }
