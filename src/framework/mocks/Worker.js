@@ -1,5 +1,4 @@
 import EventEmitter3 from "eventemitter3";
-import noop from "lodash/noop";
 import raf from "raf";
 
 export default class WorkerMock extends EventEmitter3 {

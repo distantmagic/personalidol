@@ -31,7 +31,6 @@ export default class TiledTilesetUnserializer implements TiledTilesetUnserialize
   fromObject(parsed: TiledTilesetSerializedObject): TiledTilesetInterface {
     const tiledTileset = new TiledTileset(
       this.loggerBreadcrumbs,
-      parsed.firstgid,
       parsed.expectedTileCount,
       this.elementSizeUnserializer.fromObject(parsed.tileSize)
     );

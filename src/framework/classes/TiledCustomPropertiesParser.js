@@ -1,6 +1,5 @@
 // @flow
 
-import * as xml from "../helpers/xml";
 import assert from "../helpers/assert";
 import Cancelled from "./Exception/Cancelled";
 import TiledCustomProperties from "./TiledCustomProperties";
@@ -8,7 +7,6 @@ import TiledCustomPropertiesException from "./Exception/Tiled/CustomProperties";
 import TiledCustomPropertyParser from "./TiledCustomPropertyParser";
 
 import type { CancelToken } from "../interfaces/CancelToken";
-import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledCustomProperties as TiledCustomPropertiesInterface } from "../interfaces/TiledCustomProperties";
 import type { TiledCustomPropertiesParser as TiledCustomPropertiesParserInterface } from "../interfaces/TiledCustomPropertiesParser";

@@ -49,9 +49,7 @@
     "postcss": "^7.0.17",
     "postcss-cli": "^6.1.2",
     "prettier": "1.18.2",
-    "react-app-rewired": "^2.1.3",
-    "websocket": "^1.0.28",
-    "worker-loader": "^2.0.0"
+    "websocket": "^1.0.28"
   },
   "browserslist": [
     ">0.2%",
@@ -63,7 +61,7 @@
     "extends": "react-app"
   },
   "scripts": {
-    "build": "$npm_execpath run sass:build && react-app-rewired build",
+    "build": "$npm_execpath run sass:build && react-scripts build",
     "flow:watch": "$npm_execpath run flow:watch:fswatch",
     "flow:watch:fswatch": "fswatch --one-event --one-per-batch src | xargs -n1 -I{} yarn run flow status",
     "flow:watch:inotify": "inotifywait -e close_write -r -m src | xargs -n1 -I{} yarn run flow status",
@@ -72,8 +70,8 @@
     "sass:build": "./node_modules/.bin/node-sass -r ./scss -o ./public",
     "sass:postbuild": "postcss < public/index.css > public/index.css.tmp && mv public/index.css.tmp public/index.css",
     "sass:watch": "./node_modules/.bin/node-sass -r -w ./scss -o ./public",
-    "start": "PORT=9023 react-app-rewired start",
-    "test": "react-app-rewired test --env=jsdom",
+    "start": "PORT=9023 react-scripts start",
+    "test": "react-scripts test --env=jsdom",
     "test:once": "$npm_execpath run test --watchAll=false"
   }
 }

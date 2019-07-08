@@ -5,7 +5,6 @@ import TiledCustomProperty from "./TiledCustomProperty";
 import TiledCustomPropertiesException from "./Exception/Tiled/CustomProperties";
 
 import type { CancelToken } from "../interfaces/CancelToken";
-import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledCustomProperty as TiledCustomPropertyInterface } from "../interfaces/TiledCustomProperty";
 import type { TiledCustomPropertyParser as TiledCustomPropertyParserInterface } from "../interfaces/TiledCustomPropertyParser";

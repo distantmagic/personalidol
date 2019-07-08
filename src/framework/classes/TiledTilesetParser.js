@@ -60,7 +60,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
 
     const tiledTileset = new TiledTileset(
       breadcrumbs.add("TiledTileset"),
-      xml.getNumberAttribute(breadcrumbs, this.tilesetElement, "firstgid"),
+      // xml.getNumberAttribute(breadcrumbs, this.tilesetElement, "firstgid"),
       expectedTileCount,
       new ElementSize<"px">(
         xml.getNumberAttribute(breadcrumbs, documentElement, "tilewidth"),

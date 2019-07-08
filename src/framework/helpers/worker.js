@@ -10,7 +10,6 @@ import WorkerMock from "../mocks/Worker";
 
 import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
 import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
-import type { WorkerContextController as WorkerContextControllerInterface } from "../interfaces/WorkerContextController";
 import type { WorkerContextMethods } from "../types/WorkerContextMethods";
 
 declare var self: DedicatedWorkerGlobalScope;

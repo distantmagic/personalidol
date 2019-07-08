@@ -11,8 +11,6 @@ export interface TiledTileset extends Equatable<TiledTileset>, JsonSerializable<
 
   getExpectedTileCount(): number;
 
-  getFirstgid(): number;
-
   getTileById(id: number): TiledTile;
 
   getTileSize(): ElementSize<"px">;

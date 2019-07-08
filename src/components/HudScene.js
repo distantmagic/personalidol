@@ -84,6 +84,7 @@ export default function HudScene(props: Props) {
         setIsAttaching(sceneManager.isAttaching());
       }
 
+      setIsAttaching(sceneManager.isAttaching());
       sceneManager.onStateChange(onStateChange);
 
       return function() {
