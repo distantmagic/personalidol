@@ -45,7 +45,7 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
         });
 
       return function() {
-        cancelToken.cancel();
+        cancelToken.cancel(props.loggerBreadcrumbs.add("React.useEffect").add("cleanup"));
       };
     },
     [

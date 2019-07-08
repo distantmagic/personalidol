@@ -3,7 +3,6 @@
 import * as THREE from "three";
 
 import type { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
-import type { ElementPositionSerializedObject } from "../types/ElementPositionSerializedObject";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 
 export default class ElementPosition<Unit: ElementPositionUnit> implements ElementPositionInterface<Unit> {
@@ -17,18 +16,6 @@ export default class ElementPosition<Unit: ElementPositionUnit> implements Eleme
     this.x = x;
     this.y = y;
     this.z = z;
-  }
-
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): ElementPositionSerializedObject<Unit> {
-    return {
-      x: this.getX(),
-      y: this.getY(),
-      z: this.getZ(),
-    };
   }
 
   clone(): ElementPositionInterface<Unit> {

@@ -1,7 +1,6 @@
 // @flow
 
 import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
-import type { LoggerBreadcrumbsSerializedObject } from "../types/LoggerBreadcrumbsSerializedObject";
 
 export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
   +breadcrumbs: $ReadOnlyArray<string>;
@@ -48,18 +47,16 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     return this.breadcrumbs;
   }
 
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): LoggerBreadcrumbsSerializedObject {
-    return {
-      breadcrumbs: this.asArray(),
-    };
-  }
-
   asString(): string {
-    return this.breadcrumbs.join("/");
+    return this.breadcrumbs
+      .map(function(breadcrumb) {
+        if (breadcrumb.includes(" ")) {
+          return `"${breadcrumb}"`;
+        }
+
+        return breadcrumb;
+      })
+      .join("/");
   }
 
   getBreadcrumbs(): $ReadOnlyArray<string> {

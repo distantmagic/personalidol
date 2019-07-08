@@ -2,7 +2,6 @@
 
 import type { TiledTile as TiledTileInterface } from "../interfaces/TiledTile";
 import type { TiledTileImage } from "../interfaces/TiledTileImage";
-import type { TiledTileSerializedObject } from "../types/TiledTileSerializedObject";
 
 export default class TiledTile implements TiledTileInterface {
   +id: number;
@@ -11,17 +10,6 @@ export default class TiledTile implements TiledTileInterface {
   constructor(id: number, image: TiledTileImage) {
     this.id = id;
     this.image = image;
-  }
-
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): TiledTileSerializedObject {
-    return {
-      id: this.id,
-      tiledTileImage: this.getTiledTileImage().asObject(),
-    };
   }
 
   getId(): number {

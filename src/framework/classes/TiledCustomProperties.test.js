@@ -2,20 +2,19 @@
 
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import TiledCustomProperties from "./TiledCustomProperties";
-import TiledCustomPropertiesUnserializer from "./TiledCustomPropertiesUnserializer";
 import TiledCustomProperty from "./TiledCustomProperty";
 
-it("is serializable as JSON", function() {
+it("checks if custom property is present", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
 
   const tiledCustomProperties = new TiledCustomProperties(loggerBreadcrumbs);
+  const tiledCustomProperty1 = new TiledCustomProperty(loggerBreadcrumbs, "foo", "string", "bar");
 
-  tiledCustomProperties.addProperty(new TiledCustomProperty(loggerBreadcrumbs, "foo", "string", "bar"));
+  expect(tiledCustomProperties.hasProperty(tiledCustomProperty1)).toBe(false);
 
-  const serialized = tiledCustomProperties.asJson();
+  tiledCustomProperties.addProperty(tiledCustomProperty1);
 
-  const unserializer = new TiledCustomPropertiesUnserializer(loggerBreadcrumbs);
-  const unserialized = unserializer.fromJson(serialized);
+  const tiledCustomProperty2 = new TiledCustomProperty(loggerBreadcrumbs, "foo", "string", "bar");
 
-  expect(tiledCustomProperties.isEqual(unserialized)).toBe(true);
+  expect(tiledCustomProperties.hasProperty(tiledCustomProperty2)).toBe(true);
 });

@@ -6,7 +6,7 @@ export default class Exception extends Error {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, message: string) {
-    super(message);
+    super(`[${loggerBreadcrumbs.asString()}] ${message}`);
 
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }

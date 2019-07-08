@@ -6,7 +6,6 @@ import ElementRotation from "./ElementRotation";
 import TiledMapBlockObject from "./TiledMapBlockObject";
 import TiledMapPositionedObject from "./TiledMapPositionedObject";
 import TiledMapEllipseObject from "./TiledMapEllipseObject";
-import TiledMapEllipseObjectUnserializer from "./TiledMapEllipseObjectUnserializer";
 
 it("is comparable with other ellipse objects", function() {
   const elementPosition1 = new ElementPosition(1, 1);
@@ -24,19 +23,4 @@ it("is comparable with other ellipse objects", function() {
   const tiledMapEllipseObject2 = new TiledMapEllipseObject(tiledMapBlockObject2);
 
   expect(tiledMapEllipseObject1.isEqual(tiledMapEllipseObject2)).toBe(false);
-});
-
-it("is serializable as JSON", function() {
-  const elementPosition = new ElementPosition(1, 1);
-  const elementRotation = new ElementRotation<"radians">(1, 1, 1);
-  const tiledMapPositionedObject = new TiledMapPositionedObject("test", elementPosition, elementRotation);
-  const elementSize = new ElementSize(1, 1);
-  const tiledMapBlockObject = new TiledMapBlockObject(tiledMapPositionedObject, elementSize);
-  const tiledMapEllipseObject = new TiledMapEllipseObject(tiledMapBlockObject);
-
-  const serialized = tiledMapEllipseObject.asJson();
-  const unserializer = new TiledMapEllipseObjectUnserializer();
-  const unserialized = unserializer.fromJson(serialized);
-
-  expect(tiledMapEllipseObject.isEqual(unserialized)).toBe(true);
 });

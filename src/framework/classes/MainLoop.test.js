@@ -21,7 +21,7 @@ it("is a singleton", function() {
   }).toThrow(SingletonException);
 });
 
-it("attaches scheduler", function() {
+it("attaches scheduler", async function() {
   const mainLoop = MainLoop.getInstance();
   const scheduler = new Scheduler();
 
@@ -38,5 +38,5 @@ it("attaches scheduler", function() {
 
   mainLoop.start();
 
-  return expect(promise).resolves.toBeDefined();
+  await expect(promise).resolves.toBeDefined();
 }, 300);

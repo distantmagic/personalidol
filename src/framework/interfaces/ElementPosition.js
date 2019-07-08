@@ -1,13 +1,9 @@
 // @flow
 
-import type { ElementPositionSerializedObject } from "../types/ElementPositionSerializedObject";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 import type { Equatable } from "./Equatable";
-import type { JsonSerializable } from "./JsonSerializable";
 
-export interface ElementPosition<Unit: ElementPositionUnit>
-  extends Equatable<ElementPosition<Unit>>,
-    JsonSerializable<ElementPositionSerializedObject<Unit>> {
+export interface ElementPosition<Unit: ElementPositionUnit> extends Equatable<ElementPosition<Unit>> {
   distanceTo(ElementPosition<Unit>): number;
 
   getX(): number;

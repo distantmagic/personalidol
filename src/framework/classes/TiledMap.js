@@ -13,9 +13,9 @@ import type { TiledMapEllipseObject } from "../interfaces/TiledMapEllipseObject"
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
 import type { TiledMapPolygonObject } from "../interfaces/TiledMapPolygonObject";
 import type { TiledMapRectangleObject } from "../interfaces/TiledMapRectangleObject";
-import type { TiledMapSerializedObject } from "../types/TiledMapSerializedObject";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
 import type { TiledTileset } from "../interfaces/TiledTileset";
+import type { TiledTilesetOffsetCollection } from "../interfaces/TiledTilesetOffsetCollection";
 
 export default class TiledMap implements TiledMapInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -24,14 +24,14 @@ export default class TiledMap implements TiledMapInterface {
   +tiledMapLayers: Array<TiledMapLayer>;
   +tiledMapPolygonObjects: Array<TiledMapPolygonObject>;
   +tiledMapRectangleObjects: Array<TiledMapRectangleObject>;
-  +tiledTileset: TiledTileset;
+  +tiledTilesetOffsetCollection: TiledTilesetOffsetCollection;
   +tileSize: ElementSize<"px">;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     mapSize: ElementSize<"tile">,
     tileSize: ElementSize<"px">,
-    tiledTileset: TiledTileset
+    tiledTilesetOffsetCollection: TiledTilesetOffsetCollection
   ) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapSize = mapSize;
@@ -39,7 +39,7 @@ export default class TiledMap implements TiledMapInterface {
     this.tiledMapEllipseObjects = [];
     this.tiledMapPolygonObjects = [];
     this.tiledMapRectangleObjects = [];
-    this.tiledTileset = tiledTileset;
+    this.tiledTilesetOffsetCollection = tiledTilesetOffsetCollection;
     this.tileSize = tileSize;
   }
 
@@ -59,22 +59,6 @@ export default class TiledMap implements TiledMapInterface {
     this.tiledMapRectangleObjects.push(tiledMapRectangleObject);
   }
 
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): TiledMapSerializedObject {
-    return {
-      ellipseObjects: this.getEllipseObjects().map(ellipseObject => ellipseObject.asObject()),
-      layers: this.getLayers().map(layer => layer.asObject()),
-      mapSize: this.getMapSize().asObject(),
-      polygonObjects: this.getPolygonObjects().map(polygonObject => polygonObject.asObject()),
-      rectangleObjects: this.getRectangleObjects().map(rectangleObject => rectangleObject.asObject()),
-      tiledTileset: this.getTiledTileset().asObject(),
-      tileSize: this.getTileSize().asObject(),
-    };
-  }
-
   async *generateSkinnedLayers(cancelToken: CancelToken): AsyncGenerator<TiledMapSkinnedLayerInterface, void, void> {
     for (let layer of this.getLayers()) {
       if (cancelToken.isCancelled()) {
@@ -84,7 +68,7 @@ export default class TiledMap implements TiledMapInterface {
         );
       }
 
-      yield new TiledMapSkinnedLayer(this.loggerBreadcrumbs, layer, this.tileSize, this.tiledTileset);
+      yield new TiledMapSkinnedLayer(this.loggerBreadcrumbs, layer, this.tileSize, this.tiledTilesetOffsetCollection);
     }
   }
 
@@ -125,8 +109,8 @@ export default class TiledMap implements TiledMapInterface {
     return this.tileSize;
   }
 
-  getTiledTileset(): TiledTileset {
-    return this.tiledTileset;
+  getTiledTilesetOffsetCollection(): TiledTilesetOffsetCollection {
+    return this.tiledTilesetOffsetCollection;
   }
 
   hasLayerWithProperty(tiledCustomProperty: TiledCustomProperty): boolean {
@@ -148,7 +132,7 @@ export default class TiledMap implements TiledMapInterface {
       return false;
     }
 
-    if (!this.getTiledTileset().isEqual(other.getTiledTileset())) {
+    if (!this.getTiledTilesetOffsetCollection().isEqual(other.getTiledTilesetOffsetCollection())) {
       return false;
     }
 

@@ -13,6 +13,8 @@ import TiledMapObjectElementChecker from "./TiledMapObjectElementChecker";
 import TiledMapPolygonObjectParser from "./TiledMapPolygonObjectParser";
 import TiledMapRectangleObject from "./TiledMapRectangleObject";
 import TiledRelativeFilename from "./TiledRelativeFilename";
+import TiledTilesetOffset from "./TiledTilesetOffset";
+import TiledTilesetOffsetCollection from "./TiledTilesetOffsetCollection";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -57,27 +59,41 @@ export default class TiledMapParser implements TiledMapParserInterface {
       throw xml.extractParseError(breadcrumbs, doc);
     }
 
-    // tileset
+    // tilesets
 
-    const tilesetElement = documentElement.getElementsByTagName("tileset").item(0);
+    const tilesetElements = documentElement.getElementsByTagName("tileset");
 
-    if (!tilesetElement) {
-      throw new TiledMapException(breadcrumbs, "Tileset data is missing in map document.");
+    if (tilesetElements.length < 1) {
+      throw new TiledMapException(breadcrumbs, "Tilesets data is missing in map document.");
     }
 
-    const tilesetFilename = xml.getStringAttribute(breadcrumbs, tilesetElement, "source");
-    const tiledTileset = await this.tiledTilesetLoader.load(
-      cancelToken,
-      tilesetElement,
-      // tileset URL is relative to map mapFilename
-      new TiledRelativeFilename(this.mapFilename, tilesetFilename).asString()
+    const tiledTilesetOffsetCollection = new TiledTilesetOffsetCollection(
+      breadcrumbs.add("TiledTilesetOffsetCollection")
     );
 
-    const layerElements = documentElement.getElementsByTagName("layer");
+    for (let i = 0; i < tilesetElements.length; i += 1) {
+      const tilesetElement = tilesetElements.item(i);
 
-    if (layerElements.length < 1) {
-      throw new TiledMapException(breadcrumbs, "No layers found in map document.");
+      if (!tilesetElement) {
+        continue;
+      }
+
+      const tilesetFilename = xml.getStringAttribute(breadcrumbs, tilesetElement, "source");
+      const tiledTileset = await this.tiledTilesetLoader.load(
+        cancelToken,
+        tilesetElement,
+        // tileset URL is relative to map mapFilename
+        new TiledRelativeFilename(this.mapFilename, tilesetFilename).asString()
+      );
+      const tiledTilesetOffset = new TiledTilesetOffset(
+        xml.getNumberAttribute(breadcrumbs, tilesetElement, "firstgid"),
+        tiledTileset
+      );
+
+      tiledTilesetOffsetCollection.addTiledTilesetOffset(tiledTilesetOffset);
     }
+
+    // map itself
 
     const mapSize = new ElementSize<"tile">(
       xml.getNumberAttribute(breadcrumbs, documentElement, "width"),
@@ -88,9 +104,15 @@ export default class TiledMapParser implements TiledMapParserInterface {
       xml.getNumberAttribute(breadcrumbs, documentElement, "tileheight")
     );
 
-    const tiledMap = new TiledMap(breadcrumbs.add("TiledMap"), mapSize, tileSize, tiledTileset);
+    const tiledMap = new TiledMap(breadcrumbs.add("TiledMap"), mapSize, tileSize, tiledTilesetOffsetCollection);
 
     // layers
+
+    const layerElements = documentElement.getElementsByTagName("layer");
+
+    if (layerElements.length < 1) {
+      throw new TiledMapException(breadcrumbs, "No layers found in map document.");
+    }
 
     for (let i = 0; i < layerElements.length; i += 1) {
       const layerElement = layerElements.item(i);

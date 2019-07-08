@@ -7,8 +7,12 @@ import TiledPath from "./TiledPath";
 import TiledPathfinder from "./TiledPathfinder";
 
 it("finds the shortest path from point to point on tiled map", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture("map-fixture-02-walkable.tmx");
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture(
+    loggerBreadcrumbs,
+    "map-fixture-02-walkable.tmx",
+    2
+  );
   const tiledMap = await tiledMapPromise;
   const tiledPathfinder = new TiledPathfinder(loggerBreadcrumbs, tiledMap);
   const pathStart = new ElementPosition(0, 0);

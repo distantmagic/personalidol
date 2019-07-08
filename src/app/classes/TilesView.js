@@ -10,6 +10,7 @@ import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandl
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 import type { TiledMap } from "../../framework/interfaces/TiledMap";
+import type { TiledWorkerLoadParams } from "../../framework/types/TiledWorkerLoadParams";
 import type { TilesView as TilesViewInterface } from "../interfaces/TilesView";
 
 export default class TilesView implements TilesViewInterface {

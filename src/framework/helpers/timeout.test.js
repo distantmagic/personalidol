@@ -9,7 +9,7 @@ it("supports cancel token", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
 
   setTimeout(function() {
-    cancelToken.cancel();
+    cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));
   }, 25);
 
   // return timeout tick with the time that actually elapsed
@@ -22,7 +22,7 @@ it("is immediately stopped with already paused cancel token", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
 
-  cancelToken.cancel();
+  cancelToken.cancel(loggerBreadcrumbs);
 
   const tick = await timeout(cancelToken, 10000);
 

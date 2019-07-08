@@ -12,7 +12,7 @@ it("ticks", async function() {
   const expectedTicks = 2;
 
   setTimeout(function() {
-    cancelToken.cancel();
+    cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));
   }, 50);
 
   for await (let tick of clock.interval(cancelToken)) {

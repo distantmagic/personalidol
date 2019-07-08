@@ -4,16 +4,16 @@ import Expression from "./Expression";
 import ExpressionContext from "./ExpressionContext";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-it("performs math calculations", function() {
+it("performs math calculations", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs);
   const expression = new Expression("{{ 2 + 2 }}", context);
   const result = expression.execute();
 
-  return expect(result).resolves.toBe("4");
+  await expect(result).resolves.toBe("4");
 });
 
-it("uses variables", function() {
+it("uses variables", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
     foo: 3,
@@ -21,10 +21,10 @@ it("uses variables", function() {
   const expression = new Expression("{{ 2 + foo }}", context);
   const result = expression.execute();
 
-  return expect(result).resolves.toBe("5");
+  await expect(result).resolves.toBe("5");
 });
 
-it("uses objects", function() {
+it("uses objects", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {
@@ -38,10 +38,10 @@ it("uses objects", function() {
   const expression = new Expression(`Greetings {{ character.player().name }}`, context);
   const result = expression.execute();
 
-  return expect(result).resolves.toBe("Greetings CHARNAME");
+  await expect(result).resolves.toBe("Greetings CHARNAME");
 });
 
-it("uses promises", function() {
+it("uses promises", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {
@@ -55,10 +55,10 @@ it("uses promises", function() {
   const expression = new Expression(`Greetings {{ character.player().name }}`, context);
   const result = expression.execute();
 
-  return expect(result).resolves.toBe("Greetings CHARNAME");
+  await expect(result).resolves.toBe("Greetings CHARNAME");
 });
 
-it("resolves conditions with promises", function() {
+it("resolves conditions with promises", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {
@@ -77,5 +77,5 @@ it("resolves conditions with promises", function() {
   const expression = new Expression(`{{ not character.player().knows() and character.player().aims() }}`, context);
   const result = expression.execute();
 
-  return expect(result).resolves.toBe("true");
+  await expect(result).resolves.toBe("true");
 });

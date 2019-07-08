@@ -4,7 +4,6 @@ import assert from "../helpers/assert";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledCustomProperties as TiledCustomPropertiesInterface } from "../interfaces/TiledCustomProperties";
-import type { TiledCustomPropertiesSerializedObject } from "../types/TiledCustomPropertiesSerializedObject";
 import type { TiledCustomProperty } from "../interfaces/TiledCustomProperty";
 
 export default class TiledCustomProperties implements TiledCustomPropertiesInterface {
@@ -18,22 +17,6 @@ export default class TiledCustomProperties implements TiledCustomPropertiesInter
 
   addProperty(tiledCustomProperty: TiledCustomProperty): void {
     this.tiledCustomProperties.set(tiledCustomProperty.getName(), tiledCustomProperty);
-  }
-
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): TiledCustomPropertiesSerializedObject {
-    const tiledCustomProperties = [];
-
-    for (let [, tiledCustomProperty] of this.tiledCustomProperties.entries()) {
-      tiledCustomProperties.push(tiledCustomProperty.asObject());
-    }
-
-    return {
-      tiledCustomProperties: tiledCustomProperties,
-    };
   }
 
   getPropertyByName(name: string): TiledCustomProperty {

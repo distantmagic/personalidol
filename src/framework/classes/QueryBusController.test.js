@@ -14,7 +14,7 @@ it("supports cancel token", async function() {
   const controller = new QueryBusController(clock, queryBus);
 
   setTimeout(function() {
-    cancelToken.cancel();
+    cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));
   });
 
   await controller.interval(cancelToken);

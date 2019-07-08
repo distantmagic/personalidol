@@ -4,7 +4,6 @@ import type { ElementSize } from "../interfaces/ElementSize";
 import type { TiledCustomProperties } from "../interfaces/TiledCustomProperties";
 import type { TiledMapGrid } from "../interfaces/TiledMapGrid";
 import type { TiledMapLayer as TiledMapLayerInterface } from "../interfaces/TiledMapLayer";
-import type { TiledMapLayerSerializedObject } from "../types/TiledMapLayerSerializedObject";
 
 export default class TiledMapLayer implements TiledMapLayerInterface {
   +layerSize: ElementSize<"tile">;
@@ -22,19 +21,6 @@ export default class TiledMapLayer implements TiledMapLayerInterface {
     this.name = name;
     this.tiledCustomProperties = tiledCustomProperties;
     this.tiledMapGrid = tiledMapGrid;
-  }
-
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): TiledMapLayerSerializedObject {
-    return {
-      layerSize: this.getLayerSize().asObject(),
-      name: this.getName(),
-      tiledCustomProperties: this.getTiledCustomProperties().asObject(),
-      tiledMapGrid: this.getTiledMapGrid().asObject(),
-    };
   }
 
   getLayerSize(): ElementSize<"tile"> {

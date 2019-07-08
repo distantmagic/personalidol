@@ -1,5 +1,6 @@
 // @flow
 
+import Cancelled from "./Exception/Cancelled";
 import TiledTilesetParser from "./TiledTilesetParser";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -25,6 +26,13 @@ export default class TiledTilesetLoader implements TiledTilesetLoaderInterface {
   }
 
   async load(cancelToken: CancelToken, tilesetElement: HTMLElement, tilesetPath: string): Promise<TiledTileset> {
+    if (cancelToken.isCancelled()) {
+      throw new Cancelled(
+        this.loggerBreadcrumbs.add("load"),
+        "Token was already cancelled before loading Tiled tileset."
+      );
+    }
+
     const tilesetQuery = await this.tiledTilesetLoaderQueryBuilder.build(tilesetPath);
     const tilesetContent = await this.queryBus.enqueue(cancelToken, tilesetQuery);
     const tiledTilesetParser = new TiledTilesetParser(

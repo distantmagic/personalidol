@@ -13,8 +13,6 @@ import Exception from "../../framework/classes/Exception";
 import PlayerModel from "./PlayerModel";
 import PlayerView from "./PlayerView";
 import THREEPointerInteraction from "../../framework/classes/THREEPointerInteraction";
-import TiledMapUnserializer from "../../framework/classes/TiledMapUnserializer";
-import TiledWorker from "../../framework/classes/TiledWorker.worker";
 import WorkerClientController from "../../framework/classes/WorkerClientController";
 // import { default as THREEHelpersView } from "../views/THREEHelpers";
 
@@ -31,8 +29,6 @@ import type { PointerState } from "../../framework/interfaces/PointerState";
 import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../framework/interfaces/THREEPointerInteraction";
-import type { TiledMapSerializedObject } from "../../framework/types/TiledMapSerializedObject";
-import type { TiledWorker as TiledWorkerInterface } from "../../framework/interfaces/TiledWorker";
 import type { TiledWorkerLoadParams } from "../../framework/types/TiledWorkerLoadParams";
 
 export default class CanvasLocationComplex implements CanvasController {
@@ -50,7 +46,6 @@ export default class CanvasLocationComplex implements CanvasController {
   +sound: Howl;
   +threeLoadingManager: THREELoadingManager;
   threePointerInteraction: ?THREEPointerInteractionInterface;
-  tiledWorker: ?Worker;
 
   constructor(
     exceptionHandler: ExceptionHandler,
@@ -100,10 +95,6 @@ export default class CanvasLocationComplex implements CanvasController {
       throw new Cancelled(breadcrumbs, "Cancel token was cancelled before attaching canvas location controller.");
     }
 
-    const tiledWorker = new TiledWorker();
-
-    this.tiledWorker = tiledWorker;
-
     // this.sound.pos(0, 0, 0);
     // this.sound.play();
 
@@ -124,19 +115,6 @@ export default class CanvasLocationComplex implements CanvasController {
         this.keyboardState
       )
     );
-
-    const workerController = new WorkerClientController<TiledWorkerInterface>(tiledWorker);
-    const workerResponse = await workerController.request<TiledWorkerLoadParams, TiledMapSerializedObject>(
-      cancelToken,
-      "loadMap",
-      {
-        filename: "/assets/map-outlands-01.tmx",
-      }
-    );
-    const tiledMapUnserializer = new TiledMapUnserializer(this.loggerBreadcrumbs);
-    const tiledMap = await tiledMapUnserializer.fromObject(workerResponse);
-
-    console.log(tiledMap);
 
     // this.canvasViewGroup.add(
     //   new GameboardView(
@@ -195,14 +173,6 @@ export default class CanvasLocationComplex implements CanvasController {
     threePointerInteraction.disconnect();
 
     this.scene.remove(this.light);
-
-    const tiledWorker = this.tiledWorker;
-
-    if (!tiledWorker) {
-      throw new Exception(this.loggerBreadcrumbs, "Tiled worker was expected to be instanciated.");
-    }
-
-    tiledWorker.terminate();
 
     return this.canvasViewGroup.detach(cancelToken, renderer);
   }

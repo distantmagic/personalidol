@@ -11,7 +11,7 @@ it("produces interval events generator", async function() {
   const expectedTicks = 2;
 
   setTimeout(function() {
-    cancelToken.cancel();
+    cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));
   }, 50);
 
   for await (let tick of interval(cancelToken, 20)) {
@@ -43,7 +43,7 @@ it("is immediately stopped with already paused cancel token", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const ticks = [];
 
-  cancelToken.cancel();
+  cancelToken.cancel(loggerBreadcrumbs);
 
   for await (let tick of interval(cancelToken, 20)) {
     ticks.push(Date.now());

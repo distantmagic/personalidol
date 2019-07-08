@@ -9,7 +9,7 @@ import WorkerMock from "../mocks/Worker";
 
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 
-it("hooks up into worker client", function() {
+it("hooks up into worker client", async function() {
   class Methods {
     async someMethod(cancelToken: CancelTokenInterface, params) {
       return {
@@ -32,12 +32,12 @@ it("hooks up into worker client", function() {
     foo: "bar",
   });
 
-  return expect(response).resolves.toEqual({
+  await expect(response).resolves.toEqual({
     baz: "bar.wooz",
   });
 }, 300);
 
-it("handles worker exceptions", function() {
+it("handles worker exceptions", async function() {
   class Methods {
     async someMethod(cancelToken: CancelTokenInterface) {
       throw new Error("foo");
@@ -56,13 +56,13 @@ it("handles worker exceptions", function() {
 
   const response = workerController.request(cancelToken, "someMethod", {});
 
-  return expect(response).rejects.toEqual({
+  await expect(response).rejects.toEqual({
     code: 0,
     message: "foo",
   });
 }, 300);
 
-it("allows to cancel requests", function() {
+it("allows to cancel requests", async function() {
   class Methods {
     async someMethod(cancelToken: CancelTokenInterface, params) {
       return new Promise(function(resolve) {
@@ -88,16 +88,16 @@ it("allows to cancel requests", function() {
   });
 
   setTimeout(function() {
-    cancelToken.cancel();
+    cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));
   }, 100);
 
-  return expect(response).rejects.toEqual({
+  await expect(response).rejects.toEqual({
     code: 1,
-    message: "Token is cancelled.",
+    message: "[root/onMessage] Token was cancelled at: root/onMessage/_:cancel",
   });
 }, 300);
 
-it("does not send request when cancel token is already cancelled", function() {
+it("does not send request when cancel token is already cancelled", async function() {
   class Methods {
     async someMethod(cancelToken: CancelTokenInterface, params) {
       return new Promise(function(resolve) {
@@ -116,19 +116,19 @@ it("does not send request when cancel token is already cancelled", function() {
   workerContextController.setMethods(new Methods());
   workerContextController.attach();
 
-  cancelToken.cancel();
+  cancelToken.cancel(loggerBreadcrumbs);
 
   const response = workerController.request(cancelToken, "someMethod", {
     foo: "bar",
   });
 
-  return expect(response).rejects.toEqual({
+  await expect(response).rejects.toEqual({
     code: 1,
     message: "Token has been cancelled before sending request.",
   });
 }, 300);
 
-it("binds request methods", function() {
+it("binds request methods", async function() {
   class Methods {
     +test: string;
 
@@ -157,7 +157,7 @@ it("binds request methods", function() {
     foo: "bar",
   });
 
-  return expect(response).resolves.toEqual({
+  await expect(response).resolves.toEqual({
     baz: "foobar",
   });
 }, 300);

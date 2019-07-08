@@ -58,7 +58,7 @@ export default function HudModalCharacterLoader(props: Props) {
         });
 
       return function() {
-        cancelToken.cancel();
+        cancelToken.cancel(props.loggerBreadcrumbs.add("React.useEffect").add("cleanup"));
       };
     },
     [props.exceptionHandler, props.loggerBreadcrumbs, props.match.params.characterId, props.queryBus]

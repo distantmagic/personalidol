@@ -2,7 +2,6 @@
 
 import type { TiledMapBlockObject } from "../interfaces/TiledMapBlockObject";
 import type { TiledMapEllipseObject as TiledMapEllipseObjectInterface } from "../interfaces/TiledMapEllipseObject";
-import type { TiledMapEllipseObjectSerializedObject } from "../types/TiledMapEllipseObjectSerializedObject";
 
 export default class TiledMapEllipseObject implements TiledMapEllipseObjectInterface {
   +isEllipse: true;
@@ -22,19 +21,6 @@ export default class TiledMapEllipseObject implements TiledMapEllipseObjectInter
     }
 
     this.tiledMapBlockObject = tiledMapBlockObject;
-  }
-
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): TiledMapEllipseObjectSerializedObject {
-    return {
-      isEllipse: true,
-      isPolygon: false,
-      isRectangle: false,
-      tiledMapBlockObject: this.tiledMapBlockObject.asObject(),
-    };
   }
 
   getTiledMapBlockObject(): TiledMapBlockObject {

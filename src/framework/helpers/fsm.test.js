@@ -26,7 +26,7 @@ const Phases = fsm<States, Transitions>({
   ],
 });
 
-it("keeps state", function() {
+it("keeps state", async function() {
   const logger = new SilentLogger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandler = new ExceptionHandler(logger);
@@ -43,7 +43,7 @@ it("keeps state", function() {
 
   phases.melt();
 
-  return expect(promise).resolves.toBe("liquid");
+  await expect(promise).resolves.toBe("liquid");
 });
 
 it("handles errors", function() {

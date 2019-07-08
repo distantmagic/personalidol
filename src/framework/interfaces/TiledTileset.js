@@ -2,11 +2,9 @@
 
 import type { ElementSize } from "./ElementSize";
 import type { Equatable } from "./Equatable";
-import type { JsonSerializable } from "./JsonSerializable";
 import type { TiledTile } from "./TiledTile";
-import type { TiledTilesetSerializedObject } from "../types/TiledTilesetSerializedObject";
 
-export interface TiledTileset extends Equatable<TiledTileset>, JsonSerializable<TiledTilesetSerializedObject> {
+export interface TiledTileset extends Equatable<TiledTileset> {
   add(TiledTile): void;
 
   getExpectedTileCount(): number;
@@ -16,4 +14,6 @@ export interface TiledTileset extends Equatable<TiledTileset>, JsonSerializable<
   getTileSize(): ElementSize<"px">;
 
   getTiles(): Set<TiledTile>;
+
+  hasTileWithId(number): boolean;
 }

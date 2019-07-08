@@ -6,7 +6,6 @@ import type { ElementSize } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledTile } from "../interfaces/TiledTile";
 import type { TiledTileset as TiledTilesetInterface } from "../interfaces/TiledTileset";
-import type { TiledTilesetSerializedObject } from "../types/TiledTilesetSerializedObject";
 
 export default class TiledTileset implements TiledTilesetInterface {
   +expectedTileCount: number;
@@ -23,24 +22,6 @@ export default class TiledTileset implements TiledTilesetInterface {
 
   add(tile: TiledTile): void {
     this.tiles.set(tile.getId(), tile);
-  }
-
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): TiledTilesetSerializedObject {
-    const serializedTiles = [];
-
-    for (let tile of this.getTiles().values()) {
-      serializedTiles.push(tile.asObject());
-    }
-
-    return {
-      expectedTileCount: this.getExpectedTileCount(),
-      tiles: serializedTiles,
-      tileSize: this.getTileSize().asObject(),
-    };
   }
 
   getExpectedTileCount(): number {
@@ -63,6 +44,10 @@ export default class TiledTileset implements TiledTilesetInterface {
 
   getTiles(): Set<TiledTile> {
     return new Set(this.tiles.values());
+  }
+
+  hasTileWithId(id: number): boolean {
+    return this.tiles.has(id);
   }
 
   isEqual(other: TiledTilesetInterface): boolean {

@@ -3,32 +3,43 @@
 import Cancelled from "./Exception/Cancelled";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import tiledMapParserFixture from "./TiledMapParser.fixture";
-import TiledMapUnserializer from "./TiledMapUnserializer";
 
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 
 it("parses map file", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture("map-fixture-01.tmx");
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture(
+    loggerBreadcrumbs,
+    "map-fixture-01.tmx",
+    1
+  );
 
-  return expect(tiledMapPromise).resolves.toBeDefined();
+  await expect(tiledMapPromise).resolves.toBeDefined();
 });
 
-it("can be cancelled gracefully", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture("map-fixture-01.tmx");
-
-  cancelToken.cancel();
-
-  return expect(tiledMapPromise).rejects.toThrow(Cancelled);
-});
-
-it("generates skinned layers and tiles", async function() {
+const test2Description = "can be cancelled gracefully";
+it(test2Description, async function() {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs().add(test2Description);
   const [cancelToken, queryBus, tiledMapPromise]: [
     CancelTokenInterface,
     QueryBusInterface,
     Promise<TiledMapInterface>
-  ] = await tiledMapParserFixture("map-fixture-01.tmx");
+  ] = await tiledMapParserFixture(loggerBreadcrumbs, "map-fixture-01.tmx", 1);
+
+  cancelToken.cancel(loggerBreadcrumbs);
+
+  await expect(tiledMapPromise).rejects.toThrow(Cancelled);
+});
+
+it("generates skinned layers and tiles", async function() {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const [cancelToken, queryBus, tiledMapPromise]: [
+    CancelTokenInterface,
+    QueryBusInterface,
+    Promise<TiledMapInterface>
+  ] = await tiledMapParserFixture(loggerBreadcrumbs, "map-fixture-01.tmx", 1);
   const tiledMap = await tiledMapPromise;
   const skinnedTiles = [];
 
@@ -122,21 +133,4 @@ it("generates skinned layers and tiles", async function() {
   expect(tiledMapRectangleBlockObject2.getElementSize().getHeight()).toBe(2);
   expect(tiledMapRectangleBlockObject2.getElementSize().getWidth()).toBe(9);
   expect(tiledMapRectanglePosition2.getName()).toBe("Rectangle with source");
-});
-
-it("is serializable", async function() {
-  const [cancelToken, queryBus, tiledMapPromise] = await tiledMapParserFixture("map-fixture-01.tmx");
-  const tiledMap = await tiledMapPromise;
-
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const serialized = tiledMap.asJson();
-
-  expect(function() {
-    JSON.parse(serialized);
-  }).not.toThrow();
-
-  const tiledMapUnserializer = new TiledMapUnserializer(loggerBreadcrumbs);
-  const unserialized = tiledMapUnserializer.fromJson(serialized);
-
-  expect(tiledMap.isEqual(unserialized)).toBe(true);
 });

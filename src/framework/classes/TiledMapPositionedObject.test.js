@@ -3,7 +3,6 @@
 import ElementPosition from "./ElementPosition";
 import ElementRotation from "./ElementRotation";
 import TiledMapPositionedObject from "./TiledMapPositionedObject";
-import TiledMapPositionedObjectUnserializer from "./TiledMapPositionedObjectUnserializer";
 
 it("is equatable", function() {
   const tiledMapPositionedObjectPosition1 = new ElementPosition<"tile">(10, 10);
@@ -23,20 +22,4 @@ it("is equatable", function() {
   );
 
   expect(tiledMapPositionedObject1.isEqual(tiledMapPositionedObject2)).toBe(false);
-});
-
-it("is JSON serializable", function() {
-  const tiledMapPositionedObjectPosition = new ElementPosition<"tile">(10, 10);
-  const tiledMapPositionedObjectRotation = new ElementRotation<"radians">(10, 10, 10);
-  const tiledMapPositionedObject = new TiledMapPositionedObject(
-    "foo.png",
-    tiledMapPositionedObjectPosition,
-    tiledMapPositionedObjectRotation
-  );
-
-  const serialized = tiledMapPositionedObject.asJson();
-  const unserializer = new TiledMapPositionedObjectUnserializer();
-  const unserialized = unserializer.fromJson(serialized);
-
-  expect(tiledMapPositionedObject.isEqual(unserialized)).toBe(true);
 });

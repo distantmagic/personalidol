@@ -9,24 +9,24 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
 import type { TiledSkinnedTile as TiledSkinnedTileInterface } from "../interfaces/TiledSkinnedTile";
-import type { TiledTileset } from "../interfaces/TiledTileset";
+import type { TiledTilesetOffsetCollection } from "../interfaces/TiledTilesetOffsetCollection";
 
 export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapTileSize: ElementSize<"px">;
   +tiledMapLayer: TiledMapLayer;
-  +tiledTileset: TiledTileset;
+  +tiledTilesetOffsetCollection: TiledTilesetOffsetCollection;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     tiledMapLayer: TiledMapLayer,
     mapTileSize: ElementSize<"px">,
-    tiledTileset: TiledTileset
+    tiledTilesetOffsetCollection: TiledTilesetOffsetCollection
   ): void {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapTileSize = mapTileSize;
     this.tiledMapLayer = tiledMapLayer;
-    this.tiledTileset = tiledTileset;
+    this.tiledTilesetOffsetCollection = tiledTilesetOffsetCollection;
   }
 
   async *generateSkinnedTiles(cancelToken: CancelToken): AsyncGenerator<TiledSkinnedTileInterface, void, void> {
@@ -42,12 +42,16 @@ export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterfa
 
       const tileTypeId = positionedTile.getId();
 
-      if (tileTypeId < 0) {
+      if (tileTypeId <= 0) {
         // this one means blank
         continue;
       }
 
-      yield new TiledSkinnedTile(tileTypeId, positionedTile, this.tiledTileset.getTileById(tileTypeId));
+      yield new TiledSkinnedTile(
+        tileTypeId,
+        positionedTile,
+        this.tiledTilesetOffsetCollection.getTiledTileByOffsettedId(tileTypeId)
+      );
     }
   }
 }

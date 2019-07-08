@@ -4,7 +4,6 @@ import TiledCustomPropertiesException from "./Exception/Tiled/CustomProperties";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledCustomProperty as TiledCustomPropertyInterface } from "../interfaces/TiledCustomProperty";
-import type { TiledCustomPropertySerializedObject } from "../types/TiledCustomPropertySerializedObject";
 import type { TiledCustomPropertyType } from "../types/TiledCustomPropertyType";
 
 export default class TiledCustomProperty implements TiledCustomPropertyInterface {
@@ -18,18 +17,6 @@ export default class TiledCustomProperty implements TiledCustomPropertyInterface
     this.name = name;
     this.type = type;
     this.value = value;
-  }
-
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): TiledCustomPropertySerializedObject {
-    return {
-      name: this.getName(),
-      type: this.getType(),
-      value: this.getValue(),
-    };
   }
 
   getName(): string {

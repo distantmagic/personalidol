@@ -2,7 +2,6 @@
 
 import ElementSize from "./ElementSize";
 import TiledMapGrid from "./TiledMapGrid";
-import TiledMapGridUnserializer from "./TiledMapGridUnserializer";
 
 it("generates positioned tiles", async function() {
   const tiledMapGrid = new TiledMapGrid([[1, 2], [3, 4]], new ElementSize<"tile">(2, 2));
@@ -43,13 +42,4 @@ it("is equatable", function() {
   const tiledMapGrid2 = new TiledMapGrid([[1, 2], [3, 3]], new ElementSize<"tile">(2, 2));
 
   expect(tiledMapGrid1.isEqual(tiledMapGrid2)).toBe(false);
-});
-
-it("is serializable as JSON", function() {
-  const tiledMapGrid = new TiledMapGrid([[1, 2], [3, 4]], new ElementSize<"tile">(2, 2));
-  const serialized = tiledMapGrid.asJson();
-  const unserializer = new TiledMapGridUnserializer();
-  const unserialized = unserializer.fromJson(serialized);
-
-  expect(tiledMapGrid.isEqual(unserialized)).toBe(true);
 });

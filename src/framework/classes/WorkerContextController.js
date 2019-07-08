@@ -75,6 +75,7 @@ export default class WorkerContextController<T: WorkerContextMethods> implements
   }
 
   async onMessage(evt: MessageEvent): Promise<void> {
+    const breadcrumbs = this.loggerBreadcrumbs.add("onMessage");
     const data: any = evt.data;
 
     if (!isJsonRpcRequest(data)) {
@@ -92,22 +93,22 @@ export default class WorkerContextController<T: WorkerContextMethods> implements
       if (cancelToken) {
         this.cancelTokens.delete(cancelledRequestId);
 
-        return void cancelToken.cancel();
+        return void cancelToken.cancel(breadcrumbs.add("_:cancel"));
       } else {
         // either cancel token was cancelled so fast that request was not fired
         // yet, or non-existent token was used, to be safe we are setting
         // already cancelled token, so incoming request will be cancelled
         // immediately
         // token will be cancelled after method is actually called
-        const cancelledCancelToken = new CancelToken(this.loggerBreadcrumbs);
+        const cancelledCancelToken = new CancelToken(breadcrumbs);
 
         this.cancelTokens.set(cancelledRequestId, cancelledCancelToken);
 
-        return void cancelledCancelToken.cancel();
+        return void cancelledCancelToken.cancel(breadcrumbs.add("race"));
       }
     }
 
-    const cancelToken = new CancelToken(this.loggerBreadcrumbs);
+    const cancelToken = new CancelToken(breadcrumbs);
 
     this.cancelTokens.set(rpcRequest.id, cancelToken);
 

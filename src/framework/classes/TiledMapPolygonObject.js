@@ -2,7 +2,6 @@
 
 import type { ElementPosition } from "../interfaces/ElementPosition";
 import type { TiledMapPolygonObject as TiledMapPolygonObjectInterface } from "../interfaces/TiledMapPolygonObject";
-import type { TiledMapPolygonObjectSerializedObject } from "../types/TiledMapPolygonObjectSerializedObject";
 import type { TiledMapPositionedObject } from "../interfaces/TiledMapPositionedObject";
 
 export default class TiledMapPolygonObject implements TiledMapPolygonObjectInterface {
@@ -25,18 +24,6 @@ export default class TiledMapPolygonObject implements TiledMapPolygonObjectInter
     this.depth = depth;
     this.polygonPoints = polygonPoints;
     this.tiledMapPositionedObject = tiledMapPositionedObject;
-  }
-
-  asJson(): string {
-    return JSON.stringify(this.asObject());
-  }
-
-  asObject(): TiledMapPolygonObjectSerializedObject {
-    return {
-      depth: this.depth,
-      polygonPoints: this.polygonPoints.map(polygonPoint => polygonPoint.asObject()),
-      tiledMapPositionedObject: this.getTiledMapPositionedObject().asObject(),
-    };
   }
 
   getDepth(): number {
