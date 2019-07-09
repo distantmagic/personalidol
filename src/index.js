@@ -57,7 +57,7 @@ function init(rootElement: HTMLElement) {
   const exceptionHandler = new ExceptionHandler(logger);
   const game = new Game(loggerBreadcrumbs.add("Game"), debug, exceptionHandler);
 
-  game.setExpectedFPS(40);
+  game.setExpectedFPS(70);
 
   function onDocumentReadyStateChange() {
     if ("complete" !== document.readyState) {

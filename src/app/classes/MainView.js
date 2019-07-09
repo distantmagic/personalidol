@@ -6,7 +6,7 @@ import autoBind from "auto-bind";
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
 import TilesView from "./TilesView";
 
-import type { OrthographicCamera, Scene } from "three";
+import type { Light, OrthographicCamera, Scene } from "three";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { CanvasController } from "../../framework/interfaces/CanvasController";
@@ -25,6 +25,7 @@ export default class MainView implements CanvasController {
   +camera: OrthographicCamera;
   +canvasViewGroup: CanvasViewGroupInterface;
   +debug: Debugger;
+  +light: Light;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +scene: Scene;
   +tilesView: TilesViewInterface;
@@ -43,6 +44,7 @@ export default class MainView implements CanvasController {
     this.camera = new THREE.OrthographicCamera();
     this.canvasViewGroup = new CanvasViewGroup(loggerBreadcrumbs.add("CanvasViewGroup"));
     this.debug = debug;
+    this.light = new THREE.SpotLight(0xffffff);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.scene = new THREE.Scene();
     this.tilesView = new TilesView(
@@ -57,9 +59,13 @@ export default class MainView implements CanvasController {
 
     this.camera.position.set(32, 32, 32);
     this.camera.lookAt(this.scene.position);
+
+    this.light.position.set(512, 512, 512);
   }
 
   async attach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
+    this.scene.add(this.light);
+
     await this.canvasViewGroup.attach(cancelToken, renderer);
     await this.tilesView.loadMap(cancelToken, {
       filename: "/assets/map-outlands-01.tmx",
@@ -72,6 +78,8 @@ export default class MainView implements CanvasController {
 
   async detach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
     await this.canvasViewGroup.detach(cancelToken, renderer);
+
+    this.scene.remove(this.light);
   }
 
   draw(renderer: THREE.WebGLRenderer, interpolationPercentage: number): void {
