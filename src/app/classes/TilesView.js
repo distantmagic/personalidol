@@ -3,9 +3,13 @@
 import * as THREE from "three";
 
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
+import THREETilesetMaterials from "../../framework/classes/THREETilesetMaterials";
+import THREETilesetMeshes from "../../framework/classes/THREETilesetMeshes";
 import TiledMapLoader from "../../framework/classes/TiledMapLoader";
 import TiledTilesetLoader from "../../framework/classes/TiledTilesetLoader";
 import URLTextContentQueryBuilder from "../../framework/classes/URLTextContentQueryBuilder";
+
+import type { Scene } from "three";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { CanvasViewGroup as CanvasViewGroupInterface } from "../../framework/interfaces/CanvasViewGroup";
@@ -22,17 +26,20 @@ export default class TilesView implements TilesViewInterface {
   +canvasViewGroup: CanvasViewGroupInterface;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
+  +scene: Scene;
   +threeLoadingManager: THREELoadingManager;
   +tiledMapLoader: TiledMapLoaderInterface;
 
   constructor(
     exceptionHandler: ExceptionHandler,
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    threeLoadingManager: THREELoadingManager,
-    queryBus: QueryBus
+    queryBus: QueryBus,
+    scene: Scene,
+    threeLoadingManager: THREELoadingManager
   ) {
     this.canvasViewGroup = new CanvasViewGroup(loggerBreadcrumbs.add("CanvasViewGroup"));
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
 
     const tiledQueryBuilder = new URLTextContentQueryBuilder();
@@ -59,20 +66,16 @@ export default class TilesView implements TilesViewInterface {
 
   async loadMap(cancelToken: CancelToken, params: TiledWorkerLoadParams): Promise<void> {
     const tiledMap = await this.tiledMapLoader.load(cancelToken, params.filename);
-    const tileSize = tiledMap.getTileSize();
-    const tileHeight = tileSize.getHeight();
-    const tileWidth = tileSize.getWidth();
-
-    console.log(tiledMap.getTiledTilesets());
+    const tilesetMaterials = new THREETilesetMaterials(
+      this.loggerBreadcrumbs.add("THREETilesetMaterials"),
+      this.threeLoadingManager
+    );
+    const tilesetMeshes = new THREETilesetMeshes(this.loggerBreadcrumbs.add("THREETilesetMeshes"), tilesetMaterials);
 
     for await (let tiledMapSkinnedLayer of tiledMap.generateSkinnedLayers(cancelToken)) {
       for await (let tiledSkinnedTile of tiledMapSkinnedLayer.generateSkinnedTiles(cancelToken)) {
-        const tilePosition = tiledSkinnedTile.getElementPosition();
-        const tilePositionX = tilePosition.getX();
-        const tilePositionY = tilePosition.getY();
-
-        console.log(tiledSkinnedTile);
-        break;
+        this.scene.add(tilesetMeshes.getTiledSkinnedTileMesh(tiledSkinnedTile));
+        // break;
       }
     }
   }
