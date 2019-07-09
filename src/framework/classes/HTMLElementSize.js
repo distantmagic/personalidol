@@ -16,6 +16,10 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
     this.htmlElementWidth = htmlElement.offsetWidth;
   }
 
+  getBaseArea(): number {
+    return this.getHeight() * this.getWidth();
+  }
+
   getAspect(): number {
     return this.getWidth() / this.getHeight();
   }

@@ -15,6 +15,7 @@ import type { TiledMapPolygonObject } from "../interfaces/TiledMapPolygonObject"
 import type { TiledMapRectangleObject } from "../interfaces/TiledMapRectangleObject";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
 import type { TiledTileset } from "../interfaces/TiledTileset";
+import type { TiledTilesetOffset } from "../interfaces/TiledTilesetOffset";
 import type { TiledTilesetOffsetCollection } from "../interfaces/TiledTilesetOffsetCollection";
 
 export default class TiledMap implements TiledMapInterface {
@@ -68,7 +69,12 @@ export default class TiledMap implements TiledMapInterface {
         );
       }
 
-      yield new TiledMapSkinnedLayer(this.loggerBreadcrumbs, layer, this.tileSize, this.tiledTilesetOffsetCollection);
+      yield new TiledMapSkinnedLayer(
+        this.loggerBreadcrumbs,
+        layer,
+        this.tileSize,
+        this.getTiledTilesetOffsetCollection()
+      );
     }
   }
 
@@ -111,6 +117,14 @@ export default class TiledMap implements TiledMapInterface {
 
   getTiledTilesetOffsetCollection(): TiledTilesetOffsetCollection {
     return this.tiledTilesetOffsetCollection;
+  }
+
+  getTiledTilesets(): $ReadOnlyArray<TiledTileset> {
+    const tilesetOffsets = this.getTiledTilesetOffsetCollection().getTiledTilesetOffsets();
+
+    return Array.from(tilesetOffsets.values()).map(function(tiledOffset: TiledTilesetOffset): TiledTileset {
+      return tiledOffset.getTiledTileset();
+    });
   }
 
   hasLayerWithProperty(tiledCustomProperty: TiledCustomProperty): boolean {

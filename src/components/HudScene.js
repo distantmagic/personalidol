@@ -6,7 +6,7 @@ import classnames from "classnames";
 import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObserver";
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
 import HudSceneOverlay from "./HudSceneOverlay";
-import MainController from "../app/classes/MainController";
+import MainView from "../app/classes/MainView";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
@@ -45,9 +45,9 @@ export default function HudScene(props: Props) {
 
       game.onSceneManagerChange(setSceneManager);
       game.setPrimaryController(
-        new MainController(
+        new MainView(
           game.getExceptionHandler(),
-          props.loggerBreadcrumbs.add("MainController"),
+          props.loggerBreadcrumbs.add("MainView"),
           threeLoadingManager,
           game.getKeyboardState(),
           game.getPointerState(),

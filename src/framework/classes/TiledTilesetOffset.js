@@ -1,7 +1,5 @@
 // @flow
 
-import { default as TiledTilesetException } from "./Exception/Tiled/Tileset";
-
 import type { TiledTile } from "../interfaces/TiledTile";
 import type { TiledTileset } from "../interfaces/TiledTileset";
 import type { TiledTilesetOffset as TiledTilesetOffsetInterface } from "../interfaces/TiledTilesetOffset";

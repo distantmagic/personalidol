@@ -50,7 +50,8 @@ export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterfa
       yield new TiledSkinnedTile(
         tileTypeId,
         positionedTile,
-        this.tiledTilesetOffsetCollection.getTiledTileByOffsettedId(tileTypeId)
+        this.tiledTilesetOffsetCollection.getTiledTileByOffsettedId(tileTypeId),
+        this.tiledTilesetOffsetCollection.getTiledTilesetByOffsettedId(tileTypeId)
       );
     }
   }

@@ -3,37 +3,46 @@
 import * as THREE from "three";
 
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
+import TiledMapLoader from "../../framework/classes/TiledMapLoader";
+import TiledTilesetLoader from "../../framework/classes/TiledTilesetLoader";
+import URLTextContentQueryBuilder from "../../framework/classes/URLTextContentQueryBuilder";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { CanvasViewGroup as CanvasViewGroupInterface } from "../../framework/interfaces/CanvasViewGroup";
 import type { ExceptionHandler } from "../../framework/interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
+import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
-import type { TiledMap } from "../../framework/interfaces/TiledMap";
+// import type { TiledMap } from "../../framework/interfaces/TiledMap";
+import type { TiledMapLoader as TiledMapLoaderInterface } from "../../framework/interfaces/TiledMapLoader";
 import type { TiledWorkerLoadParams } from "../../framework/types/TiledWorkerLoadParams";
 import type { TilesView as TilesViewInterface } from "../interfaces/TilesView";
 
 export default class TilesView implements TilesViewInterface {
   +canvasViewGroup: CanvasViewGroupInterface;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +queryBus: QueryBus;
   +threeLoadingManager: THREELoadingManager;
+  +tiledMapLoader: TiledMapLoaderInterface;
 
   constructor(
     exceptionHandler: ExceptionHandler,
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    threeLoadingManager: THREELoadingManager
+    threeLoadingManager: THREELoadingManager,
+    queryBus: QueryBus
   ) {
     this.canvasViewGroup = new CanvasViewGroup(loggerBreadcrumbs.add("CanvasViewGroup"));
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.threeLoadingManager = threeLoadingManager;
-  }
 
-  async applyMap(cancelToken: CancelToken, tiledMap: TiledMap): Promise<void> {
-    for await (let tiledMapSkinnedLayer of tiledMap.generateSkinnedLayers(cancelToken)) {
-      for await (let tiledSkinnedTile of tiledMapSkinnedLayer.generateSkinnedTiles(cancelToken)) {
-        // console.log(tiledSkinnedTile);
-      }
-    }
+    const tiledQueryBuilder = new URLTextContentQueryBuilder();
+
+    this.tiledMapLoader = new TiledMapLoader(
+      loggerBreadcrumbs,
+      queryBus,
+      tiledQueryBuilder,
+      new TiledTilesetLoader(loggerBreadcrumbs, queryBus, tiledQueryBuilder)
+    );
   }
 
   async attach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
@@ -49,13 +58,23 @@ export default class TilesView implements TilesViewInterface {
   }
 
   async loadMap(cancelToken: CancelToken, params: TiledWorkerLoadParams): Promise<void> {
-    // const tiledMapSerializedObject = await tiledWorkerController.request<
-    //   TiledWorkerLoadParams,
-    //   TiledMapSerializedObject
-    // >(cancelToken, "loadMap", params);
-    // const tiledMapUnserializer = new TiledMapUnserializer(this.loggerBreadcrumbs);
-    // const tiledMap = await tiledMapUnserializer.fromObject(tiledMapSerializedObject);
-    // await this.applyMap(cancelToken, tiledMap);
+    const tiledMap = await this.tiledMapLoader.load(cancelToken, params.filename);
+    const tileSize = tiledMap.getTileSize();
+    const tileHeight = tileSize.getHeight();
+    const tileWidth = tileSize.getWidth();
+
+    console.log(tiledMap.getTiledTilesets());
+
+    for await (let tiledMapSkinnedLayer of tiledMap.generateSkinnedLayers(cancelToken)) {
+      for await (let tiledSkinnedTile of tiledMapSkinnedLayer.generateSkinnedTiles(cancelToken)) {
+        const tilePosition = tiledSkinnedTile.getElementPosition();
+        const tilePositionX = tilePosition.getX();
+        const tilePositionY = tilePosition.getY();
+
+        console.log(tiledSkinnedTile);
+        break;
+      }
+    }
   }
 
   async start(): Promise<void> {

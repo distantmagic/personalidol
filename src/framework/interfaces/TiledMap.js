@@ -9,6 +9,7 @@ import type { TiledMapLayer } from "./TiledMapLayer";
 import type { TiledMapPolygonObject } from "./TiledMapPolygonObject";
 import type { TiledMapRectangleObject } from "./TiledMapRectangleObject";
 import type { TiledMapSkinnedLayer } from "./TiledMapSkinnedLayer";
+import type { TiledTileset } from "./TiledTileset";
 import type { TiledTilesetOffsetCollection } from "./TiledTilesetOffsetCollection";
 
 export interface TiledMap extends Equatable<TiledMap> {
@@ -37,6 +38,8 @@ export interface TiledMap extends Equatable<TiledMap> {
   getTileSize(): ElementSize<"px">;
 
   getTiledTilesetOffsetCollection(): TiledTilesetOffsetCollection;
+
+  getTiledTilesets(): $ReadOnlyArray<TiledTileset>;
 
   hasLayerWithProperty(TiledCustomProperty): boolean;
 }

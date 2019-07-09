@@ -19,7 +19,7 @@ import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 import type { TilesView as TilesViewInterface } from "../interfaces/TilesView";
 
-export default class MainController implements CanvasController {
+export default class MainView implements CanvasController {
   +canvasViewGroup: CanvasViewGroupInterface;
   +debug: Debugger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -39,7 +39,7 @@ export default class MainController implements CanvasController {
     this.canvasViewGroup = new CanvasViewGroup(loggerBreadcrumbs.add("CanvasViewGroup"));
     this.debug = debug;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.tilesView = new TilesView(exceptionHandler, loggerBreadcrumbs.add("TilesView"), threeLoadingManager);
+    this.tilesView = new TilesView(exceptionHandler, loggerBreadcrumbs.add("TilesView"), threeLoadingManager, queryBus);
 
     this.canvasViewGroup.add(this.tilesView);
   }

@@ -4,6 +4,7 @@ import { default as TiledTilesetException } from "./Exception/Tiled/Tileset";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledTile } from "../interfaces/TiledTile";
+import type { TiledTileset } from "../interfaces/TiledTileset";
 import type { TiledTilesetOffset } from "../interfaces/TiledTilesetOffset";
 import type { TiledTilesetOffsetCollection as TiledTilesetOffsetCollectionInterface } from "../interfaces/TiledTilesetOffsetCollection";
 
@@ -21,15 +22,25 @@ export default class TiledTilesetOffsetCollection implements TiledTilesetOffsetC
   }
 
   getTiledTileByOffsettedId(tiledTileOffsettedId: number): TiledTile {
+    return this.getTiledTilesetOffsetByOffsettedId(tiledTileOffsettedId).getTiledTileByOffsettedId(
+      tiledTileOffsettedId
+    );
+  }
+
+  getTiledTilesetByOffsettedId(tiledTileOffsettedId: number): TiledTileset {
+    return this.getTiledTilesetOffsetByOffsettedId(tiledTileOffsettedId).getTiledTileset();
+  }
+
+  getTiledTilesetOffsetByOffsettedId(tiledTileOffsettedId: number): TiledTilesetOffset {
     for (let tiledTilesetOffset of this.tiledTilesetOffsets) {
       if (tiledTilesetOffset.hasTiledTileOffsetedId(tiledTileOffsettedId)) {
-        return tiledTilesetOffset.getTiledTileByOffsettedId(tiledTileOffsettedId);
+        return tiledTilesetOffset;
       }
     }
 
     throw new TiledTilesetException(
       this.loggerBreadcrumbs.add("getTiledTileByOffsettedId"),
-      `Tile with offset does not exist: "${tiledTileOffsettedId}"`
+      `Tileset with offset does not exist: "${tiledTileOffsettedId}"`
     );
   }
 

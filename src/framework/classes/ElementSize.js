@@ -14,6 +14,10 @@ export default class ElementSize<Unit: ElementPositionUnit> implements ElementSi
     this.width = width;
   }
 
+  getBaseArea(): number {
+    return this.getHeight() * this.getWidth();
+  }
+
   getAspect(): number {
     return this.getWidth() / this.getHeight();
   }
