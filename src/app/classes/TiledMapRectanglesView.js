@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import THREEMeshLoader from "../../framework/classes/THREEMeshLoader";
 
-import type { Scene } from "three";
+import type { Material, Mesh, Scene } from "three";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { CanvasView } from "../../framework/interfaces/CanvasView";
@@ -94,16 +94,12 @@ export default class TiledMapRectanglesView implements CanvasView {
 
     if (tiledMapBlockObject.hasSource()) {
       const mesh = await this.threeMeshLoader.load(cancelToken, tiledMapBlockObject.getSource());
-      const tiledMapObjectPosition = tiledMapBlockObject.getTiledMapPositionedObject().getElementPosition();
 
-      mesh.scale.set(0.01, 0.01, 0.01);
-      mesh.position.set(
-        tiledMapObjectPosition.getX() + tiledMapObjectSize.getWidth() / 2,
-        tiledMapObjectPosition.getZ(),
-        tiledMapObjectPosition.getY() + tiledMapObjectSize.getHeight() / 2
-      );
-
-      this.scene.add(mesh);
+      if (mesh.parent === this.scene) {
+        this.attachTiledMapMesh(cancelToken, tiledMapObject, mesh.clone());
+      } else {
+        this.attachTiledMapMesh(cancelToken, tiledMapObject, mesh);
+      }
     } else {
       const tiledMapObjectGeometry = new THREE.BoxGeometry(
         tiledMapObjectSize.getWidth(),
@@ -113,6 +109,25 @@ export default class TiledMapRectanglesView implements CanvasView {
 
       this.addTiledMapBlockGeometry(tiledMapObject, tiledMapObjectGeometry, tiledMapObjectMaterial);
     }
+  }
+
+  async attachTiledMapMesh(
+    cancelToken: CancelToken,
+    tiledMapObject: TiledMapRectangleObject,
+    mesh: Mesh
+  ): Promise<void> {
+    const tiledMapBlockObject = tiledMapObject.getTiledMapBlockObject();
+    const tiledMapObjectSize = tiledMapBlockObject.getElementSize();
+    const tiledMapObjectPosition = tiledMapBlockObject.getTiledMapPositionedObject().getElementPosition();
+
+    mesh.scale.set(0.01, 0.01, 0.01);
+    mesh.position.set(
+      tiledMapObjectPosition.getX() + tiledMapObjectSize.getWidth() / 2,
+      tiledMapObjectPosition.getZ(),
+      tiledMapObjectPosition.getY() + tiledMapObjectSize.getHeight() / 2
+    );
+
+    this.scene.add(mesh);
   }
 
   begin(): void {}

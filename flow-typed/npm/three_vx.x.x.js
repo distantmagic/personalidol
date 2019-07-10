@@ -233,6 +233,8 @@ declare module "three" {
 
   declare export interface Mesh extends Object3D {
     constructor(BufferGeometry | Geometry, Material): void;
+
+    clone(): Mesh;
   }
 
   declare export interface MeshBasicMaterial extends Material {
@@ -256,6 +258,7 @@ declare module "three" {
     +children: Array<Object3D>;
     +geometry: Geometry;
     +material: Material;
+    +parent: Object3D;
     +position: Vector3;
     +rotation: Euler;
     +scale: Vector3;
