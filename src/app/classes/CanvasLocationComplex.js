@@ -29,7 +29,6 @@ import type { PointerState } from "../../framework/interfaces/PointerState";
 import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../framework/interfaces/THREEPointerInteraction";
-import type { TiledWorkerLoadParams } from "../../framework/types/TiledWorkerLoadParams";
 
 export default class CanvasLocationComplex implements CanvasController {
   +camera: THREE.OrthographicCamera;

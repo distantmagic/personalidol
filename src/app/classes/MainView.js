@@ -10,6 +10,7 @@ import type { Light, OrthographicCamera, Scene } from "three";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { CanvasController } from "../../framework/interfaces/CanvasController";
+import type { CanvasView } from "../../framework/interfaces/CanvasView";
 import type { CanvasViewGroup as CanvasViewGroupInterface } from "../../framework/interfaces/CanvasViewGroup";
 import type { Debugger } from "../../framework/interfaces/Debugger";
 import type { ElementSize } from "../../framework/interfaces/ElementSize";
@@ -19,7 +20,6 @@ import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcr
 import type { PointerState } from "../../framework/interfaces/PointerState";
 import type { QueryBus } from "../../framework/interfaces/QueryBus";
 import type { THREELoadingManager } from "../../framework/interfaces/THREELoadingManager";
-import type { TilesView as TilesViewInterface } from "../interfaces/TilesView";
 
 export default class MainView implements CanvasController {
   +camera: OrthographicCamera;
@@ -28,7 +28,7 @@ export default class MainView implements CanvasController {
   +light: Light;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +scene: Scene;
-  +tilesView: TilesViewInterface;
+  +tilesView: CanvasView;
 
   constructor(
     exceptionHandler: ExceptionHandler,
@@ -52,7 +52,8 @@ export default class MainView implements CanvasController {
       loggerBreadcrumbs.add("TilesView"),
       queryBus,
       this.scene,
-      threeLoadingManager
+      threeLoadingManager,
+      "/assets/map-outlands-01.tmx"
     );
 
     this.canvasViewGroup.add(this.tilesView);
@@ -67,9 +68,6 @@ export default class MainView implements CanvasController {
     this.scene.add(this.light);
 
     await this.canvasViewGroup.attach(cancelToken, renderer);
-    await this.tilesView.loadMap(cancelToken, {
-      filename: "/assets/map-outlands-01.tmx",
-    });
   }
 
   begin(): void {

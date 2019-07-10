@@ -55,4 +55,8 @@ export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterfa
       );
     }
   }
+
+  getTiledMapLayer(): TiledMapLayer {
+    return this.tiledMapLayer;
+  }
 }
