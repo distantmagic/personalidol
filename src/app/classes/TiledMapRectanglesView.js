@@ -77,31 +77,41 @@ export default class TiledMapRectanglesView implements CanvasView {
       color: 0xff0000,
     });
 
-    for (let tiledMapObject of this.tiledMap.getRectangleObjects()) {
-      const tiledMapBlockObject = tiledMapObject.getTiledMapBlockObject();
-      const tiledMapObjectSize = tiledMapBlockObject.getElementSize();
+    await Promise.all(
+      this.tiledMap.getRectangleObjects().map(tiledMapObject => {
+        return this.attachTiledMapObject(cancelToken, tiledMapObject, tiledMapObjectMaterial);
+      })
+    );
+  }
 
-      if (tiledMapBlockObject.hasSource()) {
-        const mesh = await this.threeMeshLoader.load(cancelToken, tiledMapBlockObject.getSource());
-        const tiledMapObjectPosition = tiledMapBlockObject.getTiledMapPositionedObject().getElementPosition();
+  async attachTiledMapObject(
+    cancelToken: CancelToken,
+    tiledMapObject: TiledMapRectangleObject,
+    tiledMapObjectMaterial: Material
+  ): Promise<void> {
+    const tiledMapBlockObject = tiledMapObject.getTiledMapBlockObject();
+    const tiledMapObjectSize = tiledMapBlockObject.getElementSize();
 
-        mesh.scale.set(0.01, 0.01, 0.01);
-        mesh.position.set(
-          tiledMapObjectPosition.getX() + tiledMapObjectSize.getWidth() / 2,
-          tiledMapObjectPosition.getZ(),
-          tiledMapObjectPosition.getY() + tiledMapObjectSize.getHeight() / 2
-        );
+    if (tiledMapBlockObject.hasSource()) {
+      const mesh = await this.threeMeshLoader.load(cancelToken, tiledMapBlockObject.getSource());
+      const tiledMapObjectPosition = tiledMapBlockObject.getTiledMapPositionedObject().getElementPosition();
 
-        this.scene.add(mesh);
-      } else {
-        const tiledMapObjectGeometry = new THREE.BoxGeometry(
-          tiledMapObjectSize.getWidth(),
-          tiledMapObjectSize.getDepth(),
-          tiledMapObjectSize.getHeight()
-        );
+      mesh.scale.set(0.01, 0.01, 0.01);
+      mesh.position.set(
+        tiledMapObjectPosition.getX() + tiledMapObjectSize.getWidth() / 2,
+        tiledMapObjectPosition.getZ(),
+        tiledMapObjectPosition.getY() + tiledMapObjectSize.getHeight() / 2
+      );
 
-        this.addTiledMapBlockGeometry(tiledMapObject, tiledMapObjectGeometry, tiledMapObjectMaterial);
-      }
+      this.scene.add(mesh);
+    } else {
+      const tiledMapObjectGeometry = new THREE.BoxGeometry(
+        tiledMapObjectSize.getWidth(),
+        tiledMapObjectSize.getDepth(),
+        tiledMapObjectSize.getHeight()
+      );
+
+      this.addTiledMapBlockGeometry(tiledMapObject, tiledMapObjectGeometry, tiledMapObjectMaterial);
     }
   }
 
