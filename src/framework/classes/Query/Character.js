@@ -12,14 +12,14 @@ export default class Character implements Query<CharacterModel> {
     this.ref = ref;
   }
 
-  async execute(cancelToken?: CancelToken): Promise<?CharacterModel> {
+  async execute(cancelToken?: CancelToken): Promise<CharacterModel> {
     switch (this.ref) {
       case "arlance":
       case "circassia":
       case "moore":
         return new CharacterModel(this.ref);
       default:
-        return null;
+        throw new Error("Error while loading character model.");
     }
   }
 

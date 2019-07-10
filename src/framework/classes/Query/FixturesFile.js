@@ -12,7 +12,7 @@ export default class FixturesFile implements Query<string> {
     this.ref = ref;
   }
 
-  async execute(cancelToken: CancelToken): Promise<?string> {
+  async execute(cancelToken: CancelToken): Promise<string> {
     return await fixtures.file(this.ref);
   }
 

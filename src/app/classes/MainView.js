@@ -4,13 +4,12 @@ import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
-import TilesView from "./TilesView";
+import TiledTilesetView from "./TiledTilesetView";
 
 import type { Light, OrthographicCamera, Scene } from "three";
 
 import type { CancelToken } from "../../framework/interfaces/CancelToken";
 import type { CanvasController } from "../../framework/interfaces/CanvasController";
-import type { CanvasView } from "../../framework/interfaces/CanvasView";
 import type { CanvasViewGroup as CanvasViewGroupInterface } from "../../framework/interfaces/CanvasViewGroup";
 import type { Debugger } from "../../framework/interfaces/Debugger";
 import type { ElementSize } from "../../framework/interfaces/ElementSize";
@@ -28,7 +27,6 @@ export default class MainView implements CanvasController {
   +light: Light;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +scene: Scene;
-  +tilesView: CanvasView;
 
   constructor(
     exceptionHandler: ExceptionHandler,
@@ -47,16 +45,16 @@ export default class MainView implements CanvasController {
     this.light = new THREE.SpotLight(0xffffff);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.scene = new THREE.Scene();
-    this.tilesView = new TilesView(
-      exceptionHandler,
-      loggerBreadcrumbs.add("TilesView"),
-      queryBus,
-      this.scene,
-      threeLoadingManager,
-      "/assets/map-outlands-01.tmx"
-    );
 
-    this.canvasViewGroup.add(this.tilesView);
+    this.canvasViewGroup.add(
+      new TiledTilesetView(
+        loggerBreadcrumbs.add("TiledTilesetView"),
+        queryBus,
+        this.scene,
+        threeLoadingManager,
+        "/assets/map-outlands-01.tmx"
+      )
+    );
 
     this.camera.position.set(32, 32, 32);
     this.camera.lookAt(this.scene.position);
