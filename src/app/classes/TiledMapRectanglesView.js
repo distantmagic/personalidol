@@ -78,7 +78,7 @@ export default class TiledMapRectanglesView implements CanvasView {
     });
 
     await Promise.all(
-      this.tiledMap.getRectangleObjects().map(tiledMapObject => {
+      this.tiledMap.getRectangleObjects(true).map(tiledMapObject => {
         return this.attachTiledMapObject(cancelToken, tiledMapObject, tiledMapObjectMaterial);
       })
     );

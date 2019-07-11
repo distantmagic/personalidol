@@ -99,15 +99,15 @@ export default class TiledMap implements TiledMapInterface {
     return this.mapSize;
   }
 
-  getEllipseObjects(): Array<TiledMapEllipseObject> {
+  getEllipseObjects(isWithoutSource: boolean): Array<TiledMapEllipseObject> {
     return this.tiledMapEllipseObjects.slice(0);
   }
 
-  getPolygonObjects(): Array<TiledMapPolygonObject> {
+  getPolygonObjects(isWithoutSource: boolean): Array<TiledMapPolygonObject> {
     return this.tiledMapPolygonObjects.slice(0);
   }
 
-  getRectangleObjects(): Array<TiledMapRectangleObject> {
+  getRectangleObjects(isWithoutSource: boolean): Array<TiledMapRectangleObject> {
     return this.tiledMapRectangleObjects.slice(0);
   }
 
@@ -163,8 +163,8 @@ export default class TiledMap implements TiledMapInterface {
       }
     }
 
-    const ellipseObjects = this.getEllipseObjects();
-    const otherEllipseObjects = other.getEllipseObjects();
+    const ellipseObjects = this.getEllipseObjects(false);
+    const otherEllipseObjects = other.getEllipseObjects(false);
 
     if (ellipseObjects.length !== otherEllipseObjects.length) {
       return false;
@@ -176,8 +176,8 @@ export default class TiledMap implements TiledMapInterface {
       }
     }
 
-    const polygonObjects = this.getPolygonObjects();
-    const otherPolygonObjects = other.getPolygonObjects();
+    const polygonObjects = this.getPolygonObjects(false);
+    const otherPolygonObjects = other.getPolygonObjects(false);
 
     if (polygonObjects.length !== otherPolygonObjects.length) {
       return false;
@@ -189,8 +189,8 @@ export default class TiledMap implements TiledMapInterface {
       }
     }
 
-    const rectangleObjects = this.getRectangleObjects();
-    const otherRectangleObjects = other.getRectangleObjects();
+    const rectangleObjects = this.getRectangleObjects(false);
+    const otherRectangleObjects = other.getRectangleObjects(false);
 
     if (rectangleObjects.length !== otherRectangleObjects.length) {
       return false;

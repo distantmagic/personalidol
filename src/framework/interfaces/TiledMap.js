@@ -29,11 +29,11 @@ export interface TiledMap extends Equatable<TiledMap> {
 
   getMapSize(): ElementSize<"tile">;
 
-  getEllipseObjects(): $ReadOnlyArray<TiledMapEllipseObject>;
+  getEllipseObjects(isWithoutSource: boolean): $ReadOnlyArray<TiledMapEllipseObject>;
 
-  getPolygonObjects(): $ReadOnlyArray<TiledMapPolygonObject>;
+  getPolygonObjects(isWithoutSource: boolean): $ReadOnlyArray<TiledMapPolygonObject>;
 
-  getRectangleObjects(): $ReadOnlyArray<TiledMapRectangleObject>;
+  getRectangleObjects(isWithoutSource: boolean): $ReadOnlyArray<TiledMapRectangleObject>;
 
   getTileSize(): ElementSize<"px">;
 

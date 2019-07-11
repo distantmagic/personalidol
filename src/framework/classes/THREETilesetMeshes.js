@@ -19,8 +19,7 @@ export default class THREETilesetMeshes implements THREETilesetMeshesInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.threeTilesetMaterials = threeTilesetMaterials;
     this.tileGeometry = new THREE.PlaneBufferGeometry(1, 1);
-
-    // tileGeometry.translate(-0.5, -0.5, 0);
+    this.tileGeometry.translate(-0.5, -0.5, 0);
   }
 
   getTHREETilesetMaterials(): THREETilesetMaterials {

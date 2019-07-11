@@ -4,6 +4,7 @@ import * as THREE from "three";
 
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
 import RuntimeCache from "../../framework/classes/RuntimeCache";
+import THREEHelpersView from "./THREEHelpersView";
 import THREETilesetMaterials from "../../framework/classes/THREETilesetMaterials";
 import THREETilesetMeshes from "../../framework/classes/THREETilesetMeshes";
 import TiledCustomProperty from "../../framework/classes/TiledCustomProperty";
@@ -107,6 +108,14 @@ export default class TiledTilesetView implements CanvasView {
     }
 
     this.scene.add(this.tileLayerMeshes);
+
+    this.canvasViewGroup.add(
+      new THREEHelpersView(
+        this.loggerBreadcrumbs.add("THREEHelpersView"),
+        this.scene,
+        tiledMap
+      )
+    );
 
     await this.canvasViewGroup.attach(cancelToken, renderer);
   }
