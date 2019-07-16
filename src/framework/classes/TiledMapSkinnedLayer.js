@@ -42,17 +42,15 @@ export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterfa
 
       const tileTypeId = positionedTile.getId();
 
-      if (tileTypeId <= 0) {
-        // this one means blank
-        continue;
+      if (tileTypeId > 0) {
+        // otherwise it means blank
+        yield new TiledSkinnedTile(
+          tileTypeId,
+          positionedTile,
+          this.tiledTilesetOffsetCollection.getTiledTileByOffsettedId(tileTypeId),
+          this.tiledTilesetOffsetCollection.getTiledTilesetByOffsettedId(tileTypeId)
+        );
       }
-
-      yield new TiledSkinnedTile(
-        tileTypeId,
-        positionedTile,
-        this.tiledTilesetOffsetCollection.getTiledTileByOffsettedId(tileTypeId),
-        this.tiledTilesetOffsetCollection.getTiledTilesetByOffsettedId(tileTypeId)
-      );
     }
   }
 

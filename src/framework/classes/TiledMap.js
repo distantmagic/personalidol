@@ -9,10 +9,7 @@ import type { ElementSize } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledCustomProperty } from "../interfaces/TiledCustomProperty";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
-import type { TiledMapEllipseObject } from "../interfaces/TiledMapEllipseObject";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
-import type { TiledMapPolygonObject } from "../interfaces/TiledMapPolygonObject";
-import type { TiledMapRectangleObject } from "../interfaces/TiledMapRectangleObject";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
 import type { TiledTileset } from "../interfaces/TiledTileset";
 import type { TiledTilesetOffset } from "../interfaces/TiledTilesetOffset";
@@ -21,10 +18,7 @@ import type { TiledTilesetOffsetCollection } from "../interfaces/TiledTilesetOff
 export default class TiledMap implements TiledMapInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapSize: ElementSize<"tile">;
-  +tiledMapEllipseObjects: Array<TiledMapEllipseObject>;
   +tiledMapLayers: Array<TiledMapLayer>;
-  +tiledMapPolygonObjects: Array<TiledMapPolygonObject>;
-  +tiledMapRectangleObjects: Array<TiledMapRectangleObject>;
   +tiledTilesetOffsetCollection: TiledTilesetOffsetCollection;
   +tileSize: ElementSize<"px">;
 
@@ -37,27 +31,12 @@ export default class TiledMap implements TiledMapInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapSize = mapSize;
     this.tiledMapLayers = [];
-    this.tiledMapEllipseObjects = [];
-    this.tiledMapPolygonObjects = [];
-    this.tiledMapRectangleObjects = [];
     this.tiledTilesetOffsetCollection = tiledTilesetOffsetCollection;
     this.tileSize = tileSize;
   }
 
   addLayer(tiledMapLayer: TiledMapLayer): void {
     this.tiledMapLayers.push(tiledMapLayer);
-  }
-
-  addEllipseObject(tiledMapEllipseObject: TiledMapEllipseObject): void {
-    this.tiledMapEllipseObjects.push(tiledMapEllipseObject);
-  }
-
-  addPolygonObject(tiledMapPolygonObject: TiledMapPolygonObject): void {
-    this.tiledMapPolygonObjects.push(tiledMapPolygonObject);
-  }
-
-  addRectangleObject(tiledMapRectangleObject: TiledMapRectangleObject): void {
-    this.tiledMapRectangleObjects.push(tiledMapRectangleObject);
   }
 
   async *generateSkinnedLayers(cancelToken: CancelToken): AsyncGenerator<TiledMapSkinnedLayerInterface, void, void> {
@@ -97,18 +76,6 @@ export default class TiledMap implements TiledMapInterface {
 
   getMapSize(): ElementSize<"tile"> {
     return this.mapSize;
-  }
-
-  getEllipseObjects(isWithoutSource: boolean): Array<TiledMapEllipseObject> {
-    return this.tiledMapEllipseObjects.slice(0);
-  }
-
-  getPolygonObjects(isWithoutSource: boolean): Array<TiledMapPolygonObject> {
-    return this.tiledMapPolygonObjects.slice(0);
-  }
-
-  getRectangleObjects(isWithoutSource: boolean): Array<TiledMapRectangleObject> {
-    return this.tiledMapRectangleObjects.slice(0);
   }
 
   getTileSize(): ElementSize<"px"> {
@@ -159,45 +126,6 @@ export default class TiledMap implements TiledMapInterface {
 
     for (let i = 0; i < layers.length; i += 1) {
       if (!layers[i].isEqual(otherLayers[i])) {
-        return false;
-      }
-    }
-
-    const ellipseObjects = this.getEllipseObjects(false);
-    const otherEllipseObjects = other.getEllipseObjects(false);
-
-    if (ellipseObjects.length !== otherEllipseObjects.length) {
-      return false;
-    }
-
-    for (let i = 0; i < ellipseObjects.length; i += 1) {
-      if (!ellipseObjects[i].isEqual(otherEllipseObjects[i])) {
-        return false;
-      }
-    }
-
-    const polygonObjects = this.getPolygonObjects(false);
-    const otherPolygonObjects = other.getPolygonObjects(false);
-
-    if (polygonObjects.length !== otherPolygonObjects.length) {
-      return false;
-    }
-
-    for (let i = 0; i < polygonObjects.length; i += 1) {
-      if (!polygonObjects[i].isEqual(otherPolygonObjects[i])) {
-        return false;
-      }
-    }
-
-    const rectangleObjects = this.getRectangleObjects(false);
-    const otherRectangleObjects = other.getRectangleObjects(false);
-
-    if (rectangleObjects.length !== otherRectangleObjects.length) {
-      return false;
-    }
-
-    for (let i = 0; i < rectangleObjects.length; i += 1) {
-      if (!rectangleObjects[i].isEqual(otherRectangleObjects[i])) {
         return false;
       }
     }

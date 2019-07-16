@@ -7,6 +7,7 @@ import ElementSize from "./ElementSize";
 import TiledTileParser from "./TiledTileParser";
 import TiledTileset from "./TiledTileset";
 import { default as TiledTilesetException } from "./Exception/Tiled/Tileset";
+import { default as XMLDocumentException } from "./Exception/XMLDocument";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
@@ -73,7 +74,7 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
       const tileElement = tiles.item(i);
 
       if (!tileElement) {
-        continue;
+        throw new XMLDocumentException(breadcrumbs.addVariable(String(i)), "Tile element is missing.");
       }
 
       const tileParser = new TiledTileParser(breadcrumbs.add("TiledTileParser"), this.tilesetPath, tileElement);

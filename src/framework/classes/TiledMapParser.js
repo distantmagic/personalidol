@@ -6,16 +6,10 @@ import * as xml from "../helpers/xml";
 import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
 import TiledMap from "./TiledMap";
-import TiledMapBlockObjectParser from "./TiledMapBlockObjectParser";
-import TiledMapEllipseObject from "./TiledMapEllipseObject";
 import TiledMapLayerParser from "./TiledMapLayerParser";
-import TiledMapObjectElementChecker from "./TiledMapObjectElementChecker";
-import TiledMapPolygonObjectParser from "./TiledMapPolygonObjectParser";
-import TiledMapRectangleObject from "./TiledMapRectangleObject";
-import TiledRelativeFilename from "./TiledRelativeFilename";
-import TiledTilesetOffset from "./TiledTilesetOffset";
-import TiledTilesetOffsetCollection from "./TiledTilesetOffsetCollection";
+import TiledTilesetOffsetCollectionParser from "./TiledTilesetOffsetCollectionParser";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
+import { default as XMLDocumentException } from "./Exception/XMLDocument";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
@@ -53,7 +47,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
     // xml
 
     const doc: Document = this.domParser.parseFromString(this.content, "application/xml");
-    const documentElement = doc.documentElement;
+    const documentElement: ?HTMLElement = doc.documentElement;
 
     if (!documentElement || xml.isParseError(doc)) {
       throw xml.extractParseError(breadcrumbs, doc);
@@ -61,37 +55,13 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     // tilesets
 
-    const tilesetElements = documentElement.getElementsByTagName("tileset");
-
-    if (tilesetElements.length < 1) {
-      throw new TiledMapException(breadcrumbs, "Tilesets data is missing in map document.");
-    }
-
-    const tiledTilesetOffsetCollection = new TiledTilesetOffsetCollection(
-      breadcrumbs.add("TiledTilesetOffsetCollection")
+    const tiledTilesetOffsetCollectionParser = new TiledTilesetOffsetCollectionParser(
+      breadcrumbs.add("TiledTilesetOffsetCollectionParser"),
+      documentElement,
+      this.mapFilename,
+      this.tiledTilesetLoader
     );
-
-    for (let i = 0; i < tilesetElements.length; i += 1) {
-      const tilesetElement = tilesetElements.item(i);
-
-      if (!tilesetElement) {
-        continue;
-      }
-
-      const tilesetFilename = xml.getStringAttribute(breadcrumbs, tilesetElement, "source");
-      const tiledTileset = await this.tiledTilesetLoader.load(
-        cancelToken,
-        tilesetElement,
-        // tileset URL is relative to map mapFilename
-        new TiledRelativeFilename(this.mapFilename, tilesetFilename).asString()
-      );
-      const tiledTilesetOffset = new TiledTilesetOffset(
-        xml.getNumberAttribute(breadcrumbs, tilesetElement, "firstgid"),
-        tiledTileset
-      );
-
-      tiledTilesetOffsetCollection.addTiledTilesetOffset(tiledTilesetOffset);
-    }
+    const tiledTilesetOffsetCollection = await tiledTilesetOffsetCollectionParser.parse(cancelToken);
 
     // map itself
 
@@ -118,7 +88,7 @@ export default class TiledMapParser implements TiledMapParserInterface {
       const layerElement = layerElements.item(i);
 
       if (!layerElement) {
-        continue;
+        throw new XMLDocumentException(breadcrumbs.addVariable(String(i)), "Layer element is missing.");
       }
 
       if (cancelToken.isCancelled()) {
@@ -133,44 +103,44 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     // objects
 
-    const objectElements = documentElement.getElementsByTagName("object");
+    // const objectElements = documentElement.getElementsByTagName("object");
 
-    for (let i = 0; i < objectElements.length; i += 1) {
-      const objectElement = objectElements.item(i);
+    // for (let i = 0; i < objectElements.length; i += 1) {
+    //   const objectElement = objectElements.item(i);
 
-      if (!objectElement) {
-        continue;
-      }
+    //   if (!objectElement) {
+    //     continue;
+    //   }
 
-      const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(objectElement);
-      // ellipse or rectangle
-      if (tiledMapObjectElementChecker.isEllipse() || tiledMapObjectElementChecker.isRectangle()) {
-        const tiledMapObjectParser = new TiledMapBlockObjectParser(
-          breadcrumbs.add("TiledMapBlockObjectParser"),
-          this.mapFilename,
-          objectElement,
-          tileSize
-        );
-        const tiledMapBlockObject = await tiledMapObjectParser.parse(cancelToken);
+    //   const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(objectElement);
+    //   // ellipse or rectangle
+    //   if (tiledMapObjectElementChecker.isEllipse() || tiledMapObjectElementChecker.isRectangle()) {
+    //     const tiledMapObjectParser = new TiledMapBlockObjectParser(
+    //       breadcrumbs.add("TiledMapBlockObjectParser"),
+    //       this.mapFilename,
+    //       objectElement,
+    //       tileSize
+    //     );
+    //     const tiledMapBlockObject = await tiledMapObjectParser.parse(cancelToken);
 
-        if (tiledMapObjectElementChecker.isEllipse()) {
-          tiledMap.addEllipseObject(new TiledMapEllipseObject(tiledMapBlockObject));
-        } else {
-          tiledMap.addRectangleObject(new TiledMapRectangleObject(tiledMapBlockObject));
-        }
-        // polygon
-      } else {
-        const tiledMapPolygonObjectParser = new TiledMapPolygonObjectParser(
-          breadcrumbs.add("TiledMapPolygonObjectParser"),
-          this.mapFilename,
-          objectElement,
-          tileSize
-        );
-        const tiledMapPolygonObject = await tiledMapPolygonObjectParser.parse(cancelToken);
+    //     if (tiledMapObjectElementChecker.isEllipse()) {
+    //       tiledMap.addEllipseObject(new TiledMapEllipseObject(tiledMapBlockObject));
+    //     } else {
+    //       tiledMap.addRectangleObject(new TiledMapRectangleObject(tiledMapBlockObject));
+    //     }
+    //     // polygon
+    //   } else {
+    //     const tiledMapPolygonObjectParser = new TiledMapPolygonObjectParser(
+    //       breadcrumbs.add("TiledMapPolygonObjectParser"),
+    //       this.mapFilename,
+    //       objectElement,
+    //       tileSize
+    //     );
+    //     const tiledMapPolygonObject = await tiledMapPolygonObjectParser.parse(cancelToken);
 
-        tiledMap.addPolygonObject(tiledMapPolygonObject);
-      }
-    }
+    //     tiledMap.addPolygonObject(tiledMapPolygonObject);
+    //   }
+    // }
 
     return tiledMap;
   }

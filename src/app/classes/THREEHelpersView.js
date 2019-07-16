@@ -13,11 +13,7 @@ export default class THREEHelpersView implements CanvasView {
   +scene: THREE.Scene;
   +tiledMap: TiledMap;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    scene: Scene,
-    tiledMap: TiledMap
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, scene: Scene, tiledMap: TiledMap) {
     this.scene = scene;
     this.tiledMap = tiledMap;
   }
