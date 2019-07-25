@@ -3,6 +3,7 @@
 import Cancelled from "./Exception/Cancelled";
 import TiledMapObjectCollection from "./TiledMapObjectCollection";
 import TiledMapObjectElementChecker from "./TiledMapObjectElementChecker";
+import TiledMapObjectParser from "./TiledMapObjectParser";
 import { default as XMLDocumentException } from "./Exception/XMLDocument";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -37,7 +38,11 @@ export default class TiledMapObjectCollectionParser implements TiledMapObjectCol
       }
 
       const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(objectElement);
+      const tiledMapObjectParser = new TiledMapObjectParser(breadcrumbs.add("TiledMapObjectParser"));
 
+      if (tiledMapObjectElementChecker.isEllipse()) {
+        tiledMapObjectCollection.addEllipseObject(await tiledMapObjectParser.createEllipseObject());
+      }
       console.log(
         tiledMapObjectElementChecker.isEllipse(),
         tiledMapObjectElementChecker.isRectangle(),

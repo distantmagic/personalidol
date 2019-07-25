@@ -59,14 +59,14 @@
     "extends": "react-app"
   },
   "scripts": {
-    "build": "$npm_execpath run sass:build && react-scripts build",
+    "build": "react-scripts build",
     "flow:watch": "$npm_execpath run flow:watch:fswatch",
     "flow:watch:fswatch": "fswatch --one-event --one-per-batch src | xargs -n1 -I{} yarn run flow status",
     "flow:watch:inotify": "inotifywait -e close_write -r -m src | xargs -n1 -I{} yarn run flow status",
     "postbuild": "$npm_execpath run sass:postbuild",
     "prettier": "./node_modules/.bin/prettier --write \"./{flow-typed,public,scss,src}/**/*.{htm,html,js,scss}\"",
-    "sass:build": "./node_modules/.bin/node-sass -r ./scss -o ./public",
-    "sass:postbuild": "postcss < public/index.css > public/index.css.tmp && mv public/index.css.tmp public/index.css",
+    "sass:build": "./node_modules/.bin/node-sass -r ./scss -o ./build",
+    "sass:postbuild": "postcss < build/index.css > build/index.css.tmp && mv build/index.css.tmp build/index.css",
     "sass:watch": "./node_modules/.bin/node-sass -r -w ./scss -o ./public",
     "start": "PORT=9023 react-scripts start",
     "test": "react-scripts test --env=jsdom",

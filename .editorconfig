@@ -6,16 +6,13 @@
 root = true
 
 # Use bracketed regexp to target specific file types or file locations
-[*.{js,json,scss,xml}]
+[*]
 
 # Use hard or soft tabs ["tab", "space"]
 indent_style = space
 
 # Size of a single indent [an integer, "tab"]
 indent_size = tab
-
-# Number of columns representing a tab character [an integer]
-tab_width = 2
 
 # Line breaks representation ["lf", "cr", "crlf"]
 end_of_line = lf
@@ -28,3 +25,16 @@ trim_trailing_whitespace = true
 
 # Ensure file ends with a newline when saving ["true", "false"]
 insert_final_newline = true
+
+[Makefile]
+
+indent_style = tab
+
+[*.{js,json,scss,xml}]
+
+# Number of columns representing a tab character [an integer]
+tab_width = 2
+
+[*.{rs}]
+
+tab_width = 4
