@@ -21,7 +21,7 @@ build/index.html: $(JS_SOURCES)
 frontend: build/index.html build/index.css
 
 node_modules: yarn.lock
-	yarn install
+	yarn install --network-timeout 9000000
 
 pretty: pretty_backend pretty_frontend
 
@@ -37,5 +37,5 @@ test: test_backend test_frontend
 test_backend: $(RUST_SOURCES)
 	cd backend && cargo test
 
-test_frontend: $(JS_SOURCES)
+test_frontend: $(JS_SOURCES) node_modules
 	yarn run test:once
