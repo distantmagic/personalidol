@@ -6,11 +6,6 @@ import ScrollbarPosition from "../framework/classes/ScrollbarPosition";
 
 type Props = {|
   children: $ReadOnlyArray<any>,
-  className?: string,
-  style?: {
-    [string]: number | string,
-  },
-  type: string,
 |};
 
 function updateScrollDelta(ref: HTMLElement, delta: number): void {
@@ -30,7 +25,6 @@ export default function HudToolbarScrollbar(props: Props) {
       }
 
       const element = containerElement;
-
       const onWheelBound = function(evt: WheelEvent) {
         evt.preventDefault();
 
@@ -47,17 +41,16 @@ export default function HudToolbarScrollbar(props: Props) {
     [containerElement]
   );
 
-  return React.createElement(
-    props.type,
-    {
-      className: props.className,
-      style: props.style,
-      ref: setContainerElement,
-    },
-    [props.children]
+  return (
+    <div
+      className="dd__frame dd__toolbar dd__toolbar--hud"
+      ref={setContainerElement}
+      style={{
+        "--dd-toolbar-elements": props.children.length,
+      }}
+    >
+      {props.children}
+      <div className="dd__toolbar__scroll-indicator" />
+    </div>
   );
 }
-
-HudToolbarScrollbar.defaultProps = {
-  type: "div",
-};

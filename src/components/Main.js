@@ -8,6 +8,7 @@ import DialogueLoader from "./DialogueLoader";
 import HudAside from "./HudAside";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
+import HudSettings from "./HudSettings";
 import HudToolbar from "./HudToolbar";
 import Person from "../framework/classes/Entity/Person";
 
@@ -37,7 +38,6 @@ export default function Main(props: Props) {
   return (
     <React.Fragment>
       <div className={classnames("dd__container", "dd__hud")}>
-        <HudAside />
         <DialogueLoader
           dialogueResourceReference={dialogueResourceReference}
           dialogueInitiator={dialogueInitiator}
@@ -48,6 +48,7 @@ export default function Main(props: Props) {
           loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
           queryBus={queryBus}
         />
+        <HudAside />
         <HudScene
           debug={props.debug}
           exceptionHandler={props.exceptionHandler}
@@ -56,6 +57,7 @@ export default function Main(props: Props) {
           queryBus={queryBus}
           scheduler={props.game.getScheduler()}
         />
+        <HudSettings />
         <div className="dd__frame dd__statusbar dd__statusbar--hud">
           Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że będzie przyjaźnie nastawiony.
         </div>

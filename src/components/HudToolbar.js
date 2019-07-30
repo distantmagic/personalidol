@@ -8,12 +8,7 @@ type Props = {||};
 
 export default React.memo<Props>(function HudToolbar(props: Props) {
   return (
-    <HudToolbarScrollbar
-      className="dd__frame dd__toolbar dd__toolbar--hud"
-      style={{
-        "--dd-toolbar-elements": 6,
-      }}
-    >
+    <HudToolbarScrollbar>
       <button className="dd__button dd__button--toolbar dd__button--icon dd__button--dialogue">Rozmowa</button>
       <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">Brutalna siła</button>
       <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">Modlitwa</button>
@@ -24,8 +19,6 @@ export default React.memo<Props>(function HudToolbar(props: Props) {
       <button className="dd__button dd__button--toolbar dd__button--toolbar dd__button--icon dd__button--skill">
         Umiejętność specjalna
       </button>
-
-      <div className="dd__toolbar__scroll-indicator" />
     </HudToolbarScrollbar>
   );
 });

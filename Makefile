@@ -32,10 +32,10 @@ pretty_backend:
 pretty_frontend:
 	yarn run prettier
 
-test: test_backend test_frontend
+test: test.backend test.frontend
 
-test_backend: $(RUST_SOURCES)
+test.backend: $(RUST_SOURCES)
 	cd backend && cargo test
 
-test_frontend: $(JS_SOURCES) node_modules
+test.frontend: $(JS_SOURCES) node_modules
 	yarn run test:once

@@ -1,7 +1,7 @@
 $dd-hud-statusbar-height: 50px;
 $dd-hud-toolbar-height: 80px;
-// $dd-hud-dialogue-width: 524px;
-$dd-hud-dialogue-width: 0px;
+$dd-hud-dialogue-width: 524px;
+// $dd-hud-dialogue-width: 0px;
 $dd-hud-aside-width: 128px;
 
 .dd__hud {
@@ -9,15 +9,17 @@ $dd-hud-aside-width: 128px;
   grid-template-areas:
     "dialogue scene aside"
     "dialogue toolbar aside"
-    "dialogue statusbar aside";
+    "dialogue statusbar settings";
   grid-template-columns:
     $dd-hud-dialogue-width
     calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
-    $dd-hud-aside-width;
+    $dd-hud-aside-width
+  ;
   grid-template-rows:
     calc(100vh - #{$dd-hud-toolbar-height} - #{$dd-hud-statusbar-height})
     $dd-hud-toolbar-height
-    $dd-hud-statusbar-height;
+    $dd-hud-statusbar-height
+  ;
   height: 100vh;
   position: relative;
 }
@@ -25,6 +27,7 @@ $dd-hud-aside-width: 128px;
 .dd__aside.dd__aside--hud,
 .dd__dialogue.dd__dialogue--hud,
 .dd__scene.dd__scene--hud,
+.dd__settings.dd__settings--hud,
 .dd__statusbar.dd__statusbar--hud,
 .dd__toolbar.dd__toolbar--hud {
   height: 100%;
@@ -41,6 +44,10 @@ $dd-hud-aside-width: 128px;
 
 .dd__scene.dd__scene--hud {
   grid-area: scene;
+}
+
+.dd__settings.dd__settings--hud {
+  grid-area: settings;
 }
 
 .dd__statusbar.dd__statusbar--hud {
