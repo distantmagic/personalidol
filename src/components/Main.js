@@ -60,16 +60,18 @@ export default function Main(props: Props) {
           "dd__hud--dialogue": hasDialogue
         })}
       >
-        <DialogueLoader
-          dialogueResourceReference={dialogueResourceReference}
-          dialogueInitiator={dialogueInitiator}
-          exceptionHandler={props.exceptionHandler}
-          expressionBus={expressionBus}
-          expressionContext={expressionContext}
-          logger={props.logger}
-          loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
-          queryBus={queryBus}
-        />
+        {hasDialogue && (
+          <DialogueLoader
+            dialogueResourceReference={dialogueResourceReference}
+            dialogueInitiator={dialogueInitiator}
+            exceptionHandler={props.exceptionHandler}
+            expressionBus={expressionBus}
+            expressionContext={expressionContext}
+            logger={props.logger}
+            loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
+            queryBus={queryBus}
+          />
+        )}
         <HudAside />
         {hasDebugger && (
           <HudDebuggerListing debuggerState={debuggerState} />
