@@ -1182,7 +1182,7 @@ button {
 .dd__toolbar {
   display: grid;
   grid-column-gap: 4px;
-  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc( 100vw - 128px - 524px - var(--dd-toolbar-elements) * 64px  /* left and right padding */ - 24px  /* space between buttons */ - var(--dd-toolbar-elements) * 4px  /* additional space between scroll indicator and buttons */ - 4px);
+  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc( 100vw - 128px - 0px - 0px - var(--dd-toolbar-elements) * 64px  /* left and right padding */ - 24px  /* space between buttons */ - var(--dd-toolbar-elements) * 4px  /* additional space between scroll indicator and buttons */ - 4px);
   grid-template-rows: 1fr;
   overflow: hidden;
   padding-bottom: 6px;
@@ -1191,6 +1191,12 @@ button {
   padding-top: 6px;
   position: relative;
   white-space: nowrap; }
+
+.dd__toolbar.dd__toolbar--debugger {
+  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc( 100vw - 128px - 524px - 0px - var(--dd-toolbar-elements) * 64px  /* left and right padding */ - 24px  /* space between buttons */ - var(--dd-toolbar-elements) * 4px  /* additional space between scroll indicator and buttons */ - 4px); }
+
+.dd__toolbar.dd__toolbar--debugger.dd__toolbar--dialogue {
+  grid-template-columns: repeat(var(--dd-toolbar-elements), 64px) calc( 100vw - 128px - 524px - 524px - var(--dd-toolbar-elements) * 64px  /* left and right padding */ - 24px  /* space between buttons */ - var(--dd-toolbar-elements) * 4px  /* additional space between scroll indicator and buttons */ - 4px); }
 
 .dd__button.dd__button--toolbar {
   height: 64px;

@@ -1,11 +1,14 @@
 // @flow
 
 import * as React from "react";
+import classnames from "classnames";
 
 import ScrollbarPosition from "../framework/classes/ScrollbarPosition";
 
 type Props = {|
   children: $ReadOnlyArray<any>,
+  hasDebugger: boolean,
+  hasDialogue: boolean,
 |};
 
 function updateScrollDelta(ref: HTMLElement, delta: number): void {
@@ -43,7 +46,10 @@ export default function HudToolbarScrollbar(props: Props) {
 
   return (
     <div
-      className="dd__frame dd__toolbar dd__toolbar--hud"
+      className={classnames("dd__frame", "dd__toolbar", "dd__toolbar--hud", {
+        "dd__toolbar--debugger": props.hasDebugger,
+        "dd__toolbar--dialogue": props.hasDialogue
+      })}
       ref={setContainerElement}
       style={{
         "--dd-toolbar-elements": props.children.length,

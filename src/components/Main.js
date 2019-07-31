@@ -35,7 +35,9 @@ export default function Main(props: Props) {
   const expressionBus = props.game.getExpressionBus();
   const expressionContext = props.game.getExpressionContext();
   const queryBus = props.game.getQueryBus();
-  const isDebuggerStateEmpty = debuggerState.isEmpty();
+
+  const hasDebugger = !debuggerState.isEmpty();
+  const hasDialogue = true;
 
   React.useEffect(
     function() {
@@ -54,8 +56,8 @@ export default function Main(props: Props) {
     <React.Fragment>
       <div
         className={classnames("dd__container", "dd__hud", {
-          "dd__hud--debugger": !isDebuggerStateEmpty,
-          "dd__hud--dialogue": true
+          "dd__hud--debugger": hasDebugger,
+          "dd__hud--dialogue": hasDialogue
         })}
       >
         <DialogueLoader
@@ -69,7 +71,7 @@ export default function Main(props: Props) {
           queryBus={queryBus}
         />
         <HudAside />
-        {!isDebuggerStateEmpty && (
+        {hasDebugger && (
           <HudDebuggerListing debuggerState={debuggerState} />
         )}
         <HudScene
@@ -84,7 +86,10 @@ export default function Main(props: Props) {
         <div className="dd__frame dd__statusbar dd__statusbar--hud">
           Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że będzie przyjaźnie nastawiony.
         </div>
-        <HudToolbar />
+        <HudToolbar
+          hasDebugger={hasDebugger}
+          hasDialogue={hasDialogue}
+        />
         <HudModalRouter
           exceptionHandler={props.exceptionHandler}
           logger={props.logger}
