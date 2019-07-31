@@ -877,36 +877,31 @@ button {
   font-family: "Almendra", serif; }
 
 .dd__debugger {
-  display: block;
-  height: 100%;
-  left: 0;
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 6; }
-
-.dd__debugger__popup {
+  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
   box-shadow: 0 0 16px black;
   display: grid;
-  grid-template-rows: 2rem 1fr;
-  left: 0;
-  min-width: 300px;
-  pointer-events: all;
-  position: absolute;
-  top: 0; }
-  .dd__debugger__popup.dd__debugger__popup--dragging {
-    cursor: url("/assets/cursor-rpg-hand-grabbing-32-48.png") 3 4, grabbing;
-    opacity: 0.9; }
-    .dd__debugger__popup.dd__debugger__popup--dragging .dd__debugger__popup__handle {
-      cursor: url("/assets/cursor-rpg-hand-grabbing-32-48.png") 3 4, grabbing; }
+  grid-template-rows: 2.5rem 1fr;
+  height: 100%;
+  width: 100%; }
 
-.dd__debugger__popup__handle {
+.dd__debugger__breadcrumbs,
+.dd__debugger__value {
+  font-family: "Nanum Gothic Coding", monospace;
+  font-size: 0.8rem; }
+
+.dd__debugger__breadcrumbs {
+  width: 60%; }
+
+.dd__debugger__content {
+  width: 100%; }
+
+.dd__debugger__handle {
   align-items: center;
-  cursor: url("/assets/cursor-rpg-hand-grab-32-48.png") 3 4, grab;
   display: flex;
   padding: 0 0.5rem; }
+
+.dd__debugger__value {
+  width: 40%; }
 
 .dd__hud {
   display: grid;
@@ -915,6 +910,10 @@ button {
   grid-template-rows: calc(100vh - 80px - 50px) 80px 50px;
   height: 100vh;
   position: relative; }
+
+.dd__hud.dd__hud--debugger {
+  grid-template-areas: "debugger dialogue scene aside" "debugger dialogue toolbar aside" "debugger dialogue statusbar settings";
+  grid-template-columns: 327px 524px calc(100vw - 327px - 128px - 524px) 128px; }
 
 .dd__aside.dd__aside--hud,
 .dd__dialogue.dd__dialogue--hud,
@@ -927,6 +926,9 @@ button {
 
 .dd__aside.dd__aside--hud {
   grid-area: aside; }
+
+.dd__debugger.dd__debugger--hud {
+  grid-area: debugger; }
 
 .dd__dialogue.dd__dialogue--hud {
   grid-area: dialogue; }

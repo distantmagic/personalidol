@@ -3,9 +3,9 @@
 import * as React from "react";
 import classnames from "classnames";
 
-import DebuggerListing from "./DebuggerListing";
 import DialogueLoader from "./DialogueLoader";
 import HudAside from "./HudAside";
+import HudDebuggerListing from "./HudDebuggerListing";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
 import HudSettings from "./HudSettings";
@@ -30,14 +30,33 @@ type Props = {|
 export default function Main(props: Props) {
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
+  const [debuggerState, setDebuggetState] = React.useState(props.debug.getState());
 
   const expressionBus = props.game.getExpressionBus();
   const expressionContext = props.game.getExpressionContext();
   const queryBus = props.game.getQueryBus();
+  const isDebuggerStateEmpty = debuggerState.isEmpty();
+
+  React.useEffect(
+    function() {
+      const debug = props.debug;
+
+      debug.onStateChange(setDebuggetState);
+
+      return function() {
+        debug.offStateChange(setDebuggetState);
+      };
+    },
+    [props.debug]
+  );
 
   return (
     <React.Fragment>
-      <div className={classnames("dd__container", "dd__hud")}>
+      <div
+        className={classnames("dd__container", "dd__hud", {
+          "dd__hud--debugger": !isDebuggerStateEmpty
+        })}
+      >
         <DialogueLoader
           dialogueResourceReference={dialogueResourceReference}
           dialogueInitiator={dialogueInitiator}
@@ -49,6 +68,9 @@ export default function Main(props: Props) {
           queryBus={queryBus}
         />
         <HudAside />
+        {!isDebuggerStateEmpty && (
+          <HudDebuggerListing debuggerState={debuggerState} />
+        )}
         <HudScene
           debug={props.debug}
           exceptionHandler={props.exceptionHandler}
@@ -69,7 +91,6 @@ export default function Main(props: Props) {
           queryBus={queryBus}
         />
       </div>
-      <DebuggerListing debug={props.debug} />
     </React.Fragment>
   );
 }

@@ -84,7 +84,8 @@ export default class MainView implements CanvasController {
   }
 
   end(fps: number, isPanicked: boolean): void {
-    this.debug.updateState(this.loggerBreadcrumbs.add("end").add("fps"), fps);
+    this.debug.updateState(this.loggerBreadcrumbs.add("end").add("fps"), Math.round(fps * 100) / 100);
+    this.debug.updateState(this.loggerBreadcrumbs.add("end").add("isPanicked"), String(isPanicked));
   }
 
   resize(elementSize: ElementSize<"px">): void {

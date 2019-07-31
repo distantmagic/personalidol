@@ -1,42 +1,37 @@
 .dd__debugger {
-  display: block;
-  height: 100%;
-  left: 0;
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: $z-index-dd-debugger;
-}
-
-.dd__debugger__popup {
-  // background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
   // border-radius: unset;
   box-shadow: 0 0 16px black;
   display: grid;
   // grid-row-gap: 1rem;
-  grid-template-rows: 2rem 1fr;
+  grid-template-rows: 2.5rem 1fr;
   // height: 300px;
-  left: 0;
-  min-width: 300px;
-  pointer-events: all;
-  position: absolute;
-  top: 0;
-
-  &.dd__debugger__popup--dragging {
-    cursor: $cursor-grabbing;
-    opacity: 0.9;
-
-    .dd__debugger__popup__handle {
-      cursor: $cursor-grabbing;
-    }
-  }
+  height: 100%;
+  // overflow-x: scroll;
+  width: 100%;
 }
 
-.dd__debugger__popup__handle {
+.dd__debugger__breadcrumbs,
+.dd__debugger__value {
+  font-family: $font-family-nanum-gothic-coding;
+  font-size: 0.8rem;
+}
+
+.dd__debugger__breadcrumbs {
+  width: 60%;
+}
+
+.dd__debugger__content {
+  width: 100%;
+}
+
+.dd__debugger__handle {
   align-items: center;
-  cursor: $cursor-grab;
+  // cursor: $cursor-grab;
   display: flex;
   padding: 0 0.5rem;
+}
+
+.dd__debugger__value {
+  width: 40%;
 }

@@ -1,4 +1,4 @@
-fn hello() -> String {
+fn hello() -> &'static str {
     "Hello, world!!"
 }
 

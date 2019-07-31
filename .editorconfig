@@ -30,7 +30,7 @@ insert_final_newline = true
 
 indent_style = tab
 
-[*.{js,json,scss,xml}]
+[*.{htm,html,js,json,scss,xml}]
 
 # Number of columns representing a tab character [an integer]
 tab_width = 2

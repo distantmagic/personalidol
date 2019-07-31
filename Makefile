@@ -18,6 +18,9 @@ build/index.css: $(SCSS_SOURCES)
 build/index.html: $(JS_SOURCES)
 	yarn run build
 
+flow.watch: node_modules
+	yarn run flow:watch:inotify
+
 frontend: build/index.html build/index.css
 
 node_modules: yarn.lock
@@ -32,6 +35,9 @@ pretty_backend:
 pretty_frontend:
 	yarn run prettier
 
+sass.watch:
+	yarn run sass:watch
+
 test: test.backend test.frontend
 
 test.backend: $(RUST_SOURCES)
@@ -39,3 +45,9 @@ test.backend: $(RUST_SOURCES)
 
 test.frontend: $(JS_SOURCES) node_modules
 	yarn run test:once
+
+test.frontend.watch: node_modules
+	yarn run test
+
+start: node_modules
+	yarn run start
