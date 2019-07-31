@@ -3,7 +3,7 @@
 
 JS_SOURCES = $(shell find src -name "*.js")
 RUST_SOURCES = $(shell find backend/src -name "*.rs")
-SCSS_SOURCES = $(wildcard scss/*.scss)
+SCSS_SOURCES = $(shell find scss -name "*.scss")
 
 all: backend frontend
 
