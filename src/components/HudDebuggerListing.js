@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from "react";
-import * as THREE from "three";
 
 import type { DebuggerState } from "../framework/types/DebuggerState";
 import type { DebuggerStateValue } from "../framework/types/DebuggerStateValue";
@@ -35,12 +34,8 @@ export default React.memo<Props>(function HudDebuggerListing(props: Props) {
           <tbody>
             {props.debuggerState.toArray().map(([breadcrumbs, value]) => (
               <tr key={breadcrumbs.asString()}>
-                <td className="dd__debugger__breadcrumbs">
-                  {breadcrumbs.asString()}
-                </td>
-                <td className="dd__debugger__value">
-                  {printValue(value)}
-                </td>
+                <td className="dd__debugger__breadcrumbs">{breadcrumbs.asString()}</td>
+                <td className="dd__debugger__value">{printValue(value)}</td>
               </tr>
             ))}
           </tbody>

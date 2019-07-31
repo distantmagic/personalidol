@@ -7,6 +7,7 @@ import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
 import TiledMap from "./TiledMap";
 import TiledMapLayerParser from "./TiledMapLayerParser";
+import TiledMapObjectCollectionParser from "./TiledMapObjectCollectionParser";
 import TiledTilesetOffsetCollectionParser from "./TiledTilesetOffsetCollectionParser";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
 import { default as XMLDocumentException } from "./Exception/XMLDocument";
@@ -102,6 +103,13 @@ export default class TiledMapParser implements TiledMapParserInterface {
     }
 
     // objects
+
+    const tiledMapObjectCollectionParser = new TiledMapObjectCollectionParser(
+      breadcrumbs.add("TiledMapObjectCollectionParser"),
+      documentElement
+    );
+
+    console.log(await tiledMapObjectCollectionParser.parse(cancelToken));
 
     // const objectElements = documentElement.getElementsByTagName("object");
 

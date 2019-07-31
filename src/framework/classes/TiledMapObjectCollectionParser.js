@@ -12,10 +12,10 @@ import type { TiledMapObjectCollection as TiledMapObjectCollectionInterface } fr
 import type { TiledMapObjectCollectionParser as TiledMapObjectCollectionParserInterface } from "../interfaces/TiledMapObjectCollectionParser";
 
 export default class TiledMapObjectCollectionParser implements TiledMapObjectCollectionParserInterface {
-  +documentElement: Document;
+  +documentElement: HTMLElement;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, documentElement: Document) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, documentElement: HTMLElement) {
     this.documentElement = documentElement;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
@@ -30,6 +30,7 @@ export default class TiledMapObjectCollectionParser implements TiledMapObjectCol
     const objectElements = this.documentElement.getElementsByTagName("object");
     const tiledMapObjectCollection = new TiledMapObjectCollection(breadcrumbs.add("TiledMapObjectCollection"));
 
+    console.log(objectElements);
     for (let i = 0; i < objectElements.length; i += 1) {
       const objectElement = objectElements.item(i);
 
@@ -41,7 +42,7 @@ export default class TiledMapObjectCollectionParser implements TiledMapObjectCol
       const tiledMapObjectParser = new TiledMapObjectParser(breadcrumbs.add("TiledMapObjectParser"));
 
       if (tiledMapObjectElementChecker.isEllipse()) {
-        tiledMapObjectCollection.addEllipseObject(await tiledMapObjectParser.createEllipseObject());
+        tiledMapObjectCollection.addEllipseObject(await tiledMapObjectParser.createEllipseObject(objectElement));
       }
       console.log(
         tiledMapObjectElementChecker.isEllipse(),

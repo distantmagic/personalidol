@@ -57,7 +57,7 @@ export default function Main(props: Props) {
       <div
         className={classnames("dd__container", "dd__hud", {
           "dd__hud--debugger": hasDebugger,
-          "dd__hud--dialogue": hasDialogue
+          "dd__hud--dialogue": hasDialogue,
         })}
       >
         {hasDialogue && (
@@ -73,9 +73,7 @@ export default function Main(props: Props) {
           />
         )}
         <HudAside />
-        {hasDebugger && (
-          <HudDebuggerListing debuggerState={debuggerState} />
-        )}
+        {hasDebugger && <HudDebuggerListing debuggerState={debuggerState} />}
         <HudScene
           debug={props.debug}
           exceptionHandler={props.exceptionHandler}
@@ -88,10 +86,7 @@ export default function Main(props: Props) {
         <div className="dd__frame dd__statusbar dd__statusbar--hud">
           Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że będzie przyjaźnie nastawiony.
         </div>
-        <HudToolbar
-          hasDebugger={hasDebugger}
-          hasDialogue={hasDialogue}
-        />
+        <HudToolbar hasDebugger={hasDebugger} hasDialogue={hasDialogue} />
         <HudModalRouter
           exceptionHandler={props.exceptionHandler}
           logger={props.logger}

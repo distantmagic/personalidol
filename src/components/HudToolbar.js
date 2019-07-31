@@ -11,10 +11,7 @@ type Props = {|
 
 export default React.memo<Props>(function HudToolbar(props: Props) {
   return (
-    <HudToolbarScrollbar
-      hasDebugger={props.hasDebugger}
-      hasDialogue={props.hasDialogue}
-    >
+    <HudToolbarScrollbar hasDebugger={props.hasDebugger} hasDialogue={props.hasDialogue}>
       <button className="dd__button dd__button--toolbar dd__button--icon dd__button--dialogue">Rozmowa</button>
       <button className="dd__button dd__button--toolbar dd__button--icon dd__button--strength">Brutalna siła</button>
       <button className="dd__button dd__button--toolbar dd__button--icon dd__button--prayer">Modlitwa</button>

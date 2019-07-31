@@ -4,20 +4,10 @@ $dd-hud-toolbar-column-gap: $dd-frame-padding - 2px;
 
 @function dd-toolbar-spacer-width($has-debugger: 0, $has-dialogue: 0) {
   @return calc(
-    100vw
-    - #{$dd-hud-aside-width}
-    - #{$has-debugger * $dd-hud-debugger-width}
-    - #{$has-dialogue * $dd-hud-dialogue-width}
-    - var(--dd-toolbar-elements) * #{$dd-hud-toolbar-button-side}
-
-    /* left and right padding */
-    - #{4 * $dd-frame-padding}
-
-    /* space between buttons */
-    - var(--dd-toolbar-elements) * #{$dd-hud-toolbar-column-gap}
-
-    /* additional space between scroll indicator and buttons */
-    - #{$dd-hud-toolbar-column-gap}
+    100vw - #{$dd-hud-aside-width} - #{$has-debugger * $dd-hud-debugger-width} - #{$has-dialogue *
+      $dd-hud-dialogue-width} - var(--dd-toolbar-elements) * #{$dd-hud-toolbar-button-side} /* left and right padding */ -
+      #{4 * $dd-frame-padding} /* space between buttons */ - var(--dd-toolbar-elements) * #{$dd-hud-toolbar-column-gap}
+      /* additional space between scroll indicator and buttons */ - #{$dd-hud-toolbar-column-gap}
   );
 }
 
@@ -26,8 +16,7 @@ $dd-hud-toolbar-column-gap: $dd-frame-padding - 2px;
   grid-column-gap: $dd-hud-toolbar-column-gap;
   grid-template-columns:
     repeat(var(--dd-toolbar-elements), $dd-hud-toolbar-button-side)
-    dd-toolbar-spacer-width(0, 0)
-  ;
+    dd-toolbar-spacer-width(0, 0);
   grid-template-rows: 1fr;
   overflow: hidden;
   padding-bottom: $dd-frame-padding;
@@ -41,15 +30,13 @@ $dd-hud-toolbar-column-gap: $dd-frame-padding - 2px;
 .dd__toolbar.dd__toolbar--debugger {
   grid-template-columns:
     repeat(var(--dd-toolbar-elements), $dd-hud-toolbar-button-side)
-    dd-toolbar-spacer-width(1, 0)
-  ;
+    dd-toolbar-spacer-width(1, 0);
 }
 
 .dd__toolbar.dd__toolbar--debugger.dd__toolbar--dialogue {
   grid-template-columns:
     repeat(var(--dd-toolbar-elements), $dd-hud-toolbar-button-side)
-    dd-toolbar-spacer-width(1, 1)
-  ;
+    dd-toolbar-spacer-width(1, 1);
 }
 
 .dd__button.dd__button--toolbar {

@@ -48,7 +48,7 @@ export default function HudToolbarScrollbar(props: Props) {
     <div
       className={classnames("dd__frame", "dd__toolbar", "dd__toolbar--hud", {
         "dd__toolbar--debugger": props.hasDebugger,
-        "dd__toolbar--dialogue": props.hasDialogue
+        "dd__toolbar--dialogue": props.hasDialogue,
       })}
       ref={setContainerElement}
       style={{

@@ -388,6 +388,8 @@ declare module "three" {
     distanceTo(Vector3): number;
 
     set(number, number, number): Vector3;
+
+    toArray(): [number, number, number];
   }
 
   declare export interface WebGLRenderer extends Renderer {
