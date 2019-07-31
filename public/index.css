@@ -876,6 +876,9 @@ button {
   color: crimson;
   font-family: "Almendra", serif; }
 
+.dd__table.dd__table--debugger {
+  width: 100%; }
+
 .dd__debugger {
   background-image: url("/assets/texture-navy-blue-marble-512.jpg");
   display: grid;
@@ -912,15 +915,15 @@ button {
 
 .dd__hud.dd__hud--debugger {
   grid-template-areas: "debugger scene aside" "debugger toolbar aside" "debugger statusbar settings";
-  grid-template-columns: 327px calc(100vw - 327px - 128px) 128px; }
+  grid-template-columns: 524px calc(100vw - 524px - 128px) 128px; }
 
 .dd__hud.dd__hud--debugger.dd__hud--dialogue {
   grid-template-areas: "debugger dialogue scene aside" "debugger dialogue toolbar aside" "debugger dialogue statusbar settings";
-  grid-template-columns: 327px 524px calc(100vw - 327px - 128px - 524px) 128px; }
+  grid-template-columns: 524px 524px calc(100vw - 524px - 128px - 524px) 128px; }
 
 .dd__hud.dd__hud--dialogue {
   grid-template-areas: "dialogue scene aside" "dialogue toolbar aside" "dialogue statusbar settings";
-  grid-template-columns: 327px 524px calc(100vw - 327px - 128px - 524px) 128px; }
+  grid-template-columns: 524px 524px calc(100vw - 524px - 128px - 524px) 128px; }
 
 .dd__aside.dd__aside--hud,
 .dd__dialogue.dd__dialogue--hud,

@@ -59,7 +59,11 @@ export default class MainView implements CanvasController {
     this.camera.position.set(32, 32, 32);
     this.camera.lookAt(this.scene.position);
 
+    this.debug.updateState(this.loggerBreadcrumbs.add("camera").add("position"), this.camera.position);
+
     this.light.position.set(512, 512, 512);
+
+    this.debug.updateState(this.loggerBreadcrumbs.add("light").add("position"), this.light.position);
   }
 
   async attach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
