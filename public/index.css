@@ -710,7 +710,7 @@ button {
 .dd__dialogue__scrollframe,
 .dd__dialogue__scrollframe__scrollbar {
   backface-visibility: hidden;
-  perspective: 1000; }
+  perspective: 100px; }
 
 .dd__dialogue__scrollframe {
   display: grid;
@@ -878,7 +878,6 @@ button {
 
 .dd__debugger {
   background-image: url("/assets/texture-navy-blue-marble-512.jpg");
-  box-shadow: 0 0 16px black;
   display: grid;
   grid-template-rows: 2.5rem 1fr;
   height: 100%;
@@ -905,14 +904,22 @@ button {
 
 .dd__hud {
   display: grid;
-  grid-template-areas: "dialogue scene aside" "dialogue toolbar aside" "dialogue statusbar settings";
-  grid-template-columns: 524px calc(100vw - 128px - 524px) 128px;
+  grid-template-areas: "scene aside" "toolbar aside" "statusbar settings";
+  grid-template-columns: calc(100vw - 128px) 128px;
   grid-template-rows: calc(100vh - 80px - 50px) 80px 50px;
   height: 100vh;
   position: relative; }
 
 .dd__hud.dd__hud--debugger {
+  grid-template-areas: "debugger scene aside" "debugger toolbar aside" "debugger statusbar settings";
+  grid-template-columns: 327px calc(100vw - 327px - 128px) 128px; }
+
+.dd__hud.dd__hud--debugger.dd__hud--dialogue {
   grid-template-areas: "debugger dialogue scene aside" "debugger dialogue toolbar aside" "debugger dialogue statusbar settings";
+  grid-template-columns: 327px 524px calc(100vw - 327px - 128px - 524px) 128px; }
+
+.dd__hud.dd__hud--dialogue {
+  grid-template-areas: "dialogue scene aside" "dialogue toolbar aside" "dialogue statusbar settings";
   grid-template-columns: 327px 524px calc(100vw - 327px - 128px - 524px) 128px; }
 
 .dd__aside.dd__aside--hud,

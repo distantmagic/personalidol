@@ -54,7 +54,8 @@ export default function Main(props: Props) {
     <React.Fragment>
       <div
         className={classnames("dd__container", "dd__hud", {
-          "dd__hud--debugger": !isDebuggerStateEmpty
+          "dd__hud--debugger": !isDebuggerStateEmpty,
+          "dd__hud--dialogue": true
         })}
       >
         <DialogueLoader

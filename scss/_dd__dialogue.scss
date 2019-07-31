@@ -37,7 +37,7 @@ $dd-dialogue-padding-horizontal: 1rem;
 .dd__dialogue__scrollframe,
 .dd__dialogue__scrollframe__scrollbar {
   backface-visibility: hidden;
-  perspective: 1000;
+  perspective: 100px;
 }
 
 .dd__dialogue__scrollframe {
