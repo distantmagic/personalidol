@@ -4,6 +4,7 @@ import Cancelled from "./Exception/Cancelled";
 import TiledMapObjectCollection from "./TiledMapObjectCollection";
 import TiledMapObjectElementChecker from "./TiledMapObjectElementChecker";
 import TiledMapObjectParser from "./TiledMapObjectParser";
+import { default as TiledException } from "./Exception/Tiled";
 import { default as XMLDocumentException } from "./Exception/XMLDocument";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -30,7 +31,6 @@ export default class TiledMapObjectCollectionParser implements TiledMapObjectCol
     const objectElements = this.documentElement.getElementsByTagName("object");
     const tiledMapObjectCollection = new TiledMapObjectCollection(breadcrumbs.add("TiledMapObjectCollection"));
 
-    console.log(objectElements);
     for (let i = 0; i < objectElements.length; i += 1) {
       const objectElement = objectElements.item(i);
 
@@ -43,12 +43,13 @@ export default class TiledMapObjectCollectionParser implements TiledMapObjectCol
 
       if (tiledMapObjectElementChecker.isEllipse()) {
         tiledMapObjectCollection.addEllipseObject(await tiledMapObjectParser.createEllipseObject(objectElement));
+      } else if (tiledMapObjectElementChecker.isRectangle()) {
+        tiledMapObjectCollection.addRectangleObject(await tiledMapObjectParser.createRectangleObject(objectElement));
+      } else if (tiledMapObjectElementChecker.isPolygon()) {
+        tiledMapObjectCollection.addPolygonObject(await tiledMapObjectParser.createPolygonObject(objectElement));
+      } else {
+        throw new TiledException(breadcrumbs, "Unknown map element type.");
       }
-      console.log(
-        tiledMapObjectElementChecker.isEllipse(),
-        tiledMapObjectElementChecker.isRectangle(),
-        tiledMapObjectElementChecker.isPolygon()
-      );
     }
 
     return tiledMapObjectCollection;

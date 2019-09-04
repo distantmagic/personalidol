@@ -6,4 +6,8 @@ import type { Polygon as TiledMapPolygonObject } from "./TiledMapObject/Polygon"
 
 export interface TiledMapObjectParser {
   createEllipseObject(HTMLElement): Promise<TiledMapEllipseObject>;
+
+  createPolygonObject(HTMLElement): Promise<TiledMapPolygonObject>;
+
+  createRectangleObject(HTMLElement): Promise<TiledMapRectangleObject>;
 }

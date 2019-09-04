@@ -172,11 +172,11 @@ button {
   }
 }
 
-.dd__button:nth-of-type(2):before {
+.dd__button:nth-of-type(3n):before {
   border-top-left-radius: 20px;
 }
 
-.dd__button:nth-of-type(3):before {
+.dd__button:nth-of-type(4n):before {
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
@@ -204,7 +204,10 @@ button {
 
 @each $icon in (backpack, cogs, dialogue, magic, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
-    background-image: url("/assets/icon-#{$icon}.png"), url("/assets/texture-mineshaft-marble-512.png");
+    background-image:
+      url("/assets/icon-#{$icon}.png")
+      , url("/assets/texture-mineshaft-marble-512.png")
+    ;
     background-size: 80%, auto;
   }
 }
