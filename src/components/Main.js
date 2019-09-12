@@ -37,7 +37,7 @@ export default function Main(props: Props) {
   const queryBus = props.game.getQueryBus();
 
   const hasDebugger = !debuggerState.isEmpty();
-  const hasDialogue = true;
+  const hasDialogue = false;
 
   React.useEffect(
     function() {
@@ -83,9 +83,6 @@ export default function Main(props: Props) {
           scheduler={props.game.getScheduler()}
         />
         <HudSettings />
-        <div className="dd__frame dd__statusbar dd__statusbar--hud">
-          Thalantyr: szansa na zadanie obrażeń 56%. Intuicja podpowiada ci, że będzie przyjaźnie nastawiony.
-        </div>
         <HudToolbar hasDebugger={hasDebugger} hasDialogue={hasDialogue} />
         <HudModalRouter
           exceptionHandler={props.exceptionHandler}

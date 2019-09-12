@@ -1,18 +1,18 @@
 // @flow
 
 import Cancelled from "./Exception/Cancelled";
-import TiledMapObjectCollection from "./TiledMapObjectCollection";
 import TiledMapObjectElementChecker from "./TiledMapObjectElementChecker";
+import TiledMapObjectLayer from "./TiledMapObjectLayer";
 import TiledMapObjectParser from "./TiledMapObjectParser";
 import { default as TiledException } from "./Exception/Tiled";
 import { default as XMLDocumentException } from "./Exception/XMLDocument";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { TiledMapObjectCollection as TiledMapObjectCollectionInterface } from "../interfaces/TiledMapObjectCollection";
-import type { TiledMapObjectCollectionParser as TiledMapObjectCollectionParserInterface } from "../interfaces/TiledMapObjectCollectionParser";
+import type { TiledMapObjectLayer as TiledMapObjectLayerInterface } from "../interfaces/TiledMapObjectLayer";
+import type { TiledMapObjectLayerParser as TiledMapObjectLayerParserInterface } from "../interfaces/TiledMapObjectLayerParser";
 
-export default class TiledMapObjectCollectionParser implements TiledMapObjectCollectionParserInterface {
+export default class TiledMapObjectLayerParser implements TiledMapObjectLayerParserInterface {
   +documentElement: HTMLElement;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
@@ -21,7 +21,7 @@ export default class TiledMapObjectCollectionParser implements TiledMapObjectCol
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  async parse(cancelToken: CancelToken): Promise<TiledMapObjectCollectionInterface> {
+  async parse(cancelToken: CancelToken): Promise<TiledMapObjectLayerInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("parse");
 
     if (cancelToken.isCancelled()) {
@@ -29,7 +29,7 @@ export default class TiledMapObjectCollectionParser implements TiledMapObjectCol
     }
 
     const objectElements = this.documentElement.getElementsByTagName("object");
-    const tiledMapObjectCollection = new TiledMapObjectCollection(breadcrumbs.add("TiledMapObjectCollection"));
+    const tiledMapObjectLayer = new TiledMapObjectLayer(breadcrumbs.add("TiledMapObjectLayer"));
 
     for (let i = 0; i < objectElements.length; i += 1) {
       const objectElement = objectElements.item(i);
@@ -42,16 +42,16 @@ export default class TiledMapObjectCollectionParser implements TiledMapObjectCol
       const tiledMapObjectParser = new TiledMapObjectParser(breadcrumbs.add("TiledMapObjectParser"));
 
       if (tiledMapObjectElementChecker.isEllipse()) {
-        tiledMapObjectCollection.addEllipseObject(await tiledMapObjectParser.createEllipseObject(objectElement));
+        tiledMapObjectLayer.addEllipseObject(await tiledMapObjectParser.createEllipseObject(objectElement));
       } else if (tiledMapObjectElementChecker.isRectangle()) {
-        tiledMapObjectCollection.addRectangleObject(await tiledMapObjectParser.createRectangleObject(objectElement));
+        tiledMapObjectLayer.addRectangleObject(await tiledMapObjectParser.createRectangleObject(objectElement));
       } else if (tiledMapObjectElementChecker.isPolygon()) {
-        tiledMapObjectCollection.addPolygonObject(await tiledMapObjectParser.createPolygonObject(objectElement));
+        tiledMapObjectLayer.addPolygonObject(await tiledMapObjectParser.createPolygonObject(objectElement));
       } else {
         throw new TiledException(breadcrumbs, "Unknown map element type.");
       }
     }
 
-    return tiledMapObjectCollection;
+    return tiledMapObjectLayer;
   }
 }

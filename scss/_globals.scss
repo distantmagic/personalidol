@@ -34,7 +34,7 @@ body {
 
   background-color: black;
   background-image: url("/assets/texture-cod-gray-marble-512.png");
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(white, 0.85);
   cursor: $cursor-default;
   display: grid;
   font-family: $font-family-vesper-libre;
@@ -118,8 +118,15 @@ button {
 }
 
 .dd__button,
+.dd__button:before,
+.dd__frame {
+  // border-color: rgba(darken(red, 33%), 0.8);
+  border-color: darken(gray, 33%);
+}
+
+.dd__button,
 .dd__button:before {
-  border-color: rgba(55, 55, 55, 0.6);
+  // border-color: rgba(55, 55, 55, 0.6);
   border-radius: 10px;
   border-width: $dd-frame-border-width;
 }
@@ -131,7 +138,6 @@ button {
   cursor: $cursor-pointer;
   overflow: hidden;
   position: relative;
-  transition: padding 0.05s ease-in-out;
   z-index: $z-index-dd-button;
 
   &:active {
@@ -161,7 +167,6 @@ button {
     content: "";
     left: 0;
     position: absolute;
-    transition: filter 0.05s ease-in-out, transform 0.05s ease-in-out;
     right: 0;
     top: 0;
     z-index: -1;
@@ -213,7 +218,6 @@ button {
 }
 
 .dd__frame {
-  border-color: rgba(55, 55, 55, 0.4);
   background-image: url("/assets/texture-mineshaft-marble-512.png");
   border-radius: $dd-frame-border-radius;
   border-style: outset;
@@ -236,13 +240,13 @@ button {
 }
 
 .dd__table {
-  // background-image: url("/assets/image-nobody-knows-anybody.png"),
-  //   url("/assets/texture-navy-blue-marble-512.jpg");
-  // background-blend-mode: multiply;
-  background-image: url("/assets/texture-navy-blue-marble-512.jpg");
-  // background-position: 100% 100%, center;
-  // background-repeat: no-repeat, repeat;
-  background-repeat: repeat;
+  background-image: url("/assets/image-nobody-knows-anybody.png"),
+    url("/assets/texture-navy-blue-marble-512.jpg");
+  background-blend-mode: multiply;
+  // background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  background-position: 100% 100%, center;
+  background-repeat: no-repeat, repeat;
+  // background-repeat: repeat;
   // background-size: contain, auto;
   background-size: auto;
   border-collapse: collapse;

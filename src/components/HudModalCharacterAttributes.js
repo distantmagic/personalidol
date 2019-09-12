@@ -20,8 +20,6 @@ export default function HudModalCharacterAttributes(props: Props) {
         <dd>1/1-20</dd>
         <dt>Inteligencja i pamięć</dt>
         <dd>1/1-20</dd>
-        <dt>Mądrość i siła woli</dt>
-        <dd>1/1-20</dd>
         <dt>Empatia</dt>
         <dd>1/1-20</dd>
       </dl>

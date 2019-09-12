@@ -21,7 +21,7 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
   }
 
   async createEllipseObject(element: HTMLElement): Promise<TiledMapEllipseObjectInterface> {
-    console.log(element);
+    // console.log(element);
     const breadcrumbs = this.loggerBreadcrumbs.add("createEllipseObject");
 
     return new TiledMapEllipseObject(
@@ -35,7 +35,7 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
   }
 
   async createPolygonObject(element: HTMLElement): Promise<TiledMapPolygonObjectInterface> {
-    console.log(element);
+    // console.log(element);
     const breadcrumbs = this.loggerBreadcrumbs.add("createPolygonObject");
 
     return new TiledMapPolygonObject(
@@ -49,7 +49,7 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
   }
 
   async createRectangleObject(element: HTMLElement): Promise<TiledMapRectangleObjectInterface> {
-    console.log(element);
+    // console.log(element);
     const breadcrumbs = this.loggerBreadcrumbs.add("createRectangleObject");
 
     return new TiledMapRectangleObject(
