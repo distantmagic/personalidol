@@ -66,7 +66,9 @@ export default class TiledTileset implements TiledTilesetInterface {
       return false;
     }
 
-    for (let tile of tiles.values()) {
+    let tile;
+
+    for (tile of tiles.values()) {
       if (!tile.isEqual(other.getTileById(tile.getId()))) {
         return false;
       }

@@ -209,10 +209,7 @@ button {
 
 @each $icon in (backpack, cogs, dialogue, magic, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
-    background-image:
-      url("/assets/icon-#{$icon}.png")
-      , url("/assets/texture-mineshaft-marble-512.png")
-    ;
+    background-image: url("/assets/icon-#{$icon}.png"), url("/assets/texture-mineshaft-marble-512.png");
     background-size: 80%, auto;
   }
 }
@@ -240,8 +237,7 @@ button {
 }
 
 .dd__table {
-  background-image: url("/assets/image-nobody-knows-anybody.png"),
-    url("/assets/texture-navy-blue-marble-512.jpg");
+  background-image: url("/assets/image-nobody-knows-anybody.png"), url("/assets/texture-navy-blue-marble-512.jpg");
   background-blend-mode: multiply;
   // background-image: url("/assets/texture-navy-blue-marble-512.jpg");
   background-position: 100% 100%, center;

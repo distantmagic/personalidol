@@ -53,9 +53,10 @@ export default class DialogueTurn implements DialogueTurnInterface {
   async answers(): Promise<DialogueMessages> {
     const currentMessage = await this.getCurrentMessage();
     const answers = await this.script.getAnswers(currentMessage);
+    let answer;
     let ret = Map<string, DialogueMessageInterface>();
 
-    for (let answer of answers.toSet().toArray()) {
+    for (answer of answers.toSet().toArray()) {
       const condition = answer.condition();
 
       if (!condition || (await this.expressionBus.condition(condition))) {

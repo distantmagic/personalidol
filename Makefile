@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = all
-.PHONY = pretty_backend pretty_frontend
+.PHONY = pretty.backend pretty.frontend
 
 JS_SOURCES = $(shell find src -name "*.js")
 RUST_SOURCES = $(shell find backend/src -name "*.rs")
@@ -26,13 +26,13 @@ frontend: build/index.html build/index.css
 node_modules: yarn.lock
 	yarn install --network-timeout 9000000
 
-pretty: pretty_backend pretty_frontend
+pretty: pretty.backend pretty.frontend
 
-pretty_backend:
+pretty.backend:
 	rustup component add rustfmt
 	cd backend && cargo fmt --all
 
-pretty_frontend:
+pretty.frontend:
 	yarn run prettier
 
 sass.watch:

@@ -1,5 +1,7 @@
 // @flow
 
+import * as angle from "../helpers/angle";
+import * as xml from "../helpers/xml";
 import ElementPosition from "./ElementPosition";
 import ElementRotation from "./ElementRotation";
 import ElementSize from "./ElementSize";
@@ -7,6 +9,9 @@ import { default as TiledMapEllipseObject } from "./TiledMapObject/Ellipse";
 import { default as TiledMapPolygonObject } from "./TiledMapObject/Polygon";
 import { default as TiledMapRectangleObject } from "./TiledMapObject/Rectangle";
 
+import type { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
+import type { ElementRotation as ElementRotationInterface } from "../interfaces/ElementRotation";
+import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 import type { Ellipse as TiledMapEllipseObjectInterface } from "../interfaces/TiledMapObject/Ellipse";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { Polygon as TiledMapPolygonObjectInterface } from "../interfaces/TiledMapObject/Polygon";
@@ -26,9 +31,9 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
 
     return new TiledMapEllipseObject(
       breadcrumbs,
-      "test",
-      new ElementPosition<"tile">(0, 0, 0),
-      new ElementRotation<"radians">(0, 0, 0),
+      xml.getStringAttribute(breadcrumbs, element, "name"),
+      this.getElementPosition(breadcrumbs, element),
+      this.getElementRotation(breadcrumbs, element),
       new ElementSize<"tile">(32, 32),
       "source"
     );
@@ -40,25 +45,44 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
 
     return new TiledMapPolygonObject(
       breadcrumbs,
-      "test",
-      new ElementPosition<"tile">(0, 0, 0),
-      new ElementRotation<"radians">(0, 0, 0),
+      xml.getStringAttribute(breadcrumbs, element, "name"),
+      this.getElementPosition(breadcrumbs, element),
+      this.getElementRotation(breadcrumbs, element),
       new ElementSize<"tile">(32, 32),
       "source"
     );
   }
 
   async createRectangleObject(element: HTMLElement): Promise<TiledMapRectangleObjectInterface> {
-    // console.log(element);
     const breadcrumbs = this.loggerBreadcrumbs.add("createRectangleObject");
 
     return new TiledMapRectangleObject(
       breadcrumbs,
-      "test",
-      new ElementPosition<"tile">(0, 0, 0),
-      new ElementRotation<"radians">(0, 0, 0),
+      xml.getStringAttribute(breadcrumbs, element, "name"),
+      this.getElementPosition(breadcrumbs, element),
+      this.getElementRotation(breadcrumbs, element),
       new ElementSize<"tile">(32, 32),
       "source"
+    );
+  }
+
+  getElementPosition(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementPositionInterface<"tile"> {
+    return new ElementPosition<"tile">(
+      xml.getNumberAttribute(breadcrumbs, element, "x"),
+      xml.getNumberAttribute(breadcrumbs, element, "y"),
+      xml.getNumberAttribute(breadcrumbs, element, "z", 0)
+    );
+  }
+
+  getElementRotation(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementRotationInterface<"radians"> {
+    return new ElementRotation<"radians">(0, angle.deg2radians(xml.getNumberAttribute(breadcrumbs, element, "y")), 0);
+  }
+
+  getElementSize(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementSizeInterface<"tile"> {
+    return new ElementSize<"tile">(
+      xml.getNumberAttribute(breadcrumbs, element, "width"),
+      xml.getNumberAttribute(breadcrumbs, element, "height"),
+      0
     );
   }
 }

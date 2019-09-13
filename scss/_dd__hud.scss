@@ -10,8 +10,7 @@ $dd-hud-toolbar-height: 80px;
   display: grid;
   grid-template-areas:
     "scene aside"
-    "toolbar settings"
-  ;
+    "toolbar settings";
   grid-template-columns:
     calc(100vw - #{$dd-hud-aside-width})
     $dd-hud-aside-width;
@@ -25,8 +24,7 @@ $dd-hud-toolbar-height: 80px;
 .dd__hud.dd__hud--debugger {
   grid-template-areas:
     "debugger scene aside"
-    "debugger toolbar settings"
-  ;
+    "debugger toolbar settings";
   grid-template-columns:
     $dd-hud-debugger-width
     calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width})
@@ -36,8 +34,7 @@ $dd-hud-toolbar-height: 80px;
 .dd__hud.dd__hud--debugger.dd__hud--dialogue {
   grid-template-areas:
     "debugger scene dialogue aside"
-    "debugger toolbar dialogue settings"
-  ;
+    "debugger toolbar dialogue settings";
   grid-template-columns:
     $dd-hud-debugger-width
     calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
@@ -48,8 +45,7 @@ $dd-hud-toolbar-height: 80px;
 .dd__hud.dd__hud--dialogue {
   grid-template-areas:
     "scene dialogue aside"
-    "toolbar dialogue settings"
-  ;
+    "toolbar dialogue settings";
   grid-template-columns:
     $dd-hud-debugger-width
     calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})

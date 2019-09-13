@@ -1,12 +1,15 @@
 // @flow
 
+import TiledMapObjectCollection from "./TiledMapObjectCollection";
+
 import type { Ellipse as TiledMapEllipseObjectInterface } from "../interfaces/TiledMapObject/Ellipse";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { Polygon as TiledMapPolygonObjectInterface } from "../interfaces/TiledMapObject/Polygon";
 import type { Rectangle as TiledMapRectangleObjectInterface } from "../interfaces/TiledMapObject/Rectangle";
 import type { TiledMapObjectCollection as TiledMapObjectCollectionInterface } from "../interfaces/TiledMapObjectCollection";
+import type { TiledMapObjectLayer as TiledMapObjectLayerInterface } from "../interfaces/TiledMapObjectLayer";
 
-export default class TiledMapObjectCollection implements TiledMapObjectCollectionInterface {
+export default class TiledMapObjectLayer implements TiledMapObjectLayerInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tiledMapEllipseObjects: Array<TiledMapEllipseObjectInterface>;
   +tiledMapRectangleObjects: Array<TiledMapRectangleObjectInterface>;
@@ -31,15 +34,15 @@ export default class TiledMapObjectCollection implements TiledMapObjectCollectio
     this.tiledMapRectangleObjects.push(tiledMapRectangleObject);
   }
 
-  getEllipseObjects(): $ReadOnlyArray<TiledMapEllipseObjectInterface> {
-    return this.tiledMapEllipseObjects;
+  getEllipseObjects(): TiledMapObjectCollectionInterface<TiledMapEllipseObjectInterface> {
+    return new TiledMapObjectCollection<TiledMapEllipseObjectInterface>(this.tiledMapEllipseObjects);
   }
 
-  getPolygonObjects(): $ReadOnlyArray<TiledMapPolygonObjectInterface> {
-    return this.tiledMapPolygonObjects;
+  getPolygonObjects(): TiledMapObjectCollectionInterface<TiledMapPolygonObjectInterface> {
+    return new TiledMapObjectCollection<TiledMapPolygonObjectInterface>(this.tiledMapPolygonObjects);
   }
 
-  getRectangleObjects(): $ReadOnlyArray<TiledMapRectangleObjectInterface> {
-    return this.tiledMapRectangleObjects;
+  getRectangleObjects(): TiledMapObjectCollectionInterface<TiledMapRectangleObjectInterface> {
+    return new TiledMapObjectCollection<TiledMapRectangleObjectInterface>(this.tiledMapRectangleObjects);
   }
 }

@@ -31,8 +31,9 @@ export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterfa
 
   async *generateSkinnedTiles(cancelToken: CancelToken): AsyncGenerator<TiledSkinnedTileInterface, void, void> {
     const tiledMapGrid = this.tiledMapLayer.getTiledMapGrid();
+    let positionedTile;
 
-    for await (let positionedTile of tiledMapGrid.generatePositionedTiles()) {
+    for await (positionedTile of tiledMapGrid.generatePositionedTiles()) {
       if (cancelToken.isCancelled()) {
         throw new Cancelled(
           this.loggerBreadcrumbs.add("generateSkinnedTiles"),

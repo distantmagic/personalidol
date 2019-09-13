@@ -49,7 +49,9 @@ export default class TiledCustomProperties implements TiledCustomPropertiesInter
       return false;
     }
 
-    for (let otherKey of otherKeys) {
+    let otherKey;
+
+    for (otherKey of otherKeys) {
       if (!this.hasPropertyByName(otherKey)) {
         return false;
       }

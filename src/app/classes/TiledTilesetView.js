@@ -85,8 +85,10 @@ export default class TiledTilesetView implements CanvasView {
       "bool",
       "true"
     );
+    let tiledMapSkinnedLayer;
+    let tiledSkinnedTile;
 
-    for await (let tiledMapSkinnedLayer of tiledMap.generateSkinnedLayers(cancelToken)) {
+    for await (tiledMapSkinnedLayer of tiledMap.generateSkinnedLayers(cancelToken)) {
       const layerGroup = new THREE.Group();
       const isWalkabilityMap = tiledMapSkinnedLayer
         .getTiledMapLayer()
@@ -98,7 +100,7 @@ export default class TiledTilesetView implements CanvasView {
         // continue;
       }
 
-      for await (let tiledSkinnedTile of tiledMapSkinnedLayer.generateSkinnedTiles(cancelToken)) {
+      for await (tiledSkinnedTile of tiledMapSkinnedLayer.generateSkinnedTiles(cancelToken)) {
         const tileMesh = tilesetMeshes.getTiledSkinnedTileMesh(tiledSkinnedTile);
 
         layerGroup.add(tileMesh);

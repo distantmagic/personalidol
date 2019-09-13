@@ -38,7 +38,9 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
   }
 
   begin(): void {
-    for (let child of this.children) {
+    let child;
+
+    for (child of this.children) {
       child.begin();
     }
   }
@@ -67,7 +69,9 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
   }
 
   update(delta: number): void {
-    for (let child of this.children) {
+    let child;
+
+    for (child of this.children) {
       child.update(delta);
     }
   }

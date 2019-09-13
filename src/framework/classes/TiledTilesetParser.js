@@ -82,7 +82,9 @@ export default class TiledTilesetParser implements TiledTilesetParserInterface {
       tiledTilePromises.push(tileParser.parse(cancelToken));
     }
 
-    for (let tiledTile of await Promise.all(tiledTilePromises)) {
+    let tiledTile;
+
+    for (tiledTile of await Promise.all(tiledTilePromises)) {
       tiledTileset.add(tiledTile);
     }
 

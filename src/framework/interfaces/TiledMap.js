@@ -5,6 +5,7 @@ import type { ElementSize } from "./ElementSize";
 import type { Equatable } from "./Equatable";
 import type { TiledCustomProperty } from "./TiledCustomProperty";
 import type { TiledMapLayer } from "./TiledMapLayer";
+import type { TiledMapObjectLayer } from "./TiledMapObjectLayer";
 import type { TiledMapSkinnedLayer } from "./TiledMapSkinnedLayer";
 import type { TiledTileset } from "./TiledTileset";
 import type { TiledTilesetOffsetCollection } from "./TiledTilesetOffsetCollection";
@@ -19,6 +20,8 @@ export interface TiledMap extends Equatable<TiledMap> {
   getLayerWithProperty(TiledCustomProperty): TiledMapLayer;
 
   getMapSize(): ElementSize<"tile">;
+
+  getTiledMapObjectLayer(): TiledMapObjectLayer;
 
   getTileSize(): ElementSize<"px">;
 

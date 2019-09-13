@@ -18,13 +18,15 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
   }
 
   async captureException(loggerBreadcrumbs: LoggerBreadcrumbs, error: Error): Promise<void> {
+    let breadcrumb;
+
     this.logger.debug(loggerBreadcrumbs, "ExceptionHandler");
 
-    for (let breadcrumb of loggerBreadcrumbs.getBreadcrumbs()) {
+    for (breadcrumb of loggerBreadcrumbs.getBreadcrumbs()) {
       this.logger.debug(loggerBreadcrumbs, `${breadcrumb}`);
     }
     if (error instanceof Exception) {
-      for (let breadcrumb of error.loggerBreadcrumbs.getBreadcrumbs()) {
+      for (breadcrumb of error.loggerBreadcrumbs.getBreadcrumbs()) {
         this.logger.debug(loggerBreadcrumbs, `${breadcrumb}`);
       }
     }

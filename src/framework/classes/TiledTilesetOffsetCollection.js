@@ -32,7 +32,9 @@ export default class TiledTilesetOffsetCollection implements TiledTilesetOffsetC
   }
 
   getTiledTilesetOffsetByOffsettedId(tiledTileOffsettedId: number): TiledTilesetOffset {
-    for (let tiledTilesetOffset of this.tiledTilesetOffsets) {
+    let tiledTilesetOffset;
+
+    for (tiledTilesetOffset of this.tiledTilesetOffsets) {
       if (tiledTilesetOffset.hasTiledTileOffsetedId(tiledTileOffsettedId)) {
         return tiledTilesetOffset;
       }
@@ -49,7 +51,9 @@ export default class TiledTilesetOffsetCollection implements TiledTilesetOffsetC
   }
 
   hasTiledTilesetOffset(tiledTilesetOffset: TiledTilesetOffset): boolean {
-    for (let thisTiledTilesetOffset of this.getTiledTilesetOffsets().values()) {
+    let thisTiledTilesetOffset;
+
+    for (thisTiledTilesetOffset of this.getTiledTilesetOffsets().values()) {
       if (tiledTilesetOffset.isEqual(thisTiledTilesetOffset)) {
         return true;
       }
@@ -66,7 +70,9 @@ export default class TiledTilesetOffsetCollection implements TiledTilesetOffsetC
       return false;
     }
 
-    for (let thisTiledTilesetOffset of thisTiledTilesetOffsets.values()) {
+    let thisTiledTilesetOffset;
+
+    for (thisTiledTilesetOffset of thisTiledTilesetOffsets.values()) {
       if (!other.hasTiledTilesetOffset(thisTiledTilesetOffset)) {
         return false;
       }

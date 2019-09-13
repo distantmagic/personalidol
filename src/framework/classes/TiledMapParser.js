@@ -7,7 +7,7 @@ import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
 import TiledMap from "./TiledMap";
 import TiledMapLayerParser from "./TiledMapLayerParser";
-import TiledMapObjectCollectionParser from "./TiledMapObjectCollectionParser";
+import TiledMapObjectLayerParser from "./TiledMapObjectLayerParser";
 import TiledTilesetOffsetCollectionParser from "./TiledTilesetOffsetCollectionParser";
 import { default as TiledMapException } from "./Exception/Tiled/Map";
 import { default as XMLDocumentException } from "./Exception/XMLDocument";
@@ -64,6 +64,14 @@ export default class TiledMapParser implements TiledMapParserInterface {
     );
     const tiledTilesetOffsetCollection = await tiledTilesetOffsetCollectionParser.parse(cancelToken);
 
+    // objects layer
+
+    const tiledMapObjectLayerParser = new TiledMapObjectLayerParser(
+      breadcrumbs.add("TiledMapObjectLayerParser"),
+      documentElement
+    );
+    const tiledMapObjectLayer = await tiledMapObjectLayerParser.parse(cancelToken);
+
     // map itself
 
     const mapSize = new ElementSize<"tile">(
@@ -75,7 +83,13 @@ export default class TiledMapParser implements TiledMapParserInterface {
       xml.getNumberAttribute(breadcrumbs, documentElement, "tileheight")
     );
 
-    const tiledMap = new TiledMap(breadcrumbs.add("TiledMap"), mapSize, tileSize, tiledTilesetOffsetCollection);
+    const tiledMap = new TiledMap(
+      breadcrumbs.add("TiledMap"),
+      mapSize,
+      tileSize,
+      tiledTilesetOffsetCollection,
+      tiledMapObjectLayer
+    );
 
     // layers
 
@@ -101,54 +115,6 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
       tiledMap.addLayer(tiledMapLayer);
     }
-
-    // objects
-
-    const tiledMapObjectCollectionParser = new TiledMapObjectCollectionParser(
-      breadcrumbs.add("TiledMapObjectCollectionParser"),
-      documentElement
-    );
-
-    console.log(await tiledMapObjectCollectionParser.parse(cancelToken));
-
-    // const objectElements = documentElement.getElementsByTagName("object");
-
-    // for (let i = 0; i < objectElements.length; i += 1) {
-    //   const objectElement = objectElements.item(i);
-
-    //   if (!objectElement) {
-    //     continue;
-    //   }
-
-    //   const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(objectElement);
-    //   // ellipse or rectangle
-    //   if (tiledMapObjectElementChecker.isEllipse() || tiledMapObjectElementChecker.isRectangle()) {
-    //     const tiledMapObjectParser = new TiledMapBlockObjectParser(
-    //       breadcrumbs.add("TiledMapBlockObjectParser"),
-    //       this.mapFilename,
-    //       objectElement,
-    //       tileSize
-    //     );
-    //     const tiledMapBlockObject = await tiledMapObjectParser.parse(cancelToken);
-
-    //     if (tiledMapObjectElementChecker.isEllipse()) {
-    //       tiledMap.addEllipseObject(new TiledMapEllipseObject(tiledMapBlockObject));
-    //     } else {
-    //       tiledMap.addRectangleObject(new TiledMapRectangleObject(tiledMapBlockObject));
-    //     }
-    //     // polygon
-    //   } else {
-    //     const tiledMapPolygonObjectParser = new TiledMapPolygonObjectParser(
-    //       breadcrumbs.add("TiledMapPolygonObjectParser"),
-    //       this.mapFilename,
-    //       objectElement,
-    //       tileSize
-    //     );
-    //     const tiledMapPolygonObject = await tiledMapPolygonObjectParser.parse(cancelToken);
-
-    //     tiledMap.addPolygonObject(tiledMapPolygonObject);
-    //   }
-    // }
 
     return tiledMap;
   }

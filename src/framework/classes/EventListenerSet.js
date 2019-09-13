@@ -19,7 +19,9 @@ export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements
   }
 
   notify(args: Arguments, clearAfter: boolean = false): void {
-    for (let callback of this.callbacks.values()) {
+    let callback;
+
+    for (callback of this.callbacks.values()) {
       callback(...args);
     }
 

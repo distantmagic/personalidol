@@ -10,6 +10,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledCustomProperty } from "../interfaces/TiledCustomProperty";
 import type { TiledMap as TiledMapInterface } from "../interfaces/TiledMap";
 import type { TiledMapLayer } from "../interfaces/TiledMapLayer";
+import type { TiledMapObjectLayer } from "../interfaces/TiledMapObjectLayer";
 import type { TiledMapSkinnedLayer as TiledMapSkinnedLayerInterface } from "../interfaces/TiledMapSkinnedLayer";
 import type { TiledTileset } from "../interfaces/TiledTileset";
 import type { TiledTilesetOffset } from "../interfaces/TiledTilesetOffset";
@@ -19,6 +20,7 @@ export default class TiledMap implements TiledMapInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mapSize: ElementSize<"tile">;
   +tiledMapLayers: Array<TiledMapLayer>;
+  +tiledMapObjectLayer: TiledMapObjectLayer;
   +tiledTilesetOffsetCollection: TiledTilesetOffsetCollection;
   +tileSize: ElementSize<"px">;
 
@@ -26,11 +28,13 @@ export default class TiledMap implements TiledMapInterface {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     mapSize: ElementSize<"tile">,
     tileSize: ElementSize<"px">,
-    tiledTilesetOffsetCollection: TiledTilesetOffsetCollection
+    tiledTilesetOffsetCollection: TiledTilesetOffsetCollection,
+    tiledMapObjectLayer: TiledMapObjectLayer
   ) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mapSize = mapSize;
     this.tiledMapLayers = [];
+    this.tiledMapObjectLayer = tiledMapObjectLayer;
     this.tiledTilesetOffsetCollection = tiledTilesetOffsetCollection;
     this.tileSize = tileSize;
   }
@@ -40,7 +44,9 @@ export default class TiledMap implements TiledMapInterface {
   }
 
   async *generateSkinnedLayers(cancelToken: CancelToken): AsyncGenerator<TiledMapSkinnedLayerInterface, void, void> {
-    for (let layer of this.getLayers()) {
+    let layer;
+
+    for (layer of this.getLayers()) {
       if (cancelToken.isCancelled()) {
         throw new Cancelled(
           this.loggerBreadcrumbs.add("generateSkinnedLayers").add(layer.getName()),
@@ -62,7 +68,9 @@ export default class TiledMap implements TiledMapInterface {
   }
 
   getLayerWithProperty(tiledCustomProperty: TiledCustomProperty): TiledMapLayer {
-    for (let layer of this.getLayers()) {
+    let layer;
+
+    for (layer of this.getLayers()) {
       if (layer.getTiledCustomProperties().hasProperty(tiledCustomProperty)) {
         return layer;
       }
@@ -76,6 +84,10 @@ export default class TiledMap implements TiledMapInterface {
 
   getMapSize(): ElementSize<"tile"> {
     return this.mapSize;
+  }
+
+  getTiledMapObjectLayer(): TiledMapObjectLayer {
+    return this.tiledMapObjectLayer;
   }
 
   getTileSize(): ElementSize<"px"> {
@@ -95,7 +107,9 @@ export default class TiledMap implements TiledMapInterface {
   }
 
   hasLayerWithProperty(tiledCustomProperty: TiledCustomProperty): boolean {
-    for (let layer of this.getLayers()) {
+    let layer;
+
+    for (layer of this.getLayers()) {
       if (layer.getTiledCustomProperties().hasProperty(tiledCustomProperty)) {
         return true;
       }

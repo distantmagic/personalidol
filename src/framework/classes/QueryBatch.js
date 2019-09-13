@@ -32,9 +32,12 @@ function includesSimilar(collection: QueryBusQueueCollection, other: CancelToken
 }
 
 function infer(allQueries: QueryBusQueueCollection, executedQueries: QueryBusQueueCollection): void {
-  for (let cancelTokenQuery of executedQueries) {
+  let cancelTokenQuery;
+  let similarQuery;
+
+  for (cancelTokenQuery of executedQueries) {
     const similarQueries = findSimilar(findActive(allQueries), cancelTokenQuery);
-    for (let similarQuery of similarQueries) {
+    for (similarQuery of similarQueries) {
       similarQuery.setExecuted(cancelTokenQuery.getResult());
     }
   }

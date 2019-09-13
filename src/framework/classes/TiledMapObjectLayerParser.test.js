@@ -16,13 +16,13 @@ it("parses object collection", async function() {
 
   const ellipseObjects = tiledMapObjectCollection.getEllipseObjects();
 
-  expect(ellipseObjects).toHaveLength(1);
+  expect(ellipseObjects.asArray()).toHaveLength(1);
 
   const polygonObjects = tiledMapObjectCollection.getPolygonObjects();
 
-  expect(polygonObjects).toHaveLength(1);
+  expect(polygonObjects.asArray()).toHaveLength(1);
 
   const rectangleObjects = tiledMapObjectCollection.getRectangleObjects();
 
-  expect(rectangleObjects).toHaveLength(2);
+  expect(rectangleObjects.asArray()).toHaveLength(2);
 });

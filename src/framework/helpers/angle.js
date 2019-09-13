@@ -14,6 +14,10 @@ function partialTheta(sx: number, sy: number, ex: number, ey: number): number {
   return Math.atan2(dy, dx);
 }
 
+export function deg2radians(deg: number): number {
+  return (deg * Math.PI) / 180;
+}
+
 export function theta<T: ElementPositionUnit>(
   p1: ElementPosition<T>,
   p2: ElementPosition<T>

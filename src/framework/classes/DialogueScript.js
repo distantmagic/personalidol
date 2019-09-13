@@ -25,9 +25,10 @@ export default class DialogueScript implements Contextual {
 
   async getAnswers(prompt: DialogueMessageInterface): Promise<DialogueMessages> {
     const messages = await this.getMessages();
+    let message;
     let ret = Map<string, DialogueMessageInterface>();
 
-    for (let message of messages.toSet().toArray()) {
+    for (message of messages.toSet().toArray()) {
       if (await message.isAnswerTo(prompt)) {
         ret = ret.set(message.key(), message);
       }
@@ -45,9 +46,10 @@ export default class DialogueScript implements Contextual {
   }
 
   async getMessages(): Promise<DialogueMessages> {
+    let id;
     let ret = Map<string, DialogueMessageInterface>();
 
-    for (let id in this.script.messages) {
+    for (id in this.script.messages) {
       if (this.script.messages.hasOwnProperty(id)) {
         const message = new DialogueMessage(
           this.expressionBus,

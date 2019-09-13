@@ -1,8 +1,9 @@
 // @flow
 
 import type { Ellipse as TiledMapEllipseObject } from "./TiledMapObject/Ellipse";
-import type { Rectangle as TiledMapRectangleObject } from "./TiledMapObject/Rectangle";
 import type { Polygon as TiledMapPolygonObject } from "./TiledMapObject/Polygon";
+import type { Rectangle as TiledMapRectangleObject } from "./TiledMapObject/Rectangle";
+import type { TiledMapObjectCollection } from "./TiledMapObjectCollection";
 
 export interface TiledMapObjectLayer {
   addEllipseObject(TiledMapEllipseObject): void;
@@ -11,9 +12,9 @@ export interface TiledMapObjectLayer {
 
   addRectangleObject(TiledMapRectangleObject): void;
 
-  getEllipseObjects(): $ReadOnlyArray<TiledMapEllipseObject>;
+  getEllipseObjects(): TiledMapObjectCollection<TiledMapEllipseObject>;
 
-  getPolygonObjects(): $ReadOnlyArray<TiledMapPolygonObject>;
+  getPolygonObjects(): TiledMapObjectCollection<TiledMapPolygonObject>;
 
-  getRectangleObjects(): $ReadOnlyArray<TiledMapRectangleObject>;
+  getRectangleObjects(): TiledMapObjectCollection<TiledMapRectangleObject>;
 }

@@ -1,12 +1,18 @@
 [ignore]
+<PROJECT_ROOT>/build/.*
 
 [include]
+<PROJECT_ROOT>/src
 
 [libs]
 flow-typed
 
 [lints]
+all=warn
 
 [options]
 
 [strict]
+
+[untyped]
+<PROJECT_ROOT>/src/three/.*

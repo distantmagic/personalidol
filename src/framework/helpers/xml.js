@@ -94,7 +94,9 @@ export function hasAllAttributes(
     [string]: string,
   }
 ) {
-  for (let attributeName of Object.keys(attributes)) {
+  let attributeName;
+
+  for (attributeName of Object.keys(attributes)) {
     const attribute = element.attributes.getNamedItem(attributeName);
     if (!attribute || attribute.value !== attributes[attributeName]) {
       return false;
