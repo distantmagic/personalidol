@@ -35,14 +35,23 @@ export default class TiledMapObjectLayer implements TiledMapObjectLayerInterface
   }
 
   getEllipseObjects(): TiledMapObjectCollectionInterface<TiledMapEllipseObjectInterface> {
-    return new TiledMapObjectCollection<TiledMapEllipseObjectInterface>(this.tiledMapEllipseObjects);
+    return new TiledMapObjectCollection<TiledMapEllipseObjectInterface>(
+      this.loggerBreadcrumbs.add("getEllipseObjects"),
+      this.tiledMapEllipseObjects
+    );
   }
 
   getPolygonObjects(): TiledMapObjectCollectionInterface<TiledMapPolygonObjectInterface> {
-    return new TiledMapObjectCollection<TiledMapPolygonObjectInterface>(this.tiledMapPolygonObjects);
+    return new TiledMapObjectCollection<TiledMapPolygonObjectInterface>(
+      this.loggerBreadcrumbs.add("getPolygonObjects"),
+      this.tiledMapPolygonObjects
+    );
   }
 
   getRectangleObjects(): TiledMapObjectCollectionInterface<TiledMapRectangleObjectInterface> {
-    return new TiledMapObjectCollection<TiledMapRectangleObjectInterface>(this.tiledMapRectangleObjects);
+    return new TiledMapObjectCollection<TiledMapRectangleObjectInterface>(
+      this.loggerBreadcrumbs.add("getRectangleObjects"),
+      this.tiledMapRectangleObjects
+    );
   }
 }

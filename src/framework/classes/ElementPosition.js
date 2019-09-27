@@ -2,6 +2,8 @@
 
 import * as THREE from "three";
 
+import * as dmmath from "../helpers/dmmath";
+
 import type { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 
@@ -46,5 +48,13 @@ export default class ElementPosition<Unit: ElementPositionUnit> implements Eleme
 
   isEqual(other: ElementPositionInterface<Unit>): boolean {
     return this.getX() === other.getX() && this.getY() === other.getY() && this.getZ() === other.getZ();
+  }
+
+  isEqualWithPrecision(other: ElementPositionInterface<Unit>, precision: number): boolean {
+    return (
+      dmmath.isEqualWithPrecision(this.getX(), other.getX(), precision) &&
+      dmmath.isEqualWithPrecision(this.getY(), other.getY(), precision) &&
+      dmmath.isEqualWithPrecision(this.getZ(), other.getZ(), precision)
+    );
   }
 }

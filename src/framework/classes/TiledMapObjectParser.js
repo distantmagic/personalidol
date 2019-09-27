@@ -26,7 +26,6 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
   }
 
   async createEllipseObject(element: HTMLElement): Promise<TiledMapEllipseObjectInterface> {
-    // console.log(element);
     const breadcrumbs = this.loggerBreadcrumbs.add("createEllipseObject");
 
     return new TiledMapEllipseObject(
@@ -34,13 +33,12 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
       xml.getStringAttribute(breadcrumbs, element, "name"),
       this.getElementPosition(breadcrumbs, element),
       this.getElementRotation(breadcrumbs, element),
-      new ElementSize<"tile">(32, 32),
+      this.getRectangleElementSize(breadcrumbs, element),
       "source"
     );
   }
 
   async createPolygonObject(element: HTMLElement): Promise<TiledMapPolygonObjectInterface> {
-    // console.log(element);
     const breadcrumbs = this.loggerBreadcrumbs.add("createPolygonObject");
 
     return new TiledMapPolygonObject(
@@ -61,7 +59,7 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
       xml.getStringAttribute(breadcrumbs, element, "name"),
       this.getElementPosition(breadcrumbs, element),
       this.getElementRotation(breadcrumbs, element),
-      new ElementSize<"tile">(32, 32),
+      this.getRectangleElementSize(breadcrumbs, element),
       "source"
     );
   }
@@ -75,10 +73,12 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
   }
 
   getElementRotation(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementRotationInterface<"radians"> {
-    return new ElementRotation<"radians">(0, angle.deg2radians(xml.getNumberAttribute(breadcrumbs, element, "y")), 0);
+    const rotation = angle.deg2radians(xml.getNumberAttribute(breadcrumbs, element, "rotation", 0));
+
+    return new ElementRotation<"radians">(0, 0, rotation);
   }
 
-  getElementSize(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementSizeInterface<"tile"> {
+  getRectangleElementSize(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementSizeInterface<"tile"> {
     return new ElementSize<"tile">(
       xml.getNumberAttribute(breadcrumbs, element, "width"),
       xml.getNumberAttribute(breadcrumbs, element, "height"),

@@ -1,5 +1,7 @@
 // @flow
 
+import * as dmmath from "../helpers/dmmath";
+
 import type { ElementRotation as ElementRotationInterface } from "../interfaces/ElementRotation";
 import type { ElementRotationUnit } from "../types/ElementRotationUnit";
 
@@ -31,6 +33,14 @@ export default class ElementRotation<Unit: ElementRotationUnit> implements Eleme
       this.getRotationX() === other.getRotationX() &&
       this.getRotationY() === other.getRotationY() &&
       this.getRotationZ() === other.getRotationZ()
+    );
+  }
+
+  isEqualWithPrecision(other: ElementRotationInterface<Unit>, precision: number): boolean {
+    return (
+      dmmath.isEqualWithPrecision(this.getRotationX(), other.getRotationX(), precision) &&
+      dmmath.isEqualWithPrecision(this.getRotationY(), other.getRotationY(), precision) &&
+      dmmath.isEqualWithPrecision(this.getRotationZ(), other.getRotationZ(), precision)
     );
   }
 }

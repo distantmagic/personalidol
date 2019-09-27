@@ -27,3 +27,10 @@ it("is comparable with other element positions", function() {
 
   expect(elementPosition1.isEqual(elementPosition2)).toBe(false);
 });
+
+it("is comparable with other element positions with precision", function() {
+  const elementPosition1 = new ElementPosition(10.005, 10.005, 5.005);
+  const elementPosition2 = new ElementPosition(10.01, 10.01, 5.01);
+
+  expect(elementPosition1.isEqualWithPrecision(elementPosition2, -2)).toBe(true);
+});

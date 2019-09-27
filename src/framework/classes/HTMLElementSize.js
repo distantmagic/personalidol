@@ -1,5 +1,7 @@
 // @flow
 
+import * as dmmath from "../helpers/dmmath";
+
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";
 
@@ -46,5 +48,12 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
 
   isEqual(other: ElementSize<"px">): boolean {
     return this.getHeight() === other.getHeight() && this.getWidth() === other.getWidth();
+  }
+
+  isEqualWithPrecision(other: ElementSize<"px">, precision: number): boolean {
+    return (
+      dmmath.isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) &&
+      dmmath.isEqualWithPrecision(this.getWidth(), other.getWidth(), precision)
+    );
   }
 }

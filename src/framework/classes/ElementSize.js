@@ -1,5 +1,7 @@
 // @flow
 
+import * as dmmath from "../helpers/dmmath";
+
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 
@@ -39,6 +41,14 @@ export default class ElementSize<Unit: ElementPositionUnit> implements ElementSi
       this.getDepth() === other.getDepth() &&
       this.getHeight() === other.getHeight() &&
       this.getWidth() === other.getWidth()
+    );
+  }
+
+  isEqualWithPrecision(other: ElementSizeInterface<Unit>, precision: number): boolean {
+    return (
+      dmmath.isEqualWithPrecision(this.getDepth(), other.getDepth(), precision) &&
+      dmmath.isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) &&
+      dmmath.isEqualWithPrecision(this.getWidth(), other.getWidth(), precision)
     );
   }
 }

@@ -1,9 +1,9 @@
 // @flow
 
-import type { Equatable } from "./Equatable";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
+import type { EquatableWithPrecision } from "./EquatableWithPrecision";
 
-export interface ElementSize<Unit: ElementPositionUnit> extends Equatable<ElementSize<Unit>> {
+export interface ElementSize<Unit: ElementPositionUnit> extends EquatableWithPrecision<ElementSize<Unit>> {
   getBaseArea(): number;
 
   getAspect(): number;

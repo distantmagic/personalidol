@@ -1,9 +1,9 @@
 // @flow
 
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
-import type { Equatable } from "./Equatable";
+import type { EquatableWithPrecision } from "./EquatableWithPrecision";
 
-export interface ElementPosition<Unit: ElementPositionUnit> extends Equatable<ElementPosition<Unit>> {
+export interface ElementPosition<Unit: ElementPositionUnit> extends EquatableWithPrecision<ElementPosition<Unit>> {
   distanceTo(ElementPosition<Unit>): number;
 
   getX(): number;
