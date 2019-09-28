@@ -12,12 +12,12 @@ import type { TiledCustomProperties as TiledCustomPropertiesInterface } from "..
 import type { TiledCustomPropertiesParser as TiledCustomPropertiesParserInterface } from "../interfaces/TiledCustomPropertiesParser";
 
 export default class TiledCustomPropertiesParser implements TiledCustomPropertiesParserInterface {
-  +propertiesElement: HTMLElement;
+  +element: HTMLElement;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, propertiesElement: HTMLElement) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.propertiesElement = propertiesElement;
+    this.element = element;
   }
 
   async parse(cancelToken: CancelToken): Promise<TiledCustomPropertiesInterface> {
@@ -27,18 +27,26 @@ export default class TiledCustomPropertiesParser implements TiledCustomPropertie
       throw new Cancelled(currentLoggerBreadcrumbs, "Cancel token was cancelled before parsing custom properties.");
     }
 
-    if ("properties" !== this.propertiesElement.localName) {
+    const propertiesElements = this.element.getElementsByTagName("properties");
+
+    if (0 === propertiesElements.length) {
+      // empty properties list for consitency
+      return new TiledCustomProperties(currentLoggerBreadcrumbs);
+    }
+
+    if (1 !== propertiesElements.length) {
       throw new TiledCustomPropertiesException(
         currentLoggerBreadcrumbs,
-        "Properties element must be named 'properties'."
+        "Object may contain only 1 properties set."
       );
     }
 
-    const propertiesElements = this.propertiesElement.getElementsByTagName("property");
+    const propertiesElement = assert<HTMLElement>(currentLoggerBreadcrumbs, propertiesElements.item(0));
+    const elements = propertiesElement.getElementsByTagName("property");
     const tiledCustomProperties = new TiledCustomProperties(currentLoggerBreadcrumbs);
 
-    for (let i = 0; i < propertiesElements.length; i += 1) {
-      const propertyElement = assert<HTMLElement>(currentLoggerBreadcrumbs, propertiesElements.item(i));
+    for (let i = 0; i < elements.length; i += 1) {
+      const propertyElement = assert<HTMLElement>(currentLoggerBreadcrumbs, elements.item(i));
       const tiledCustomPropertyParser = new TiledCustomPropertyParser(currentLoggerBreadcrumbs, propertyElement);
       const tiledCustomProperty = await tiledCustomPropertyParser.parse(cancelToken);
 

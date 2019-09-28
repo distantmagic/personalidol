@@ -66,9 +66,14 @@ export default class TiledMapParser implements TiledMapParserInterface {
 
     // objects layer
 
+    const tileSize = new ElementSize<"px">(
+      xml.getNumberAttribute(breadcrumbs, documentElement, "tilewidth"),
+      xml.getNumberAttribute(breadcrumbs, documentElement, "tileheight")
+    );
     const tiledMapObjectLayerParser = new TiledMapObjectLayerParser(
       breadcrumbs.add("TiledMapObjectLayerParser"),
-      documentElement
+      documentElement,
+      tileSize
     );
     const tiledMapObjectLayer = await tiledMapObjectLayerParser.parse(cancelToken);
 
@@ -77,10 +82,6 @@ export default class TiledMapParser implements TiledMapParserInterface {
     const mapSize = new ElementSize<"tile">(
       xml.getNumberAttribute(breadcrumbs, documentElement, "width"),
       xml.getNumberAttribute(breadcrumbs, documentElement, "height")
-    );
-    const tileSize = new ElementSize<"px">(
-      xml.getNumberAttribute(breadcrumbs, documentElement, "tilewidth"),
-      xml.getNumberAttribute(breadcrumbs, documentElement, "tileheight")
     );
 
     const tiledMap = new TiledMap(

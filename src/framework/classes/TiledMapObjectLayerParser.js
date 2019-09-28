@@ -8,6 +8,7 @@ import { default as TiledException } from "./Exception/Tiled";
 import { default as XMLDocumentException } from "./Exception/XMLDocument";
 
 import type { CancelToken } from "../interfaces/CancelToken";
+import type { ElementSize } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledMapObjectLayer as TiledMapObjectLayerInterface } from "../interfaces/TiledMapObjectLayer";
 import type { TiledMapObjectLayerParser as TiledMapObjectLayerParserInterface } from "../interfaces/TiledMapObjectLayerParser";
@@ -15,10 +16,12 @@ import type { TiledMapObjectLayerParser as TiledMapObjectLayerParserInterface } 
 export default class TiledMapObjectLayerParser implements TiledMapObjectLayerParserInterface {
   +documentElement: HTMLElement;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +tileSize: ElementSize<"px">;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, documentElement: HTMLElement) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, documentElement: HTMLElement, tileSize: ElementSize<"px">) {
     this.documentElement = documentElement;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.tileSize = tileSize;
   }
 
   async parse(cancelToken: CancelToken): Promise<TiledMapObjectLayerInterface> {
@@ -39,14 +42,14 @@ export default class TiledMapObjectLayerParser implements TiledMapObjectLayerPar
       }
 
       const tiledMapObjectElementChecker = new TiledMapObjectElementChecker(objectElement);
-      const tiledMapObjectParser = new TiledMapObjectParser(breadcrumbs.add("TiledMapObjectParser"));
+      const tiledMapObjectParser = new TiledMapObjectParser(breadcrumbs.add("TiledMapObjectParser"), this.tileSize);
 
       if (tiledMapObjectElementChecker.isEllipse()) {
-        tiledMapObjectLayer.addEllipseObject(await tiledMapObjectParser.createEllipseObject(objectElement));
+        tiledMapObjectLayer.addEllipseObject(await tiledMapObjectParser.createEllipseObject(cancelToken, objectElement));
       } else if (tiledMapObjectElementChecker.isRectangle()) {
-        tiledMapObjectLayer.addRectangleObject(await tiledMapObjectParser.createRectangleObject(objectElement));
+        tiledMapObjectLayer.addRectangleObject(await tiledMapObjectParser.createRectangleObject(cancelToken, objectElement));
       } else if (tiledMapObjectElementChecker.isPolygon()) {
-        tiledMapObjectLayer.addPolygonObject(await tiledMapObjectParser.createPolygonObject(objectElement));
+        tiledMapObjectLayer.addPolygonObject(await tiledMapObjectParser.createPolygonObject(cancelToken, objectElement));
       } else {
         throw new TiledException(breadcrumbs, "Unknown map element type.");
       }

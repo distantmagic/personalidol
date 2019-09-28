@@ -1,11 +1,14 @@
 // @flow
 
 import Exception from "./Exception";
+import TiledCustomProperty from "./TiledCustomProperty";
+import TiledCustomPropertiesException from "./Exception/Tiled/CustomProperties";
 
 import type { ElementPosition } from "../interfaces/ElementPosition";
 import type { ElementRotation } from "../interfaces/ElementRotation";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import type { TiledCustomProperties } from "../interfaces/TiledCustomProperties";
 import type { TiledMapObject as TiledMapObjectInterface } from "../interfaces/TiledMapObject";
 
 export default class TiledMapObject implements TiledMapObjectInterface {
@@ -14,7 +17,7 @@ export default class TiledMapObject implements TiledMapObjectInterface {
   +elementSize: ElementSize<"tile">;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +name: string;
-  +source: ?string;
+  +tiledCustomProperties: TiledCustomProperties;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -22,14 +25,14 @@ export default class TiledMapObject implements TiledMapObjectInterface {
     elementPosition: ElementPosition<"tile">,
     elementRotation: ElementRotation<"radians">,
     elementSize: ElementSize<"tile">,
-    source: ?string
+    tiledCustomProperties: TiledCustomProperties
   ) {
     this.elementPosition = elementPosition;
     this.elementRotation = elementRotation;
     this.elementSize = elementSize;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.name = name;
-    this.source = source;
+    this.tiledCustomProperties = tiledCustomProperties;
   }
 
   getElementPosition(): ElementPosition<"tile"> {
@@ -45,17 +48,17 @@ export default class TiledMapObject implements TiledMapObjectInterface {
   }
 
   getSource(): string {
-    const source = this.source;
+    const sourceProperty = this.tiledCustomProperties.getPropertyByName("source");
 
-    if (!source) {
-      throw new Exception(this.loggerBreadcrumbs.add("getSource"), "Source is not defined and it was expected.");
+    if ("string" !== sourceProperty.getType()) {
+      throw new TiledCustomPropertiesException(this.loggerBreadcrumbs.add("getSource"), "Custom object source must be a string.");
     }
 
-    return source;
+    return sourceProperty.getValue();
   }
 
   hasSource(): boolean {
-    return "string" === typeof this.source;
+    return this.tiledCustomProperties.hasPropertyByName("source");
   }
 
   getName(): string {

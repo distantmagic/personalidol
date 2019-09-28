@@ -1,5 +1,6 @@
 // @flow
 
+import Cancelled from "./Exception/Cancelled";
 import ElementPosition from "./ElementPosition";
 import Exception from "./Exception";
 
@@ -10,19 +11,24 @@ import type { ElementPosition as ElementPositionInterface } from "../interfaces/
 import type { TiledMapPolygonPointsParser as TiledMapPolygonPointsParserInterface } from "../interfaces/TiledMapPolygonPointsParser";
 
 export default class TiledMapPolygonPointsParser implements TiledMapPolygonPointsParserInterface {
-  +content: string;
+  +polygonPoints: string;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tileSize: ElementSize<"px">;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, content: string, tileSize: ElementSize<"px">) {
-    this.content = content;
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, polygonPoints: string, tileSize: ElementSize<"px">) {
+    this.polygonPoints = polygonPoints;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.tileSize = tileSize;
   }
 
   async parse(cancelToken: CancelToken): Promise<$ReadOnlyArray<ElementPositionInterface<"tile">>> {
-    const breadcrumbs = this.loggerBreadcrumbs;
-    const points = this.content.trim().split(" ");
+    const breadcrumbs = this.loggerBreadcrumbs.add("parse");
+
+    if (cancelToken.isCancelled()) {
+      throw new Cancelled(breadcrumbs, "Cancel token has been cancelled before parsing polygon points.");
+    }
+
+    const points = this.polygonPoints.trim().split(" ");
     const tileHeightPx = this.tileSize.getHeight();
     const tileWidthPx = this.tileSize.getWidth();
 
