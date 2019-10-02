@@ -10,7 +10,10 @@ it("parses tiled custom properties", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const propertiesDocument = await fixtures.xmlFile("map-custom-properties-01.xml");
-  const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(loggerBreadcrumbs, propertiesDocument);
+  const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
+    loggerBreadcrumbs,
+    assert<HTMLElement>(loggerBreadcrumbs, propertiesDocument.documentElement)
+  );
   const tiledCustomProperties = await tiledCustomPropertiesParser.parse(cancelToken);
 
   expect(tiledCustomProperties.hasPropertyByName("isWalkabilityMap")).toBe(true);

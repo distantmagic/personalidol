@@ -35,10 +35,7 @@ export default class TiledCustomPropertiesParser implements TiledCustomPropertie
     }
 
     if (1 !== propertiesElements.length) {
-      throw new TiledCustomPropertiesException(
-        currentLoggerBreadcrumbs,
-        "Object may contain only 1 properties set."
-      );
+      throw new TiledCustomPropertiesException(currentLoggerBreadcrumbs, "Object may contain only 1 properties set.");
     }
 
     const propertiesElement = assert<HTMLElement>(currentLoggerBreadcrumbs, propertiesElements.item(0));

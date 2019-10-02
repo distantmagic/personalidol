@@ -51,7 +51,10 @@ export default class TiledMapObject implements TiledMapObjectInterface {
     const sourceProperty = this.tiledCustomProperties.getPropertyByName("source");
 
     if ("string" !== sourceProperty.getType()) {
-      throw new TiledCustomPropertiesException(this.loggerBreadcrumbs.add("getSource"), "Custom object source must be a string.");
+      throw new TiledCustomPropertiesException(
+        this.loggerBreadcrumbs.add("getSource"),
+        "Custom object source must be a string."
+      );
     }
 
     return sourceProperty.getValue();

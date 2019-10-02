@@ -21,7 +21,7 @@ import type { Ellipse as TiledMapEllipseObjectInterface } from "../interfaces/Ti
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { Polygon as TiledMapPolygonObjectInterface } from "../interfaces/TiledMapObject/Polygon";
 import type { Rectangle as TiledMapRectangleObjectInterface } from "../interfaces/TiledMapObject/Rectangle";
-import type { TiledMapCustomProperties } from "../interfaces/TiledMapCustomProperties";
+import type { TiledCustomProperties } from "../interfaces/TiledCustomProperties";
 import type { TiledMapObjectParser as TiledMapObjectParserInterface } from "../interfaces/TiledMapObjectParser";
 
 export default class TiledMapObjectParser implements TiledMapObjectParserInterface {
@@ -51,13 +51,22 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
     const polygonElements = element.getElementsByTagName("polygon");
 
     if (1 !== polygonElements.length) {
-      throw new XMLDocumentException(breadcrumbs, "There should be exactly 1 polygon tag inside polygon object definition.");
+      throw new XMLDocumentException(
+        breadcrumbs,
+        "There should be exactly 1 polygon tag inside polygon object definition."
+      );
     }
 
     const polygonElement = assert<HTMLElement>(breadcrumbs, polygonElements.item(0));
     const polygonPointsString: string = xml.getStringAttribute(breadcrumbs, polygonElement, "points");
-    const tiledMapPolygonPointsParser = new TiledMapPolygonPointsParser(breadcrumbs, polygonPointsString, this.tileSize);
+    const tiledMapPolygonPointsParser = new TiledMapPolygonPointsParser(
+      breadcrumbs,
+      polygonPointsString,
+      this.tileSize
+    );
     const tiledMapPolygonPoints = await tiledMapPolygonPointsParser.parse(cancelToken);
+
+    console.log(tiledMapPolygonPoints);
 
     return new TiledMapPolygonObject(
       breadcrumbs,
@@ -70,7 +79,10 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
     );
   }
 
-  async createRectangleObject(cancelToken: CancelToken, element: HTMLElement): Promise<TiledMapRectangleObjectInterface> {
+  async createRectangleObject(
+    cancelToken: CancelToken,
+    element: HTMLElement
+  ): Promise<TiledMapRectangleObjectInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("createRectangleObject");
 
     return new TiledMapRectangleObject(
@@ -97,7 +109,11 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
     return new ElementRotation<"radians">(0, 0, rotation);
   }
 
-  getElementCustomProperties(breadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, element: HTMLElement): Promise<TiledMapCustomProperties> {
+  getElementCustomProperties(
+    breadcrumbs: LoggerBreadcrumbs,
+    cancelToken: CancelToken,
+    element: HTMLElement
+  ): Promise<TiledCustomProperties> {
     const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
       breadcrumbs.add("TiledCustomPropertiesParser"),
       element

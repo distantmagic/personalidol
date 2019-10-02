@@ -1,15 +1,13 @@
 // @flow
 
 import type { Equatable } from "./Equatable";
-import type { HasElementPosition } from "./HasElementPosition";
+import type { GeometryRectangle } from "./GeometryRectangle";
 import type { HasElementRotation } from "./HasElementRotation";
-import type { HasElementSize } from "./HasElementSize";
 
 export interface TiledMapObject
   extends Equatable<TiledMapObject>,
-    HasElementPosition<"tile">,
-    HasElementRotation<"radians">,
-    HasElementSize<"tile"> {
+    GeometryRectangle<"tile">,
+    HasElementRotation<"radians"> {
   getSource(): string;
 
   hasSource(): boolean;

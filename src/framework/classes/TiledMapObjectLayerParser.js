@@ -45,11 +45,17 @@ export default class TiledMapObjectLayerParser implements TiledMapObjectLayerPar
       const tiledMapObjectParser = new TiledMapObjectParser(breadcrumbs.add("TiledMapObjectParser"), this.tileSize);
 
       if (tiledMapObjectElementChecker.isEllipse()) {
-        tiledMapObjectLayer.addEllipseObject(await tiledMapObjectParser.createEllipseObject(cancelToken, objectElement));
+        tiledMapObjectLayer.addEllipseObject(
+          await tiledMapObjectParser.createEllipseObject(cancelToken, objectElement)
+        );
       } else if (tiledMapObjectElementChecker.isRectangle()) {
-        tiledMapObjectLayer.addRectangleObject(await tiledMapObjectParser.createRectangleObject(cancelToken, objectElement));
+        tiledMapObjectLayer.addRectangleObject(
+          await tiledMapObjectParser.createRectangleObject(cancelToken, objectElement)
+        );
       } else if (tiledMapObjectElementChecker.isPolygon()) {
-        tiledMapObjectLayer.addPolygonObject(await tiledMapObjectParser.createPolygonObject(cancelToken, objectElement));
+        tiledMapObjectLayer.addPolygonObject(
+          await tiledMapObjectParser.createPolygonObject(cancelToken, objectElement)
+        );
       } else {
         throw new TiledException(breadcrumbs, "Unknown map element type.");
       }
