@@ -57,4 +57,12 @@ export default class ElementPosition<Unit: ElementPositionUnit> implements Eleme
       dmmath.isEqualWithPrecision(this.getZ(), other.getZ(), precision)
     );
   }
+
+  offset(other: ElementPositionInterface<Unit>): ElementPositionInterface<Unit> {
+    return new ElementPosition<Unit>(
+      this.getX() + other.getX(),
+      this.getY() + other.getY(),
+      this.getZ() + other.getZ()
+    );
+  }
 }

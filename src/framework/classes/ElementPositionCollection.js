@@ -66,4 +66,11 @@ export default class ElementPositionCollection<Unit: ElementPositionUnit>
       new ElementSize<Unit>(maxX - minX, maxY - minY, maxZ - minZ)
     );
   }
+
+  offsetCollection(other: ElementPositionInterface<Unit>): ElementPositionCollectionInterface<Unit> {
+    return new ElementPositionCollection(
+      this.loggerBreadcrumbs.add("offsetCollection").add("ElementPositionCollection"),
+      this.asArray().map(elementPosition => elementPosition.offset(other))
+    );
+  }
 }

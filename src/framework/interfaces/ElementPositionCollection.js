@@ -7,4 +7,6 @@ import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 
 export interface ElementPositionCollection<Unit: ElementPositionUnit> extends Arrayable<ElementPosition<Unit>> {
   getElementBoundingBox(): ElementBoundingBox<Unit>;
+
+  offsetCollection(ElementPosition<Unit>): ElementPositionCollection<Unit>;
 }

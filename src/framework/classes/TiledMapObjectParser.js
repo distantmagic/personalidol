@@ -24,6 +24,83 @@ import type { Rectangle as TiledMapRectangleObjectInterface } from "../interface
 import type { TiledCustomProperties } from "../interfaces/TiledCustomProperties";
 import type { TiledMapObjectParser as TiledMapObjectParserInterface } from "../interfaces/TiledMapObjectParser";
 
+function getElementPosition(
+  breadcrumbs: LoggerBreadcrumbs,
+  element: HTMLElement,
+  tileSize: ElementSizeInterface<"px">
+): ElementPositionInterface<"tile"> {
+  return new ElementPosition<"tile">(
+    xml.getNumberAttribute(breadcrumbs, element, "x") / tileSize.getWidth(),
+    xml.getNumberAttribute(breadcrumbs, element, "y") / tileSize.getWidth(),
+    xml.getNumberAttribute(breadcrumbs, element, "z", 0) / tileSize.getWidth()
+  );
+}
+
+function getElementRotation(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementRotationInterface<"radians"> {
+  const rotation = angle.deg2radians(xml.getNumberAttribute(breadcrumbs, element, "rotation", 0));
+
+  return new ElementRotation<"radians">(0, 0, rotation);
+}
+
+function getElementCustomProperties(
+  breadcrumbs: LoggerBreadcrumbs,
+  cancelToken: CancelToken,
+  element: HTMLElement
+): Promise<TiledCustomProperties> {
+  const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
+    breadcrumbs.add("TiledCustomPropertiesParser"),
+    element
+  );
+
+  return tiledCustomPropertiesParser.parse(cancelToken);
+}
+
+function getElementDepthPx(
+  breadcrumbs: LoggerBreadcrumbs,
+  element: HTMLElement,
+  tiledCustomProperties: TiledCustomProperties
+): number {
+  if (!tiledCustomProperties.hasPropertyByName("depth")) {
+    return 0;
+  }
+
+  const depthProperty = tiledCustomProperties.getPropertyByName("depth");
+
+  switch (depthProperty.getType()) {
+    case "float":
+      return parseFloat(depthProperty.getValue());
+    case "int":
+      return parseInt(depthProperty.getValue(), 10);
+    default:
+      throw new XMLDocumentException(
+        breadcrumbs.add("depthProperty").add("getType"),
+        "Element depth property must be either 'float' or 'int'."
+      );
+  }
+}
+
+function getElementDepth(
+  breadcrumbs: LoggerBreadcrumbs,
+  element: HTMLElement,
+  tileSize: ElementSizeInterface<"px">,
+  tiledCustomProperties: TiledCustomProperties
+): number {
+  return getElementDepthPx(breadcrumbs, element, tiledCustomProperties) / tileSize.getWidth();
+}
+
+function getRectangleElementSize(
+  breadcrumbs: LoggerBreadcrumbs,
+  element: HTMLElement,
+  tileSize: ElementSizeInterface<"px">,
+  tiledCustomProperties: TiledCustomProperties
+): ElementSizeInterface<"tile"> {
+  return new ElementSize<"tile">(
+    xml.getNumberAttribute(breadcrumbs, element, "width") / tileSize.getWidth(),
+    xml.getNumberAttribute(breadcrumbs, element, "height") / tileSize.getHeight(),
+    getElementDepth(breadcrumbs, element, tileSize, tiledCustomProperties)
+  );
+}
+
 export default class TiledMapObjectParser implements TiledMapObjectParserInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +tileSize: ElementSizeInterface<"px">;
@@ -35,14 +112,15 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
 
   async createEllipseObject(cancelToken: CancelToken, element: HTMLElement): Promise<TiledMapEllipseObjectInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("createEllipseObject");
+    const elementCustomProperties = await getElementCustomProperties(breadcrumbs, cancelToken, element);
 
     return new TiledMapEllipseObject(
       breadcrumbs,
       xml.getStringAttribute(breadcrumbs, element, "name"),
-      this.getElementPosition(breadcrumbs, element),
-      this.getElementRotation(breadcrumbs, element),
-      this.getRectangleElementSize(breadcrumbs, element),
-      await this.getElementCustomProperties(breadcrumbs, cancelToken, element)
+      getElementPosition(breadcrumbs, element, this.tileSize),
+      getElementRotation(breadcrumbs, element),
+      getRectangleElementSize(breadcrumbs, element, this.tileSize, elementCustomProperties),
+      elementCustomProperties
     );
   }
 
@@ -57,6 +135,7 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
       );
     }
 
+    const elementCustomProperties = await getElementCustomProperties(breadcrumbs, cancelToken, element);
     const polygonElement = assert<HTMLElement>(breadcrumbs, polygonElements.item(0));
     const polygonPointsString: string = xml.getStringAttribute(breadcrumbs, polygonElement, "points");
     const tiledMapPolygonPointsParser = new TiledMapPolygonPointsParser(
@@ -65,16 +144,19 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
       this.tileSize
     );
     const tiledMapPolygonPoints = await tiledMapPolygonPointsParser.parse(cancelToken);
-
-    console.log(tiledMapPolygonPoints);
+    const polygonDepth = getElementDepth(breadcrumbs, element, this.tileSize, elementCustomProperties);
+    const polygonPosition = getElementPosition(breadcrumbs, element, this.tileSize);
+    const polygonBoundingBox = tiledMapPolygonPoints.offsetCollection(polygonPosition).getElementBoundingBox();
+    const polygonBoundingBoxSize = polygonBoundingBox.getElementSize();
 
     return new TiledMapPolygonObject(
       breadcrumbs,
       xml.getStringAttribute(breadcrumbs, element, "name"),
-      this.getElementPosition(breadcrumbs, element),
-      this.getElementRotation(breadcrumbs, element),
-      new ElementSize<"tile">(0, 0, 0),
-      await this.getElementCustomProperties(breadcrumbs, cancelToken, element),
+      polygonBoundingBox.getElementPosition(),
+      getElementRotation(breadcrumbs, element),
+      // polygon points are 2D, so third component can be discarded
+      new ElementSize<"tile">(polygonBoundingBoxSize.getWidth(), polygonBoundingBoxSize.getHeight(), polygonDepth),
+      elementCustomProperties,
       tiledMapPolygonPoints
     );
   }
@@ -84,49 +166,15 @@ export default class TiledMapObjectParser implements TiledMapObjectParserInterfa
     element: HTMLElement
   ): Promise<TiledMapRectangleObjectInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("createRectangleObject");
+    const elementCustomProperties = await getElementCustomProperties(breadcrumbs, cancelToken, element);
 
     return new TiledMapRectangleObject(
       breadcrumbs,
       xml.getStringAttribute(breadcrumbs, element, "name"),
-      this.getElementPosition(breadcrumbs, element),
-      this.getElementRotation(breadcrumbs, element),
-      this.getRectangleElementSize(breadcrumbs, element),
-      await this.getElementCustomProperties(breadcrumbs, cancelToken, element)
-    );
-  }
-
-  getElementPosition(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementPositionInterface<"tile"> {
-    return new ElementPosition<"tile">(
-      xml.getNumberAttribute(breadcrumbs, element, "x"),
-      xml.getNumberAttribute(breadcrumbs, element, "y"),
-      xml.getNumberAttribute(breadcrumbs, element, "z", 0)
-    );
-  }
-
-  getElementRotation(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementRotationInterface<"radians"> {
-    const rotation = angle.deg2radians(xml.getNumberAttribute(breadcrumbs, element, "rotation", 0));
-
-    return new ElementRotation<"radians">(0, 0, rotation);
-  }
-
-  getElementCustomProperties(
-    breadcrumbs: LoggerBreadcrumbs,
-    cancelToken: CancelToken,
-    element: HTMLElement
-  ): Promise<TiledCustomProperties> {
-    const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
-      breadcrumbs.add("TiledCustomPropertiesParser"),
-      element
-    );
-
-    return tiledCustomPropertiesParser.parse(cancelToken);
-  }
-
-  getRectangleElementSize(breadcrumbs: LoggerBreadcrumbs, element: HTMLElement): ElementSizeInterface<"tile"> {
-    return new ElementSize<"tile">(
-      xml.getNumberAttribute(breadcrumbs, element, "width"),
-      xml.getNumberAttribute(breadcrumbs, element, "height"),
-      0
+      getElementPosition(breadcrumbs, element, this.tileSize),
+      getElementRotation(breadcrumbs, element),
+      getRectangleElementSize(breadcrumbs, element, this.tileSize, elementCustomProperties),
+      elementCustomProperties
     );
   }
 }

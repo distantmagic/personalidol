@@ -13,4 +13,6 @@ export interface ElementPosition<Unit: ElementPositionUnit> extends EquatableWit
   getZ(): number;
 
   isOnLineBetween(ElementPosition<Unit>, ElementPosition<Unit>): boolean;
+
+  offset(ElementPosition<Unit>): ElementPosition<Unit>;
 }

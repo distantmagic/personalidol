@@ -28,7 +28,7 @@ it("parses object collection", async function() {
     ellipseObjects
       .item(0)
       .getElementPosition()
-      .isEqual(new ElementPosition<"tile">(512, 1664, 0))
+      .isEqual(new ElementPosition<"tile">(4, 13, 0))
   ).toBe(true);
   expect(
     ellipseObjects
@@ -40,18 +40,21 @@ it("parses object collection", async function() {
     ellipseObjects
       .item(0)
       .getElementSize()
-      .isEqual(new ElementSize<"tile">(640, 640, 0))
+      .isEqual(new ElementSize<"tile">(5, 5, 0.125))
   ).toBe(true);
   expect(ellipseObjects.item(0).hasSource()).toBe(false);
 
   const polygonObjects = tiledMapObjectCollection.getPolygonObjects();
 
   expect(polygonObjects.asArray()).toHaveLength(1);
+
+  // although polygon starting point is placed at (13, 16), the actual points
+  // bounding box starts at (13, 14) because one of the points is (7, -2)
   expect(
     polygonObjects
       .item(0)
       .getElementPosition()
-      .isEqual(new ElementPosition<"tile">(1664, 2048, 0))
+      .isEqual(new ElementPosition<"tile">(13, 14, 0))
   ).toBe(true);
   expect(
     polygonObjects
@@ -63,7 +66,7 @@ it("parses object collection", async function() {
     polygonObjects
       .item(0)
       .getElementSize()
-      .isEqual(new ElementSize<"tile">(0, 0, 0))
+      .isEqual(new ElementSize<"tile">(7, 10, 0.125))
   ).toBe(true);
   expect(polygonObjects.item(0).hasSource()).toBe(false);
 
@@ -74,7 +77,7 @@ it("parses object collection", async function() {
     rectangleObjects
       .item(0)
       .getElementPosition()
-      .isEqual(new ElementPosition<"tile">(1024, 128, 0))
+      .isEqual(new ElementPosition<"tile">(8, 1, 0))
   ).toBe(true);
   expect(
     rectangleObjects
@@ -86,7 +89,7 @@ it("parses object collection", async function() {
     rectangleObjects
       .item(0)
       .getElementSize()
-      .isEqual(new ElementSize<"tile">(640, 256, 0))
+      .isEqual(new ElementSize<"tile">(5, 2, 0.25))
   ).toBe(true);
   expect(rectangleObjects.item(0).hasSource()).toBe(false);
 
@@ -94,7 +97,7 @@ it("parses object collection", async function() {
     rectangleObjects
       .item(1)
       .getElementPosition()
-      .isEqual(new ElementPosition<"tile">(1664, 256, 0))
+      .isEqual(new ElementPosition<"tile">(13, 2, 0))
   ).toBe(true);
   expect(
     rectangleObjects
@@ -106,7 +109,7 @@ it("parses object collection", async function() {
     rectangleObjects
       .item(1)
       .getElementSize()
-      .isEqual(new ElementSize<"tile">(1152, 256, 0))
+      .isEqual(new ElementSize<"tile">(9, 2, 0.25))
   ).toBe(true);
   expect(rectangleObjects.item(1).hasSource()).toBe(true);
   expect(rectangleObjects.item(1).getSource()).toBe("foo-model.fbx");

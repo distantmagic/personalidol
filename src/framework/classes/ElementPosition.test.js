@@ -34,3 +34,16 @@ it("is comparable with other element positions with precision", function() {
 
   expect(elementPosition1.isEqualWithPrecision(elementPosition2, -2)).toBe(true);
 });
+
+it("can be offsetted by other element position and stays immutable", function() {
+  const elementPosition = new ElementPosition(1, 2, 4);
+  const offsetted = elementPosition.offset(new ElementPosition(8, 16, 32));
+
+  expect(elementPosition.getX()).toBe(1);
+  expect(elementPosition.getY()).toBe(2);
+  expect(elementPosition.getZ()).toBe(4);
+
+  expect(offsetted.getX()).toBe(9);
+  expect(offsetted.getY()).toBe(18);
+  expect(offsetted.getZ()).toBe(36);
+});
