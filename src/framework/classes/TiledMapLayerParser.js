@@ -61,16 +61,7 @@ export default class TiledMapLayerParser implements TiledMapLayerParserInterface
       xml.getNumberAttribute(breadcrumbsLayerName, this.layerElement, "height")
     );
 
-    const tiledCustomPropertiesElement = this.layerElement.getElementsByTagName("properties").item(0);
-
-    if (!tiledCustomPropertiesElement) {
-      return new TiledMapLayer(layerName, tiledMapGrid, layerSize, new TiledCustomProperties(breadcrumbsLayerName));
-    }
-
-    const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(
-      breadcrumbsLayerName,
-      tiledCustomPropertiesElement
-    );
+    const tiledCustomPropertiesParser = new TiledCustomPropertiesParser(breadcrumbsLayerName, this.layerElement);
     const tiledCustomProperties = await tiledCustomPropertiesParser.parse(cancelToken);
 
     return new TiledMapLayer(layerName, tiledMapGrid, layerSize, tiledCustomProperties);

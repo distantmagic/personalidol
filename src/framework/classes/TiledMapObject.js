@@ -1,7 +1,5 @@
 // @flow
 
-import Exception from "./Exception";
-import TiledCustomProperty from "./TiledCustomProperty";
 import TiledCustomPropertiesException from "./Exception/Tiled/CustomProperties";
 
 import type { ElementPosition } from "../interfaces/ElementPosition";

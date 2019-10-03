@@ -25,8 +25,8 @@ export default class TiledPathfinder implements TiledPathfinderInterface {
     start: ElementPositionInterface<"tile">,
     end: ElementPositionInterface<"tile">
   ): Promise<TiledPathInterface<"tile">> {
-    const loggerBreadcrumbs = this.loggerBreadcrumbs.add("findPath");
-    const walkabilityProperty = new TiledCustomProperty(loggerBreadcrumbs, "isWalkabilityMap", "bool", "true");
+    const breadcrumbs = this.loggerBreadcrumbs.add("findPath");
+    const walkabilityProperty = new TiledCustomProperty(breadcrumbs, "isWalkabilityMap", "bool", "true");
     const walkabilityLayer = this.tiledMap.getLayerWithProperty(walkabilityProperty);
     const coveredGrid = walkabilityLayer.getTiledMapGrid().getCoveredGrid();
     const pathfinderGrid = new PF.Grid(coveredGrid);
@@ -35,7 +35,7 @@ export default class TiledPathfinder implements TiledPathfinderInterface {
     });
 
     const path = pathfinderFinder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), pathfinderGrid);
-    const tiledPath = new TiledPath(loggerBreadcrumbs);
+    const tiledPath = new TiledPath(breadcrumbs);
 
     for (let step of path) {
       const elementPosition = new ElementPosition<"tile">(...step);
