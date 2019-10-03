@@ -3,7 +3,6 @@
 import * as xml from "../helpers/xml";
 import Cancelled from "./Exception/Cancelled";
 import ElementSize from "./ElementSize";
-import TiledCustomProperties from "./TiledCustomProperties";
 import TiledCustomPropertiesParser from "./TiledCustomPropertiesParser";
 import TiledMapLayer from "./TiledMapLayer";
 import TiledMapLayerGridCSVParser from "./TiledMapLayerGridCSVParser";
