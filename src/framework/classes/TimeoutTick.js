@@ -3,13 +3,13 @@
 import type { TimeoutTick as TimeoutTickInterface } from "../interfaces/TimeoutTick";
 
 export default class TimeoutTick implements TimeoutTickInterface {
-  cancelled: boolean;
+  canceled: boolean;
 
-  constructor(cancelled: boolean) {
-    this.cancelled = cancelled;
+  constructor(canceled: boolean) {
+    this.canceled = canceled;
   }
 
-  isCancelled(): boolean {
-    return this.cancelled;
+  isCanceled(): boolean {
+    return this.canceled;
   }
 }

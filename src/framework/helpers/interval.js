@@ -10,10 +10,10 @@ export default async function* interval(
   cancelToken: CancelToken,
   delay: number = 40
 ): AsyncGenerator<IntervalTickInterface, void, void> {
-  while (!cancelToken || !cancelToken.isCancelled()) {
+  while (!cancelToken || !cancelToken.isCanceled()) {
     const tick = await timeout(cancelToken, delay);
 
-    if (tick.isCancelled()) {
+    if (tick.isCanceled()) {
       break;
     }
 

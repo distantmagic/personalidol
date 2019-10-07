@@ -1,6 +1,6 @@
 // @flow
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import ElementPosition from "./ElementPosition";
 import ElementPositionCollection from "./ElementPositionCollection";
 import Exception from "./Exception";
@@ -26,8 +26,8 @@ export default class TiledMapPolygonPointsParser implements TiledMapPolygonPoint
   async parse(cancelToken: CancelToken): Promise<ElementPositionCollectionInterface<"tile">> {
     const breadcrumbs = this.loggerBreadcrumbs.add("parse");
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(breadcrumbs, "Cancel token has been cancelled before parsing polygon points.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(breadcrumbs, "Cancel token has been canceled before parsing polygon points.");
     }
 
     const points = this.polygonPoints.trim().split(" ");

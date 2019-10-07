@@ -1,12 +1,12 @@
 // @flow
 
 import type { CancelToken } from "./CancelToken";
-import type { ClockTick } from "./ClockTick";
+import type { ClockReactive } from "./ClockReactive";
 import type { Query } from "./Query";
 import type { QueryBatch } from "./QueryBatch";
 import type { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCallback";
 
-export interface QueryBus {
+export interface QueryBus extends ClockReactive {
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<T>;
 
   findSimilarQuery<T>(Query<T>): ?Query<T>;
@@ -16,6 +16,4 @@ export interface QueryBus {
   onEnqueued(QueryBusOnEnqueuedCallback): void;
 
   offEnqueued(QueryBusOnEnqueuedCallback): void;
-
-  tick(ClockTick): Promise<QueryBus>;
 }

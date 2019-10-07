@@ -3,12 +3,13 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
+import CancelToken from "./CancelToken";
 import EventListenerSet from "./EventListenerSet";
 
 import type { DrawCallback } from "mainloop.js";
 
-import type { CancelToken } from "../interfaces/CancelToken";
+import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 import type { CanvasController } from "../interfaces/CanvasController";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
@@ -50,9 +51,9 @@ export default class SceneManager implements SceneManagerInterface {
     this.scheduler = scheduler;
   }
 
-  async attach(cancelToken: CancelToken, canvas: HTMLCanvasElement): Promise<void> {
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(this.loggerBreadcrumbs.add("attach"), "Cancel token was cancelled before attaching scene.");
+  async attach(cancelToken: CancelTokenInterface, canvas: HTMLCanvasElement): Promise<void> {
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(this.loggerBreadcrumbs.add("attach"), "Cancel token was canceled before attaching scene.");
     }
 
     this._isAttaching = true;
@@ -82,7 +83,7 @@ export default class SceneManager implements SceneManagerInterface {
     this.stateChangeCallbacks.notify([this]);
   }
 
-  async detach(cancelToken: CancelToken): Promise<void> {
+  async detach(cancelToken: CancelTokenInterface): Promise<void> {
     const renderer = this.renderer;
 
     if (!renderer) {
@@ -92,11 +93,11 @@ export default class SceneManager implements SceneManagerInterface {
     const drawCallback = this.drawCallback;
 
     if (!drawCallback) {
-      throw new Error("Invalid scene lifecycle. Draw callback was expected while detaching.");
+      throw new Error("Invalid scene life cycle. Draw callback was expected while detaching.");
     }
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(this.loggerBreadcrumbs.add("detach"), "Cancel token was cancelled before detaching scene.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(this.loggerBreadcrumbs.add("detach"), "Cancel token was canceled before detaching scene.");
     }
 
     this._isDetaching = true;
@@ -144,6 +145,18 @@ export default class SceneManager implements SceneManagerInterface {
 
     if (renderer) {
       renderer.setSize(elementSize.getWidth(), elementSize.getHeight());
+    }
+  }
+
+  async setCanvasElement(canvas: ?HTMLCanvasElement): Promise<void> {
+    const cancelToken = new CancelToken(this.loggerBreadcrumbs.add("setCanvasElement"));
+
+    if (this.isAttached()) {
+      await this.detach(cancelToken);
+    }
+
+    if (canvas) {
+      this.attach(cancelToken, canvas);
     }
   }
 

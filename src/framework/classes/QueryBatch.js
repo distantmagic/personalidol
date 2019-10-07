@@ -5,7 +5,7 @@ import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
 function findActive(collection: QueryBusQueueCollection): QueryBusQueueCollection {
   return collection.filter(function(query) {
-    return !query.isCancelled();
+    return !query.isCanceled();
   });
 }
 

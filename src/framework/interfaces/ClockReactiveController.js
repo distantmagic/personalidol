@@ -2,6 +2,6 @@
 
 import type { CancelToken } from "./CancelToken";
 
-export interface QueryBusController {
+export interface ClockReactiveController {
   interval(CancelToken): Promise<void>;
 }

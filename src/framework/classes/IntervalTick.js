@@ -10,7 +10,7 @@ export default class IntervalTick implements IntervalTickInterface {
     this.timeoutTick = timeoutTick;
   }
 
-  isCancelled(): boolean {
-    return this.timeoutTick.isCancelled();
+  isCanceled(): boolean {
+    return this.timeoutTick.isCanceled();
   }
 }

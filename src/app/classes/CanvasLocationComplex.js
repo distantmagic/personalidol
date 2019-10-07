@@ -7,7 +7,7 @@ import {
   // Howler
 } from "howler";
 
-import Cancelled from "../../framework/classes/Exception/Cancelled";
+import Canceled from "../../framework/classes/Exception/Canceled";
 import CanvasViewGroup from "../../framework/classes/CanvasViewGroup";
 import Exception from "../../framework/classes/Exception";
 import PlayerModel from "./PlayerModel";
@@ -90,8 +90,8 @@ export default class CanvasLocationComplex implements CanvasController {
   async attach(cancelToken: CancelToken, renderer: THREE.WebGLRenderer): Promise<void> {
     const breadcrumbs = this.loggerBreadcrumbs.add("attach");
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before attaching canvas location controller.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(breadcrumbs, "Cancel token was canceled before attaching canvas location controller.");
     }
 
     // this.sound.pos(0, 0, 0);
@@ -165,8 +165,8 @@ export default class CanvasLocationComplex implements CanvasController {
       );
     }
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before detaching canvas location controller.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(breadcrumbs, "Cancel token was canceled before detaching canvas location controller.");
     }
 
     threePointerInteraction.disconnect();

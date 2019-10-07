@@ -3,13 +3,13 @@
 import type { ForcedTick as ForcedTickInterface } from "../interfaces/ForcedTick";
 
 export default class ForcedTick implements ForcedTickInterface {
-  cancelled: boolean;
+  canceled: boolean;
 
-  constructor(cancelled: boolean) {
-    this.cancelled = cancelled;
+  constructor(canceled: boolean) {
+    this.canceled = canceled;
   }
 
-  isCancelled(): boolean {
-    return this.cancelled;
+  isCanceled(): boolean {
+    return this.canceled;
   }
 }

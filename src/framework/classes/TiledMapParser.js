@@ -3,7 +3,7 @@
 import { DOMParser } from "xmldom";
 
 import * as xml from "../helpers/xml";
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import ElementSize from "./ElementSize";
 import TiledMap from "./TiledMap";
 import TiledMapLayerParser from "./TiledMapLayerParser";
@@ -41,8 +41,8 @@ export default class TiledMapParser implements TiledMapParserInterface {
   async parse(cancelToken: CancelToken): Promise<TiledMapInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("parse").addVariable(this.mapFilename);
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before parsing began.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(breadcrumbs, "Cancel token was canceled before parsing began.");
     }
 
     // xml
@@ -107,8 +107,8 @@ export default class TiledMapParser implements TiledMapParserInterface {
         throw new XMLDocumentException(breadcrumbs.addVariable(String(i)), "Layer element is missing.");
       }
 
-      if (cancelToken.isCancelled()) {
-        throw new Cancelled(breadcrumbs, "Cancel token was cancelled while parsing layers.");
+      if (cancelToken.isCanceled()) {
+        throw new Canceled(breadcrumbs, "Cancel token was canceled while parsing layers.");
       }
 
       const tiledMapLayerParser = new TiledMapLayerParser(breadcrumbs, layerElement, mapSize);

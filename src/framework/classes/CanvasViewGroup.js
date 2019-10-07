@@ -1,6 +1,6 @@
 // @flow
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 
 import type { WebGLRenderer } from "three";
 
@@ -25,10 +25,10 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
   async attach(cancelToken: CancelToken, renderer: WebGLRenderer): Promise<void> {
     return void (await Promise.all(
       this.children.map(child => {
-        if (cancelToken.isCancelled()) {
-          throw new Cancelled(
+        if (cancelToken.isCanceled()) {
+          throw new Canceled(
             this.loggerBreadcrumbs.add("attach"),
-            "Cancel token was cancelled while attaching views group."
+            "Cancel token was canceled while attaching views group."
           );
         }
 
@@ -48,10 +48,10 @@ export default class CanvasViewGroup implements CanvasViewGroupInterface {
   async detach(cancelToken: CancelToken, renderer: WebGLRenderer): Promise<void> {
     return void (await Promise.all(
       this.children.map(child => {
-        if (cancelToken.isCancelled()) {
-          throw new Cancelled(
+        if (cancelToken.isCanceled()) {
+          throw new Canceled(
             this.loggerBreadcrumbs.add("detach"),
-            "Cancel token was cancelled while detaching views group."
+            "Cancel token was canceled while detaching views group."
           );
         }
 

@@ -1,13 +1,13 @@
 // @flow
 
-import type { Cancellable } from "./Cancellable";
+import type { Cancelable } from "./Cancelable";
 import type { CancelTokenCallback } from "../types/CancelTokenCallback";
 import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
 
-export interface CancelToken extends Cancellable {
+export interface CancelToken extends Cancelable {
   cancel(LoggerBreadcrumbs): void;
 
   getAbortSignal(): AbortSignal;
 
-  onCancelled(CancelTokenCallback): void;
+  onCanceled(CancelTokenCallback): void;
 }

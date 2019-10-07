@@ -1,7 +1,7 @@
 // @flow
 
 import assert from "../helpers/assert";
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import TiledCustomProperties from "./TiledCustomProperties";
 import TiledCustomPropertiesException from "./Exception/Tiled/CustomProperties";
 import TiledCustomPropertyParser from "./TiledCustomPropertyParser";
@@ -23,8 +23,8 @@ export default class TiledCustomPropertiesParser implements TiledCustomPropertie
   async parse(cancelToken: CancelToken): Promise<TiledCustomPropertiesInterface> {
     const currentLoggerBreadcrumbs = this.loggerBreadcrumbs.add("parse");
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(currentLoggerBreadcrumbs, "Cancel token was cancelled before parsing custom properties.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(currentLoggerBreadcrumbs, "Cancel token was canceled before parsing custom properties.");
     }
 
     const propertiesElements = this.element.getElementsByTagName("properties");

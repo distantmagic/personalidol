@@ -1,5 +1,5 @@
 // @flow
 
-import type { Cancelled } from "../interfaces/Exception/Cancelled";
+import type { Canceled } from "../interfaces/Exception/Canceled";
 
-export type CancelTokenCallback = Cancelled => void;
+export type CancelTokenCallback = Canceled => void;

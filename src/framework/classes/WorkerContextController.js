@@ -46,16 +46,16 @@ export default class WorkerContextController<T: WorkerContextMethods> implements
     return new Promise(async (resolve, reject) => {
       let responseData;
 
-      cancelToken.onCancelled(err => {
-        const cancelledResponse = jsonrpc.error(rpcRequest.id, new jsonrpc.JsonRpcError(err.message, 1));
+      cancelToken.onCanceled(err => {
+        const canceledResponse = jsonrpc.error(rpcRequest.id, new jsonrpc.JsonRpcError(err.message, 1));
 
-        resolve(void this.workerContext.postMessage(cancelledResponse));
+        resolve(void this.workerContext.postMessage(canceledResponse));
       });
 
       try {
         responseData = await method.call(this.methods, cancelToken, rpcRequest.params);
       } catch (err) {
-        if (cancelToken.isCancelled()) {
+        if (cancelToken.isCanceled()) {
           return resolve();
         }
 
@@ -64,7 +64,7 @@ export default class WorkerContextController<T: WorkerContextMethods> implements
         return resolve(void this.workerContext.postMessage(errorResponse));
       }
 
-      if (cancelToken.isCancelled()) {
+      if (cancelToken.isCanceled()) {
         return resolve();
       }
 
@@ -87,24 +87,24 @@ export default class WorkerContextController<T: WorkerContextMethods> implements
     const rpcRequest: JsonRpcRequest<any, any> = data;
 
     if ("_:cancel" === rpcRequest.method) {
-      const cancelledRequestId = rpcRequest.params.id;
-      const cancelToken = this.cancelTokens.get(cancelledRequestId);
+      const canceledRequestId = rpcRequest.params.id;
+      const cancelToken = this.cancelTokens.get(canceledRequestId);
 
       if (cancelToken) {
-        this.cancelTokens.delete(cancelledRequestId);
+        this.cancelTokens.delete(canceledRequestId);
 
         return void cancelToken.cancel(breadcrumbs.add("_:cancel"));
       } else {
-        // either cancel token was cancelled so fast that request was not fired
+        // either cancel token was canceled so fast that request was not fired
         // yet, or non-existent token was used, to be safe we are setting
-        // already cancelled token, so incoming request will be cancelled
+        // already canceled token, so incoming request will be canceled
         // immediately
-        // token will be cancelled after method is actually called
-        const cancelledCancelToken = new CancelToken(breadcrumbs);
+        // token will be canceled after method is actually called
+        const canceledCancelToken = new CancelToken(breadcrumbs);
 
-        this.cancelTokens.set(cancelledRequestId, cancelledCancelToken);
+        this.cancelTokens.set(canceledRequestId, canceledCancelToken);
 
-        return void cancelledCancelToken.cancel(breadcrumbs.add("race"));
+        return void canceledCancelToken.cancel(breadcrumbs.add("race"));
       }
     }
 

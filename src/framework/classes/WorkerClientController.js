@@ -19,7 +19,7 @@ export default class WorkerClientController<T: WorkerContextMethods> implements 
     this.worker = worker;
   }
 
-  async cancel(cancelledRequestId: string): Promise<void> {
+  async cancel(canceledRequestId: string): Promise<void> {
     const requestId = this.getNextRequestId();
     const request = jsonrpc.request<
       "_:cancel",
@@ -27,7 +27,7 @@ export default class WorkerClientController<T: WorkerContextMethods> implements 
         id: string,
       }
     >(requestId, "_:cancel", {
-      id: cancelledRequestId,
+      id: canceledRequestId,
     });
     this.worker.postMessage(request);
   }
@@ -42,10 +42,10 @@ export default class WorkerClientController<T: WorkerContextMethods> implements 
     const requestId = this.getNextRequestId();
 
     return new Promise((resolve, reject) => {
-      if (cancelToken.isCancelled()) {
+      if (cancelToken.isCanceled()) {
         return void reject({
           code: 1,
-          message: "Token has been cancelled before sending request.",
+          message: "Token has been canceled before sending request.",
         });
       }
 
@@ -85,7 +85,7 @@ export default class WorkerClientController<T: WorkerContextMethods> implements 
       const request = jsonrpc.request<$Keys<T>, Params>(requestId, methodName, params);
       this.worker.postMessage(request);
 
-      cancelToken.onCancelled(() => {
+      cancelToken.onCanceled(() => {
         this.cancel(requestId);
       });
     });

@@ -1,10 +1,10 @@
 // @flow
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import EventListenerSet from "./EventListenerSet";
 import Exception from "./Exception";
 
-import type { Cancelled as CancelledInterface } from "../interfaces/Exception/Cancelled";
+import type { Canceled as CanceledInterface } from "../interfaces/Exception/Canceled";
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 import type { CancelTokenCallback } from "../types/CancelTokenCallback";
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
@@ -12,15 +12,15 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class CancelToken implements CancelTokenInterface {
   +abortController: AbortController;
-  +callbacks: EventListenerSetInterface<[CancelledInterface]>;
+  +callbacks: EventListenerSetInterface<[CanceledInterface]>;
   +loggerBreadcrumbsCreate: LoggerBreadcrumbs;
   loggerBreadcrumbsCancel: ?LoggerBreadcrumbs;
-  _isCancelled: boolean;
+  _isCanceled: boolean;
 
   constructor(loggerBreadcrumbsCreate: LoggerBreadcrumbs) {
-    this._isCancelled = false;
+    this._isCanceled = false;
     this.abortController = new AbortController();
-    this.callbacks = new EventListenerSet<[CancelledInterface]>();
+    this.callbacks = new EventListenerSet<[CanceledInterface]>();
     this.loggerBreadcrumbsCancel = null;
     this.loggerBreadcrumbsCreate = loggerBreadcrumbsCreate;
   }
@@ -28,10 +28,10 @@ export default class CancelToken implements CancelTokenInterface {
   cancel(loggerBreadcrumbsCancel: LoggerBreadcrumbs): void {
     this.loggerBreadcrumbsCancel = loggerBreadcrumbsCancel;
     this.abortController.abort();
-    this._isCancelled = true;
+    this._isCanceled = true;
 
     return this.callbacks.notify(
-      [new Cancelled(this.loggerBreadcrumbsCreate, `Token was cancelled at: ${loggerBreadcrumbsCancel.asString()}`)],
+      [new Canceled(this.loggerBreadcrumbsCreate, `Token was canceled at: ${loggerBreadcrumbsCancel.asString()}`)],
       true
     );
   }
@@ -40,12 +40,12 @@ export default class CancelToken implements CancelTokenInterface {
     return this.abortController.signal;
   }
 
-  isCancelled(): boolean {
-    return this._isCancelled;
+  isCanceled(): boolean {
+    return this._isCanceled;
   }
 
-  onCancelled(callback: CancelTokenCallback): void {
-    if (this._isCancelled) {
+  onCanceled(callback: CancelTokenCallback): void {
+    if (this._isCanceled) {
       const loggerBreadcrumbsCancel = this.loggerBreadcrumbsCancel;
 
       if (!loggerBreadcrumbsCancel) {
@@ -53,9 +53,9 @@ export default class CancelToken implements CancelTokenInterface {
       }
 
       callback(
-        new Cancelled(
+        new Canceled(
           this.loggerBreadcrumbsCreate,
-          `Token is already cancelled at: ${loggerBreadcrumbsCancel.asString()}`
+          `Token is already canceled at: ${loggerBreadcrumbsCancel.asString()}`
         )
       );
     } else {

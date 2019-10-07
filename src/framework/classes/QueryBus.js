@@ -57,17 +57,15 @@ export default class QueryBus implements QueryBusInterface {
     this.enqueuedCallbacks.add(callback);
   }
 
-  async tick(tick: ClockTick): Promise<QueryBusInterface> {
+  tick(tick: ClockTick): Promise<void> {
     // Random things happen, timeouts and intervals are not reliable (those are
     // definitely not real time clocks) and QueryBus is really important to
     // the system.
     // It's better to have this additional check here, just for safety.
-    if (tick.isCancelled()) {
-      return this;
+    if (tick.isCanceled()) {
+      return Promise.resolve(void 0);
     }
 
-    await this.flush().process();
-
-    return this;
+    return this.flush().process();
   }
 }

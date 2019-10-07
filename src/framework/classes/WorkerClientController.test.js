@@ -68,7 +68,7 @@ it("allows to cancel requests", async function() {
       return new Promise(function(resolve) {
         const timeoutId = setTimeout(resolve, 10000);
 
-        cancelToken.onCancelled(() => clearTimeout(timeoutId));
+        cancelToken.onCanceled(() => clearTimeout(timeoutId));
       });
     }
   }
@@ -93,11 +93,11 @@ it("allows to cancel requests", async function() {
 
   await expect(response).rejects.toEqual({
     code: 1,
-    message: "[root/onMessage] Token was cancelled at: root/onMessage/_:cancel",
+    message: "[root/onMessage] Token was canceled at: root/onMessage/_:cancel",
   });
 }, 300);
 
-it("does not send request when cancel token is already cancelled", async function() {
+it("does not send request when cancel token is already canceled", async function() {
   class Methods {
     async someMethod(cancelToken: CancelTokenInterface, params) {
       return new Promise(function(resolve) {
@@ -124,7 +124,7 @@ it("does not send request when cancel token is already cancelled", async functio
 
   await expect(response).rejects.toEqual({
     code: 1,
-    message: "Token has been cancelled before sending request.",
+    message: "Token has been canceled before sending request.",
   });
 }, 300);
 

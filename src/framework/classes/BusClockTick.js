@@ -10,7 +10,7 @@ export default class BusClockTick implements BusClockTickInterface {
     this.tick = tick;
   }
 
-  isCancelled(): boolean {
-    return this.tick.isCancelled();
+  isCanceled(): boolean {
+    return this.tick.isCanceled();
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import TiledSkinnedTile from "./TiledSkinnedTile";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -34,10 +34,10 @@ export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterfa
     let positionedTile;
 
     for await (positionedTile of tiledMapGrid.generatePositionedTiles()) {
-      if (cancelToken.isCancelled()) {
-        throw new Cancelled(
+      if (cancelToken.isCanceled()) {
+        throw new Canceled(
           this.loggerBreadcrumbs.add("generateSkinnedTiles"),
-          "Cancel token was cancelled while generating skinned tiles."
+          "Cancel token was canceled while generating skinned tiles."
         );
       }
 

@@ -1,6 +1,6 @@
 // @flow
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import TiledMapException from "./Exception/Tiled/Map";
 import TiledMapSkinnedLayer from "./TiledMapSkinnedLayer";
 
@@ -47,10 +47,10 @@ export default class TiledMap implements TiledMapInterface {
     let layer;
 
     for (layer of this.getLayers()) {
-      if (cancelToken.isCancelled()) {
-        throw new Cancelled(
+      if (cancelToken.isCanceled()) {
+        throw new Canceled(
           this.loggerBreadcrumbs.add("generateSkinnedLayers").add(layer.getName()),
-          "Cancel token was cancelled while generating skinned layers."
+          "Cancel token was canceled while generating skinned layers."
         );
       }
 

@@ -65,8 +65,8 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     return this._result;
   }
 
-  isCancelled(): boolean {
-    return this.cancelToken.isCancelled();
+  isCanceled(): boolean {
+    return this.cancelToken.isCanceled();
   }
 
   isEqual(other: CancelTokenQuery<T>) {
@@ -83,7 +83,7 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
 
   onExecuted(): Promise<?T> {
     return new Promise<?T>((resolve, reject) => {
-      this.cancelToken.onCancelled(reject);
+      this.cancelToken.onCanceled(reject);
       this.callbacks.add(resolve);
     });
   }

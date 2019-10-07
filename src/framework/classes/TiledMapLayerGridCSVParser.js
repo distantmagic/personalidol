@@ -2,7 +2,7 @@
 
 import split from "lodash/split";
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import TiledMapGrid from "./TiledMapGrid";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -31,8 +31,8 @@ export default class TiledMapLayerGridCSVParser implements TiledMapLayerGridCSVP
    *   4. CSV holds map sized array
    */
   async parse(cancelToken: CancelToken): Promise<TiledMapGridInterface> {
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(this.loggerBreadcrumbs.add("parse"), "Cancel token was cancelled before parsing layer grid.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(this.loggerBreadcrumbs.add("parse"), "Cancel token was canceled before parsing layer grid.");
     }
 
     const layerData = this.data.trim();

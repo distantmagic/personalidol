@@ -1,7 +1,7 @@
 // @flow
 
 import * as xml from "../helpers/xml";
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import ElementSize from "./ElementSize";
 import TiledCustomPropertiesParser from "./TiledCustomPropertiesParser";
 import TiledMapLayer from "./TiledMapLayer";
@@ -28,8 +28,8 @@ export default class TiledMapLayerParser implements TiledMapLayerParserInterface
   async parse(cancelToken: CancelToken): Promise<TiledMapLayerInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("parse");
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before parsing tiled layer.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(breadcrumbs, "Cancel token was canceled before parsing tiled layer.");
     }
 
     const layerName = xml.getStringAttribute(breadcrumbs, this.layerElement, "name");

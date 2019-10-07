@@ -4,6 +4,7 @@ import autoBind from "auto-bind";
 
 import BusClock from "./BusClock";
 import CancelToken from "./CancelToken";
+import ClockReactiveController from "./ClockReactiveController";
 import EventListenerSet from "./EventListenerSet";
 import Exception from "./Exception";
 import ExpressionBus from "./ExpressionBus";
@@ -12,7 +13,6 @@ import KeyboardState from "./KeyboardState";
 import MainLoop from "./MainLoop";
 import PointerStateDelegate from "./PointerStateDelegate";
 import QueryBus from "./QueryBus";
-import QueryBusController from "./QueryBusController";
 import SceneLoader from "./SceneLoader";
 import SceneManager from "./SceneManager";
 import Scheduler from "./Scheduler";
@@ -20,6 +20,7 @@ import THREELoadingManager from "./THREELoadingManager";
 
 import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
 import type { CanvasController } from "../interfaces/CanvasController";
+import type { ClockReactiveController as ClockReactiveControllerInterface } from "../interfaces/ClockReactiveController";
 import type { Debugger } from "../interfaces/Debugger";
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
@@ -31,7 +32,6 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
 import type { PointerState as PointerStateInterface } from "../interfaces/PointerState";
 import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
-import type { QueryBusController as QueryBusControllerInterface } from "../interfaces/QueryBusController";
 import type { SceneLoader as SceneLoaderInterface } from "../interfaces/SceneLoader";
 import type { SceneManager as SceneManagerInterface } from "../interfaces/SceneManager";
 import type { SceneManagerChangeCallback } from "../types/SceneManagerChangeCallback";
@@ -57,6 +57,7 @@ async function onSceneStateChange(
 }
 
 export default class Game implements GameInterface {
+  +clockReactiveController: ClockReactiveControllerInterface;
   +debug: Debugger;
   +exceptionHandler: ExceptionHandler;
   +expressionBus: ExpressionBusInterface;
@@ -66,14 +67,13 @@ export default class Game implements GameInterface {
   +mainLoop: MainLoopInterface;
   +pointerState: PointerStateInterface;
   +queryBus: QueryBusInterface;
-  +queryBusController: QueryBusControllerInterface;
   +sceneManagerChangeCallbacks: EventListenerSetInterface<[SceneManagerInterface]>;
   +scheduler: SchedulerInterface;
   +threeLoadingManager: THREELoadingManagerInterface;
-  canvas: ?HTMLCanvasElement;
-  sceneManager: ?SceneManagerInterface;
-  sceneLoader: ?SceneLoaderInterface;
   _isHidden: boolean;
+  canvas: ?HTMLCanvasElement;
+  sceneLoader: ?SceneLoaderInterface;
+  sceneManager: ?SceneManagerInterface;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, debug: Debugger, exceptionHandler: ExceptionHandler) {
     autoBind(this);
@@ -88,7 +88,9 @@ export default class Game implements GameInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.pointerState = new PointerStateDelegate(loggerBreadcrumbs.add("PointerStateDelegate"));
     this.queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
-    this.queryBusController = new QueryBusController(new BusClock(), this.queryBus);
+    this.clockReactiveController = new ClockReactiveController(new BusClock(), [
+      this.queryBus
+    ]);
     this.sceneLoader = null;
     this.sceneManager = null;
     this.sceneManagerChangeCallbacks = new EventListenerSet<[SceneManagerInterface]>();
@@ -164,7 +166,7 @@ export default class Game implements GameInterface {
   async run(cancelToken: CancelTokenInterface): Promise<void> {
     this.keyboardState.observe();
     this.pointerState.observe();
-    this.queryBusController.interval(cancelToken);
+    this.clockReactiveController.interval(cancelToken);
     // this.keyboardState.disconnect();
     // this.pointerState.disconnect();
   }
@@ -206,11 +208,16 @@ export default class Game implements GameInterface {
     );
 
     const previousSceneManager = this.sceneManager;
+    const previousSceneLoader = this.sceneLoader;
 
     if (previousSceneManager) {
       const cancelToken = new CancelToken(this.loggerBreadcrumbs.add("setPrimaryController"));
 
       await previousSceneManager.detach(cancelToken);
+    }
+
+    if (previousSceneLoader) {
+      previousSceneLoader.disconnect();
     }
 
     this.sceneManager = sceneManager;

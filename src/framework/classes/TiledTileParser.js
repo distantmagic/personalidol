@@ -1,7 +1,7 @@
 // @flow
 
 import * as xml from "../helpers/xml";
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import ElementSize from "./ElementSize";
 import TiledRelativeFilename from "./TiledRelativeFilename";
 import TiledTile from "./TiledTile";
@@ -27,8 +27,8 @@ export default class TiledTileParser implements TiledTileParserInterface {
   async parse(cancelToken: CancelToken): Promise<TiledTileInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("parse").add(this.tilesetPath);
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(breadcrumbs, "Cancel token was cancelled before parsing map tile.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(breadcrumbs, "Cancel token was canceled before parsing map tile.");
     }
 
     const imageElement = this.tileElement.getElementsByTagName("image").item(0);

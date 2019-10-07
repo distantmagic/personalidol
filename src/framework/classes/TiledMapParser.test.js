@@ -1,6 +1,6 @@
 // @flow
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import tiledMapParserFixture from "./TiledMapParser.fixture";
 
@@ -19,7 +19,7 @@ it("parses map file", async function() {
   await expect(tiledMapPromise).resolves.toBeDefined();
 });
 
-const test2Description = "can be cancelled gracefully";
+const test2Description = "can be canceled gracefully";
 it(test2Description, async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs().add(test2Description);
   const [cancelToken, queryBus, tiledMapPromise]: [
@@ -30,7 +30,7 @@ it(test2Description, async function() {
 
   cancelToken.cancel(loggerBreadcrumbs);
 
-  await expect(tiledMapPromise).rejects.toThrow(Cancelled);
+  await expect(tiledMapPromise).rejects.toThrow(Canceled);
 });
 
 it("generates skinned layers and tiles", async function() {

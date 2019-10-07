@@ -10,7 +10,7 @@ export default class RequestAnimationFrameIntervalTick implements RequestAnimati
     this.requestAnimationFrameTick = requestAnimationFrameTick;
   }
 
-  isCancelled(): boolean {
-    return this.requestAnimationFrameTick.isCancelled();
+  isCanceled(): boolean {
+    return this.requestAnimationFrameTick.isCanceled();
   }
 }

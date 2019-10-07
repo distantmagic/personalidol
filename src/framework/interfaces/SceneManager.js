@@ -23,6 +23,14 @@ export interface SceneManager extends Resizeable<"px"> {
 
   offStateChange(SceneManagerChangeCallback): void;
 
+  /**
+   * This method mat be called directly from a HTML event callback, so it's not
+   * guaranteed that it always be possible to hold off other actions until this
+   * one is done. Nonetheless it should properly handle promises and behave
+   * like it's not the case.
+   */
+  setCanvasElement(?HTMLCanvasElement): Promise<void>;
+
   start(): Promise<void>;
 
   stop(): Promise<void>;

@@ -1,6 +1,6 @@
 // @flow
 
-import Cancelled from "./Exception/Cancelled";
+import Canceled from "./Exception/Canceled";
 import TiledMapObjectElementChecker from "./TiledMapObjectElementChecker";
 import TiledMapObjectLayer from "./TiledMapObjectLayer";
 import TiledMapObjectParser from "./TiledMapObjectParser";
@@ -27,8 +27,8 @@ export default class TiledMapObjectLayerParser implements TiledMapObjectLayerPar
   async parse(cancelToken: CancelToken): Promise<TiledMapObjectLayerInterface> {
     const breadcrumbs = this.loggerBreadcrumbs.add("parse");
 
-    if (cancelToken.isCancelled()) {
-      throw new Cancelled(breadcrumbs, "Cancel token has been cancelled before parsing map objects.");
+    if (cancelToken.isCanceled()) {
+      throw new Canceled(breadcrumbs, "Cancel token has been canceled before parsing map objects.");
     }
 
     const objectElements = this.documentElement.getElementsByTagName("object");

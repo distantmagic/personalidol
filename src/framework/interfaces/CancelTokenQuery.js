@@ -13,7 +13,7 @@ export interface CancelTokenQuery<T> extends Equatable<CancelTokenQuery<T>> {
 
   getResult(): T;
 
-  isCancelled(): boolean;
+  isCanceled(): boolean;
 
   isExecuted(): boolean;
 

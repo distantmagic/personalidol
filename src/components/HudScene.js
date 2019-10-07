@@ -130,7 +130,7 @@ export default function HudScene(props: Props) {
               "dd__scene__canvas--attaching": isAttaching,
               "dd__scene__canvas--loading": resourcesLoadingState.isLoading(),
             })}
-            ref={props.game.setCanvasElement}
+            ref={sceneManager.setCanvasElement}
           />
         </React.Fragment>
       ) : (

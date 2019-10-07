@@ -47,8 +47,6 @@ export interface Game extends FPSController {
 
   run(CancelToken): Promise<void>;
 
-  setCanvasElement(?HTMLCanvasElement): Promise<void>;
-
   setIsHidden(boolean): void;
 
   setPrimaryController(CanvasController): Promise<void>;
