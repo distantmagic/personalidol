@@ -47,7 +47,7 @@ async function onSceneStateChange(
     return;
   }
 
-  const cancelToken = new CancelToken(loggerBreadcrumbs.add("setCanvasElement"));
+  const cancelToken = new CancelToken(loggerBreadcrumbs.add("onSceneStateChange"));
 
   if (sceneManager.isAttached()) {
     await sceneManager.detach(cancelToken);
@@ -70,7 +70,6 @@ export default class Game implements GameInterface {
   +sceneManagerChangeCallbacks: EventListenerSetInterface<[SceneManagerInterface]>;
   +scheduler: SchedulerInterface;
   +threeLoadingManager: THREELoadingManagerInterface;
-  _isHidden: boolean;
   canvas: ?HTMLCanvasElement;
   sceneLoader: ?SceneLoaderInterface;
   sceneManager: ?SceneManagerInterface;
@@ -78,7 +77,6 @@ export default class Game implements GameInterface {
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, debug: Debugger, exceptionHandler: ExceptionHandler) {
     autoBind(this);
 
-    this._isHidden = false;
     this.canvas = null;
     this.debug = debug;
     this.exceptionHandler = exceptionHandler;
@@ -151,10 +149,6 @@ export default class Game implements GameInterface {
     return !!this.sceneManager;
   }
 
-  isHidden(): boolean {
-    return this._isHidden;
-  }
-
   offSceneManagerChange(callback: SceneManagerChangeCallback): void {
     this.sceneManagerChangeCallbacks.delete(callback);
   }
@@ -171,26 +165,8 @@ export default class Game implements GameInterface {
     // this.pointerState.disconnect();
   }
 
-  async setCanvasElement(canvas: ?HTMLCanvasElement): Promise<void> {
-    this.canvas = canvas;
-
-    onSceneStateChange(this.loggerBreadcrumbs, canvas, this.sceneManager);
-  }
-
   setExpectedFPS(expectedFPS: number): void {
     this.mainLoop.setMaxAllowedFPS(expectedFPS);
-  }
-
-  setIsHidden(isHidden: boolean): void {
-    this._isHidden = isHidden;
-
-    const mainLoop = this.getMainLoop();
-
-    if (isHidden) {
-      mainLoop.stop();
-    } else {
-      mainLoop.start();
-    }
   }
 
   async setPrimaryController(controller: CanvasController): Promise<void> {

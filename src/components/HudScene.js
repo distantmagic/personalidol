@@ -29,7 +29,6 @@ type Props = {|
 export default function HudScene(props: Props) {
   const threeLoadingManager = props.game.getTHREELoadingManager();
 
-  // const [isFailed, isAttaching] = useScene(props, sceneManager, canvas);
   const [resourcesLoadingState, setResourcesLoadingState] = React.useState<ResourcesLoadingState>(
     threeLoadingManager.getResourcesLoadingState()
   );
