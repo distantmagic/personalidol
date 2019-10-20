@@ -7,6 +7,7 @@ import HTMLElementResizeObserver from "../framework/classes/HTMLElementResizeObs
 import HTMLElementSize from "../framework/classes/HTMLElementSize";
 import HudSceneOverlay from "./HudSceneOverlay";
 import MainView from "../app/classes/MainView";
+import SceneCanvas from "../framework/classes/HTMLElement/SceneCanvas";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
@@ -26,6 +27,8 @@ type Props = {|
   queryBus: QueryBus,
 |};
 
+customElements.define('x-dm-scene-canvas', SceneCanvas);
+
 export default function HudScene(props: Props) {
   const threeLoadingManager = props.game.getTHREELoadingManager();
 
@@ -33,10 +36,37 @@ export default function HudScene(props: Props) {
     threeLoadingManager.getResourcesLoadingState()
   );
   const [scene, setScene] = React.useState<?HTMLElement>(null);
+  const [sceneCanvas, setSceneCanvas] = React.useState<?SceneCanvas>(null);
   const [sceneManager, setSceneManager] = React.useState<?SceneManager>(
     props.game.hasSceneManager() ? props.game.getSceneManager() : null
   );
   const [isAttaching, setIsAttaching] = React.useState<boolean>(sceneManager ? sceneManager.isAttaching() : true);
+
+  const castSceneCanvas = React.useCallback(function (element: ?HTMLElement) {
+    if (!element) {
+      return void setSceneCanvas(null);
+    }
+
+    // This type of casting is a workaround to make flow typed
+    // hints work. For some reason it asserts that SceneCanvas is not
+    // compatible with HTMLElement.
+    setSceneCanvas(((element: any): SceneCanvas));
+  }, [setSceneCanvas]);
+
+  React.useEffect(function () {
+    if (!sceneCanvas) {
+      return;
+    }
+
+    sceneCanvas.attach(props.loggerBreadcrumbs, props.exceptionHandler);
+    sceneCanvas.addEventListener('foo', function () {
+      console.log('foo received :D');
+    });
+
+    // return function () {
+    //   sceneCanvas.detach();
+    // };
+  }, [props.exceptionHandler, props.loggerBreadcrumbs, sceneCanvas]);
 
   React.useEffect(
     function() {
@@ -124,12 +154,12 @@ export default function HudScene(props: Props) {
             itemsLoaded={resourcesLoadingState.getItemsLoaded()}
             itemsTotal={resourcesLoadingState.getItemsTotal()}
           />
-          <canvas
-            className={classnames("dd__scene__canvas", {
+          <x-dm-scene-canvas
+            class={classnames("dd__scene__canvas", {
               "dd__scene__canvas--attaching": isAttaching,
               "dd__scene__canvas--loading": resourcesLoadingState.isLoading(),
             })}
-            ref={sceneManager.setCanvasElement}
+            ref={castSceneCanvas}
           />
         </React.Fragment>
       ) : (

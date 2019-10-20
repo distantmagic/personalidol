@@ -3,6 +3,12 @@
   position: relative;
 }
 
+.dd__scene__canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
 .dd__scene__canvas.dd__scene__canvas--attaching,
 .dd__scene__canvas.dd__scene__canvas--loading {
   // display: none;
