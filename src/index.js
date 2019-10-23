@@ -9,6 +9,9 @@ import "core-js/features/object";
 import React from "react";
 import ReactDOM from "react-dom";
 
+import BusClock from "./framework/classes/BusClock";
+import CancelToken from "./framework/classes/CancelToken";
+import ClockReactiveController from "./framework/classes/ClockReactiveController";
 import Debugger from "./framework/classes/Debugger";
 import ExceptionHandler from "./framework/classes/ExceptionHandler";
 import ExpressionBus from "./framework/classes/ExpressionBus";
@@ -32,19 +35,23 @@ function init(rootElement: HTMLElement) {
   const expressionBus = new ExpressionBus();
   const expressionContext = new ExpressionContext(loggerBreadcrumbs.add("ExpressionContext"))
   const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
+  const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 
-  ReactDOM.render(
-    <Main
-      debug={debug}
-      exceptionHandler={exceptionHandler}
-      expressionBus={expressionBus}
-      expressionContext={expressionContext}
-      logger={logger}
-      loggerBreadcrumbs={loggerBreadcrumbs}
-      queryBus={queryBus}
-    />,
-    rootElement
-  );
+  clockReactiveController.interval(new CancelToken(loggerBreadcrumbs));
+
+  ReactDOM.render((
+    <React.StrictMode>
+      <Main
+        debug={debug}
+        exceptionHandler={exceptionHandler}
+        expressionBus={expressionBus}
+        expressionContext={expressionContext}
+        logger={logger}
+        loggerBreadcrumbs={loggerBreadcrumbs}
+        queryBus={queryBus}
+      />
+    </React.StrictMode>
+  ), rootElement);
 }
 
 const rootElement = document.getElementById("root");

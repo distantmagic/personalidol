@@ -1,7 +1,9 @@
 // @flow
 
 import HTMLElementResizeObserver from "../HTMLElementResizeObserver";
+import HTMLElementSize from "../HTMLElementSize";
 import KeyboardState from "../KeyboardState";
+import MainLoop from "../MainLoop";
 import MainView from "../../../app/classes/MainView";
 import PointerState from "../PointerState";
 import SceneManager from "../SceneManager";
@@ -14,20 +16,20 @@ import type { ExceptionHandler } from "../../interfaces/ExceptionHandler";
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../../interfaces/HTMLElementResizeObserver";
 import type { KeyboardState as KeyboardStateInterface } from "../../interfaces/KeyboardState";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import type { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
 import type { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
 import type { SceneManager as SceneManagerInterface } from "../../interfaces/SceneManager";
+import type { Scheduler as SchedulerInterface } from "../../interfaces/Scheduler";
 
 export default class SceneCanvas extends HTMLElement {
   canvasElement: HTMLCanvasElement;
   keyboardState: KeyboardStateInterface;
+  mainLoop: MainLoopInterface;
   pointerState: PointerStateInterface;
   resizeObserver: HTMLElementResizeObserverInterface;
   sceneManager: ?SceneManagerInterface;
-
-  // static get observedAttributes() {
-  //   return ['foo'];
-  // }
+  scheduler: SchedulerInterface;
 
   constructor() {
     super();
@@ -49,19 +51,21 @@ export default class SceneCanvas extends HTMLElement {
       <canvas id="dm-canvas"></canvas>
     `;
 
+    // flow assumes that shadow root does not contain `.getElementById`
+    // method
+
     // $FlowFixMe
     this.canvasElement = shadowRoot.getElementById("dm-canvas");
+
     this.keyboardState = new KeyboardState();
+    this.mainLoop = MainLoop.getInstance();
     this.pointerState = new PointerState(this.canvasElement);
-    this.resizeObserver = new HTMLElementResizeObserver(this.canvasElement);
+    this.resizeObserver = new HTMLElementResizeObserver(this);
+    this.scheduler = new Scheduler();
 
-    // resizeObserver.notify(sceneManager);
-    // sceneManager.resize(new HTMLElementSize(scene));
+    // this.mainLoop.setMaxAllowedFPS(60);
+    this.mainLoop.attachScheduler(this.scheduler);
   }
-
-  // attributeChangedCallback(name, oldValue, newValue) {
-  //   console.log('attributeChangedCallback', name, oldValue, newValue);
-  // }
 
   connectedCallback() {
     // connectedCallback may be called once your element is no longer
@@ -71,17 +75,19 @@ export default class SceneCanvas extends HTMLElement {
       return;
     }
 
-    console.log("connectedCallback", this.isConnected, this.canvasElement);
     this.keyboardState.observe();
     this.pointerState.observe();
     this.resizeObserver.observe();
+
+    this.mainLoop.start();
   }
 
   disconnectedCallback() {
-    console.log('disconnectedCallback');
     this.keyboardState.disconnect();
     this.pointerState.disconnect();
     this.resizeObserver.disconnect();
+
+    this.mainLoop.stop();
   }
 
   async attach(
@@ -93,11 +99,18 @@ export default class SceneCanvas extends HTMLElement {
   ): Promise<void> {
     const threeLoadingManager = new THREELoadingManager(loggerBreadcrumbs.add("THREELoadingManager"), exceptionHandler);
 
-    this.dispatchEvent(new CustomEvent('foo', { 'bar': 'baz' }));
-    this.sceneManager = new SceneManager(
+    threeLoadingManager.onResourcesLoadingStateChange(resourcesLoadingState => {
+      this.dispatchEvent(new CustomEvent('resourcesLoadingStateChange', {
+        detail: {
+          resourcesLoadingState: resourcesLoadingState
+        }
+      }));
+    });
+
+    const sceneManager = new SceneManager(
       loggerBreadcrumbs.add("SceneManager"),
       exceptionHandler,
-      new Scheduler(),
+      this.scheduler,
       new MainView(
         exceptionHandler,
         loggerBreadcrumbs,
@@ -108,13 +121,15 @@ export default class SceneCanvas extends HTMLElement {
         debug
       )
     );
+
+    await sceneManager.attach(cancelToken, this.canvasElement);
+    await sceneManager.start();
+
+    this.resizeObserver.notify(sceneManager);
+    sceneManager.resize(new HTMLElementSize(this));
+
+    this.sceneManager = sceneManager;
   }
 
   async detach(): Promise<void> {}
 }
-
-// const threeLoadingManager = props.game.getTHREELoadingManager();
-
-// const [resourcesLoadingState, setResourcesLoadingState] = React.useState<ResourcesLoadingState>(
-//   threeLoadingManager.getResourcesLoadingState()
-// );

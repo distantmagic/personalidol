@@ -7,11 +7,11 @@ import type { ClockReactiveController as ClockReactiveControllerInterface } from
 
 export default class ClockReactiveController implements ClockReactiveControllerInterface {
   clock: BusClock;
-  clockReactives: $ReadOnlyArray<ClockReactive>;
+  clockReactive: ClockReactive;
 
-  constructor(clock: BusClock, clockReactives: $ReadOnlyArray<ClockReactive>) {
+  constructor(clock: BusClock, clockReactive: ClockReactive) {
     this.clock = clock;
-    this.clockReactives = clockReactives;
+    this.clockReactive = clockReactive;
   }
 
   async interval(cancelToken: CancelToken): Promise<void> {
@@ -22,15 +22,7 @@ export default class ClockReactiveController implements ClockReactiveControllerI
         return;
       }
 
-      // keep loop variable reference safe
-      const thisTick = tick;
-
-      // process all scheduled ticks simultaneously
-      const scheduledTicks = this.clockReactives.map(clockReactive => {
-        return clockReactive.tick(thisTick);
-      });
-
-      await Promise.all(scheduledTicks);
+      await this.clockReactive.tick(tick);
     }
   }
 }

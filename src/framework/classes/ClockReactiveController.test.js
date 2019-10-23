@@ -11,9 +11,7 @@ it("supports cancel token", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const clock = new BusClock(10000);
   const queryBus = new QueryBus(loggerBreadcrumbs);
-  const controller = new ClockReactiveController(clock, [
-    queryBus,
-  ]);
+  const controller = new ClockReactiveController(clock, queryBus);
 
   setTimeout(function() {
     cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));

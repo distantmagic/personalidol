@@ -11,7 +11,6 @@ import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler"
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 import type { ResourcesLoadingState } from "../framework/interfaces/ResourcesLoadingState";
-import type { Scheduler } from "../framework/interfaces/Scheduler";
 
 type Props = {|
   debug: Debugger,
@@ -44,13 +43,14 @@ export default function HudScene(props: Props) {
 
     const breadcrumbs = props.loggerBreadcrumbs.add("useEffect(SceneCanvas)");
     const cancelToken = new CancelToken(breadcrumbs.add("CancelToken"));
-    const currentSceneCanvas = sceneCanvas;
 
-    currentSceneCanvas.addEventListener('resourcesLoadingStateChange', function (evt: Event) {
-      console.log('resourcesLoadingStateChange received :D', evt);
+    sceneCanvas.addEventListener('resourcesLoadingStateChange', function (evt: Event) {
+      if (evt instanceof CustomEvent) {
+        setResourcesLoadingState(evt.detail.resourcesLoadingState);
+      }
     });
 
-    currentSceneCanvas.attach(
+    sceneCanvas.attach(
       cancelToken,
       props.debug,
       props.exceptionHandler,
@@ -60,9 +60,10 @@ export default function HudScene(props: Props) {
 
     return function () {
       cancelToken.cancel(props.loggerBreadcrumbs.add("(cleanup)"));
-      currentSceneCanvas.detach();
+      sceneCanvas.detach();
     };
   }, [
+    props.debug,
     props.exceptionHandler,
     props.loggerBreadcrumbs,
     props.queryBus,
@@ -71,9 +72,7 @@ export default function HudScene(props: Props) {
 
   return (
     <div className="dd__scene dd__scene--hud dd__scene--canvas">
-      {resourcesLoadingState && (
-        <HudSceneOverlay resourcesLoadingState={resourcesLoadingState} />
-      )}
+      <HudSceneOverlay resourcesLoadingState={resourcesLoadingState} />
       <x-dm-scene-canvas
         class="dd__scene__canvas"
         ref={castSceneCanvas}

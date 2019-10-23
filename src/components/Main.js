@@ -16,7 +16,6 @@ import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
 import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
 import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { Scheduler } from "../framework/interfaces/Scheduler";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 
 type Props = {|

@@ -1,6 +1,5 @@
 // @flow
 
-import debounce from "lodash/debounce";
 import ResizeObserver from "resize-observer-polyfill";
 
 import ElementSize from "../classes/ElementSize";
@@ -18,21 +17,19 @@ export default class HTMLElementResizeObserver implements HTMLElementResizeObser
 
     this.element = element;
     this.notifiable = notifiable;
-    this.nativeResizeObserver = new ResizeObserver(
-      debounce(function(mutationList) {
-        let mutation;
+    this.nativeResizeObserver = new ResizeObserver(function(mutationList) {
+      let mutation;
 
-        for (mutation of mutationList) {
-          const contentRect = mutation.contentRect;
-          const elementSize = new ElementSize<"px">(contentRect.width, contentRect.height);
-          let callback;
+      for (mutation of mutationList) {
+        const contentRect = mutation.contentRect;
+        const elementSize = new ElementSize<"px">(contentRect.width, contentRect.height);
+        let callback;
 
-          for (callback of notifiable.values()) {
-            callback.resize(elementSize);
-          }
+        for (callback of notifiable.values()) {
+          callback.resize(elementSize);
         }
-      }, 300)
-    );
+      }
+    });
   }
 
   disconnect(): void {
