@@ -9,12 +9,6 @@
   width: 100%;
 }
 
-.dd__scene__canvas.dd__scene__canvas--attaching,
-.dd__scene__canvas.dd__scene__canvas--loading {
-  // display: none;
-  pointer-events: none;
-}
-
 .dd__scene__loader {
   background-blend-mode: color-burn;
   background-image: url("/assets/image-disasters-of-war.png"), url("/assets/texture-blood-marble-512.png");

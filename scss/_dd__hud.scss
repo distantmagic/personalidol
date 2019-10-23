@@ -8,56 +8,46 @@ $dd-hud-toolbar-height: 80px;
 
 .dd__hud {
   display: grid;
-  grid-template-areas:
-    "scene aside"
-    "toolbar settings";
+  grid-template-areas: "aside scene";
   grid-template-columns:
+    $dd-hud-aside-width
     calc(100vw - #{$dd-hud-aside-width})
-    $dd-hud-aside-width;
-  grid-template-rows:
-    calc(100vh - #{$dd-hud-toolbar-height})
-    $dd-hud-toolbar-height;
+  ;
   height: 100vh;
   position: relative;
 }
 
 .dd__hud.dd__hud--debugger {
-  grid-template-areas:
-    "debugger scene aside"
-    "debugger toolbar settings";
+  grid-template-areas: "debugger aside scene";
   grid-template-columns:
     $dd-hud-debugger-width
+    $dd-hud-aside-width
     calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width})
-    $dd-hud-aside-width;
+  ;
 }
 
 .dd__hud.dd__hud--debugger.dd__hud--dialogue {
-  grid-template-areas:
-    "debugger scene dialogue aside"
-    "debugger toolbar dialogue settings";
+  grid-template-areas: "debugger aside dialogue scene";
   grid-template-columns:
     $dd-hud-debugger-width
-    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
+    $dd-hud-aside-width
     $dd-hud-dialogue-width
-    $dd-hud-aside-width;
+    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
+  ;
 }
 
 .dd__hud.dd__hud--dialogue {
-  grid-template-areas:
-    "scene dialogue aside"
-    "toolbar dialogue settings";
+  grid-template-areas: "aside dialogue scene";
   grid-template-columns:
-    $dd-hud-debugger-width
-    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
+    $dd-hud-aside-width
     $dd-hud-dialogue-width
-    $dd-hud-aside-width;
+    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
+  ;
 }
 
 .dd__aside.dd__aside--hud,
 .dd__dialogue.dd__dialogue--hud,
-.dd__scene.dd__scene--hud,
-.dd__settings.dd__settings--hud,
-.dd__toolbar.dd__toolbar--hud {
+.dd__scene.dd__scene--hud {
   height: 100%;
   width: 100%;
 }
@@ -76,12 +66,4 @@ $dd-hud-toolbar-height: 80px;
 
 .dd__scene.dd__scene--hud {
   grid-area: scene;
-}
-
-.dd__settings.dd__settings--hud {
-  grid-area: settings;
-}
-
-.dd__toolbar.dd__toolbar--hud {
-  grid-area: toolbar;
 }

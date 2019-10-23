@@ -8,33 +8,31 @@ import HudAside from "./HudAside";
 import HudDebuggerListing from "./HudDebuggerListing";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
-import HudSettings from "./HudSettings";
-import HudToolbar from "./HudToolbar";
 import Person from "../framework/classes/Entity/Person";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { Game } from "../framework/interfaces/Game";
+import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
+import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
 import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-// import type { QueryBus as QueryBusInterface } from "../framework/interfaces/QueryBus";
+import type { Scheduler } from "../framework/interfaces/Scheduler";
+import type { QueryBus } from "../framework/interfaces/QueryBus";
 
 type Props = {|
   debug: Debugger,
   exceptionHandler: ExceptionHandler,
-  game: Game,
+  expressionBus: ExpressionBus,
+  expressionContext: ExpressionContext,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
+  queryBus: QueryBus,
 |};
 
 export default function Main(props: Props) {
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
   const [debuggerState, setDebuggetState] = React.useState(props.debug.getState());
-
-  const expressionBus = props.game.getExpressionBus();
-  const expressionContext = props.game.getExpressionContext();
-  const queryBus = props.game.getQueryBus();
 
   const hasDebugger = !debuggerState.isEmpty();
   const hasDialogue = false;
@@ -65,11 +63,11 @@ export default function Main(props: Props) {
             dialogueResourceReference={dialogueResourceReference}
             dialogueInitiator={dialogueInitiator}
             exceptionHandler={props.exceptionHandler}
-            expressionBus={expressionBus}
-            expressionContext={expressionContext}
+            expressionBus={props.expressionBus}
+            expressionContext={props.expressionContext}
             logger={props.logger}
             loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
-            queryBus={queryBus}
+            queryBus={props.queryBus}
           />
         )}
         <HudAside />
@@ -77,18 +75,14 @@ export default function Main(props: Props) {
         <HudScene
           debug={props.debug}
           exceptionHandler={props.exceptionHandler}
-          game={props.game}
           loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
-          queryBus={queryBus}
-          scheduler={props.game.getScheduler()}
+          queryBus={props.queryBus}
         />
-        <HudSettings />
-        <HudToolbar hasDebugger={hasDebugger} hasDialogue={hasDialogue} />
         <HudModalRouter
           exceptionHandler={props.exceptionHandler}
           logger={props.logger}
           loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")}
-          queryBus={queryBus}
+          queryBus={props.queryBus}
         />
       </div>
     </React.Fragment>
