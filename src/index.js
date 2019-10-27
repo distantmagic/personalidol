@@ -1,10 +1,5 @@
 // @flow
 
-import "core-js/features/map";
-import "core-js/features/set";
-import "core-js/features/promise";
-import "core-js/features/object";
-
 // import * as Sentry from "@sentry/browser";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -56,6 +51,6 @@ function init(rootElement: HTMLElement) {
 
 const rootElement = document.getElementById("root");
 
-if (rootElement) {
+if (rootElement && rootElement.className === "js-dd-capable") {
   init(rootElement);
 }

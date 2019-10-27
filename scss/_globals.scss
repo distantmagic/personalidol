@@ -69,9 +69,22 @@ button {
   cursor: $cursor-pointer;
 }
 
+.dd__browser-features {
+  padding: 0;
+}
+
+.dd__browser-feature {
+  display: none;
+}
+
+.dd__browser-feature.dd__browser-feature--not-supported {
+  display: list-item;
+}
+
 #root,
 .dd__container {
   align-items: flex-start;
+  background-image: url("/assets/texture-mineshaft-marble-512.png");
   justify-content: center;
   display: flex;
   height: 100%;
@@ -80,10 +93,8 @@ button {
 
 .dd__loader {
   align-items: center;
-  // background-color: rgba(255, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
-  // font-family: serif;
   height: 100%;
   justify-content: center;
   width: 100%;
@@ -108,6 +119,14 @@ button {
   &:not(:empty):before {
     padding-bottom: 1rem;
   }
+
+  p {
+    width: 100%;
+  }
+}
+
+.dd__loader.dd__loader--app-setup {
+  max-width: 40ch;
 }
 
 .dd__loader.dd__loader--error {
@@ -115,6 +134,33 @@ button {
     animation: unset;
     background-image: url("/assets/icon-error.png");
   }
+}
+
+.dd__loader.dd__loader--hidden {
+  display: none;
+}
+
+.dd__loader__error-message {
+  color: gold;
+  font-weight: bold;
+  padding-bottom: 1.6rem;
+}
+
+.dd__loader__recommended-browsers {
+  display: block;
+  padding: 0.4rem;
+}
+
+.dd__loader__recommended-browsers__browser {
+  display: inline-block;
+  padding: 0.6rem;
+}
+
+.dd__noscript {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
 }
 
 .dd__button,

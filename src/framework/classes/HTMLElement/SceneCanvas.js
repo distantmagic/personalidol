@@ -1,5 +1,8 @@
 // @flow
 
+import * as THREE from "three";
+import autoBind from "auto-bind";
+
 import HTMLElementResizeObserver from "../HTMLElementResizeObserver";
 import HTMLElementSize from "../HTMLElementSize";
 import KeyboardState from "../KeyboardState";
@@ -19,20 +22,21 @@ import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
 import type { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
+import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../../interfaces/ResourcesLoadingState";
 import type { SceneManager as SceneManagerInterface } from "../../interfaces/SceneManager";
 import type { Scheduler as SchedulerInterface } from "../../interfaces/Scheduler";
 
 export default class SceneCanvas extends HTMLElement {
-  canvasElement: HTMLCanvasElement;
-  keyboardState: KeyboardStateInterface;
-  mainLoop: MainLoopInterface;
-  pointerState: PointerStateInterface;
-  resizeObserver: HTMLElementResizeObserverInterface;
-  sceneManager: ?SceneManagerInterface;
-  scheduler: SchedulerInterface;
+  +canvasElement: HTMLCanvasElement;
+  +keyboardState: KeyboardStateInterface;
+  +mainLoop: MainLoopInterface;
+  +pointerState: PointerStateInterface;
+  +resizeObserver: HTMLElementResizeObserverInterface;
+  +scheduler: SchedulerInterface;
 
   constructor() {
     super();
+    autoBind(this);
 
     const shadowRoot = this.attachShadow({
       mode: "closed"
@@ -97,39 +101,26 @@ export default class SceneCanvas extends HTMLElement {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus
   ): Promise<void> {
-    const threeLoadingManager = new THREELoadingManager(loggerBreadcrumbs.add("THREELoadingManager"), exceptionHandler);
-
-    threeLoadingManager.onResourcesLoadingStateChange(resourcesLoadingState => {
-      this.dispatchEvent(new CustomEvent('resourcesLoadingStateChange', {
-        detail: {
-          resourcesLoadingState: resourcesLoadingState
-        }
-      }));
+    const loadingManager = new THREELoadingManager(loggerBreadcrumbs.add("THREELoadingManager"), exceptionHandler);
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      canvas: this.canvasElement,
+      // context: canvas.getContext("webgl2"),
     });
 
-    const sceneManager = new SceneManager(
-      loggerBreadcrumbs.add("SceneManager"),
-      exceptionHandler,
-      this.scheduler,
-      new MainView(
-        exceptionHandler,
-        loggerBreadcrumbs,
-        threeLoadingManager,
-        this.keyboardState,
-        this.pointerState,
-        queryBus,
-        debug
-      )
-    );
+    loadingManager.onResourcesLoadingStateChange(this.onResourcesLoadingStateChange);
 
-    await sceneManager.attach(cancelToken, this.canvasElement);
-    await sceneManager.start();
-
-    this.resizeObserver.notify(sceneManager);
-    sceneManager.resize(new HTMLElementSize(this));
-
-    this.sceneManager = sceneManager;
+    // this.resizeObserver.notify(sceneManager);
+    // sceneManager.resize(new HTMLElementSize(this));
   }
 
   async detach(): Promise<void> {}
+
+  onResourcesLoadingStateChange(resourcesLoadingState: ResourcesLoadingStateInterface): void {
+    const evt = new CustomEvent('resourcesLoadingStateChange', {
+      detail: resourcesLoadingState
+    });
+
+    this.dispatchEvent(evt);
+  }
 }

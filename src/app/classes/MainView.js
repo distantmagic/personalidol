@@ -93,7 +93,7 @@ export default class MainView implements CanvasController {
   }
 
   resize(elementSize: ElementSize<"px">): void {
-    const zoom = 200;
+    const zoom = 160;
     const height = elementSize.getHeight();
     const width = elementSize.getWidth();
 

@@ -4,6 +4,7 @@ import * as React from "react";
 
 import CancelToken from "../framework/classes/CancelToken";
 import HudSceneOverlay from "./HudSceneOverlay";
+import HudSceneOverlayError from "./HudSceneOverlayError";
 import SceneCanvas from "../framework/classes/HTMLElement/SceneCanvas";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
@@ -19,9 +20,8 @@ type Props = {|
   queryBus: QueryBus,
 |};
 
-customElements.define('x-dm-scene-canvas', SceneCanvas);
-
 export default function HudScene(props: Props) {
+  const [customElements] = React.useState<?CustomElementRegistry>(window.customElements);
   const [resourcesLoadingState, setResourcesLoadingState] = React.useState<?ResourcesLoadingState>(null);
   const [sceneCanvas, setSceneCanvas] = React.useState<?SceneCanvas>(null);
 
@@ -37,6 +37,12 @@ export default function HudScene(props: Props) {
   }, [setSceneCanvas]);
 
   React.useEffect(function () {
+    if (customElements) {
+      customElements.define('x-dm-scene-canvas', SceneCanvas);
+    }
+  }, [customElements]);
+
+  React.useEffect(function () {
     if (!sceneCanvas) {
       return;
     }
@@ -46,7 +52,7 @@ export default function HudScene(props: Props) {
 
     sceneCanvas.addEventListener('resourcesLoadingStateChange', function (evt: Event) {
       if (evt instanceof CustomEvent) {
-        setResourcesLoadingState(evt.detail.resourcesLoadingState);
+        setResourcesLoadingState(evt.detail);
       }
     });
 
@@ -70,8 +76,19 @@ export default function HudScene(props: Props) {
     sceneCanvas,
   ]);
 
+  if (customElements) {
+    return (
+      <div className="dd__scene dd__scene--canvas dd__scene--hud">
+        <HudSceneOverlayError>
+          :(
+          https://caniuse.com/#search=customelements
+        </HudSceneOverlayError>
+      </div>
+    );
+  }
+
   return (
-    <div className="dd__scene dd__scene--hud dd__scene--canvas">
+    <div className="dd__scene dd__scene--canvas dd__scene--hud">
       <HudSceneOverlay resourcesLoadingState={resourcesLoadingState} />
       <x-dm-scene-canvas
         class="dd__scene__canvas"

@@ -23,6 +23,8 @@ flow.watch: node_modules
 
 frontend: build/index.html build/index.css
 
+frontend.dependencies: node_modules public/vendor/modernizr.js
+
 node_modules: yarn.lock
 	yarn install --network-timeout 9000000
 
@@ -35,6 +37,9 @@ pretty.backend:
 pretty.frontend:
 	yarn run prettier
 
+public/vendor/modernizr.js: frontend.dependencies
+	yarn run modernizr
+
 sass.watch:
 	yarn run sass:watch
 
@@ -43,11 +48,11 @@ test: test.backend test.frontend
 test.backend: $(RUST_SOURCES)
 	cd backend && cargo test
 
-test.frontend: $(JS_SOURCES) node_modules
+test.frontend: $(JS_SOURCES) frontend.dependencies
 	yarn run test:once
 
-test.frontend.watch: node_modules
+test.frontend.watch: frontend.dependencies
 	yarn run test
 
-start: node_modules
+start: frontend.dependencies
 	yarn run start

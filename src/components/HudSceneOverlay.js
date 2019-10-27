@@ -2,6 +2,8 @@
 
 import * as React from "react";
 
+import HudSceneOverlayError from "./HudSceneOverlayError";
+
 import type { ResourcesLoadingState } from "../framework/interfaces/ResourcesLoadingState";
 
 type Props = {|
@@ -21,9 +23,9 @@ export default function HudSceneOverlay(props: Props) {
 
   if (resourcesLoadingState.isFailed()) {
     return (
-      <div className="dd__loader dd__loader--error dd__scene__loader">
+      <HudSceneOverlayError>
         Failed loading assets.
-      </div>
+      </HudSceneOverlayError>
     );
   }
 
