@@ -14,11 +14,7 @@ export default function HudSceneOverlay(props: Props) {
   const resourcesLoadingState = props.resourcesLoadingState;
 
   if (!resourcesLoadingState) {
-    return (
-      <div className="dd__loader dd__scene__loader">
-        Loading scene...
-      </div>
-    );
+    return null;
   }
 
   if (resourcesLoadingState.isFailed()) {

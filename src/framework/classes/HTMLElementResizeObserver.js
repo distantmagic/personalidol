@@ -1,7 +1,5 @@
 // @flow
 
-import ResizeObserver from "resize-observer-polyfill";
-
 import ElementSize from "../classes/ElementSize";
 
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../interfaces/HTMLElementResizeObserver";

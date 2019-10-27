@@ -29,9 +29,10 @@ $dd-font-size-base: 16px;
 }
 
 .dd-tp__formatted-text {
-  // p {
-  // max-width: 80ch;
-  // }
+  p {
+    @include tp-text(1);
+    // max-width: 80ch;
+  }
 
   p + p {
     // content: "\2767";

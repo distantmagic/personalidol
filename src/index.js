@@ -1,6 +1,5 @@
 // @flow
 
-// import * as Sentry from "@sentry/browser";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -15,12 +14,6 @@ import Logger from "./framework/classes/Logger";
 import LoggerBreadcrumbs from "./framework/classes/LoggerBreadcrumbs";
 import Main from "./components/Main";
 import QueryBus from "./framework/classes/QueryBus";
-
-// Sentry.init({
-//   dsn: process.env.REACT_APP_SENTRY_DSN,
-//   environment: process.env.REACT_APP_ENVIRONMENT,
-//   release: process.env.REACT_APP_RELEASE
-// });
 
 function init(rootElement: HTMLElement) {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
@@ -49,8 +42,18 @@ function init(rootElement: HTMLElement) {
   ), rootElement);
 }
 
+function checkInit() {
+  if (rootElement.className === "js-dd-capable") {
+    init(rootElement);
+  } else if (rootElement.className === "js-dd-incapable") {
+    return;
+  } else {
+    setTimeout(checkInit);
+  }
+}
+
 const rootElement = document.getElementById("root");
 
-if (rootElement && rootElement.className === "js-dd-capable") {
-  init(rootElement);
+if (rootElement) {
+  setTimeout(checkInit);
 }

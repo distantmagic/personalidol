@@ -22,6 +22,7 @@ type Props = {|
 
 export default function HudScene(props: Props) {
   const [customElements] = React.useState<?CustomElementRegistry>(window.customElements);
+  const [isSceneCanvasDefined, setIsSceneCanvasDefined] = React.useState<bool>(false);
   const [resourcesLoadingState, setResourcesLoadingState] = React.useState<?ResourcesLoadingState>(null);
   const [sceneCanvas, setSceneCanvas] = React.useState<?SceneCanvas>(null);
 
@@ -38,6 +39,9 @@ export default function HudScene(props: Props) {
 
   React.useEffect(function () {
     if (customElements) {
+      customElements.whenDefined('x-dm-scene-canvas').then(function () {
+        setIsSceneCanvasDefined(true);
+      });
       customElements.define('x-dm-scene-canvas', SceneCanvas);
     }
   }, [customElements]);
@@ -76,12 +80,17 @@ export default function HudScene(props: Props) {
     sceneCanvas,
   ]);
 
-  if (customElements) {
+  if (!customElements) {
     return (
       <div className="dd__scene dd__scene--canvas dd__scene--hud">
         <HudSceneOverlayError>
-          :(
-          https://caniuse.com/#search=customelements
+          <p class="dd__loader__error-message">
+            Your browser can't render game scene because it does not
+            support custom elements.
+          </p>
+          <a href="https://caniuse.com/#search=customelements">
+            Which browsers support custom elements?
+          </a>
         </HudSceneOverlayError>
       </div>
     );
@@ -90,10 +99,12 @@ export default function HudScene(props: Props) {
   return (
     <div className="dd__scene dd__scene--canvas dd__scene--hud">
       <HudSceneOverlay resourcesLoadingState={resourcesLoadingState} />
-      <x-dm-scene-canvas
-        class="dd__scene__canvas"
-        ref={castSceneCanvas}
-      />
+      {isSceneCanvasDefined && (
+        <x-dm-scene-canvas
+          class="dd__scene__canvas"
+          ref={castSceneCanvas}
+        />
+      )}
     </div>
   );
 }

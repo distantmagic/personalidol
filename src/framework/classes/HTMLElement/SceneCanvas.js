@@ -4,12 +4,12 @@ import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import HTMLElementResizeObserver from "../HTMLElementResizeObserver";
-import HTMLElementSize from "../HTMLElementSize";
+// import HTMLElementSize from "../HTMLElementSize";
 import KeyboardState from "../KeyboardState";
 import MainLoop from "../MainLoop";
-import MainView from "../../../app/classes/MainView";
+// import MainView from "../../../app/classes/MainView";
 import PointerState from "../PointerState";
-import SceneManager from "../SceneManager";
+// import SceneManager from "../SceneManager";
 import Scheduler from "../Scheduler";
 import THREELoadingManager from "../THREELoadingManager";
 
@@ -23,7 +23,7 @@ import type { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
 import type { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
 import type { ResourcesLoadingState as ResourcesLoadingStateInterface } from "../../interfaces/ResourcesLoadingState";
-import type { SceneManager as SceneManagerInterface } from "../../interfaces/SceneManager";
+// import type { SceneManager as SceneManagerInterface } from "../../interfaces/SceneManager";
 import type { Scheduler as SchedulerInterface } from "../../interfaces/Scheduler";
 
 export default class SceneCanvas extends HTMLElement {

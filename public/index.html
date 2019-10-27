@@ -11,7 +11,7 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json?%REACT_APP_RELEASE%">
     <link rel="stylesheet" href="%PUBLIC_URL%/index.css?%REACT_APP_RELEASE%">
-    <link href="https://fonts.googleapis.com/css?family=Almendra|Lacquer|Nanum+Gothic+Coding|Vesper+Libre&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Almendra|Lacquer|Nanum+Gothic+Coding|Vesper+Libre&subset=latin-ext" rel="stylesheet">
 
     <title>Personal Idol</title>
   </head>
@@ -20,7 +20,7 @@
       <noscript class="dd__noscript">
         <div class="dd__loader dd__loader--app-setup dd__loader--error">
           <p class="dd__loader__error-message">
-            You need to enable JavaScript to run this app.
+            You need to enable JavaScript to run this application.
           </p>
           <p>
             <a href="https://www.wikihow.com/Enable-JavaScript">
@@ -33,74 +33,136 @@
         Checking browser capabilities...
       </div>
       <div class="dd__loader dd__loader--app-setup dd__loader--error dd__loader--hidden" id="root-error">
-        <p class="dd__loader__error-message">
-          Your browser is not capable of running this app.
-        </p>
-        <p>
-          It is recommended to use the latest version of any of those browsers:
-        </p>
-        <nav class="dd__loader__recommended-browsers">
-          <a class="dd__loader__recommended-browsers__browser" href="https://www.google.com/chrome/">
-            <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/chrome/chrome_64x64.png">
-          </a>
-          <a class="dd__loader__recommended-browsers__browser" href="https://www.mozilla.org/en-US/firefox/">
-            <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/firefox/firefox_64x64.png">
-          </a>
-          <a class="dd__loader__recommended-browsers__browser" href="https://www.apple.com/lae/safari/">
-            <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/safari/safari_64x64.png">
-          </a>
-        </nav>
-        <p>
-          If your are not interested in using any of the above, you can always
-          pick your own browser that fully supports the following technical
-          features:
-        </p>
-        <ul class="dd__browser-features">
-          <li class="dd__browser-feature" id="browser-feature-flexbox">
-            <a href="https://caniuse.com/#feat=flexbox">
-              CSS Flexible Box Layout Module
+        <div class="dd__loader__content dd-tp__formatted-text">
+          <p class="dd__loader__error-message">
+            Your browser is not capable of running this application.
+          </p>
+          <p>
+            I am using latest web development technologies to provide the most
+            optimal and safe experience possible (or at least the best possible
+            for me to provide 🙂). I want to do that without using any kind of
+            hacks or polyfills and instead to rely on native browser features.
+          </p>
+          <p>
+            Thanks to that I also want to make sure that the app will be
+            experienced under optimal conditions and never in a degraded state.
+          </p>
+          <p>
+            It is recommended to use the latest version of any of these browsers:
+          </p>
+          <nav class="dd__loader__recommended-browsers">
+            <a class="dd__loader__recommended-browsers__browser" href="https://www.google.com/chrome/">
+              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/chrome/chrome_64x64.png">
             </a>
-          </li>
-          <li class="dd__browser-feature" id="browser-feature-cssgrid">
-            <a href="https://caniuse.com/#feat=css-grid">
-              CSS Grid Layout
+            <a class="dd__loader__recommended-browsers__browser" href="https://www.mozilla.org/en-US/firefox/">
+              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/firefox/firefox_64x64.png">
             </a>
-          </li>
-          <li class="dd__browser-feature" id="browser-feature-customelements">
-            <a href="https://caniuse.com/#feat=mdn-api_window_customelements">
-              Custom Elements
+            <a class="dd__loader__recommended-browsers__browser" href="https://www.apple.com/lae/safari/">
+              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/safari/safari_64x64.png">
             </a>
-          </li>
-          <li class="dd__browser-feature" id="browser-feature-es5">
-            <a href="https://caniuse.com/#feat=es5">
-              ECMAScript 5
-            </a>
-          </li>
-          <li class="dd__browser-feature" id="browser-feature-es6">
-            <a href="https://caniuse.com/#feat=es6">
-              ECMAScript 6
-            </a>
-          </li>
-          <li class="dd__browser-feature" id="browser-feature-fetch">
-            <a href="https://caniuse.com/#feat=fetch">
-              Fetch
-            </a>
-          </li>
-          <li class="dd__browser-feature" id="browser-feature-promises">
-            <a href="https://caniuse.com/#feat=promises">
-              Promises
-            </a>
-          </li>
-          <li class="dd__browser-feature" id="browser-feature-webgl">
-            <a href="https://caniuse.com/#feat=webgl">
-              WebGL
-            </a>
-          </li>
-        </ul>
+          </nav>
+          <p>
+            If your are not interested in using any of the above, you can always
+            pick your own browser, but it has to fully support those technical
+            features:
+          </p>
+          <details class="dd__browser-details">
+            <p>
+              ✓ - your current browser supports this one
+            </p>
+            <ul class="dd__browser-features">
+              <li class="dd__browser-feature" id="browser-feature-beacon">
+                <a href="https://caniuse.com/#feat=beacon">
+                  Beacon API
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-flexbox">
+                <a href="https://caniuse.com/#feat=flexbox">
+                  CSS Flexible Box Layout Module
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-cssgrid">
+                <a href="https://caniuse.com/#feat=css-grid">
+                  CSS Grid Layout
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-customelements">
+                <a href="https://caniuse.com/#feat=mdn-api_window_customelements">
+                  Custom Elements
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-customevent">
+                <a href="https://caniuse.com/#feat=customevent">
+                  Custom Events
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-es5">
+                <a href="https://caniuse.com/#feat=es5">
+                  ECMAScript 5
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-es6">
+                <a href="https://caniuse.com/#feat=es6">
+                  ECMAScript 6
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-fetch">
+                <a href="https://caniuse.com/#feat=fetch">
+                  Fetch
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-intl">
+                <a href="https://caniuse.com/#feat=mdn-javascript_builtins_intl">
+                  Intl
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-passiveeventlisteners">
+                <a href="https://caniuse.com/#feat=passive-event-listener">
+                  Passive event listeners
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-promises">
+                <a href="https://caniuse.com/#feat=promises">
+                  Promises
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-resizeobserver">
+                <a href="https://caniuse.com/#feat=resizeobserver">
+                  ResizeObserver
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-serviceworker">
+                <a href="https://caniuse.com/#search=serviceworker">
+                  Service Workers
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-srcset">
+                <a href="https://caniuse.com/#search=srcset">
+                  Srcset and sizes attributes
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-webworkers">
+                <a href="https://caniuse.com/#feat=webworkers">
+                  Web Workers
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-webgl">
+                <a href="https://caniuse.com/#feat=webgl">
+                  WebGL
+                </a>
+              </li>
+              <li class="dd__browser-feature" id="browser-feature-webrtc">
+                <a href="https://caniuse.com/#feat=rtcpeerconnection">
+                  WebRTC
+                </a>
+              </li>
+            </ul>
+          </details>
+        </div>
       </div>
     </div>
     <script>(function () {
-      document.getElementById("root-loader").className = "dd__loader";
+      document.getElementById("root-loader").classList.remove("dd__loader--hidden");
     }())</script>
 
     <script src="%PUBLIC_URL%/vendor/modernizr.js"></script>
@@ -109,8 +171,11 @@
 
       var rootElement = document.getElementById("root");
       var requiredBrowserFeatures = {
+        "beacon": "beacon",
         "cssgrid": "cssgrid",
         "customelements": "customelements",
+        "customevent": "customevent",
+        "datachannel": "webrtc",
         "es5": "es5",
         "es6array": "es6",
         "es6collections": "es6",
@@ -121,31 +186,59 @@
         "fetch": "fetch",
         "flexbox": "flexbox",
         "generators": "es6",
+        "intl": "intl",
+        "passiveeventlisteners": "passiveeventlisteners",
+        "peerconnection": "webrtc",
         "promises": "promises",
+        "resizeobserver": "resizeobserver",
+        "serviceworker": "serviceworker",
+        "srcset": "srcset",
         "webgl": "webgl",
+        "webworkers": "webworkers"
       };
+      var allFeatures = 0;
+      var doneFeatures = 0;
       var feature = void 0;
       var isCapable = true;
-      var isFeatureSupported = false;
 
-      var notSupportedClassName = "dd__browser-feature dd__browser-feature--not-supported";
+      var notSupportedClassName = "dd__browser-feature--not-supported";
+      var supportedClassName = "dd__browser-feature--supported";
+
+      Modernizr.addTest('resizeobserver', function() {
+        return window.ResizeObserver && window.ResizeObserver.toString().indexOf("[native code]") > -1;
+      });
 
       for (feature in requiredBrowserFeatures) {
         if (requiredBrowserFeatures.hasOwnProperty(feature)) {
-          isFeatureSupported = window.Modernizr[feature];
-          isCapable = isCapable && isFeatureSupported;
+          allFeatures += 1;
 
-          if (!isFeatureSupported) {
-            document.getElementById("browser-feature-" + requiredBrowserFeatures[feature]).className = notSupportedClassName;
-          }
+          Modernizr.on(feature, function (thisFeature) {
+            return function (result) {
+              var isFeatureSupported = result;
+
+              isCapable = isCapable && isFeatureSupported;
+              doneFeatures += 1;
+
+              document.getElementById("browser-feature-" + requiredBrowserFeatures[thisFeature]).classList.add(
+                isFeatureSupported
+                ? supportedClassName
+                : notSupportedClassName
+              );
+
+              if (doneFeatures < allFeatures) {
+                return;
+              }
+
+              if (isCapable) {
+                rootElement.classList.add("js-dd-capable");
+              } else {
+                rootElement.classList.add("js-dd-incapable");
+                document.getElementById("root-loader").classList.add("dd__loader--hidden");
+                document.getElementById("root-error").classList.remove("dd__loader--hidden");
+              }
+            };
+          }(feature));
         }
-      }
-
-      if (isCapable) {
-        rootElement.className = "js-dd-capable";
-      } else {
-        document.getElementById("root-loader").className = "dd__loader dd__loader--app-setup dd__loader--hidden";
-        document.getElementById("root-error").className = "dd__loader dd__loader--app-setup dd__loader--error";
       }
     }())</script>
   </body>
