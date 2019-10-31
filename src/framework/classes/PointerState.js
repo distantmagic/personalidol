@@ -2,25 +2,39 @@
 
 import autoBind from "auto-bind";
 
+import Idempotence from "../classes/Exception/Idempotence";
+
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { PointerButtonNames } from "../types/PointerButtonNames";
 import type { PointerState as PointerStateInterface } from "../interfaces/PointerState";
 
 export default class PointerState implements PointerStateInterface {
+  #isObserving: bool;
   +element: HTMLElement;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   keys: {
     [PointerButtonNames]: boolean,
   };
 
-  constructor(element: HTMLElement) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
     autoBind(this);
 
+    this.#isObserving = false;
     this.element = element;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
+
     this.reset();
   }
 
   disconnect(): void {
+    if (!this.#isObserving) {
+      throw new Idempotence(this.loggerBreadcrumbs.add("disconnect"), "PointerState is not idempotent.");
+    }
+
     this.element.removeEventListener("mousedown", this.onMouseChange);
     this.element.removeEventListener("mouseup", this.onMouseChange);
+
+    this.#isObserving = false;
   }
 
   isPressed(code: PointerButtonNames): boolean {
@@ -28,6 +42,10 @@ export default class PointerState implements PointerStateInterface {
   }
 
   observe(): void {
+    if (this.#isObserving) {
+      throw new Idempotence(this.loggerBreadcrumbs.add("observe"), "PointerState is not idempotent.");
+    }
+
     const config = {
       capture: true,
       passive: false,
@@ -35,6 +53,8 @@ export default class PointerState implements PointerStateInterface {
 
     this.element.addEventListener("mousedown", this.onMouseChange, config);
     this.element.addEventListener("mouseup", this.onMouseChange, config);
+
+    this.#isObserving = true;
   }
 
   onMouseChange(evt: MouseEvent): void {

@@ -62,4 +62,8 @@ export default class CancelToken implements CancelTokenInterface {
       this.callbacks.add(callback);
     }
   }
+
+  whenCanceled(): Promise<CanceledInterface> {
+    return new Promise(resolve => this.onCanceled(resolve));
+  }
 }

@@ -25,7 +25,7 @@ function printValue(value: DebuggerStateValue): string {
   return `vec3(${printValue(value.toArray())})`;
 }
 
-export default React.memo<Props>(function HudDebuggerListing(props: Props) {
+export default function HudDebuggerListing(props: Props) {
   return (
     <div className="dd__frame dd__debugger dd__debugger--hud">
       <div className="dd__debugger__handle">Debugger State Listing</div>
@@ -43,4 +43,4 @@ export default React.memo<Props>(function HudDebuggerListing(props: Props) {
       </div>
     </div>
   );
-});
+}

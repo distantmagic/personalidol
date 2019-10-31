@@ -1,10 +1,10 @@
 // @flow
 
+import raf from "raf";
 import React from "react";
 import ReactDOM from "react-dom";
 
 import BusClock from "./framework/classes/BusClock";
-import CancelToken from "./framework/classes/CancelToken";
 import ClockReactiveController from "./framework/classes/ClockReactiveController";
 import Debugger from "./framework/classes/Debugger";
 import ExceptionHandler from "./framework/classes/ExceptionHandler";
@@ -25,11 +25,10 @@ function init(rootElement: HTMLElement) {
   const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 
-  clockReactiveController.interval(new CancelToken(loggerBreadcrumbs));
-
   ReactDOM.render((
     <React.StrictMode>
       <Main
+        clockReactiveController={clockReactiveController}
         debug={debug}
         exceptionHandler={exceptionHandler}
         expressionBus={expressionBus}
@@ -43,17 +42,17 @@ function init(rootElement: HTMLElement) {
 }
 
 function checkInit() {
-  if (rootElement.className === "js-dd-capable") {
-    init(rootElement);
-  } else if (rootElement.className === "js-dd-incapable") {
-    return;
-  } else {
-    setTimeout(checkInit);
+  const rootElement = document.getElementById("root");
+
+  if (rootElement) {
+    if (rootElement.className === "js-dd-capable") {
+      return void init(rootElement);
+    } else if (rootElement.className === "js-dd-incapable") {
+      return;
+    }
   }
+
+  raf(checkInit);
 }
 
-const rootElement = document.getElementById("root");
-
-if (rootElement) {
-  setTimeout(checkInit);
-}
+raf(checkInit);

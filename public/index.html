@@ -11,7 +11,7 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json?%REACT_APP_RELEASE%">
     <link rel="stylesheet" href="%PUBLIC_URL%/index.css?%REACT_APP_RELEASE%">
-    <link href="https://fonts.googleapis.com/css?family=Almendra|Lacquer|Nanum+Gothic+Coding|Vesper+Libre&subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Almendra|Vesper+Libre&subset=latin-ext" rel="stylesheet">
 
     <title>Personal Idol</title>
   </head>
@@ -34,9 +34,9 @@
       </div>
       <div class="dd__loader dd__loader--app-setup dd__loader--error dd__loader--hidden" id="root-error">
         <div class="dd__loader__content dd-tp__formatted-text">
-          <p class="dd__loader__error-message">
+          <strong class="dd__loader__error-message">
             Your browser is not capable of running this application.
-          </p>
+          </strong>
           <p>
             I am using latest web development technologies to provide the most
             optimal and safe experience possible (or at least the best possible
@@ -48,7 +48,13 @@
             experienced under optimal conditions and never in a degraded state.
           </p>
           <p>
-            It is recommended to use the latest version of any of these browsers:
+            Sorry for not letting you try to run this app nonetheless, but I
+            am completely sure that without those required features it will
+            break anyway.
+          </p>
+          <p>
+            It is recommended to use the latest version of any of these
+            browsers:
           </p>
           <nav class="dd__loader__recommended-browsers">
             <a class="dd__loader__recommended-browsers__browser" href="https://www.google.com/chrome/">
@@ -69,6 +75,9 @@
           <details class="dd__browser-details">
             <p>
               ✓ - your current browser supports this one
+            </p>
+            <p>
+              Click feature name for more info.
             </p>
             <ul class="dd__browser-features">
               <li class="dd__browser-feature" id="browser-feature-beacon">

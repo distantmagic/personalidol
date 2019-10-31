@@ -16,6 +16,7 @@ import type { ResourcesLoadingState } from "../framework/interfaces/ResourcesLoa
 type Props = {|
   debug: Debugger,
   exceptionHandler: ExceptionHandler,
+  isDocumentHidden: boolean,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
 |};
@@ -54,23 +55,16 @@ export default function HudScene(props: Props) {
     const breadcrumbs = props.loggerBreadcrumbs.add("useEffect(SceneCanvas)");
     const cancelToken = new CancelToken(breadcrumbs.add("CancelToken"));
 
-    sceneCanvas.addEventListener('resourcesLoadingStateChange', function (evt: Event) {
-      if (evt instanceof CustomEvent) {
-        setResourcesLoadingState(evt.detail);
-      }
-    });
-
-    sceneCanvas.attach(
+    sceneCanvas.startPainting(
       cancelToken,
       props.debug,
       props.exceptionHandler,
-      props.loggerBreadcrumbs,
+      props.loggerBreadcrumbs.add("sceneCanvas").add("startPainting"),
       props.queryBus,
     );
 
     return function () {
-      cancelToken.cancel(props.loggerBreadcrumbs.add("(cleanup)"));
-      sceneCanvas.detach();
+      cancelToken.cancel(props.loggerBreadcrumbs.add("cleanup"));
     };
   }, [
     props.debug,
@@ -84,12 +78,12 @@ export default function HudScene(props: Props) {
     return (
       <div className="dd__scene dd__scene--canvas dd__scene--hud">
         <HudSceneOverlayError>
-          <p class="dd__loader__error-message">
+          <strong class="dd__loader__error-message">
             Your browser can't render game scene because it does not
-            support custom elements.
-          </p>
+            support customElements technical feature.
+          </strong>
           <a href="https://caniuse.com/#search=customelements">
-            Which browsers support custom elements?
+            Which browsers support customElements?
           </a>
         </HudSceneOverlayError>
       </div>
@@ -102,6 +96,7 @@ export default function HudScene(props: Props) {
       {isSceneCanvasDefined && (
         <x-dm-scene-canvas
           class="dd__scene__canvas"
+          documenthidden={String(props.isDocumentHidden)}
           ref={castSceneCanvas}
         />
       )}

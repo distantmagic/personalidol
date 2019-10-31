@@ -33,7 +33,7 @@ body {
   @include tp-text(1);
 
   background-color: black;
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
+  background-image: url("/assets/texture-cod-gray-marble-512.png");
   color: rgba(white, 0.85);
   cursor: $cursor-default;
   display: grid;
@@ -150,6 +150,7 @@ button {
 
 .dd__loader__error-message {
   color: gold;
+  display: block;
   font-weight: bold;
   max-width: 40ch;
   padding-bottom: 1.6rem;
