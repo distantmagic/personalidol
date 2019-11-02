@@ -14,4 +14,4 @@ export default function HudAside(props: Props) {
       <HudAsidePortrait isActive={false} name="Circassia" src="/assets/portrait-circassia.jpg" />
     </div>
   );
-};
+}

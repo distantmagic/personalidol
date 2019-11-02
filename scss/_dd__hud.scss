@@ -11,8 +11,7 @@ $dd-hud-toolbar-height: 80px;
   grid-template-areas: "aside scene";
   grid-template-columns:
     $dd-hud-aside-width
-    calc(100vw - #{$dd-hud-aside-width})
-  ;
+    calc(100vw - #{$dd-hud-aside-width});
   height: 100vh;
   position: relative;
 }
@@ -22,8 +21,7 @@ $dd-hud-toolbar-height: 80px;
   grid-template-columns:
     $dd-hud-debugger-width
     $dd-hud-aside-width
-    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width})
-  ;
+    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width});
 }
 
 .dd__hud.dd__hud--debugger.dd__hud--dialogue {
@@ -32,8 +30,7 @@ $dd-hud-toolbar-height: 80px;
     $dd-hud-debugger-width
     $dd-hud-aside-width
     $dd-hud-dialogue-width
-    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
-  ;
+    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width});
 }
 
 .dd__hud.dd__hud--dialogue {
@@ -41,8 +38,7 @@ $dd-hud-toolbar-height: 80px;
   grid-template-columns:
     $dd-hud-aside-width
     $dd-hud-dialogue-width
-    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width})
-  ;
+    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width});
 }
 
 .dd__aside.dd__aside--hud,

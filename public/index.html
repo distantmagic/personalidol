@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="theme-color" content="#000000" />
     <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json?%REACT_APP_RELEASE%">
-    <link rel="stylesheet" href="%PUBLIC_URL%/index.css?%REACT_APP_RELEASE%">
-    <link href="https://fonts.googleapis.com/css?family=Almendra|Vesper+Libre&subset=latin-ext" rel="stylesheet">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json?%REACT_APP_RELEASE%" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/index.css?%REACT_APP_RELEASE%" />
+    <link href="https://fonts.googleapis.com/css?family=Almendra|Vesper+Libre&subset=latin-ext" rel="stylesheet" />
 
     <title>Personal Idol</title>
   </head>
@@ -38,39 +38,35 @@
             Your browser is not capable of running this application.
           </strong>
           <p>
-            I am using latest web development technologies to provide the most
-            optimal and safe experience possible (or at least the best possible
-            for me to provide 🙂). I want to do that without using any kind of
-            hacks or polyfills and instead to rely on native browser features.
+            I am using latest web development technologies to provide the most optimal and safe experience possible (or
+            at least the best possible for me to provide 🙂). I want to do that without using any kind of hacks or
+            polyfills and instead to rely on native browser features.
           </p>
           <p>
-            Thanks to that I also want to make sure that the app will be
-            experienced under optimal conditions and never in a degraded state.
+            Thanks to that I also want to make sure that the app will be experienced under optimal conditions and never
+            in a degraded state.
           </p>
           <p>
-            Sorry for not letting you try to run this app nonetheless, but I
-            am completely sure that without those required features it will
-            break anyway.
+            Sorry for not letting you try to run this app nonetheless, but I am completely sure that without those
+            required features it will break anyway.
           </p>
           <p>
-            It is recommended to use the latest version of any of these
-            browsers:
+            It is recommended to use the latest version of any of these browsers:
           </p>
           <nav class="dd__loader__recommended-browsers">
             <a class="dd__loader__recommended-browsers__browser" href="https://www.google.com/chrome/">
-              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/chrome/chrome_64x64.png">
+              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/chrome/chrome_64x64.png" />
             </a>
             <a class="dd__loader__recommended-browsers__browser" href="https://www.mozilla.org/en-US/firefox/">
-              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/firefox/firefox_64x64.png">
+              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/firefox/firefox_64x64.png" />
             </a>
             <a class="dd__loader__recommended-browsers__browser" href="https://www.apple.com/lae/safari/">
-              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/safari/safari_64x64.png">
+              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/safari/safari_64x64.png" />
             </a>
           </nav>
           <p>
-            If your are not interested in using any of the above, you can always
-            pick your own browser, but it has to fully support those technical
-            features:
+            If your are not interested in using any of the above, you can always pick your own browser, but it has to
+            fully support those technical features:
           </p>
           <details class="dd__browser-details">
             <p>
@@ -170,85 +166,90 @@
         </div>
       </div>
     </div>
-    <script>(function () {
-      document.getElementById("root-loader").classList.remove("dd__loader--hidden");
-    }())</script>
+    <script>
+      (function() {
+        document.getElementById("root-loader").classList.remove("dd__loader--hidden");
+      })();
+    </script>
 
     <script src="%PUBLIC_URL%/vendor/modernizr.js"></script>
-    <script>(function () {
-      "use strict";
+    <script>
+      (function() {
+        "use strict";
 
-      var rootElement = document.getElementById("root");
-      var requiredBrowserFeatures = {
-        "beacon": "beacon",
-        "cssgrid": "cssgrid",
-        "customelements": "customelements",
-        "customevent": "customevent",
-        "datachannel": "webrtc",
-        "es5": "es5",
-        "es6array": "es6",
-        "es6collections": "es6",
-        "es6math": "es6",
-        "es6number": "es6",
-        "es6object": "es6",
-        "es6string": "es6",
-        "fetch": "fetch",
-        "flexbox": "flexbox",
-        "generators": "es6",
-        "intl": "intl",
-        "passiveeventlisteners": "passiveeventlisteners",
-        "peerconnection": "webrtc",
-        "promises": "promises",
-        "resizeobserver": "resizeobserver",
-        "serviceworker": "serviceworker",
-        "srcset": "srcset",
-        "webgl": "webgl",
-        "webworkers": "webworkers"
-      };
-      var allFeatures = 0;
-      var doneFeatures = 0;
-      var feature = void 0;
-      var isCapable = true;
+        var rootElement = document.getElementById("root");
+        var requiredBrowserFeatures = {
+          beacon: "beacon",
+          cssgrid: "cssgrid",
+          customelements: "customelements",
+          customevent: "customevent",
+          datachannel: "webrtc",
+          es5: "es5",
+          es6array: "es6",
+          es6collections: "es6",
+          es6math: "es6",
+          es6number: "es6",
+          es6object: "es6",
+          es6string: "es6",
+          fetch: "fetch",
+          flexbox: "flexbox",
+          generators: "es6",
+          intl: "intl",
+          passiveeventlisteners: "passiveeventlisteners",
+          peerconnection: "webrtc",
+          promises: "promises",
+          resizeobserver: "resizeobserver",
+          serviceworker: "serviceworker",
+          srcset: "srcset",
+          webgl: "webgl",
+          webworkers: "webworkers",
+        };
+        var allFeatures = 0;
+        var doneFeatures = 0;
+        var feature = void 0;
+        var isCapable = true;
 
-      var notSupportedClassName = "dd__browser-feature--not-supported";
-      var supportedClassName = "dd__browser-feature--supported";
+        var notSupportedClassName = "dd__browser-feature--not-supported";
+        var supportedClassName = "dd__browser-feature--supported";
 
-      Modernizr.addTest('resizeobserver', function() {
-        return window.ResizeObserver && window.ResizeObserver.toString().indexOf("[native code]") > -1;
-      });
+        Modernizr.addTest("resizeobserver", function() {
+          return window.ResizeObserver && window.ResizeObserver.toString().indexOf("[native code]") > -1;
+        });
 
-      for (feature in requiredBrowserFeatures) {
-        if (requiredBrowserFeatures.hasOwnProperty(feature)) {
-          allFeatures += 1;
+        for (feature in requiredBrowserFeatures) {
+          if (requiredBrowserFeatures.hasOwnProperty(feature)) {
+            allFeatures += 1;
 
-          Modernizr.on(feature, function (thisFeature) {
-            return function (result) {
-              var isFeatureSupported = result;
+            Modernizr.on(
+              feature,
+              (function(thisFeature) {
+                return function(result) {
+                  var isFeatureSupported = result;
 
-              isCapable = isCapable && isFeatureSupported;
-              doneFeatures += 1;
+                  isCapable = isCapable && isFeatureSupported;
+                  doneFeatures += 1;
 
-              document.getElementById("browser-feature-" + requiredBrowserFeatures[thisFeature]).classList.add(
-                isFeatureSupported
-                ? supportedClassName
-                : notSupportedClassName
-              );
+                  document
+                    .getElementById("browser-feature-" + requiredBrowserFeatures[thisFeature])
+                    .classList.add(isFeatureSupported ? supportedClassName : notSupportedClassName);
 
-              if (doneFeatures < allFeatures) {
-                return;
-              }
+                  if (doneFeatures < allFeatures) {
+                    return;
+                  }
 
-              if (isCapable) {
-                rootElement.classList.add("js-dd-capable");
-              } else {
-                rootElement.classList.add("js-dd-incapable");
-                document.getElementById("root-loader").classList.add("dd__loader--hidden");
-                document.getElementById("root-error").classList.remove("dd__loader--hidden");
-              }
-            };
-          }(feature));
+                  if (isCapable) {
+                    rootElement.classList.add("js-dd-capable");
+                  } else {
+                    rootElement.classList.add("js-dd-incapable");
+                    document.getElementById("root-loader").classList.add("dd__loader--hidden");
+                    document.getElementById("root-error").classList.remove("dd__loader--hidden");
+                  }
+                };
+              })(feature)
+            );
+          }
         }
-      }
-    }())</script>
+      })();
+    </script>
   </body>
 </html>

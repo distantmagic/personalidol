@@ -8,7 +8,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { Resizeable } from "../interfaces/Resizeable";
 
 export default class HTMLElementResizeObserver implements HTMLElementResizeObserverInterface {
-  #isObserving: bool;
+  #isObserving: boolean;
   +element: HTMLElement;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +nativeResizeObserver: ResizeObserver;
@@ -56,5 +56,9 @@ export default class HTMLElementResizeObserver implements HTMLElementResizeObser
 
     this.nativeResizeObserver.observe(this.element);
     this.#isObserving = true;
+  }
+
+  off(resizeable: Resizeable<"px">): void {
+    this.notifiable.delete(resizeable);
   }
 }

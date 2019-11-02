@@ -31,8 +31,6 @@ export default class THREEPointerInteraction implements THREEPointerInteractionI
     this.renderer = renderer;
   }
 
-  begin(): void {}
-
   disconnect(): void {
     this.renderer.domElement.removeEventListener("mousedown", this.onMouseChange);
     this.renderer.domElement.removeEventListener("mousemove", this.onMouseChange);

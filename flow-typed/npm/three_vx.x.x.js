@@ -239,6 +239,7 @@ declare module "three" {
 
   declare export interface MeshBasicMaterial extends Material {
     constructor({|
+      color?: number,
       map?: Texture,
     |}): void;
   }
@@ -318,6 +319,8 @@ declare module "three" {
   }
 
   declare export interface Renderer {
+    dispose(): void;
+
     render(Scene, Camera): void;
 
     getSize(): {|

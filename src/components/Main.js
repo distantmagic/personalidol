@@ -53,28 +53,38 @@ export default function Main(props: Props) {
     [props.debug]
   );
 
-  React.useEffect(function () {
-    document.addEventListener("visibilitychange", function (): void {
-      setIsDocumentHidden(document.hidden);
-    }, {
-      once: true,
-    });
-  }, [isDocumentHidden]);
+  React.useEffect(
+    function() {
+      document.addEventListener(
+        "visibilitychange",
+        function(): void {
+          setIsDocumentHidden(document.hidden);
+        },
+        {
+          once: true,
+        }
+      );
+    },
+    [isDocumentHidden]
+  );
 
-  React.useEffect(function () {
-    if (isDocumentHidden) {
-      return;
-    }
+  React.useEffect(
+    function() {
+      if (isDocumentHidden) {
+        return;
+      }
 
-    const breadcrumbs = props.loggerBreadcrumbs.add("useEffect(isDocumentHidden)");
-    const cancelToken = new CancelToken(breadcrumbs.add("CancelToken"));
+      const breadcrumbs = props.loggerBreadcrumbs.add("useEffect(isDocumentHidden)");
+      const cancelToken = new CancelToken(breadcrumbs.add("CancelToken"));
 
-    props.clockReactiveController.interval(cancelToken);
+      props.clockReactiveController.interval(cancelToken);
 
-    return function () {
-      cancelToken.cancel(breadcrumbs.add("cleanup"));
-    };
-  }, [isDocumentHidden, props.clockReactiveController, props.loggerBreadcrumbs]);
+      return function() {
+        cancelToken.cancel(breadcrumbs.add("cleanup"));
+      };
+    },
+    [isDocumentHidden, props.clockReactiveController, props.loggerBreadcrumbs]
+  );
 
   return (
     <React.Fragment>

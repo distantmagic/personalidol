@@ -3,7 +3,7 @@
 import type { Animatable } from "./Animatable";
 
 export interface CanvasView extends Animatable {
-  draw(interpolationPercentage: number): void;
+  begin(): void;
 
   end(fps: number, isPanicked: boolean): void;
 }

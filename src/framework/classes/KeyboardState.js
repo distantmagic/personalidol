@@ -9,7 +9,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { KeyboardState as KeyboardStateInterface } from "../interfaces/KeyboardState";
 
 export default class KeyboardState implements KeyboardStateInterface {
-  #isObserving: bool;
+  #isObserving: boolean;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   keys: {
     [string]: boolean,

@@ -21,11 +21,11 @@ function init(rootElement: HTMLElement) {
   const debug = new Debugger();
   const exceptionHandler = new ExceptionHandler(logger);
   const expressionBus = new ExpressionBus();
-  const expressionContext = new ExpressionContext(loggerBreadcrumbs.add("ExpressionContext"))
+  const expressionContext = new ExpressionContext(loggerBreadcrumbs.add("ExpressionContext"));
   const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 
-  ReactDOM.render((
+  ReactDOM.render(
     <React.StrictMode>
       <Main
         clockReactiveController={clockReactiveController}
@@ -37,8 +37,9 @@ function init(rootElement: HTMLElement) {
         loggerBreadcrumbs={loggerBreadcrumbs}
         queryBus={queryBus}
       />
-    </React.StrictMode>
-  ), rootElement);
+    </React.StrictMode>,
+    rootElement
+  );
 }
 
 function checkInit() {

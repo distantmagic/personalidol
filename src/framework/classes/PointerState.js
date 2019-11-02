@@ -9,7 +9,7 @@ import type { PointerButtonNames } from "../types/PointerButtonNames";
 import type { PointerState as PointerStateInterface } from "../interfaces/PointerState";
 
 export default class PointerState implements PointerStateInterface {
-  #isObserving: bool;
+  #isObserving: boolean;
   +element: HTMLElement;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   keys: {

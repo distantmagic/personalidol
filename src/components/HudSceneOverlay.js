@@ -18,11 +18,7 @@ export default function HudSceneOverlay(props: Props) {
   }
 
   if (resourcesLoadingState.isFailed()) {
-    return (
-      <HudSceneOverlayError>
-        Failed loading assets.
-      </HudSceneOverlayError>
-    );
+    return <HudSceneOverlayError>Failed loading assets.</HudSceneOverlayError>;
   }
 
   if (resourcesLoadingState.isLoading()) {
