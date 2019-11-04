@@ -7,7 +7,7 @@ import CanvasController from "../CanvasController";
 import { default as AmbientLightView } from "../CanvasView/AmbientLight";
 import { default as TiledMapView } from "../CanvasView/TiledMap";
 
-import type { PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
 
 import type { CanvasControllerBus } from "../../interfaces/CanvasControllerBus";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -22,7 +22,7 @@ import type { THREELoadingManager } from "../../interfaces/THREELoadingManager";
 const CAMERA_FOV = 90;
 
 export default class Root extends CanvasController {
-  +camera: PerspectiveCamera;
+  +camera: OrthographicCamera;
   +canvasControllerBus: CanvasControllerBus;
   +debug: Debugger;
   +keyboardState: KeyboardState;
@@ -47,7 +47,7 @@ export default class Root extends CanvasController {
     super(canvasViewBag);
     autoBind(this);
 
-    this.camera = new THREE.PerspectiveCamera(CAMERA_FOV, 0, 0.1, 1000);
+    this.camera = new THREE.OrthographicCamera(CAMERA_FOV, 0, 0.1, 1000);
     this.canvasControllerBus = canvasControllerBus;
     this.debug = debug;
     this.keyboardState = keyboardState;
@@ -97,8 +97,14 @@ export default class Root extends CanvasController {
 
     const height = elementSize.getHeight();
     const width = elementSize.getWidth();
+    const zoom = 160;
 
-    this.camera.aspect = width / height;
+    this.camera.left = -1 * (width / zoom);
+    this.camera.far = 100;
+    this.camera.near = 0;
+    this.camera.right = width / zoom;
+    this.camera.top = height / zoom;
+    this.camera.bottom = -1 * (height / zoom);
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize(width, height);
