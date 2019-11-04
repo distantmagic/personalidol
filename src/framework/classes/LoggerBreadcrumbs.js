@@ -2,6 +2,8 @@
 
 import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
 
+const LOGGER_BREADCRUMB_SEPARATOR = "/";
+
 export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
   +breadcrumbs: $ReadOnlyArray<string>;
   +loggerBreadcrumbsLocalCache: Map<string, LoggerBreadcrumbsInterface>;
@@ -50,13 +52,13 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
   asString(): string {
     return this.breadcrumbs
       .map(function(breadcrumb) {
-        if (breadcrumb.includes(" ")) {
+        if (breadcrumb.includes(" ") || breadcrumb.includes(LOGGER_BREADCRUMB_SEPARATOR)) {
           return `"${breadcrumb}"`;
         }
 
         return breadcrumb;
       })
-      .join("/");
+      .join(LOGGER_BREADCRUMB_SEPARATOR);
   }
 
   getBreadcrumbs(): $ReadOnlyArray<string> {

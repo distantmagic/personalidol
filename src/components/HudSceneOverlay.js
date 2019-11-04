@@ -5,13 +5,25 @@ import * as React from "react";
 import HudSceneOverlayError from "./HudSceneOverlayError";
 
 import type { ResourcesLoadingState } from "../framework/interfaces/ResourcesLoadingState";
+import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
 
 type Props = {|
-  resourcesLoadingState: ?ResourcesLoadingState,
+  threeLoadingManager: THREELoadingManager,
 |};
 
 export default function HudSceneOverlay(props: Props) {
-  const resourcesLoadingState = props.resourcesLoadingState;
+  const [resourcesLoadingState, setResourcesLoadingState] = React.useState<?ResourcesLoadingState>(null);
+
+  React.useEffect(
+    function() {
+      props.threeLoadingManager.onResourcesLoadingStateChange(setResourcesLoadingState);
+
+      return function() {
+        props.threeLoadingManager.offResourcesLoadingStateChange(setResourcesLoadingState);
+      };
+    },
+    [props.threeLoadingManager]
+  );
 
   if (!resourcesLoadingState) {
     return null;

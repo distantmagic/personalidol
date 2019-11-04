@@ -43,8 +43,8 @@ export default class TiledMapSkinnedLayer implements TiledMapSkinnedLayerInterfa
 
       const tileTypeId = positionedTile.getId();
 
+      // otherwise it means blank
       if (tileTypeId > 0) {
-        // otherwise it means blank
         yield new TiledSkinnedTile(
           tileTypeId,
           positionedTile,

@@ -5,9 +5,9 @@ import autoBind from "auto-bind";
 import yn from "yn";
 
 import CanvasControllerBus from "../CanvasControllerBus";
+import CanvasViewBag from "../CanvasViewBag";
 import CanvasViewBus from "../CanvasViewBus";
 import HTMLElementResizeObserver from "../HTMLElementResizeObserver";
-import HTMLElementSize from "../HTMLElementSize";
 import Idempotence from "../Exception/Idempotence";
 import KeyboardState from "../KeyboardState";
 import LoggerBreadcrumbs from "../LoggerBreadcrumbs";
@@ -18,17 +18,22 @@ import { default as RootCanvasController } from "../CanvasController/Root";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasControllerBus as CanvasControllerBusInterface } from "../../interfaces/CanvasControllerBus";
+import type { CanvasViewBag as CanvasViewBagInterface } from "../../interfaces/CanvasViewBag";
 import type { CanvasViewBus as CanvasViewBusInterface } from "../../interfaces/CanvasViewBus";
+import type { Debugger } from "../../interfaces/Debugger";
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../../interfaces/HTMLElementResizeObserver";
 import type { KeyboardState as KeyboardStateInterface } from "../../interfaces/KeyboardState";
 import type { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
 import type { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
+import type { QueryBus } from "../../interfaces/QueryBus";
 import type { Scheduler as SchedulerInterface } from "../../interfaces/Scheduler";
+import type { THREELoadingManager } from "../../interfaces/THREELoadingManager";
 
 const ATTR_DOCUMENT_HIDDEN = "documenthidden";
 
 export default class SceneCanvas extends HTMLElement {
   +canvasControllerBus: CanvasControllerBusInterface;
+  +canvasViewBag: CanvasViewBagInterface;
   +canvasViewBus: CanvasViewBusInterface;
   +canvasElement: HTMLCanvasElement;
   +keyboardState: KeyboardStateInterface;
@@ -79,14 +84,15 @@ export default class SceneCanvas extends HTMLElement {
 
     this.loggerBreadcrumbs = new LoggerBreadcrumbs(["SceneCanvas"]);
     this.scheduler = new Scheduler();
-    this.canvasControllerBus = new CanvasControllerBus(this.scheduler);
     this.canvasViewBus = new CanvasViewBus(this.scheduler);
+    this.canvasViewBag = new CanvasViewBag(this.canvasViewBus, this.loggerBreadcrumbs);
     this.keyboardState = new KeyboardState(this.loggerBreadcrumbs.add("KeyboardState"));
     this.mainLoop = MainLoop.getInstance();
     this.pointerState = new PointerState(this.loggerBreadcrumbs.add("PointerState"), this.canvasElement);
     this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this);
+    this.canvasControllerBus = new CanvasControllerBus(this.resizeObserver, this.scheduler);
 
-    this.mainLoop.setMaxAllowedFPS(4);
+    this.mainLoop.setMaxAllowedFPS(10);
     this.mainLoop.attachScheduler(this.scheduler);
   }
 
@@ -142,7 +148,12 @@ export default class SceneCanvas extends HTMLElement {
     }
   }
 
-  async attachRenderer(cancelToken: CancelToken): Promise<void> {
+  async attachRenderer(
+    cancelToken: CancelToken,
+    debug: Debugger,
+    queryBus: QueryBus,
+    threeLoadingManager: THREELoadingManager
+  ): Promise<void> {
     if (this.isLooping) {
       throw new Idempotence(
         this.loggerBreadcrumbs.add("attachRenderer"),
@@ -154,27 +165,26 @@ export default class SceneCanvas extends HTMLElement {
     this.onComponentStateChange();
 
     const renderer = new THREE.WebGLRenderer({
-      // alpha: true,
       canvas: this.canvasElement,
     });
     const canvasController = new RootCanvasController(
       this.canvasControllerBus,
-      this.canvasViewBus,
+      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("RootCanvasControllert")),
+      debug,
       this.keyboardState,
+      this.loggerBreadcrumbs.add("RootCanvasController"),
       this.pointerState,
-      renderer
+      queryBus,
+      renderer,
+      threeLoadingManager
     );
-
-    this.resizeObserver.notify(canvasController);
-    canvasController.resize(new HTMLElementSize(this));
 
     this.canvasControllerBus.add(canvasController);
 
-    await canvasController.lightsUp(cancelToken);
     await cancelToken.whenCanceled();
 
-    this.resizeObserver.off(canvasController);
     this.canvasControllerBus.delete(canvasController);
+    this.canvasViewBag.dispose();
     renderer.dispose();
 
     this.isLooping = false;

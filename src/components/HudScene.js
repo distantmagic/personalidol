@@ -6,12 +6,13 @@ import CancelToken from "../framework/classes/CancelToken";
 import HudSceneOverlay from "./HudSceneOverlay";
 import HudSceneOverlayError from "./HudSceneOverlayError";
 import SceneCanvas from "../framework/classes/HTMLElement/SceneCanvas";
+import THREELoadingManager from "../framework/classes/THREELoadingManager";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
-import type { ResourcesLoadingState } from "../framework/interfaces/ResourcesLoadingState";
+import type { THREELoadingManager as THREELoadingManagerInterface } from "../framework/interfaces/THREELoadingManager";
 
 type Props = {|
   debug: Debugger,
@@ -24,8 +25,8 @@ type Props = {|
 export default function HudScene(props: Props) {
   const [customElements] = React.useState<?CustomElementRegistry>(window.customElements);
   const [isSceneCanvasDefined, setIsSceneCanvasDefined] = React.useState<boolean>(false);
-  const [resourcesLoadingState, setResourcesLoadingState] = React.useState<?ResourcesLoadingState>(null);
   const [sceneCanvas, setSceneCanvas] = React.useState<?SceneCanvas>(null);
+  const [threeLoadingManager, setThreeLoadingManager] = React.useState<?THREELoadingManagerInterface>(null);
 
   const castSceneCanvas = React.useCallback(
     function(element: ?HTMLElement) {
@@ -61,14 +62,19 @@ export default function HudScene(props: Props) {
 
       const breadcrumbs = props.loggerBreadcrumbs.add("useEffect(SceneCanvas)");
       const cancelToken = new CancelToken(breadcrumbs.add("CancelToken"));
+      const threeLoadingManager = new THREELoadingManager(
+        props.loggerBreadcrumbs.add("THREELoadingManager"),
+        props.exceptionHandler
+      );
 
-      sceneCanvas.attachRenderer(cancelToken);
+      setThreeLoadingManager(threeLoadingManager);
+      sceneCanvas.attachRenderer(cancelToken, props.debug, props.queryBus, threeLoadingManager);
 
       return function() {
         cancelToken.cancel(breadcrumbs.add("cleanup"));
       };
     },
-    [props.loggerBreadcrumbs, sceneCanvas]
+    [props.debug, props.exceptionHandler, props.loggerBreadcrumbs, props.queryBus, sceneCanvas]
   );
 
   if (!customElements) {
@@ -86,7 +92,6 @@ export default function HudScene(props: Props) {
 
   return (
     <div className="dd__scene dd__scene--canvas dd__scene--hud">
-      <HudSceneOverlay resourcesLoadingState={resourcesLoadingState} />
       {isSceneCanvasDefined && (
         <x-dm-scene-canvas
           class="dd__scene__canvas"
@@ -94,6 +99,7 @@ export default function HudScene(props: Props) {
           ref={castSceneCanvas}
         />
       )}
+      {threeLoadingManager && <HudSceneOverlay threeLoadingManager={threeLoadingManager} />}
     </div>
   );
 }

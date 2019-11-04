@@ -34,24 +34,10 @@ type Props = {|
 export default function Main(props: Props) {
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
-  const [debuggerState, setDebuggetState] = React.useState(props.debug.getState());
   const [isDocumentHidden, setIsDocumentHidden] = React.useState<boolean>(document.hidden);
 
-  const hasDebugger = !debuggerState.isEmpty();
+  const hasDebugger = true;
   const hasDialogue = false;
-
-  React.useEffect(
-    function() {
-      const debug = props.debug;
-
-      debug.onStateChange(setDebuggetState);
-
-      return function() {
-        debug.offStateChange(setDebuggetState);
-      };
-    },
-    [props.debug]
-  );
 
   React.useEffect(
     function() {
@@ -107,7 +93,7 @@ export default function Main(props: Props) {
           />
         )}
         <HudAside />
-        {hasDebugger && <HudDebuggerListing debuggerState={debuggerState} />}
+        {hasDebugger && <HudDebuggerListing debug={props.debug} />}
         <HudModalRouter
           exceptionHandler={props.exceptionHandler}
           logger={props.logger}

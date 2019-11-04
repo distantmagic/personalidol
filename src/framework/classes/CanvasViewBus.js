@@ -12,6 +12,7 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
   }
 
   add(canvasView: CanvasView): void {
+    canvasView.attach();
     this.scheduler.onBegin(canvasView.begin);
     this.scheduler.onEnd(canvasView.end);
     this.scheduler.onUpdate(canvasView.update);
@@ -21,5 +22,6 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
     this.scheduler.offBegin(canvasView.begin);
     this.scheduler.offEnd(canvasView.end);
     this.scheduler.offUpdate(canvasView.update);
+    canvasView.dispose();
   }
 }

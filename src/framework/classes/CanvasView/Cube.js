@@ -7,23 +7,21 @@ import CanvasView from "../CanvasView";
 
 import type { Mesh, Scene } from "three";
 
+import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+
 export default class Cube extends CanvasView {
   +scene: Scene;
   cube: ?Mesh;
-  isAttached: boolean;
 
-  constructor(scene: Scene) {
-    super();
+  constructor(canvasViewBag: CanvasViewBag, scene: Scene) {
+    super(canvasViewBag);
     autoBind(this);
 
-    this.isAttached = false;
     this.scene = scene;
   }
 
-  begin(): void {
-    if (this.isAttached) {
-      return;
-    }
+  attach(): void {
+    super.attach();
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({
@@ -32,15 +30,21 @@ export default class Cube extends CanvasView {
 
     this.cube = new THREE.Mesh(geometry, material);
     this.scene.add(this.cube);
-
-    this.isAttached = true;
   }
 
-  end(fps: number, isPanicked: boolean): void {
-    // console.log('end');
+  dispose(): void {
+    super.dispose();
+
+    if (!this.cube) {
+      return;
+    }
+
+    this.scene.remove(this.cube);
   }
 
   update(delta: number): void {
+    super.update(delta);
+
     if (!this.cube) {
       return;
     }
