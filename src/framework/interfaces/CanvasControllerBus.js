@@ -3,7 +3,7 @@
 import type { CanvasController } from "./CanvasController";
 
 export interface CanvasControllerBus {
-  add(CanvasController): void;
+  add(CanvasController): Promise<void>;
 
-  delete(CanvasController): void;
+  delete(CanvasController): Promise<void>;
 }

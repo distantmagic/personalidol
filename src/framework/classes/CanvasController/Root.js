@@ -4,7 +4,6 @@ import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import CanvasController from "../CanvasController";
-import { default as AmbientLightView } from "../CanvasView/AmbientLight";
 import { default as TiledMapView } from "../CanvasView/TiledMap";
 
 import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
@@ -14,6 +13,7 @@ import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { Debugger } from "../../interfaces/Debugger";
 import type { ElementSize } from "../../interfaces/ElementSize";
 import type { KeyboardState } from "../../interfaces/KeyboardState";
+import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { PointerState } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
@@ -26,6 +26,7 @@ export default class Root extends CanvasController {
   +canvasControllerBus: CanvasControllerBus;
   +debug: Debugger;
   +keyboardState: KeyboardState;
+  +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +pointerState: PointerState;
   +queryBus: QueryBus;
@@ -38,6 +39,7 @@ export default class Root extends CanvasController {
     canvasViewBag: CanvasViewBag,
     debug: Debugger,
     keyboardState: KeyboardState,
+    loadingManager: LoadingManager,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     pointerState: PointerState,
     queryBus: QueryBus,
@@ -51,6 +53,7 @@ export default class Root extends CanvasController {
     this.canvasControllerBus = canvasControllerBus;
     this.debug = debug;
     this.keyboardState = keyboardState;
+    this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.pointerState = pointerState;
     this.queryBus = queryBus;
@@ -59,31 +62,37 @@ export default class Root extends CanvasController {
     this.threeLoadingManager = threeLoadingManager;
   }
 
-  attach(): void {
-    super.attach();
+  async attach(): Promise<void> {
+    await super.attach();
 
-    this.canvasViewBag.add(
-      new AmbientLightView(
-        this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLightView")),
-        this.debug,
-        this.loggerBreadcrumbs.add("AmbientLightView"),
-        this.scene
-      )
-    );
-    this.canvasViewBag.add(
-      new TiledMapView(
-        this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapView")),
-        this.debug,
-        this.loggerBreadcrumbs.add("TiledMapView"),
-        this.queryBus,
-        this.scene,
-        this.threeLoadingManager
-      )
+    await this.loadingManager.blocking(
+      this.canvasViewBag.add(
+        new TiledMapView(
+          this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapView")),
+          this.debug,
+          this.loadingManager,
+          this.loggerBreadcrumbs.add("TiledMapView"),
+          this.queryBus,
+          this.scene,
+          this.threeLoadingManager
+        )
+      ),
+      "Loading map"
     );
 
     this.camera.position.set(16, 16, 16);
     this.camera.lookAt(this.scene.position);
     this.debug.updateState(this.loggerBreadcrumbs.add("camera").add("position"), this.camera.position);
+  }
+
+  async dispose(): Promise<void> {
+    await super.dispose();
+
+    // redraw once more after cleaning views etc
+    this.draw(0);
+
+    this.scene.dispose();
+    this.debug.deleteState(this.loggerBreadcrumbs.add("camera").add("position"));
   }
 
   draw(interpolationPercentage: number): void {

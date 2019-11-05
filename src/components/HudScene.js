@@ -10,14 +10,15 @@ import THREELoadingManager from "../framework/classes/THREELoadingManager";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
+import type { LoadingManager } from "../framework/interfaces/LoadingManager";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
-import type { THREELoadingManager as THREELoadingManagerInterface } from "../framework/interfaces/THREELoadingManager";
 
 type Props = {|
   debug: Debugger,
   exceptionHandler: ExceptionHandler,
   isDocumentHidden: boolean,
+  loadingManager: LoadingManager,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
 |};
@@ -26,7 +27,6 @@ export default function HudScene(props: Props) {
   const [customElements] = React.useState<?CustomElementRegistry>(window.customElements);
   const [isSceneCanvasDefined, setIsSceneCanvasDefined] = React.useState<boolean>(false);
   const [sceneCanvas, setSceneCanvas] = React.useState<?SceneCanvas>(null);
-  const [threeLoadingManager, setThreeLoadingManager] = React.useState<?THREELoadingManagerInterface>(null);
 
   const castSceneCanvas = React.useCallback(
     function(element: ?HTMLElement) {
@@ -67,14 +67,21 @@ export default function HudScene(props: Props) {
         props.exceptionHandler
       );
 
-      setThreeLoadingManager(threeLoadingManager);
-      sceneCanvas.attachRenderer(cancelToken, props.debug, props.queryBus, threeLoadingManager);
+      function beforeUnload() {
+        cancelToken.cancel(breadcrumbs.add("beforeunload"));
+      }
+
+      window.addEventListener("beforeunload", beforeUnload, {
+        once: true,
+      });
+      sceneCanvas.attachRenderer(cancelToken, props.debug, props.loadingManager, props.queryBus, threeLoadingManager);
 
       return function() {
+        window.removeEventListener("beforeunload", beforeUnload);
         cancelToken.cancel(breadcrumbs.add("cleanup"));
       };
     },
-    [props.debug, props.exceptionHandler, props.loggerBreadcrumbs, props.queryBus, sceneCanvas]
+    [props.debug, props.exceptionHandler, props.loadingManager, props.loggerBreadcrumbs, props.queryBus, sceneCanvas]
   );
 
   if (!customElements) {
@@ -99,7 +106,7 @@ export default function HudScene(props: Props) {
           ref={castSceneCanvas}
         />
       )}
-      {threeLoadingManager && <HudSceneOverlay threeLoadingManager={threeLoadingManager} />}
+      <HudSceneOverlay loadingManager={props.loadingManager} />
     </div>
   );
 }

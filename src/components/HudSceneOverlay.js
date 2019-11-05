@@ -4,45 +4,49 @@ import * as React from "react";
 
 import HudSceneOverlayError from "./HudSceneOverlayError";
 
-import type { ResourcesLoadingState } from "../framework/interfaces/ResourcesLoadingState";
-import type { THREELoadingManager } from "../framework/interfaces/THREELoadingManager";
+import type { LoadingManager } from "../framework/interfaces/LoadingManager";
+import type { LoadingManagerState } from "../framework/interfaces/LoadingManagerState";
 
 type Props = {|
-  threeLoadingManager: THREELoadingManager,
+  loadingManager: LoadingManager,
 |};
 
-export default function HudSceneOverlay(props: Props) {
-  const [resourcesLoadingState, setResourcesLoadingState] = React.useState<?ResourcesLoadingState>(null);
+export default React.memo<Props>(function HudSceneOverlay(props: Props) {
+  const [loadingManagerState, setLoadingManagerState] = React.useState<LoadingManagerState>(
+    props.loadingManager.getState()
+  );
+  const comments = loadingManagerState.getComments();
 
   React.useEffect(
     function() {
-      props.threeLoadingManager.onResourcesLoadingStateChange(setResourcesLoadingState);
+      props.loadingManager.onChange(setLoadingManagerState);
 
       return function() {
-        props.threeLoadingManager.offResourcesLoadingStateChange(setResourcesLoadingState);
+        props.loadingManager.offChange(setLoadingManagerState);
       };
     },
-    [props.threeLoadingManager]
+    [props.loadingManager]
   );
 
-  if (!resourcesLoadingState) {
-    return null;
-  }
-
-  if (resourcesLoadingState.isFailed()) {
+  if (loadingManagerState.isFailed()) {
     return <HudSceneOverlayError>Failed loading assets.</HudSceneOverlayError>;
   }
 
-  if (resourcesLoadingState.isLoading()) {
-    return (
-      <div className="dd__loader dd__scene__loader">
-        Loading asset {resourcesLoadingState.getItemsLoaded()}
-        {" of "}
-        {resourcesLoadingState.getItemsTotal()}
-        ...
-      </div>
-    );
+  if (!loadingManagerState.isLoading()) {
+    return null;
   }
 
-  return null;
-}
+  if (comments.length < 1) {
+    return <div className="dd__loader dd__scene__loader">Loading...</div>;
+  }
+
+  return (
+    <div className="dd__loader dd__scene__loader">
+      <ul className="dd__scene__loader__list">
+        {comments.map(comment => (
+          <li key={comment}>{comment}...</li>
+        ))}
+      </ul>
+    </div>
+  );
+});

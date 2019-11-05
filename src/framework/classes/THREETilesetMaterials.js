@@ -44,7 +44,7 @@ export default class THREETilesetMaterials implements THREETilesetMaterialsInter
     const tileImageSource = tiledTile.getTiledTileImage().getSource();
 
     return this.materialsCache.remember(tileImageSource, () => {
-      return new THREE.MeshPhongMaterial({
+      return new THREE.MeshBasicMaterial({
         // color: [0xcccccc, 0xdddddd, 0xaaaaaa, 0x999999][1],
         // color: 0xffc000,
         map: this.getTHREETextureLoader().load(tileImageSource),

@@ -29,21 +29,29 @@ export default class AmbientLight extends CanvasView {
     this.spotLight = new THREE.SpotLight(0xffffff);
   }
 
-  attach(): void {
-    super.attach();
+  async attach(): Promise<void> {
+    await super.attach();
 
     this.spotLight.position.set(512, 512, 512);
     this.debug.updateState(this.loggerBreadcrumbs.add("light").add("position"), this.spotLight.position);
     this.scene.add(this.spotLight);
   }
 
-  dispose(): void {
-    super.dispose();
+  async dispose(): Promise<void> {
+    await super.dispose();
 
     this.scene.remove(this.spotLight);
   }
 
-  update(delta: number): void {
-    super.update(delta);
+  useBegin(): boolean {
+    return super.useBegin() && false;
+  }
+
+  useEnd(): boolean {
+    return super.useEnd() && false;
+  }
+
+  useUpdate(): boolean {
+    return super.useUpdate() && false;
   }
 }

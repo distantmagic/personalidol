@@ -1,5 +1,7 @@
 // @flow
 
+import autoBind from "auto-bind";
+
 import type { CanvasView } from "../interfaces/CanvasView";
 import type { CanvasViewBag as CanvasViewBagInterface } from "../interfaces/CanvasViewBag";
 import type { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
@@ -12,25 +14,26 @@ export default class CanvasViewBag implements CanvasViewBagInterface {
   #isDisposed: boolean;
 
   constructor(canvasViewBus: CanvasViewBusInterface, loggerBreadcrumbs: LoggerBreadcrumbs) {
+    autoBind(this);
+
     this.#isDisposed = false;
     this.canvasViewBus = canvasViewBus;
     this.canvasViews = new Set();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  add(canvasView: CanvasView): void {
-    this.canvasViewBus.add(canvasView);
+  add(canvasView: CanvasView): Promise<void> {
     this.canvasViews.add(canvasView);
+
+    return this.canvasViewBus.add(canvasView);
   }
 
-  delete(canvasView: CanvasView): void {
-    this.canvasViewBus.delete(canvasView);
+  delete(canvasView: CanvasView): Promise<void> {
+    return this.canvasViewBus.delete(canvasView);
   }
 
-  dispose(): void {
-    for (let canvasView of this.canvasViews) {
-      canvasView.dispose();
-    }
+  async dispose(): Promise<void> {
+    await Promise.all(Array.from(this.canvasViews).map(this.delete));
 
     this.canvasViews.clear();
     this.#isDisposed = true;

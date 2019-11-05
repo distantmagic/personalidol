@@ -38,24 +38,34 @@ export default class TiledSkinnedTile extends CanvasView {
     this.tiledSkinnedTile = tiledSkinnedTile;
   }
 
-  attach(): void {
-    super.attach();
+  async attach(): Promise<void> {
+    await super.attach();
 
     this.tiledSkinnedTileMesh = this.threeTilesetMeshes.getTiledSkinnedTileMesh(this.tiledSkinnedTile);
     this.scene.add(this.tiledSkinnedTileMesh);
   }
 
-  dispose(): void {
-    super.dispose();
+  async dispose(): Promise<void> {
+    await super.dispose();
 
-    if (!this.tiledSkinnedTileMesh) {
+    const tiledSkinnedTileMesh = this.tiledSkinnedTileMesh;
+
+    if (!tiledSkinnedTileMesh) {
       return;
     }
 
-    this.scene.remove(this.tiledSkinnedTileMesh);
+    this.scene.remove(tiledSkinnedTileMesh);
   }
 
-  update(delta: number): void {
-    super.update(delta);
+  useBegin(): boolean {
+    return super.useBegin() && false;
+  }
+
+  useEnd(): boolean {
+    return super.useEnd() && false;
+  }
+
+  useUpdate(): boolean {
+    return super.useUpdate() && false;
   }
 }

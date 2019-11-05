@@ -1,5 +1,6 @@
 // @flow
 
+import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import CancelToken from "../CancelToken";
@@ -17,13 +18,13 @@ import type { Material, Scene } from "three";
 import type { CancelToken as CancelTokenInterface } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { Debugger } from "../../interfaces/Debugger";
+import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../../interfaces/QueryBus";
 import type { RuntimeCache as RuntimeCacheInterface } from "../../interfaces/RuntimeCache";
 import type { THREELoadingManager } from "../../interfaces/THREELoadingManager";
 import type { THREETilesetMaterials as THREETilesetMaterialsInterface } from "../../interfaces/THREETilesetMaterials";
 import type { THREETilesetMeshes as THREETilesetMeshesInterface } from "../../interfaces/THREETilesetMeshes";
-import type { TiledMap as TiledMapInterface } from "../../interfaces/TiledMap";
 import type { TiledMapLoader as TiledMapLoaderInterface } from "../../interfaces/TiledMapLoader";
 
 const TILED_MAP_FILENAME = "assets/map-outlands-01.tmx";
@@ -31,6 +32,7 @@ const TILED_MAP_FILENAME = "assets/map-outlands-01.tmx";
 export default class TiledMap extends CanvasView {
   +cancelToken: CancelTokenInterface;
   +debug: Debugger;
+  +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +runtimeMaterialsCache: RuntimeCacheInterface<Material>;
   +scene: Scene;
@@ -42,6 +44,7 @@ export default class TiledMap extends CanvasView {
   constructor(
     canvasViewBag: CanvasViewBag,
     debug: Debugger,
+    loadingManager: LoadingManager,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
     scene: Scene,
@@ -51,9 +54,13 @@ export default class TiledMap extends CanvasView {
     autoBind(this);
 
     const tiledQueryBuilder = new URLTextContentQueryBuilder();
+    const tileGeometry = new THREE.PlaneBufferGeometry(1, 1);
+
+    tileGeometry.translate(-0.5, -0.5, 0);
 
     this.cancelToken = new CancelToken(loggerBreadcrumbs.add("CancelToken"));
     this.debug = debug;
+    this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.runtimeMaterialsCache = new RuntimeCache<Material>(loggerBreadcrumbs.add("RuntimeCache"));
     this.scene = scene;
@@ -65,7 +72,8 @@ export default class TiledMap extends CanvasView {
     );
     this.threeTilesetMeshes = new THREETilesetMeshes(
       loggerBreadcrumbs.add("THREETilesetMeshes"),
-      this.threeTilesetMaterials
+      this.threeTilesetMaterials,
+      tileGeometry
     );
     this.tiledMapLoader = new TiledMapLoader(
       loggerBreadcrumbs.add("TiledMapLoader"),
@@ -75,33 +83,28 @@ export default class TiledMap extends CanvasView {
     );
   }
 
-  attach(): void {
-    super.attach();
+  async attach(): Promise<void> {
+    await super.attach();
 
-    this.tiledMapLoader.load(this.cancelToken, TILED_MAP_FILENAME).then(this.onTiledMapLoaded);
-  }
+    const tiledMap = await this.tiledMapLoader.load(this.cancelToken, TILED_MAP_FILENAME);
 
-  dispose(): void {
-    super.dispose();
-
-    this.cancelToken.cancel(this.loggerBreadcrumbs.add("dispose"));
-  }
-
-  async onTiledMapLoaded(tiledMap: TiledMapInterface): Promise<void> {
     this.debug.updateState(this.loggerBreadcrumbs.add("TILED_MAP_FILENAME"), TILED_MAP_FILENAME);
 
     let skinnedLayersLoaded = 0;
     for await (let skinnedLayer of tiledMap.generateSkinnedLayers(this.cancelToken)) {
-      const skinnedLayerView = new TiledMapSkinnedLayerCanvasView(
-        this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView")),
-        this.debug,
-        this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView").addVariable(String(skinnedLayersLoaded)),
-        this.scene,
-        this.threeTilesetMeshes,
-        skinnedLayer
+      await this.loadingManager.blocking(
+        this.canvasViewBag.add(
+          new TiledMapSkinnedLayerCanvasView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView")),
+            this.debug,
+            this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView").addVariable(String(skinnedLayersLoaded)),
+            this.scene,
+            this.threeTilesetMeshes,
+            skinnedLayer
+          )
+        ),
+        `Loading map layer #${skinnedLayersLoaded + 1}`
       );
-
-      this.canvasViewBag.add(skinnedLayerView);
       skinnedLayersLoaded += 1;
     }
 
@@ -111,7 +114,23 @@ export default class TiledMap extends CanvasView {
     );
   }
 
-  update(delta: number): void {
-    super.update(delta);
+  async dispose(): Promise<void> {
+    await super.dispose();
+
+    this.cancelToken.cancel(this.loggerBreadcrumbs.add("dispose"));
+    this.debug.deleteState(this.loggerBreadcrumbs.add("TILED_MAP_FILENAME"));
+    this.debug.deleteState(this.loggerBreadcrumbs.add(TILED_MAP_FILENAME).add("skinnedLayersLoaded"));
+  }
+
+  useBegin(): boolean {
+    return super.useBegin() && false;
+  }
+
+  useEnd(): boolean {
+    return super.useEnd() && false;
+  }
+
+  useUpdate(): boolean {
+    return super.useUpdate() && false;
   }
 }

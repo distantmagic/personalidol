@@ -11,10 +11,10 @@ export default class CanvasController implements CanvasControllerInterface {
     this.canvasViewBag = canvasViewBag;
   }
 
-  attach(): void {}
+  async attach(): Promise<void> {}
 
-  dispose(): void {
-    this.canvasViewBag.dispose();
+  async dispose(): Promise<void> {
+    return this.canvasViewBag.dispose();
   }
 
   draw(interpolationPercentage: number): void {}

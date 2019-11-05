@@ -11,17 +11,31 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
     this.scheduler = scheduler;
   }
 
-  add(canvasView: CanvasView): void {
-    canvasView.attach();
-    this.scheduler.onBegin(canvasView.begin);
-    this.scheduler.onEnd(canvasView.end);
-    this.scheduler.onUpdate(canvasView.update);
+  async add(canvasView: CanvasView): Promise<void> {
+    await canvasView.attach();
+
+    if (canvasView.useBegin()) {
+      this.scheduler.onBegin(canvasView.begin);
+    }
+    if (canvasView.useEnd()) {
+      this.scheduler.onEnd(canvasView.end);
+    }
+    if (canvasView.useUpdate()) {
+      this.scheduler.onUpdate(canvasView.update);
+    }
   }
 
-  delete(canvasView: CanvasView): void {
-    this.scheduler.offBegin(canvasView.begin);
-    this.scheduler.offEnd(canvasView.end);
-    this.scheduler.offUpdate(canvasView.update);
-    canvasView.dispose();
+  async delete(canvasView: CanvasView): Promise<void> {
+    if (canvasView.useBegin()) {
+      this.scheduler.offBegin(canvasView.begin);
+    }
+    if (canvasView.useEnd()) {
+      this.scheduler.offEnd(canvasView.end);
+    }
+    if (canvasView.useUpdate()) {
+      this.scheduler.offUpdate(canvasView.update);
+    }
+
+    return canvasView.dispose();
   }
 }

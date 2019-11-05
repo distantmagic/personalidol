@@ -15,11 +15,14 @@ export default class THREETilesetMeshes implements THREETilesetMeshesInterface {
   +tileGeometry: BufferGeometry;
   +threeTilesetMaterials: THREETilesetMaterials;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, threeTilesetMaterials: THREETilesetMaterials) {
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    threeTilesetMaterials: THREETilesetMaterials,
+    tileGeometry: BufferGeometry
+  ) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.threeTilesetMaterials = threeTilesetMaterials;
-    this.tileGeometry = new THREE.PlaneBufferGeometry(1, 1);
-    this.tileGeometry.translate(-0.5, -0.5, 0);
+    this.tileGeometry = tileGeometry;
   }
 
   getTHREETilesetMaterials(): THREETilesetMaterials {

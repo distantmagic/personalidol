@@ -20,6 +20,12 @@ export default class Debugger implements DebuggerInterface {
     this.state = state;
   }
 
+  deleteState(loggerBreadcrumbs: LoggerBreadcrumbs): void {
+    const state = this.getState();
+
+    return this.setState(state.delete(loggerBreadcrumbs));
+  }
+
   getState(): DebuggerState {
     return this.state;
   }

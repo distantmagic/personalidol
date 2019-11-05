@@ -8,6 +8,7 @@ import CanvasControllerBus from "../CanvasControllerBus";
 import CanvasViewBag from "../CanvasViewBag";
 import CanvasViewBus from "../CanvasViewBus";
 import HTMLElementResizeObserver from "../HTMLElementResizeObserver";
+import HTMLElementSize from "../HTMLElementSize";
 import Idempotence from "../Exception/Idempotence";
 import KeyboardState from "../KeyboardState";
 import LoggerBreadcrumbs from "../LoggerBreadcrumbs";
@@ -23,6 +24,7 @@ import type { CanvasViewBus as CanvasViewBusInterface } from "../../interfaces/C
 import type { Debugger } from "../../interfaces/Debugger";
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../../interfaces/HTMLElementResizeObserver";
 import type { KeyboardState as KeyboardStateInterface } from "../../interfaces/KeyboardState";
+import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
 import type { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
@@ -151,6 +153,7 @@ export default class SceneCanvas extends HTMLElement {
   async attachRenderer(
     cancelToken: CancelToken,
     debug: Debugger,
+    loadingManager: LoadingManager,
     queryBus: QueryBus,
     threeLoadingManager: THREELoadingManager
   ): Promise<void> {
@@ -172,6 +175,7 @@ export default class SceneCanvas extends HTMLElement {
       this.canvasViewBag.fork(this.loggerBreadcrumbs.add("RootCanvasControllert")),
       debug,
       this.keyboardState,
+      loadingManager,
       this.loggerBreadcrumbs.add("RootCanvasController"),
       this.pointerState,
       queryBus,
@@ -179,13 +183,19 @@ export default class SceneCanvas extends HTMLElement {
       threeLoadingManager
     );
 
-    this.canvasControllerBus.add(canvasController);
+    await loadingManager.blocking(this.canvasControllerBus.add(canvasController), "Loading root canvas controller");
+
+    canvasController.resize(new HTMLElementSize(this.canvasElement));
 
     await cancelToken.whenCanceled();
 
-    this.canvasControllerBus.delete(canvasController);
-    this.canvasViewBag.dispose();
+    // prevent some memory leaks
     renderer.dispose();
+    renderer.forceContextLoss();
+    this.canvasElement.remove();
+
+    await loadingManager.blocking(this.canvasViewBag.dispose(), "Disposing root canvas controller");
+    await loadingManager.blocking(this.canvasControllerBus.delete(canvasController), "Disposing canvas views");
 
     this.isLooping = false;
     this.onComponentStateChange();

@@ -14,15 +14,17 @@ export default class CanvasControllerBus implements CanvasControllerBusInterface
     this.scheduler = scheduler;
   }
 
-  add(canvasController: CanvasController): void {
-    canvasController.attach();
+  async add(canvasController: CanvasController): Promise<void> {
+    await canvasController.attach();
+
     this.resizeObserver.notify(canvasController);
     this.scheduler.onDraw(canvasController.draw);
   }
 
-  delete(canvasController: CanvasController): void {
+  delete(canvasController: CanvasController): Promise<void> {
     this.resizeObserver.off(canvasController);
     this.scheduler.offDraw(canvasController.draw);
-    canvasController.dispose();
+
+    return canvasController.dispose();
   }
 }

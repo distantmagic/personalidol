@@ -6,19 +6,35 @@ import type { CanvasViewBag } from "../interfaces/CanvasViewBag";
 export default class CanvasView implements CanvasViewInterface {
   +canvasViewBag: CanvasViewBag;
 
+  static useBegin: boolean = true;
+  static useEnd: boolean = true;
+  static useUpdate: boolean = true;
+
   constructor(canvasViewBag: CanvasViewBag): void {
     this.canvasViewBag = canvasViewBag;
   }
 
-  attach(): void {}
+  async attach(): Promise<void> {}
 
   begin(): void {}
 
-  dispose(): void {
-    this.canvasViewBag.dispose();
+  async dispose(): Promise<void> {
+    return this.canvasViewBag.dispose();
   }
 
   end(fps: number, isPanicked: boolean): void {}
 
   update(delta: number): void {}
+
+  useBegin(): boolean {
+    return true;
+  }
+
+  useEnd(): boolean {
+    return true;
+  }
+
+  useUpdate(): boolean {
+    return true;
+  }
 }

@@ -4,6 +4,7 @@ import autoBind from "auto-bind";
 
 import CancelToken from "../CancelToken";
 import CanvasView from "../CanvasView";
+import timeout from "../../helpers/timeout";
 import { default as TiledSkinnedTileCanvasView } from "./TiledSkinnedTile";
 
 import type { Material, Scene } from "three";
@@ -44,41 +45,48 @@ export default class TiledMapSkinnedLayer extends CanvasView {
     this.tiledMapSkinnedLayer = tiledMapSkinnedLayer;
   }
 
-  attach(): void {
-    super.attach();
+  async attach(): Promise<void> {
+    await super.attach();
 
-    this.attachSkinnedTiles();
-  }
-
-  async attachSkinnedTiles(): Promise<void> {
     let skinnedTilesLoaded = 0;
     for await (let tiledSkinnedTile of this.tiledMapSkinnedLayer.generateSkinnedTiles(this.cancelToken)) {
-      const tiledSkinnedTileCanvasView = new TiledSkinnedTileCanvasView(
-        this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView")),
-        this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView"),
-        this.scene,
-        this.threeTilesetMeshes,
-        tiledSkinnedTile
+      await this.canvasViewBag.add(
+        new TiledSkinnedTileCanvasView(
+          this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView")),
+          this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView"),
+          this.scene,
+          this.threeTilesetMeshes,
+          tiledSkinnedTile
+        )
       );
-
-      this.canvasViewBag.add(tiledSkinnedTileCanvasView);
       skinnedTilesLoaded += 1;
-
-      if (skinnedTilesLoaded > 1024) {
-        break;
+      if (0 === skinnedTilesLoaded % 300) {
+        // give control back elsewhere for a moment
+        // it slows down tiles loading, but makes the entire app more
+        // responsive
+        await timeout(this.cancelToken, 10);
       }
     }
 
     this.debug.updateState(this.loggerBreadcrumbs.add("skinnedTilesLoaded"), skinnedTilesLoaded);
   }
 
-  dispose(): void {
-    super.dispose();
+  async dispose(): Promise<void> {
+    await super.dispose();
 
+    this.debug.deleteState(this.loggerBreadcrumbs.add("skinnedTilesLoaded"));
     this.cancelToken.cancel(this.loggerBreadcrumbs.add("dispose"));
   }
 
-  update(delta: number): void {
-    super.update(delta);
+  useBegin(): boolean {
+    return super.useBegin() && false;
+  }
+
+  useEnd(): boolean {
+    return super.useEnd() && false;
+  }
+
+  useUpdate(): boolean {
+    return super.useUpdate() && false;
   }
 }

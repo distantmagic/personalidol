@@ -16,6 +16,7 @@ import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
 import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
+import type { LoadingManager } from "../framework/interfaces/LoadingManager";
 import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
@@ -26,6 +27,7 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
+  loadingManager: LoadingManager,
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
@@ -104,6 +106,7 @@ export default function Main(props: Props) {
           debug={props.debug}
           exceptionHandler={props.exceptionHandler}
           isDocumentHidden={isDocumentHidden}
+          loadingManager={props.loadingManager}
           loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
           queryBus={props.queryBus}
         />

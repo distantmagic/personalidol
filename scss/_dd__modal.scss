@@ -4,12 +4,12 @@
   align-items: center;
   display: flex;
   height: 100%;
+  left: 0;
   justify-content: center;
   perspective: 100px;
   position: absolute;
-  right: 0;
   top: 0;
-  width: calc(100% - 128px);
+  width: 100%;
   z-index: $z-index-dd-modal;
 }
 

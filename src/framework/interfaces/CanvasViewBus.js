@@ -3,7 +3,7 @@
 import type { CanvasView } from "./CanvasView";
 
 export interface CanvasViewBus {
-  add(CanvasView): void;
+  add(CanvasView): Promise<void>;
 
-  delete(CanvasView): void;
+  delete(CanvasView): Promise<void>;
 }

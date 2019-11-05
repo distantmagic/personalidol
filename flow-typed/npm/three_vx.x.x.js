@@ -321,6 +321,8 @@ declare module "three" {
   declare export interface Renderer {
     dispose(): void;
 
+    forceContextLoss(): void;
+
     render(Scene, Camera): void;
 
     getSize(): {|
@@ -335,6 +337,8 @@ declare module "three" {
 
   declare export interface Scene extends Object3D {
     constructor(): void;
+
+    dispose(): void;
   }
 
   declare export interface Shape {

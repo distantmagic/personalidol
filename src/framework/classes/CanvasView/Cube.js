@@ -20,8 +20,8 @@ export default class Cube extends CanvasView {
     this.scene = scene;
   }
 
-  attach(): void {
-    super.attach();
+  async attach(): Promise<void> {
+    await super.attach();
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({
@@ -32,8 +32,8 @@ export default class Cube extends CanvasView {
     this.scene.add(this.cube);
   }
 
-  dispose(): void {
-    super.dispose();
+  async dispose(): Promise<void> {
+    await super.dispose();
 
     if (!this.cube) {
       return;
@@ -52,5 +52,13 @@ export default class Cube extends CanvasView {
     this.cube.rotation.x += 0.01;
     this.cube.rotation.y += 0.01;
     // this.cube.rotation.z += 0.1;
+  }
+
+  useBegin(): boolean {
+    return super.useBegin() && false;
+  }
+
+  useEnd(): boolean {
+    return super.useEnd() && false;
   }
 }

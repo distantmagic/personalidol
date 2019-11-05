@@ -19,6 +19,12 @@
   top: 0;
 }
 
+.dd__scene__loader__list {
+  list-style-type: none;
+  padding: 0;
+  text-align: center;
+}
+
 .dd__scene.dd__scene--text {
   // display: flex;
   overflow-y: auto;

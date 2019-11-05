@@ -1,8 +1,8 @@
 // @flow
 
-import type { Renderable } from "./Renderable";
+import type { Disposable } from "./Disposable";
 import type { Resizeable } from "./Resizeable";
 
-export interface CanvasController extends Renderable, Resizeable<"px"> {
+export interface CanvasController extends Disposable, Resizeable<"px"> {
   draw(interpolationPercentage: number): void;
 }

@@ -6,6 +6,8 @@ import type { DebuggerStateValue } from "../types/DebuggerStateValue";
 import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
 
 export interface Debugger {
+  deleteState(LoggerBreadcrumbs): void;
+
   getState(): DebuggerState;
 
   offStateChange(DebuggerStateChangeCallback): void;

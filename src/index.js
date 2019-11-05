@@ -10,6 +10,7 @@ import Debugger from "./framework/classes/Debugger";
 import ExceptionHandler from "./framework/classes/ExceptionHandler";
 import ExpressionBus from "./framework/classes/ExpressionBus";
 import ExpressionContext from "./framework/classes/ExpressionContext";
+import LoadingManager from "./framework/classes/LoadingManager";
 import Logger from "./framework/classes/Logger";
 import LoggerBreadcrumbs from "./framework/classes/LoggerBreadcrumbs";
 import Main from "./components/Main";
@@ -22,6 +23,7 @@ function init(rootElement: HTMLElement) {
   const exceptionHandler = new ExceptionHandler(logger);
   const expressionBus = new ExpressionBus();
   const expressionContext = new ExpressionContext(loggerBreadcrumbs.add("ExpressionContext"));
+  const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"));
   const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 
@@ -33,6 +35,7 @@ function init(rootElement: HTMLElement) {
         exceptionHandler={exceptionHandler}
         expressionBus={expressionBus}
         expressionContext={expressionContext}
+        loadingManager={loadingManager}
         logger={logger}
         loggerBreadcrumbs={loggerBreadcrumbs}
         queryBus={queryBus}
