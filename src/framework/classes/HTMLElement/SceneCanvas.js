@@ -94,7 +94,7 @@ export default class SceneCanvas extends HTMLElement {
     this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this);
     this.canvasControllerBus = new CanvasControllerBus(this.resizeObserver, this.scheduler);
 
-    this.mainLoop.setMaxAllowedFPS(10);
+    // this.mainLoop.setMaxAllowedFPS(10);
     this.mainLoop.attachScheduler(this.scheduler);
   }
 
@@ -180,6 +180,7 @@ export default class SceneCanvas extends HTMLElement {
       this.pointerState,
       queryBus,
       renderer,
+      this.scheduler,
       threeLoadingManager
     );
 

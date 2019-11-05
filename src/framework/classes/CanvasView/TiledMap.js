@@ -92,17 +92,17 @@ export default class TiledMap extends CanvasView {
 
     let skinnedLayersLoaded = 0;
     for await (let skinnedLayer of tiledMap.generateSkinnedLayers(this.cancelToken)) {
+      const tiledMapLayerView = new TiledMapSkinnedLayerCanvasView(
+        this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView")),
+        this.debug,
+        this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView").addVariable(String(skinnedLayersLoaded)),
+        this.scene,
+        this.threeTilesetMeshes,
+        skinnedLayer
+      );
+
       await this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          new TiledMapSkinnedLayerCanvasView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView")),
-            this.debug,
-            this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView").addVariable(String(skinnedLayersLoaded)),
-            this.scene,
-            this.threeTilesetMeshes,
-            skinnedLayer
-          )
-        ),
+        this.canvasViewBag.add(tiledMapLayerView),
         `Loading map layer #${skinnedLayersLoaded + 1}`
       );
       skinnedLayersLoaded += 1;

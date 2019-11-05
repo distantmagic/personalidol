@@ -38,7 +38,7 @@ export default function Main(props: Props) {
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
   const [isDocumentHidden, setIsDocumentHidden] = React.useState<boolean>(document.hidden);
 
-  const hasDebugger = true;
+  const hasDebugger = false;
   const hasDialogue = false;
 
   React.useEffect(

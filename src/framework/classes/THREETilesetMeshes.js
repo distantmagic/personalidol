@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 
-import type { BufferGeometry, Mesh } from "three";
+import type { BufferGeometry, Geometry, Mesh } from "three";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { TiledSkinnedTile } from "../interfaces/TiledSkinnedTile";
@@ -12,13 +12,13 @@ import type { THREETilesetMeshes as THREETilesetMeshesInterface } from "../inter
 
 export default class THREETilesetMeshes implements THREETilesetMeshesInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +tileGeometry: BufferGeometry;
+  +tileGeometry: BufferGeometry | Geometry;
   +threeTilesetMaterials: THREETilesetMaterials;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     threeTilesetMaterials: THREETilesetMaterials,
-    tileGeometry: BufferGeometry
+    tileGeometry: BufferGeometry | Geometry
   ) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.threeTilesetMaterials = threeTilesetMaterials;
@@ -34,6 +34,7 @@ export default class THREETilesetMeshes implements THREETilesetMeshesInterface {
     const tileMesh = this.getTiledTileMesh(tiledSkinnedTile.getTiledTile());
 
     tileMesh.position.x = tilePosition.getX();
+    tileMesh.position.y = 0;
     tileMesh.position.z = tilePosition.getY();
     tileMesh.rotation.x = (-1 * Math.PI) / 2;
     tileMesh.rotation.y = 0;

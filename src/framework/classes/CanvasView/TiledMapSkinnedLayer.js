@@ -50,15 +50,16 @@ export default class TiledMapSkinnedLayer extends CanvasView {
 
     let skinnedTilesLoaded = 0;
     for await (let tiledSkinnedTile of this.tiledMapSkinnedLayer.generateSkinnedTiles(this.cancelToken)) {
-      await this.canvasViewBag.add(
-        new TiledSkinnedTileCanvasView(
-          this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView")),
-          this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView"),
-          this.scene,
-          this.threeTilesetMeshes,
-          tiledSkinnedTile
-        )
+      const tiledSkinnedTileView = new TiledSkinnedTileCanvasView(
+        this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView")),
+        this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView"),
+        this.scene,
+        this.threeTilesetMeshes,
+        tiledSkinnedTile
       );
+
+      await this.canvasViewBag.add(tiledSkinnedTileView);
+
       skinnedTilesLoaded += 1;
       if (0 === skinnedTilesLoaded % 300) {
         // give control back elsewhere for a moment

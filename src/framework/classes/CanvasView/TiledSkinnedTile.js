@@ -3,17 +3,19 @@
 import autoBind from "auto-bind";
 
 import CancelToken from "../CancelToken";
+import CanvasPointerHandlerReference from "../CanvasPointerHandlerReference";
 import CanvasView from "../CanvasView";
 
 import type { Mesh, Scene } from "three";
 
 import type { CancelToken as CancelTokenInterface } from "../../interfaces/CancelToken";
+import type { CanvasPointerHandler } from "../../interfaces/CanvasPointerHandler";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { THREETilesetMeshes } from "../../interfaces/THREETilesetMeshes";
 import type { TiledSkinnedTile as TiledSkinnedTileInterface } from "../../interfaces/TiledSkinnedTile";
 
-export default class TiledSkinnedTile extends CanvasView {
+export default class TiledSkinnedTile extends CanvasView implements CanvasPointerHandler {
   +cancelToken: CancelTokenInterface;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +scene: Scene;
@@ -42,6 +44,8 @@ export default class TiledSkinnedTile extends CanvasView {
     await super.attach();
 
     this.tiledSkinnedTileMesh = this.threeTilesetMeshes.getTiledSkinnedTileMesh(this.tiledSkinnedTile);
+    this.tiledSkinnedTileMesh.userData = new CanvasPointerHandlerReference(this);
+
     this.scene.add(this.tiledSkinnedTileMesh);
   }
 
@@ -55,6 +59,27 @@ export default class TiledSkinnedTile extends CanvasView {
     }
 
     this.scene.remove(tiledSkinnedTileMesh);
+  }
+
+  onMouseAuxilaryPressed(): void {
+    // console.log('onMouseAuxilaryPressed');
+  }
+
+  onMouseOver(): void {
+    const tiledSkinnedTileMesh = this.tiledSkinnedTileMesh;
+
+    // console.log('onMouseOver');
+    if (tiledSkinnedTileMesh) {
+      tiledSkinnedTileMesh.position.y += 0.1;
+    }
+  }
+
+  onMousePrimaryPressed(): void {
+    // console.log('onMousePrimaryPressed');
+  }
+
+  onMouseSecondaryPressed(): void {
+    // console.log('onMouseSecondaryPressed');
   }
 
   useBegin(): boolean {

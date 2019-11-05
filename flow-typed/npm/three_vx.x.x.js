@@ -263,6 +263,7 @@ declare module "three" {
     +position: Vector3;
     +rotation: Euler;
     +scale: Vector3;
+    userData: any;
     visible: boolean;
 
     add(Object3D): void;
