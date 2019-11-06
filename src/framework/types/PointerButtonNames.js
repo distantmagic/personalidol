@@ -1,3 +1,3 @@
 // @flow
 
-export type PointerButtonNames = "Primary" | "Secondary" | "Auxilary" | "BrowserBack" | "BrowserForward";
+export type PointerButtonNames = "Primary" | "Secondary" | "Auxiliary" | "BrowserBack" | "BrowserForward";

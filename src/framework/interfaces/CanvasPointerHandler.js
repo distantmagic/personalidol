@@ -1,11 +1,25 @@
 // @flow
 
 export interface CanvasPointerHandler {
-  onMouseAuxilaryPressed(): void;
+  onPointerAuxiliaryClick(): void;
 
-  onMouseOver(): void;
+  onPointerAuxiliaryDepressed(): void;
 
-  onMousePrimaryPressed(): void;
+  onPointerAuxiliaryPressed(): void;
 
-  onMouseSecondaryPressed(): void;
+  onPointerOut(): void;
+
+  onPointerOver(): void;
+
+  onPointerPrimaryClick(): void;
+
+  onPointerPrimaryDepressed(): void;
+
+  onPointerPrimaryPressed(): void;
+
+  onPointerSecondaryClick(): void;
+
+  onPointerSecondaryDepressed(): void;
+
+  onPointerSecondaryPressed(): void;
 }

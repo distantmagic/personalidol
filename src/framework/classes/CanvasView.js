@@ -24,6 +24,28 @@ export default class CanvasView implements CanvasViewInterface {
 
   end(fps: number, isPanicked: boolean): void {}
 
+  onPointerAuxiliaryClick(): void {}
+
+  onPointerAuxiliaryDepressed(): void {}
+
+  onPointerAuxiliaryPressed(): void {}
+
+  onPointerOut(): void {}
+
+  onPointerOver(): void {}
+
+  onPointerPrimaryClick(): void {}
+
+  onPointerPrimaryDepressed(): void {}
+
+  onPointerPrimaryPressed(): void {}
+
+  onPointerSecondaryClick(): void {}
+
+  onPointerSecondaryDepressed(): void {}
+
+  onPointerSecondaryPressed(): void {}
+
   update(delta: number): void {}
 
   useBegin(): boolean {

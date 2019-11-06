@@ -63,7 +63,7 @@ export default class PointerState implements PointerStateInterface {
     // 0: No button or un-initialized
     // 1: Primary button (usually the left button)
     // 2: Secondary button (usually the right button)
-    // 4: Auxilary button (usually the mouse wheel button or middle button)
+    // 4: Auxiliary button (usually the mouse wheel button or middle button)
     // 8: 4th button (typically the "Browser Back" button)
     // 16: 5th button (typically the "Browser Forward" button)
     //
@@ -76,7 +76,7 @@ export default class PointerState implements PointerStateInterface {
     this.keys = {
       Primary: 0 !== (evt.buttons & 1),
       Secondary: 0 !== (evt.buttons & 2),
-      Auxilary: 0 !== (evt.buttons & 4),
+      Auxiliary: 0 !== (evt.buttons & 4),
       BrowserBack: 0 !== (evt.buttons & 8),
       BrowserForward: 0 !== (evt.buttons & 16),
     };
