@@ -46,12 +46,12 @@ export default class CameraController implements CameraControllerInterface {
     this.camera.lookAt(this.scene.position);
     this.updateProjection();
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
-
     this.debug.updateState(this.loggerBreadcrumbs.add("camera").add("position"), this.camera.position);
   }
 
   async dispose(): Promise<void> {
     this.renderer.domElement.removeEventListener("wheel", this.onWheel);
+    this.debug.deleteState(this.loggerBreadcrumbs.add("camera").add("position"));
   }
 
   draw(interpolationPercentage: number): void {

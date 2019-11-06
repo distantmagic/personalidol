@@ -8,6 +8,7 @@ import timeout from "../../helpers/timeout";
 import { default as TiledSkinnedTileCanvasView } from "./TiledSkinnedTile";
 
 import type { Material, Scene } from "three";
+import type { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 
 import type { CancelToken as CancelTokenInterface } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -21,6 +22,7 @@ export default class TiledMapSkinnedLayer extends CanvasView {
   +cancelToken: CancelTokenInterface;
   +debug: Debugger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +outlinePass: OutlinePass;
   +runtimeCache: RuntimeCacheInterface<Material>;
   +scene: Scene;
   +threeTilesetMeshes: THREETilesetMeshes;
@@ -30,6 +32,7 @@ export default class TiledMapSkinnedLayer extends CanvasView {
     canvasViewBag: CanvasViewBag,
     debug: Debugger,
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    outlinePass: OutlinePass,
     scene: Scene,
     threeTilesetMeshes: THREETilesetMeshes,
     tiledMapSkinnedLayer: TiledMapSkinnedLayerInterface
@@ -40,6 +43,7 @@ export default class TiledMapSkinnedLayer extends CanvasView {
     this.cancelToken = new CancelToken(loggerBreadcrumbs.add("CancelToken"));
     this.debug = debug;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.outlinePass = outlinePass;
     this.scene = scene;
     this.threeTilesetMeshes = threeTilesetMeshes;
     this.tiledMapSkinnedLayer = tiledMapSkinnedLayer;
@@ -53,6 +57,7 @@ export default class TiledMapSkinnedLayer extends CanvasView {
       const tiledSkinnedTileView = new TiledSkinnedTileCanvasView(
         this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView")),
         this.loggerBreadcrumbs.add("TiledSkinnedTileCanvasView"),
+        this.outlinePass,
         this.scene,
         this.threeTilesetMeshes,
         tiledSkinnedTile

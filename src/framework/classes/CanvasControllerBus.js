@@ -19,11 +19,13 @@ export default class CanvasControllerBus implements CanvasControllerBusInterface
 
     this.resizeObserver.notify(canvasController);
     this.scheduler.onDraw(canvasController.draw);
+    this.scheduler.onEnd(canvasController.end);
   }
 
   delete(canvasController: CanvasController): Promise<void> {
     this.resizeObserver.off(canvasController);
     this.scheduler.offDraw(canvasController.draw);
+    this.scheduler.offEnd(canvasController.end);
 
     return canvasController.dispose();
   }

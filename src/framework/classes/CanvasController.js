@@ -19,5 +19,7 @@ export default class CanvasController implements CanvasControllerInterface {
 
   draw(interpolationPercentage: number): void {}
 
+  end(fps: number, isPanicked: boolean): void {}
+
   resize(elementSize: ElementSize<"px">): void {}
 }
