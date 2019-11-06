@@ -10,9 +10,13 @@ export interface Debugger {
 
   getState(): DebuggerState;
 
+  isEnabled(): boolean;
+
   offStateChange(DebuggerStateChangeCallback): void;
 
   onStateChange(DebuggerStateChangeCallback): void;
+
+  setIsEnabled(boolean): void;
 
   setState(DebuggerState): void;
 

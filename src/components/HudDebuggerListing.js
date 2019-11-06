@@ -41,6 +41,10 @@ export default function HudDebuggerListing(props: Props) {
     [props.debug]
   );
 
+  if (!props.debug.isEnabled()) {
+    return null;
+  }
+
   return (
     <div className="dd__frame dd__debugger dd__debugger--hud">
       <div className="dd__debugger__handle">Debugger State Listing</div>

@@ -1,6 +1,7 @@
 // @flow
 
-import FBXLoader from "../../three/FBXLoader";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+
 import THREEFBXMesh from "./Query/THREEFBXMesh";
 
 import type { Mesh } from "three";

@@ -32,6 +32,12 @@ declare module "three" {
 
   declare type LoadingManagerOnStartCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
+  declare type Uniforms = {|
+    [string]: {|
+      value: number | string | Vector2 | Vector3 | Vector4,
+    |},
+  |};
+
   declare export interface AmbientLight extends Light {
     +isAmbientLight: true;
     castShadow: boolean;
@@ -266,6 +272,8 @@ declare module "three" {
     userData: any;
     visible: boolean;
 
+    constructor(): void;
+
     add(Object3D): void;
 
     remove(Object3D): void;
@@ -313,7 +321,7 @@ declare module "three" {
     intersectObjects(
       objects: Array<Object3D>,
       recursive?: boolean
-    ): Array<{|
+    ): $ReadOnlyArray<{|
       distance: number,
       object: Object3D,
     |}>;
@@ -340,6 +348,22 @@ declare module "three" {
     constructor(): void;
 
     dispose(): void;
+  }
+
+  declare export interface Shader {
+    uniforms: Uniforms;
+    fragmentShader: string;
+    vertexShader: string;
+  }
+
+  declare export interface ShaderMaterial extends Material, Shader {
+    +isShaderMaterial: true;
+
+    constructor({|
+      uniforms?: Uniforms,
+    |}): void;
+
+    clone(): ShaderMaterial;
   }
 
   declare export interface Shape {
@@ -400,6 +424,22 @@ declare module "three" {
     toArray(): [number, number, number];
   }
 
+  declare export interface Vector4 {
+    +isVector4: true;
+    x: number;
+    y: number;
+    z: number;
+    w: number;
+
+    constructor(x?: number, y?: number, z?: number, w?: number): void;
+
+    clone(): Vector4;
+
+    set(number, number, number, number): Vector4;
+
+    toArray(): [number, number, number, number];
+  }
+
   declare export interface WebGLRenderer extends Renderer {
     +domElement: HTMLCanvasElement;
 
@@ -413,5 +453,55 @@ declare module "three" {
       premultipliedAlpha?: boolean,
       stencil?: boolean,
     |}): void;
+  }
+
+  // A render target is a buffer where the video card draws pixels for a scene
+  // that is being rendered in the background. It is used in different effects,
+  // such as applying postprocessing to a rendered image before displaying it
+  // on the screen.
+  declare export interface WebGLRenderTarget {
+    // The width of the render target.
+    width: number;
+
+    // The height of the render target.
+    height: number;
+
+    // A rectangular area inside the render target's viewport. Fragments that
+    // are outside the area will be discarded.
+    scissor: Vector4;
+
+    // Indicates whether the scissor test is active or not.
+    scissorTest: boolean;
+
+    // The viewport of this render target.
+    viewport: Vector4;
+
+    // This texture instance holds the rendered pixels. Use it as input for
+    // further processing.
+    texture: Texture;
+
+    // Renders to the depth buffer. Default is true.
+    depthBuffer: boolean;
+
+    // Renders to the stencil buffer. Default is true.
+    stencilBuffer: boolean;
+
+    // If set, the scene depth will be rendered to this texture.
+    // Default is null.
+    // depthTexture: DepthTexture;
+
+    constructor(width: number, height: number, options?: {||}): void;
+
+    // Sets the size of the render target.
+    setSize(width: number, height: number): void;
+
+    // Creates a copy of this render target.
+    clone(): WebGLRenderTarget;
+
+    // Adopts the settings of the given render target.
+    copy(source: WebGLRenderTarget): WebGLRenderTarget;
+
+    // Dispatches a dispose event.
+    dispose(): void;
   }
 }

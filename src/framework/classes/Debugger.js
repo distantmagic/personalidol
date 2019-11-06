@@ -13,9 +13,11 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class Debugger implements DebuggerInterface {
   +callbacks: EventListenerSetInterface<[DebuggerState]>;
+  _isEnabled: boolean;
   state: DebuggerState;
 
   constructor(state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
+    this._isEnabled = false;
     this.callbacks = new EventListenerSet<[DebuggerState]>();
     this.state = state;
   }
@@ -30,12 +32,20 @@ export default class Debugger implements DebuggerInterface {
     return this.state;
   }
 
+  isEnabled(): boolean {
+    return this._isEnabled;
+  }
+
   offStateChange(callback: DebuggerStateChangeCallback): void {
     this.callbacks.delete(callback);
   }
 
   onStateChange(callback: DebuggerStateChangeCallback): void {
     this.callbacks.add(callback);
+  }
+
+  setIsEnabled(isEnabled: boolean): void {
+    this._isEnabled = isEnabled;
   }
 
   setState(state: DebuggerState): void {
@@ -45,7 +55,9 @@ export default class Debugger implements DebuggerInterface {
 
     this.state = state;
 
-    this.callbacks.notify([state]);
+    if (this.isEnabled()) {
+      this.callbacks.notify([state]);
+    }
   }
 
   updateState(loggerBreadcrumbs: LoggerBreadcrumbs, value: DebuggerStateValue): void {

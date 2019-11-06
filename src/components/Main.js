@@ -38,7 +38,6 @@ export default function Main(props: Props) {
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
   const [isDocumentHidden, setIsDocumentHidden] = React.useState<boolean>(document.hidden);
 
-  const hasDebugger = true;
   const hasDialogue = false;
 
   React.useEffect(
@@ -78,7 +77,7 @@ export default function Main(props: Props) {
     <React.Fragment>
       <div
         className={classnames("dd__container", "dd__hud", {
-          "dd__hud--debugger": hasDebugger,
+          "dd__hud--debugger": props.debug.isEnabled(),
           "dd__hud--dialogue": hasDialogue,
         })}
       >
@@ -95,7 +94,7 @@ export default function Main(props: Props) {
           />
         )}
         <HudAside />
-        {hasDebugger && <HudDebuggerListing debug={props.debug} />}
+        <HudDebuggerListing debug={props.debug} />
         <HudModalRouter
           exceptionHandler={props.exceptionHandler}
           logger={props.logger}

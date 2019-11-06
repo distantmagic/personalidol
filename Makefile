@@ -55,4 +55,4 @@ test.frontend.watch: frontend.dependencies
 	yarn run test
 
 start: frontend.dependencies
-	yarn run start
+	REACT_APP_DEBUG=true yarn run start

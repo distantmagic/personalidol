@@ -3,7 +3,7 @@
 import autoBind from "auto-bind";
 
 import CancelToken from "../CancelToken";
-import CanvasPointerHandlerReference from "../CanvasPointerHandlerReference";
+import CanvasPointerEventHandlerReference from "../CanvasPointerEventHandlerReference";
 import CanvasView from "../CanvasView";
 
 import type { Mesh, Scene } from "three";
@@ -43,7 +43,7 @@ export default class TiledSkinnedTile extends CanvasView {
     await super.attach();
 
     this.tiledSkinnedTileMesh = this.threeTilesetMeshes.getTiledSkinnedTileMesh(this.tiledSkinnedTile);
-    this.tiledSkinnedTileMesh.userData = new CanvasPointerHandlerReference(this);
+    this.tiledSkinnedTileMesh.userData = new CanvasPointerEventHandlerReference(this);
 
     this.scene.add(this.tiledSkinnedTileMesh);
   }
@@ -58,6 +58,18 @@ export default class TiledSkinnedTile extends CanvasView {
     }
 
     this.scene.remove(tiledSkinnedTileMesh);
+  }
+
+  onPointerAuxiliaryClick(): void {
+    super.onPointerAuxiliaryClick();
+
+    const tiledSkinnedTileMesh = this.tiledSkinnedTileMesh;
+
+    if (!tiledSkinnedTileMesh) {
+      return;
+    }
+
+    tiledSkinnedTileMesh.position.y -= 0.3;
   }
 
   onPointerPrimaryClick(): void {

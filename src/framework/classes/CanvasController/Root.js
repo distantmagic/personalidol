@@ -2,16 +2,21 @@
 
 import * as THREE from "three";
 import autoBind from "auto-bind";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 
 import CameraController from "../CameraController";
 import CanvasController from "../CanvasController";
 import CanvasPointerController from "../CanvasPointerController";
 import ElementSize from "../ElementSize";
+import PointerEventResponder from "../CanvasPointerResponder/PointerEventResponder";
 import THREEPointerInteraction from "../THREEPointerInteraction";
 // import { default as AmbientLightView } from "../CanvasView/AmbientLight";
 import { default as TiledMapView } from "../CanvasView/TiledMap";
 
 import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
+import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import type { CanvasControllerBus } from "../../interfaces/CanvasControllerBus";
@@ -34,6 +39,7 @@ export default class Root extends CanvasController {
   +canvasControllerBus: CanvasControllerBus;
   +canvasPointerController: CanvasPointerControllerInterface;
   +debug: Debugger;
+  +effectComposer: EffectComposerInterface;
   +keyboardState: KeyboardState;
   +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -80,11 +86,18 @@ export default class Root extends CanvasController {
     );
     this.threeLoadingManager = threeLoadingManager;
     this.threePointerInteraction = new THREEPointerInteraction(renderer, this.camera);
+
+    this.effectComposer = new EffectComposer(renderer);
+    this.effectComposer.addPass(new RenderPass(this.scene, this.camera));
+    this.effectComposer.addPass(
+      new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), this.scene, this.camera)
+    );
+
     this.canvasPointerController = new CanvasPointerController(
-      pointerState,
       this.threePointerInteraction.getCameraRaycaster(),
       this.scene
     );
+    this.canvasPointerController.addResponder(new PointerEventResponder(pointerState));
   }
 
   async attach(): Promise<void> {
@@ -137,7 +150,8 @@ export default class Root extends CanvasController {
   draw(interpolationPercentage: number): void {
     super.draw(interpolationPercentage);
 
-    this.renderer.render(this.scene, this.camera);
+    // this.renderer.render(this.scene, this.camera);
+    this.effectComposer.render();
   }
 
   resize(elementSize: ElementSizeInterface<"px">): void {
@@ -146,6 +160,7 @@ export default class Root extends CanvasController {
     const height = elementSize.getHeight();
     const width = elementSize.getWidth();
 
+    this.effectComposer.setSize(width, height);
     this.renderer.setSize(width, height);
     this.cameraController.setViewportSize(elementSize);
     this.threePointerInteraction.resize(elementSize);

@@ -1,6 +1,6 @@
 // @flow
 
-export interface CanvasPointerHandler {
+export interface CanvasPointerEventHandler {
   onPointerAuxiliaryClick(): void;
 
   onPointerAuxiliaryDepressed(): void;

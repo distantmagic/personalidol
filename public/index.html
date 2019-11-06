@@ -39,8 +39,9 @@
           </strong>
           <p>
             I am using latest web development technologies to provide the most optimal and safe experience possible (or
-            at least the best possible for me to provide 🙂). I want to do that without using any kind of hacks or
-            polyfills and instead to rely on native browser features.
+            at least the best possible for me to provide 🙂). I want to do that without using any kind of coding tricks
+            or polyfills to overcome browser limitations (or at least keep them at minimum) and instead to rely on
+            native browser features.
           </p>
           <p>
             Thanks to that I also want to make sure that the app will be experienced under optimal conditions and never
@@ -74,89 +75,74 @@
               Click feature name for more info.
             </p>
             <ul class="dd__browser-features">
-              <li class="dd__browser-feature" id="browser-feature-beacon">
-                <a href="https://caniuse.com/#feat=beacon">
-                  Beacon API
-                </a>
-              </li>
               <li class="dd__browser-feature" id="browser-feature-flexbox">
                 <a href="https://caniuse.com/#feat=flexbox">
-                  CSS Flexible Box Layout Module
+                  CSS Flexible Box Layout Module (for UI rendering)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-cssgrid">
                 <a href="https://caniuse.com/#feat=css-grid">
-                  CSS Grid Layout
+                  CSS Grid Layout (for UI rendering)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-customelements">
                 <a href="https://caniuse.com/#feat=mdn-api_window_customelements">
-                  Custom Elements
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-customevent">
-                <a href="https://caniuse.com/#feat=customevent">
-                  Custom Events
+                  Custom Elements (for 3D scene rendering)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-es5">
                 <a href="https://caniuse.com/#feat=es5">
-                  ECMAScript 5
+                  ECMAScript 5 (coding features)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-es6">
                 <a href="https://caniuse.com/#feat=es6">
-                  ECMAScript 6
+                  ECMAScript 6 (coding features)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-fetch">
                 <a href="https://caniuse.com/#feat=fetch">
-                  Fetch
+                  Fetch (coding feature)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-intl">
                 <a href="https://caniuse.com/#feat=mdn-javascript_builtins_intl">
-                  Intl
+                  Intl (browser extension for internationalization)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-passiveeventlisteners">
                 <a href="https://caniuse.com/#feat=passive-event-listener">
-                  Passive event listeners
+                  Passive event listeners (coding feature)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-promises">
                 <a href="https://caniuse.com/#feat=promises">
-                  Promises
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-resizeobserver">
-                <a href="https://caniuse.com/#feat=resizeobserver">
-                  ResizeObserver
+                  Promises (coding feature)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-serviceworker">
                 <a href="https://caniuse.com/#search=serviceworker">
-                  Service Workers
+                  Service Workers (for progressive web apps and offline caching)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-srcset">
                 <a href="https://caniuse.com/#search=srcset">
-                  Srcset and sizes attributes
+                  Srcset and sizes attributes (for image loading optimization)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-webworkers">
                 <a href="https://caniuse.com/#feat=webworkers">
-                  Web Workers
+                  Web Workers (for performance)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-webgl">
                 <a href="https://caniuse.com/#feat=webgl">
-                  WebGL
+                  WebGL (for 3D scene rendering)
                 </a>
               </li>
               <li class="dd__browser-feature" id="browser-feature-webrtc">
                 <a href="https://caniuse.com/#feat=rtcpeerconnection">
-                  WebRTC
+                  WebRTC (for P2P chat between players)
                 </a>
               </li>
             </ul>
@@ -177,10 +163,8 @@
 
         var rootElement = document.getElementById("root");
         var requiredBrowserFeatures = {
-          beacon: "beacon",
           cssgrid: "cssgrid",
           customelements: "customelements",
-          customevent: "customevent",
           datachannel: "webrtc",
           es5: "es5",
           es6array: "es6",
@@ -196,7 +180,6 @@
           passiveeventlisteners: "passiveeventlisteners",
           peerconnection: "webrtc",
           promises: "promises",
-          resizeobserver: "resizeobserver",
           serviceworker: "serviceworker",
           srcset: "srcset",
           webgl: "webgl",
@@ -209,10 +192,6 @@
 
         var notSupportedClassName = "dd__browser-feature--not-supported";
         var supportedClassName = "dd__browser-feature--supported";
-
-        Modernizr.addTest("resizeobserver", function() {
-          return window.ResizeObserver && window.ResizeObserver.toString().indexOf("[native code]") > -1;
-        });
 
         for (feature in requiredBrowserFeatures) {
           if (requiredBrowserFeatures.hasOwnProperty(feature)) {

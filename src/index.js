@@ -3,6 +3,7 @@
 import raf from "raf";
 import React from "react";
 import ReactDOM from "react-dom";
+import yn from "yn";
 
 import BusClock from "./framework/classes/BusClock";
 import ClockReactiveController from "./framework/classes/ClockReactiveController";
@@ -26,6 +27,12 @@ function init(rootElement: HTMLElement) {
   const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"));
   const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
+
+  debug.setIsEnabled(
+    yn(process.env.REACT_APP_DEBUG, {
+      default: false,
+    })
+  );
 
   ReactDOM.render(
     <React.StrictMode>

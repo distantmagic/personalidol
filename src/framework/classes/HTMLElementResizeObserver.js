@@ -1,5 +1,7 @@
 // @flow
 
+import ResizeObserver from "resize-observer-polyfill";
+
 import ElementSize from "../classes/ElementSize";
 import Idempotence from "../classes/Exception/Idempotence";
 
