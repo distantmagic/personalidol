@@ -13,13 +13,11 @@ import type { THREELoadingManager } from "../interfaces/THREELoadingManager";
 import type { THREEMeshLoader as THREEMeshLoaderInterface } from "../interfaces/THREEMeshLoader";
 
 export default class THREEMeshLoader implements THREEMeshLoaderInterface {
-  +fbxLoader: FBXLoader;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
   +threeLoadingManager: THREELoadingManager;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, queryBus: QueryBus, threeLoadingManager: THREELoadingManager) {
-    this.fbxLoader = new FBXLoader(threeLoadingManager.getLoadingManager());
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.threeLoadingManager = threeLoadingManager;
@@ -33,8 +31,11 @@ export default class THREEMeshLoader implements THREEMeshLoaderInterface {
     return this.threeLoadingManager;
   }
 
-  load(cancelToken: CancelToken, source: string): Promise<Mesh> {
-    const query = new THREEFBXMesh(this.fbxLoader, source);
+  load(cancelToken: CancelToken, source: string, resourcesPath: string): Promise<Mesh> {
+    const fbxLoader = new FBXLoader(this.threeLoadingManager.getLoadingManager());
+    const query = new THREEFBXMesh(fbxLoader, source);
+
+    fbxLoader.setResourcePath(resourcesPath);
 
     return this.queryBus.enqueue(cancelToken, query);
   }

@@ -24,13 +24,13 @@ declare module "three" {
 
   declare type RepeatWrapping = 1000;
 
-  declare type LoadingManagerOnErrorCallback = (url: string) => void;
+  declare export type LoadingManagerOnErrorCallback = (url: string) => void;
 
-  declare type LoadingManagerOnLoadCallback = () => void;
+  declare export type LoadingManagerOnLoadCallback = () => void;
 
-  declare type LoadingManagerOnProgressCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
+  declare export type LoadingManagerOnProgressCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
-  declare type LoadingManagerOnStartCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
+  declare export type LoadingManagerOnStartCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
   declare type Uniforms = {|
     [string]: {|

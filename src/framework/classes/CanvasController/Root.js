@@ -13,7 +13,8 @@ import CanvasPointerController from "../CanvasPointerController";
 import ElementSize from "../ElementSize";
 import PointerEventResponder from "../CanvasPointerResponder/PointerEventResponder";
 import THREEPointerInteraction from "../THREEPointerInteraction";
-// import { default as AmbientLightView } from "../CanvasView/AmbientLight";
+import { default as AmbientLightView } from "../CanvasView/AmbientLight";
+import { default as LoaderModelView } from "../CanvasView/LoaderModel";
 import { default as TiledMapView } from "../CanvasView/TiledMap";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
@@ -108,6 +109,15 @@ export default class Root extends CanvasController {
   async attach(): Promise<void> {
     await super.attach();
 
+    const loaderModelView = new LoaderModelView(
+      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("LoaderModelView")),
+      this.loggerBreadcrumbs.add("LoaderModelView"),
+      this.queryBus,
+      this.scene,
+      this.threeLoadingManager
+    );
+    await this.loadingManager.blocking(this.canvasViewBag.add(loaderModelView), "Loading player model");
+
     const tiledMapView = new TiledMapView(
       this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapView")),
       this.debug,
@@ -119,13 +129,13 @@ export default class Root extends CanvasController {
     );
     await this.loadingManager.blocking(this.canvasViewBag.add(tiledMapView), "Loading map");
 
-    // const ambientLightView = new AmbientLightView(
-    //   this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLightView")),
-    //   this.debug,
-    //   this.loggerBreadcrumbs.add("AmbientLightView"),
-    //   this.scene
-    // );
-    // await this.loadingManager.blocking(this.canvasViewBag.add(ambientLightView), "Loading ambient light");
+    const ambientLightView = new AmbientLightView(
+      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLightView")),
+      this.debug,
+      this.loggerBreadcrumbs.add("AmbientLightView"),
+      this.scene
+    );
+    await this.loadingManager.blocking(this.canvasViewBag.add(ambientLightView), "Loading ambient light");
 
     await this.cameraController.attach();
 
