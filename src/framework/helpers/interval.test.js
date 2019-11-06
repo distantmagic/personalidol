@@ -12,9 +12,9 @@ it("produces interval events generator", async function() {
 
   setTimeout(function() {
     cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));
-  }, 50);
+  }, 250);
 
-  for await (let tick of interval(cancelToken, 20)) {
+  for await (let tick of interval(cancelToken, 100)) {
     ticks.push(Date.now());
   }
 
