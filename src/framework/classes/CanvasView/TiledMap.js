@@ -14,7 +14,6 @@ import URLTextContentQueryBuilder from "../URLTextContentQueryBuilder";
 import { default as TiledMapSkinnedLayerCanvasView } from "./TiledMapSkinnedLayer";
 
 import type { Material, Scene } from "three";
-import type { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 
 import type { CancelToken as CancelTokenInterface } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -35,7 +34,6 @@ export default class TiledMap extends CanvasView {
   +debug: Debugger;
   +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +outlinePass: OutlinePass;
   +runtimeMaterialsCache: RuntimeCacheInterface<Material>;
   +scene: Scene;
   +threeLoadingManager: THREELoadingManager;
@@ -48,7 +46,6 @@ export default class TiledMap extends CanvasView {
     debug: Debugger,
     loadingManager: LoadingManager,
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    outlinePass: OutlinePass,
     queryBus: QueryBus,
     scene: Scene,
     threeLoadingManager: THREELoadingManager
@@ -65,7 +62,6 @@ export default class TiledMap extends CanvasView {
     this.debug = debug;
     this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.outlinePass = outlinePass;
     this.runtimeMaterialsCache = new RuntimeCache<Material>(loggerBreadcrumbs.add("RuntimeCache"));
     this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
@@ -100,7 +96,6 @@ export default class TiledMap extends CanvasView {
         this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView")),
         this.debug,
         this.loggerBreadcrumbs.add("TiledMapSkinnedLayerCanvasView").addVariable(String(skinnedLayersLoaded)),
-        this.outlinePass,
         this.scene,
         this.threeTilesetMeshes,
         skinnedLayer

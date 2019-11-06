@@ -9,6 +9,7 @@ import HudAside from "./HudAside";
 import HudDebuggerListing from "./HudDebuggerListing";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
+import HudSettings from "./HudSettings";
 import Person from "../framework/classes/Entity/Person";
 
 import type { ClockReactiveController } from "../framework/interfaces/ClockReactiveController";
@@ -74,42 +75,41 @@ export default function Main(props: Props) {
   );
 
   return (
-    <React.Fragment>
-      <div
-        className={classnames("dd__container", "dd__hud", {
-          "dd__hud--debugger": props.debug.isEnabled(),
-          "dd__hud--dialogue": hasDialogue,
-        })}
-      >
-        {hasDialogue && (
-          <DialogueLoader
-            dialogueResourceReference={dialogueResourceReference}
-            dialogueInitiator={dialogueInitiator}
-            exceptionHandler={props.exceptionHandler}
-            expressionBus={props.expressionBus}
-            expressionContext={props.expressionContext}
-            logger={props.logger}
-            loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
-            queryBus={props.queryBus}
-          />
-        )}
-        <HudAside />
-        <HudDebuggerListing debug={props.debug} />
-        <HudModalRouter
+    <div
+      className={classnames("dd__container", "dd__hud", {
+        "dd__hud--debugger": props.debug.isEnabled(),
+        "dd__hud--dialogue": hasDialogue,
+      })}
+    >
+      {hasDialogue && (
+        <DialogueLoader
+          dialogueResourceReference={dialogueResourceReference}
+          dialogueInitiator={dialogueInitiator}
           exceptionHandler={props.exceptionHandler}
+          expressionBus={props.expressionBus}
+          expressionContext={props.expressionContext}
           logger={props.logger}
-          loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")}
+          loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
           queryBus={props.queryBus}
         />
-        <HudScene
-          debug={props.debug}
-          exceptionHandler={props.exceptionHandler}
-          isDocumentHidden={isDocumentHidden}
-          loadingManager={props.loadingManager}
-          loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
-          queryBus={props.queryBus}
-        />
-      </div>
-    </React.Fragment>
+      )}
+      <HudAside />
+      <HudDebuggerListing debug={props.debug} />
+      <HudModalRouter
+        exceptionHandler={props.exceptionHandler}
+        logger={props.logger}
+        loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")}
+        queryBus={props.queryBus}
+      />
+      <HudScene
+        debug={props.debug}
+        exceptionHandler={props.exceptionHandler}
+        isDocumentHidden={isDocumentHidden}
+        loadingManager={props.loadingManager}
+        loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
+        queryBus={props.queryBus}
+      />
+      <HudSettings />
+    </div>
   );
 }

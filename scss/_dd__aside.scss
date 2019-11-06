@@ -18,7 +18,6 @@
   grid-template-columns: 64px auto;
   grid-template-rows: 1fr;
   height: 96px;
-  cursor: $cursor-pointer;
 
   &:nth-of-type(4n) .dd__aside__portrait__statuses {
     background-position: 128px;
@@ -55,7 +54,6 @@
 }
 
 .dd__aside__portrait__status {
-  cursor: $cursor-default;
   display: grid;
 
   &:hover {
@@ -74,7 +72,6 @@
 .dd__aside__portrait__status__icon {
   background-color: transparent;
   border: none;
-  cursor: $cursor-pointer;
   display: grid;
 }
 

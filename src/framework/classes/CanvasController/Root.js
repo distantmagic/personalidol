@@ -4,7 +4,6 @@ import * as THREE from "three";
 import autoBind from "auto-bind";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 // import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader";
-import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 // import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 
@@ -19,7 +18,6 @@ import { default as TiledMapView } from "../CanvasView/TiledMap";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
 import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
-import type { OutlinePass as OutlinePassInterface } from "three/examples/jsm/postprocessing/OutlinePass";
 // import type { ShaderPass as ShaderPassInterface } from "three/examples/jsm/postprocessing/ShaderPass";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
@@ -47,7 +45,6 @@ export default class Root extends CanvasController {
   +keyboardState: KeyboardState;
   +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +outlinePass: OutlinePassInterface;
   +queryBus: QueryBus;
   +renderer: WebGLRenderer;
   +scene: Scene;
@@ -95,17 +92,10 @@ export default class Root extends CanvasController {
 
     const renderPass = new RenderPass(this.scene, this.camera);
 
-    this.outlinePass = new OutlinePass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
-      this.scene,
-      this.camera
-    );
-    this.outlinePass.edgeThickness = 1;
     // this.shaderPass = new ShaderPass(FXAAShader);
 
     this.effectComposer = new EffectComposer(renderer);
     this.effectComposer.addPass(renderPass);
-    this.effectComposer.addPass(this.outlinePass);
     // this.effectComposer.addPass(this.shaderPass);
 
     this.canvasPointerController = new CanvasPointerController(
@@ -123,7 +113,6 @@ export default class Root extends CanvasController {
       this.debug,
       this.loadingManager,
       this.loggerBreadcrumbs.add("TiledMapView"),
-      this.outlinePass,
       this.queryBus,
       this.scene,
       this.threeLoadingManager

@@ -7,7 +7,6 @@ import CanvasPointerEventHandlerReference from "../CanvasPointerEventHandlerRefe
 import CanvasView from "../CanvasView";
 
 import type { Mesh, Scene } from "three";
-import type { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 
 import type { CancelToken as CancelTokenInterface } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -18,7 +17,6 @@ import type { TiledSkinnedTile as TiledSkinnedTileInterface } from "../../interf
 export default class TiledSkinnedTile extends CanvasView {
   +cancelToken: CancelTokenInterface;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +outlinePass: OutlinePass;
   +scene: Scene;
   +threeTilesetMeshes: THREETilesetMeshes;
   +tiledSkinnedTile: TiledSkinnedTileInterface;
@@ -27,7 +25,6 @@ export default class TiledSkinnedTile extends CanvasView {
   constructor(
     canvasViewBag: CanvasViewBag,
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    outlinePass: OutlinePass,
     scene: Scene,
     threeTilesetMeshes: THREETilesetMeshes,
     tiledSkinnedTile: TiledSkinnedTileInterface
@@ -37,7 +34,6 @@ export default class TiledSkinnedTile extends CanvasView {
 
     this.cancelToken = new CancelToken(loggerBreadcrumbs.add("CancelToken"));
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.outlinePass = outlinePass;
     this.scene = scene;
     this.threeTilesetMeshes = threeTilesetMeshes;
     this.tiledSkinnedTile = tiledSkinnedTile;
@@ -66,38 +62,18 @@ export default class TiledSkinnedTile extends CanvasView {
 
   onPointerAuxiliaryClick(): void {
     super.onPointerAuxiliaryClick();
-
-    const tiledSkinnedTileMesh = this.tiledSkinnedTileMesh;
-
-    if (!tiledSkinnedTileMesh) {
-      return;
-    }
-
-    tiledSkinnedTileMesh.position.y -= 0.3;
   }
 
   onPointerOut(): void {
     super.onPointerOut();
-
-    this.outlinePass.selectedObjects = [];
   }
 
   onPointerOver(): void {
     super.onPointerOver();
-
-    this.outlinePass.selectedObjects = [this.tiledSkinnedTileMesh];
   }
 
   onPointerPrimaryClick(): void {
     super.onPointerPrimaryClick();
-
-    const tiledSkinnedTileMesh = this.tiledSkinnedTileMesh;
-
-    if (!tiledSkinnedTileMesh) {
-      return;
-    }
-
-    tiledSkinnedTileMesh.position.y += 0.3;
   }
 
   useBegin(): boolean {

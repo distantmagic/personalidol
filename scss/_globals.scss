@@ -1,7 +1,6 @@
 @import "animations";
 @import "breakpoints";
 @import "colors";
-@import "cursors";
 @import "fonts";
 @import "functions";
 @import "normalize";
@@ -35,7 +34,6 @@ body {
   background-color: black;
   background-image: url("/assets/texture-cod-gray-marble-512.png");
   color: rgba(white, 0.85);
-  cursor: $cursor-default;
   display: grid;
   font-family: $font-family-vesper-libre;
   height: 100vh;
@@ -66,7 +64,11 @@ p {
 a,
 button {
   color: inherit;
-  cursor: $cursor-pointer;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
 }
 
 .dd__browser-details {
@@ -193,20 +195,9 @@ button {
   background-color: transparent;
   border-style: inset;
   color: white;
-  cursor: $cursor-pointer;
   overflow: hidden;
   position: relative;
   z-index: $z-index-dd-button;
-
-  &:active {
-    padding-left: $dd-frame-border-width;
-    padding-top: $dd-frame-border-width;
-  }
-
-  &:active:before {
-    filter: brightness(0.8);
-    transform: translateX($dd-frame-border-width) translateY($dd-frame-border-width);
-  }
 
   &:after {
     background-color: black;
@@ -228,6 +219,21 @@ button {
     right: 0;
     top: 0;
     z-index: -1;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    filter: grayscale(1);
+  }
+
+  &:enabled:active {
+    padding-left: $dd-frame-border-width;
+    padding-top: $dd-frame-border-width;
+  }
+
+  &:enabled:active:before {
+    filter: brightness(0.8);
+    transform: translateX($dd-frame-border-width) translateY($dd-frame-border-width);
   }
 
   &:focus {
@@ -265,7 +271,7 @@ button {
   }
 }
 
-@each $icon in (backpack, cogs, dialogue, magic, observe, prayer, skill, strength) {
+@each $icon in (backpack, cogs, dialogue, magic, magnifying-glass, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
     background-image: url("/assets/icon-#{$icon}.png"), url("/assets/texture-mineshaft-marble-512.png");
     background-size: 80%, auto;
@@ -295,7 +301,7 @@ button {
 }
 
 .dd__table {
-  background-image: url("/assets/image-nobody-knows-anybody.png"), url("/assets/texture-navy-blue-marble-512.jpg");
+  // background-image: url("/assets/image-nobody-knows-anybody.png"), url("/assets/texture-navy-blue-marble-512.jpg");
   background-blend-mode: multiply;
   // background-image: url("/assets/texture-navy-blue-marble-512.jpg");
   background-position: 100% 100%, center;
@@ -310,27 +316,10 @@ button {
 
   td,
   th {
-    border: 1px solid white;
-    border-color: rgba(55, 55, 55, 0.4);
+    border-color: rgba(black, 0.1);
     border-style: outset;
-    border-width: $dd-frame-border-width + 1px;
-    overflow: hidden;
+    border-width: $dd-frame-border-width;
     padding: #{2 * $dd-frame-padding} $dd-frame-padding;
-
-    &:last-child {
-      border-right-color: rgb(35, 35, 35);
-      border-right-style: solid;
-      border-right-width: 1px;
-    }
-  }
-
-  tr:last-child {
-    td,
-    th {
-      border-bottom-color: rgb(35, 35, 35);
-      border-bottom-style: solid;
-      border-bottom-width: 1px;
-    }
   }
 }
 
@@ -339,7 +328,6 @@ button {
   background-color: rgba(black, 0.85);
   // background-image: url('assets/texture-paper-1-512.jpg');
   border-radius: $dd-frame-border-radius;
-  cursor: $cursor-default;
   // display: flex;
   display: none;
   filter: drop-shadow(12px 12px 24px rgba(black, 0.6));
