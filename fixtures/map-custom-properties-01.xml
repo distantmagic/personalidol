@@ -1,6 +1,0 @@
-<object id="1" name="FooObject" x="0" y="0">
-  <properties>
-    <property name="isWalkabilityMap" type="bool" value="true"/>
-    <property name="test" type="int" value="5"/>
-  </properties>
-</object>

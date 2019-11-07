@@ -37,7 +37,7 @@ export default class CameraController implements CameraControllerInterface {
     this.renderer = renderer;
     this.scene = scene;
     this.viewportSize = viewportSize;
-    this.zoom = Ola(320, 320);
+    this.zoom = Ola(320, 100);
     this.zoomStep = 4;
   }
 

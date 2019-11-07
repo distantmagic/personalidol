@@ -170,6 +170,7 @@ export default class SceneCanvas extends HTMLElement {
     const renderer = new THREE.WebGLRenderer({
       canvas: this.canvasElement,
     });
+
     const canvasController = new RootCanvasController(
       this.canvasControllerBus,
       this.canvasViewBag.fork(this.loggerBreadcrumbs.add("RootCanvasControllert")),

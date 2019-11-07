@@ -14,8 +14,7 @@ import ElementSize from "../ElementSize";
 import PointerEventResponder from "../CanvasPointerResponder/PointerEventResponder";
 import THREEPointerInteraction from "../THREEPointerInteraction";
 import { default as AmbientLightView } from "../CanvasView/AmbientLight";
-import { default as LoaderModelView } from "../CanvasView/LoaderModel";
-import { default as TiledMapView } from "../CanvasView/TiledMap";
+import { default as MD2CharacterView } from "../CanvasView/MD2Character";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
 import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
@@ -78,7 +77,10 @@ export default class Root extends CanvasController {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.renderer = renderer;
+
     this.scene = new THREE.Scene();
+    // this.scene.fog = new THREE.Fog( 0x050505, 40, 100 );
+
     this.scheduler = scheduler;
     this.cameraController = new CameraController(
       this.camera,
@@ -109,33 +111,25 @@ export default class Root extends CanvasController {
   async attach(): Promise<void> {
     await super.attach();
 
-    const loaderModelView = new LoaderModelView(
-      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("LoaderModelView")),
-      this.loggerBreadcrumbs.add("LoaderModelView"),
-      this.queryBus,
-      this.scene,
-      this.threeLoadingManager
-    );
-    await this.loadingManager.blocking(this.canvasViewBag.add(loaderModelView), "Loading player model");
-
-    const tiledMapView = new TiledMapView(
-      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("TiledMapView")),
-      this.debug,
-      this.loadingManager,
-      this.loggerBreadcrumbs.add("TiledMapView"),
-      this.queryBus,
-      this.scene,
-      this.threeLoadingManager
-    );
-    await this.loadingManager.blocking(this.canvasViewBag.add(tiledMapView), "Loading map");
-
-    const ambientLightView = new AmbientLightView(
-      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLightView")),
-      this.debug,
-      this.loggerBreadcrumbs.add("AmbientLightView"),
-      this.scene
-    );
-    await this.loadingManager.blocking(this.canvasViewBag.add(ambientLightView), "Loading ambient light");
+    await Promise.all([
+      this.loadingManager.blocking(
+        this.canvasViewBag.add(
+          new AmbientLightView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLightView")),
+            this.debug,
+            this.loggerBreadcrumbs.add("AmbientLightView"),
+            this.scene
+          )
+        ),
+        "Loading ambient light"
+      ),
+      this.loadingManager.blocking(
+        this.canvasViewBag.add(
+          new MD2CharacterView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2CharacterView")), this.scene)
+        ),
+        "Loading character"
+      ),
+    ]);
 
     await this.cameraController.attach();
 

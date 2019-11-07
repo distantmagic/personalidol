@@ -26,7 +26,7 @@ export default class AmbientLight extends CanvasView {
     this.debug = debug;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.scene = scene;
-    this.spotLight = new THREE.AmbientLight(0xffffff, 4);
+    this.spotLight = new THREE.AmbientLight(0xffffff, 1);
   }
 
   async attach(): Promise<void> {
