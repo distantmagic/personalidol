@@ -5,7 +5,7 @@ import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 
-import type { Scene, AmbientLight as AmbientLightInterface } from "three";
+import type { Light, Scene } from "three";
 
 import type { CancelToken as CancelTokenInterface } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -17,7 +17,7 @@ export default class AmbientLight extends CanvasView {
   +debug: Debugger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +scene: Scene;
-  +spotLight: AmbientLightInterface;
+  +light: Light;
 
   constructor(canvasViewBag: CanvasViewBag, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, scene: Scene) {
     super(canvasViewBag);
@@ -26,21 +26,21 @@ export default class AmbientLight extends CanvasView {
     this.debug = debug;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.scene = scene;
-    this.spotLight = new THREE.AmbientLight(0xffffff, 1);
+    this.light = new THREE.SpotLight(0xffffff);
   }
 
   async attach(): Promise<void> {
     await super.attach();
 
-    this.spotLight.position.set(32, 32, 32);
-    this.debug.updateState(this.loggerBreadcrumbs.add("light").add("position"), this.spotLight.position);
-    this.scene.add(this.spotLight);
+    this.light.position.set(32, 32, 32);
+    this.debug.updateState(this.loggerBreadcrumbs.add("light").add("position"), this.light.position);
+    this.scene.add(this.light);
   }
 
   async dispose(): Promise<void> {
     await super.dispose();
 
-    this.scene.remove(this.spotLight);
+    this.scene.remove(this.light);
   }
 
   useBegin(): boolean {

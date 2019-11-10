@@ -1,8 +1,8 @@
 // @flow
 
-import * as THREE from "three";
 import autoBind from "auto-bind";
 import { MD2Character as MD2CharacterLoader } from "three/examples/jsm/misc/MD2Character";
+import { OBJLoader2 } from "three/examples/jsm/loaders/OBJLoader2";
 
 import CanvasView from "../CanvasView";
 
@@ -71,6 +71,15 @@ export default class MD2Character extends CanvasView {
     };
 
     character.scale = 0.05;
+
+    let objLoader2Parallel = new OBJLoader2();
+
+    // load a resource from provided URL in parallel to Main
+    objLoader2Parallel.load( '/assets/map-test.obj', object => {
+      object.scale.set(0.02, 0.02, 0.02);
+
+      this.scene.add(object);
+    }, null, null, null );
 
     return new Promise(resolve => {
       character.onLoadComplete = () => {
