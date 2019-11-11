@@ -1,6 +1,6 @@
 // @flow
 
-import clamp from "clamp";
+import * as THREE from "three";
 
 export default class ScrollbarPosition {
   +changed: boolean;
@@ -27,7 +27,7 @@ export default class ScrollbarPosition {
   }
 
   adjust(delta: number): ScrollbarPosition {
-    const updatedScrollOffset = clamp(this.scrollOffset + delta, 0, this.scrollLength - this.offsetLength);
+    const updatedScrollOffset = THREE.Math.clamp(this.scrollOffset + delta, 0, this.scrollLength - this.offsetLength);
 
     return new ScrollbarPosition(
       this.scrollLength,

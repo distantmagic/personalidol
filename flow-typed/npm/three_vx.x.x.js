@@ -22,8 +22,6 @@ declare module "three" {
 
   declare type EventCallback<Events: string, Data> = (Event<Events, Data>) => void;
 
-  declare type RepeatWrapping = 1000;
-
   declare export type LoadingManagerOnErrorCallback = (url: string) => void;
 
   declare export type LoadingManagerOnLoadCallback = Object3D => void;
@@ -37,6 +35,158 @@ declare module "three" {
       value: number | string | Vector2 | Vector3 | Vector4,
     |},
   |};
+
+  // export var MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2, ROTATE: 0, DOLLY: 1, PAN: 2 };
+  // export var TOUCH = { ROTATE: 0, PAN: 1, DOLLY_PAN: 2, DOLLY_ROTATE: 3 };
+  declare export var CullFaceNone: 0;
+  declare export var CullFaceBack: 1;
+  declare export var CullFaceFront: 2;
+  declare export var CullFaceFrontBack: 3;
+  declare export var FrontFaceDirectionCW: 0;
+  declare export var FrontFaceDirectionCCW: 1;
+  declare export var BasicShadowMap: 0;
+  declare export var PCFShadowMap: 1;
+  declare export var PCFSoftShadowMap: 2;
+  declare export var FrontSide: 0;
+  declare export var BackSide: 1;
+  declare export var DoubleSide: 2;
+  declare export var FlatShading: 1;
+  declare export var SmoothShading: 2;
+  declare export var NoColors: 0;
+  declare export var FaceColors: 1;
+  declare export var VertexColors: 2;
+  declare export var NoBlending: 0;
+  declare export var NormalBlending: 1;
+  declare export var AdditiveBlending: 2;
+  declare export var SubtractiveBlending: 3;
+  declare export var MultiplyBlending: 4;
+  declare export var CustomBlending: 5;
+  declare export var AddEquation: 100;
+  declare export var SubtractEquation: 101;
+  declare export var ReverseSubtractEquation: 102;
+  declare export var MinEquation: 103;
+  declare export var MaxEquation: 104;
+  declare export var ZeroFactor: 200;
+  declare export var OneFactor: 201;
+  declare export var SrcColorFactor: 202;
+  declare export var OneMinusSrcColorFactor: 203;
+  declare export var SrcAlphaFactor: 204;
+  declare export var OneMinusSrcAlphaFactor: 205;
+  declare export var DstAlphaFactor: 206;
+  declare export var OneMinusDstAlphaFactor: 207;
+  declare export var DstColorFactor: 208;
+  declare export var OneMinusDstColorFactor: 209;
+  declare export var SrcAlphaSaturateFactor: 210;
+  declare export var NeverDepth: 0;
+  declare export var AlwaysDepth: 1;
+  declare export var LessDepth: 2;
+  declare export var LessEqualDepth: 3;
+  declare export var EqualDepth: 4;
+  declare export var GreaterEqualDepth: 5;
+  declare export var GreaterDepth: 6;
+  declare export var NotEqualDepth: 7;
+  declare export var MultiplyOperation: 0;
+  declare export var MixOperation: 1;
+  declare export var AddOperation: 2;
+  declare export var NoToneMapping: 0;
+  declare export var LinearToneMapping: 1;
+  declare export var ReinhardToneMapping: 2;
+  declare export var Uncharted2ToneMapping: 3;
+  declare export var CineonToneMapping: 4;
+  declare export var ACESFilmicToneMapping: 5;
+  declare export var UVMapping: 300;
+  declare export var CubeReflectionMapping: 301;
+  declare export var CubeRefractionMapping: 302;
+  declare export var EquirectangularReflectionMapping: 303;
+  declare export var EquirectangularRefractionMapping: 304;
+  declare export var SphericalReflectionMapping: 305;
+  declare export var CubeUVReflectionMapping: 306;
+  declare export var CubeUVRefractionMapping: 307;
+  declare export var RepeatWrapping: 1000;
+  declare export var ClampToEdgeWrapping: 1001;
+  declare export var MirroredRepeatWrapping: 1002;
+  declare export var NearestFilter: 1003;
+  declare export var NearestMipmapNearestFilter: 1004;
+  declare export var NearestMipMapNearestFilter: 1004;
+  declare export var NearestMipmapLinearFilter: 1005;
+  declare export var NearestMipMapLinearFilter: 1005;
+  declare export var LinearFilter: 1006;
+  declare export var LinearMipmapNearestFilter: 1007;
+  declare export var LinearMipMapNearestFilter: 1007;
+  declare export var LinearMipmapLinearFilter: 1008;
+  declare export var LinearMipMapLinearFilter: 1008;
+  declare export var UnsignedByteType: 1009;
+  declare export var ByteType: 1010;
+  declare export var ShortType: 1011;
+  declare export var UnsignedShortType: 1012;
+  declare export var IntType: 1013;
+  declare export var UnsignedIntType: 1014;
+  declare export var FloatType: 1015;
+  declare export var HalfFloatType: 1016;
+  declare export var UnsignedShort4444Type: 1017;
+  declare export var UnsignedShort5551Type: 1018;
+  declare export var UnsignedShort565Type: 1019;
+  declare export var UnsignedInt248Type: 1020;
+  declare export var AlphaFormat: 1021;
+  declare export var RGBFormat: 1022;
+  declare export var RGBAFormat: 1023;
+  declare export var LuminanceFormat: 1024;
+  declare export var LuminanceAlphaFormat: 1025;
+  declare export var RGBEFormat: typeof RGBAFormat;
+  declare export var DepthFormat: 1026;
+  declare export var DepthStencilFormat: 1027;
+  declare export var RedFormat: 1028;
+  declare export var RGB_S3TC_DXT1_Format: 33776;
+  declare export var RGBA_S3TC_DXT1_Format: 33777;
+  declare export var RGBA_S3TC_DXT3_Format: 33778;
+  declare export var RGBA_S3TC_DXT5_Format: 33779;
+  declare export var RGB_PVRTC_4BPPV1_Format: 35840;
+  declare export var RGB_PVRTC_2BPPV1_Format: 35841;
+  declare export var RGBA_PVRTC_4BPPV1_Format: 35842;
+  declare export var RGBA_PVRTC_2BPPV1_Format: 35843;
+  declare export var RGB_ETC1_Format: 36196;
+  declare export var RGBA_ASTC_4x4_Format: 37808;
+  declare export var RGBA_ASTC_5x4_Format: 37809;
+  declare export var RGBA_ASTC_5x5_Format: 37810;
+  declare export var RGBA_ASTC_6x5_Format: 37811;
+  declare export var RGBA_ASTC_6x6_Format: 37812;
+  declare export var RGBA_ASTC_8x5_Format: 37813;
+  declare export var RGBA_ASTC_8x6_Format: 37814;
+  declare export var RGBA_ASTC_8x8_Format: 37815;
+  declare export var RGBA_ASTC_10x5_Format: 37816;
+  declare export var RGBA_ASTC_10x6_Format: 37817;
+  declare export var RGBA_ASTC_10x8_Format: 37818;
+  declare export var RGBA_ASTC_10x10_Format: 37819;
+  declare export var RGBA_ASTC_12x10_Format: 37820;
+  declare export var RGBA_ASTC_12x12_Format: 37821;
+  declare export var LoopOnce: 2200;
+  declare export var LoopRepeat: 2201;
+  declare export var LoopPingPong: 2202;
+  declare export var InterpolateDiscrete: 2300;
+  declare export var InterpolateLinear: 2301;
+  declare export var InterpolateSmooth: 2302;
+  declare export var ZeroCurvatureEnding: 2400;
+  declare export var ZeroSlopeEnding: 2401;
+  declare export var WrapAroundEnding: 2402;
+  declare export var TrianglesDrawMode: 0;
+  declare export var TriangleStripDrawMode: 1;
+  declare export var TriangleFanDrawMode: 2;
+  declare export var LinearEncoding: 3000;
+  declare export var sRGBEncoding: 3001;
+  declare export var GammaEncoding: 3007;
+  declare export var RGBEEncoding: 3002;
+  declare export var LogLuvEncoding: 3003;
+  declare export var RGBM7Encoding: 3004;
+  declare export var RGBM16Encoding: 3005;
+  declare export var RGBDEncoding: 3006;
+  declare export var BasicDepthPacking: 3200;
+  declare export var RGBADepthPacking: 3201;
+  declare export var TangentSpaceNormalMap: 0;
+  declare export var ObjectSpaceNormalMap: 1;
+
+  declare export class Math {
+    static clamp(number, number, number): number;
+  }
 
   declare export interface AmbientLight extends Light {
     +isAmbientLight: true;
@@ -211,9 +361,18 @@ declare module "three" {
   declare export interface Light extends Object3D {
     +isLight: true;
     intensity: number;
+    shadow: LightShadow;
+  }
+
+  declare export interface LightShadow {
+    +mapSize: Vector2;
+
+    constructor(Camera): void;
   }
 
   declare export interface LineBasicMaterial extends Material {
+    +isLineBasicMaterial: true;
+
     constructor({|
       color: number,
       linewidth: number,
@@ -221,6 +380,8 @@ declare module "three" {
   }
 
   declare export interface LineSegments extends Object3D {
+    +isLineSegments: true;
+
     constructor(BaseGeometry, Material): void;
   }
 
@@ -246,40 +407,56 @@ declare module "three" {
 
   declare export interface Material extends Geometry {
     +color: Color;
+    +isMaterial: true;
+    +map: Texture;
+
+    constructor({|
+      color?: number,
+      map?: Texture,
+    |}): void;
   }
 
   declare export interface Mesh extends Object3D {
+    +isMesh: true;
+
     constructor(BufferGeometry | Geometry, Material): void;
 
     clone(): Mesh;
   }
 
   declare export interface MeshBasicMaterial extends Material {
-    constructor({|
-      color?: number,
-      map?: Texture,
-    |}): void;
+    +isMeshBasicMaterial: true;
   }
 
   declare export interface MeshNormalMaterial extends Material {
-    constructor(): void;
+    +isMeshNormalMaterial: true;
   }
 
   declare export interface MeshPhongMaterial extends Material {
+    +isMeshPhongMaterial: true;
+  }
+
+  declare export interface MeshStandardMaterial extends Material {
+    +isMeshStandardMaterial: true;
+
     constructor({|
       color?: number,
-      map?: Texture,
+      emissive?: number,
+      emissiveIntensity?: number,
     |}): void;
   }
 
   declare export interface Object3D {
     +children: Array<Object3D>;
     +geometry: Geometry;
+    +isObject3D: true;
     +material: Material;
     +parent: Object3D;
     +position: Vector3;
     +rotation: Euler;
     +scale: Vector3;
+    castShadow: boolean;
+    receiveShadow: boolean;
     userData: any;
     visible: boolean;
 
@@ -293,6 +470,7 @@ declare module "three" {
   }
 
   declare export interface OrthographicCamera extends Camera {
+    +isOrthographicCamera: true;
     bottom: number;
     far: number;
     left: number;
@@ -304,6 +482,7 @@ declare module "three" {
   }
 
   declare export interface PerspectiveCamera extends Camera {
+    +isPerspectiveCamera: true;
     aspect: number;
 
     constructor(fov: number, aspect: number, near: number, far: number): void;
@@ -315,6 +494,15 @@ declare module "three" {
 
   declare export interface PlaneGeometryBase {
     constructor(width: number, height: number, widthSegments?: number, heightSegments?: number): void;
+  }
+
+  declare export interface Plane {
+    constant: number;
+    normal: Vector3;
+
+    constructor(normal?: Vector3, constant?: number): void;
+
+    equals(Plane): boolean;
   }
 
   declare export interface PointLight extends Light {
@@ -389,15 +577,31 @@ declare module "three" {
     constructor(Shape): void;
   }
 
+  declare export interface SphereBufferGeometry extends BufferGeometry {
+    constructor(
+      radius: number,
+      widthSegments?: number,
+      heightSegments?: number,
+      phiStart?: number,
+      phiLength?: number,
+      thetaStart?: number,
+      thetaLength?: number
+    ): void;
+  }
+
   declare export interface SpotLight extends Light {
+    +isSpotLight: true;
+    angle: number;
+    penumbra: number;
     target: Object3D;
 
     constructor(color?: number): void;
   }
 
   declare export interface Texture extends Geometry {
-    wrapS: RepeatWrapping;
-    wrapT: RepeatWrapping;
+    +repeat: Vector2;
+    wrapS: typeof ClampToEdgeWrapping | typeof RepeatWrapping | typeof MirroredRepeatWrapping;
+    wrapT: typeof ClampToEdgeWrapping | typeof RepeatWrapping | typeof MirroredRepeatWrapping;
   }
 
   declare export interface TextureLoader {
@@ -408,6 +612,8 @@ declare module "three" {
 
   declare export interface Vector2 {
     +isVector2: true;
+    height: number;
+    width: number;
     x: number;
     y: number;
 
@@ -426,11 +632,23 @@ declare module "three" {
 
     constructor(x?: number, y?: number, z?: number): void;
 
+    add(Vector3): Vector3;
+
     clone(): Vector3;
+
+    cross(Vector3): Vector3;
 
     distanceTo(Vector3): number;
 
+    dot(Vector3): number;
+
+    equals(Vector3): boolean;
+
+    normalize(): Vector3;
+
     set(number, number, number): Vector3;
+
+    sub(Vector3): Vector3;
 
     toArray(): [number, number, number];
   }
@@ -453,6 +671,9 @@ declare module "three" {
 
   declare export interface WebGLRenderer extends Renderer {
     +domElement: HTMLCanvasElement;
+    +shadowMap: WebGLShadowMap;
+    gammaInput: boolean;
+    gammaOutput: boolean;
 
     constructor({|
       alpha?: boolean,
@@ -514,5 +735,14 @@ declare module "three" {
 
     // Dispatches a dispose event.
     dispose(): void;
+  }
+
+  declare export interface WebGLShadowMap {
+    enabled: boolean;
+    autoUpdate: boolean;
+    needsUpdate: boolean;
+    // type: ShadowMapType;
+
+    render(Scene, Camera): void;
   }
 }

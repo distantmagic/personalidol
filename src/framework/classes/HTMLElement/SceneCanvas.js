@@ -36,9 +36,10 @@ const ATTR_DOCUMENT_HIDDEN = "documenthidden";
 
 export default class SceneCanvas extends HTMLElement {
   +canvasControllerBus: CanvasControllerBusInterface;
+  +canvasElement: HTMLCanvasElement;
   +canvasViewBag: CanvasViewBagInterface;
   +canvasViewBus: CanvasViewBusInterface;
-  +canvasElement: HTMLCanvasElement;
+  +canvasWrapperElement: HTMLDivElement;
   +keyboardState: KeyboardStateInterface;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +mainLoop: MainLoopInterface;
@@ -62,22 +63,24 @@ export default class SceneCanvas extends HTMLElement {
     });
 
     shadowRoot.innerHTML = `
-      <style>
-        canvas {
+      <div
+        id="dm-canvas-wrapper"
+        style="
           height: 100%;
-          left: 0;
-          position: absolute;
-          top: 0;
+          position: relative;
           width: 100%;
-        }
-      </style>
-      <canvas id="dm-canvas" />
+        "
+      >
+        <canvas id="dm-canvas" />
+      </div>
     `;
 
     // flow assumes that shadow root does not contain `.getElementById`
     // method
     // $FlowFixMe
     this.canvasElement = shadowRoot.getElementById("dm-canvas");
+    // $FlowFixMe
+    this.canvasWrapperElement = shadowRoot.getElementById("dm-canvas-wrapper");
 
     this.isHidden = yn(this.getAttribute(ATTR_DOCUMENT_HIDDEN), {
       default: true,
@@ -92,7 +95,10 @@ export default class SceneCanvas extends HTMLElement {
     this.keyboardState = new KeyboardState(this.loggerBreadcrumbs.add("KeyboardState"));
     this.mainLoop = MainLoop.getInstance();
     this.pointerState = new PointerState(this.loggerBreadcrumbs.add("PointerState"), this.canvasElement);
-    this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this);
+    this.resizeObserver = new HTMLElementResizeObserver(
+      this.loggerBreadcrumbs.add("HTMLElementResizeObserver"),
+      this.canvasWrapperElement
+    );
     this.canvasControllerBus = new CanvasControllerBus(this.resizeObserver, this.scheduler);
 
     // this.mainLoop.setMaxAllowedFPS(10);
@@ -172,6 +178,11 @@ export default class SceneCanvas extends HTMLElement {
       canvas: this.canvasElement,
     });
 
+    renderer.gammaInput = true;
+    renderer.gammaOutput = true;
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+
     const canvasController = new RootCanvasController(
       this.canvasControllerBus,
       this.canvasViewBag.fork(this.loggerBreadcrumbs.add("RootCanvasControllert")),
@@ -188,7 +199,7 @@ export default class SceneCanvas extends HTMLElement {
 
     await loadingManager.blocking(this.canvasControllerBus.add(canvasController), "Loading root canvas controller");
 
-    canvasController.resize(new HTMLElementSize(this.canvasElement));
+    canvasController.resize(new HTMLElementSize(this.canvasWrapperElement));
 
     await cancelToken.whenCanceled();
 

@@ -1,6 +1,6 @@
 // @flow
 
-import * as dmmath from "./dmmath";
+import * as round from "./round";
 
 test.each([
   [1.004, 1.005, -3, false],
@@ -11,7 +11,7 @@ test.each([
   [1.005, 1.0051, -1, true],
   [1.005, 1.0051, -0, true],
 ])("equality of '%p' vs '%p' with precision '%p' should be %p", function(n1, n2, precision, expected) {
-  expect(dmmath.isEqualWithPrecision(n1, n2, precision)).toBe(expected);
+  expect(round.isEqualWithPrecision(n1, n2, precision)).toBe(expected);
 });
 
 test.each([
@@ -29,5 +29,5 @@ test.each([
   [5.005, -1, 5.0],
   [5.005, -0, 5.0],
 ])("rounds '%p' with precision of '%p' to '%p'", function(n, precision, expected) {
-  expect(dmmath.roundWithPrecision(n, precision)).toBe(expected);
+  expect(round.roundWithPrecision(n, precision)).toBe(expected);
 });

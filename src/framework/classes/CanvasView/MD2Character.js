@@ -71,8 +71,6 @@ export default class MD2Character extends CanvasView {
       weapons: [["weapon.md2", "weapon.jpg"]],
     };
 
-    character.scale = 0.05;
-
     return new Promise(resolve => {
       character.onLoadComplete = () => {
         character.setAnimation(character.meshBody.geometry.animations[0].name);

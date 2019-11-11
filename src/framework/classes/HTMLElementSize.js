@@ -1,6 +1,6 @@
 // @flow
 
-import * as dmmath from "../helpers/dmmath";
+import * as round from "../helpers/round";
 
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";
@@ -52,8 +52,8 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
 
   isEqualWithPrecision(other: ElementSize<"px">, precision: number): boolean {
     return (
-      dmmath.isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) &&
-      dmmath.isEqualWithPrecision(this.getWidth(), other.getWidth(), precision)
+      round.isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) &&
+      round.isEqualWithPrecision(this.getWidth(), other.getWidth(), precision)
     );
   }
 }

@@ -1,17 +1,15 @@
 // @flow
 
+import * as THREE from "three";
 import autoBind from "auto-bind";
-import { OBJLoader2 } from "three/examples/jsm/loaders/OBJLoader2";
 
 import CanvasView from "../CanvasView";
 
 import type { LoadingManager as THREELoadingManager, Scene } from "three";
-import type { OBJLoader2 as OBJLoader2Interface } from "three/examples/jsm/loaders/OBJLoader2";
 
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class QuakeMap extends CanvasView {
-  +objLoader2Parallel: OBJLoader2Interface;
   +scene: Scene;
   +source: string;
 
@@ -19,7 +17,6 @@ export default class QuakeMap extends CanvasView {
     super(canvasViewBag);
     autoBind(this);
 
-    this.objLoader2Parallel = new OBJLoader2(threeLoadingManager);
     this.scene = scene;
     this.source = source;
   }
@@ -27,20 +24,16 @@ export default class QuakeMap extends CanvasView {
   async attach(): Promise<void> {
     await super.attach();
 
-    return new Promise((resolve, reject) => {
-      this.objLoader2Parallel.load(
-        this.source,
-        object => {
-          object.scale.set(0.02, 0.02, 0.02);
+    var gt = new THREE.TextureLoader().load("/assets/texture-brown-rock-128.jpg");
+    var gg = new THREE.PlaneBufferGeometry(2000, 2000);
+    var gm = new THREE.MeshPhongMaterial({ color: 0xffffff, map: gt });
+    var ground = new THREE.Mesh(gg, gm);
+    ground.rotation.x = -Math.PI / 2;
+    ground.material.map.repeat.set(16, 16);
+    ground.material.map.wrapS = ground.material.map.wrapT = THREE.RepeatWrapping;
+    ground.receiveShadow = true;
 
-          this.scene.add(object);
-          resolve();
-        },
-        null,
-        reject,
-        null
-      );
-    });
+    this.scene.add(ground);
   }
 
   async dispose(): Promise<void> {

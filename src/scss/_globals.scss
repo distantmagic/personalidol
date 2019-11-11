@@ -25,7 +25,6 @@ body {
   @include tp-text(1);
 
   background-color: black;
-  background-image: url("../assets/texture-cod-gray-marble-512.png");
   color: rgba(white, 0.85);
   display: grid;
   font-family: $font-family-vesper-libre;
@@ -62,6 +61,10 @@ button {
 
 button:disabled {
   cursor: default;
+}
+
+#root {
+  background-image: url("../assets/texture-cod-gray-marble-512.png");
 }
 
 .dd__browser-details {

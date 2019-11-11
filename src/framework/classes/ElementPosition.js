@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 
-import * as dmmath from "../helpers/dmmath";
+import * as round from "../helpers/round";
 
 import type { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
@@ -52,9 +52,9 @@ export default class ElementPosition<Unit: ElementPositionUnit> implements Eleme
 
   isEqualWithPrecision(other: ElementPositionInterface<Unit>, precision: number): boolean {
     return (
-      dmmath.isEqualWithPrecision(this.getX(), other.getX(), precision) &&
-      dmmath.isEqualWithPrecision(this.getY(), other.getY(), precision) &&
-      dmmath.isEqualWithPrecision(this.getZ(), other.getZ(), precision)
+      round.isEqualWithPrecision(this.getX(), other.getX(), precision) &&
+      round.isEqualWithPrecision(this.getY(), other.getY(), precision) &&
+      round.isEqualWithPrecision(this.getZ(), other.getZ(), precision)
     );
   }
 

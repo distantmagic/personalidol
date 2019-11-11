@@ -14,11 +14,11 @@ export default function HudModalCharacterAttributes(props: Props) {
       <dl className="dd__modal__character__body">
         <dt>Siła</dt>
         <dd>1/1-20</dd>
-        <dt>Zręczność</dt>
+        <dt>Szybkość</dt>
         <dd>1/1-20</dd>
         <dt>Kondycja</dt>
         <dd>1/1-20</dd>
-        <dt>Inteligencja i pamięć</dt>
+        <dt>Inteligencja</dt>
         <dd>1/1-20</dd>
         <dt>Empatia</dt>
         <dd>1/1-20</dd>

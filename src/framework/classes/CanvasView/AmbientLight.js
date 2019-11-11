@@ -26,13 +26,19 @@ export default class AmbientLight extends CanvasView {
     this.debug = debug;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.scene = scene;
+
     this.light = new THREE.SpotLight(0xffffff);
+    this.light.angle = 0.5;
+    this.light.penumbra = 0.5;
+    this.light.castShadow = true;
+    this.light.shadow.mapSize.width = 1024;
+    this.light.shadow.mapSize.height = 1024;
   }
 
   async attach(): Promise<void> {
     await super.attach();
 
-    this.light.position.set(32, 32, 0);
+    this.light.position.set(240, 240, 240);
     this.debug.updateState(this.loggerBreadcrumbs.add("light").add("position"), this.light.position);
     this.scene.add(this.light);
   }

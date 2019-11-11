@@ -11,6 +11,11 @@ import type { Debugger } from "../interfaces/Debugger";
 import type { ElementSize } from "../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
+const ZOOM_2 = 4;
+const ZOOM_3 = 8;
+const ZOOM_4 = 16;
+const ZOOM_5 = 32;
+
 export default class CameraController implements CameraControllerInterface {
   +camera: OrthographicCamera;
   +debug: Debugger;
@@ -37,12 +42,12 @@ export default class CameraController implements CameraControllerInterface {
     this.renderer = renderer;
     this.scene = scene;
     this.viewportSize = viewportSize;
-    this.zoom = Ola(320, 100);
-    this.zoomStep = 4;
+    this.zoom = Ola(ZOOM_2, 100);
+    this.zoomStep = 2;
   }
 
   async attach(): Promise<void> {
-    this.camera.position.set(16, 16, 16);
+    this.camera.position.set(128, 128, 128);
     this.camera.lookAt(this.scene.position);
     this.updateProjection();
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
@@ -96,16 +101,16 @@ export default class CameraController implements CameraControllerInterface {
 
     switch (this.zoomStep) {
       case 3:
-        this.zoom.value = 160;
+        this.zoom.value = ZOOM_3;
         break;
       case 4:
-        this.zoom.value = 320;
+        this.zoom.value = ZOOM_4;
         break;
       case 5:
-        this.zoom.value = 480;
+        this.zoom.value = ZOOM_5;
         break;
       default:
-        this.zoom.value = 100;
+        this.zoom.value = ZOOM_2;
         break;
     }
   }
@@ -115,7 +120,7 @@ export default class CameraController implements CameraControllerInterface {
     const width = this.viewportSize.getWidth();
 
     this.camera.left = -1 * (width / this.zoom.value);
-    this.camera.far = 100;
+    this.camera.far = 540;
     this.camera.near = 0;
     this.camera.right = width / this.zoom.value;
     this.camera.top = height / this.zoom.value;

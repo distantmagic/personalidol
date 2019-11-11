@@ -1,6 +1,6 @@
 // @flow
 
-import * as dmmath from "../helpers/dmmath";
+import * as round from "../helpers/round";
 
 import type { ElementRotation as ElementRotationInterface } from "../interfaces/ElementRotation";
 import type { ElementRotationUnit } from "../types/ElementRotationUnit";
@@ -38,9 +38,9 @@ export default class ElementRotation<Unit: ElementRotationUnit> implements Eleme
 
   isEqualWithPrecision(other: ElementRotationInterface<Unit>, precision: number): boolean {
     return (
-      dmmath.isEqualWithPrecision(this.getRotationX(), other.getRotationX(), precision) &&
-      dmmath.isEqualWithPrecision(this.getRotationY(), other.getRotationY(), precision) &&
-      dmmath.isEqualWithPrecision(this.getRotationZ(), other.getRotationZ(), precision)
+      round.isEqualWithPrecision(this.getRotationX(), other.getRotationX(), precision) &&
+      round.isEqualWithPrecision(this.getRotationY(), other.getRotationY(), precision) &&
+      round.isEqualWithPrecision(this.getRotationZ(), other.getRotationZ(), precision)
     );
   }
 }

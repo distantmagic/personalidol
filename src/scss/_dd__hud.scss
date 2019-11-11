@@ -1,7 +1,7 @@
 $dd-hud-aside-width: 128px;
 $dd-hud-debugger-width: 327px;
 $dd-hud-dialogue-width: 524px;
-$dd-hud-gap: $dd-frame-padding;
+$dd-hud-gap: 2 * $dd-frame-padding;
 $dd-hud-settings-height: 80px;
 
 @function dd__hud_gap_diff($columns) {
