@@ -26,7 +26,7 @@ declare module "three" {
 
   declare export type LoadingManagerOnErrorCallback = (url: string) => void;
 
-  declare export type LoadingManagerOnLoadCallback = () => void;
+  declare export type LoadingManagerOnLoadCallback = (Object3D) => void;
 
   declare export type LoadingManagerOnProgressCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
@@ -222,6 +222,17 @@ declare module "three" {
 
   declare export interface LineSegments extends Object3D {
     constructor(BaseGeometry, Material): void;
+  }
+
+  declare export interface Loader {
+    constructor(?LoadingManager): void;
+
+    load(
+      url: string,
+      LoadingManagerOnLoadCallback,
+      LoadingManagerOnProgressCallback,
+      LoadingManagerOnErrorCallback
+    ): void;
   }
 
   declare export interface LoadingManager {

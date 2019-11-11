@@ -1,12 +1,12 @@
 // @flow
 
 import * as React from "react";
+import * as THREE from "three";
 
 import CancelToken from "../framework/classes/CancelToken";
 import HudSceneOverlay from "./HudSceneOverlay";
 import HudSceneOverlayError from "./HudSceneOverlayError";
 import SceneCanvas from "../framework/classes/HTMLElement/SceneCanvas";
-import THREELoadingManager from "../framework/classes/THREELoadingManager";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
@@ -62,10 +62,7 @@ export default function HudScene(props: Props) {
 
       const breadcrumbs = props.loggerBreadcrumbs.add("useEffect(SceneCanvas)");
       const cancelToken = new CancelToken(breadcrumbs.add("CancelToken"));
-      const threeLoadingManager = new THREELoadingManager(
-        props.loggerBreadcrumbs.add("THREELoadingManager"),
-        props.exceptionHandler
-      );
+      const threeLoadingManager = new THREE.LoadingManager();
 
       function beforeUnload() {
         cancelToken.cancel(breadcrumbs.add("beforeunload"));

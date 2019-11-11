@@ -2,29 +2,30 @@
 
 import autoBind from "auto-bind";
 import { MD2Character as MD2CharacterLoader } from "three/examples/jsm/misc/MD2Character";
-import { OBJLoader2 } from "three/examples/jsm/loaders/OBJLoader2";
 
 import CanvasView from "../CanvasView";
 
-import type { Scene } from "three";
+import type { LoadingManager as THREELoadingManager, Scene } from "three";
 
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class MD2Character extends CanvasView {
   +scene: Scene;
+  +threeLoadingManager: THREELoadingManager;
   character: ?Object;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, scene: Scene, threeLoadingManager: THREELoadingManager) {
     super(canvasViewBag);
     autoBind(this);
 
     this.scene = scene;
+    this.threeLoadingManager = threeLoadingManager;
   }
 
   async attach(): Promise<void> {
     await super.attach();
 
-    const character = new MD2CharacterLoader();
+    const character = new MD2CharacterLoader(this.threeLoadingManager);
     // const config = {
     //   baseUrl: "/assets/model-md2-ratamahatta/",
     //   body: "ratamahatta.md2",
@@ -71,15 +72,6 @@ export default class MD2Character extends CanvasView {
     };
 
     character.scale = 0.05;
-
-    let objLoader2Parallel = new OBJLoader2();
-
-    // load a resource from provided URL in parallel to Main
-    objLoader2Parallel.load( '/assets/map-test.obj', object => {
-      object.scale.set(0.02, 0.02, 0.02);
-
-      this.scene.add(object);
-    }, null, null, null );
 
     return new Promise(resolve => {
       character.onLoadComplete = () => {

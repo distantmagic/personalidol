@@ -15,9 +15,10 @@ import PointerEventResponder from "../CanvasPointerResponder/PointerEventRespond
 import THREEPointerInteraction from "../THREEPointerInteraction";
 import { default as AmbientLightView } from "../CanvasView/AmbientLight";
 import { default as MD2CharacterView } from "../CanvasView/MD2Character";
+import { default as QuakeMapView } from "../CanvasView/QuakeMap";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
-import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
+import type { LoadingManager as THREELoadingManager, OrthographicCamera, Scene, WebGLRenderer } from "three";
 // import type { ShaderPass as ShaderPassInterface } from "three/examples/jsm/postprocessing/ShaderPass";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
@@ -32,7 +33,6 @@ import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { PointerState } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
 import type { Scheduler } from "../../interfaces/Scheduler";
-import type { THREELoadingManager } from "../../interfaces/THREELoadingManager";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../interfaces/THREEPointerInteraction";
 
 export default class Root extends CanvasController {
@@ -115,9 +115,9 @@ export default class Root extends CanvasController {
       this.loadingManager.blocking(
         this.canvasViewBag.add(
           new AmbientLightView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLightView")),
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
             this.debug,
-            this.loggerBreadcrumbs.add("AmbientLightView"),
+            this.loggerBreadcrumbs.add("AmbientLight"),
             this.scene
           )
         ),
@@ -125,10 +125,25 @@ export default class Root extends CanvasController {
       ),
       this.loadingManager.blocking(
         this.canvasViewBag.add(
-          new MD2CharacterView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2CharacterView")), this.scene)
+          new MD2CharacterView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
+            this.scene,
+            this.threeLoadingManager
+          )
         ),
         "Loading character"
       ),
+      this.loadingManager.blocking(
+        this.canvasViewBag.add(
+          new QuakeMapView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
+            this.scene,
+            this.threeLoadingManager,
+            '/assets/map-test.objz'
+          )
+        ),
+        "Loading map"
+      )
     ]);
 
     await this.cameraController.attach();

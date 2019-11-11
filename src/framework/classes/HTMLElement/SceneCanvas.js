@@ -17,6 +17,8 @@ import PointerState from "../PointerState";
 import Scheduler from "../Scheduler";
 import { default as RootCanvasController } from "../CanvasController/Root";
 
+import type { LoadingManager as THREELoadingManager } from "three";
+
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasControllerBus as CanvasControllerBusInterface } from "../../interfaces/CanvasControllerBus";
 import type { CanvasViewBag as CanvasViewBagInterface } from "../../interfaces/CanvasViewBag";
@@ -29,7 +31,6 @@ import type { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
 import type { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
 import type { Scheduler as SchedulerInterface } from "../../interfaces/Scheduler";
-import type { THREELoadingManager } from "../../interfaces/THREELoadingManager";
 
 const ATTR_DOCUMENT_HIDDEN = "documenthidden";
 

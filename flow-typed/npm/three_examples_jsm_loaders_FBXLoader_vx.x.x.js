@@ -1,21 +1,7 @@
-import type {
-  LoadingManager,
-  LoadingManagerOnErrorCallback,
-  LoadingManagerOnLoadCallback,
-  LoadingManagerOnProgressCallback,
-} from "three";
+import type { Loader } from "three";
 
 declare module "three/examples/jsm/loaders/FBXLoader" {
-  declare export interface FBXLoader {
-    constructor(LoadingManager): void;
-
-    load(
-      url: string,
-      LoadingManagerOnLoadCallback,
-      LoadingManagerOnProgressCallback,
-      LoadingManagerOnErrorCallback
-    ): void;
-
+  declare export interface FBXLoader extends Loader {
     setResourcePath(string): void;
   }
 }
