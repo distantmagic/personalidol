@@ -37,11 +37,11 @@ export default React.memo<Props>(function HudSceneOverlay(props: Props) {
   }
 
   if (comments.length < 1) {
-    return <div className="dd__loader dd__scene__loader">Loading...</div>;
+    return <div className="dd__frame dd__loader dd__scene__loader">Loading...</div>;
   }
 
   return (
-    <div className="dd__loader dd__scene__loader">
+    <div className="dd__frame dd__loader dd__scene__loader">
       <ul className="dd__scene__loader__list">
         {comments.map(comment => (
           <li key={comment}>{comment}...</li>

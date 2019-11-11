@@ -1,5 +1,3 @@
-@import "normalize";
-
 *,
 * * {
   box-sizing: border-box;
@@ -8,6 +6,12 @@
 ::selection {
   background-color: crimson;
   color: white;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 
 html {

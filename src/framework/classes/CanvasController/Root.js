@@ -139,7 +139,7 @@ export default class Root extends CanvasController {
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
             this.scene,
             this.threeLoadingManager,
-            "/assets/map-test.objz"
+            "/assets/map-test.obj"
           )
         ),
         "Loading map"
