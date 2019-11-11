@@ -1,15 +1,4 @@
-@import "animations";
-@import "breakpoints";
-@import "colors";
-@import "fonts";
-@import "functions";
 @import "normalize";
-@import "typography";
-@import "z-index";
-
-$dd-frame-border-width: 2px;
-$dd-frame-border-radius: 4px;
-$dd-frame-padding: 6px;
 
 *,
 * * {
@@ -32,7 +21,7 @@ body {
   @include tp-text(1);
 
   background-color: black;
-  background-image: url("/assets/texture-cod-gray-marble-512.png");
+  background-image: url("../assets/texture-cod-gray-marble-512.png");
   color: rgba(white, 0.85);
   display: grid;
   font-family: $font-family-vesper-libre;
@@ -119,7 +108,7 @@ button:disabled {
     animation-iteration-count: infinite;
     animation-name: fadein;
     // background-color: red;
-    background-image: url("/assets/icon-hourglass.png");
+    background-image: url("../assets/icon-hourglass.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -142,7 +131,7 @@ button:disabled {
 .dd__loader.dd__loader--error {
   &:before {
     animation: unset;
-    background-image: url("/assets/icon-error.png");
+    background-image: url("../assets/icon-error.png");
   }
 }
 
@@ -255,7 +244,7 @@ button:disabled {
     filter: brightness(1.2);
   }
   &:after {
-    background-image: url("/assets/texture-blood-marble-512.png");
+    background-image: url("../assets/texture-blood-marble-512.png");
     transition: filter 0.05s ease-in-out;
     // background-blend-mode: luminosity;
   }
@@ -273,13 +262,13 @@ button:disabled {
 
 @each $icon in (backpack, cogs, dialogue, magic, magnifying-glass, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
-    background-image: url("/assets/icon-#{$icon}.png"), url("/assets/texture-mineshaft-marble-512.png");
+    background-image: url("../assets/icon-#{$icon}.png"), url("../assets/texture-mineshaft-marble-512.png");
     background-size: 80%, auto;
   }
 }
 
 .dd__frame {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
+  background-image: url("../assets/texture-mineshaft-marble-512.png");
   border-radius: $dd-frame-border-radius;
   border-style: outset;
   border-width: $dd-frame-border-width;
@@ -297,13 +286,13 @@ button:disabled {
 
 .dd__frame.dd__frame--tab:not(.dd__frame--active) {
   background-image: linear-gradient(to bottom, transparent 60%, rgba(black, 0.3)),
-    url("/assets/texture-cod-gray-marble-512.png");
+    url("../assets/texture-cod-gray-marble-512.png");
 }
 
 .dd__table {
-  // background-image: url("/assets/image-nobody-knows-anybody.png"), url("/assets/texture-navy-blue-marble-512.jpg");
+  // background-image: url("../assets/image-nobody-knows-anybody.png"), url("../assets/texture-navy-blue-marble-512.jpg");
   background-blend-mode: multiply;
-  // background-image: url("/assets/texture-navy-blue-marble-512.jpg");
+  // background-image: url("../assets/texture-navy-blue-marble-512.jpg");
   background-position: 100% 100%, center;
   background-repeat: no-repeat, repeat;
   // background-repeat: repeat;

@@ -28,15 +28,21 @@ export default class QuakeMap extends CanvasView {
     await super.attach();
 
     return new Promise((resolve, reject) => {
-      this.objLoader2Parallel.load(this.source, object => {
-        console.log(":D");
-        object.scale.set(0.02, 0.02, 0.02);
+      this.objLoader2Parallel.load(
+        this.source,
+        object => {
+          console.log(":D");
+          object.scale.set(0.02, 0.02, 0.02);
 
-        this.scene.add(object);
-        resolve();
-      }, null, function (err) {
-        console.log("ERROR", err);
-      }, null );
+          this.scene.add(object);
+          resolve();
+        },
+        null,
+        function(err) {
+          console.log("ERROR", err);
+        },
+        null
+      );
     });
   }
 

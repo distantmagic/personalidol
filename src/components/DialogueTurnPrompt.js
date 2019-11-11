@@ -5,6 +5,8 @@ import ReactMarkdown from "react-markdown";
 
 import DialogueAnswer from "./DialogueAnswer";
 
+import imgImageManuscriptHeader from "../assets/image-manuscript-header.png";
+
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { DialogueMessages } from "../framework/types/DialogueMessages";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
@@ -34,11 +36,7 @@ export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
     <div className="dd__dialogue__turn">
       {props.illustration && (
         <div className="dd__dialogue__turn__illustration">
-          <img
-            alt="Illustration"
-            className="dd__dialogue__turn__illustration__image"
-            src={`/assets/image-manuscript-header.png`}
-          />
+          <img alt="Illustration" className="dd__dialogue__turn__illustration__image" src={imgImageManuscriptHeader} />
         </div>
       )}
       <h1 className="dd__dialogue__turn__title">Jaskinia pustelnika</h1>

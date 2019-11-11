@@ -1,9 +1,11 @@
+@import "variables";
+
 .dd__table.dd__table--debugger {
   width: 100%;
 }
 
 .dd__debugger {
-  background-image: url("/assets/texture-mineshaft-marble-512.png");
+  background-image: url("../assets/texture-mineshaft-marble-512.png");
   // border-radius: unset;
   // box-shadow: 0 0 16px black;
   display: grid;

@@ -12,16 +12,13 @@ backend: backend/target/debug/personalidol
 backend/target/debug/personalidol: $(RUST_SOURCES)
 	cd backend && cargo build
 
-build/index.css: $(SCSS_SOURCES)
-	yarn run sass:build
-
 build/index.html: $(JS_SOURCES)
 	yarn run build
 
 flow.watch: node_modules
 	yarn run flow:watch:inotify
 
-frontend: build/index.html build/index.css
+frontend: build/index.html
 
 frontend.dependencies: node_modules public/vendor/modernizr.js
 
@@ -39,9 +36,6 @@ pretty.frontend:
 
 public/vendor/modernizr.js: frontend.dependencies
 	yarn run modernizr
-
-sass.watch:
-	yarn run sass:watch
 
 test: test.backend test.frontend
 

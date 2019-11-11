@@ -26,7 +26,7 @@ declare module "three" {
 
   declare export type LoadingManagerOnErrorCallback = (url: string) => void;
 
-  declare export type LoadingManagerOnLoadCallback = (Object3D) => void;
+  declare export type LoadingManagerOnLoadCallback = Object3D => void;
 
   declare export type LoadingManagerOnProgressCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 

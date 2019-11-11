@@ -17,6 +17,8 @@ import LoggerBreadcrumbs from "./framework/classes/LoggerBreadcrumbs";
 import Main from "./components/Main";
 import QueryBus from "./framework/classes/QueryBus";
 
+import "./scss/index.scss";
+
 function init(rootElement: HTMLElement) {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const logger = new Logger();

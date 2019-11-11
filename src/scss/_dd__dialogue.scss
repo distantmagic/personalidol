@@ -1,3 +1,5 @@
+@import "variables";
+
 $dd-dialogue-padding-horizontal: 1rem;
 
 .dd__button.dd__button--dialogue-turn-end {
@@ -9,7 +11,7 @@ $dd-dialogue-padding-horizontal: 1rem;
 }
 
 .dd__dialogue {
-  // background-image: url("/assets/texture-dark-blood-marble-512.png");
+  // background-image: url("../assets/texture-dark-blood-marble-512.png");
   // border-color: darken(red, 33%);
   display: grid;
   overflow: hidden;
@@ -24,7 +26,7 @@ $dd-dialogue-padding-horizontal: 1rem;
 }
 
 .dd__dialogue__hr {
-  background-image: url("/assets/image-horizontal-rule-ornamental.png");
+  background-image: url("../assets/image-horizontal-rule-ornamental.png");
   background-position: 0 50%;
   background-repeat: no-repeat;
   background-size: contain;
@@ -91,7 +93,7 @@ $dd-dialogue-padding-horizontal: 1rem;
 }
 
 .dd__dialogue__scrollframe__scrollbar__track {
-  // background-image: url("/assets/image-rope.png");
+  // background-image: url("../assets/image-rope.png");
   background-image: linear-gradient(to right, $color-givry 10%, $color-cioccolato, $color-arrowtown 90%);
   background-position: center;
   background-repeat: repeat-y;
@@ -136,9 +138,9 @@ $dd-dialogue-padding-horizontal: 1rem;
 
 .dd__dialogue__turn {
   align-content: flex-start;
-  background-image: url("/assets/texture-paper-1-512.jpg");
+  background-image: url("../assets/texture-paper-1-512.jpg");
   background-size: auto, auto, auto;
-  border-image-source: url("assets/border-orthodox-frame.png");
+  border-image-source: url("../assets/border-orthodox-frame.png");
   border-image-repeat: round;
   border-image-slice: 108;
   border-radius: $dd-frame-border-radius;

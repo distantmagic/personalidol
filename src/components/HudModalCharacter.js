@@ -10,9 +10,26 @@ import HudModalCharacterBiography from "./HudModalCharacterBiography";
 import HudModalCharacterInventory from "./HudModalCharacterInventory";
 import HudModalLoader from "./HudModalLoader";
 
+import imagePortraitArlance from "../assets/portrait-arlance.jpg";
+import imagePortraitMoore from "../assets/portrait-moore.jpg";
+import imagePortraitCircassia from "../assets/portrait-circassia.jpg";
+
 type Props = {|
   character: Character,
 |};
+
+function getPortraitSrc(id: string): string {
+  switch (id) {
+    case "arlance":
+      return imagePortraitArlance;
+    case "circassia":
+      return imagePortraitCircassia;
+    case "moore":
+      return imagePortraitMoore;
+    default:
+      return imagePortraitArlance;
+  }
+}
 
 export default function HudModalCharacter(props: Props) {
   const [state, setState] = React.useState({
@@ -41,7 +58,7 @@ export default function HudModalCharacter(props: Props) {
   return (
     <section className="dd__frame dd__modal__character">
       <div className="dd__modal__character__avatar">
-        <img alt="portrait" className="dd__modal__character__avatar__image" src={`/assets/portrait-${state.id}.jpg`} />
+        <img alt="portrait" className="dd__modal__character__avatar__image" src={getPortraitSrc(state.id)} />
       </div>
       <h1 className="dd__modal__character__name">{state.name}</h1>
       <nav className="dd__modal__character__tabs">
