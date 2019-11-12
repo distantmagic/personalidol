@@ -188,7 +188,7 @@ declare module "three" {
     static clamp(number, number, number): number;
   }
 
-  declare export interface AmbientLight extends Light {
+  declare export interface AmbientLight<T: Camera> extends Light<T> {
     +isAmbientLight: true;
     castShadow: boolean;
 
@@ -265,8 +265,6 @@ declare module "three" {
     +isCamera: true;
 
     constructor(): void;
-
-    updateProjectionMatrix(): void;
   }
 
   declare export interface Clock {
@@ -358,13 +356,14 @@ declare module "three" {
     constructor(): void;
   }
 
-  declare export interface Light extends Object3D {
+  declare export interface Light<T: Camera> extends Object3D {
     +isLight: true;
     intensity: number;
-    shadow: LightShadow;
+    shadow: LightShadow<T>;
   }
 
-  declare export interface LightShadow {
+  declare export interface LightShadow<T: Camera> {
+    +camera: T;
     +mapSize: Vector2;
 
     constructor(Camera): void;
@@ -479,13 +478,19 @@ declare module "three" {
     top: number;
 
     constructor(bottom?: number, far?: number, left?: number, near?: number, right?: number, top?: number): void;
+
+    updateProjectionMatrix(): void;
   }
 
   declare export interface PerspectiveCamera extends Camera {
     +isPerspectiveCamera: true;
     aspect: number;
+    far: number;
+    near: number;
 
     constructor(fov: number, aspect: number, near: number, far: number): void;
+
+    updateProjectionMatrix(): void;
   }
 
   declare export interface PlaneBufferGeometry extends BufferGeometry, PlaneGeometryBase {}
@@ -505,7 +510,7 @@ declare module "three" {
     equals(Plane): boolean;
   }
 
-  declare export interface PointLight extends Light {
+  declare export interface PointLight<T: Camera> extends Light<T> {
     +isPointLight: true;
     +position: Vector3;
 
@@ -589,7 +594,7 @@ declare module "three" {
     ): void;
   }
 
-  declare export interface SpotLight extends Light {
+  declare export interface SpotLight<T: Camera> extends Light<T> {
     +isSpotLight: true;
     angle: number;
     penumbra: number;
