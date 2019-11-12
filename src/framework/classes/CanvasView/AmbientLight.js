@@ -36,7 +36,7 @@ export default class AmbientLight extends CanvasView {
 
     // this one is important on mobile (ios at least)
     // https://stackoverflow.com/questions/50945270/threejs-shadow-artifact-ios-devices
-    this.light.shadow.camera.near = 0.1;
+    this.light.shadow.camera.near = 20;
   }
 
   async attach(): Promise<void> {

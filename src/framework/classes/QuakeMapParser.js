@@ -1,13 +1,19 @@
 // @flow
 
 import QuakeBrush from "./QuakeBrush";
-import QuakeEntityPropertyParser from "./QuakeEntityPropertyParser";
 import QuakeBrushHalfPlaneParser from "./QuakeBrushHalfPlaneParser";
+import QuakeEntity from "./QuakeEntity";
+import QuakeEntityProperties from "./QuakeEntityProperties";
+import QuakeEntityPropertyParser from "./QuakeEntityPropertyParser";
+import QuakeMap from "./QuakeMap";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
+import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
 import type { QuakeBrushHalfPlane } from "../interfaces/QuakeBrushHalfPlane";
+import type { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
+import type { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
+import type { QuakeMap as QuakeMapInterface } from "../interfaces/QuakeMap";
 import type { QuakeMapParser as QuakeMapParserInterface } from "../interfaces/QuakeMapParser";
 
 const REGEXP_NEWLINE = /\r?\n/;
@@ -29,12 +35,12 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     return new QuakeEntityPropertyParser(this.loggerBreadcrumbs.add("entityProperty"), line).parse();
   }
 
-  parse(): void {
-    const entities = [];
-    const lines = this.splitLines(this.content);
-    let currentBrush = null;
-    let currentEntity: ?{|
-      brush: ?$ReadOnlyArray<QuakeBrushHalfPlane>,
+  parse(): QuakeMapInterface {
+    const entities: Array<QuakeEntityInterface> = [];
+    const lines: $ReadOnlyArray<string> = this.splitLines(this.content);
+    let currentBrushSketch: ?Array<QuakeBrushHalfPlane> = null;
+    let currentEntitySketch: ?{|
+      brush: ?QuakeBrushInterface,
       props: Array<QuakeEntityProperty>,
     |} = null;
 
@@ -47,11 +53,11 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
       }
 
       if (this.isOpeningBracket(line)) {
-        if (currentEntity) {
-          currentBrush = [];
+        if (currentEntitySketch) {
+          currentBrushSketch = [];
           continue;
-        } else if (!currentEntity) {
-          currentEntity = {
+        } else if (!currentEntitySketch) {
+          currentEntitySketch = {
             brush: null,
             props: [],
           };
@@ -62,40 +68,50 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
       }
 
       if (this.isClosingBracket(line)) {
-        if (currentBrush) {
-          if (!currentEntity) {
+        if (currentBrushSketch) {
+          if (!currentEntitySketch) {
             throw new QuakeMapParserException(breadcrumbs, "Expected brush to be nested inside entity");
           }
-          if (currentEntity.brush) {
+          if (currentEntitySketch.brush) {
             throw new QuakeMapParserException(breadcrumbs, "Multiple brushes inside entity.");
           }
 
-          currentEntity.brush = currentBrush;
-          currentBrush = null;
+          currentEntitySketch.brush = new QuakeBrush(breadcrumbs.add("QuakeBrush"), currentBrushSketch);
+          currentBrushSketch = null;
           continue;
-        } else if (currentEntity) {
-          entities.push(currentEntity);
-          currentEntity = null;
+        } else if (currentEntitySketch) {
+          const quakeEntityProperties = new QuakeEntityProperties(
+            breadcrumbs.add("QuakeEntityProperties"),
+            currentEntitySketch.props
+          );
+          const quakeEntity = new QuakeEntity(
+            breadcrumbs.add("QuakeEntity"),
+            quakeEntityProperties,
+            currentEntitySketch.brush
+          );
+
+          entities.push(quakeEntity);
+          currentEntitySketch = null;
           continue;
         } else {
           throw new QuakeMapParserException(breadcrumbs, "Unexpected closing bracket.");
         }
       }
 
-      if (currentBrush) {
-        currentBrush.push(this.brushHalfPlane(line));
+      if (currentBrushSketch) {
+        currentBrushSketch.push(this.brushHalfPlane(line));
         continue;
       }
 
-      if (currentEntity) {
-        currentEntity.props.push(this.entityProperty(line));
+      if (currentEntitySketch) {
+        currentEntitySketch.props.push(this.entityProperty(line));
         continue;
       }
 
       throw new QuakeMapParserException(breadcrumbs, "Unexpected line.");
     }
 
-    console.log(entities);
+    return new QuakeMap(this.loggerBreadcrumbs.add("QuakeMap"), entities);
   }
 
   isClosingBracket(line: string): boolean {

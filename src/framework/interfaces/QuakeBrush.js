@@ -1,4 +1,3 @@
 // @flow
 
-export interface QuakeBrush {
-}
+export interface QuakeBrush {}

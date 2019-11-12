@@ -63,33 +63,11 @@ button:disabled {
   cursor: default;
 }
 
-#root {
+.dd__capable {
   background-image: url("../assets/texture-cod-gray-marble-512.png");
 }
 
-.dd__browser-details {
-  padding-top: 1.6rem;
-  width: 100%;
-}
-
-.dd__browser-features {
-  padding: 0;
-  padding-left: 1rem;
-}
-
-.dd__browser-feature.dd__browser-feature--supported {
-  opacity: 0.6;
-
-  &:after {
-    content: "\2713";
-  }
-}
-
-.dd__browser-feature.dd__browser-feature--not-supported {
-  color: crimson;
-}
-
-#root,
+.dd__capable,
 .dd__container {
   align-items: flex-start;
   justify-content: center;
@@ -153,17 +131,6 @@ button:disabled {
   max-width: 40ch;
   padding-bottom: 1.6rem;
   text-align: center;
-}
-
-.dd__loader__recommended-browsers {
-  display: block;
-  padding: 0.4rem;
-  text-align: center;
-}
-
-.dd__loader__recommended-browsers__browser {
-  display: inline-block;
-  padding: 0.6rem;
 }
 
 .dd__noscript {

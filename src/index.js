@@ -58,9 +58,11 @@ function checkInit() {
   const rootElement = document.getElementById("root");
 
   if (rootElement) {
-    if (rootElement.className === "js-dd-capable") {
+    if (rootElement.classList.contains("js-dd-capable")) {
+      rootElement.classList.add("dd__capable");
+
       return void init(rootElement);
-    } else if (rootElement.className === "js-dd-incapable") {
+    } else if (rootElement.classList.contains("js-dd-incapable")) {
       return;
     }
   }
