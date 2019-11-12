@@ -38,7 +38,7 @@ export default class AmbientLight extends CanvasView {
   async attach(): Promise<void> {
     await super.attach();
 
-    this.light.position.set(240, 240, 240);
+    this.light.position.set(240, 240, 120);
     this.debug.updateState(this.loggerBreadcrumbs.add("light").add("position"), this.light.position);
     this.scene.add(this.light);
   }

@@ -2,14 +2,14 @@
 
 import * as THREE from "three";
 
-import QuakeBrushEntityProperty from "./QuakeBrushEntityProperty";
+import QuakeEntityProperty from "./QuakeEntityProperty";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeBrushEntityProperty as QuakeBrushEntityPropertyInterface } from "../interfaces/QuakeBrushEntityProperty";
-import type { QuakeBrushEntityPropertyParser as QuakeBrushEntityPropertyParserInterface } from "../interfaces/QuakeBrushEntityPropertyParser";
+import type { QuakeEntityProperty as QuakeEntityPropertyInterface } from "../interfaces/QuakeEntityProperty";
+import type { QuakeEntityPropertyParser as QuakeEntityPropertyParserInterface } from "../interfaces/QuakeEntityPropertyParser";
 
-export default class QuakeBrushEntityPropertyParser implements QuakeBrushEntityPropertyParserInterface {
+export default class QuakeEntityPropertyParser implements QuakeEntityPropertyParserInterface {
   +line: string;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
@@ -18,7 +18,7 @@ export default class QuakeBrushEntityPropertyParser implements QuakeBrushEntityP
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  entityPropertySplits(splits: $ReadOnlyArray<string>): QuakeBrushEntityPropertyInterface {
+  entityPropertySplits(splits: $ReadOnlyArray<string>): QuakeEntityPropertyInterface {
     if (splits.length !== 5) {
       throw new QuakeMapParserException(
         this.loggerBreadcrumbs.add("entityPropertySplits"),
@@ -26,10 +26,10 @@ export default class QuakeBrushEntityPropertyParser implements QuakeBrushEntityP
       );
     }
 
-    return new QuakeBrushEntityProperty(splits[1], splits[3]);
+    return new QuakeEntityProperty(splits[1], splits[3]);
   }
 
-  parse(): QuakeBrushEntityPropertyInterface {
+  parse(): QuakeEntityPropertyInterface {
     const splits = this.line.split('"');
 
     if (splits.length < 5) {

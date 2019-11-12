@@ -1,8 +1,8 @@
 // @flow
 
-import type { QuakeBrushEntityProperty as QuakeBrushEntityPropertyInterface } from "../interfaces/QuakeBrushEntityProperty";
+import type { QuakeEntityProperty as QuakeEntityPropertyInterface } from "../interfaces/QuakeEntityProperty";
 
-export default class QuakeBrushEntityProperty implements QuakeBrushEntityPropertyInterface {
+export default class QuakeEntityProperty implements QuakeEntityPropertyInterface {
   +key: string;
   +value: string;
 
@@ -19,7 +19,7 @@ export default class QuakeBrushEntityProperty implements QuakeBrushEntityPropert
     return this.value;
   }
 
-  isEqual(other: QuakeBrushEntityPropertyInterface): boolean {
+  isEqual(other: QuakeEntityPropertyInterface): boolean {
     return this.getKey() === other.getKey() && this.getValue() === other.getValue();
   }
 }

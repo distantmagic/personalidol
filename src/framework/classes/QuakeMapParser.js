@@ -1,11 +1,12 @@
 // @flow
 
-import QuakeBrushEntityPropertyParser from "./QuakeBrushEntityPropertyParser";
+import QuakeBrush from "./QuakeBrush";
+import QuakeEntityPropertyParser from "./QuakeEntityPropertyParser";
 import QuakeBrushHalfPlaneParser from "./QuakeBrushHalfPlaneParser";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeBrushEntityProperty } from "../interfaces/QuakeBrushEntityProperty";
+import type { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
 import type { QuakeBrushHalfPlane } from "../interfaces/QuakeBrushHalfPlane";
 import type { QuakeMapParser as QuakeMapParserInterface } from "../interfaces/QuakeMapParser";
 
@@ -24,8 +25,8 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     return new QuakeBrushHalfPlaneParser(this.loggerBreadcrumbs.add("brushHalfPlane"), line).parse();
   }
 
-  entityProperty(line: string): QuakeBrushEntityProperty {
-    return new QuakeBrushEntityPropertyParser(this.loggerBreadcrumbs.add("entityProperty"), line).parse();
+  entityProperty(line: string): QuakeEntityProperty {
+    return new QuakeEntityPropertyParser(this.loggerBreadcrumbs.add("entityProperty"), line).parse();
   }
 
   parse(): void {
@@ -34,7 +35,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     let currentBrush = null;
     let currentEntity: ?{|
       brush: ?$ReadOnlyArray<QuakeBrushHalfPlane>,
-      props: Array<QuakeBrushEntityProperty>,
+      props: Array<QuakeEntityProperty>,
     |} = null;
 
     for (let lineno = 0; lineno < lines.length; lineno += 1) {

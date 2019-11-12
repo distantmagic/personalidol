@@ -120,7 +120,7 @@ export default class CameraController implements CameraControllerInterface {
     const width = this.viewportSize.getWidth();
 
     this.camera.left = -1 * (width / this.zoom.value);
-    this.camera.far = 540;
+    this.camera.far = 1024;
     this.camera.near = 0;
     this.camera.right = width / this.zoom.value;
     this.camera.top = height / this.zoom.value;
