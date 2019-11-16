@@ -74,7 +74,7 @@ export default function Preloader(props: Props) {
 
   return (
     <div className="dd__setup" id="dd-root-loader">
-      Preloading assets...
+      Loading interface...
       <progress className="dd__setup__progress" max={images.length} value={loadedCount}></progress>
       <div
         className="dd__preloader__progress"
