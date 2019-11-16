@@ -11,18 +11,8 @@ type Props = {|
 export default React.memo<Props>(function PreloaderImage(props: Props) {
   const [imageElement, setImageElement] = React.useState<?HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
-
-  const notify = React.useCallback(
-    function() {
-      if (isLoaded) {
-        return;
-      }
-
-      setIsLoaded(true);
-      props.onLoad(props.src);
-    },
-    [isLoaded, props]
-  );
+  const [isArtificiallyLoaded, setIsArtificiallyLoaded] = React.useState<boolean>(false);
+  const [isNotified, setIsNotified] = React.useState<boolean>(false);
 
   const checkCompleted = React.useCallback(
     function() {
@@ -34,9 +24,9 @@ export default React.memo<Props>(function PreloaderImage(props: Props) {
         return void setTimeout(checkCompleted);
       }
 
-      notify();
+      setIsLoaded(true);
     },
-    [imageElement, isLoaded, notify]
+    [imageElement, isLoaded]
   );
 
   React.useEffect(
@@ -51,7 +41,42 @@ export default React.memo<Props>(function PreloaderImage(props: Props) {
         clearTimeout(timeoutId);
       };
     },
-    [checkCompleted, imageElement, isLoaded, notify]
+    [checkCompleted, imageElement, isLoaded]
+  );
+
+  React.useEffect(
+    function() {
+      if (isArtificiallyLoaded) {
+        return;
+      }
+
+      function onComplete() {
+        setIsArtificiallyLoaded(true);
+      }
+
+      const img = new Image();
+
+      img.onerror = onComplete;
+      img.onload = onComplete;
+      img.src = props.src;
+
+      return function() {
+        delete img.onload;
+      };
+    },
+    [isArtificiallyLoaded, props]
+  );
+
+  React.useEffect(
+    function() {
+      if (!isLoaded || !isArtificiallyLoaded || isNotified) {
+        return;
+      }
+
+      setIsNotified(true);
+      props.onLoad(props.src);
+    },
+    [isArtificiallyLoaded, isLoaded, isNotified, props]
   );
 
   return (

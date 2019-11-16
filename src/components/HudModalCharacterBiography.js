@@ -12,7 +12,7 @@ export default function HudModalCharacterBiography(props: Props) {
   return (
     <div className="dd-tp__formatted-text">
       <blockquote>
-        Duch kędy chce wieje, i głos jego słyszysz, ale niewiesz skąd idzie, albo gdzie odchodzi.
+        Duch kędy chce wieje, i głos jego słyszysz, ale nie wiesz skąd idzie, albo gdzie odchodzi.
         <footer>Jan 3:7</footer>
       </blockquote>
       <p>
