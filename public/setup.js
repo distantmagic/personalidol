@@ -48,7 +48,7 @@
   }
 
   function onFinished() {
-    document.getElementById("dd-root-loader-setup").classList.add("dd__setup--hidden");
+    document.getElementById("dd-root-loader-capabilities").classList.add("dd__setup--hidden");
     document.getElementById("dd-root-loader-app").classList.remove("dd__setup--hidden");
 
     if (isCapable) {
@@ -72,6 +72,9 @@
       .getElementById("browser-feature-" + requiredBrowserFeatures[feature])
       .classList.add(isFeatureSupported ? supportedClassName : notSupportedClassName);
   }
+
+  document.getElementById("dd-root-loader-setup").classList.add("dd__setup--hidden");
+  document.getElementById("dd-root-loader-capabilities").classList.remove("dd__setup--hidden");
 
   for (feature in requiredBrowserFeatures) {
     if (requiredBrowserFeatures.hasOwnProperty(feature)) {

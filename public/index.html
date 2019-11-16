@@ -8,10 +8,6 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"
     />
-    <link
-      href="https://fonts.googleapis.com/css?family=Almendra|Space+Mono|Vesper+Libre&subset=latin-ext"
-      rel="stylesheet"
-    />
 
     <style>
       *,
@@ -163,12 +159,16 @@
         </div>
       </noscript>
       <div class="dd__setup dd__setup--hidden" id="dd-root-loader-setup">
+        Loading setup...
+        <progress class="dd__setup__progress" id="dd-capabilities-progress" max="5" value="1"></progress>
+      </div>
+      <div class="dd__setup dd__setup--hidden" id="dd-root-loader-capabilities">
         Checking browser capabilities...
-        <progress class="dd__setup__progress" id="dd-capabilities-progress"></progress>
+        <progress class="dd__setup__progress" id="dd-capabilities-progress" max="5" value="2"></progress>
       </div>
       <div class="dd__setup dd__setup--hidden" id="dd-root-loader-app">
-        Loading application...
-        <progress class="dd__setup__progress" id="dd-capabilities-progress"></progress>
+        Loading game engine...
+        <progress class="dd__setup__progress" id="dd-capabilities-progress" max="5" value="3"></progress>
       </div>
       <div class="dd__setup dd__setup--error dd__setup--hidden" id="dd-root-error">
         <div class="dd__setup__content">
@@ -298,5 +298,10 @@
 
     <script src="%PUBLIC_URL%/vendor/modernizr.js"></script>
     <script src="%PUBLIC_URL%/setup.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Almendra|Space+Mono|Vesper+Libre&subset=latin-ext"
+      rel="stylesheet"
+    />
   </body>
 </html>
