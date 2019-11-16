@@ -162,9 +162,13 @@
           </p>
         </div>
       </noscript>
-      <div class="dd__setup dd__setup--hidden" id="dd-root-loader">
+      <div class="dd__setup dd__setup--hidden" id="dd-root-loader-setup">
         Checking browser capabilities...
-        <progress class="dd__setup__progress" id="dd-capabilities-progress">70%</progress>
+        <progress class="dd__setup__progress" id="dd-capabilities-progress"></progress>
+      </div>
+      <div class="dd__setup dd__setup--hidden" id="dd-root-loader-app">
+        Loading application...
+        <progress class="dd__setup__progress" id="dd-capabilities-progress"></progress>
       </div>
       <div class="dd__setup dd__setup--error dd__setup--hidden" id="dd-root-error">
         <div class="dd__setup__content">
@@ -288,7 +292,7 @@
       (function() {
         // this one is here to make sure that setup contents is shown only to
         // users that have JavaScript enabled
-        document.getElementById("dd-root-loader").classList.remove("dd__setup--hidden");
+        document.getElementById("dd-root-loader-setup").classList.remove("dd__setup--hidden");
       })();
     </script>
 

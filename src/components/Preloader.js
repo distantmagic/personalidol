@@ -52,7 +52,7 @@ const images = [
   texture_paper_1_512,
 ];
 
-const loaded = [];
+let loaded = [];
 
 type Props = {|
   onPreloaded: true => any,
@@ -79,6 +79,7 @@ export default function Preloader(props: Props) {
         return;
       }
 
+      Preloader.clear();
       props.onPreloaded(true);
     },
     [props, wasLoaded]
@@ -90,7 +91,7 @@ export default function Preloader(props: Props) {
     return (
       <div className="dd__setup">
         Loading interface...
-        <progress className="dd__setup__progress" max="1" value="1"></progress>
+        <progress className="dd__setup__progress" />
       </div>
     );
   }
@@ -98,7 +99,7 @@ export default function Preloader(props: Props) {
   return (
     <div className="dd__setup">
       Loading interface...
-      <progress className="dd__setup__progress" max={images.length} value={loadedCount}></progress>
+      <progress className="dd__setup__progress" max={images.length} value={loadedCount} />
       <div
         className="dd__preloader__progress"
         style={{
@@ -112,6 +113,10 @@ export default function Preloader(props: Props) {
     </div>
   );
 }
+
+Preloader.clear = function(): void {
+  loaded = [];
+};
 
 Preloader.isLoaded = function(): boolean {
   for (let src of images) {

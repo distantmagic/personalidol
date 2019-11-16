@@ -48,11 +48,13 @@
   }
 
   function onFinished() {
+    document.getElementById("dd-root-loader-setup").classList.add("dd__setup--hidden");
+    document.getElementById("dd-root-loader-app").classList.remove("dd__setup--hidden");
+
     if (isCapable) {
       rootElement.className = "js-dd-capable";
     } else {
       rootElement.className = "js-dd-incapable";
-      document.getElementById("dd-root-loader").classList.add("dd__setup--hidden");
       document.getElementById("dd-root-error").classList.remove("dd__setup--hidden");
     }
   }

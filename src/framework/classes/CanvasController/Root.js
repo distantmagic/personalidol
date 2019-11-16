@@ -122,7 +122,7 @@ export default class Root extends CanvasController {
             this.scene
           )
         ),
-        "Loading ambient light"
+        "Loading lights"
       ),
       this.loadingManager.blocking(
         this.canvasViewBag.add(
