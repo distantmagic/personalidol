@@ -13,9 +13,7 @@ type Props = {|
 |};
 
 function HudAsidePortraitLoader() {
-  return (
-    <div className="dd__frame dd__frame--inset dd__aside__portrait__image dd__aside__portrait__image--loading"/>
-  );
+  return <div className="dd__frame dd__frame--inset dd__aside__portrait__image dd__aside__portrait__image--loading" />;
 }
 
 export default function HudAsidePortrait(props: Props) {

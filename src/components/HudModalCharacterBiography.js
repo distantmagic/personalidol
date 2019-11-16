@@ -11,6 +11,10 @@ type Props = {|
 export default function HudModalCharacterBiography(props: Props) {
   return (
     <div className="dd-tp__formatted-text">
+      <blockquote>
+        Duch kędy chce wieje, i głos jego słyszysz, ale niewiesz skąd idzie, albo gdzie odchodzi.
+        <footer>Jan 3:7</footer>
+      </blockquote>
       <p>
         Młoda, inteligentna, piękna. Wychowana tylko do tego, żeby trafić do pałacu jako luksusowa niewolnica, do czego
         faktycznie ma wszystkie predyspozycje. Większość życia spędziła w wygodzie, dlatego nie ma dobrej kondycji.

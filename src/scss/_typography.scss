@@ -28,16 +28,16 @@ $dd-font-size-base: 16px;
   @include tp-heading(1);
 }
 
-.dd-tp__formatted-text {
-  p {
-    @include tp-text(1);
-    // max-width: 80ch;
-  }
+.dd-tp__formatted-text p,
+.dd-tp__p {
+  @include tp-text(1);
+  // max-width: 80ch;
+}
 
-  p + p {
-    // content: "\2767";
-    text-indent: 1em;
-  }
+.dd-tp__formatted-text p + p,
+.dd-tp__p + .dd-tp__p {
+  // content: "\2767";
+  text-indent: 1em;
 }
 
 .dd-tp__formatted-text h1,
@@ -53,4 +53,18 @@ $dd-font-size-base: 16px;
 .dd-tp__formatted-text h3,
 .dd-tp__heading-h3 {
   @include tp-heading-h3();
+}
+
+.dd-tp__formatted-text blockquote,
+.dd-tp__blockquote {
+  font-family: $font-family-alemdra;
+  padding: tp-font-size(1.375);
+
+  footer {
+    text-align: right;
+
+    &:before {
+      content: "\2014\00a0";
+    }
+  }
 }

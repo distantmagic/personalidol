@@ -1,6 +1,6 @@
 // @flow
 
-import Canceled from "./Exception/Canceled";
+import Canceled from "./Exception/CancelToken/Canceled";
 import EventListenerSet from "./EventListenerSet";
 import Exception from "./Exception";
 

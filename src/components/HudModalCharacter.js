@@ -6,9 +6,10 @@ import upperFirst from "lodash/upperFirst";
 import { NavLink, Route, Switch } from "react-router-dom";
 
 import Character from "../framework/classes/Entity/Person/Character";
-import HudModalCharacterAttributes from "./HudModalCharacterAttributes";
 import HudModalCharacterBiography from "./HudModalCharacterBiography";
+import HudModalCharacterBody from "./HudModalCharacterBody";
 import HudModalCharacterInventory from "./HudModalCharacterInventory";
+import HudModalCharacterSoul from "./HudModalCharacterSoul";
 import HudModalLoader from "./HudModalLoader";
 
 import imagePortraitArlance from "../assets/portrait-arlance.jpg";
@@ -66,17 +67,25 @@ export default function HudModalCharacter(props: Props) {
         <NavLink
           activeClassName="dd__modal__character__tab--active dd__frame--active"
           className="dd__frame dd__frame--tab dd__modal__character__tab"
-          exact
-          to={`/character/${state.id}`}
+          to={`/character/${state.id}/biography`}
         >
-          Atrybuty
+          Biografia
         </NavLink>
         <NavLink
           activeClassName="dd__modal__character__tab--active dd__frame--active"
           className="dd__frame dd__frame--tab dd__modal__character__tab"
-          to={`/character/${state.id}/biography`}
+          exact
+          to={`/character/${state.id}`}
         >
-          Biografia
+          Ciało
+        </NavLink>
+        <NavLink
+          activeClassName="dd__modal__character__tab--active dd__frame--active"
+          className="dd__frame dd__frame--tab dd__modal__character__tab"
+          exact
+          to={`/character/${state.id}/soul`}
+        >
+          Dusza
         </NavLink>
         <NavLink
           activeClassName="dd__modal__character__tab--active dd__frame--active"
@@ -101,7 +110,12 @@ export default function HudModalCharacter(props: Props) {
           <Route
             exact
             path="/character/:characterId"
-            component={() => <HudModalCharacterAttributes character={props.character} />}
+            component={() => <HudModalCharacterBody character={props.character} />}
+          />
+          <Route
+            exact
+            path="/character/:characterId/soul"
+            component={() => <HudModalCharacterSoul character={props.character} />}
           />
         </Switch>
       </div>

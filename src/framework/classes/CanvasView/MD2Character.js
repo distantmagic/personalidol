@@ -1,5 +1,6 @@
 // @flow
 
+import * as THREE from "three";
 import autoBind from "auto-bind";
 import { MD2Character as MD2CharacterLoader } from "three/examples/jsm/misc/MD2Character";
 

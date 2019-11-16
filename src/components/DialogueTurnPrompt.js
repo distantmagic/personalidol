@@ -37,7 +37,11 @@ export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
     <div className="dd__dialogue__turn">
       {props.illustration && (
         <div className="dd__dialogue__turn__illustration">
-          <Image alt="Illustration" className="dd__dialogue__turn__illustration__image" src={imgImageManuscriptHeader} />
+          <Image
+            alt="Illustration"
+            className="dd__dialogue__turn__illustration__image"
+            src={imgImageManuscriptHeader}
+          />
         </div>
       )}
       <h1 className="dd__dialogue__turn__title">Jaskinia pustelnika</h1>

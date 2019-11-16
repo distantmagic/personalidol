@@ -8,34 +8,14 @@ type Props = {|
   character: Character,
 |};
 
-export default function HudModalCharacterAttributes(props: Props) {
+export default function HudModalCharacterSoul(props: Props) {
   return (
     <div className="dd__modal__character__attributes">
-      <dl className="dd__modal__character__body">
-        <dt>Siła</dt>
-        <dd>1/1-20</dd>
-        <dt>Szybkość</dt>
-        <dd>1/1-20</dd>
-        <dt>Kondycja</dt>
-        <dd>1/1-20</dd>
-        <dt>Inteligencja</dt>
-        <dd>1/1-20</dd>
-        <dt>Empatia</dt>
-        <dd>1/1-20</dd>
-      </dl>
-      <dl className="dd__modal__character__senses">
-        <dt>Wzrok</dt>
-        <dd>1/0-20</dd>
-        <dt>Słuch</dt>
-        <dd>1/0-20</dd>
-        <dt>Smak</dt>
-        <dd>1/0-20</dd>
-        <dt>Węch</dt>
-        <dd>1/0-20</dd>
-        <dt>Dotyk</dt>
-        <dd>1/0-20</dd>
-      </dl>
-      <dl className="dd__modal__character__soul">
+      <blockquote className="dd-tp__blockquote">
+        Bezbożni zaś są jak morze wzburzone, które się nie może uciszyć i którego fale wyrzucają muł i błoto.
+        <footer>Iz 57:20</footer>
+      </blockquote>
+      <dl className="dd__modal__character__specifics dd__modal__character__specifics--soul">
         <dt>Nieufność i nieposłuszeństwo</dt>
         <dd>20/0-100</dd>
         <dt>Skłonność do gniewu</dt>

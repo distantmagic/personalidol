@@ -7,6 +7,7 @@ import CancelToken from "../framework/classes/CancelToken";
 import CharacterQuery from "../framework/classes/Query/Character";
 import HudModalCharacter from "./HudModalCharacter";
 import HudModalLoader from "./HudModalLoader";
+import { default as CanceledException } from "../framework/classes/Exception/CancelToken/Canceled";
 
 import type { Match } from "react-router";
 
@@ -54,7 +55,9 @@ export default function HudModalCharacterLoader(props: Props) {
           })
         )
         .catch((error: Error) => {
-          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("characterQuery"), error);
+          if (!(error instanceof CanceledException)) {
+            return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("characterQuery"), error);
+          }
         });
 
       return function() {
