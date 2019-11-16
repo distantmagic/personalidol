@@ -5,7 +5,7 @@
 }
 
 .dd__debugger {
-  background-image: $texture-mineshaft-marble-512;
+  background-image: url($texture-mineshaft-marble-512);
   // border-radius: unset;
   // box-shadow: 0 0 16px black;
   display: grid;

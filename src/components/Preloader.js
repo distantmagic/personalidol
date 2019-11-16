@@ -60,6 +60,7 @@ type Props = {|
 
 export default function Preloader(props: Props) {
   const [loadedCount, setLoadedCount] = React.useState<number>(loaded.length);
+  const [wasLoaded] = React.useState<boolean>(Preloader.isLoaded());
 
   function onLoad(loadedSrc: string) {
     loaded.push(loadedSrc);
@@ -72,8 +73,30 @@ export default function Preloader(props: Props) {
     props.onPreloaded(true);
   }
 
+  React.useEffect(
+    function() {
+      if (!wasLoaded) {
+        return;
+      }
+
+      props.onPreloaded(true);
+    },
+    [props, wasLoaded]
+  );
+
+  // This edge case is almost impossible to happen, but just in case, do not
+  // go through the loading process again.
+  if (wasLoaded) {
+    return (
+      <div className="dd__setup">
+        Loading interface...
+        <progress className="dd__setup__progress" max="1" value="1"></progress>
+      </div>
+    );
+  }
+
   return (
-    <div className="dd__setup" id="dd-root-loader">
+    <div className="dd__setup">
       Loading interface...
       <progress className="dd__setup__progress" max={images.length} value={loadedCount}></progress>
       <div

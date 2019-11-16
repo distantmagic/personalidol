@@ -7,7 +7,7 @@ body {
 
 .dd__container {
   align-items: flex-start;
-  background-image: $texture-texture-cod-gray-marble-512;
+  background-image: url($texture-texture-cod-gray-marble-512);
   justify-content: center;
   display: flex;
   height: 100%;
@@ -31,7 +31,7 @@ body {
     animation-iteration-count: infinite;
     animation-name: fadein;
     // background-color: red;
-    background-image: $icon-hourglass;
+    background-image: url($icon-hourglass);
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -54,7 +54,7 @@ body {
 .dd__loader.dd__loader--error {
   &:before {
     animation: unset;
-    background-image: $icon-error;
+    background-image: url($icon-error);
   }
 }
 
@@ -165,7 +165,7 @@ body {
     filter: brightness(1.2);
   }
   &:after {
-    background-image: $texture-blood-marble-512;
+    background-image: url($texture-blood-marble-512);
     transition: filter 0.05s ease-in-out;
     // background-blend-mode: luminosity;
   }
@@ -183,13 +183,13 @@ body {
 
 @each $icon in (backpack, cogs, dialogue, error, hourglass, magic, magnifying-glass, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
-    background-image: url("../assets/icon-#{$icon}.png"), $texture-mineshaft-marble-512;
+    background-image: url("../assets/icon-#{$icon}.png"), url($texture-mineshaft-marble-512);
     background-size: 80%, auto;
   }
 }
 
 .dd__frame {
-  background-image: $texture-mineshaft-marble-512;
+  background-image: url($texture-mineshaft-marble-512);
   border-radius: $dd-frame-border-radius;
   border-style: solid;
 }
@@ -201,7 +201,8 @@ body {
 }
 
 .dd__frame.dd__frame--tab:not(.dd__frame--active) {
-  background-image: linear-gradient(to bottom, transparent 60%, rgba(black, 0.3)), $texture-texture-cod-gray-marble-512;
+  background-image: linear-gradient(to bottom, transparent 60%, rgba(black, 0.3)),
+    url($texture-texture-cod-gray-marble-512);
 }
 
 .dd__table {

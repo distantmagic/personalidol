@@ -24,7 +24,7 @@ $dd-dialogue-padding-horizontal: 1rem;
 }
 
 .dd__dialogue__hr {
-  background-image: $image-horizontal-rule-ornamental;
+  background-image: url($image-horizontal-rule-ornamental);
   background-position: 0 50%;
   background-repeat: no-repeat;
   background-size: contain;
@@ -135,9 +135,9 @@ $dd-dialogue-padding-horizontal: 1rem;
 
 .dd__dialogue__turn {
   align-content: flex-start;
-  background-image: $texture-paper-1-512;
+  background-image: url($texture-paper-1-512);
   background-size: auto, auto, auto;
-  border-image-source: $border-orthodox-frame;
+  border-image-source: url($border-orthodox-frame);
   border-image-repeat: round;
   border-image-slice: 108;
   border-radius: $dd-frame-border-radius;

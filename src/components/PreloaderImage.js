@@ -25,7 +25,7 @@ export default React.memo<Props>(function PreloaderImage(props: Props) {
   );
 
   const checkCompleted = React.useCallback(
-    function () {
+    function() {
       if (isLoaded || !imageElement) {
         return;
       }
@@ -47,7 +47,7 @@ export default React.memo<Props>(function PreloaderImage(props: Props) {
 
       const timeoutId = setTimeout(checkCompleted);
 
-      return function () {
+      return function() {
         clearTimeout(timeoutId);
       };
     },

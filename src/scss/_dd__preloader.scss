@@ -12,13 +12,14 @@
 .dd__preloader__progress__image {
   height: 100%;
   object-fit: contain;
+  transition: filter 0.1s ease-in-out;
   width: 100%;
 
   &.dd__preloader__progress__image--loading {
-    filter: grayscale(1) opacity(0.3);
+    filter: brightness(0.1) opacity(0.3);
   }
 
   &.dd__preloader__progress__image--loaded {
-    filter: grayscale(0) opacity(1);
+    filter: brightness(1) opacity(1);
   }
 }
