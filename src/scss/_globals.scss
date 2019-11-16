@@ -181,7 +181,7 @@ body {
   }
 }
 
-@each $icon in (backpack, cogs, dialogue, magic, magnifying-glass, observe, prayer, skill, strength) {
+@each $icon in (backpack, cogs, dialogue, error, hourglass, magic, magnifying-glass, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
     background-image: url("../assets/icon-#{$icon}.png"), $texture-mineshaft-marble-512;
     background-size: 80%, auto;
