@@ -88,6 +88,14 @@ export default class MD2Character extends CanvasView {
 
   async dispose(): Promise<void> {
     await super.dispose();
+
+    const character = this.character;
+
+    if (!character) {
+      return;
+    }
+
+    this.scene.remove(character.root);
   }
 
   update(delta: number): void {

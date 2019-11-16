@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import Image from "react-image";
 import ReactMarkdown from "react-markdown";
 
 import DialogueAnswer from "./DialogueAnswer";
@@ -36,7 +37,7 @@ export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
     <div className="dd__dialogue__turn">
       {props.illustration && (
         <div className="dd__dialogue__turn__illustration">
-          <img alt="Illustration" className="dd__dialogue__turn__illustration__image" src={imgImageManuscriptHeader} />
+          <Image alt="Illustration" className="dd__dialogue__turn__illustration__image" src={imgImageManuscriptHeader} />
         </div>
       )}
       <h1 className="dd__dialogue__turn__title">Jaskinia pustelnika</h1>

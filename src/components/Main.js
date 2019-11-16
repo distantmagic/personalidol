@@ -34,12 +34,29 @@ type Props = {|
   queryBus: QueryBus,
 |};
 
+function checkIsDocumentTooSmall(innerHeight: number, innerWidth: number): bool {
+  return innerHeight < 600 || innerWidth < 600;
+}
+
 export default function Main(props: Props) {
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
   const [isDocumentHidden, setIsDocumentHidden] = React.useState<boolean>(document.hidden);
+  const [isDocumentTooSmall, setIsDocumentTooSmall] = React.useState<boolean>(checkIsDocumentTooSmall(window.innerHeight, window.innerWidth));
 
   const hasDialogue = false;
+
+  React.useEffect(function () {
+    function onResize(): void {
+      setIsDocumentTooSmall(checkIsDocumentTooSmall(window.innerHeight, window.innerWidth));
+    }
+
+    const intervalId = setInterval(onResize);
+
+    return function () {
+      clearInterval(intervalId);
+    };
+  });
 
   React.useEffect(
     function() {
@@ -73,6 +90,14 @@ export default function Main(props: Props) {
     },
     [isDocumentHidden, props.clockReactiveController, props.loggerBreadcrumbs]
   );
+
+  if (isDocumentTooSmall) {
+    return (
+      <strong>
+        Your resolution is too low.
+      </strong>
+    );
+  }
 
   return (
     <div

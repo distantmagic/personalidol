@@ -39,9 +39,8 @@
         background-color: black;
         color: #eee;
         display: flex;
-        font-family: Garamond, Georgia, serif;
+        font-family: "Vesper Libre", Garamond, Georgia, serif;
         justify-content: center;
-        /*min-height: 100vh;*/
       }
       .dd__browser-details {
         padding-top: 1.6rem;
@@ -63,7 +62,12 @@
       }
       .dd__setup {
         max-width: 40ch;
+        line-height: 1.3;
         padding: 1rem;
+      }
+      .dd__setup__content p + p {
+        // content: "\2767";
+        text-indent: 1em;
       }
       .dd__setup--hidden {
         display: none;
@@ -99,7 +103,7 @@
         Checking browser capabilities...
       </div>
       <div class="dd__setup dd__setup--error dd__setup--hidden" id="root-error">
-        <div class="dd__setup__content dd-tp__formatted-text">
+        <div class="dd__setup__content">
           <strong class="dd__setup__error-message">
             Your browser is not capable of running this application.
           </strong>

@@ -1,7 +1,7 @@
 // @flow
 
 import QuakeBrush from "./QuakeBrush";
-import QuakeBrushHalfPlaneParser from "./QuakeBrushHalfPlaneParser";
+import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
 import QuakeEntity from "./QuakeEntity";
 import QuakeEntityProperties from "./QuakeEntityProperties";
 import QuakeEntityPropertyParser from "./QuakeEntityPropertyParser";
@@ -10,7 +10,7 @@ import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser"
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
-import type { QuakeBrushHalfPlane } from "../interfaces/QuakeBrushHalfPlane";
+import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
 import type { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
 import type { QuakeMap as QuakeMapInterface } from "../interfaces/QuakeMap";
@@ -27,8 +27,8 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  brushHalfPlane(line: string): QuakeBrushHalfPlane {
-    return new QuakeBrushHalfPlaneParser(this.loggerBreadcrumbs.add("brushHalfPlane"), line).parse();
+  brushHalfSpace(line: string): QuakeBrushHalfSpace {
+    return new QuakeBrushHalfSpaceParser(this.loggerBreadcrumbs.add("brushHalfSpace"), line).parse();
   }
 
   entityProperty(line: string): QuakeEntityProperty {
@@ -38,7 +38,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
   parse(): QuakeMapInterface {
     const entities: Array<QuakeEntityInterface> = [];
     const lines: $ReadOnlyArray<string> = this.splitLines(this.content);
-    let currentBrushSketch: ?Array<QuakeBrushHalfPlane> = null;
+    let currentBrushSketch: ?Array<QuakeBrushHalfSpace> = null;
     let currentEntitySketch: ?{|
       brush: ?QuakeBrushInterface,
       props: Array<QuakeEntityProperty>,
@@ -99,7 +99,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
       }
 
       if (currentBrushSketch) {
-        currentBrushSketch.push(this.brushHalfPlane(line));
+        currentBrushSketch.push(this.brushHalfSpace(line));
         continue;
       }
 

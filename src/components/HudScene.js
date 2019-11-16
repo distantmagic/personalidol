@@ -48,7 +48,9 @@ export default function HudScene(props: Props) {
         customElements.whenDefined("x-dm-scene-canvas").then(function() {
           setIsSceneCanvasDefined(true);
         });
-        customElements.define("x-dm-scene-canvas", SceneCanvas);
+        if (!customElements.get("x-dm-scene-canvas")) {
+          customElements.define("x-dm-scene-canvas", SceneCanvas);
+        }
       }
     },
     [customElements]

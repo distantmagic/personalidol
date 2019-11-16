@@ -4,9 +4,9 @@ import * as round from "../helpers/round";
 
 import type { Vector3 } from "three";
 
-import type { QuakeBrushHalfPlane as QuakeBrushHalfPlaneInterface } from "../interfaces/QuakeBrushHalfPlane";
+import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 
-export default class QuakeBrushHalfPlane implements QuakeBrushHalfPlaneInterface {
+export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface {
   +v1: Vector3;
   +v2: Vector3;
   +v3: Vector3;
@@ -81,7 +81,7 @@ export default class QuakeBrushHalfPlane implements QuakeBrushHalfPlaneInterface
     return this.yOffset;
   }
 
-  isEqual(other: QuakeBrushHalfPlaneInterface): boolean {
+  isEqual(other: QuakeBrushHalfSpaceInterface): boolean {
     return (
       this.getVector1().equals(other.getVector1()) &&
       this.getVector2().equals(other.getVector2()) &&
@@ -89,7 +89,7 @@ export default class QuakeBrushHalfPlane implements QuakeBrushHalfPlaneInterface
       this.getTexture() === other.getTexture() &&
       this.getXOffset() === other.getXOffset() &&
       this.getYOffset() === other.getYOffset() &&
-      round.isEqualWithPrecision(this.getTextureRotationAngle(), other.getTextureRotationAngle(), -2) &&
+      round.isEqualWithPrecision(this.getTextureRotationAngle(), other.getTextureRotationAngle(), 2) &&
       this.getTextureXScale() === other.getTextureXScale() &&
       this.getTextureYScale() === other.getTextureYScale()
     );

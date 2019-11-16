@@ -163,9 +163,6 @@ export default class Root extends CanvasController {
 
     await this.cameraController.dispose();
 
-    // redraw once more after cleaning views etc
-    this.draw(0);
-
     this.threePointerInteraction.disconnect();
     this.scene.dispose();
     this.debug.deleteState(this.loggerBreadcrumbs.add("fps"));

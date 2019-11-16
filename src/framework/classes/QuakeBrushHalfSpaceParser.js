@@ -2,16 +2,16 @@
 
 import * as THREE from "three";
 
-import QuakeBrushHalfPlane from "./QuakeBrushHalfPlane";
+import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeBrushHalfPlane as QuakeBrushHalfPlaneInterface } from "../interfaces/QuakeBrushHalfPlane";
-import type { QuakeBrushHalfPlaneParser as QuakeBrushHalfPlaneParserInterface } from "../interfaces/QuakeBrushHalfPlaneParser";
+import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
+import type { QuakeBrushHalfSpaceParser as QuakeBrushHalfSpaceParserInterface } from "../interfaces/QuakeBrushHalfSpaceParser";
 
 const REGEXP_BRUSH_HALFPLANE = /^\s*\(\s*(\-?[0-9]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)\s*\)\s*\(\s*(\-?[0-9]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)\s*\)\s*\(\s*(\-?[0-9]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)\s*\)\s+([_a-zA-Z]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)\s+(\-?[\.0-9]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)$/;
 
-export default class QuakeBrushHalfPlaneParser implements QuakeBrushHalfPlaneParserInterface {
+export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpaceParserInterface {
   +line: string;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
@@ -20,7 +20,7 @@ export default class QuakeBrushHalfPlaneParser implements QuakeBrushHalfPlanePar
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  parse(): QuakeBrushHalfPlaneInterface {
+  parse(): QuakeBrushHalfSpaceInterface {
     const match = this.line.match(REGEXP_BRUSH_HALFPLANE);
 
     if (!match) {
@@ -36,7 +36,7 @@ export default class QuakeBrushHalfPlaneParser implements QuakeBrushHalfPlanePar
       );
     }
 
-    return new QuakeBrushHalfPlane(
+    return new QuakeBrushHalfSpace(
       new THREE.Vector3(Number(match[1]), Number(match[2]), Number(match[3])),
       new THREE.Vector3(Number(match[4]), Number(match[5]), Number(match[6])),
       new THREE.Vector3(Number(match[7]), Number(match[8]), Number(match[9])),

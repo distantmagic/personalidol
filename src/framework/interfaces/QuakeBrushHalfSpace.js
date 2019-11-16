@@ -2,7 +2,7 @@
 
 import type { Equatable } from "./Equatable";
 
-export interface QuakeBrushHalfPlane extends Equatable<QuakeBrushHalfPlane> {
+export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
   getTexture(): string;
 
   getTextureRotationAngle(): number;
