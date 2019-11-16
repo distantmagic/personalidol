@@ -10,7 +10,6 @@ import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { DialogueTurn } from "../framework/interfaces/DialogueTurn";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Identifiable } from "../framework/interfaces/Identifiable";
-import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { Speaks } from "../framework/interfaces/Sentient/Speaks";
 
@@ -18,7 +17,6 @@ type Props = {|
   dialogue: DialogueClass,
   dialogueInitiator: Identifiable & Speaks,
   exceptionHandler: ExceptionHandler,
-  logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   onDialogueEnd: boolean => any,
 |};
@@ -61,7 +59,6 @@ export default function Dialogue(props: Props) {
     <DialogueTurnComponent
       dialogueTurn={dialogueTurn}
       exceptionHandler={props.exceptionHandler}
-      logger={props.logger}
       loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueTurnComponent")}
       onAnswerClick={onAnswerClick}
       onDialogueEnd={props.onDialogueEnd}

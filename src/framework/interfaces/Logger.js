@@ -7,7 +7,7 @@ export interface Logger {
   /**
    * System is unusable.
    */
-  emergency(LoggerBreadcrumbs, string): void;
+  emergency(LoggerBreadcrumbs, string): Promise<void>;
 
   /**
    * Action must be taken immediately.
@@ -15,20 +15,20 @@ export interface Logger {
    * Example: Entire website down, database unavailable, etc. This should
    * trigger the SMS alerts and wake you up.
    */
-  alert(LoggerBreadcrumbs, string): void;
+  alert(LoggerBreadcrumbs, string): Promise<void>;
 
   /**
    * Critical conditions.
    *
    * Example: Application component unavailable, unexpected exception.
    */
-  critical(LoggerBreadcrumbs, string): void;
+  critical(LoggerBreadcrumbs, string): Promise<void>;
 
   /**
    * Runtime errors that do not require immediate action but should typically
    * be logged and monitored.
    */
-  error(LoggerBreadcrumbs, string): void;
+  error(LoggerBreadcrumbs, string): Promise<void>;
 
   /**
    * Exceptional occurrences that are not errors.
@@ -36,27 +36,27 @@ export interface Logger {
    * Example: Use of deprecated APIs, poor use of an API, undesirable things
    * that are not necessarily wrong.
    */
-  warning(LoggerBreadcrumbs, string): void;
+  warning(LoggerBreadcrumbs, string): Promise<void>;
 
   /**
    * Normal but significant events.
    */
-  notice(LoggerBreadcrumbs, string): void;
+  notice(LoggerBreadcrumbs, string): Promise<void>;
 
   /**
    * Interesting events.
    *
    * Example: User logs in, SQL logs.
    */
-  info(LoggerBreadcrumbs, string): void;
+  info(LoggerBreadcrumbs, string): Promise<void>;
 
   /**
    * Detailed debug information.
    */
-  debug(LoggerBreadcrumbs, string): void;
+  debug(LoggerBreadcrumbs, string): Promise<void>;
 
   /**
    * Logs with an arbitrary level.
    */
-  log(LoggerBreadcrumbs, LogSeverityEnum, string): void;
+  log(LoggerBreadcrumbs, LogSeverityEnum, string): Promise<void>;
 }

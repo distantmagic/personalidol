@@ -89,7 +89,7 @@ $dd-modal-character-inventory-slots: (
   z-index: $z-index-dd-modal-character-inventory-slot;
 
   &:before {
-    background-image: url("../assets/texture-mineshaft-marble-512.png");
+    background-image: $texture-mineshaft-marble-512;
     content: "";
     height: 100%;
     left: 0;
@@ -116,7 +116,7 @@ $dd-modal-character-inventory-slots: (
   position: relative;
 
   &:before {
-    background-image: url("../assets/image-knight-silhouette.svg");
+    background-image: $image-knight-silhouette;
     background-position: center;
     background-size: 100% calc(100% - 128px);
     background-repeat: no-repeat;

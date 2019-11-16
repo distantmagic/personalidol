@@ -1,0 +1,25 @@
+.dd__preloader__progress {
+  bottom: 1rem;
+  display: grid;
+  grid-template-columns: repeat(var(--dd-preloader-images-total), 1fr);
+  height: 1.6rem;
+  left: 0;
+  margin-top: 1.6rem;
+  position: absolute;
+  width: 100%;
+}
+
+.dd__preloader__progress__image {
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+  transition: filter 0.3s ease-in-out;
+
+  &.dd__preloader__progress__image--loading {
+    filter: grayscale(1) opacity(0.3);
+  }
+
+  &.dd__preloader__progress__image--loaded {
+    filter: grayscale(0) opacity(1);
+  }
+}

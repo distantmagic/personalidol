@@ -6,6 +6,7 @@ import EventListenerSet from "./EventListenerSet";
 import LoadingManagerState from "./LoadingManagerState";
 
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
+import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
 import type { LoadingManager as LoadingManagerInterface } from "../interfaces/LoadingManager";
 import type { LoadingManagerState as LoadingManagerStateInterface } from "../interfaces/LoadingManagerState";
 import type { LoadingManagerStateChangeCallback } from "../types/LoadingManagerStateChangeCallback";
@@ -16,13 +17,15 @@ export default class LoadingManager implements LoadingManagerInterface {
   +backgroundItems: Map<Promise<any>, string>;
   +blockingItems: Map<Promise<any>, string>;
   +callbacks: EventListenerSetInterface<[LoadingManagerStateInterface]>;
+  +exceptionHandler: ExceptionHandler;
   +failedItems: Map<Promise<any>, string>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, exceptionHandler: ExceptionHandler) {
     this.backgroundItems = new Map<Promise<any>, string>();
     this.blockingItems = new Map<Promise<any>, string>();
     this.callbacks = new EventListenerSet<[LoadingManagerStateInterface]>();
+    this.exceptionHandler = exceptionHandler;
     this.failedItems = new Map<Promise<any>, string>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
@@ -35,6 +38,7 @@ export default class LoadingManager implements LoadingManagerInterface {
       return await blocker;
     } catch (err) {
       this.failedItems.set(blocker, comment);
+      this.exceptionHandler.captureException(this.loggerBreadcrumbs.add("background"), err);
       throw err;
     } finally {
       this.backgroundItems.delete(blocker);
@@ -50,6 +54,7 @@ export default class LoadingManager implements LoadingManagerInterface {
       return await blocker;
     } catch (err) {
       this.failedItems.set(blocker, comment);
+      this.exceptionHandler.captureException(this.loggerBreadcrumbs.add("blocking"), err);
       throw err;
     } finally {
       this.blockingItems.delete(blocker);

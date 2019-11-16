@@ -1,75 +1,13 @@
-*,
-* * {
-  box-sizing: border-box;
-}
-
-::selection {
-  background-color: crimson;
-  color: white;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
 body {
   @include tp-text(1);
 
-  background-color: black;
   color: rgba(white, 0.85);
-  display: grid;
   font-family: $font-family-vesper-libre;
-  // grid-template-columns: 1fr;
-  // grid-template-rows: 1fr;
-  height: 100vh;
-  // overflow: hidden;
-  width: 100%;
 }
 
-button,
-dd,
-dl,
-dt,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  font-size: inherit;
-  font-weight: normal;
-  line-height: inherit;
-  margin: 0;
-  padding: 0;
-}
-
-a,
-button {
-  color: inherit;
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: default;
-}
-
-.dd__capable {
-  background-image: url("../assets/texture-cod-gray-marble-512.png");
-}
-
-.dd__capable,
 .dd__container {
   align-items: flex-start;
+  background-image: $texture-texture-cod-gray-marble-512;
   justify-content: center;
   display: flex;
   height: 100%;
@@ -93,7 +31,7 @@ button:disabled {
     animation-iteration-count: infinite;
     animation-name: fadein;
     // background-color: red;
-    background-image: url("../assets/icon-hourglass.png");
+    background-image: $icon-hourglass;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -116,7 +54,7 @@ button:disabled {
 .dd__loader.dd__loader--error {
   &:before {
     animation: unset;
-    background-image: url("../assets/icon-error.png");
+    background-image: $icon-error;
   }
 }
 
@@ -227,7 +165,7 @@ button:disabled {
     filter: brightness(1.2);
   }
   &:after {
-    background-image: url("../assets/texture-blood-marble-512.png");
+    background-image: $texture-blood-marble-512;
     transition: filter 0.05s ease-in-out;
     // background-blend-mode: luminosity;
   }
@@ -245,13 +183,13 @@ button:disabled {
 
 @each $icon in (backpack, cogs, dialogue, magic, magnifying-glass, observe, prayer, skill, strength) {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
-    background-image: url("../assets/icon-#{$icon}.png"), url("../assets/texture-mineshaft-marble-512.png");
+    background-image: url("../assets/icon-#{$icon}.png"), $texture-mineshaft-marble-512;
     background-size: 80%, auto;
   }
 }
 
 .dd__frame {
-  background-image: url("../assets/texture-mineshaft-marble-512.png");
+  background-image: $texture-mineshaft-marble-512;
   border-radius: $dd-frame-border-radius;
   border-style: solid;
 }
@@ -263,23 +201,16 @@ button:disabled {
 }
 
 .dd__frame.dd__frame--tab:not(.dd__frame--active) {
-  background-image: linear-gradient(to bottom, transparent 60%, rgba(black, 0.3)),
-    url("../assets/texture-cod-gray-marble-512.png");
+  background-image: linear-gradient(to bottom, transparent 60%, rgba(black, 0.3)), $texture-texture-cod-gray-marble-512;
 }
 
 .dd__table {
-  // background-image: url("../assets/image-nobody-knows-anybody.png"), url("../assets/texture-navy-blue-marble-512.jpg");
   background-blend-mode: multiply;
-  // background-image: url("../assets/texture-navy-blue-marble-512.jpg");
   background-position: 100% 100%, center;
   background-repeat: no-repeat, repeat;
-  // background-repeat: repeat;
-  // background-size: contain, auto;
   background-size: auto;
   border-collapse: collapse;
-  // margin: 1rem 0;
   table-layout: fixed;
-  // width: 100%;
 
   td,
   th {
@@ -293,14 +224,10 @@ button:disabled {
 .dd__tooltip {
   align-items: center;
   background-color: rgba(black, 0.85);
-  // background-image: url('assets/texture-paper-1-512.jpg');
   border-radius: $dd-frame-border-radius;
-  // display: flex;
   display: none;
   filter: drop-shadow(12px 12px 24px rgba(black, 0.6));
   flex-direction: column;
-  // height: 100%;
-  // min-height: 4rem;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
@@ -309,7 +236,6 @@ button:disabled {
   right: -12px;
   top: 12px;
   text-align: center;
-  // transition: opacity 0.1s ease-in-out;
   transform: translateX(100%) translateY(-12px);
   width: 328px;
   z-index: $z-index-dd-aside-portrait-status-tooltip;
@@ -321,12 +247,9 @@ button:disabled {
     height: 0;
     width: 0;
 
-    // background-color: green;
     content: "";
-    // height: 12px;
     left: -10.4px;
     position: absolute;
     top: 6px;
-    // width: 12px;
   }
 }

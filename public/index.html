@@ -8,12 +8,6 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"
     />
-    <meta name="theme-color" content="#000000" />
-    <!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json?%REACT_APP_RELEASE%" />
     <link
       href="https://fonts.googleapis.com/css?family=Almendra|Space+Mono|Vesper+Libre&subset=latin-ext"
       rel="stylesheet"
@@ -23,24 +17,62 @@
       *,
       * * {
         box-sizing: border-box;
+      }
+      html,
+      body {
         margin: 0;
         padding: 0;
       }
-      a {
-        color: inherit;
+      html {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
       body,
-      html {
-        height: 100%;
-        width: 100%;
+      #dd-root {
+        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        justify-items: center;
       }
       body {
-        align-items: center;
         background-color: black;
         color: #eee;
-        display: flex;
         font-family: "Vesper Libre", Garamond, Georgia, serif;
-        justify-content: center;
+        height: 100%;
+        min-height: 100vh;
+        width: 100%;
+      }
+      ::selection {
+        background-color: crimson;
+        color: white;
+      }
+      button,
+      dd,
+      dl,
+      dt,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        font-size: inherit;
+        font-weight: normal;
+        line-height: inherit;
+        margin: 0;
+        padding: 0;
+      }
+      a,
+      button {
+        color: inherit;
+        cursor: pointer;
+      }
+      button:disabled {
+        cursor: default;
       }
       .dd__browser-details {
         padding-top: 1.6rem;
@@ -61,16 +93,40 @@
         color: crimson;
       }
       .dd__setup {
-        max-width: 40ch;
+        display: block;
         line-height: 1.3;
+        max-width: 40ch;
+        min-width: 30vw;
         padding: 1rem;
+        text-align: center;
+        width: 100%;
+      }
+      .dd__setup.dd__setup--hidden {
+        display: none;
+      }
+      .dd__setup__content {
+        text-align: left;
       }
       .dd__setup__content p + p {
-        // content: "\2767";
         text-indent: 1em;
       }
-      .dd__setup--hidden {
-        display: none;
+      .dd__setup__progress {
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: #eee;
+        border: none;
+        display: block;
+        margin-top: 1.6rem;
+        width: 100%;
+      }
+      .dd__setup__progress::-webkit-progress-bar {
+        background-color: #eee;
+      }
+      .dd__setup__progress::-webkit-progress-value {
+        background-color: #333;
+      }
+      .dd__setup__progress::-moz-progress-bar {
+        background-color: #333;
       }
       .dd__setup__recommended-browsers {
         display: block;
@@ -86,7 +142,7 @@
     <title>Personal Idol</title>
   </head>
   <body>
-    <div class="js-dd-pending" id="root">
+    <div class="js-dd-pending" id="dd-root">
       <noscript class="dd__noscript">
         <div class="dd__setup dd__setup--error">
           <p class="dd__setup__error-message">
@@ -99,10 +155,11 @@
           </p>
         </div>
       </noscript>
-      <div class="dd__setup dd__setup--hidden" id="root-loader">
+      <div class="dd__setup dd__setup--hidden" id="dd-root-loader">
         Checking browser capabilities...
+        <progress class="dd__setup__progress" id="dd-capabilities-progress">70%</progress>
       </div>
-      <div class="dd__setup dd__setup--error dd__setup--hidden" id="root-error">
+      <div class="dd__setup dd__setup--error dd__setup--hidden" id="dd-root-error">
         <div class="dd__setup__content">
           <strong class="dd__setup__error-message">
             Your browser is not capable of running this application.
@@ -222,81 +279,13 @@
     </div>
     <script>
       (function() {
-        document.getElementById("root-loader").classList.remove("dd__setup--hidden");
+        // this one is here to make sure that setup contents is shown only to
+        // users that have JavaScript enabled
+        document.getElementById("dd-root-loader").classList.remove("dd__setup--hidden");
       })();
     </script>
 
     <script src="%PUBLIC_URL%/vendor/modernizr.js"></script>
-    <script>
-      (function() {
-        "use strict";
-
-        var rootElement = document.getElementById("root");
-        var requiredBrowserFeatures = {
-          cssgrid: "cssgrid",
-          customelements: "customelements",
-          datachannel: "webrtc",
-          es5: "es5",
-          es6array: "es6",
-          es6collections: "es6",
-          es6math: "es6",
-          es6number: "es6",
-          es6object: "es6",
-          es6string: "es6",
-          fetch: "fetch",
-          flexbox: "flexbox",
-          generators: "es6",
-          intl: "intl",
-          passiveeventlisteners: "passiveeventlisteners",
-          peerconnection: "webrtc",
-          promises: "promises",
-          serviceworker: "serviceworker",
-          srcset: "srcset",
-          webgl: "webgl",
-          webworkers: "webworkers",
-        };
-        var allFeatures = 0;
-        var doneFeatures = 0;
-        var feature = void 0;
-        var isCapable = true;
-
-        var notSupportedClassName = "dd__browser-feature--not-supported";
-        var supportedClassName = "dd__browser-feature--supported";
-
-        for (feature in requiredBrowserFeatures) {
-          if (requiredBrowserFeatures.hasOwnProperty(feature)) {
-            allFeatures += 1;
-
-            Modernizr.on(
-              feature,
-              (function(thisFeature) {
-                return function(result) {
-                  var isFeatureSupported = result;
-
-                  isCapable = isCapable && isFeatureSupported;
-                  doneFeatures += 1;
-
-                  document
-                    .getElementById("browser-feature-" + requiredBrowserFeatures[thisFeature])
-                    .classList.add(isFeatureSupported ? supportedClassName : notSupportedClassName);
-
-                  if (doneFeatures < allFeatures) {
-                    return;
-                  }
-
-                  if (isCapable) {
-                    rootElement.className = "js-dd-capable";
-                  } else {
-                    rootElement.className = "js-dd-incapable";
-                    document.getElementById("root-loader").classList.add("dd__setup--hidden");
-                    document.getElementById("root-error").classList.remove("dd__setup--hidden");
-                  }
-                };
-              })(feature)
-            );
-          }
-        }
-      })();
-    </script>
+    <script src="%PUBLIC_URL%/setup.js"></script>
   </body>
 </html>

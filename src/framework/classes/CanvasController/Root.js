@@ -112,6 +112,7 @@ export default class Root extends CanvasController {
     await super.attach();
 
     await Promise.all([
+      this.cameraController.attach(),
       this.loadingManager.blocking(
         this.canvasViewBag.add(
           new AmbientLightView(
@@ -145,8 +146,6 @@ export default class Root extends CanvasController {
         "Loading map"
       ),
     ]);
-
-    await this.cameraController.attach();
 
     this.scheduler.onBegin(this.canvasPointerController.begin);
     this.scheduler.onDraw(this.cameraController.draw);

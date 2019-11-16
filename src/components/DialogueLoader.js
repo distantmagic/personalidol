@@ -12,7 +12,6 @@ import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
 import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { Identifiable } from "../framework/interfaces/Identifiable";
-import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 import type { Speaks } from "../framework/interfaces/Sentient/Speaks";
@@ -23,7 +22,6 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
-  logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
 |};
@@ -76,7 +74,6 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
       dialogueInitiator={props.dialogueInitiator}
       exceptionHandler={props.exceptionHandler}
       onDialogueEnd={setIsDialogueEnded}
-      logger={props.logger}
       loggerBreadcrumbs={props.loggerBreadcrumbs.add("Dialogue")}
     />
   );

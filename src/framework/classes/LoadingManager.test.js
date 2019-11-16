@@ -1,14 +1,20 @@
 // @flow
 
 import CancelToken from "./CancelToken";
+import ExceptionHandler from "./ExceptionHandler";
+import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
 import LoadingManager from "./LoadingManager";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import { default as ConsoleLogger } from "./Logger/Console";
 
 it("determines whether loading is blocking or not", async function() {
+  const logger = new ConsoleLogger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const exceptionHandlerFilter = new ExceptionHandlerFilter();
+  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const cancelToken1 = new CancelToken(loggerBreadcrumbs);
   const cancelToken2 = new CancelToken(loggerBreadcrumbs);
-  const loadingManager = new LoadingManager(loggerBreadcrumbs);
+  const loadingManager = new LoadingManager(loggerBreadcrumbs, exceptionHandler);
 
   loadingManager.blocking(cancelToken1.whenCanceled());
 
@@ -46,9 +52,12 @@ it("determines whether loading is blocking or not", async function() {
 }, 300);
 
 it("allows to embed comments", async function() {
+  const logger = new ConsoleLogger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const exceptionHandlerFilter = new ExceptionHandlerFilter();
+  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const loadingManager = new LoadingManager(loggerBreadcrumbs);
+  const loadingManager = new LoadingManager(loggerBreadcrumbs, exceptionHandler);
 
   loadingManager.blocking(cancelToken.whenCanceled(), "test");
   loadingManager.blocking(cancelToken.whenCanceled(), "");

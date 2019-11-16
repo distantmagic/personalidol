@@ -11,7 +11,6 @@ import imgImageManuscriptHeader from "../assets/image-manuscript-header.png";
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { DialogueMessages } from "../framework/types/DialogueMessages";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 
 type Props = {|
@@ -19,7 +18,6 @@ type Props = {|
   answers: DialogueMessages,
   exceptionHandler: ExceptionHandler,
   illustration: ?string,
-  logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
   onDialogueEnd: boolean => any,
@@ -64,7 +62,6 @@ export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
                 <DialogueAnswer
                   dialogueMessage={dialogueMessage}
                   exceptionHandler={props.exceptionHandler}
-                  logger={props.logger}
                   loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueAnswer")}
                   onAnswerClick={props.onAnswerClick}
                 />

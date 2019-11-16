@@ -1,12 +1,14 @@
 // @flow
 
+import type { ExceptionHandlerGuardCallback } from "../types/ExceptionHandlerGuardCallback";
 import type { Logger } from "./Logger";
 import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
 
 export interface ExceptionHandler {
-  constructor(Logger): void;
+  /**
+   * Should return 'true' when exception is processed successfully.
+   */
+  captureException<T: Error>(LoggerBreadcrumbs, T): Promise<boolean>;
 
-  captureException(LoggerBreadcrumbs, Error): Promise<void>;
-
-  expectException(LoggerBreadcrumbs): Error => Promise<void>;
+  guard<T>(LoggerBreadcrumbs, ExceptionHandlerGuardCallback<T>): Promise<T>;
 }

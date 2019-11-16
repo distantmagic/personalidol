@@ -1,55 +1,25 @@
 // @flow
 
-import autoBind from "auto-bind";
-
 import type { Logger as LoggerInterface } from "../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { LogSeverityEnum } from "../types/LogSeverityEnum";
 
 export default class Logger implements LoggerInterface {
-  constructor() {
-    autoBind(this);
-  }
+  async emergency(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}
 
-  emergency(breadcrumbs: LoggerBreadcrumbs, message: string): void {
-    this.log(breadcrumbs, "emergency", message);
-  }
+  async alert(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}
 
-  alert(breadcrumbs: LoggerBreadcrumbs, message: string): void {
-    this.log(breadcrumbs, "alert", message);
-  }
+  async critical(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}
 
-  critical(breadcrumbs: LoggerBreadcrumbs, message: string): void {
-    this.log(breadcrumbs, "critical", message);
-  }
+  async error(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}
 
-  error(breadcrumbs: LoggerBreadcrumbs, message: string): void {
-    this.log(breadcrumbs, "error", message);
-  }
+  async warning(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}
 
-  warning(breadcrumbs: LoggerBreadcrumbs, message: string): void {
-    this.log(breadcrumbs, "warning", message);
-  }
+  async notice(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}
 
-  notice(breadcrumbs: LoggerBreadcrumbs, message: string): void {
-    this.log(breadcrumbs, "notice", message);
-  }
+  async info(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}
 
-  info(breadcrumbs: LoggerBreadcrumbs, message: string): void {
-    this.log(breadcrumbs, "info", message);
-  }
+  async debug(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}
 
-  debug(breadcrumbs: LoggerBreadcrumbs, message: string): void {
-    this.log(breadcrumbs, "debug", message);
-  }
-
-  log(breadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): void {
-    const baseMessage = `[DD][${severity}] ${message}`;
-
-    if ("debug" === severity) {
-      console.info(`%c${baseMessage}`, "background-color: #222; color: tomato");
-    } else {
-      console.log(baseMessage);
-    }
-  }
+  async log(breadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): Promise<void> {}
 }

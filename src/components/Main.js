@@ -11,6 +11,7 @@ import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
 import HudSettings from "./HudSettings";
 import Person from "../framework/classes/Entity/Person";
+import Preloader from "./Preloader";
 
 import type { ClockReactiveController } from "../framework/interfaces/ClockReactiveController";
 import type { Debugger } from "../framework/interfaces/Debugger";
@@ -18,7 +19,6 @@ import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler"
 import type { ExpressionBus } from "../framework/interfaces/ExpressionBus";
 import type { ExpressionContext } from "../framework/interfaces/ExpressionContext";
 import type { LoadingManager } from "../framework/interfaces/LoadingManager";
-import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 
@@ -29,36 +29,17 @@ type Props = {|
   expressionBus: ExpressionBus,
   expressionContext: ExpressionContext,
   loadingManager: LoadingManager,
-  logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
 |};
-
-function checkIsDocumentTooSmall(innerHeight: number, innerWidth: number): boolean {
-  return innerHeight < 600 || innerWidth < 600;
-}
 
 export default function Main(props: Props) {
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
   const [isDocumentHidden, setIsDocumentHidden] = React.useState<boolean>(document.hidden);
-  const [isDocumentTooSmall, setIsDocumentTooSmall] = React.useState<boolean>(
-    checkIsDocumentTooSmall(window.innerHeight, window.innerWidth)
-  );
+  const [isPreloaded, setIsPreloaded] = React.useState<boolean>(Preloader.isLoaded());
 
   const hasDialogue = false;
-
-  React.useEffect(function() {
-    function onResize(): void {
-      setIsDocumentTooSmall(checkIsDocumentTooSmall(window.innerHeight, window.innerWidth));
-    }
-
-    const intervalId = setInterval(onResize);
-
-    return function() {
-      clearInterval(intervalId);
-    };
-  });
 
   React.useEffect(
     function() {
@@ -93,8 +74,8 @@ export default function Main(props: Props) {
     [isDocumentHidden, props.clockReactiveController, props.loggerBreadcrumbs]
   );
 
-  if (isDocumentTooSmall) {
-    return <strong>Your resolution is too low.</strong>;
+  if (!isPreloaded) {
+    return <Preloader onPreloaded={setIsPreloaded} />;
   }
 
   return (
@@ -111,7 +92,6 @@ export default function Main(props: Props) {
           exceptionHandler={props.exceptionHandler}
           expressionBus={props.expressionBus}
           expressionContext={props.expressionContext}
-          logger={props.logger}
           loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
           queryBus={props.queryBus}
         />
@@ -120,7 +100,6 @@ export default function Main(props: Props) {
       <HudDebuggerListing debug={props.debug} />
       <HudModalRouter
         exceptionHandler={props.exceptionHandler}
-        logger={props.logger}
         loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")}
         queryBus={props.queryBus}
       />

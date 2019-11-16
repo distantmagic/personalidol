@@ -12,13 +12,11 @@ import ScrollbarPosition from "../framework/classes/ScrollbarPosition";
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { DialogueTurn as DialogueTurnInterface } from "../framework/interfaces/DialogueTurn";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 
 type Props = {|
   dialogueTurn: DialogueTurnInterface,
   exceptionHandler: ExceptionHandler,
-  logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
   onDialogueEnd: boolean => any,
@@ -108,7 +106,6 @@ export default function DialogueTurn(props: Props) {
           answers={state.answers}
           exceptionHandler={props.exceptionHandler}
           illustration={state.illustration}
-          logger={props.logger}
           loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueTurnPrompt")}
           onAnswerClick={props.onAnswerClick}
           onDialogueEnd={props.onDialogueEnd}

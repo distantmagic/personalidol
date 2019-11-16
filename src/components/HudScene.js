@@ -73,7 +73,14 @@ export default function HudScene(props: Props) {
       window.addEventListener("beforeunload", beforeUnload, {
         once: true,
       });
-      sceneCanvas.attachRenderer(cancelToken, props.debug, props.loadingManager, props.queryBus, threeLoadingManager);
+      sceneCanvas.attachRenderer(
+        cancelToken,
+        props.debug,
+        props.exceptionHandler,
+        props.loadingManager,
+        props.queryBus,
+        threeLoadingManager
+      );
 
       return function() {
         window.removeEventListener("beforeunload", beforeUnload);

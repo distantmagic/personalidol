@@ -14,6 +14,7 @@ import KeyboardState from "../KeyboardState";
 import LoggerBreadcrumbs from "../LoggerBreadcrumbs";
 import MainLoop from "../MainLoop";
 import PointerState from "../PointerState";
+import SceneCanvasTemplate from "./SceneCanvas.template";
 import Scheduler from "../Scheduler";
 import { default as RootCanvasController } from "../CanvasController/Root";
 
@@ -24,6 +25,7 @@ import type { CanvasControllerBus as CanvasControllerBusInterface } from "../../
 import type { CanvasViewBag as CanvasViewBagInterface } from "../../interfaces/CanvasViewBag";
 import type { CanvasViewBus as CanvasViewBusInterface } from "../../interfaces/CanvasViewBus";
 import type { Debugger } from "../../interfaces/Debugger";
+import type { ExceptionHandler } from "../../interfaces/ExceptionHandler";
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../../interfaces/HTMLElementResizeObserver";
 import type { KeyboardState as KeyboardStateInterface } from "../../interfaces/KeyboardState";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
@@ -62,18 +64,7 @@ export default class SceneCanvas extends HTMLElement {
       mode: "closed",
     });
 
-    shadowRoot.innerHTML = `
-      <div
-        id="dm-canvas-wrapper"
-        style="
-          height: 100%;
-          position: relative;
-          width: 100%;
-        "
-      >
-        <canvas id="dm-canvas" />
-      </div>
-    `;
+    shadowRoot.innerHTML = SceneCanvasTemplate();
 
     // flow assumes that shadow root does not contain `.getElementById`
     // method
@@ -160,15 +151,15 @@ export default class SceneCanvas extends HTMLElement {
   async attachRenderer(
     cancelToken: CancelToken,
     debug: Debugger,
+    exceptionHandler: ExceptionHandler,
     loadingManager: LoadingManager,
     queryBus: QueryBus,
     threeLoadingManager: THREELoadingManager
   ): Promise<void> {
+    const breadcrumbs = this.loggerBreadcrumbs.add("attachRenderer");
+
     if (this.isLooping) {
-      throw new Idempotence(
-        this.loggerBreadcrumbs.add("attachRenderer"),
-        "SceneCanvas@attachRenderer is not idempotent."
-      );
+      throw new Idempotence(breadcrumbs, "SceneCanvas@attachRenderer is not idempotent.");
     }
 
     this.isLooping = true;
@@ -196,9 +187,13 @@ export default class SceneCanvas extends HTMLElement {
       threeLoadingManager
     );
 
-    await loadingManager.blocking(this.canvasControllerBus.add(canvasController), "Loading root canvas controller");
+    await exceptionHandler.guard(breadcrumbs, () => {
+      return loadingManager.blocking(this.canvasControllerBus.add(canvasController), "Loading root canvas controller");
+    });
 
     canvasController.resize(new HTMLElementSize(this.canvasWrapperElement));
+
+    this.canvasWrapperElement.classList.add("dm-canvas-wrapper--loaded");
 
     await cancelToken.whenCanceled();
 
@@ -208,7 +203,10 @@ export default class SceneCanvas extends HTMLElement {
     this.canvasElement.remove();
 
     await loadingManager.blocking(this.canvasViewBag.dispose(), "Disposing root canvas controller");
-    await loadingManager.blocking(this.canvasControllerBus.delete(canvasController), "Disposing canvas views");
+
+    await exceptionHandler.guard(breadcrumbs, () => {
+      return loadingManager.blocking(this.canvasControllerBus.delete(canvasController), "Disposing canvas views");
+    });
 
     this.isLooping = false;
     this.onComponentStateChange();

@@ -4,13 +4,11 @@ import * as React from "react";
 
 import type { DialogueMessage } from "../framework/interfaces/DialogueMessage";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 
 type Props = {|
   dialogueMessage: DialogueMessage,
   exceptionHandler: ExceptionHandler,
-  logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   onAnswerClick: DialogueMessage => any,
 |};

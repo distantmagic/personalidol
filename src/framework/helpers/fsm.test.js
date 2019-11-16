@@ -1,10 +1,11 @@
 // @flow
 
 import ExceptionHandler from "../classes/ExceptionHandler";
+import ExceptionHandlerFilter from "../classes/ExceptionHandlerFilter";
 import fsm from "./fsm";
 import InvalidTransitionException from "../classes/Exception/StateMachine/InvalidTransition";
+import Logger from "../classes/Logger";
 import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
-import SilentLogger from "../classes/SilentLogger";
 
 type States = "gas" | "liquid" | "solid";
 
@@ -27,9 +28,10 @@ const Phases = fsm<States, Transitions>({
 });
 
 it("keeps state", async function() {
-  const logger = new SilentLogger();
+  const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const exceptionHandler = new ExceptionHandler(logger);
+  const exceptionHandlerFilter = new ExceptionHandlerFilter();
+  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve) {
@@ -47,9 +49,10 @@ it("keeps state", async function() {
 });
 
 it("handles errors", function() {
-  const logger = new SilentLogger();
+  const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const exceptionHandler = new ExceptionHandler(logger);
+  const exceptionHandlerFilter = new ExceptionHandlerFilter();
+  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
 
   phases.melt();
@@ -60,9 +63,10 @@ it("handles errors", function() {
 });
 
 it("notifies about any kind of event", function() {
-  const logger = new SilentLogger();
+  const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const exceptionHandler = new ExceptionHandler(logger);
+  const exceptionHandlerFilter = new ExceptionHandlerFilter();
+  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
   const transitions = [];
 
@@ -83,9 +87,10 @@ it("notifies about any kind of event", function() {
 });
 
 it("does not notify when state is not changed", function() {
-  const logger = new SilentLogger();
+  const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const exceptionHandler = new ExceptionHandler(logger);
+  const exceptionHandlerFilter = new ExceptionHandlerFilter();
+  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
   const transitions = [];
 

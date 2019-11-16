@@ -11,7 +11,7 @@
 
 .dd__scene__loader {
   background-blend-mode: color-burn;
-  background-image: url("../assets/image-disasters-of-war.png"), url("../assets/texture-navy-blue-marble-512.jpg");
+  background-image: $image-disasters-of-war, $texture-navy-blue-marble-512;
   background-position: 100% 100%, center;
   background-repeat: no-repeat, repeat;
   left: 0;

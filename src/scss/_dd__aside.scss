@@ -2,7 +2,7 @@
 
 .dd__aside {
   align-content: flex-start;
-  background-image: url("../assets/image-rise-and-fall.png"), url("../assets/texture-mineshaft-marble-512.png");
+  background-image: $image-rise-and-fall, $texture-mineshaft-marble-512;
   background-blend-mode: multiply;
   background-position: 30% 50%, center;
   background-repeat: no-repeat, repeat;
@@ -44,7 +44,7 @@
 }
 
 .dd__aside__portrait__statuses {
-  background-image: url("../assets/texture-mineshaft-marble-512.png");
+  background-image: $texture-mineshaft-marble-512;
   background-size: auto;
   display: grid;
   grid-auto-rows: 24px;

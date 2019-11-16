@@ -12,21 +12,23 @@ import ExceptionHandler from "./framework/classes/ExceptionHandler";
 import ExpressionBus from "./framework/classes/ExpressionBus";
 import ExpressionContext from "./framework/classes/ExpressionContext";
 import LoadingManager from "./framework/classes/LoadingManager";
-import Logger from "./framework/classes/Logger";
 import LoggerBreadcrumbs from "./framework/classes/LoggerBreadcrumbs";
 import Main from "./components/Main";
 import QueryBus from "./framework/classes/QueryBus";
+import { default as UnexpectedExceptionHandlerFilter } from "./framework/classes/ExceptionHandlerFilter/Unexpected";
+import { default as ConsoleLogger } from "./framework/classes/Logger/Console";
 
 import "./scss/index.scss";
 
 function init(rootElement: HTMLElement) {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const logger = new Logger();
+  const logger = new ConsoleLogger();
   const debug = new Debugger();
-  const exceptionHandler = new ExceptionHandler(logger);
+  const exceptionHandlerFilter = new UnexpectedExceptionHandlerFilter();
+  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const expressionBus = new ExpressionBus();
   const expressionContext = new ExpressionContext(loggerBreadcrumbs.add("ExpressionContext"));
-  const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"));
+  const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"), exceptionHandler);
   const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 
@@ -45,7 +47,6 @@ function init(rootElement: HTMLElement) {
         expressionBus={expressionBus}
         expressionContext={expressionContext}
         loadingManager={loadingManager}
-        logger={logger}
         loggerBreadcrumbs={loggerBreadcrumbs}
         queryBus={queryBus}
       />
@@ -55,7 +56,7 @@ function init(rootElement: HTMLElement) {
 }
 
 function checkInit() {
-  const rootElement = document.getElementById("root");
+  const rootElement = document.getElementById("dd-root");
 
   if (rootElement) {
     if (rootElement.classList.contains("js-dd-capable")) {
