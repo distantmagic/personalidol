@@ -13,7 +13,6 @@
   height: 100%;
   object-fit: contain;
   width: 100%;
-  transition: filter 0.3s ease-in-out;
 
   &.dd__preloader__progress__image--loading {
     filter: grayscale(1) opacity(0.3);

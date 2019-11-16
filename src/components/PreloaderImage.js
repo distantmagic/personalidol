@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import classnames from "classnames";
-import raf from "raf";
 
 type Props = {|
   onLoad: (src: string) => any,
@@ -25,27 +24,34 @@ export default React.memo<Props>(function PreloaderImage(props: Props) {
     [isLoaded, props]
   );
 
+  const checkCompleted = React.useCallback(
+    function () {
+      if (isLoaded || !imageElement) {
+        return;
+      }
+
+      if (!imageElement.complete) {
+        return void setTimeout(checkCompleted);
+      }
+
+      notify();
+    },
+    [imageElement, isLoaded, notify]
+  );
+
   React.useEffect(
     function() {
       if (!imageElement || isLoaded) {
         return;
       }
 
-      function checkCompleted() {
-        if (isLoaded) {
-          return;
-        }
+      const timeoutId = setTimeout(checkCompleted);
 
-        if (!imageElement.complete) {
-          return void raf(checkCompleted);
-        }
-
-        notify();
-      }
-
-      raf(checkCompleted);
+      return function () {
+        clearTimeout(timeoutId);
+      };
     },
-    [imageElement, isLoaded, notify]
+    [checkCompleted, imageElement, isLoaded, notify]
   );
 
   return (
