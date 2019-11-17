@@ -18,7 +18,7 @@ $dd-hud-settings-height: 80px;
     $dd-hud-aside-width;
   grid-gap: $dd-hud-gap;
   grid-template-rows: 1fr $dd-hud-settings-height;
-  height: 100vh;
+  // height: 100%;
   padding: $dd-hud-gap;
   position: relative;
 }

@@ -508,6 +508,8 @@ declare module "three" {
     constructor(normal?: Vector3, constant?: number): void;
 
     equals(Plane): boolean;
+
+    setFromCoplanarPoints(Vector3, Vector3, Vector3): Plane;
   }
 
   declare export interface PointLight<T: Camera> extends Light<T> {
@@ -648,6 +650,8 @@ declare module "three" {
     dot(Vector3): number;
 
     equals(Vector3): boolean;
+
+    multiplyScalar(number): Vector3;
 
     normalize(): Vector3;
 

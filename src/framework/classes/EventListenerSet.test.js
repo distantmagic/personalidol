@@ -7,7 +7,7 @@ it("notifies callbacks set about specific event", function() {
   const eventListenerSet = new EventListenerSet<[number, number]>();
 
   eventListenerSet.add(mockedCallback);
-  eventListenerSet.notify([1, 2]);
+  eventListenerSet.notify(Object.freeze([1, 2]));
 
   expect(mockedCallback.mock.calls.length).toBe(1);
   expect(mockedCallback.mock.calls[0][0]).toBe(1);

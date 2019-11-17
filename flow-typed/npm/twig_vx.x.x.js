@@ -12,6 +12,7 @@ declare module "twig" {
 
   declare type Twig = {|
     twig: ({|
+      allow_async: boolean,
       data: string,
       rethrow: boolean,
       strict_variables: boolean,

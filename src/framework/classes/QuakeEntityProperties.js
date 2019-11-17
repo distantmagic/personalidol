@@ -12,7 +12,7 @@ export default class QuakeEntityProperties implements QuakeEntityPropertiesInter
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, props: $ReadOnlyArray<QuakeEntityProperty>) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.props = props;
+    this.props = Object.freeze(props);
   }
 
   getProperties(): $ReadOnlyArray<QuakeEntityProperty> {

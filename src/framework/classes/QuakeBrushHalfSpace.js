@@ -1,8 +1,10 @@
 // @flow
 
+import * as THREE from "three";
+
 import * as round from "../helpers/round";
 
-import type { Vector3 } from "three";
+import type { Plane, Vector3 } from "three";
 
 import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 
@@ -43,6 +45,22 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     this.textureRotationAngle = textureRotationAngle;
     this.textureXScale = textureXScale;
     this.textureYScale = textureYScale;
+  }
+
+  getPlane(): Plane {
+    // THREE's Plane is actually a half-space in Quake map terms
+    const plane = new THREE.Plane();
+
+    // THREE expects points to be in counter-clockwise order
+    // https://threejs.org/docs/#api/en/math/Plane.setFromCoplanarPoints
+    //
+    // Quake map format stores vertices in a clockwise order
+    // http://www.gamers.org/dEngine/quake2/Q2DP/Q2DP_Map/Q2DP_Map-2.html
+    //
+    // to put something in a counter-clockwise order, you need to reverse
+    // clockwise elements array and then put the last one in the first plance,
+    // so 1,3,2 is not a mistake, it's actually 1,2,3 -> 3,2,1 -> 1,3,2
+    return plane.setFromCoplanarPoints(this.getVector1(), this.getVector3(), this.getVector2());
   }
 
   getTexture(): string {
@@ -93,5 +111,12 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
       this.getTextureXScale() === other.getTextureXScale() &&
       this.getTextureYScale() === other.getTextureYScale()
     );
+  }
+
+  isParallel(other: QuakeBrushHalfSpaceInterface): boolean {
+    const thisPlane = this.getPlane();
+    const otherPlane = other.getPlane();
+
+    return thisPlane.normal.equals(otherPlane.normal) || thisPlane.normal.multiplyScalar(-1).equals(otherPlane.normal);
   }
 }

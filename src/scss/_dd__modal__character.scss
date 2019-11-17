@@ -33,7 +33,6 @@ dl.dd__modal__character__specifics {
     "name content content";
   grid-template-columns: $dd-modal-character-avatar-column-width 1fr;
   grid-template-rows: 1fr 1rem;
-  height: calc(100vh - 204px);
   padding: $dd-modal-grid-gap;
   position: relative;
   max-width: 800px;

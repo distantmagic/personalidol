@@ -11,7 +11,7 @@ export default class QuakeMap implements QuakeMapInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, entities: $ReadOnlyArray<QuakeEntity>) {
-    this.entities = entities;
+    this.entities = Object.freeze(entities);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 

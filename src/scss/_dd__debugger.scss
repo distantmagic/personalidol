@@ -5,23 +5,16 @@
 }
 
 .dd__debugger {
-  background-image: url($texture-mineshaft-marble-512);
-  // border-radius: unset;
-  // box-shadow: 0 0 16px black;
   display: grid;
-  // grid-row-gap: 1rem;
   grid-template-rows: 2.5rem 1fr;
-  // height: 300px;
   height: 100%;
-  padding: $dd-frame-padding;
-  // overflow-x: scroll;
   width: 100%;
 }
 
 .dd__debugger__breadcrumbs,
 .dd__debugger__value {
   font-family: $font-family-space-mono;
-  font-size: 0.8rem;
+  font-size: tp-font-size(0.7);
   word-wrap: break-word;
 }
 
@@ -37,6 +30,7 @@
   align-items: center;
   display: flex;
   font-variant: small-caps;
+  padding: $dd-frame-padding;
 }
 
 .dd__debugger__value {

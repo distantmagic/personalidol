@@ -16,7 +16,8 @@ export default class Expression implements ExpressionInterface {
     this.context = context;
     this.expression = expression;
     this.template = twig.twig({
-      data: `${expression}`,
+      allow_async: true,
+      data: expression,
       // debug: process.env.REACT_APP_DEBUG,
       rethrow: true,
       strict_variables: true,

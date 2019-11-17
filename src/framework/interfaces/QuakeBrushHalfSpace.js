@@ -1,8 +1,12 @@
 // @flow
 
+import type { Plane } from "three";
+
 import type { Equatable } from "./Equatable";
 
 export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
+  getPlane(): Plane;
+
   getTexture(): string;
 
   getTextureRotationAngle(): number;
@@ -20,4 +24,6 @@ export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
   getXOffset(): number;
 
   getYOffset(): number;
+
+  isParallel(QuakeBrushHalfSpace): boolean;
 }
