@@ -27,15 +27,13 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
       return false;
     }
 
-    let breadcrumb;
-
     await this.logger.debug(loggerBreadcrumbs, "ExceptionHandler");
 
-    for (breadcrumb of loggerBreadcrumbs.getBreadcrumbs()) {
+    for (let breadcrumb of loggerBreadcrumbs.getBreadcrumbs()) {
       await this.logger.debug(loggerBreadcrumbs, `${breadcrumb}`);
     }
     if (error instanceof Exception) {
-      for (breadcrumb of error.loggerBreadcrumbs.getBreadcrumbs()) {
+      for (let breadcrumb of error.loggerBreadcrumbs.getBreadcrumbs()) {
         await this.logger.debug(loggerBreadcrumbs, `${breadcrumb}`);
       }
     }

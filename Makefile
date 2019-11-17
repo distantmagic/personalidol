@@ -13,7 +13,7 @@ backend/target/debug/personalidol: $(RUST_SOURCES)
 	cd backend && cargo build
 
 build/index.html: $(JS_SOURCES)
-	yarn run build
+	REACT_APP_DEBUG=false yarn run build
 
 flow.watch: node_modules
 	yarn run flow:watch:inotify

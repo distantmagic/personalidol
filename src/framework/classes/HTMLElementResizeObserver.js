@@ -24,14 +24,11 @@ export default class HTMLElementResizeObserver implements HTMLElementResizeObser
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.notifiable = notifiable;
     this.nativeResizeObserver = new ResizeObserver(function(mutationList) {
-      let mutation;
-
-      for (mutation of mutationList) {
+      for (let mutation of mutationList) {
         const contentRect = mutation.contentRect;
         const elementSize = new ElementSize<"px">(contentRect.width, contentRect.height);
-        let callback;
 
-        for (callback of notifiable.values()) {
+        for (let callback of notifiable.values()) {
           callback.resize(elementSize);
         }
       }

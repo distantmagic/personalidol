@@ -20,7 +20,6 @@
     passiveeventlisteners: "passiveeventlisteners",
     peerconnection: "webrtc",
     promises: "promises",
-    serviceworker: "serviceworker",
     srcset: "srcset",
     webgl: "webgl",
     webworkers: "webworkers",

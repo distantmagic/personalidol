@@ -43,15 +43,13 @@ export default function Main(props: Props) {
 
   React.useEffect(
     function() {
-      document.addEventListener(
-        "visibilitychange",
-        function(): void {
-          setIsDocumentHidden(document.hidden);
-        },
-        {
-          once: true,
-        }
-      );
+      const intervalId = setInterval(function() {
+        setIsDocumentHidden(document.hidden);
+      }, 100);
+
+      return function() {
+        clearInterval(intervalId);
+      };
     },
     [isDocumentHidden]
   );
