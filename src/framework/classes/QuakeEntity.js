@@ -35,4 +35,20 @@ export default class QuakeEntity implements QuakeEntityInterface {
   hasBrush(): boolean {
     return !!this.brush;
   }
+
+  isEqual(other: QuakeEntityInterface): boolean {
+    if (!this.getProperties().isEqual(other.getProperties())) {
+      return false;
+    }
+
+    if (this.hasBrush() !== other.hasBrush()) {
+      return false;
+    }
+
+    if (!this.hasBrush()) {
+      return true;
+    }
+
+    return this.getBrush().isEqual(other.getBrush());
+  }
 }

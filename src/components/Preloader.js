@@ -119,11 +119,5 @@ Preloader.clear = function(): void {
 };
 
 Preloader.isLoaded = function(): boolean {
-  for (let src of images) {
-    if (!loaded.includes(src)) {
-      return false;
-    }
-  }
-
-  return true;
+  return images.every(src => loaded.includes(src));
 };

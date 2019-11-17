@@ -11,10 +11,10 @@ class FooExceptionHandlerFilter extends ExceptionHandlerFilter {
   }
 }
 
-test.each([[new Error(), false], [new RangeError(), true]])("decides which exceptions to report further", function(
-  error: Error,
-  expected: boolean
-) {
+test.each([
+  [new Error(), false],
+  [new RangeError(), true],
+])("decides which exceptions to report further", function(error: Error, expected: boolean) {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandlerFilter = new FooExceptionHandlerFilter();

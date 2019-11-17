@@ -1,5 +1,7 @@
 // @flow
 
+import * as equality from "../helpers/equality";
+
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity } from "../interfaces/QuakeEntity";
 import type { QuakeMap as QuakeMapInterface } from "../interfaces/QuakeMap";
@@ -15,5 +17,12 @@ export default class QuakeMap implements QuakeMapInterface {
 
   getEntities(): $ReadOnlyArray<QuakeEntity> {
     return this.entities;
+  }
+
+  isEqual(other: QuakeMapInterface): boolean {
+    const thisEntities = this.getEntities();
+    const otherEntities = other.getEntities();
+
+    return equality.isArrayEqual(thisEntities, otherEntities);
   }
 }

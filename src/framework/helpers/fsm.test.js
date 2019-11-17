@@ -83,7 +83,10 @@ it("notifies about any kind of event", function() {
 
   phases.condense();
 
-  expect(transitions).toEqual([["solid", "liquid"], ["liquid", "gas"]]);
+  expect(transitions).toEqual([
+    ["solid", "liquid"],
+    ["liquid", "gas"],
+  ]);
 });
 
 it("does not notify when state is not changed", function() {

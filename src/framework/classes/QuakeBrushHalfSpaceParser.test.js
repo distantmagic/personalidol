@@ -12,7 +12,7 @@ it("converts quake map format to something processable by controllers", function
     loggerBreadcrumbs,
     "        ( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0.32 1 1"
   );
-  const halfPlane = parser.parse();
+  const halfSpace = parser.parse();
   const correct = new QuakeBrushHalfSpace(
     new THREE.Vector3(-64, -64, -16),
     new THREE.Vector3(-64, -63, -16),
@@ -25,5 +25,5 @@ it("converts quake map format to something processable by controllers", function
     1
   );
 
-  expect(halfPlane.isEqual(correct)).toBe(true);
+  expect(halfSpace.isEqual(correct)).toBe(true);
 });
