@@ -34,9 +34,11 @@ export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpacePar
     }
 
     return new QuakeBrushHalfSpace(
-      new THREE.Vector3(Number(match[1]), Number(match[2]), Number(match[3])),
-      new THREE.Vector3(Number(match[4]), Number(match[5]), Number(match[6])),
-      new THREE.Vector3(Number(match[7]), Number(match[8]), Number(match[9])),
+      // translate Quake coordinates to THREE coordinates
+      // (X,Y,Z) -> (X, Z, -Y)
+      new THREE.Vector3(Number(match[1]), Number(match[3]), -1 * Number(match[2])),
+      new THREE.Vector3(Number(match[4]), Number(match[6]), -1 * Number(match[5])),
+      new THREE.Vector3(Number(match[7]), Number(match[9]), -1 * Number(match[8])),
       // texture
       String(match[10]),
       // Texture x-offset (must be multiple of 16)

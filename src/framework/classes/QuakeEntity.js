@@ -1,7 +1,8 @@
 // @flow
 
 import * as equality from "../helpers/equality";
-import { default as QuakeMapException } from "./Exception/QuakeMap";
+import Exception from "./Exception";
+import QuakePointParser from "./QuakePointParser";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeBrush } from "../interfaces/QuakeBrush";
@@ -23,8 +24,33 @@ export default class QuakeEntity implements QuakeEntityInterface {
     return this.brushes;
   }
 
+  getOrigin(): Vector3 {
+    const breadcrumbs = this.loggerBreadcrumbs.add("getOrigin");
+    const origin = this.props.getPropertyByKey("origin");
+
+    if (!this.hasOrigin() || !origin) {
+      throw new Exception(breadcrumbs, "Entity does not have origin point, but it was expected.");
+    }
+
+    const parser = new QuakePointParser(breadcrumbs.add("QuakePointParser"), origin.getValue());
+
+    return parser.parse();
+  }
+
   getProperties(): QuakeEntityProperties {
     return this.props;
+  }
+
+  hasOrigin(): boolean {
+    return this.props.hasPropertyKey("origin");
+  }
+
+  isOfClass(className: string): boolean {
+    if (!this.props.hasPropertyKey("classname")) {
+      return false;
+    }
+
+    return this.props.getPropertyByKey("classname").getValue() === className;
   }
 
   isEqual(other: QuakeEntityInterface): boolean {

@@ -192,6 +192,10 @@ export default class SceneCanvas extends HTMLElement {
 
     this.canvasWrapperElement.classList.add("dm-canvas-wrapper--loaded");
 
+    // setTimeout(() => {
+    //   cancelToken.cancel(this.loggerBreadcrumbs);
+    // }, 2000);
+
     await cancelToken.whenCanceled();
 
     // prevent some memory leaks

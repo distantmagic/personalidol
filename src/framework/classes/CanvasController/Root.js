@@ -14,7 +14,6 @@ import ElementSize from "../ElementSize";
 import PointerEventResponder from "../CanvasPointerResponder/PointerEventResponder";
 import THREEPointerInteraction from "../THREEPointerInteraction";
 import { default as AmbientLightView } from "../CanvasView/AmbientLight";
-import { default as MD2CharacterView } from "../CanvasView/MD2Character";
 import { default as QuakeMapView } from "../CanvasView/QuakeMap";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
@@ -105,21 +104,15 @@ export default class Root extends CanvasController {
     await Promise.all([
       this.cameraController.attach(cancelToken),
       this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          cancelToken,
-          new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.debug, this.loggerBreadcrumbs.add("AmbientLight"), this.scene)
-        ),
+        this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.scene)),
         "Loading lights"
-      ),
-      this.loadingManager.blocking(
-        this.canvasViewBag.add(cancelToken, new MD2CharacterView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")), this.scene, this.threeLoadingManager)),
-        "Loading character"
       ),
       this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,
           new QuakeMapView(
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
+            this.loadingManager,
             this.loggerBreadcrumbs.add("QuakeMap"),
             this.queryBus,
             this.scene,
@@ -130,6 +123,8 @@ export default class Root extends CanvasController {
         "Loading map"
       ),
     ]);
+
+    this.scene.add(new THREE.AxesHelper(256));
 
     this.scheduler.onBegin(this.canvasPointerController.begin);
     this.scheduler.onDraw(this.cameraController.draw);

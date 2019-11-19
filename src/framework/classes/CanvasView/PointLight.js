@@ -10,24 +10,34 @@ import type { Light, OrthographicCamera, Scene } from "three";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
-export default class AmbientLight extends CanvasView {
+export default class PointLight extends CanvasView {
   +cancelToken: CancelToken;
   +scene: Scene;
   +light: Light<OrthographicCamera>;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, scene: Scene, origin: Vector3, brightness: number) {
     super(canvasViewBag);
     autoBind(this);
 
     this.scene = scene;
 
-    this.light = new THREE.AmbientLight(0xffffff, 0.01);
+    this.light = new THREE.PointLight<OrthographicCamera>(0xffffff, brightness);
+    this.light.position.copy(origin);
+
+    // this.light.angle = 0.5;
+    // this.light.penumbra = 0.5;
+    // this.light.castShadow = true;
+    this.light.shadow.mapSize.width = 1024;
+    this.light.shadow.mapSize.height = 1024;
+
+    // this one is important on mobile (ios at least)
+    // https://stackoverflow.com/questions/50945270/threejs-shadow-artifact-ios-devices
+    this.light.shadow.camera.near = 20;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    this.light.position.set(360, 360, 360);
     this.scene.add(this.light);
   }
 

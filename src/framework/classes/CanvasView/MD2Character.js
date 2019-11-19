@@ -5,20 +5,22 @@ import { MD2Character as MD2CharacterLoader } from "three/examples/jsm/misc/MD2C
 
 import CanvasView from "../CanvasView";
 
-import type { LoadingManager as THREELoadingManager, Scene } from "three";
+import type { LoadingManager as THREELoadingManager, Vector3, Scene } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class MD2Character extends CanvasView {
+  +origin: Vector3;
   +scene: Scene;
   +threeLoadingManager: THREELoadingManager;
   character: ?Object;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: Scene, threeLoadingManager: THREELoadingManager) {
+  constructor(canvasViewBag: CanvasViewBag, origin: Vector3, scene: Scene, threeLoadingManager: THREELoadingManager) {
     super(canvasViewBag);
     autoBind(this);
 
+    this.origin = origin;
     this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
   }
@@ -78,6 +80,7 @@ export default class MD2Character extends CanvasView {
         character.setWeapon(0);
         character.setSkin(7);
         this.character = character;
+        this.character.root.position.copy(this.origin);
 
         this.scene.add(character.root);
 

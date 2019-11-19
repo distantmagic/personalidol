@@ -653,6 +653,8 @@ declare module "three" {
 
     normalize(): Vector3;
 
+    copy(Vector3): Vector3;
+
     set(number, number, number): Vector3;
 
     sub(Vector3): Vector3;
