@@ -24,9 +24,7 @@ export default class PointLight extends CanvasView {
     this.light = new THREE.PointLight<OrthographicCamera>(0xffffff, brightness);
     this.light.position.copy(origin);
 
-    // this.light.angle = 0.5;
-    // this.light.penumbra = 0.5;
-    // this.light.castShadow = true;
+    this.light.castShadow = true;
     this.light.shadow.mapSize.width = 1024;
     this.light.shadow.mapSize.height = 1024;
 

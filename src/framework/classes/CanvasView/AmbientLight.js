@@ -27,7 +27,6 @@ export default class AmbientLight extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    this.light.position.set(360, 360, 360);
     this.scene.add(this.light);
   }
 

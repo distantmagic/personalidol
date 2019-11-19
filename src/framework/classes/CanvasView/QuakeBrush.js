@@ -34,9 +34,12 @@ export default class QuakeBrush extends CanvasView {
       opacity: 0.5,
       transparent: true,
     });
+
     const vertices = this.brush.getVertices();
     const geometry = new ConvexBufferGeometry(vertices);
     const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.receiveShadow = true;
 
     this.mesh = mesh;
     this.scene.add(mesh);

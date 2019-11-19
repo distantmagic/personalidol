@@ -66,10 +66,6 @@ export default class QuakeMap extends CanvasView {
     }
   }
 
-  async dispose(cancelToken: CancelToken): Promise<void> {
-    await super.dispose(cancelToken);
-  }
-
   useBegin(): boolean {
     return super.useBegin() && false;
   }
