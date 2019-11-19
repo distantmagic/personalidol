@@ -10,7 +10,7 @@ import type { CanvasPointerResponder } from "../interfaces/CanvasPointerResponde
 export default class CanvasPointerController implements CanvasPointerControllerInterface {
   +raycaster: Raycaster;
   +scene: Scene;
-  canvasPointerResponders: Array<CanvasPointerResponder<any>>;
+  canvasPointerResponders: CanvasPointerResponder<any>[];
 
   constructor(raycaster: Raycaster, scene: Scene) {
     autoBind(this);

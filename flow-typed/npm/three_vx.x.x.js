@@ -415,6 +415,14 @@ declare module "three" {
     |}): void;
   }
 
+  declare export interface Matrix3 {
+    constructor(): void;
+
+    determinant(): number;
+
+    set(number, number, number, number, number, number, number, number, number): Matrix3;
+  }
+
   declare export interface Mesh extends Object3D {
     +isMesh: true;
 
@@ -647,11 +655,15 @@ declare module "three" {
 
     distanceTo(Vector3): number;
 
+    divideScalar(number): Vector3;
+
     dot(Vector3): number;
 
     equals(Vector3): boolean;
 
     multiplyScalar(number): Vector3;
+
+    negate(): Vector3;
 
     normalize(): Vector3;
 

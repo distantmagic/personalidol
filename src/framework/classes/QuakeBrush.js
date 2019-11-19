@@ -2,39 +2,34 @@
 
 import * as equality from "../helpers/equality";
 
+import Exception from "./Exception";
 import QuakeBrushHalfSpaceTrio from "./QuakeBrushHalfSpaceTrio";
+
+import type { Vector3 } from "three";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
 import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
 
-function combineWithoutRepetitions(
+function* combineWithoutRepetitions(
   comboOptions: $ReadOnlyArray<QuakeBrushHalfSpace>,
   comboLength: number
-): $ReadOnlyArray<$ReadOnlyArray<QuakeBrushHalfSpace>> {
-  // If the length of the combination is 1 then each element of the original array
-  // is a combination itself.
+): Generator<$ReadOnlyArray<QuakeBrushHalfSpace>, void, void> {
   if (comboLength === 1) {
-    return comboOptions.map(comboOption => [comboOption]);
+    for (let currentOption of comboOptions) {
+      yield [currentOption];
+    }
   }
 
-  // Init combinations array.
-  const combos = [];
-
-  // Extract characters one by one and concatenate them to combinations of smaller lengths.
-  // We need to extract them because we don't want to have repetitions after concatenation.
-  comboOptions.forEach((currentOption, optionIndex) => {
-    // Generate combinations of smaller size.
+  for (let optionIndex = 0; optionIndex < comboOptions.length; optionIndex += 1) {
+    const currentOption: QuakeBrushHalfSpace = comboOptions[optionIndex];
     const smallerCombos = combineWithoutRepetitions(comboOptions.slice(optionIndex + 1), comboLength - 1);
 
-    // Concatenate currentOption with all combinations of smaller size.
-    smallerCombos.forEach(smallerCombo => {
-      combos.push([currentOption].concat(smallerCombo));
-    });
-  });
-
-  return combos;
+    for (let smallerCombo of smallerCombos) {
+      yield [currentOption, ...smallerCombo];
+    }
+  }
 }
 
 export default class QuakeBrush implements QuakeBrushInterface {
@@ -42,20 +37,37 @@ export default class QuakeBrush implements QuakeBrushInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: $ReadOnlyArray<QuakeBrushHalfSpace>) {
+    if (halfSpaces.length < 4) {
+      throw new Exception(
+        loggerBreadcrumbs,
+        "You need at least 4 half-spaces to have a chance of forming a polyhedron."
+      );
+    }
+
     this.halfSpaces = Object.freeze(halfSpaces);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
   *generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrioInterface, void, void> {
-    const combos = combineWithoutRepetitions(this.halfSpaces, 3);
-
-    for (let combo of combos) {
-      yield new QuakeBrushHalfSpaceTrio(...combo);
+    for (let combo of combineWithoutRepetitions(this.halfSpaces, 3)) {
+      yield new QuakeBrushHalfSpaceTrio(this.loggerBreadcrumbs.add("QuakeBrushHalfSpaceTrio"), ...combo);
     }
   }
 
   getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace> {
     return this.halfSpaces;
+  }
+
+  *generateVertices(): Generator<Vector3, void, void> {
+    for (let trio of this.generateHalfSpaceTrios()) {
+      if (trio.hasIntersectingPoint()) {
+        yield trio.getIntersectingPoint();
+      }
+    }
+  }
+
+  getVertices(): $ReadOnlyArray<Vector3> {
+    return Array.from(this.generateVertices());
   }
 
   isEqual(other: QuakeBrushInterface): boolean {

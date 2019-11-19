@@ -36,12 +36,12 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
   }
 
   parse(): QuakeMapInterface {
-    const entities: Array<QuakeEntityInterface> = [];
+    const entities: QuakeEntityInterface[] = [];
     const lines: $ReadOnlyArray<string> = this.splitLines(this.content);
-    let currentBrushSketch: ?Array<QuakeBrushHalfSpace> = null;
+    let currentBrushSketch: ?(QuakeBrushHalfSpace[]) = null;
     let currentEntitySketch: ?{|
       brush: ?QuakeBrushInterface,
-      props: Array<QuakeEntityProperty>,
+      props: QuakeEntityProperty[],
     |} = null;
 
     for (let lineno = 0; lineno < lines.length; lineno += 1) {
