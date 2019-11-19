@@ -97,26 +97,10 @@ export default function HudModalCharacter(props: Props) {
       </nav>
       <div className="dd__modal__character__content">
         <Switch>
-          <Route
-            exact
-            path="/character/:characterId/inventory"
-            component={() => <HudModalCharacterInventory character={props.character} />}
-          />
-          <Route
-            exact
-            path="/character/:characterId/biography"
-            component={() => <HudModalCharacterBiography character={props.character} />}
-          />
-          <Route
-            exact
-            path="/character/:characterId"
-            component={() => <HudModalCharacterBody character={props.character} />}
-          />
-          <Route
-            exact
-            path="/character/:characterId/soul"
-            component={() => <HudModalCharacterSoul character={props.character} />}
-          />
+          <Route exact path="/character/:characterId/inventory" component={() => <HudModalCharacterInventory character={props.character} />} />
+          <Route exact path="/character/:characterId/biography" component={() => <HudModalCharacterBiography character={props.character} />} />
+          <Route exact path="/character/:characterId" component={() => <HudModalCharacterBody character={props.character} />} />
+          <Route exact path="/character/:characterId/soul" component={() => <HudModalCharacterSoul character={props.character} />} />
         </Switch>
       </div>
     </section>

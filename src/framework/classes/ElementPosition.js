@@ -59,10 +59,6 @@ export default class ElementPosition<Unit: ElementPositionUnit> implements Eleme
   }
 
   offset(other: ElementPositionInterface<Unit>): ElementPositionInterface<Unit> {
-    return new ElementPosition<Unit>(
-      this.getX() + other.getX(),
-      this.getY() + other.getY(),
-      this.getZ() + other.getZ()
-    );
+    return new ElementPosition<Unit>(this.getX() + other.getX(), this.getY() + other.getY(), this.getZ() + other.getZ());
   }
 }

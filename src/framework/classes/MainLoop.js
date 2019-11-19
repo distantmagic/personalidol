@@ -21,10 +21,7 @@ export default class MainLoop implements MainLoopInterface {
 
   constructor() {
     if (instance) {
-      throw new SingletonException(
-        new LoggerBreadcrumbs(["root", "MainLoop"]),
-        "MainLoop is a singleton. Use `getInstance()` instead."
-      );
+      throw new SingletonException(new LoggerBreadcrumbs(["root", "MainLoop"]), "MainLoop is a singleton. Use `getInstance()` instead.");
     }
 
     autoBind(this);

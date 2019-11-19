@@ -21,13 +21,7 @@ export default function fsm<States: string, Transitions: {}>(config: {|
 |}): Class<FSMDefaultFactoryClass<States, Transitions>> {
   const events = new EventDispatcher<States | "any">();
 
-  return StateMachine.factory<
-    States,
-    Transitions,
-    FSMDefaultMethods,
-    FSMDefaultData<States, Transitions>,
-    FSMDefaultConstructorArguments
-  >({
+  return StateMachine.factory<States, Transitions, FSMDefaultMethods, FSMDefaultData<States, Transitions>, FSMDefaultConstructorArguments>({
     init: config.init,
     data: function(exceptionHandler: ExceptionHandler, loggerBreadcrumbs: LoggerBreadcrumbs) {
       return {

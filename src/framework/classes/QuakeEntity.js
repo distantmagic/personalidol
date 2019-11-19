@@ -1,5 +1,6 @@
 // @flow
 
+import * as equality from "../helpers/equality";
 import { default as QuakeMapException } from "./Exception/QuakeMap";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
@@ -8,32 +9,22 @@ import type { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEnt
 import type { QuakeEntityProperties } from "../interfaces/QuakeEntityProperties";
 
 export default class QuakeEntity implements QuakeEntityInterface {
-  +brush: ?QuakeBrush;
+  +brushes: $ReadOnlyArray<QuakeBrush>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +props: QuakeEntityProperties;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, props: QuakeEntityProperties, brush: ?QuakeBrush) {
-    this.brush = brush;
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, props: QuakeEntityProperties, brushes: $ReadOnlyArray<QuakeBrush> = []) {
+    this.brushes = brushes;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.props = props;
   }
 
-  getBrush(): QuakeBrush {
-    const brush = this.brush;
-
-    if (!brush) {
-      throw new QuakeMapException(this.loggerBreadcrumbs.add("getBrush"), "Brush is not set, but was expected.");
-    }
-
-    return brush;
+  getBrushes(): $ReadOnlyArray<QuakeBrush> {
+    return this.brushes;
   }
 
   getProperties(): QuakeEntityProperties {
     return this.props;
-  }
-
-  hasBrush(): boolean {
-    return !!this.brush;
   }
 
   isEqual(other: QuakeEntityInterface): boolean {
@@ -41,14 +32,6 @@ export default class QuakeEntity implements QuakeEntityInterface {
       return false;
     }
 
-    if (this.hasBrush() !== other.hasBrush()) {
-      return false;
-    }
-
-    if (!this.hasBrush()) {
-      return true;
-    }
-
-    return this.getBrush().isEqual(other.getBrush());
+    return equality.isArrayEqual(this.getBrushes(), other.getBrushes());
   }
 }

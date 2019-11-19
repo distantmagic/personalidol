@@ -51,9 +51,6 @@ export default class HTMLElementSize implements HTMLElementSizeInterface {
   }
 
   isEqualWithPrecision(other: ElementSize<"px">, precision: number): boolean {
-    return (
-      round.isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) &&
-      round.isEqualWithPrecision(this.getWidth(), other.getWidth(), precision)
-    );
+    return round.isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) && round.isEqualWithPrecision(this.getWidth(), other.getWidth(), precision);
   }
 }

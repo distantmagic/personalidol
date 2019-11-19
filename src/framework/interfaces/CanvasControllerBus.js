@@ -1,9 +1,10 @@
 // @flow
 
+import type { CancelToken } from "./CancelToken";
 import type { CanvasController } from "./CanvasController";
 
 export interface CanvasControllerBus {
-  add(CanvasController): Promise<void>;
+  add(CancelToken, CanvasController): Promise<void>;
 
-  delete(CanvasController): Promise<void>;
+  delete(CancelToken, CanvasController): Promise<void>;
 }

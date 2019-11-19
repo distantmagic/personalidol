@@ -12,10 +12,7 @@ import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush
 import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
 
-function* combineWithoutRepetitions(
-  comboOptions: $ReadOnlyArray<QuakeBrushHalfSpace>,
-  comboLength: number
-): Generator<$ReadOnlyArray<QuakeBrushHalfSpace>, void, void> {
+function* combineWithoutRepetitions(comboOptions: $ReadOnlyArray<QuakeBrushHalfSpace>, comboLength: number): Generator<$ReadOnlyArray<QuakeBrushHalfSpace>, void, void> {
   if (comboLength === 1) {
     for (let currentOption of comboOptions) {
       yield [currentOption];
@@ -38,10 +35,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: $ReadOnlyArray<QuakeBrushHalfSpace>) {
     if (halfSpaces.length < 4) {
-      throw new Exception(
-        loggerBreadcrumbs,
-        "You need at least 4 half-spaces to have a chance of forming a polyhedron."
-      );
+      throw new Exception(loggerBreadcrumbs, "You need at least 4 half-spaces to have a chance of forming a polyhedron.");
     }
 
     this.halfSpaces = Object.freeze(halfSpaces);

@@ -75,16 +75,12 @@ $dd-dialogue-padding-horizontal: 1rem;
 }
 
 .dd__dialogue__scrollframe__scrollbar__indicator {
-  background-image: radial-gradient(rgba($color-givry, 0.6) 10%, transparent 70%),
-    radial-gradient(at top left, white 10%, transparent 60%),
+  background-image: radial-gradient(rgba($color-givry, 0.6) 10%, transparent 70%), radial-gradient(at top left, white 10%, transparent 60%),
     linear-gradient(to right, $color-givry, $color-cioccolato 40%);
   box-shadow: inset 0 0 2px $color-givry, 0 0 4px black;
   height: 16px;
   position: relative;
-  transform: translateX(-50%)
-    translateY(
-      calc((100vh - 8rem - #{2 * $dd-frame-border-width}) * var(--dd-scroll-percentage-normalized) + 1rem - 50%)
-    );
+  transform: translateX(-50%) translateY(calc((100vh - 8rem - #{2 * $dd-frame-border-width}) * var(--dd-scroll-percentage-normalized) + 1rem - 50%));
   width: 16px;
   will-change: transform;
   z-index: $z-index-dd-scroll-indicator;
@@ -117,8 +113,7 @@ $dd-dialogue-padding-horizontal: 1rem;
   -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 
-  background-image: radial-gradient(at bottom center, rgba($color-cioccolato, 0.5) 10%, transparent),
-    linear-gradient(to right, $color-givry 40%, $color-arrowtown 50%);
+  background-image: radial-gradient(at bottom center, rgba($color-cioccolato, 0.5) 10%, transparent), linear-gradient(to right, $color-givry 40%, $color-arrowtown 50%);
   top: 0;
   transform: translateX(-50%) translateY(-100%);
 }
@@ -127,8 +122,7 @@ $dd-dialogue-padding-horizontal: 1rem;
   -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
   clip-path: polygon(50% 100%, 0 0, 100% 0);
 
-  background-image: radial-gradient(at top center, rgba($color-cioccolato, 0.5) 10%, transparent),
-    linear-gradient(to right, $color-givry 40%, $color-arrowtown 50%);
+  background-image: radial-gradient(at top center, rgba($color-cioccolato, 0.5) 10%, transparent), linear-gradient(to right, $color-givry 40%, $color-arrowtown 50%);
   bottom: 0;
   transform: translateX(-50%) translateY(100%);
 }

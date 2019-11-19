@@ -9,7 +9,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceParser as QuakeBrushHalfSpaceParserInterface } from "../interfaces/QuakeBrushHalfSpaceParser";
 
-const REGEXP_BRUSH_HALFPLANE = /^\s*\(\s*(\-?[0-9]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)\s*\)\s*\(\s*(\-?[0-9]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)\s*\)\s*\(\s*(\-?[0-9]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)\s*\)\s+([_a-zA-Z]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)\s+(\-?[\.0-9]+)\s+(\-?[0-9]+)\s+(\-?[0-9]+)$/;
+const REGEXP_BRUSH_HALFPLANE = /^\s*\(\s*(-?[0-9]+)\s+(-?[0-9]+)\s+(-?[0-9]+)\s*\)\s*\(\s*(-?[0-9]+)\s+(-?[0-9]+)\s+(-?[0-9]+)\s*\)\s*\(\s*(-?[0-9]+)\s+(-?[0-9]+)\s+(-?[0-9]+)\s*\)\s+([_a-zA-Z]+)\s+(-?[0-9]+)\s+(-?[0-9]+)\s+(-?[.0-9]+)\s+(-?[0-9]+)\s+(-?[0-9]+)$/;
 
 export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpaceParserInterface {
   +line: string;
@@ -30,10 +30,7 @@ export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpacePar
     const textureRotationAngle = Number(match[13]);
 
     if (isNaN(textureRotationAngle)) {
-      throw new QuakeMapParserException(
-        this.loggerBreadcrumbs.add("parse"),
-        "Brush half-plane's texture rotation angle is not a number."
-      );
+      throw new QuakeMapParserException(this.loggerBreadcrumbs.add("parse"), "Brush half-plane's texture rotation angle is not a number.");
     }
 
     return new QuakeBrushHalfSpace(

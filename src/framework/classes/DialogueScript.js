@@ -49,12 +49,7 @@ export default class DialogueScript implements Contextual {
 
     for (let id in this.script.messages) {
       if (this.script.messages.hasOwnProperty(id)) {
-        const message = new DialogueMessage(
-          this.expressionBus,
-          this.getExpressionContext(),
-          id,
-          this.script.messages[id]
-        );
+        const message = new DialogueMessage(this.expressionBus, this.getExpressionContext(), id, this.script.messages[id]);
 
         ret = ret.set(id, message);
       }
@@ -64,11 +59,6 @@ export default class DialogueScript implements Contextual {
   }
 
   async getStartMessage(): Promise<DialogueMessageInterface> {
-    return new DialogueMessage(
-      this.expressionBus,
-      this.getExpressionContext(),
-      this.script.metadata.start_message,
-      this.script.messages[this.script.metadata.start_message]
-    );
+    return new DialogueMessage(this.expressionBus, this.getExpressionContext(), this.script.metadata.start_message, this.script.messages[this.script.metadata.start_message]);
   }
 }

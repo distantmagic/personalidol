@@ -50,16 +50,10 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
       throw new CancelTokenException(this.loggerBreadcrumbs.add("getResult"), "Query is still executing.");
     }
     if (!this.isExecuted()) {
-      throw new CancelTokenException(
-        this.loggerBreadcrumbs.add("getResult"),
-        "Query must be executed before asking for a result."
-      );
+      throw new CancelTokenException(this.loggerBreadcrumbs.add("getResult"), "Query must be executed before asking for a result.");
     }
     if (!this._result) {
-      throw new CancelTokenException(
-        this.loggerBreadcrumbs.add("getResult"),
-        "Execution result is not set and it was expected."
-      );
+      throw new CancelTokenException(this.loggerBreadcrumbs.add("getResult"), "Execution result is not set and it was expected.");
     }
 
     return this._result;

@@ -11,8 +11,7 @@ export default function HudModalCharacterBody(props: Props) {
   return (
     <div className="dd__modal__character__attributes">
       <blockquote className="dd-tp__blockquote">
-        Nie bójcie się tych, którzy zabijają ciało, lecz duszy zabić nie mogą. Bójcie się raczej Tego, który duszę i
-        ciało może zatracić w piekle.
+        Nie bójcie się tych, którzy zabijają ciało, lecz duszy zabić nie mogą. Bójcie się raczej Tego, który duszę i ciało może zatracić w piekle.
         <footer>Mt 10:28</footer>
       </blockquote>
       <dl className="dd__modal__character__specifics dd__modal__character__specifics--body">

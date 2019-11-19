@@ -1,5 +1,6 @@
 // @flow
 
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasView as CanvasViewInterface } from "../interfaces/CanvasView";
 import type { CanvasViewBag } from "../interfaces/CanvasViewBag";
 
@@ -14,12 +15,12 @@ export default class CanvasView implements CanvasViewInterface {
     this.canvasViewBag = canvasViewBag;
   }
 
-  async attach(): Promise<void> {}
+  async attach(cancelToken: CancelToken): Promise<void> {}
 
   begin(): void {}
 
-  async dispose(): Promise<void> {
-    return this.canvasViewBag.dispose();
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    return this.canvasViewBag.dispose(cancelToken);
   }
 
   end(fps: number, isPanicked: boolean): void {}

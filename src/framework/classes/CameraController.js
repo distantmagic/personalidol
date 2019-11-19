@@ -26,14 +26,7 @@ export default class CameraController implements CameraControllerInterface {
   zoom: any;
   zoomStep: CameraZoomEnum;
 
-  constructor(
-    camera: OrthographicCamera,
-    debug: Debugger,
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    renderer: WebGLRenderer,
-    scene: Scene,
-    viewportSize: ElementSize<"px">
-  ) {
+  constructor(camera: OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene, viewportSize: ElementSize<"px">) {
     autoBind(this);
 
     this.camera = camera;

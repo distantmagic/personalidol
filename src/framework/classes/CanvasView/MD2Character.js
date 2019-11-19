@@ -7,6 +7,7 @@ import CanvasView from "../CanvasView";
 
 import type { LoadingManager as THREELoadingManager, Scene } from "three";
 
+import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class MD2Character extends CanvasView {
@@ -22,8 +23,8 @@ export default class MD2Character extends CanvasView {
     this.threeLoadingManager = threeLoadingManager;
   }
 
-  async attach(): Promise<void> {
-    await super.attach();
+  async attach(cancelToken: CancelToken): Promise<void> {
+    await super.attach(cancelToken);
 
     const character = new MD2CharacterLoader(this.threeLoadingManager);
     // const config = {
@@ -86,8 +87,8 @@ export default class MD2Character extends CanvasView {
     });
   }
 
-  async dispose(): Promise<void> {
-    await super.dispose();
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await super.dispose(cancelToken);
 
     const character = this.character;
 

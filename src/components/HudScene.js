@@ -73,14 +73,7 @@ export default function HudScene(props: Props) {
       window.addEventListener("beforeunload", beforeUnload, {
         once: true,
       });
-      sceneCanvas.attachRenderer(
-        cancelToken,
-        props.debug,
-        props.exceptionHandler,
-        props.loadingManager,
-        props.queryBus,
-        threeLoadingManager
-      );
+      sceneCanvas.attachRenderer(cancelToken, props.debug, props.exceptionHandler, props.loadingManager, props.queryBus, threeLoadingManager);
 
       return function() {
         window.removeEventListener("beforeunload", beforeUnload);
@@ -94,9 +87,7 @@ export default function HudScene(props: Props) {
     return (
       <div className="dd__scene dd__scene--canvas dd__scene--hud">
         <HudSceneOverlayError>
-          <strong class="dd__loader__error-message">
-            Your browser can't render game scene because it does not support customElements technical feature.
-          </strong>
+          <strong class="dd__loader__error-message">Your browser can't render game scene because it does not support customElements technical feature.</strong>
           <a href="https://caniuse.com/#search=customelements">Which browsers support customElements?</a>
         </HudSceneOverlayError>
       </div>
@@ -105,13 +96,7 @@ export default function HudScene(props: Props) {
 
   return (
     <div className="dd__scene dd__scene--canvas dd__scene--hud">
-      {isSceneCanvasDefined && (
-        <x-dm-scene-canvas
-          class="dd__scene__canvas"
-          documenthidden={String(props.isDocumentHidden)}
-          ref={castSceneCanvas}
-        />
-      )}
+      {isSceneCanvasDefined && <x-dm-scene-canvas class="dd__scene__canvas" documenthidden={String(props.isDocumentHidden)} ref={castSceneCanvas} />}
       <HudSceneOverlay loadingManager={props.loadingManager} />
     </div>
   );

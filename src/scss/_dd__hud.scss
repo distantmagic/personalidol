@@ -40,9 +40,7 @@ $dd-hud-settings-height: 80px;
   grid-template-columns:
     $dd-hud-debugger-width
     $dd-hud-dialogue-width
-    calc(
-      100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(4)}
-    )
+    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(4)})
     $dd-hud-aside-width;
 }
 
@@ -52,9 +50,7 @@ $dd-hud-settings-height: 80px;
     "dialogue scene settings";
   grid-template-columns:
     $dd-hud-dialogue-width
-    calc(
-      100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(3)}
-    )
+    calc(100vw - #{$dd-hud-debugger-width} - #{$dd-hud-aside-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(3)})
     $dd-hud-aside-width;
 }
 

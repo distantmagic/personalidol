@@ -40,7 +40,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     const lines: $ReadOnlyArray<string> = this.splitLines(this.content);
     let currentBrushSketch: ?(QuakeBrushHalfSpace[]) = null;
     let currentEntitySketch: ?{|
-      brush: ?QuakeBrushInterface,
+      brushes: QuakeBrushInterface[],
       props: QuakeEntityProperty[],
     |} = null;
 
@@ -58,7 +58,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
           continue;
         } else if (!currentEntitySketch) {
           currentEntitySketch = {
-            brush: null,
+            brushes: [],
             props: [],
           };
           continue;
@@ -72,23 +72,12 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
           if (!currentEntitySketch) {
             throw new QuakeMapParserException(breadcrumbs, "Expected brush to be nested inside entity");
           }
-          if (currentEntitySketch.brush) {
-            throw new QuakeMapParserException(breadcrumbs, "Multiple brushes inside entity.");
-          }
-
-          currentEntitySketch.brush = new QuakeBrush(breadcrumbs.add("QuakeBrush"), currentBrushSketch);
+          currentEntitySketch.brushes.push(new QuakeBrush(breadcrumbs.add("QuakeBrush"), currentBrushSketch));
           currentBrushSketch = null;
           continue;
         } else if (currentEntitySketch) {
-          const quakeEntityProperties = new QuakeEntityProperties(
-            breadcrumbs.add("QuakeEntityProperties"),
-            currentEntitySketch.props
-          );
-          const quakeEntity = new QuakeEntity(
-            breadcrumbs.add("QuakeEntity"),
-            quakeEntityProperties,
-            currentEntitySketch.brush
-          );
+          const quakeEntityProperties = new QuakeEntityProperties(breadcrumbs.add("QuakeEntityProperties"), currentEntitySketch.props);
+          const quakeEntity = new QuakeEntity(breadcrumbs.add("QuakeEntity"), quakeEntityProperties, currentEntitySketch.brushes);
 
           entities.push(quakeEntity);
           currentEntitySketch = null;

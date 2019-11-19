@@ -27,11 +27,7 @@ export default class Dialogue implements Query<DialogueModel> {
     });
     const dialogue = await response.text();
 
-    return new DialogueModel(
-      this.expressionBus,
-      this.context,
-      new DialogueScript(this.expressionBus, this.context, YAML.parse(dialogue))
-    );
+    return new DialogueModel(this.expressionBus, this.context, new DialogueScript(this.expressionBus, this.context, YAML.parse(dialogue)));
   }
 
   isEqual(other: Dialogue): boolean {

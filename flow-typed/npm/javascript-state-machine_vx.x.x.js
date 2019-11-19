@@ -26,11 +26,7 @@ declare module "javascript-state-machine" {
     transition: $Keys<Transitions>,
   |};
 
-  declare type GenericTransitionCallback<States: string, Transitions> = (
-    transition: $Keys<Transitions>,
-    from: States,
-    to: States
-  ) => void;
+  declare type GenericTransitionCallback<States: string, Transitions> = (transition: $Keys<Transitions>, from: States, to: States) => void;
 
   declare type HelperMethods<States: string, Transitions> = {|
     allStates(): Array<States>,
@@ -88,8 +84,6 @@ declare module "javascript-state-machine" {
       StateMachineConfigurationFactory<TStates, TTransitions, TMethods, TData, TConstructorArguments>
     ): Class<StateMachineFactoryClass<TStates, TTransitions, TData, TConstructorArguments>>;
 
-    constructor(
-      StateMachineConfigurationClass<States, Transitions, Methods, Data>
-    ): StateMachineInstance<States, Transitions, Data>;
+    constructor(StateMachineConfigurationClass<States, Transitions, Methods, Data>): StateMachineInstance<States, Transitions, Data>;
   }
 }

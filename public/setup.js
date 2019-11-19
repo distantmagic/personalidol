@@ -67,9 +67,7 @@
   }
 
   function markSupported(feature, isFeatureSupported) {
-    document
-      .getElementById("browser-feature-" + requiredBrowserFeatures[feature])
-      .classList.add(isFeatureSupported ? supportedClassName : notSupportedClassName);
+    document.getElementById("browser-feature-" + requiredBrowserFeatures[feature]).classList.add(isFeatureSupported ? supportedClassName : notSupportedClassName);
   }
 
   document.getElementById("dd-root-loader-setup").classList.add("dd__setup--hidden");

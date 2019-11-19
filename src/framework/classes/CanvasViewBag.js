@@ -2,6 +2,7 @@
 
 import autoBind from "auto-bind";
 
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasView } from "../interfaces/CanvasView";
 import type { CanvasViewBag as CanvasViewBagInterface } from "../interfaces/CanvasViewBag";
 import type { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
@@ -22,18 +23,22 @@ export default class CanvasViewBag implements CanvasViewBagInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  add(canvasView: CanvasView): Promise<void> {
+  add(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
     this.canvasViews.add(canvasView);
 
-    return this.canvasViewBus.add(canvasView);
+    return this.canvasViewBus.add(cancelToken, canvasView);
   }
 
-  delete(canvasView: CanvasView): Promise<void> {
-    return this.canvasViewBus.delete(canvasView);
+  delete(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
+    return this.canvasViewBus.delete(cancelToken, canvasView);
   }
 
-  async dispose(): Promise<void> {
-    await Promise.all(Array.from(this.canvasViews).map(this.delete));
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await Promise.all(
+      Array.from(this.canvasViews).map((canvasView: CanvasView) => {
+        return this.delete(cancelToken, canvasView);
+      })
+    );
 
     this.canvasViews.clear();
     this.#isDisposed = true;

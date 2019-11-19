@@ -108,9 +108,7 @@ declare module "react-router" {
     location?: Location,
   |}> {}
 
-  declare export function withRouter<P>(
-    Component: React$ComponentType<{| ...ContextRouter, ...P |}>
-  ): React$ComponentType<P>;
+  declare export function withRouter<P>(Component: React$ComponentType<{| ...ContextRouter, ...P |}>): React$ComponentType<P>;
 
   declare type MatchPathOptions = {
     path?: string,

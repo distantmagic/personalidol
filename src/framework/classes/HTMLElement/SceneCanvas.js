@@ -86,10 +86,7 @@ export default class SceneCanvas extends HTMLElement {
     this.keyboardState = new KeyboardState(this.loggerBreadcrumbs.add("KeyboardState"));
     this.mainLoop = MainLoop.getInstance();
     this.pointerState = new PointerState(this.loggerBreadcrumbs.add("PointerState"), this.canvasElement);
-    this.resizeObserver = new HTMLElementResizeObserver(
-      this.loggerBreadcrumbs.add("HTMLElementResizeObserver"),
-      this.canvasWrapperElement
-    );
+    this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this.canvasWrapperElement);
     this.canvasControllerBus = new CanvasControllerBus(this.resizeObserver, this.scheduler);
 
     // this.mainLoop.setMaxAllowedFPS(10);
@@ -188,7 +185,7 @@ export default class SceneCanvas extends HTMLElement {
     );
 
     await exceptionHandler.guard(breadcrumbs, () => {
-      return loadingManager.blocking(this.canvasControllerBus.add(canvasController), "Loading initial game resources");
+      return loadingManager.blocking(this.canvasControllerBus.add(cancelToken, canvasController), "Loading initial game resources");
     });
 
     canvasController.resize(new HTMLElementSize(this.canvasWrapperElement));
@@ -202,10 +199,10 @@ export default class SceneCanvas extends HTMLElement {
     renderer.forceContextLoss();
     this.canvasElement.remove();
 
-    await loadingManager.blocking(this.canvasViewBag.dispose(), "Disposing root canvas controller");
+    await loadingManager.blocking(this.canvasViewBag.dispose(cancelToken), "Disposing root canvas controller");
 
     await exceptionHandler.guard(breadcrumbs, () => {
-      return loadingManager.blocking(this.canvasControllerBus.delete(canvasController), "Disposing game resources");
+      return loadingManager.blocking(this.canvasControllerBus.delete(cancelToken, canvasController), "Disposing game resources");
     });
 
     this.isLooping = false;

@@ -11,15 +11,13 @@ export default function HudSceneLocationRoom(props: Props) {
         <div className="dd-tp__formatted-text">
           <h1>Komnata mnicha u zbocza góry</h1>
           <p>
-            Pustelnik odsłania przed tobą zasłonę oddzielającą komnatę od reszty tunelu. Wchodzi do środka i siada na
-            niewielkim stołeczku, milczy. Daje ci tym samym chwilę, żebyś mógł przyzwyczaić się do nowego miejsca.
-            Gestem zaprasza cię, żebyś rozejrzał się, czeka spokojnie na pytania.
+            Pustelnik odsłania przed tobą zasłonę oddzielającą komnatę od reszty tunelu. Wchodzi do środka i siada na niewielkim stołeczku, milczy. Daje ci tym samym chwilę, żebyś
+            mógł przyzwyczaić się do nowego miejsca. Gestem zaprasza cię, żebyś rozejrzał się, czeka spokojnie na pytania.
           </p>
           <p>
-            Masz przed sobą niezbyt obszerną, skromnie wyposażoną komnatę. Na pierwszy rzut oka wszystkie przybory,
-            które się w niaj znajdują stanowią tylko absolutne minimum potrzebne do ascetycznego życia mnicha-zielarza.
-            Nie ma tu nic, ponad to co niezbędne, ale nawet ta ascetyczna prostota w porównaniu z obszernym pustkowiem
-            na zewnątrz jest dla ciebie jak bogaty pałacyk.
+            Masz przed sobą niezbyt obszerną, skromnie wyposażoną komnatę. Na pierwszy rzut oka wszystkie przybory, które się w niaj znajdują stanowią tylko absolutne minimum
+            potrzebne do ascetycznego życia mnicha-zielarza. Nie ma tu nic, ponad to co niezbędne, ale nawet ta ascetyczna prostota w porównaniu z obszernym pustkowiem na zewnątrz
+            jest dla ciebie jak bogaty pałacyk.
           </p>
         </div>
         <h2 className="dd-tp__heading-h2">Dostępne interakcje</h2>

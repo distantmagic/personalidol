@@ -12,9 +12,7 @@ type Props = {|
 |};
 
 export default React.memo<Props>(function HudSceneOverlay(props: Props) {
-  const [loadingManagerState, setLoadingManagerState] = React.useState<LoadingManagerState>(
-    props.loadingManager.getState()
-  );
+  const [loadingManagerState, setLoadingManagerState] = React.useState<LoadingManagerState>(props.loadingManager.getState());
   const comments = loadingManagerState.getComments();
 
   React.useEffect(

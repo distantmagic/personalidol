@@ -1,7 +1,5 @@
 // @flow
 
-import * as THREE from "three";
-
 import QuakeEntityProperty from "./QuakeEntityProperty";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
@@ -20,10 +18,7 @@ export default class QuakeEntityPropertyParser implements QuakeEntityPropertyPar
 
   entityPropertySplits(splits: $ReadOnlyArray<string>): QuakeEntityPropertyInterface {
     if (splits.length !== 5) {
-      throw new QuakeMapParserException(
-        this.loggerBreadcrumbs.add("entityPropertySplits"),
-        "Unexpected number of brush splits."
-      );
+      throw new QuakeMapParserException(this.loggerBreadcrumbs.add("entityPropertySplits"), "Unexpected number of brush splits.");
     }
 
     return new QuakeEntityProperty(splits[1], splits[3]);

@@ -22,6 +22,7 @@ import type { LoadingManager as THREELoadingManager, OrthographicCamera, Scene, 
 // import type { ShaderPass as ShaderPassInterface } from "three/examples/jsm/postprocessing/ShaderPass";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
+import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasControllerBus } from "../../interfaces/CanvasControllerBus";
 import type { CanvasPointerController as CanvasPointerControllerInterface } from "../../interfaces/CanvasPointerController";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -82,14 +83,7 @@ export default class Root extends CanvasController {
     // this.scene.fog = new THREE.Fog( 0x050505, 40, 100 );
 
     this.scheduler = scheduler;
-    this.cameraController = new CameraController(
-      this.camera,
-      debug,
-      loggerBreadcrumbs,
-      renderer,
-      this.scene,
-      new ElementSize<"px">(0, 0)
-    );
+    this.cameraController = new CameraController(this.camera, debug, loggerBreadcrumbs, renderer, this.scene, new ElementSize<"px">(0, 0));
     this.threeLoadingManager = threeLoadingManager;
     this.threePointerInteraction = new THREEPointerInteraction(renderer, this.camera);
 
@@ -101,43 +95,33 @@ export default class Root extends CanvasController {
     this.effectComposer.addPass(renderPass);
     // this.effectComposer.addPass(this.shaderPass);
 
-    this.canvasPointerController = new CanvasPointerController(
-      this.threePointerInteraction.getCameraRaycaster(),
-      this.scene
-    );
+    this.canvasPointerController = new CanvasPointerController(this.threePointerInteraction.getCameraRaycaster(), this.scene);
     this.canvasPointerController.addResponder(new PointerEventResponder(pointerState));
   }
 
-  async attach(): Promise<void> {
-    await super.attach();
+  async attach(cancelToken: CancelToken): Promise<void> {
+    await super.attach(cancelToken);
 
     await Promise.all([
-      this.cameraController.attach(),
+      this.cameraController.attach(cancelToken),
       this.loadingManager.blocking(
         this.canvasViewBag.add(
-          new AmbientLightView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
-            this.debug,
-            this.loggerBreadcrumbs.add("AmbientLight"),
-            this.scene
-          )
+          cancelToken,
+          new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.debug, this.loggerBreadcrumbs.add("AmbientLight"), this.scene)
         ),
         "Loading lights"
       ),
       this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          new MD2CharacterView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
-            this.scene,
-            this.threeLoadingManager
-          )
-        ),
+        this.canvasViewBag.add(cancelToken, new MD2CharacterView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")), this.scene, this.threeLoadingManager)),
         "Loading character"
       ),
       this.loadingManager.blocking(
         this.canvasViewBag.add(
+          cancelToken,
           new QuakeMapView(
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
+            this.loggerBreadcrumbs.add("QuakeMap"),
+            this.queryBus,
             this.scene,
             this.threeLoadingManager,
             "/assets/map-test.map"
@@ -153,14 +137,14 @@ export default class Root extends CanvasController {
     this.threePointerInteraction.observe();
   }
 
-  async dispose(): Promise<void> {
-    await super.dispose();
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await super.dispose(cancelToken);
 
     this.scheduler.offBegin(this.canvasPointerController.begin);
     this.scheduler.offDraw(this.cameraController.draw);
     this.scheduler.offUpdate(this.threePointerInteraction.update);
 
-    await this.cameraController.dispose();
+    await this.cameraController.dispose(cancelToken);
 
     this.threePointerInteraction.disconnect();
     this.scene.dispose();

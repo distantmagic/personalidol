@@ -46,14 +46,7 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
         cancelToken.cancel(props.loggerBreadcrumbs.add("React.useEffect").add("cleanup"));
       };
     },
-    [
-      props.dialogueResourceReference,
-      props.expressionBus,
-      props.exceptionHandler,
-      props.expressionContext,
-      props.loggerBreadcrumbs,
-      props.queryBus,
-    ]
+    [props.dialogueResourceReference, props.expressionBus, props.exceptionHandler, props.expressionContext, props.loggerBreadcrumbs, props.queryBus]
   );
 
   if (!dialogue) {

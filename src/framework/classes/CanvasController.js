@@ -1,5 +1,6 @@
 // @flow
 
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasController as CanvasControllerInterface } from "../interfaces/CanvasController";
 import type { CanvasViewBag } from "../interfaces/CanvasViewBag";
 import type { ElementSize } from "../interfaces/ElementSize";
@@ -11,10 +12,10 @@ export default class CanvasController implements CanvasControllerInterface {
     this.canvasViewBag = canvasViewBag;
   }
 
-  async attach(): Promise<void> {}
+  async attach(cancelToken: CancelToken): Promise<void> {}
 
-  async dispose(): Promise<void> {
-    return this.canvasViewBag.dispose();
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    return this.canvasViewBag.dispose(cancelToken);
   }
 
   draw(interpolationPercentage: number): void {}

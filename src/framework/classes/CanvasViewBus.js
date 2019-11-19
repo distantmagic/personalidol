@@ -1,5 +1,6 @@
 // @flow
 
+import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasView } from "../interfaces/CanvasView";
 import type { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
 import type { Scheduler } from "../interfaces/Scheduler";
@@ -11,8 +12,8 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
     this.scheduler = scheduler;
   }
 
-  async add(canvasView: CanvasView): Promise<void> {
-    await canvasView.attach();
+  async add(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
+    await canvasView.attach(cancelToken);
 
     if (canvasView.useBegin()) {
       this.scheduler.onBegin(canvasView.begin);
@@ -25,7 +26,7 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
     }
   }
 
-  async delete(canvasView: CanvasView): Promise<void> {
+  async delete(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
     if (canvasView.useBegin()) {
       this.scheduler.offBegin(canvasView.begin);
     }
@@ -36,6 +37,6 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
       this.scheduler.offUpdate(canvasView.update);
     }
 
-    return canvasView.dispose();
+    return canvasView.dispose(cancelToken);
   }
 }

@@ -64,12 +64,7 @@ declare module "fs-extra" {
 
   declare export function copy(src: string, dest: string, options?: CopyOptionsAync): Promise<void>;
   declare export function copy(src: string, dest: string, callback: (err: Error) => void): void;
-  declare export function copy(
-    src: string,
-    dest: string,
-    options: CopyOptionsAync,
-    callback: (err: Error) => void
-  ): void;
+  declare export function copy(src: string, dest: string, options: CopyOptionsAync, callback: (err: Error) => void): void;
   declare export function copySync(src: string, dest: string, options?: CopyOptionsSync): void;
 
   declare export function move(src: string, dest: string, options?: MoveOptions): Promise<void>;
@@ -100,28 +95,15 @@ declare module "fs-extra" {
 
   declare export function outputFile(file: string, data: any, options?: WriteFileOptions | string): Promise<void>;
   declare export function outputFile(file: string, data: any, callback: (err: Error) => void): void;
-  declare export function outputFile(
-    file: string,
-    data: any,
-    options: WriteFileOptions | string,
-    callback: (err: Error) => void
-  ): void;
+  declare export function outputFile(file: string, data: any, options: WriteFileOptions | string, callback: (err: Error) => void): void;
   declare export function outputFileSync(file: string, data: any, options?: WriteFileOptions | string): void;
 
   declare export function readJson(file: string, options?: ReadOptions): Promise<any>;
   declare export function readJson(file: string, callback: (err: Error, jsonObject: any) => void): void;
-  declare export function readJson(
-    file: string,
-    options: ReadOptions,
-    callback: (err: Error, jsonObject: any) => void
-  ): void;
+  declare export function readJson(file: string, options: ReadOptions, callback: (err: Error, jsonObject: any) => void): void;
   declare export function readJSON(file: string, options?: ReadOptions): Promise<any>;
   declare export function readJSON(file: string, callback: (err: Error, jsonObject: any) => void): void;
-  declare export function readJSON(
-    file: string,
-    options: ReadOptions,
-    callback: (err: Error, jsonObject: any) => void
-  ): void;
+  declare export function readJSON(file: string, options: ReadOptions, callback: (err: Error, jsonObject: any) => void): void;
 
   declare export function readJsonSync(file: string, options?: ReadOptions): any;
   declare export function readJSONSync(file: string, options?: ReadOptions): any;
@@ -132,18 +114,8 @@ declare module "fs-extra" {
 
   declare export function outputJson(file: string, data: any, options?: WriteOptions): Promise<void>;
   declare export function outputJSON(file: string, data: any, options?: WriteOptions): Promise<void>;
-  declare export function outputJson(
-    file: string,
-    data: any,
-    options: WriteOptions,
-    callback: (err: Error) => void
-  ): void;
-  declare export function outputJSON(
-    file: string,
-    data: any,
-    options: WriteOptions,
-    callback: (err: Error) => void
-  ): void;
+  declare export function outputJson(file: string, data: any, options: WriteOptions, callback: (err: Error) => void): void;
+  declare export function outputJSON(file: string, data: any, options: WriteOptions, callback: (err: Error) => void): void;
   declare export function outputJson(file: string, data: any, callback: (err: Error) => void): void;
   declare export function outputJSON(file: string, data: any, callback: (err: Error) => void): void;
   declare export function outputJsonSync(file: string, data: any, options?: WriteOptions): void;
@@ -151,20 +123,10 @@ declare module "fs-extra" {
 
   declare export function writeJSON(file: string, object: any, options?: WriteOptions): Promise<void>;
   declare export function writeJSON(file: string, object: any, callback: (err: Error) => void): void;
-  declare export function writeJSON(
-    file: string,
-    object: any,
-    options: WriteOptions,
-    callback: (err: Error) => void
-  ): void;
+  declare export function writeJSON(file: string, object: any, options: WriteOptions, callback: (err: Error) => void): void;
   declare export function writeJson(file: string, object: any, options?: WriteOptions): Promise<void>;
   declare export function writeJson(file: string, object: any, callback: (err: Error) => void): void;
-  declare export function writeJson(
-    file: string,
-    object: any,
-    options: WriteOptions,
-    callback: (err: Error) => void
-  ): void;
+  declare export function writeJson(file: string, object: any, options: WriteOptions, callback: (err: Error) => void): void;
 
   declare export function writeJsonSync(file: string, object: any, options?: WriteOptions): void;
   declare export function writeJSONSync(file: string, object: any, options?: WriteOptions): void;
@@ -178,12 +140,7 @@ declare module "fs-extra" {
   declare export function ensureLinkSync(src: string, dest: string): void;
 
   declare export function ensureSymlink(src: string, dest: string, type?: SymlinkType): Promise<void>;
-  declare export function ensureSymlink(
-    src: string,
-    dest: string,
-    type: SymlinkType,
-    callback: (err: Error) => void
-  ): void;
+  declare export function ensureSymlink(src: string, dest: string, type: SymlinkType, callback: (err: Error) => void): void;
   declare export function ensureSymlink(src: string, dest: string, callback: (err: Error) => void): void;
   declare export function ensureSymlinkSync(src: string, dest: string, type?: SymlinkType): void;
 
@@ -205,31 +162,14 @@ declare module "fs-extra" {
     options: { encoding?: string, mode?: number | string, flag?: string },
     callback: (err: ErrnoError) => void
   ): void;
-  declare export function appendFile(
-    file: string | Buffer | number,
-    data: any,
-    callback: (err: ErrnoError) => void
-  ): void;
-  declare export function appendFile(
-    file: string | Buffer | number,
-    data: any,
-    options?: { encoding?: string, mode?: number | string, flag?: string }
-  ): Promise<void>;
+  declare export function appendFile(file: string | Buffer | number, data: any, callback: (err: ErrnoError) => void): void;
+  declare export function appendFile(file: string | Buffer | number, data: any, options?: { encoding?: string, mode?: number | string, flag?: string }): Promise<void>;
 
-  declare export function chmod(
-    path: string | Buffer,
-    mode: string | number,
-    callback: (err: ErrnoError) => void
-  ): void;
+  declare export function chmod(path: string | Buffer, mode: string | number, callback: (err: ErrnoError) => void): void;
   declare export function chmod(path: string | Buffer, mode: string | number): Promise<void>;
 
   declare export function chown(path: string | Buffer, uid: number, gid: number): Promise<void>;
-  declare export function chown(
-    path: string | Buffer,
-    uid: number,
-    gid: number,
-    callback: (err: ErrnoError) => void
-  ): void;
+  declare export function chown(path: string | Buffer, uid: number, gid: number, callback: (err: ErrnoError) => void): void;
 
   declare export function close(fd: number, callback: (err: ErrnoError) => void): void;
   declare export function close(fd: number): Promise<void>;
@@ -258,43 +198,21 @@ declare module "fs-extra" {
   declare export function futimes(fd: number, atime: number, mtime: number): Promise<void>;
   declare export function futimes(fd: number, atime: Date, mtime: Date): Promise<void>;
 
-  declare export function lchown(
-    path: string | Buffer,
-    uid: number,
-    gid: number,
-    callback: (err: ErrnoError) => void
-  ): void;
+  declare export function lchown(path: string | Buffer, uid: number, gid: number, callback: (err: ErrnoError) => void): void;
   declare export function lchown(path: string | Buffer, uid: number, gid: number): Promise<void>;
 
-  declare export function link(
-    srcpath: string | Buffer,
-    dstpath: string | Buffer,
-    callback: (err: ErrnoError) => void
-  ): void;
+  declare export function link(srcpath: string | Buffer, dstpath: string | Buffer, callback: (err: ErrnoError) => void): void;
   declare export function link(srcpath: string | Buffer, dstpath: string | Buffer): Promise<void>;
 
   declare export function lstat(path: string | Buffer, callback: (err: ErrnoError, stats: Stats) => any): void;
   declare export function lstat(path: string | Buffer): Promise<Stats>;
 
   declare export function mkdir(path: string | Buffer, callback: (err: ErrnoError) => void): void;
-  declare export function mkdir(
-    path: string | Buffer,
-    mode: number | string,
-    callback: (err: ErrnoError) => void
-  ): void;
+  declare export function mkdir(path: string | Buffer, mode: number | string, callback: (err: ErrnoError) => void): void;
   declare export function mkdir(path: string | Buffer): Promise<void>;
 
-  declare export function open(
-    path: string | Buffer,
-    flags: string | number,
-    callback: (err: ErrnoError, fd: number) => void
-  ): void;
-  declare export function open(
-    path: string | Buffer,
-    flags: string | number,
-    mode: number,
-    callback: (err: ErrnoError, fd: number) => void
-  ): void;
+  declare export function open(path: string | Buffer, flags: string | number, callback: (err: ErrnoError, fd: number) => void): void;
+  declare export function open(path: string | Buffer, flags: string | number, mode: number, callback: (err: ErrnoError, fd: number) => void): void;
   declare export function open(path: string | Buffer, flags: string | number, mode?: number): Promise<number>;
 
   declare export function read(
@@ -305,32 +223,16 @@ declare module "fs-extra" {
     position: number | null,
     callback: (err: ErrnoError, bytesRead: number, buffer: Buffer) => void
   ): void;
-  declare export function read(
-    fd: number,
-    buffer: Buffer,
-    offset: number,
-    length: number,
-    position: number | null
-  ): Promise<ReadResult>;
+  declare export function read(fd: number, buffer: Buffer, offset: number, length: number, position: number | null): Promise<ReadResult>;
 
-  declare export function readFile(
-    file: string | Buffer | number,
-    callback: (err: ErrnoError, data: Buffer) => void
-  ): void;
-  declare export function readFile(
-    file: string | Buffer | number,
-    encoding: string,
-    callback: (err: ErrnoError, data: string) => void
-  ): void;
+  declare export function readFile(file: string | Buffer | number, callback: (err: ErrnoError, data: Buffer) => void): void;
+  declare export function readFile(file: string | Buffer | number, encoding: string, callback: (err: ErrnoError, data: string) => void): void;
   declare export function readFile(
     file: string | Buffer | number,
     options: { flag?: string } | { encoding: string, flag?: string },
     callback: (err: ErrnoError, data: Buffer) => void
   ): void;
-  declare export function readFile(
-    file: string | Buffer | number,
-    options: { flag?: string } | { encoding: string, flag?: string }
-  ): Promise<string>;
+  declare export function readFile(file: string | Buffer | number, options: { flag?: string } | { encoding: string, flag?: string }): Promise<string>;
   declare export function readFile(file: string | Buffer | number, encoding: string): Promise<string>;
   declare export function readFile(file: string | Buffer | number): Promise<Buffer>;
 
@@ -340,15 +242,8 @@ declare module "fs-extra" {
   declare export function readlink(path: string | Buffer, callback: (err: ErrnoError, linkString: string) => any): void;
   declare export function readlink(path: string | Buffer): Promise<string>;
 
-  declare export function realpath(
-    path: string | Buffer,
-    callback: (err: ErrnoError, resolvedPath: string) => any
-  ): void;
-  declare export function realpath(
-    path: string | Buffer,
-    cache: { [path: string]: string },
-    callback: (err: ErrnoError, resolvedPath: string) => any
-  ): void;
+  declare export function realpath(path: string | Buffer, callback: (err: ErrnoError, resolvedPath: string) => any): void;
+  declare export function realpath(path: string | Buffer, cache: { [path: string]: string }, callback: (err: ErrnoError, resolvedPath: string) => any): void;
   declare export function realpath(path: string | Buffer, cache?: { [path: string]: string }): Promise<string>;
 
   declare export function rename(oldPath: string, newPath: string, callback: (err: ErrnoError) => void): void;
@@ -362,22 +257,9 @@ declare module "fs-extra" {
 
   declare export function statSync(path: string): Stats;
 
-  declare export function symlink(
-    srcpath: string | Buffer,
-    dstpath: string | Buffer,
-    type: FsSymlinkType | void,
-    callback: (err: ErrnoError) => void
-  ): void;
-  declare export function symlink(
-    srcpath: string | Buffer,
-    dstpath: string | Buffer,
-    callback: (err: ErrnoError) => void
-  ): void;
-  declare export function symlink(
-    srcpath: string | Buffer,
-    dstpath: string | Buffer,
-    type?: FsSymlinkType
-  ): Promise<void>;
+  declare export function symlink(srcpath: string | Buffer, dstpath: string | Buffer, type: FsSymlinkType | void, callback: (err: ErrnoError) => void): void;
+  declare export function symlink(srcpath: string | Buffer, dstpath: string | Buffer, callback: (err: ErrnoError) => void): void;
+  declare export function symlink(srcpath: string | Buffer, dstpath: string | Buffer, type?: FsSymlinkType): Promise<void>;
 
   declare export function truncate(path: string | Buffer, callback: (err: ErrnoError) => void): void;
   declare export function truncate(path: string | Buffer, len: number, callback: (err: ErrnoError) => void): void;
@@ -386,18 +268,8 @@ declare module "fs-extra" {
   declare export function unlink(path: string | Buffer, callback: (err: ErrnoError) => void): void;
   declare export function unlink(path: string | Buffer): Promise<void>;
 
-  declare export function utimes(
-    path: string | Buffer,
-    atime: number,
-    mtime: number,
-    callback: (err: ErrnoError) => void
-  ): void;
-  declare export function utimes(
-    path: string | Buffer,
-    atime: Date,
-    mtime: Date,
-    callback: (err: ErrnoError) => void
-  ): void;
+  declare export function utimes(path: string | Buffer, atime: number, mtime: number, callback: (err: ErrnoError) => void): void;
+  declare export function utimes(path: string | Buffer, atime: Date, mtime: Date, callback: (err: ErrnoError) => void): void;
   declare export function utimes(path: string | Buffer, atime: number, mtime: number): Promise<void>;
   declare export function utimes(path: string | Buffer, atime: Date, mtime: Date): Promise<void>;
 
@@ -409,56 +281,16 @@ declare module "fs-extra" {
     position: number | null,
     callback: (err: ErrnoError, written: number, buffer: Buffer) => void
   ): void;
-  declare export function write(
-    fd: number,
-    buffer: Buffer,
-    offset: number,
-    length: number,
-    callback: (err: ErrnoError, written: number, buffer: Buffer) => void
-  ): void;
-  declare export function write(
-    fd: number,
-    data: any,
-    callback: (err: ErrnoError, written: number, str: string) => void
-  ): void;
-  declare export function write(
-    fd: number,
-    data: any,
-    offset: number,
-    callback: (err: ErrnoError, written: number, str: string) => void
-  ): void;
-  declare export function write(
-    fd: number,
-    data: any,
-    offset: number,
-    encoding: string,
-    callback: (err: ErrnoError, written: number, str: string) => void
-  ): void;
-  declare export function write(
-    fd: number,
-    buffer: Buffer,
-    offset: number,
-    length: number,
-    position?: number | null
-  ): Promise<WriteResult>;
+  declare export function write(fd: number, buffer: Buffer, offset: number, length: number, callback: (err: ErrnoError, written: number, buffer: Buffer) => void): void;
+  declare export function write(fd: number, data: any, callback: (err: ErrnoError, written: number, str: string) => void): void;
+  declare export function write(fd: number, data: any, offset: number, callback: (err: ErrnoError, written: number, str: string) => void): void;
+  declare export function write(fd: number, data: any, offset: number, encoding: string, callback: (err: ErrnoError, written: number, str: string) => void): void;
+  declare export function write(fd: number, buffer: Buffer, offset: number, length: number, position?: number | null): Promise<WriteResult>;
   declare export function write(fd: number, data: any, offset: number, encoding?: string): Promise<WriteResult>;
 
-  declare export function writeFile(
-    file: string | Buffer | number,
-    data: any,
-    callback: (err: ErrnoError) => void
-  ): void;
-  declare export function writeFile(
-    file: string | Buffer | number,
-    data: any,
-    options?: WriteFileOptions | string
-  ): Promise<void>;
-  declare export function writeFile(
-    file: string | Buffer | number,
-    data: any,
-    options: WriteFileOptions | string,
-    callback: (err: ErrnoError) => void
-  ): void;
+  declare export function writeFile(file: string | Buffer | number, data: any, callback: (err: ErrnoError) => void): void;
+  declare export function writeFile(file: string | Buffer | number, data: any, options?: WriteFileOptions | string): Promise<void>;
+  declare export function writeFile(file: string | Buffer | number, data: any, options: WriteFileOptions | string, callback: (err: ErrnoError) => void): void;
 
   declare export function mkdtemp(prefix: string): Promise<string>;
   declare export function mkdtemp(prefix: string, callback: (err: ErrnoError, folder: string) => void): void;

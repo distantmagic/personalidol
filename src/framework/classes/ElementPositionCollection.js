@@ -10,8 +10,7 @@ import type { ElementPositionCollection as ElementPositionCollectionInterface } 
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
-export default class ElementPositionCollection<Unit: ElementPositionUnit>
-  implements ElementPositionCollectionInterface<Unit> {
+export default class ElementPositionCollection<Unit: ElementPositionUnit> implements ElementPositionCollectionInterface<Unit> {
   +elementPositions: $ReadOnlyArray<ElementPositionInterface<Unit>>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 

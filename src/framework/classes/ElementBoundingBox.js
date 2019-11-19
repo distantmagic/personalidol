@@ -11,11 +11,7 @@ export default class ElementBoundingBox<Unit: ElementPositionUnit> implements El
   +elementSize: ElementSize<Unit>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    elementPosition: ElementPosition<Unit>,
-    elementSize: ElementSize<Unit>
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, elementPosition: ElementPosition<Unit>, elementSize: ElementSize<Unit>) {
     this.elementPosition = elementPosition;
     this.elementSize = elementSize;
     this.loggerBreadcrumbs = loggerBreadcrumbs;

@@ -47,9 +47,7 @@ export default class CanvasPointerController implements CanvasPointerControllerI
   }
 
   deleteResponder<T>(canvasPointerResponder: CanvasPointerResponder<T>): void {
-    this.canvasPointerResponders = this.canvasPointerResponders.filter(
-      storedCanvasPointerResponder => storedCanvasPointerResponder !== canvasPointerResponder
-    );
+    this.canvasPointerResponders = this.canvasPointerResponders.filter(storedCanvasPointerResponder => storedCanvasPointerResponder !== canvasPointerResponder);
   }
 
   hasResponder<T>(canvasPointerResponder: CanvasPointerResponder<T>): boolean {

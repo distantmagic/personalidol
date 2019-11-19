@@ -39,11 +39,7 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
     }
     await this.logger.debug(loggerBreadcrumbs, `${error.message}`);
 
-    const message = [
-      loggerBreadcrumbs.asString(),
-      error instanceof Exception ? "Reported at: " + error.loggerBreadcrumbs.asString() : "",
-      error.stack,
-    ].join(" ");
+    const message = [loggerBreadcrumbs.asString(), error instanceof Exception ? "Reported at: " + error.loggerBreadcrumbs.asString() : "", error.stack].join(" ");
 
     await this.logger.error(loggerBreadcrumbs, message);
 

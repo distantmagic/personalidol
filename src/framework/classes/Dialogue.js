@@ -25,12 +25,6 @@ export default class Dialogue implements Contextual {
   }
 
   async initiate(initiator: Identifiable & Speaks): Promise<DialogueTurn> {
-    return new DialogueTurn(
-      this.expressionBus,
-      this.getExpressionContext(),
-      this.script,
-      await this.script.getStartMessage(),
-      initiator
-    );
+    return new DialogueTurn(this.expressionBus, this.getExpressionContext(), this.script, await this.script.getStartMessage(), initiator);
   }
 }

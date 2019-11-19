@@ -5,9 +5,7 @@ import type { QuakeBrush } from "./QuakeBrush";
 import type { QuakeEntityProperties } from "./QuakeEntityProperties";
 
 export interface QuakeEntity extends Equatable<QuakeEntity> {
-  getBrush(): QuakeBrush;
+  getBrushes(): $ReadOnlyArray<QuakeBrush>;
 
   getProperties(): QuakeEntityProperties;
-
-  hasBrush(): boolean;
 }

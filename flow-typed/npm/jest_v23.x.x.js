@@ -154,11 +154,7 @@ type JestStyledComponentsMatcherOptions = {
 };
 
 type JestStyledComponentsMatchersType = {
-  toHaveStyleRule(
-    property: string,
-    value: JestStyledComponentsMatcherValue,
-    options?: JestStyledComponentsMatcherOptions
-  ): void,
+  toHaveStyleRule(property: string, value: JestStyledComponentsMatcherValue, options?: JestStyledComponentsMatcherOptions): void,
 };
 
 /**
@@ -537,12 +533,7 @@ type JestExtendedMatchersType = {
 };
 
 interface JestExpectType {
-  not: JestExpectType &
-    EnzymeMatchersType &
-    DomTestingLibraryType &
-    JestJQueryMatchersType &
-    JestStyledComponentsMatchersType &
-    JestExtendedMatchersType;
+  not: JestExpectType & EnzymeMatchersType & DomTestingLibraryType & JestJQueryMatchersType & JestStyledComponentsMatchersType & JestExtendedMatchersType;
   /**
    * If you have a mock function, you can use .lastCalledWith to test what
    * arguments it was last called with.
@@ -779,9 +770,7 @@ type JestObjectType = {
    * Returns a new, unused mock function. Optionally takes a mock
    * implementation.
    */
-  fn<TArguments: $ReadOnlyArray<*>, TReturn>(
-    implementation?: (...args: TArguments) => TReturn
-  ): JestMockFn<TArguments, TReturn>,
+  fn<TArguments: $ReadOnlyArray<*>, TReturn>(implementation?: (...args: TArguments) => TReturn): JestMockFn<TArguments, TReturn>,
   /**
    * Determines if the given function is a mocked function.
    */
@@ -917,9 +906,7 @@ declare var describe: {
    *
    * @param {table} table of Test
    */
-  each(
-    ...table: Array<Array<mixed> | mixed> | [Array<string>, string]
-  ): (name: JestTestName, fn?: (...args: Array<any>) => ?Promise<mixed>, timeout?: number) => void,
+  each(...table: Array<Array<mixed> | mixed> | [Array<string>, string]): (name: JestTestName, fn?: (...args: Array<any>) => ?Promise<mixed>, timeout?: number) => void,
 };
 
 /** An individual test unit */
@@ -945,9 +932,7 @@ declare var it: {
     fn?: (done: () => void) => ?Promise<mixed>,
     timeout?: number
   ): {
-    each(
-      ...table: Array<Array<mixed> | mixed> | [Array<string>, string]
-    ): (name: JestTestName, fn?: (...args: Array<any>) => ?Promise<mixed>, timeout?: number) => void,
+    each(...table: Array<Array<mixed> | mixed> | [Array<string>, string]): (name: JestTestName, fn?: (...args: Array<any>) => ?Promise<mixed>, timeout?: number) => void,
   },
 
   /**
@@ -973,9 +958,7 @@ declare var it: {
    *
    * @param {table} table of Test
    */
-  each(
-    ...table: Array<Array<mixed> | mixed> | [Array<string>, string]
-  ): (name: JestTestName, fn?: (...args: Array<any>) => ?Promise<mixed>, timeout?: number) => void,
+  each(...table: Array<Array<mixed> | mixed> | [Array<string>, string]): (name: JestTestName, fn?: (...args: Array<any>) => ?Promise<mixed>, timeout?: number) => void,
 };
 
 declare function fit(name: JestTestName, fn: (done: () => void) => ?Promise<mixed>, timeout?: number): void;
@@ -1024,13 +1007,7 @@ type JestPrettyFormatOptions = {|
 |};
 
 type JestPrettyFormatPlugin = {
-  print: (
-    val: any,
-    serialize: JestPrettyFormatPrint,
-    indent: JestPrettyFormatIndent,
-    opts: JestPrettyFormatOptions,
-    colors: JestPrettyFormatColors
-  ) => string,
+  print: (val: any, serialize: JestPrettyFormatPrint, indent: JestPrettyFormatIndent, opts: JestPrettyFormatOptions, colors: JestPrettyFormatColors) => string,
   test: any => boolean,
 };
 
@@ -1041,13 +1018,7 @@ declare var expect: {
   /** The object that you want to make assertions against */
   (
     value: any
-  ): JestExpectType &
-    JestPromiseType &
-    EnzymeMatchersType &
-    DomTestingLibraryType &
-    JestJQueryMatchersType &
-    JestStyledComponentsMatchersType &
-    JestExtendedMatchersType,
+  ): JestExpectType & JestPromiseType & EnzymeMatchersType & DomTestingLibraryType & JestJQueryMatchersType & JestStyledComponentsMatchersType & JestExtendedMatchersType,
 
   /** Add additional Jasmine matchers to Jest's roster */
   extend(matchers: { [name: string]: JestMatcher }): void,

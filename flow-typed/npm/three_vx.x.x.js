@@ -247,14 +247,7 @@ declare module "three" {
       widthSegments: number,
     |};
 
-    constructor(
-      width?: number,
-      height?: number,
-      depth?: number,
-      widthSegments?: number,
-      heightSegments?: number,
-      depthSegments?: number
-    ): void;
+    constructor(width?: number, height?: number, depth?: number, widthSegments?: number, heightSegments?: number, depthSegments?: number): void;
   }
 
   declare export interface BufferGeometry extends BaseGeometry {
@@ -387,12 +380,7 @@ declare module "three" {
   declare export interface Loader {
     constructor(?LoadingManager): void;
 
-    load(
-      url: string,
-      LoadingManagerOnLoadCallback,
-      LoadingManagerOnProgressCallback,
-      LoadingManagerOnErrorCallback
-    ): void;
+    load(url: string, LoadingManagerOnLoadCallback, LoadingManagerOnProgressCallback, LoadingManagerOnErrorCallback): void;
   }
 
   declare export interface LoadingManager {
@@ -412,6 +400,8 @@ declare module "three" {
     constructor({|
       color?: number,
       map?: Texture,
+      opacity?: number,
+      transparent?: boolean,
     |}): void;
   }
 
@@ -433,6 +423,10 @@ declare module "three" {
 
   declare export interface MeshBasicMaterial extends Material {
     +isMeshBasicMaterial: true;
+  }
+
+  declare export interface MeshLambertMaterial extends Material {
+    +isMeshLambertMaterial: true;
   }
 
   declare export interface MeshNormalMaterial extends Material {
@@ -593,15 +587,7 @@ declare module "three" {
   }
 
   declare export interface SphereBufferGeometry extends BufferGeometry {
-    constructor(
-      radius: number,
-      widthSegments?: number,
-      heightSegments?: number,
-      phiStart?: number,
-      phiLength?: number,
-      thetaStart?: number,
-      thetaLength?: number
-    ): void;
+    constructor(radius: number, widthSegments?: number, heightSegments?: number, phiStart?: number, phiLength?: number, thetaStart?: number, thetaLength?: number): void;
   }
 
   declare export interface SpotLight<T: Camera> extends Light<T> {

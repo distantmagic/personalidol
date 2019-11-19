@@ -10,13 +10,7 @@ export default class ScrollbarPosition {
   +scrollOffset: number;
   +scrollPercentage: number;
 
-  constructor(
-    scrollLength: number,
-    offsetLength: number,
-    scrollIndicatorHeight: number,
-    scrollOffset: number,
-    changed: boolean = false
-  ) {
+  constructor(scrollLength: number, offsetLength: number, scrollIndicatorHeight: number, scrollOffset: number, changed: boolean = false) {
     this.changed = changed;
     this.offsetLength = offsetLength;
     this.scrollIndicatorHeight = scrollIndicatorHeight;
@@ -29,13 +23,7 @@ export default class ScrollbarPosition {
   adjust(delta: number): ScrollbarPosition {
     const updatedScrollOffset = THREE.Math.clamp(this.scrollOffset + delta, 0, this.scrollLength - this.offsetLength);
 
-    return new ScrollbarPosition(
-      this.scrollLength,
-      this.offsetLength,
-      this.scrollIndicatorHeight,
-      updatedScrollOffset,
-      updatedScrollOffset !== this.scrollOffset
-    );
+    return new ScrollbarPosition(this.scrollLength, this.offsetLength, this.scrollIndicatorHeight, updatedScrollOffset, updatedScrollOffset !== this.scrollOffset);
   }
 
   isChanged(): boolean {

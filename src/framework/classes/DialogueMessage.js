@@ -14,12 +14,7 @@ export default class DialogueMessage implements DialogueMessageInterface {
   +expressionBus: ExpressionBus;
   +messageScript: DialogueScriptMessage;
 
-  constructor(
-    expressionBus: ExpressionBus,
-    context: ExpressionContext,
-    key: string,
-    messageScript: DialogueScriptMessage
-  ) {
+  constructor(expressionBus: ExpressionBus, context: ExpressionContext, key: string, messageScript: DialogueScriptMessage) {
     this._key = key;
     this.context = context;
     this.expressionBus = expressionBus;

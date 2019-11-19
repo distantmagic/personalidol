@@ -10,8 +10,7 @@ import type { CanvasPointerEventHandlerReference as CanvasPointerEventHandlerRef
 import type { PointerButtonNames } from "../../types/PointerButtonNames";
 import type { PointerState } from "../../interfaces/PointerState";
 
-export default class PointerEventResponder
-  implements CanvasPointerResponder<CanvasPointerEventHandlerReferenceInterface> {
+export default class PointerEventResponder implements CanvasPointerResponder<CanvasPointerEventHandlerReferenceInterface> {
   +pointerState: PointerState;
 
   static observedButtons = ["Auxiliary", "Primary", "Secondary"];

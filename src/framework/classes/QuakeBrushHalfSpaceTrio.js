@@ -10,12 +10,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
 
-function getIntersectionDeterminant(
-  trio: QuakeBrushHalfSpaceTrioInterface,
-  plane1: Plane,
-  plane2: Plane,
-  plane3: Plane
-): number {
+function getIntersectionDeterminant(trio: QuakeBrushHalfSpaceTrioInterface, plane1: Plane, plane2: Plane, plane3: Plane): number {
   const matrix = new THREE.Matrix3();
 
   matrix.set(...plane1.normal.toArray(), ...plane2.normal.toArray(), ...plane3.normal.toArray());
@@ -29,12 +24,7 @@ export default class QuakeBrushHalfSpaceTrio implements QuakeBrushHalfSpaceTrioI
   +hs3: QuakeBrushHalfSpace;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    hs1: QuakeBrushHalfSpace,
-    hs2: QuakeBrushHalfSpace,
-    hs3: QuakeBrushHalfSpace
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, hs1: QuakeBrushHalfSpace, hs2: QuakeBrushHalfSpace, hs3: QuakeBrushHalfSpace) {
     this.hs1 = hs1;
     this.hs2 = hs2;
     this.hs3 = hs3;
@@ -48,53 +38,20 @@ export default class QuakeBrushHalfSpaceTrio implements QuakeBrushHalfSpaceTrioI
     const intersectionDeterminant: number = getIntersectionDeterminant(this, plane1, plane2, plane3);
 
     if (!this.hasIntersectingPoint(intersectionDeterminant)) {
-      throw new Exception(
-        this.loggerBreadcrumbs.add("getIntersectingPoint"),
-        "There is no intersecting point, but it was expected."
-      );
+      throw new Exception(this.loggerBreadcrumbs.add("getIntersectingPoint"), "There is no intersecting point, but it was expected.");
     }
 
     const xMatrix = new THREE.Matrix3();
 
-    xMatrix.set(
-      plane1.constant,
-      plane1.normal.y,
-      plane1.normal.z,
-      plane2.constant,
-      plane2.normal.y,
-      plane2.normal.z,
-      plane3.constant,
-      plane3.normal.y,
-      plane3.normal.z
-    );
+    xMatrix.set(plane1.constant, plane1.normal.y, plane1.normal.z, plane2.constant, plane2.normal.y, plane2.normal.z, plane3.constant, plane3.normal.y, plane3.normal.z);
 
     const yMatrix = new THREE.Matrix3();
 
-    yMatrix.set(
-      plane1.normal.x,
-      plane1.constant,
-      plane1.normal.z,
-      plane2.normal.x,
-      plane2.constant,
-      plane2.normal.z,
-      plane3.normal.x,
-      plane3.constant,
-      plane3.normal.z
-    );
+    yMatrix.set(plane1.normal.x, plane1.constant, plane1.normal.z, plane2.normal.x, plane2.constant, plane2.normal.z, plane3.normal.x, plane3.constant, plane3.normal.z);
 
     const zMatrix = new THREE.Matrix3();
 
-    zMatrix.set(
-      plane1.normal.x,
-      plane1.normal.y,
-      plane1.constant,
-      plane2.normal.x,
-      plane2.normal.y,
-      plane2.constant,
-      plane3.normal.x,
-      plane3.normal.y,
-      plane3.constant
-    );
+    zMatrix.set(plane1.normal.x, plane1.normal.y, plane1.constant, plane2.normal.x, plane2.normal.y, plane2.constant, plane3.normal.x, plane3.normal.y, plane3.constant);
 
     return new THREE.Vector3(
       xMatrix.determinant() / (-1 * intersectionDeterminant),

@@ -14,10 +14,7 @@ function partialTheta(sx: number, sy: number, ex: number, ey: number): number {
   return Math.atan2(dy, dx);
 }
 
-export function theta<T: ElementPositionUnit>(
-  p1: ElementPosition<T>,
-  p2: ElementPosition<T>
-): ElementRotationInterface<"radians"> {
+export function theta<T: ElementPositionUnit>(p1: ElementPosition<T>, p2: ElementPosition<T>): ElementRotationInterface<"radians"> {
   return new ElementRotation<"radians">(
     partialTheta(p1.getZ(), p1.getY(), p2.getZ(), p2.getY()),
     partialTheta(p1.getZ(), p1.getX(), p2.getZ(), p2.getX()),

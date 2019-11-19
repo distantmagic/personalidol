@@ -23,12 +23,7 @@ export default function HudAsidePortrait(props: Props) {
         "dd__aside__portrait--active": props.isActive,
       })}
     >
-      <Image
-        alt="arthurian knight"
-        className="dd__aside__portrait__image dd__aside__portrait__image--loaded"
-        loader={<HudAsidePortraitLoader />}
-        src={props.src}
-      />
+      <Image alt="arthurian knight" className="dd__aside__portrait__image dd__aside__portrait__image--loaded" loader={<HudAsidePortraitLoader />} src={props.src} />
       <ul className="dd__aside__portrait__statuses">
         <HudAsidePortraitIcon name={props.name} />
         <li className="dd__aside__portrait__status dd__frame dd__frame--inset" />

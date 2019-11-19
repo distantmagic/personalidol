@@ -7,6 +7,7 @@ import CanvasView from "../CanvasView";
 
 import type { Mesh, Scene } from "three";
 
+import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class Cube extends CanvasView {
@@ -20,8 +21,8 @@ export default class Cube extends CanvasView {
     this.scene = scene;
   }
 
-  async attach(): Promise<void> {
-    await super.attach();
+  async attach(cancelToken: CancelToken): Promise<void> {
+    await super.attach(cancelToken);
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({
@@ -32,8 +33,8 @@ export default class Cube extends CanvasView {
     this.scene.add(this.cube);
   }
 
-  async dispose(): Promise<void> {
-    await super.dispose();
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await super.dispose(cancelToken);
 
     if (!this.cube) {
       return;

@@ -14,10 +14,6 @@ beforeEach(async function() {
 
 it("loads dialogue messages", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const dialogueScript = new DialogueScript(
-    new ExpressionBus(),
-    new ExpressionContext(loggerBreadcrumbs),
-    testContext.dialogueScript
-  );
+  const dialogueScript = new DialogueScript(new ExpressionBus(), new ExpressionContext(loggerBreadcrumbs), testContext.dialogueScript);
   const messages = await dialogueScript.getMessages();
 });

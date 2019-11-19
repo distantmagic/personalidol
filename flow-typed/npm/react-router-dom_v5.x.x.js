@@ -159,11 +159,7 @@ declare module "react-router-dom" {
     strict?: boolean,
   };
 
-  declare export function matchPath(
-    pathname: string,
-    options?: MatchPathOptions | string,
-    parent?: Match
-  ): null | Match;
+  declare export function matchPath(pathname: string, options?: MatchPathOptions | string, parent?: Match): null | Match;
 
   declare export function generatePath(pattern?: string, params?: { +[string]: mixed }): string;
 }

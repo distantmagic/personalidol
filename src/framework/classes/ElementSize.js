@@ -37,11 +37,7 @@ export default class ElementSize<Unit: ElementPositionUnit> implements ElementSi
   }
 
   isEqual(other: ElementSizeInterface<Unit>): boolean {
-    return (
-      this.getDepth() === other.getDepth() &&
-      this.getHeight() === other.getHeight() &&
-      this.getWidth() === other.getWidth()
-    );
+    return this.getDepth() === other.getDepth() && this.getHeight() === other.getHeight() && this.getWidth() === other.getWidth();
   }
 
   isEqualWithPrecision(other: ElementSizeInterface<Unit>, precision: number): boolean {

@@ -64,12 +64,7 @@ export function getElementWithAttributes(
   }
 }
 
-export function getNumberAttribute(
-  loggerBreadcrumbs: LoggerBreadcrumbs,
-  element: HTMLElement,
-  name: string,
-  def?: number
-): number {
+export function getNumberAttribute(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement, name: string, def?: number): number {
   if ("number" === typeof def && !element.attributes.getNamedItem(name)) {
     return def;
   }

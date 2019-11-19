@@ -8,12 +8,7 @@ export default class LoadingManagerState implements LoadingManagerStateInterface
   +totalBlockingLoading: number;
   +totalFailed: number;
 
-  constructor(
-    totalBackgroundLoading: number,
-    totalBlockingLoading: number,
-    totalFailed: number,
-    comments: $ReadOnlyArray<string>
-  ) {
+  constructor(totalBackgroundLoading: number, totalBlockingLoading: number, totalFailed: number, comments: $ReadOnlyArray<string>) {
     this.comments = comments;
     this.totalBackgroundLoading = totalBackgroundLoading;
     this.totalBlockingLoading = totalBlockingLoading;

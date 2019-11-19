@@ -26,11 +26,7 @@ export default function HudSettings(props: Props) {
       <button className="dd__button dd__button--icon dd__button--cogs" disabled>
         Settings
       </button>
-      <button
-        className="dd__button dd__button--icon dd__button--magnifying-glass"
-        disabled={!document.fullscreenEnabled}
-        onClick={onToggleFullScreenClick}
-      >
+      <button className="dd__button dd__button--icon dd__button--magnifying-glass" disabled={!document.fullscreenEnabled} onClick={onToggleFullScreenClick}>
         Toggle Fullscreen
       </button>
     </div>

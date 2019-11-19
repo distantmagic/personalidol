@@ -20,13 +20,7 @@ export default class DialogueTurn implements DialogueTurnInterface {
   +expressionBus: ExpressionBus;
   +script: DialogueScript;
 
-  constructor(
-    expressionBus: ExpressionBus,
-    context: ExpressionContext,
-    script: DialogueScript,
-    currentMessage: DialogueMessageInterface,
-    initiator: Identifiable & Speaks
-  ) {
+  constructor(expressionBus: ExpressionBus, context: ExpressionContext, script: DialogueScript, currentMessage: DialogueMessageInterface, initiator: Identifiable & Speaks) {
     this._initiator = initiator;
     this.context = context;
     this.currentMessage = currentMessage;
@@ -59,10 +53,7 @@ export default class DialogueTurn implements DialogueTurnInterface {
       const condition = answer.condition();
 
       if (!condition || (await this.expressionBus.condition(condition))) {
-        ret = ret.set(
-          answer.key(),
-          new DialogueMessage(this.expressionBus, this.getExpressionContext(), answer.key(), answer.getMessageScript())
-        );
+        ret = ret.set(answer.key(), new DialogueMessage(this.expressionBus, this.getExpressionContext(), answer.key(), answer.getMessageScript()));
       }
     }
 
@@ -76,12 +67,7 @@ export default class DialogueTurn implements DialogueTurnInterface {
   }
 
   async getCurrentMessage(): Promise<DialogueMessageInterface> {
-    return new DialogueMessage(
-      this.expressionBus,
-      this.getExpressionContext(),
-      this.currentMessage.key(),
-      this.currentMessage.getMessageScript()
-    );
+    return new DialogueMessage(this.expressionBus, this.getExpressionContext(), this.currentMessage.key(), this.currentMessage.getMessageScript());
   }
 
   async getIllustration(): Promise<?string> {

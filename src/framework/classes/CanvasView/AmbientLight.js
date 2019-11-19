@@ -7,13 +7,13 @@ import CanvasView from "../CanvasView";
 
 import type { Light, OrthographicCamera, Scene } from "three";
 
-import type { CancelToken as CancelTokenInterface } from "../../interfaces/CancelToken";
+import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { Debugger } from "../../interfaces/Debugger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 export default class AmbientLight extends CanvasView {
-  +cancelToken: CancelTokenInterface;
+  +cancelToken: CancelToken;
   +debug: Debugger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +scene: Scene;
@@ -39,17 +39,17 @@ export default class AmbientLight extends CanvasView {
     this.light.shadow.camera.near = 20;
   }
 
-  async attach(): Promise<void> {
-    await super.attach();
+  async attach(cancelToken: CancelToken): Promise<void> {
+    await super.attach(cancelToken);
 
-    this.light.position.set(240, 240, 120);
+    this.light.position.set(240, 240, 240);
     this.scene.add(this.light);
 
     this.debug.updateState(this.loggerBreadcrumbs.add("light").add("position"), this.light.position);
   }
 
-  async dispose(): Promise<void> {
-    await super.dispose();
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await super.dispose(cancelToken);
 
     this.scene.remove(this.light);
     this.debug.deleteState(this.loggerBreadcrumbs.add("light").add("position"));

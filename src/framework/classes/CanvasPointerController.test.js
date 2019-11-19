@@ -14,11 +14,7 @@ class FooPointerResponder implements CanvasPointerResponder<boolean> {
   +mockMakeResponsive: Function;
   +mockRespond: Function;
 
-  constructor(
-    mockMakeResponsive: Function = noop,
-    mockNothingIntersected: Function = noop,
-    mockRespond: Function = noop
-  ) {
+  constructor(mockMakeResponsive: Function = noop, mockNothingIntersected: Function = noop, mockRespond: Function = noop) {
     this.mockMakeResponsive = mockMakeResponsive;
     this.mockNothingIntersected = mockNothingIntersected;
     this.mockRespond = mockRespond;

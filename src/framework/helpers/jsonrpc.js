@@ -7,12 +7,7 @@ export function isJsonRpcResponse(data: ?JsonRpcResponse): %checks {
 }
 
 export function isJsonRpcErrorResponse(data: ?JsonRpcErrorResponse): %checks {
-  return (
-    isJsonRpcResponse(data) &&
-    "object" === typeof data.error &&
-    "number" === typeof data.error.code &&
-    "string" === typeof data.error.message
-  );
+  return isJsonRpcResponse(data) && "object" === typeof data.error && "number" === typeof data.error.code && "string" === typeof data.error.message;
 }
 
 export function isJsonRpcRequest<Method: string, Params>(data: ?JsonRpcRequest<Method, Params>): %checks {

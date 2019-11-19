@@ -29,11 +29,7 @@ export default class ElementRotation<Unit: ElementRotationUnit> implements Eleme
   }
 
   isEqual(other: ElementRotationInterface<Unit>): boolean {
-    return (
-      this.getRotationX() === other.getRotationX() &&
-      this.getRotationY() === other.getRotationY() &&
-      this.getRotationZ() === other.getRotationZ()
-    );
+    return this.getRotationX() === other.getRotationX() && this.getRotationY() === other.getRotationY() && this.getRotationZ() === other.getRotationZ();
   }
 
   isEqualWithPrecision(other: ElementRotationInterface<Unit>, precision: number): boolean {

@@ -96,11 +96,7 @@ export default function Main(props: Props) {
       )}
       <HudAside />
       <HudDebuggerListing debug={props.debug} />
-      <HudModalRouter
-        exceptionHandler={props.exceptionHandler}
-        loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")}
-        queryBus={props.queryBus}
-      />
+      <HudModalRouter exceptionHandler={props.exceptionHandler} loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")} queryBus={props.queryBus} />
       <HudScene
         debug={props.debug}
         exceptionHandler={props.exceptionHandler}

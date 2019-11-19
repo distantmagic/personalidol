@@ -9,10 +9,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
   +loggerBreadcrumbsLocalCache: Map<string, LoggerBreadcrumbsInterface>;
   +loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface>;
 
-  constructor(
-    breadcrumbs: $ReadOnlyArray<string> = ["root"],
-    loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()
-  ) {
+  constructor(breadcrumbs: $ReadOnlyArray<string> = ["root"], loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()) {
     this.breadcrumbs = Object.freeze(breadcrumbs);
     this.loggerBreadcrumbsLocalCache = new Map<string, LoggerBreadcrumbsInterface>();
     this.loggerBreadcrumbsMemo = loggerBreadcrumbsMemo;

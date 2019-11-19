@@ -1,7 +1,9 @@
 // @flow
 
-export interface Disposable {
-  attach(): Promise<void>;
+import type { CancelToken } from "./CancelToken";
 
-  dispose(): Promise<void>;
+export interface Disposable {
+  attach(CancelToken): Promise<void>;
+
+  dispose(CancelToken): Promise<void>;
 }

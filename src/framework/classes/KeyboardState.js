@@ -36,12 +36,7 @@ export default class KeyboardState implements KeyboardStateInterface {
   }
 
   isArrowPressed(): boolean {
-    return (
-      this.isPressed("ArrowDown") ||
-      this.isPressed("ArrowLeft") ||
-      this.isPressed("ArrowRight") ||
-      this.isPressed("ArrowUp")
-    );
+    return this.isPressed("ArrowDown") || this.isPressed("ArrowLeft") || this.isPressed("ArrowRight") || this.isPressed("ArrowUp");
   }
 
   isPressed(code: KeyboardButtonNames): boolean {

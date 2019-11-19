@@ -30,10 +30,7 @@ export default class CancelToken implements CancelTokenInterface {
     this.abortController.abort();
     this._isCanceled = true;
 
-    return this.callbacks.notify(
-      [new Canceled(this.loggerBreadcrumbsCreate, `Token was canceled at: ${loggerBreadcrumbsCancel.asString()}`)],
-      true
-    );
+    return this.callbacks.notify([new Canceled(this.loggerBreadcrumbsCreate, `Token was canceled at: ${loggerBreadcrumbsCancel.asString()}`)], true);
   }
 
   getAbortSignal(): AbortSignal {
@@ -52,12 +49,7 @@ export default class CancelToken implements CancelTokenInterface {
         throw new Exception(this.loggerBreadcrumbsCreate, "Unable to determine cancel token cancel location.");
       }
 
-      callback(
-        new Canceled(
-          this.loggerBreadcrumbsCreate,
-          `Token is already canceled at: ${loggerBreadcrumbsCancel.asString()}`
-        )
-      );
+      callback(new Canceled(this.loggerBreadcrumbsCreate, `Token is already canceled at: ${loggerBreadcrumbsCancel.asString()}`));
     } else {
       this.callbacks.add(callback);
     }

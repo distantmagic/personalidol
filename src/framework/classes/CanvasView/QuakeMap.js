@@ -2,42 +2,60 @@
 
 import * as THREE from "three";
 import autoBind from "auto-bind";
+import { ConvexBufferGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
 
 import CanvasView from "../CanvasView";
+import { default as QuakeMapQuery } from "../Query/QuakeMap";
 
 import type { LoadingManager as THREELoadingManager, Scene } from "three";
 
+import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class QuakeMap extends CanvasView {
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +queryBus: QueryBus;
   +scene: Scene;
   +source: string;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: Scene, threeLoadingManager: THREELoadingManager, source: string) {
+  constructor(canvasViewBag: CanvasViewBag, loggerBreadcrumbs: LoggerBreadcrumbs, queryBus: QueryBus, scene: Scene, threeLoadingManager: THREELoadingManager, source: string) {
     super(canvasViewBag);
     autoBind(this);
 
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.queryBus = queryBus;
     this.scene = scene;
     this.source = source;
   }
 
-  async attach(): Promise<void> {
-    await super.attach();
+  async attach(cancelToken: CancelToken): Promise<void> {
+    await super.attach(cancelToken);
 
-    var gt = new THREE.TextureLoader().load("/assets/texture-brown-rock-128.jpg");
-    var gg = new THREE.PlaneBufferGeometry(2000, 2000);
-    var gm = new THREE.MeshPhongMaterial({ color: 0xffffff, map: gt });
-    var ground = new THREE.Mesh(gg, gm);
-    ground.rotation.x = -Math.PI / 2;
-    ground.material.map.repeat.set(16, 16);
-    ground.material.map.wrapS = ground.material.map.wrapT = THREE.RepeatWrapping;
-    ground.receiveShadow = true;
+    const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
+    const quakeMap = await this.queryBus.enqueue(cancelToken, query);
 
-    this.scene.add(ground);
+    const material = new THREE.MeshLambertMaterial({
+      color: 0xffffff,
+      opacity: 0.5,
+      transparent: true,
+    });
+
+    for (let entity of quakeMap.getEntities()) {
+      for (let brush of entity.getBrushes()) {
+        const vertices = brush.getVertices();
+        console.log(vertices);
+        const geometry = new ConvexBufferGeometry(vertices);
+        const mesh = new THREE.Mesh(geometry, material);
+
+        this.scene.add(mesh);
+      }
+    }
   }
 
-  async dispose(): Promise<void> {
-    await super.dispose();
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await super.dispose(cancelToken);
   }
 
   useBegin(): boolean {
