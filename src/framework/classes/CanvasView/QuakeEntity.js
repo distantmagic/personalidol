@@ -5,11 +5,12 @@ import autoBind from "auto-bind";
 import CanvasView from "../CanvasView";
 import Exception from "../Exception";
 import { default as AmbientLightView } from "./AmbientLight";
+import { default as AmbientSoundView } from "./AmbientSound";
 import { default as MD2CharacterView } from "./MD2Character";
 import { default as PointLightView } from "./PointLight";
 import { default as QuakeBrushView } from "./QuakeBrush";
 
-import type { Group, LoadingManager as THREELoadingManager, Mesh, Scene } from "three";
+import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Mesh, Scene } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -33,6 +34,8 @@ function getBrightness(self: QuakeEntity): number {
 }
 
 export default class QuakeEntity extends CanvasView {
+  +audioListener: AudioListener;
+  +audioLoader: AudioLoader;
   +brushes: Group[];
   +entity: QuakeEntityInterface;
   +loadingManager: LoadingManager;
@@ -43,6 +46,8 @@ export default class QuakeEntity extends CanvasView {
   material: ?Material;
 
   constructor(
+    audioListener: AudioListener,
+    audioLoader: AudioLoader,
     canvasViewBag: CanvasViewBag,
     entity: QuakeEntityInterface,
     loadingManager: LoadingManager,
@@ -53,6 +58,8 @@ export default class QuakeEntity extends CanvasView {
     super(canvasViewBag);
     autoBind(this);
 
+    this.audioListener = audioListener;
+    this.audioLoader = audioLoader;
     this.brushes = [];
     this.entity = entity;
     this.loadingManager = loadingManager;
@@ -75,11 +82,30 @@ export default class QuakeEntity extends CanvasView {
     }
 
     if (this.entity.isOfClass("worldspawn")) {
-      if (this.entity.getProperties().hasPropertyKey("light")) {
+      const entityProperties = this.entity.getProperties();
+
+      if (entityProperties.hasPropertyKey("light")) {
         const ambientLightBrightness = getBrightness(this);
         await this.loadingManager.blocking(
           this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.scene, ambientLightBrightness)),
           "Loading world ambient light"
+        );
+      }
+      if (entityProperties.hasPropertyKey("sounds")) {
+        const ambientSoundSource: string = entityProperties.getPropertyByKey("sounds").getValue();
+        await this.loadingManager.blocking(
+          this.canvasViewBag.add(
+            cancelToken,
+            new AmbientSoundView(
+              this.audioListener,
+              this.audioLoader,
+              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
+              this.loadingManager,
+              this.loggerBreadcrumbs.add("AmbientSound"),
+              ambientSoundSource
+            )
+          ),
+          "Loading world ambient sound"
         );
       }
     } else if (this.entity.isOfClass("info_player_start")) {
@@ -92,7 +118,6 @@ export default class QuakeEntity extends CanvasView {
       );
     } else if (this.entity.isOfClass("light")) {
       const brightness = getBrightness(this);
-
       await this.loadingManager.blocking(
         this.canvasViewBag.add(cancelToken, new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.scene, this.entity.getOrigin(), brightness)),
         "Loading point light"

@@ -14,7 +14,7 @@ import { default as CameraController } from "./Camera";
 import { default as QuakeMapView } from "../CanvasView/QuakeMap";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
-import type { LoadingManager as THREELoadingManager, OrthographicCamera, Scene, WebGLRenderer } from "three";
+import type { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, OrthographicCamera, Scene, WebGLRenderer } from "three";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import type { CancelToken } from "../../interfaces/CancelToken";
@@ -32,6 +32,8 @@ import type { Scheduler } from "../../interfaces/Scheduler";
 import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../interfaces/THREEPointerInteraction";
 
 export default class Root extends CanvasController {
+  +audioListener: AudioListener;
+  +audioLoader: AudioLoader;
   +camera: OrthographicCamera;
   +cameraController: CameraControllerInterface;
   +canvasControllerBus: CanvasControllerBus;
@@ -64,7 +66,12 @@ export default class Root extends CanvasController {
     super(canvasViewBag);
     autoBind(this);
 
+    this.audioListener = new THREE.AudioListener();
+    this.audioLoader = new THREE.AudioLoader(threeLoadingManager);
+
     this.camera = new THREE.OrthographicCamera();
+    this.camera.add(this.audioListener);
+
     this.canvasControllerBus = canvasControllerBus;
     this.debug = debug;
     this.keyboardState = keyboardState;
@@ -98,6 +105,8 @@ export default class Root extends CanvasController {
       this.canvasViewBag.add(
         cancelToken,
         new QuakeMapView(
+          this.audioListener,
+          this.audioLoader,
           this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
           this.loadingManager,
           this.loggerBreadcrumbs.add("QuakeMap"),
@@ -109,7 +118,7 @@ export default class Root extends CanvasController {
       ),
       "Loading map"
     );
-    this.scene.add(new THREE.AxesHelper(256));
+    // this.scene.add(new THREE.AxesHelper(256));
 
     this.scheduler.onBegin(this.canvasPointerController.begin);
     this.scheduler.onUpdate(this.threePointerInteraction.update);

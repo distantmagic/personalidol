@@ -24,7 +24,7 @@ declare module "three" {
 
   declare export type LoadingManagerOnErrorCallback = (url: string) => void;
 
-  declare export type LoadingManagerOnLoadCallback = Object3D => void;
+  declare export type LoadingManagerOnLoadCallback<T> = T => void;
 
   declare export type LoadingManagerOnProgressCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
@@ -215,6 +215,40 @@ declare module "three" {
     update(delta: number): void;
   }
 
+  declare export interface Audio {
+    constructor(AudioListener): void;
+
+    setBuffer(AudioBuffer): Audio;
+
+    setLoop(boolean): Audio;
+
+    setVolume(number): Audio;
+
+    play(): Audio;
+
+    stop(): Audio;
+  }
+
+  declare export interface AudioContext {}
+
+  declare export interface AudioListener extends Object3D {
+    context: AudioContext;
+    timeDelta: number;
+
+    constructor(
+      ?{|
+        context?: AudioContext,
+        timeDelta?: number,
+      |}
+    ): void;
+
+    getMasterVolume(): number;
+
+    setMasterVolume(value: number): AudioListener;
+  }
+
+  declare export interface AudioLoader extends Loader<AudioBuffer> {}
+
   declare export interface AxesHelper extends Object3D {
     constructor(size: number): void;
   }
@@ -377,17 +411,17 @@ declare module "three" {
     constructor(BaseGeometry, Material): void;
   }
 
-  declare export interface Loader {
+  declare export interface Loader<T> {
     constructor(?LoadingManager): void;
 
-    load(url: string, LoadingManagerOnLoadCallback, LoadingManagerOnProgressCallback, LoadingManagerOnErrorCallback): void;
+    load(url: string, LoadingManagerOnLoadCallback<T>, ?LoadingManagerOnProgressCallback, ?LoadingManagerOnErrorCallback): void;
   }
 
   declare export interface LoadingManager {
     constructor(): void;
 
     onError?: LoadingManagerOnErrorCallback;
-    onLoad?: LoadingManagerOnLoadCallback;
+    onLoad?: LoadingManagerOnLoadCallback<any>;
     onProgress?: LoadingManagerOnProgressCallback;
     onStart?: LoadingManagerOnStartCallback;
   }
