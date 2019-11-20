@@ -1,15 +1,14 @@
 // @flow
 
-import * as THREE from "three";
-
 import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
+import QuakePointParser from "./QuakePointParser";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceParser as QuakeBrushHalfSpaceParserInterface } from "../interfaces/QuakeBrushHalfSpaceParser";
 
-const REGEXP_BRUSH_HALFPLANE = /^\s*\(\s*(-?[0-9]+)\s+(-?[0-9]+)\s+(-?[0-9]+)\s*\)\s*\(\s*(-?[0-9]+)\s+(-?[0-9]+)\s+(-?[0-9]+)\s*\)\s*\(\s*(-?[0-9]+)\s+(-?[0-9]+)\s+(-?[0-9]+)\s*\)\s+([_a-zA-Z]+)\s+(-?[0-9]+)\s+(-?[0-9]+)\s+(-?[.0-9]+)\s+(-?[0-9]+)\s+(-?[0-9]+)$/;
+const REGEXP_WHITESPACE = /\s+/;
 
 export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpaceParserInterface {
   +line: string;
@@ -21,36 +20,45 @@ export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpacePar
   }
 
   parse(): QuakeBrushHalfSpaceInterface {
-    const match = this.line.match(REGEXP_BRUSH_HALFPLANE);
+    const parts = this.line.trim().split(REGEXP_WHITESPACE);
 
-    if (!match) {
-      throw new QuakeMapParserException(this.loggerBreadcrumbs.add("parse"), "Expected brush half-plane.");
+    if (parts.length !== 21) {
+      throw new QuakeMapParserException(this.loggerBreadcrumbs.add("parse"), "Brush half-plane is in incorrect format.");
     }
 
-    const textureRotationAngle = Number(match[13]);
-
-    if (isNaN(textureRotationAngle)) {
-      throw new QuakeMapParserException(this.loggerBreadcrumbs.add("parse"), "Brush half-plane's texture rotation angle is not a number.");
+    if (parts[0] !== parts[5] || parts[5] !== parts[10] || parts[0] !== "(") {
+      throw new QuakeMapParserException(this.loggerBreadcrumbs.add("parse"), "Expected '(', got something else.");
     }
+
+    if (parts[4] !== parts[9] || parts[9] !== parts[14] || parts[4] !== ")") {
+      throw new QuakeMapParserException(this.loggerBreadcrumbs.add("parse"), "Expected ')', got something else.");
+    }
+
+    const v1Parser = new QuakePointParser(this.loggerBreadcrumbs.add("QuakePointParser"), `${parts[1]} ${parts[2]} ${parts[3]}`);
+    const v1 = v1Parser.parse();
+
+    const v2Parser = new QuakePointParser(this.loggerBreadcrumbs.add("QuakePointParser"), `${parts[6]} ${parts[7]} ${parts[8]}`);
+    const v2 = v2Parser.parse();
+
+    const v3Parser = new QuakePointParser(this.loggerBreadcrumbs.add("QuakePointParser"), `${parts[11]} ${parts[12]} ${parts[13]}`);
+    const v3 = v3Parser.parse();
 
     return new QuakeBrushHalfSpace(
-      // translate Quake coordinates to THREE coordinates
-      // (X,Y,Z) -> (X, Z, -Y)
-      new THREE.Vector3(Number(match[1]), Number(match[3]), -1 * Number(match[2])),
-      new THREE.Vector3(Number(match[4]), Number(match[6]), -1 * Number(match[5])),
-      new THREE.Vector3(Number(match[7]), Number(match[9]), -1 * Number(match[8])),
+      v1,
+      v2,
+      v3,
       // texture
-      String(match[10]),
+      String(parts[15]),
       // Texture x-offset (must be multiple of 16)
-      Number(match[11]),
+      Number(parts[16]),
       // Texture y-offset (must be multiple of 16)
-      Number(match[12]),
+      Number(parts[17]),
       // floating point value indicating texture rotation
-      Number(textureRotationAngle),
+      Number(parts[18]),
       // scales x-dimension of texture (negative value to flip)
-      Number(match[14]),
+      Number(parts[19]),
       // scales y-dimension of texture (negative value to flip)
-      Number(match[15])
+      Number(parts[20])
     );
   }
 }

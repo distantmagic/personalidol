@@ -27,12 +27,12 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  brushHalfSpace(line: string): QuakeBrushHalfSpace {
-    return new QuakeBrushHalfSpaceParser(this.loggerBreadcrumbs.add("brushHalfSpace"), line).parse();
+  brushHalfSpace(breadcrumbs: LoggerBreadcrumbs, line: string): QuakeBrushHalfSpace {
+    return new QuakeBrushHalfSpaceParser(breadcrumbs.add("brushHalfSpace"), line).parse();
   }
 
-  entityProperty(line: string): QuakeEntityProperty {
-    return new QuakeEntityPropertyParser(this.loggerBreadcrumbs.add("entityProperty"), line).parse();
+  entityProperty(breadcrumbs: LoggerBreadcrumbs, line: string): QuakeEntityProperty {
+    return new QuakeEntityPropertyParser(breadcrumbs.add("entityProperty"), line).parse();
   }
 
   parse(): QuakeMapInterface {
@@ -46,7 +46,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
 
     for (let lineno = 0; lineno < lines.length; lineno += 1) {
       const line = lines[lineno];
-      const breadcrumbs = this.loggerBreadcrumbs.addVariable(String(lineno));
+      const breadcrumbs = this.loggerBreadcrumbs.addVariable(String(lineno + 1));
 
       if (this.isComment(line) || this.isEmpty(line)) {
         continue;
@@ -88,12 +88,12 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
       }
 
       if (currentBrushSketch) {
-        currentBrushSketch.push(this.brushHalfSpace(line));
+        currentBrushSketch.push(this.brushHalfSpace(breadcrumbs, line));
         continue;
       }
 
       if (currentEntitySketch) {
-        currentEntitySketch.props.push(this.entityProperty(line));
+        currentEntitySketch.props.push(this.entityProperty(breadcrumbs, line));
         continue;
       }
 

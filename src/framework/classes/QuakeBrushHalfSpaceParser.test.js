@@ -8,9 +8,9 @@ import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
 
 it("converts quake map format to something processable by controllers", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const parser = new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "        ( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0.32 1 1");
+  const parser = new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "   ( 8 -216 16 ) ( -120 -216 128 ) ( 8 -88    128 ) __TB_empty -0   -0.522125 -0   1   1  ");
   const halfSpace = parser.parse();
-  const correct = new QuakeBrushHalfSpace(new THREE.Vector3(-64, -16, 64), new THREE.Vector3(-64, -16, 63), new THREE.Vector3(-64, -15, 64), "__TB_empty", 0, 0, 0.32, 1, 1);
+  const correct = new QuakeBrushHalfSpace(new THREE.Vector3(8, 16, 216), new THREE.Vector3(-120, 128, 216), new THREE.Vector3(8, 128, 88), "__TB_empty", -0, -0.522125, -0, 1, 1);
 
   expect(halfSpace.isEqual(correct)).toBe(true);
 });
