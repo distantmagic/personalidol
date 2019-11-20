@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from "react";
-import Image from "react-image";
 import upperFirst from "lodash/upperFirst";
 import { NavLink, Route, Switch } from "react-router-dom";
 
@@ -60,7 +59,7 @@ export default function HudModalCharacter(props: Props) {
   return (
     <section className="dd__frame dd__modal__character">
       <div className="dd__modal__character__avatar">
-        <Image alt="portrait" className="dd__modal__character__avatar__image" src={getPortraitSrc(state.id)} />
+        <img alt="portrait" className="dd__modal__character__avatar__image" src={getPortraitSrc(state.id)} />
       </div>
       <h1 className="dd__modal__character__name">{state.name}</h1>
       <nav className="dd__modal__character__tabs">
