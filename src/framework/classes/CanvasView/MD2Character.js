@@ -4,23 +4,29 @@ import autoBind from "auto-bind";
 import { MD2Character as MD2CharacterLoader } from "three/examples/jsm/misc/MD2Character";
 
 import CanvasView from "../CanvasView";
+import { default as RemoteJSONQuery } from "../Query/RemoteJSON";
 
 import type { LoadingManager as THREELoadingManager, Vector3, Scene } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class MD2Character extends CanvasView {
+  +baseUrl: string;
   +origin: Vector3;
+  +queryBus: QueryBus;
   +scene: Scene;
   +threeLoadingManager: THREELoadingManager;
   character: ?Object;
 
-  constructor(canvasViewBag: CanvasViewBag, origin: Vector3, scene: Scene, threeLoadingManager: THREELoadingManager) {
+  constructor(canvasViewBag: CanvasViewBag, origin: Vector3, queryBus: QueryBus, scene: Scene, threeLoadingManager: THREELoadingManager, baseUrl: string) {
     super(canvasViewBag);
     autoBind(this);
 
+    this.baseUrl = baseUrl;
     this.origin = origin;
+    this.queryBus = queryBus;
     this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
   }
@@ -28,64 +34,17 @@ export default class MD2Character extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    // const config = {
-    //   baseUrl: "/assets/model-md2-ratamahatta/",
-    //   body: "ratamahatta.md2",
-    //   skins: [
-    //     "ratamahatta.png",
-    //     "ctf_b.png",
-    //     "ctf_r.png",
-    //     "dead.png",
-    //     "gearwhore.png"
-    //   ],
-    //   weapons: [
-    //     ["weapon.md2", "weapon.png"],
-    //     ["w_bfg.md2", "w_bfg.png"],
-    //     ["w_blaster.md2", "w_blaster.png"],
-    //     ["w_chaingun.md2", "w_chaingun.png"],
-    //     ["w_glauncher.md2", "w_glauncher.png"],
-    //     ["w_hyperblaster.md2", "w_hyperblaster.png"],
-    //     ["w_machinegun.md2", "w_machinegun.png"],
-    //     ["w_railgun.md2", "w_railgun.png"],
-    //     ["w_rlauncher.md2", "w_rlauncher.png"],
-    //     ["w_shotgun.md2", "w_shotgun.png"],
-    //     ["w_sshotgun.md2", "w_sshotgun.png"],
-    //   ],
-    // };
-    // const config = {
-    //   baseUrl: "/assets/model-md2-ogro/",
-    //   body: "ogro.md2",
-    //   skins: [
-    //     "arboshak.png",
-    //     "ctf_b.png",
-    //     "ctf_r.png",
-    //     "darkam.png",
-    //     "freedom.png",
-    //     "gib.png",
-    //     "gordogh.png",
-    //     "grok.jpg",
-    //     "igdosh.png",
-    //     "khorne.png",
-    //     "nabogro.png",
-    //     "ogrobase.png",
-    //     "sharokh.png",
-    //   ],
-    //   weapons: [["weapon.md2", "weapon.jpg"]],
-    // };
-    const config = {
-      baseUrl: "/assets/model-md2-chicken/",
-      body: "tris.md2",
-      skins: ["skin.png", "skin_1.png"],
-      weapons: [["weapon.md2", "weapon.png"]],
+    const config = await this.queryBus.enqueue(cancelToken, new RemoteJSONQuery(`${this.baseUrl}parts.json`));
+    const configMerged = {
+      ...config,
+      baseUrl: this.baseUrl,
     };
-
     const character = new MD2CharacterLoader(this.threeLoadingManager);
 
     return new Promise(resolve => {
       character.onLoadComplete = () => {
-        const animationId = 8;
-
-        character.setAnimation(character.meshBody.geometry.animations[animationId].name);
+        // character.setAnimation(character.meshBody.geometry.animations[8].name);
+        character.setAnimation(character.meshBody.geometry.animations[0].name);
         character.setWeapon(0);
         character.setSkin(0);
         this.character = character;
@@ -95,7 +54,7 @@ export default class MD2Character extends CanvasView {
 
         resolve();
       };
-      character.loadParts(config);
+      character.loadParts(configMerged);
     });
   }
 

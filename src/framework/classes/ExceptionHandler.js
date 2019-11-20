@@ -48,7 +48,7 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
 
   async guard<T>(loggerBreadcrumbs: LoggerBreadcrumbs, callback: ExceptionHandlerGuardCallback<T>): Promise<T> {
     try {
-      return await callback();
+      return callback();
     } catch (err) {
       this.captureException(loggerBreadcrumbs, err);
       throw err;

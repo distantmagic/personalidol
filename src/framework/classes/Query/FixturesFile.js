@@ -13,7 +13,7 @@ export default class FixturesFile implements Query<string> {
   }
 
   async execute(cancelToken: CancelToken): Promise<string> {
-    return await fixtures.file(this.ref);
+    return fixtures.file(this.ref);
   }
 
   isEqual(other: FixturesFile): boolean {

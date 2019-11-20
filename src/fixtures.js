@@ -6,7 +6,7 @@ import YAML from "yaml";
 import { DOMParser } from "xmldom";
 
 export async function file(filename: string): Promise<string> {
-  return await fs.readFile(findPath(filename), "utf8");
+  return fs.readFile(findPath(filename), "utf8");
 }
 
 export function findPath(filename: string): string {

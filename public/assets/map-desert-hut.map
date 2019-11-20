@@ -136,6 +136,7 @@
 {
 "classname" "info_player_start"
 "origin" "160 -136 56"
+"model" "ogro"
 }
 // entity 2
 {

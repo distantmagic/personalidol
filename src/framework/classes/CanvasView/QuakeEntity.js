@@ -17,6 +17,7 @@ import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
+import type { QueryBus } from "../../interfaces/QueryBus";
 
 function getBrightness(self: QuakeEntity): number {
   const brightness = Number(
@@ -40,6 +41,7 @@ export default class QuakeEntity extends CanvasView {
   +entity: QuakeEntityInterface;
   +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +queryBus: QueryBus;
   +scene: Scene;
   +threeLoadingManager: THREELoadingManager;
   cube: ?Mesh;
@@ -52,6 +54,7 @@ export default class QuakeEntity extends CanvasView {
     entity: QuakeEntityInterface,
     loadingManager: LoadingManager,
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    queryBus: QueryBus,
     scene: Scene,
     threeLoadingManager: THREELoadingManager
   ) {
@@ -65,6 +68,7 @@ export default class QuakeEntity extends CanvasView {
     this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.material = null;
+    this.queryBus = queryBus;
     this.scene = scene;
     this.threeLoadingManager = threeLoadingManager;
   }
@@ -109,10 +113,23 @@ export default class QuakeEntity extends CanvasView {
         );
       }
     } else if (this.entity.isOfClass("info_player_start")) {
+      let modelName = "chicken";
+      const entityProperties = this.entity.getProperties();
+
+      if (entityProperties.hasPropertyKey("model")) {
+        modelName = entityProperties.getPropertyByKey("model").getValue();
+      }
       await this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,
-          new MD2CharacterView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")), this.entity.getOrigin(), this.scene, this.threeLoadingManager)
+          new MD2CharacterView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
+            this.entity.getOrigin(),
+            this.queryBus,
+            this.scene,
+            this.threeLoadingManager,
+            `/assets/model-md2-${modelName}/`
+          )
         ),
         "Loading character"
       );

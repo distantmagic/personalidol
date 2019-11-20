@@ -1,7 +1,7 @@
 // @flow
 
 import QuakeMapParser from "../QuakeMapParser";
-import URLTextContent from "./URLTextContent";
+import RemoteText from "./RemoteText";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
@@ -10,21 +10,21 @@ import type { Query } from "../../interfaces/Query";
 
 export default class QuakeMap implements Query<QuakeMapInterface> {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +urlTextContent: URLTextContent;
+  +remoteText: RemoteText;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, ref: string) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.urlTextContent = new URLTextContent(ref);
+    this.remoteText = new RemoteText(ref);
   }
 
   async execute(cancelToken: CancelToken): Promise<QuakeMapInterface> {
-    const content = await this.urlTextContent.execute(cancelToken);
+    const content = await this.remoteText.execute(cancelToken);
     const quakeMap = new QuakeMapParser(this.loggerBreadcrumbs.add("execute").add("QuakeMapParser"), content);
 
     return quakeMap.parse();
   }
 
   isEqual(other: QuakeMap): boolean {
-    return this.urlTextContent.isEqual(other.urlTextContent);
+    return this.remoteText.isEqual(other.remoteText);
   }
 }

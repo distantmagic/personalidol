@@ -66,6 +66,7 @@ export default class QuakeMap extends CanvasView {
             entity,
             this.loadingManager,
             this.loggerBreadcrumbs.add("QuakeMap"),
+            this.queryBus,
             this.scene,
             this.threeLoadingManager
           )

@@ -1,0 +1,5 @@
+{
+  "body": "tris.md2",
+  "skins": ["skin.png", "skin_1.png"],
+  "weapons": [["weapon.md2", "weapon.png"]]
+}
