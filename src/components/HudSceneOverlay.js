@@ -41,8 +41,8 @@ export default React.memo<Props>(function HudSceneOverlay(props: Props) {
   return (
     <div className="dd__frame dd__loader dd__scene__loader">
       <ul className="dd__scene__loader__list">
-        {comments.map(comment => (
-          <li key={comment}>{comment}...</li>
+        {comments.map((comment, index) => (
+          <li key={index}>{comment}...</li>
         ))}
       </ul>
     </div>

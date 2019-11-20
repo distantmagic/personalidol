@@ -113,7 +113,7 @@ export default class Root extends CanvasController {
           this.queryBus,
           this.scene,
           this.threeLoadingManager,
-          "/assets/map-desert-hut.map"
+          "/assets/map-zagaj.map"
         )
       ),
       "Loading map"

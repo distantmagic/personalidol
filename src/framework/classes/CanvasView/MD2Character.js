@@ -52,34 +52,42 @@ export default class MD2Character extends CanvasView {
     //     ["w_sshotgun.md2", "w_sshotgun.png"],
     //   ],
     // };
+    // const config = {
+    //   baseUrl: "/assets/model-md2-ogro/",
+    //   body: "ogro.md2",
+    //   skins: [
+    //     "arboshak.png",
+    //     "ctf_b.png",
+    //     "ctf_r.png",
+    //     "darkam.png",
+    //     "freedom.png",
+    //     "gib.png",
+    //     "gordogh.png",
+    //     "grok.jpg",
+    //     "igdosh.png",
+    //     "khorne.png",
+    //     "nabogro.png",
+    //     "ogrobase.png",
+    //     "sharokh.png",
+    //   ],
+    //   weapons: [["weapon.md2", "weapon.jpg"]],
+    // };
     const config = {
-      baseUrl: "/assets/model-md2-ogro/",
-      body: "ogro.md2",
-      skins: [
-        "arboshak.png",
-        "ctf_b.png",
-        "ctf_r.png",
-        "darkam.png",
-        "freedom.png",
-        "gib.png",
-        "gordogh.png",
-        "grok.jpg",
-        "igdosh.png",
-        "khorne.png",
-        "nabogro.png",
-        "ogrobase.png",
-        "sharokh.png",
-      ],
-      weapons: [["weapon.md2", "weapon.jpg"]],
+      baseUrl: "/assets/model-md2-chicken/",
+      body: "tris.md2",
+      skins: ["skin.png", "skin_1.png"],
+      weapons: [["weapon.md2", "weapon.png"]],
     };
 
     const character = new MD2CharacterLoader(this.threeLoadingManager);
 
     return new Promise(resolve => {
       character.onLoadComplete = () => {
-        character.setAnimation(character.meshBody.geometry.animations[0].name);
+        const animationId = 8;
+
+        character.setAnimation(character.meshBody.geometry.animations[animationId].name);
         character.setWeapon(0);
-        character.setSkin(7);
+        character.setSkin(0);
         this.character = character;
         this.character.root.position.copy(this.origin);
 
