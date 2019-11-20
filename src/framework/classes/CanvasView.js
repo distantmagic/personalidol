@@ -50,14 +50,14 @@ export default class CanvasView implements CanvasViewInterface {
   update(delta: number): void {}
 
   useBegin(): boolean {
-    return true;
+    return false;
   }
 
   useEnd(): boolean {
-    return true;
+    return false;
   }
 
   useUpdate(): boolean {
-    return true;
+    return false;
   }
 }

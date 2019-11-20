@@ -15,13 +15,13 @@ export default class AmbientLight extends CanvasView {
   +scene: Scene;
   +light: Light<OrthographicCamera>;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, scene: Scene, brightness: number) {
     super(canvasViewBag);
     autoBind(this);
 
     this.scene = scene;
 
-    this.light = new THREE.AmbientLight(0xffffff, 0.01);
+    this.light = new THREE.AmbientLight(0xffffff, brightness);
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
@@ -34,17 +34,5 @@ export default class AmbientLight extends CanvasView {
     await super.dispose(cancelToken);
 
     this.scene.remove(this.light);
-  }
-
-  useBegin(): boolean {
-    return super.useBegin() && false;
-  }
-
-  useEnd(): boolean {
-    return super.useEnd() && false;
-  }
-
-  useUpdate(): boolean {
-    return super.useUpdate() && false;
   }
 }

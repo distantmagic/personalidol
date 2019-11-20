@@ -13,7 +13,6 @@ import CanvasPointerController from "../CanvasPointerController";
 import ElementSize from "../ElementSize";
 import PointerEventResponder from "../CanvasPointerResponder/PointerEventResponder";
 import THREEPointerInteraction from "../THREEPointerInteraction";
-import { default as AmbientLightView } from "../CanvasView/AmbientLight";
 import { default as QuakeMapView } from "../CanvasView/QuakeMap";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
@@ -104,10 +103,6 @@ export default class Root extends CanvasController {
     await Promise.all([
       this.cameraController.attach(cancelToken),
       this.loadingManager.blocking(
-        this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.scene)),
-        "Loading lights"
-      ),
-      this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,
           new QuakeMapView(
@@ -117,13 +112,12 @@ export default class Root extends CanvasController {
             this.queryBus,
             this.scene,
             this.threeLoadingManager,
-            "/assets/map-test.map"
+            "/assets/map-desert-hut.map"
           )
         ),
         "Loading map"
       ),
     ]);
-
     this.scene.add(new THREE.AxesHelper(256));
 
     this.scheduler.onBegin(this.canvasPointerController.begin);

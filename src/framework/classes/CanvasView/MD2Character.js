@@ -28,7 +28,6 @@ export default class MD2Character extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const character = new MD2CharacterLoader(this.threeLoadingManager);
     // const config = {
     //   baseUrl: "/assets/model-md2-ratamahatta/",
     //   body: "ratamahatta.md2",
@@ -74,6 +73,8 @@ export default class MD2Character extends CanvasView {
       weapons: [["weapon.md2", "weapon.jpg"]],
     };
 
+    const character = new MD2CharacterLoader(this.threeLoadingManager);
+
     return new Promise(resolve => {
       character.onLoadComplete = () => {
         character.setAnimation(character.meshBody.geometry.animations[0].name);
@@ -95,11 +96,9 @@ export default class MD2Character extends CanvasView {
 
     const character = this.character;
 
-    if (!character) {
-      return;
+    if (character) {
+      this.scene.remove(character.root);
     }
-
-    this.scene.remove(character.root);
   }
 
   update(delta: number): void {
@@ -110,11 +109,7 @@ export default class MD2Character extends CanvasView {
     }
   }
 
-  useBegin(): boolean {
-    return super.useBegin() && false;
-  }
-
-  useEnd(): boolean {
-    return super.useEnd() && false;
+  useUpdate(): boolean {
+    return true;
   }
 }

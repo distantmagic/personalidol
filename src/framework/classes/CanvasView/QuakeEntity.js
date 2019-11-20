@@ -4,6 +4,7 @@ import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 import Exception from "../Exception";
+import { default as AmbientLightView } from "./AmbientLight";
 import { default as MD2CharacterView } from "./MD2Character";
 import { default as PointLightView } from "./PointLight";
 import { default as QuakeBrushView } from "./QuakeBrush";
@@ -15,6 +16,21 @@ import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
+
+function getBrightness(self: QuakeEntity): number {
+  const brightness = Number(
+    self.entity
+      .getProperties()
+      .getPropertyByKey("light")
+      .getValue()
+  );
+
+  if (isNaN(brightness)) {
+    throw new Exception(self.loggerBreadcrumbs.add("attach"), "Light brightness is not a number.");
+  }
+
+  return brightness / 255;
+}
 
 export default class QuakeEntity extends CanvasView {
   +brushes: Group[];
@@ -58,7 +74,15 @@ export default class QuakeEntity extends CanvasView {
       );
     }
 
-    if (this.entity.isOfClass("info_player_start")) {
+    if (this.entity.isOfClass("worldspawn")) {
+      if (this.entity.getProperties().hasPropertyKey("light")) {
+        const ambientLightBrightness = getBrightness(this);
+        await this.loadingManager.blocking(
+          this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.scene, ambientLightBrightness)),
+          "Loading world ambient light"
+        );
+      }
+    } else if (this.entity.isOfClass("info_player_start")) {
       await this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,
@@ -67,36 +91,12 @@ export default class QuakeEntity extends CanvasView {
         "Loading character"
       );
     } else if (this.entity.isOfClass("light")) {
-      const brightness = Number(
-        this.entity
-          .getProperties()
-          .getPropertyByKey("light")
-          .getValue()
-      );
-
-      if (isNaN(brightness)) {
-        throw new Exception(this.loggerBreadcrumbs.add("attach"), "Light brightness is not a number.");
-      }
+      const brightness = getBrightness(this);
 
       await this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          cancelToken,
-          new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.scene, this.entity.getOrigin(), brightness / 255)
-        ),
-        "Loading point light source"
+        this.canvasViewBag.add(cancelToken, new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.scene, this.entity.getOrigin(), brightness)),
+        "Loading point light"
       );
     }
-  }
-
-  useBegin(): boolean {
-    return super.useBegin() && false;
-  }
-
-  useEnd(): boolean {
-    return super.useEnd() && false;
-  }
-
-  useUpdate(): boolean {
-    return super.useUpdate() && false;
   }
 }

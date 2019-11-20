@@ -55,11 +55,7 @@ export default class Cube extends CanvasView {
     // this.cube.rotation.z += 0.1;
   }
 
-  useBegin(): boolean {
-    return super.useBegin() && false;
-  }
-
-  useEnd(): boolean {
-    return super.useEnd() && false;
+  useUpdate(): boolean {
+    return true;
   }
 }

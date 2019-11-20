@@ -65,16 +65,4 @@ export default class QuakeMap extends CanvasView {
       );
     }
   }
-
-  useBegin(): boolean {
-    return super.useBegin() && false;
-  }
-
-  useEnd(): boolean {
-    return super.useEnd() && false;
-  }
-
-  useUpdate(): boolean {
-    return super.useUpdate() && false;
-  }
 }

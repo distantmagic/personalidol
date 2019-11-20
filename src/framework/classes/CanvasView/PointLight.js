@@ -21,12 +21,12 @@ export default class PointLight extends CanvasView {
 
     this.scene = scene;
 
-    this.light = new THREE.PointLight<OrthographicCamera>(0xffffff, brightness);
+    this.light = new THREE.PointLight<OrthographicCamera>(0xffffff, brightness, 512, 2);
     this.light.position.copy(origin);
 
     this.light.castShadow = true;
-    this.light.shadow.mapSize.width = 1024;
-    this.light.shadow.mapSize.height = 1024;
+    this.light.shadow.mapSize.width = 512;
+    this.light.shadow.mapSize.height = 512;
 
     // this one is important on mobile (ios at least)
     // https://stackoverflow.com/questions/50945270/threejs-shadow-artifact-ios-devices
@@ -43,17 +43,5 @@ export default class PointLight extends CanvasView {
     await super.dispose(cancelToken);
 
     this.scene.remove(this.light);
-  }
-
-  useBegin(): boolean {
-    return super.useBegin() && false;
-  }
-
-  useEnd(): boolean {
-    return super.useEnd() && false;
-  }
-
-  useUpdate(): boolean {
-    return super.useUpdate() && false;
   }
 }

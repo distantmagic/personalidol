@@ -58,16 +58,4 @@ export default class QuakeBrush extends CanvasView {
     mesh.geometry.dispose();
     mesh.material.dispose();
   }
-
-  useBegin(): boolean {
-    return super.useBegin() && false;
-  }
-
-  useEnd(): boolean {
-    return super.useEnd() && false;
-  }
-
-  useUpdate(): boolean {
-    return super.useUpdate() && false;
-  }
 }
