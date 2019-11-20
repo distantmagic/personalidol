@@ -3,20 +3,24 @@
 import autoBind from "auto-bind";
 import Ola from "ola";
 
+import CanvasController from "../CanvasController";
+
 import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
 
-import type { CameraController as CameraControllerInterface } from "../interfaces/CameraController";
-import type { CameraZoomEnum } from "../types/CameraZoomEnum";
-import type { Debugger } from "../interfaces/Debugger";
-import type { ElementSize } from "../interfaces/ElementSize";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
+import type { CameraZoomEnum } from "../../types/CameraZoomEnum";
+import type { CancelToken } from "../../interfaces/CancelToken";
+import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import type { Debugger } from "../../interfaces/Debugger";
+import type { ElementSize } from "../../interfaces/ElementSize";
+import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 const ZOOM_2 = 4;
 const ZOOM_3 = 8;
 const ZOOM_4 = 16;
 const ZOOM_5 = 32;
 
-export default class CameraController implements CameraControllerInterface {
+export default class CameraController extends CanvasController implements CameraControllerInterface {
   +camera: OrthographicCamera;
   +debug: Debugger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -26,7 +30,16 @@ export default class CameraController implements CameraControllerInterface {
   zoom: any;
   zoomStep: CameraZoomEnum;
 
-  constructor(camera: OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene, viewportSize: ElementSize<"px">) {
+  constructor(
+    canvasViewBag: CanvasViewBag,
+    camera: OrthographicCamera,
+    debug: Debugger,
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    renderer: WebGLRenderer,
+    scene: Scene,
+    viewportSize: ElementSize<"px">
+  ) {
+    super(canvasViewBag);
     autoBind(this);
 
     this.camera = camera;
@@ -39,7 +52,9 @@ export default class CameraController implements CameraControllerInterface {
     this.zoomStep = 2;
   }
 
-  async attach(): Promise<void> {
+  async attach(cancelToken: CancelToken): Promise<void> {
+    super.attach(cancelToken);
+
     this.camera.position.set(128, 128, 128);
     this.camera.lookAt(this.scene.position);
     this.updateProjection();
@@ -47,12 +62,16 @@ export default class CameraController implements CameraControllerInterface {
     this.debug.updateState(this.loggerBreadcrumbs.add("camera").add("position"), this.camera.position);
   }
 
-  async dispose(): Promise<void> {
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    super.dispose(cancelToken);
+
     this.renderer.domElement.removeEventListener("wheel", this.onWheel);
     this.debug.deleteState(this.loggerBreadcrumbs.add("camera").add("position"));
   }
 
   draw(interpolationPercentage: number): void {
+    super.draw(interpolationPercentage);
+
     this.updateProjection();
   }
 
@@ -80,7 +99,9 @@ export default class CameraController implements CameraControllerInterface {
     }
   }
 
-  setViewportSize(viewportSize: ElementSize<"px">): void {
+  resize(viewportSize: ElementSize<"px">): void {
+    super.resize(viewportSize);
+
     this.viewportSize = viewportSize;
     this.updateProjection();
   }
