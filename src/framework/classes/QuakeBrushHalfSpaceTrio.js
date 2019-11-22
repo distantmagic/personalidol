@@ -1,7 +1,9 @@
 // @flow
 
+import * as math from "mathjs";
 import * as THREE from "three";
 
+import * as round from "../helpers/round";
 import Exception from "./Exception";
 
 import type { Plane, Vector3 } from "three";
@@ -9,6 +11,12 @@ import type { Plane, Vector3 } from "three";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
+
+function checkIntersectingPointDeterminant(det: number): bool {
+  // normally it should be enough to check if determinant !== 0, but due to
+  // floating point limitations, there is some margin considered
+  return !round.isEqualWithEpsilon(det, 0, 0.1);
+}
 
 function getIntersectionDeterminant(trio: QuakeBrushHalfSpaceTrioInterface, plane1: Plane, plane2: Plane, plane3: Plane): number {
   const matrix = new THREE.Matrix3();
@@ -54,9 +62,9 @@ export default class QuakeBrushHalfSpaceTrio implements QuakeBrushHalfSpaceTrioI
     zMatrix.set(plane1.normal.x, plane1.normal.y, plane1.constant, plane2.normal.x, plane2.normal.y, plane2.constant, plane3.normal.x, plane3.normal.y, plane3.constant);
 
     return new THREE.Vector3(
-      xMatrix.determinant() / (-1 * intersectionDeterminant),
-      yMatrix.determinant() / (-1 * intersectionDeterminant),
-      zMatrix.determinant() / (-1 * intersectionDeterminant)
+      math.round(xMatrix.determinant() / (-1 * intersectionDeterminant), 5),
+      math.round(yMatrix.determinant() / (-1 * intersectionDeterminant), 5),
+      math.round(zMatrix.determinant() / (-1 * intersectionDeterminant), 5)
     );
   }
 
@@ -74,13 +82,13 @@ export default class QuakeBrushHalfSpaceTrio implements QuakeBrushHalfSpaceTrioI
 
   hasIntersectingPoint(intersectionDeterminant?: number): boolean {
     if ("number" === typeof intersectionDeterminant) {
-      return intersectionDeterminant !== 0;
+      return checkIntersectingPointDeterminant(intersectionDeterminant);
     }
 
     const plane1 = this.getQuakeBrushHalfSpace1().getPlane();
     const plane2 = this.getQuakeBrushHalfSpace2().getPlane();
     const plane3 = this.getQuakeBrushHalfSpace3().getPlane();
 
-    return getIntersectionDeterminant(this, plane1, plane2, plane3) !== 0;
+    return checkIntersectingPointDeterminant(getIntersectionDeterminant(this, plane1, plane2, plane3));
   }
 }

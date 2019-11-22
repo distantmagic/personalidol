@@ -29,6 +29,10 @@ function* combineWithoutRepetitions(comboOptions: $ReadOnlyArray<QuakeBrushHalfS
   }
 }
 
+function vectorToString(vector: Vector3): string {
+  return vector.toArray().join('/');
+}
+
 export default class QuakeBrush implements QuakeBrushInterface {
   +halfSpaces: $ReadOnlyArray<QuakeBrushHalfSpace>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -53,9 +57,19 @@ export default class QuakeBrush implements QuakeBrushInterface {
   }
 
   *generateVertices(): Generator<Vector3, void, void> {
+    const unique: {|
+      [string]: bool,
+    |} = {};
+
     for (let trio of this.generateHalfSpaceTrios()) {
       if (trio.hasIntersectingPoint()) {
-        yield trio.getIntersectingPoint();
+        const intersectingPoint = trio.getIntersectingPoint();
+        const pointAsString = vectorToString(intersectingPoint);
+
+        if (!unique.hasOwnProperty(pointAsString)) {
+          unique[pointAsString] = true;
+          yield intersectingPoint;
+        }
       }
     }
   }
