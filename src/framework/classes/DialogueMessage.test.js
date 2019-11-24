@@ -5,7 +5,7 @@ import ExpressionBus from "./ExpressionBus";
 import ExpressionContext from "./ExpressionContext";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-it("determines if message is an answer to something else", async function() {
+test("determines if message is an answer to something else", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs);
   const expressionBus = new ExpressionBus();

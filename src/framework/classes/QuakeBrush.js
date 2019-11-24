@@ -1,6 +1,7 @@
 // @flow
 
 import * as equality from "../helpers/equality";
+import combineWithoutRepetitions from "../helpers/combineWithoutRepetitions";
 
 import Exception from "./Exception";
 import QuakeBrushHalfSpaceTrio from "./QuakeBrushHalfSpaceTrio";
@@ -12,25 +13,8 @@ import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush
 import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
 
-function* combineWithoutRepetitions(comboOptions: $ReadOnlyArray<QuakeBrushHalfSpace>, comboLength: number): Generator<$ReadOnlyArray<QuakeBrushHalfSpace>, void, void> {
-  if (comboLength === 1) {
-    for (let currentOption of comboOptions) {
-      yield [currentOption];
-    }
-  }
-
-  for (let optionIndex = 0; optionIndex < comboOptions.length; optionIndex += 1) {
-    const currentOption: QuakeBrushHalfSpace = comboOptions[optionIndex];
-    const smallerCombos = combineWithoutRepetitions(comboOptions.slice(optionIndex + 1), comboLength - 1);
-
-    for (let smallerCombo of smallerCombos) {
-      yield [currentOption, ...smallerCombo];
-    }
-  }
-}
-
 function vectorToString(vector: Vector3): string {
-  return vector.toArray().join('/');
+  return vector.toArray().join("/");
 }
 
 export default class QuakeBrush implements QuakeBrushInterface {
@@ -48,7 +32,10 @@ export default class QuakeBrush implements QuakeBrushInterface {
 
   *generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrioInterface, void, void> {
     for (let combo of combineWithoutRepetitions(this.halfSpaces, 3)) {
-      yield new QuakeBrushHalfSpaceTrio(this.loggerBreadcrumbs.add("QuakeBrushHalfSpaceTrio"), ...combo);
+      yield new QuakeBrushHalfSpaceTrio(
+        this.loggerBreadcrumbs.add("QuakeBrushHalfSpaceTrio"),
+        ...combo
+      );
     }
   }
 
@@ -57,11 +44,11 @@ export default class QuakeBrush implements QuakeBrushInterface {
   }
 
   *generateVertices(): Generator<Vector3, void, void> {
-    const unique: {|
-      [string]: bool,
-    |} = {};
+    const unique: {
+      [string]: boolean,
+    } = {};
 
-    for (let trio of this.generateHalfSpaceTrios()) {
+    outer: for (let trio of this.generateHalfSpaceTrios()) {
       if (trio.hasIntersectingPoint()) {
         const intersectingPoint = trio.getIntersectingPoint();
         const pointAsString = vectorToString(intersectingPoint);

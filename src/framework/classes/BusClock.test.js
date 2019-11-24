@@ -4,7 +4,7 @@ import BusClock from "./BusClock";
 import CancelToken from "./CancelToken";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-it("ticks", async function() {
+test("ticks", async function() {
   let ticks = 0;
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);

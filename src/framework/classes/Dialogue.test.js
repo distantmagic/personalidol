@@ -8,18 +8,18 @@ import ExpressionContext from "./ExpressionContext";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import Person from "./Entity/Person";
 
-const testContext = {};
+import type { DialogueScript as DialogueScriptType } from "../types/DialogueScript";
 
-beforeEach(async function() {
-  testContext.dialogueScript = await fixtures.yamlFile("dialogue-basic.yml");
-});
+function getDialogueScript(): Promise<DialogueScriptType> {
+  return fixtures.yamlFile("dialogue-basic.yml");
+}
 
 it.skip("switches dialogue turns", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const expressionBus = new ExpressionBus();
   const expressionContext = new ExpressionContext(loggerBreadcrumbs);
 
-  const dialogue = new Dialogue(expressionBus, expressionContext, new DialogueScript(expressionBus, expressionContext, testContext.dialogueScript));
+  const dialogue = new Dialogue(expressionBus, expressionContext, new DialogueScript(expressionBus, expressionContext, await getDialogueScript()));
   const person = new Person("TestActor");
   const turn1 = await dialogue.initiate(person);
 

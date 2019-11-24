@@ -60,7 +60,22 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     // to put something in a counter-clockwise order, you need to reverse
     // clockwise elements array and then put the last one in the first plance,
     // so 1,3,2 is not a mistake, it's actually 1,2,3 -> 3,2,1 -> 1,3,2
-    return plane.setFromCoplanarPoints(this.getVector1(), this.getVector3(), this.getVector2());
+    return plane.setFromCoplanarPoints(this.getVector1(), this.getVector2(), this.getVector3());
+  }
+
+  getRandomPoint(): Vector3 {
+    const point = new THREE.Vector3(0, 0, 0);
+    const target = new THREE.Vector3(0, 0, 0);
+
+    this.getPlane().projectPoint(point, target);
+
+    return target;
+  }
+
+  getRandomVector(point: Vector3): Vector3 {
+    const randomPoint = this.getRandomPoint();
+
+    return point.sub(randomPoint);
   }
 
   getTexture(): string {
@@ -97,6 +112,13 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
 
   getYOffset(): number {
     return this.yOffset;
+  }
+
+  hasPoint(point: Vector3): bool {
+    const randomVector = this.getRandomVector(point);
+
+    // the point is 'in front' of the plane or lies on it
+    return this.getPlane().normal.dot(randomVector) >= 0;
   }
 
   isEqual(other: QuakeBrushHalfSpaceInterface): boolean {

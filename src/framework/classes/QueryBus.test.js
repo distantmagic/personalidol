@@ -32,7 +32,7 @@ class Foo implements Query<number> {
   }
 }
 
-it("executes similar queries only once", async function() {
+test("executes similar queries only once", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const queryBus = new QueryBus(loggerBreadcrumbs);

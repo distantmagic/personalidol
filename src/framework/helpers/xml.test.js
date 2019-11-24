@@ -5,7 +5,7 @@ import { DOMParser } from "xmldom";
 import * as xml from "./xml";
 import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
 
-it("finds element with attribute names", function() {
+test("finds element with attribute names", function() {
   const domParser = new DOMParser();
   const doc = domParser.parseFromString(
     `

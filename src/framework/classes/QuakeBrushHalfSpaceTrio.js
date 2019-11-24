@@ -12,7 +12,7 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
 
-function checkIntersectingPointDeterminant(det: number): bool {
+function checkIntersectingPointDeterminant(det: number): boolean {
   // normally it should be enough to check if determinant !== 0, but due to
   // floating point limitations, there is some margin considered
   return !round.isEqualWithEpsilon(det, 0, 0.1);

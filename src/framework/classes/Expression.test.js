@@ -4,7 +4,7 @@ import Expression from "./Expression";
 import ExpressionContext from "./ExpressionContext";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-it("performs math calculations", async function() {
+test("performs math calculations", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs);
   const expression = new Expression("{{ 2 + 2 }}", context);
@@ -13,7 +13,7 @@ it("performs math calculations", async function() {
   await expect(result).resolves.toBe("4");
 });
 
-it("uses variables", async function() {
+test("uses variables", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
     foo: 3,
@@ -24,7 +24,7 @@ it("uses variables", async function() {
   await expect(result).resolves.toBe("5");
 });
 
-it("uses objects", async function() {
+test("uses objects", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {
@@ -41,7 +41,7 @@ it("uses objects", async function() {
   await expect(result).resolves.toBe("Greetings CHARNAME");
 });
 
-it("uses promises", async function() {
+test("uses promises", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {
@@ -58,7 +58,7 @@ it("uses promises", async function() {
   await expect(result).resolves.toBe("Greetings CHARNAME");
 });
 
-it("resolves conditions with promises", async function() {
+test("resolves conditions with promises", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs, {
     character: {

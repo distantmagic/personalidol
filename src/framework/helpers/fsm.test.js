@@ -27,7 +27,7 @@ const Phases = fsm<States, Transitions>({
   ],
 });
 
-it("keeps state", async function() {
+test("keeps state", async function() {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandlerFilter = new ExceptionHandlerFilter();
@@ -48,7 +48,7 @@ it("keeps state", async function() {
   await expect(promise).resolves.toBe("liquid");
 });
 
-it("handles errors", function() {
+test("handles errors", function() {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandlerFilter = new ExceptionHandlerFilter();
@@ -62,7 +62,7 @@ it("handles errors", function() {
   }).toThrow(InvalidTransitionException);
 });
 
-it("notifies about any kind of event", function() {
+test("notifies about any kind of event", function() {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandlerFilter = new ExceptionHandlerFilter();
@@ -89,7 +89,7 @@ it("notifies about any kind of event", function() {
   ]);
 });
 
-it("does not notify when state is not changed", function() {
+test("does not notify when state is not changed", function() {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandlerFilter = new ExceptionHandlerFilter();

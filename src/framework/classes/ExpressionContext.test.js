@@ -5,7 +5,7 @@ import ExpressionContext from "./ExpressionContext";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import UnexpectedOverride from "./Exception/UnexpectedOverride";
 
-it("is immutable", function() {
+test("is immutable", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs);
   const updated = context.set("foo", "bar");
@@ -14,7 +14,7 @@ it("is immutable", function() {
   expect(context.has("foo")).toBeFalsy();
 });
 
-it("cannot override values", function() {
+test("cannot override values", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const context = new ExpressionContext(loggerBreadcrumbs);
 

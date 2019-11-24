@@ -2,7 +2,7 @@
 
 import Scheduler from "./Scheduler";
 
-it("notifies: begin", async function() {
+test("notifies: begin", async function() {
   const scheduler = new Scheduler();
 
   const promise = new Promise(function(resolve) {
@@ -14,7 +14,7 @@ it("notifies: begin", async function() {
   return promise;
 }, 300);
 
-it("disables callback: begin", async function() {
+test("disables callback: begin", async function() {
   const scheduler = new Scheduler();
 
   const promise = new Promise(function(resolve, reject) {
@@ -28,7 +28,7 @@ it("disables callback: begin", async function() {
   await expect(promise).rejects.toBe();
 }, 300);
 
-it("notifies: draw", async function() {
+test("notifies: draw", async function() {
   const scheduler = new Scheduler();
 
   const promise = new Promise(function(resolve) {
@@ -40,7 +40,7 @@ it("notifies: draw", async function() {
   await expect(promise).resolves.toBe(3);
 }, 300);
 
-it("disables callback: draw", async function() {
+test("disables callback: draw", async function() {
   const scheduler = new Scheduler();
 
   const promise = new Promise(function(resolve, reject) {
@@ -54,7 +54,7 @@ it("disables callback: draw", async function() {
   await expect(promise).rejects.toBe(3);
 }, 300);
 
-it("notifies: end", async function() {
+test("notifies: end", async function() {
   const scheduler = new Scheduler();
 
   const promise = new Promise(function(resolve) {
@@ -68,7 +68,7 @@ it("notifies: end", async function() {
   await expect(promise).resolves.toEqual([25, false]);
 }, 300);
 
-it("disables callback: end", async function() {
+test("disables callback: end", async function() {
   const scheduler = new Scheduler();
 
   const promise = new Promise(function(resolve, reject) {
@@ -84,7 +84,7 @@ it("disables callback: end", async function() {
   await expect(promise).rejects.toEqual([25, false]);
 }, 300);
 
-it("notifies: update", async function() {
+test("notifies: update", async function() {
   const scheduler = new Scheduler();
 
   const promise = new Promise(function(resolve) {
@@ -96,7 +96,7 @@ it("notifies: update", async function() {
   await expect(promise).resolves.toBe(16);
 }, 300);
 
-it("disables callback: update", async function() {
+test("disables callback: update", async function() {
   const scheduler = new Scheduler();
 
   const promise = new Promise(function(resolve, reject) {

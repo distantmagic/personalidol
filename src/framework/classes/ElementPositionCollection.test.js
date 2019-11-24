@@ -5,7 +5,7 @@ import ElementPositionCollection from "./ElementPositionCollection";
 import ElementSize from "./ElementSize";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-it("finds bounding box", function() {
+test("finds bounding box", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const elementPositionCollection = new ElementPositionCollection<"tile">(loggerBreadcrumbs, [
     new ElementPosition<"tile">(1, 1, 0),
@@ -20,7 +20,7 @@ it("finds bounding box", function() {
   expect(elementBoundingBox.getElementSize().isEqual(new ElementSize<"tile">(6.5, 7.0, 3.0))).toBe(true);
 });
 
-it("offsets points", function() {
+test("offsets points", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const elementPositionCollection = new ElementPositionCollection<"tile">(loggerBreadcrumbs, [
     new ElementPosition<"tile">(1, 1, 0),

@@ -55,7 +55,7 @@ class RaycasterMock extends THREE.Raycaster {
   }
 }
 
-it("handles multiple pointer responders", function() {
+test("handles multiple pointer responders", function() {
   const raycaster = new THREE.Raycaster();
   const scene = new THREE.Scene();
   const canvasPointerController = new CanvasPointerController(raycaster, scene);
@@ -72,7 +72,7 @@ it("handles multiple pointer responders", function() {
   expect(canvasPointerController.hasResponder(fooResponder)).toBe(false);
 });
 
-it("reacts to no intersections", function() {
+test("reacts to no intersections", function() {
   const mockMakeResponsive = jest.fn();
   const mockNothingIntersected = jest.fn();
   const mockRespond = jest.fn();
@@ -90,7 +90,7 @@ it("reacts to no intersections", function() {
   expect(mockNothingIntersected.mock.calls).toHaveLength(1);
 });
 
-it("reacts to intersections", function() {
+test("reacts to intersections", function() {
   const mockMakeResponsive = jest.fn();
   const mockNothingIntersected = jest.fn();
   const mockRespond = jest.fn();

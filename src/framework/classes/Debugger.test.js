@@ -3,7 +3,7 @@
 import Debugger from "./Debugger";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-it("can be turned on and off", function() {
+test("can be turned on and off", function() {
   const debug = new Debugger();
 
   expect(debug.isEnabled()).toBe(false);
@@ -13,7 +13,7 @@ it("can be turned on and off", function() {
   expect(debug.isEnabled()).toBe(true);
 });
 
-it("is mutable", function() {
+test("is mutable", function() {
   const breadcrumbs = new LoggerBreadcrumbs();
   const debug = new Debugger();
 
@@ -22,7 +22,7 @@ it("is mutable", function() {
   expect(debug.getState().get(breadcrumbs)).toBe("test");
 });
 
-it("removes state", function() {
+test("removes state", function() {
   const breadcrumbs = new LoggerBreadcrumbs();
   const debug = new Debugger();
 

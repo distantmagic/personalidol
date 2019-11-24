@@ -2,13 +2,13 @@
 
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-it("has root breadcrumb", function() {
+test("has root breadcrumb", function() {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   expect(breadcrumbs.asString()).toBe("root");
 });
 
-it("is immutable", function() {
+test("is immutable", function() {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   const breadcrumbsFoo = breadcrumbs.add("foo");
@@ -23,7 +23,7 @@ it("is immutable", function() {
   expect(breadcrumbsFooBar.asString()).toBe("root/foo/bar");
 });
 
-it("is memoized", function() {
+test("is memoized", function() {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   const breadcrumbsFoo1 = breadcrumbs.add("foo");
@@ -34,7 +34,7 @@ it("is memoized", function() {
   expect(breadcrumbsFoo1).toBe(breadcrumbsFoo2);
 });
 
-it("is memoized and distinguishes branches", function() {
+test("is memoized and distinguishes branches", function() {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   const breadcrumbsFoo1 = breadcrumbs.add("foo");
@@ -44,7 +44,7 @@ it("is memoized and distinguishes branches", function() {
   expect(breadcrumbsFoo1).not.toBe(breadcrumbsFoo2);
 });
 
-it("is stringable", function() {
+test("is stringable", function() {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   expect(

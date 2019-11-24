@@ -15,13 +15,13 @@ beforeEach(onBeforeAfter);
 
 afterEach(onBeforeAfter);
 
-it("is a singleton", function() {
+test("is a singleton", function() {
   expect(function() {
     new MainLoop();
   }).toThrow(SingletonException);
 });
 
-it("attaches scheduler", async function() {
+test("attaches scheduler", async function() {
   const mainLoop = MainLoop.getInstance();
   const scheduler = new Scheduler();
 

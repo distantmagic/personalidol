@@ -5,7 +5,7 @@ import * as THREE from "three";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QuakePointParser from "./QuakePointParser";
 
-it("parses a set of coordinates into THREE Vector", function() {
+test("parses a set of coordinates into THREE Vector", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const parser = new QuakePointParser(loggerBreadcrumbs, "  16 -32       40   ");
 

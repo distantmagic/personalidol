@@ -4,7 +4,7 @@ import CancelToken from "../classes/CancelToken";
 import interval from "./interval";
 import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
 
-it("produces interval events generator", async function() {
+test("produces interval events generator", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const ticks = [];
@@ -21,7 +21,7 @@ it("produces interval events generator", async function() {
   expect(ticks).toHaveLength(expectedTicks);
 }, 1000);
 
-it("ticks infinitely", async function() {
+test("ticks infinitely", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const expectedTicks = 10;
@@ -38,7 +38,7 @@ it("ticks infinitely", async function() {
   expect(ticksCount).toBe(expectedTicks);
 }, 1000);
 
-it("is immediately stopped with already paused cancel token", async function() {
+test("is immediately stopped with already paused cancel token", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const ticks = [];

@@ -4,7 +4,7 @@ import CancelToken from "../classes/CancelToken";
 import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
 import timeout from "./timeout";
 
-it("supports cancel token", async function() {
+test("supports cancel token", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
 
@@ -18,7 +18,7 @@ it("supports cancel token", async function() {
   expect(tick.isCanceled()).toBeTruthy();
 }, 1000);
 
-it("is immediately stopped with already paused cancel token", async function() {
+test("is immediately stopped with already paused cancel token", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
 

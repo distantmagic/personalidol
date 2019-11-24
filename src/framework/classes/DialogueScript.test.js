@@ -6,14 +6,14 @@ import ExpressionBus from "./ExpressionBus";
 import ExpressionContext from "./ExpressionContext";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-const testContext = {};
+import type { DialogueScript as DialogueScriptType } from "../types/DialogueScript";
 
-beforeEach(async function() {
-  testContext.dialogueScript = await fixtures.yamlFile("dialogue-basic.yml");
-});
+function getDialogueScript(): Promise<DialogueScriptType> {
+  return fixtures.yamlFile("dialogue-basic.yml");
+}
 
-it("loads dialogue messages", async function() {
+test("loads dialogue messages", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const dialogueScript = new DialogueScript(new ExpressionBus(), new ExpressionContext(loggerBreadcrumbs), testContext.dialogueScript);
+  const dialogueScript = new DialogueScript(new ExpressionBus(), new ExpressionContext(loggerBreadcrumbs), await getDialogueScript());
   const messages = await dialogueScript.getMessages();
 });

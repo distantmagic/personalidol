@@ -545,6 +545,8 @@ declare module "three" {
 
     equals(Plane): boolean;
 
+    projectPoint(Vector3, Vector3): Plane;
+
     setFromCoplanarPoints(Vector3, Vector3, Vector3): Plane;
   }
 

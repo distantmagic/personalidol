@@ -2,7 +2,7 @@
 
 import EventListenerSet from "./EventListenerSet";
 
-it("notifies callbacks set about specific event", function() {
+test("notifies callbacks set about specific event", function() {
   const mockedCallback = jest.fn();
   const eventListenerSet = new EventListenerSet<[number, number]>();
 

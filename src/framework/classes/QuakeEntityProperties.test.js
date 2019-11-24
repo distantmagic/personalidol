@@ -5,7 +5,7 @@ import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QuakeEntityProperties from "./QuakeEntityProperties";
 import QuakeEntityProperty from "./QuakeEntityProperty";
 
-it("does not accept the same key more than once", function() {
+test("does not accept the same key more than once", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeEntityProperty1 = new QuakeEntityProperty("foo", "bar");
   const quakeEntityProperty2 = new QuakeEntityProperty("foo", "booz");
@@ -15,7 +15,7 @@ it("does not accept the same key more than once", function() {
   }).toThrow(Exception);
 });
 
-it("throws when property does not exist", function() {
+test("throws when property does not exist", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeEntityProperty1 = new QuakeEntityProperty("foo", "bar");
   const quakeEntityProperty2 = new QuakeEntityProperty("baz", "booz");
@@ -28,7 +28,7 @@ it("throws when property does not exist", function() {
   }).toThrow(Exception);
 });
 
-it("finds property by key", function() {
+test("finds property by key", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeEntityProperty1 = new QuakeEntityProperty("foo", "bar");
   const quakeEntityProperty2 = new QuakeEntityProperty("baz", "booz");
@@ -38,7 +38,7 @@ it("finds property by key", function() {
   expect(quakeEntityProperties.getPropertyByKey("foo").getValue()).toBe("bar");
 });
 
-it("is equatable", function() {
+test("is equatable", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeEntityProperty1 = new QuakeEntityProperty("foo", "bar");
   const quakeEntityProperty2 = new QuakeEntityProperty("baz", "booz");

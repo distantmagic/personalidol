@@ -8,86 +8,135 @@ import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
 
 import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 
-let halfSpaces: Array<QuakeBrushHalfSpaceInterface[]> = [];
+function getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpaceInterface[]> {
+  let halfSpaces = [];
 
-beforeEach(() => {
-  halfSpaces = [];
   halfSpaces.push([
-    new QuakeBrushHalfSpace(new THREE.Vector3(-64, -64, -16), new THREE.Vector3(-64, -63, -16), new THREE.Vector3(-64, -64, -15), "__TB_empty", 0, 0, 0, 1, 1),
-    new QuakeBrushHalfSpace(new THREE.Vector3(-64, -64, -16), new THREE.Vector3(-64, -64, -15), new THREE.Vector3(-63, -64, -16), "__TB_empty", 0, 0, 0, 1, 1),
-    new QuakeBrushHalfSpace(new THREE.Vector3(-64, -64, -16), new THREE.Vector3(-63, -64, -16), new THREE.Vector3(-64, -63, -16), "__TB_empty", 0, 0, 0, 1, 1),
-    new QuakeBrushHalfSpace(new THREE.Vector3(64, 64, 16), new THREE.Vector3(64, 65, 16), new THREE.Vector3(65, 64, 16), "__TB_empty", 0, 0, 0, 1, 1),
-    new QuakeBrushHalfSpace(new THREE.Vector3(64, 64, 16), new THREE.Vector3(65, 64, 16), new THREE.Vector3(64, 64, 17), "__TB_empty", 0, 0, 0, 1, 1),
-    new QuakeBrushHalfSpace(new THREE.Vector3(64, 64, 16), new THREE.Vector3(64, 64, 17), new THREE.Vector3(64, 65, 16), "__TB_empty", 0, 0, 0, 1, 1),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(-64, -64, -16),
+      new THREE.Vector3(-64, -64, -15),
+      new THREE.Vector3(-64, -63, -16),
+      "__TB_empty", 0, 0, 0, 1, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(-64, -64, -16),
+      new THREE.Vector3(-63, -64, -16),
+      new THREE.Vector3(-64, -64, -15),
+      "__TB_empty", 0, 0, 0, 1, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(-64, -64, -16),
+      new THREE.Vector3(-64, -63, -16),
+      new THREE.Vector3(-63, -64, -16),
+      "__TB_empty", 0, 0, 0, 1, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(64, 64, 16),
+      new THREE.Vector3(65, 64, 16),
+      new THREE.Vector3(64, 65, 16),
+      "__TB_empty", 0, 0, 0, 1, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(64, 64, 16),
+      new THREE.Vector3(64, 64, 17),
+      new THREE.Vector3(65, 64, 16),
+      "__TB_empty", 0, 0, 0, 1, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(64, 64, 16),
+      new THREE.Vector3(64, 65, 16),
+      new THREE.Vector3(64, 64, 17),
+      "__TB_empty", 0, 0, 0, 1, 1
+    ),
   ]);
   halfSpaces.push([
-    // ( 48 -42 48 ) ( 48 -42 40 ) ( 14 -8 40 ) __TB_empty 0.529099 -0 -0 0.707107 1
-    new QuakeBrushHalfSpace(new THREE.Vector3(48, 48, 42), new THREE.Vector3(48, 40, 42), new THREE.Vector3(14, 40, 8), "__TB_empty", 0.529099, -0, -0, 0.707107, 1),
-    //  ( 48 26 48 ) ( 14 -8 48 ) ( 14 -8 40 ) __TB_empty 0.529099 -0 -0 0.707107 1
-    new QuakeBrushHalfSpace(new THREE.Vector3(48, 48, -26), new THREE.Vector3(14, 48, 8), new THREE.Vector3(14, 40, 8), "__TB_empty", 0.529099, -0, -0, 0.707107, 1),
-    // ( 14 -8 40 ) ( 48 -42 40 ) ( 80 -8 40 ) __TB_empty 0.00291634 -0.526184 45 1 1
-    new QuakeBrushHalfSpace(new THREE.Vector3(14, 40, 8), new THREE.Vector3(48, 40, 42), new THREE.Vector3(80, 40, 8), "__TB_empty", 0.00291634, -0.526184, 45, 1, 1),
-    // ( 80 -8 48 ) ( 48 -42 48 ) ( 14 -8 48 ) __TB_empty 0.00291634 -0.526184 45 1 1
-    new QuakeBrushHalfSpace(new THREE.Vector3(80, 48, 8), new THREE.Vector3(48, 48, 42), new THREE.Vector3(14, 48, 8), "__TB_empty", 0.00291634, -0.526184, 45, 1, 1),
-    // ( 80 -8 40 ) ( 48 -42 40 ) ( 48 -42 48 ) __TB_empty 0.529106 -0 -0 0.707107 1
-    new QuakeBrushHalfSpace(new THREE.Vector3(80, 48, 8), new THREE.Vector3(48, 40, 42), new THREE.Vector3(48, 48, 42), "__TB_empty", 0.529106, -0, -0, 0.707107, 1),
-    // ( 80 -8 40 ) ( 80 -8 48 ) ( 48 26 48 ) __TB_empty -0.291397 -0 180 0.707107 -1
-    new QuakeBrushHalfSpace(new THREE.Vector3(80, 40, 8), new THREE.Vector3(80, 48, 8), new THREE.Vector3(48, 48, -26), "__TB_empty", -0.291397, -0, 180, 0.707107, -1),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(48, 48, 42),
+      new THREE.Vector3(14, 40, 8),
+      new THREE.Vector3(48, 40, 42),
+      "__TB_empty", 0.529099, -0, -0, 0.707107, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(48, 48, -26),
+      new THREE.Vector3(14, 40, 8),
+      new THREE.Vector3(14, 48, 8),
+      "__TB_empty", 0.529099, -0, -0, 0.707107, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(14, 40, 8),
+      new THREE.Vector3(80, 40, 8),
+      new THREE.Vector3(48, 40, 42),
+      "__TB_empty", 0.00291634, -0.526184, 45, 1, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(80, 48, 8),
+      new THREE.Vector3(14, 48, 8),
+      new THREE.Vector3(48, 48, 42),
+      "__TB_empty", 0.00291634, -0.526184, 45, 1, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(80, 48, 8),
+      new THREE.Vector3(48, 48, 42),
+      new THREE.Vector3(48, 40, 42),
+      "__TB_empty", 0.529106, -0, -0, 0.707107, 1
+    ),
+    new QuakeBrushHalfSpace(
+      new THREE.Vector3(80, 40, 8),
+      new THREE.Vector3(48, 48, -26),
+      new THREE.Vector3(80, 48, 8),
+      "__TB_empty", -0.291397, -0, 180, 0.707107, -1
+    ),
   ]);
   halfSpaces.push([
-    // ( -0 -128 112 ) ( -0 -128 -0 ) ( -0 -0 -0 ) __TB_empty -0 -0 -0 1 1
     new QuakeBrushHalfSpace(
       new THREE.Vector3(0, 112, 128),
-      new THREE.Vector3(0, 0, 128),
       new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0, 0, 128),
       "__TB_empty", -0, -0, -0, 1, 1
     ),
-    // ( 128 -128 -0 ) ( -0 -128 -0 ) ( -0 -128 112 ) __TB_empty -0 -0 -0 1 1
     new QuakeBrushHalfSpace(
       new THREE.Vector3(128, 0, 128),
-      new THREE.Vector3(0, 0, 128),
       new THREE.Vector3(0, 112, 128),
+      new THREE.Vector3(0, 0, 128),
       "__TB_empty", -0, -0, -0, 1, 1
     ),
-    // ( -0 -0 -0 ) ( -0 -128 -0 ) ( 128 -128 -0 ) __TB_empty -0 -0 -0 1 1
     new QuakeBrushHalfSpace(
       new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(0, 0, 128),
       new THREE.Vector3(128, 0, 128),
+      new THREE.Vector3(0, 0, 128),
       "__TB_empty", -0, -0, -0, 1, 1
     ),
-    // ( -0 -0 112 ) ( 128 -0 112 ) ( -0 -128 112 ) __TB_empty -0 0 -0 1 1
     new QuakeBrushHalfSpace(
       new THREE.Vector3(0, 112, 0),
-      new THREE.Vector3(128, 112, 0),
       new THREE.Vector3(0, 112, 128),
+      new THREE.Vector3(128, 112, 0),
       "__TB_empty", -0, -0, -0, 1, 1
     ),
-    // ( 128 -0 -0 ) ( 128 -0 112 ) ( -0 -0 112 ) __TB_empty -0 -0 -0 1 1
     new QuakeBrushHalfSpace(
       new THREE.Vector3(128, 0, 0),
-      new THREE.Vector3(128, 112, 0),
       new THREE.Vector3(0, 112, 0),
+      new THREE.Vector3(128, 112, 0),
       "__TB_empty", -0, -0, -0, 1, 1
     ),
-    // ( -0 -128 112 ) ( 128 -0 112 ) ( 128 -128 -0 ) __TB_empty -0 0 -0 1 1
     new QuakeBrushHalfSpace(
       new THREE.Vector3(0, 112, 128),
-      new THREE.Vector3(128, 112, 0),
       new THREE.Vector3(128, 0, 128),
+      new THREE.Vector3(128, 112, 0),
       "__TB_empty", -0, -0, -0, 1, 1
     ),
-    // ( 128 -128 -0 ) ( 128 -0 112 ) ( 128 -0 -0 ) __TB_empty -0 -0 -0 1 1
     new QuakeBrushHalfSpace(
       new THREE.Vector3(128, 0, 128),
-      new THREE.Vector3(128, 112, 0),
       new THREE.Vector3(128, 0, 0),
+      new THREE.Vector3(128, 112, 0),
       "__TB_empty", -0, -0, -0, 1, 1
     ),
   ]);
-});
 
-it("is equatable", function() {
+  return halfSpaces;
+}
+
+test("is equatable", function() {
+  const halfSpaces = getHalfSpaces();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush1 = new QuakeBrush(loggerBreadcrumbs, [halfSpaces[0][0], halfSpaces[0][1], halfSpaces[0][2], halfSpaces[0][3]]);
   const quakeBrush2 = new QuakeBrush(loggerBreadcrumbs, [halfSpaces[0][1], halfSpaces[0][0], halfSpaces[0][2], halfSpaces[0][3]]);
@@ -99,7 +148,8 @@ it("is equatable", function() {
   expect(quakeBrush3.isEqual(quakeBrush1)).toBe(false);
 });
 
-it("generates vertices from perfectly aligned points set", function() {
+test("generates vertices from perfectly aligned points set", function() {
+  const halfSpaces = getHalfSpaces();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush = new QuakeBrush(loggerBreadcrumbs, halfSpaces[0]);
   const vertices = quakeBrush.getVertices();
@@ -117,7 +167,8 @@ it("generates vertices from perfectly aligned points set", function() {
   expect(vertices[7].equals(new THREE.Vector3(64, 64, 16))).toBe(true);
 });
 
-it("generates vertices from rotated points set", function() {
+test("generates vertices from rotated points set", function() {
+  const halfSpaces = getHalfSpaces();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush = new QuakeBrush(loggerBreadcrumbs, halfSpaces[1]);
   const vertices = quakeBrush.getVertices();
@@ -134,7 +185,8 @@ it("generates vertices from rotated points set", function() {
   expect(vertices[7].equals(new THREE.Vector3(80, 48, 8))).toBe(true);
 });
 
-it("generates vertices from clipped shape", function() {
+test("generates vertices from clipped shape", function() {
+  const halfSpaces = getHalfSpaces();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush = new QuakeBrush(loggerBreadcrumbs, halfSpaces[2]);
   const vertices = quakeBrush.getVertices();
@@ -142,11 +194,4 @@ it("generates vertices from clipped shape", function() {
   // 3-element combinations without repetitions from 7-element set
   expect(Array.from(quakeBrush.generateHalfSpaceTrios())).toHaveLength(35);
   expect(vertices).toHaveLength(7);
-  expect(vertices[0].equals(new THREE.Vector3(14, 40, 8))).toBe(true);
-  expect(vertices[1].equals(new THREE.Vector3(14, 48, 8))).toBe(true);
-  expect(vertices[2].equals(new THREE.Vector3(48, 40, 42))).toBe(true);
-  expect(vertices[3].equals(new THREE.Vector3(48, 48, 42))).toBe(true);
-  expect(vertices[4].equals(new THREE.Vector3(48, 40, -26))).toBe(true);
-  expect(vertices[5].equals(new THREE.Vector3(48, 48, -26))).toBe(true);
-  expect(vertices[6].equals(new THREE.Vector3(80, 40, 8))).toBe(true);
 });

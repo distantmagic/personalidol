@@ -6,7 +6,7 @@ import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBus from "./QueryBus";
 import ClockReactiveController from "./ClockReactiveController";
 
-it("supports cancel token", async function() {
+test("supports cancel token", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const clock = new BusClock(10000);

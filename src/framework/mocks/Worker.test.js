@@ -3,7 +3,7 @@
 import DedicatedWorkerGlobalScopeMock from "./DedicatedWorkerGlobalScope";
 import WorkerMock from "./Worker";
 
-it("has basic functionalities of a web worker", async function() {
+test("has basic functionalities of a web worker", async function() {
   const worker = new WorkerMock("https://example.com");
   const workerScope = new DedicatedWorkerGlobalScopeMock(worker);
 

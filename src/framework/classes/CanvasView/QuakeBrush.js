@@ -29,13 +29,13 @@ export default class QuakeBrush extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
+    const vertices = this.brush.getVertices();
+
     const material = new THREE.MeshLambertMaterial({
       color: 0xffffff,
       opacity: 0.5,
       transparent: true,
     });
-
-    const vertices = this.brush.getVertices();
     const geometry = new ConvexBufferGeometry(vertices);
     const mesh = new THREE.Mesh(geometry, material);
 

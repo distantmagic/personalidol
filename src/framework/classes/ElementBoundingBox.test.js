@@ -5,7 +5,7 @@ import ElementPosition from "./ElementPosition";
 import ElementSize from "./ElementSize";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
-it("stores element coordinates", function() {
+test("stores element coordinates", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const elementPosition = new ElementPosition(0, 0, 0);
   const elementSize = new ElementSize(10, 10, 10);
