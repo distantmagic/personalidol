@@ -15,10 +15,10 @@ import type { Debugger } from "../../interfaces/Debugger";
 import type { ElementSize } from "../../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
-const ZOOM_2 = 4;
-const ZOOM_3 = 8;
-const ZOOM_4 = 16;
-const ZOOM_5 = 32;
+const ZOOM_2 = 2;
+const ZOOM_3 = 4;
+const ZOOM_4 = 8;
+const ZOOM_5 = 16;
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
   +camera: OrthographicCamera;

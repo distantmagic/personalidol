@@ -114,12 +114,9 @@ export default class QuakeEntity extends CanvasView {
         );
       }
     } else if (this.entity.isOfClass("info_player_start")) {
-      let modelName = "chicken";
       const entityProperties = this.entity.getProperties();
+      const modelName = entityProperties.getPropertyByKey("model_name").getValue();
 
-      if (entityProperties.hasPropertyKey("model")) {
-        modelName = entityProperties.getPropertyByKey("model").getValue();
-      }
       await this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,

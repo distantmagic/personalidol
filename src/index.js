@@ -3,7 +3,7 @@
 import raf from "raf";
 import React from "react";
 import ReactDOM from "react-dom";
-// import yn from "yn";
+import yn from "yn";
 
 // import * as serviceWorker from './serviceWorker';
 import BusClock from "./framework/classes/BusClock";
@@ -47,11 +47,11 @@ async function init(rootElement: HTMLElement): Promise<void> {
   console.log(await worker.hello());
 
   // serviceWorker.register();
-  // debug.setIsEnabled(
-  //   yn(process.env.REACT_APP_DEBUG, {
-  //     default: false,
-  //   })
-  // );
+  debug.setIsEnabled(
+    yn(process.env.REACT_APP_DEBUG && false, {
+      default: false,
+    })
+  );
 
   ReactDOM.render(
     <React.StrictMode>

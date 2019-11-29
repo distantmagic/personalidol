@@ -4,7 +4,6 @@
 {
 "classname" "worldspawn"
 "light" "1"
-"sounds" "/assets/track-ritual.mp3"
 // brush 0
 {
 ( -224 288 16 ) ( -224 289 16 ) ( -224 288 17 ) __TB_empty -0 -0 -0 1 1
@@ -137,8 +136,8 @@
 {
 "classname" "info_player_start"
 "origin" "168 191 56"
-"model" "ogro"
 "angle" "90"
+"model_name" "chicken"
 }
 // entity 2
 {
