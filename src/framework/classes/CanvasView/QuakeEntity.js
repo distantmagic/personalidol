@@ -20,7 +20,7 @@ import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
-function getBrightness(self: QuakeEntity): number {
+function getIntensity(self: QuakeEntity): number {
   const brightness = Number(
     self.entity
       .getProperties()
@@ -29,7 +29,7 @@ function getBrightness(self: QuakeEntity): number {
   );
 
   if (isNaN(brightness)) {
-    throw new Exception(self.loggerBreadcrumbs.add("attach"), "Light brightness is not a number.");
+    throw new Exception(self.loggerBreadcrumbs.add("attach"), "Light intensity is not a number.");
   }
 
   return brightness / 255;
@@ -90,7 +90,7 @@ export default class QuakeEntity extends CanvasView {
       const entityProperties = this.entity.getProperties();
 
       if (entityProperties.hasPropertyKey("light")) {
-        const ambientLightBrightness = getBrightness(this);
+        const ambientLightBrightness = getIntensity(this);
         await this.loadingManager.blocking(
           this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.scene, ambientLightBrightness)),
           "Loading world ambient light"
@@ -132,11 +132,16 @@ export default class QuakeEntity extends CanvasView {
         "Loading character"
       );
     } else if (this.entity.isOfClass("light")) {
-      const brightness = getBrightness(this);
+      const brightness = getIntensity(this);
       await this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,
-          new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.scene, quake2three(this.entity.getOrigin()), brightness)
+          new PointLightView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
+            this.scene,
+            quake2three(this.entity.getOrigin()),
+            brightness
+          )
         ),
         "Loading point light"
       );

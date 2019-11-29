@@ -9,15 +9,16 @@ import type { Plane, Vector3 } from "three";
 import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 
 export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface {
-  +v1: Vector3;
-  +v2: Vector3;
-  +v3: Vector3;
+  +plane: Plane;
   +texture: string;
-  +xOffset: number;
-  +yOffset: number;
   +textureRotationAngle: number;
   +textureXScale: number;
   +textureYScale: number;
+  +v1: Vector3;
+  +v2: Vector3;
+  +v3: Vector3;
+  +xOffset: number;
+  +yOffset: number;
 
   constructor(
     v1: Vector3,
@@ -56,19 +57,27 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     //
     // Quake map format stores vertices in a clockwise order
     // http://www.gamers.org/dEngine/quake2/Q2DP/Q2DP_Map/Q2DP_Map-2.html
-
     const plane = new THREE.Plane();
 
-    return plane.setFromCoplanarPoints(this.getVector1(), this.getVector2(), this.getVector3());
+    return plane.setFromCoplanarPoints(this.getPlaneDefiningPoint1(), this.getPlaneDefiningPoint2(), this.getPlaneDefiningPoint3());
+  }
+
+  getPlaneDefiningPoint1(): Vector3 {
+    return this.v1;
+  }
+
+  getPlaneDefiningPoint2(): Vector3 {
+    return this.v2;
+  }
+
+  getPlaneDefiningPoint3(): Vector3 {
+    return this.v3;
   }
 
   getRandomPoint(): Vector3 {
-    const point = this.getVector1();
-    const target = new THREE.Vector3(0, 0, 0);
-
-    this.getPlane().projectPoint(point, target);
-
-    return target;
+    // I know it's not exactly random, but for the sake of object inheritance
+    // someone might want to override this somewhere else
+    return this.getPlaneDefiningPoint1();
   }
 
   getRandomVector(point: Vector3): Vector3 {
@@ -91,18 +100,6 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
 
   getTextureYScale(): number {
     return this.textureYScale;
-  }
-
-  getVector1(): Vector3 {
-    return this.v1.clone();
-  }
-
-  getVector2(): Vector3 {
-    return this.v2.clone();
-  }
-
-  getVector3(): Vector3 {
-    return this.v3.clone();
   }
 
   getXOffset(): number {
@@ -128,9 +125,9 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
 
   isEqual(other: QuakeBrushHalfSpaceInterface): boolean {
     return (
-      this.getVector1().equals(other.getVector1()) &&
-      this.getVector2().equals(other.getVector2()) &&
-      this.getVector3().equals(other.getVector3()) &&
+      this.getPlaneDefiningPoint1().equals(other.getPlaneDefiningPoint1()) &&
+      this.getPlaneDefiningPoint2().equals(other.getPlaneDefiningPoint2()) &&
+      this.getPlaneDefiningPoint3().equals(other.getPlaneDefiningPoint3()) &&
       this.getTexture() === other.getTexture() &&
       this.getXOffset() === other.getXOffset() &&
       this.getYOffset() === other.getYOffset() &&

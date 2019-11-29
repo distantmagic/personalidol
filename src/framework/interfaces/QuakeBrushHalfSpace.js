@@ -7,6 +7,12 @@ import type { Equatable } from "./Equatable";
 export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
   getPlane(): Plane;
 
+  getPlaneDefiningPoint1(): Vector3;
+
+  getPlaneDefiningPoint2(): Vector3;
+
+  getPlaneDefiningPoint3(): Vector3;
+
   getRandomPoint(): Vector3;
 
   getRandomVector(Vector3): Vector3;
@@ -18,12 +24,6 @@ export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
   getTextureXScale(): number;
 
   getTextureYScale(): number;
-
-  getVector1(): Vector3;
-
-  getVector2(): Vector3;
-
-  getVector3(): Vector3;
 
   getXOffset(): number;
 

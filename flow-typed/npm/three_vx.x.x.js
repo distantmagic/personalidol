@@ -553,6 +553,7 @@ declare module "three" {
   declare export interface PointLight<T: Camera> extends Light<T> {
     +isPointLight: true;
     +position: Vector3;
+    decay: number;
 
     constructor(color?: number, intensity?: number, distance?: number, decay?: number): void;
   }
