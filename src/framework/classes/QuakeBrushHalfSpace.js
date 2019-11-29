@@ -57,20 +57,9 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     // Quake map format stores vertices in a clockwise order
     // http://www.gamers.org/dEngine/quake2/Q2DP/Q2DP_Map/Q2DP_Map-2.html
 
-    const p1 = this.getVector1();
-    const p2 = this.getVector2();
-    const p3 = this.getVector3();
+    const plane = new THREE.Plane();
 
-    const v1 = p2.clone().sub(p1);
-    const v2 = p3.clone().sub(p1);
-
-    const normal = v1
-      .clone()
-      .cross(v2)
-      .normalize();
-    const constant = -1 * normal.dot(p3);
-
-    return new THREE.Plane(normal, constant);
+    return plane.setFromCoplanarPoints(this.getVector1(), this.getVector2(), this.getVector3());
   }
 
   getRandomPoint(): Vector3 {
