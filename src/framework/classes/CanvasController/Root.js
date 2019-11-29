@@ -118,7 +118,7 @@ export default class Root extends CanvasController {
       ),
       "Loading map"
     );
-    this.scene.add(new THREE.AxesHelper(256));
+    // this.scene.add(new THREE.AxesHelper(256));
 
     this.scheduler.onBegin(this.canvasPointerController.begin);
     this.scheduler.onUpdate(this.threePointerInteraction.update);

@@ -28,10 +28,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
 
   *generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrioInterface, void, void> {
     for (let combo of combineWithoutRepetitions(this.halfSpaces, 3)) {
-      yield new QuakeBrushHalfSpaceTrio(
-        this.loggerBreadcrumbs.add("QuakeBrushHalfSpaceTrio"),
-        ...combo
-      );
+      yield new QuakeBrushHalfSpaceTrio(this.loggerBreadcrumbs.add("QuakeBrushHalfSpaceTrio"), ...combo);
     }
   }
 
@@ -61,7 +58,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     return Array.from(this.generateVertices());
   }
 
-  hasPoint(point: Vector3): bool {
+  hasPoint(point: Vector3): boolean {
     for (let halfSpace of this.getHalfSpaces()) {
       if (!halfSpace.hasPoint(point)) {
         return false;

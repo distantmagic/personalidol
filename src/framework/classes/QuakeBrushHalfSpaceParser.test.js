@@ -14,7 +14,12 @@ test("converts quake map format to something processable by controllers", functi
     new THREE.Vector3(8, -216, 16),
     new THREE.Vector3(-120, -216, 128),
     new THREE.Vector3(8, -88, 128),
-    "__TB_empty", -0, -0.522125, -0, 1, 1
+    "__TB_empty",
+    -0,
+    -0.522125,
+    -0,
+    1,
+    1
   );
 
   expect(halfSpace.isEqual(correct)).toBe(true);

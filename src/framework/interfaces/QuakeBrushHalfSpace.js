@@ -29,7 +29,7 @@ export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
 
   getYOffset(): number;
 
-  hasPoint(Vector3): bool;
+  hasPoint(Vector3): boolean;
 
   isParallel(QuakeBrushHalfSpace): boolean;
 }

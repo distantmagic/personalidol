@@ -4,6 +4,7 @@ import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 import Exception from "../Exception";
+import quake2three from "../../helpers/quake2three";
 import { default as AmbientLightView } from "./AmbientLight";
 import { default as AmbientSoundView } from "./AmbientSound";
 import { default as MD2CharacterView } from "./MD2Character";
@@ -124,7 +125,7 @@ export default class QuakeEntity extends CanvasView {
           cancelToken,
           new MD2CharacterView(
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
-            this.entity.getOrigin(),
+            quake2three(this.entity.getOrigin()),
             this.queryBus,
             this.scene,
             this.threeLoadingManager,
@@ -136,7 +137,10 @@ export default class QuakeEntity extends CanvasView {
     } else if (this.entity.isOfClass("light")) {
       const brightness = getBrightness(this);
       await this.loadingManager.blocking(
-        this.canvasViewBag.add(cancelToken, new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.scene, this.entity.getOrigin(), brightness)),
+        this.canvasViewBag.add(
+          cancelToken,
+          new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.scene, quake2three(this.entity.getOrigin()), brightness)
+        ),
         "Loading point light"
       );
     }

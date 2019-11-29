@@ -15,5 +15,5 @@ export interface QuakeBrush extends Equatable<QuakeBrush> {
 
   getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace>;
 
-  hasPoint(Vector3): bool;
+  hasPoint(Vector3): boolean;
 }

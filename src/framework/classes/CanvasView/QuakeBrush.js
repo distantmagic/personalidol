@@ -5,6 +5,7 @@ import autoBind from "auto-bind";
 import { ConvexBufferGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
 
 import CanvasView from "../CanvasView";
+import quake2three from "../../helpers/quake2three";
 
 import type { Mesh, Scene } from "three";
 
@@ -29,16 +30,14 @@ export default class QuakeBrush extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const vertices = this.brush.getVertices();
+    const vertices = this.brush.getVertices().map(quake2three);
 
     const material = new THREE.MeshLambertMaterial({
       color: 0xffffff,
-      opacity: 0.5,
+      opacity: 0.6,
       transparent: true,
     });
-    if (vertices.length < 3) {
-      return;
-    }
+
     const geometry = new ConvexBufferGeometry(vertices);
     const mesh = new THREE.Mesh(geometry, material);
 

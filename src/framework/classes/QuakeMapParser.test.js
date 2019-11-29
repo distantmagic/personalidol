@@ -20,42 +20,12 @@ test.skip("converts quake map format to something processable by controllers", a
   const correct = new QuakeMap(loggerBreadcrumbs, [
     new QuakeEntity(loggerBreadcrumbs, new QuakeEntityProperties(loggerBreadcrumbs, [new QuakeEntityProperty("classname", "worldspawn")]), [
       new QuakeBrush(loggerBreadcrumbs, [
-        new QuakeBrushHalfSpace(
-          new THREE.Vector3(-64, -16, 64),
-          new THREE.Vector3(-64, -16, 63),
-          new THREE.Vector3(-64, -15, 64),
-          "__TB_empty", 0, 0, 0, 1, 1
-        ),
-        new QuakeBrushHalfSpace(
-          new THREE.Vector3(-64, -16, 64),
-          new THREE.Vector3(-64, -15, 64),
-          new THREE.Vector3(-63, -16, 64),
-          "__TB_empty", 0, 0, 0, 1, 1
-        ),
-        new QuakeBrushHalfSpace(
-          new THREE.Vector3(-64, -16, 64),
-          new THREE.Vector3(-63, -16, 64),
-          new THREE.Vector3(-64, -16, 63),
-          "__TB_empty", 0, 0, 0, 1, 1
-        ),
-        new QuakeBrushHalfSpace(
-          new THREE.Vector3(64, 16, -64),
-          new THREE.Vector3(64, 16, -65),
-          new THREE.Vector3(65, 16, -64),
-          "__TB_empty", 0, 0, 0, 1, 1
-        ),
-        new QuakeBrushHalfSpace(
-          new THREE.Vector3(64, 16, -64),
-          new THREE.Vector3(65, 16, -64),
-          new THREE.Vector3(64, 17, -64),
-          "__TB_empty", 0, 0, 0, 1, 1
-        ),
-        new QuakeBrushHalfSpace(
-          new THREE.Vector3(64, 16, -64),
-          new THREE.Vector3(64, 17, -64),
-          new THREE.Vector3(64, 16, -65),
-          "__TB_empty", 0, 0, 0, 1, 1
-        ),
+        new QuakeBrushHalfSpace(new THREE.Vector3(-64, -16, 64), new THREE.Vector3(-64, -16, 63), new THREE.Vector3(-64, -15, 64), "__TB_empty", 0, 0, 0, 1, 1),
+        new QuakeBrushHalfSpace(new THREE.Vector3(-64, -16, 64), new THREE.Vector3(-64, -15, 64), new THREE.Vector3(-63, -16, 64), "__TB_empty", 0, 0, 0, 1, 1),
+        new QuakeBrushHalfSpace(new THREE.Vector3(-64, -16, 64), new THREE.Vector3(-63, -16, 64), new THREE.Vector3(-64, -16, 63), "__TB_empty", 0, 0, 0, 1, 1),
+        new QuakeBrushHalfSpace(new THREE.Vector3(64, 16, -64), new THREE.Vector3(64, 16, -65), new THREE.Vector3(65, 16, -64), "__TB_empty", 0, 0, 0, 1, 1),
+        new QuakeBrushHalfSpace(new THREE.Vector3(64, 16, -64), new THREE.Vector3(65, 16, -64), new THREE.Vector3(64, 17, -64), "__TB_empty", 0, 0, 0, 1, 1),
+        new QuakeBrushHalfSpace(new THREE.Vector3(64, 16, -64), new THREE.Vector3(64, 17, -64), new THREE.Vector3(64, 16, -65), "__TB_empty", 0, 0, 0, 1, 1),
       ]),
     ]),
     new QuakeEntity(

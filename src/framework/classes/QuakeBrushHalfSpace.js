@@ -64,7 +64,10 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     const v1 = p2.clone().sub(p1);
     const v2 = p3.clone().sub(p1);
 
-    const normal = v1.clone().cross(v2).normalize();
+    const normal = v1
+      .clone()
+      .cross(v2)
+      .normalize();
     const constant = -1 * normal.dot(p3);
 
     return new THREE.Plane(normal, constant);
@@ -121,7 +124,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     return this.yOffset;
   }
 
-  hasPoint(point: Vector3): bool {
+  hasPoint(point: Vector3): boolean {
     const randomVector = this.getRandomVector(point);
     const dotProduct = this.getPlane().normal.dot(randomVector);
 
