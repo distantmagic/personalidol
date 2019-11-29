@@ -12,7 +12,7 @@ import QuakeEntityProperty from "./QuakeEntityProperty";
 import QuakeMap from "./QuakeMap";
 import QuakeMapParser from "./QuakeMapParser";
 
-test("converts quake map format to something processable by controllers", async function() {
+test.skip("converts quake map format to something processable by controllers", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const mapContent = await fixtures.file("map-test.map");
   const quakeMapParser = new QuakeMapParser(loggerBreadcrumbs, mapContent);

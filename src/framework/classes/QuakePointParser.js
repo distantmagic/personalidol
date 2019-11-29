@@ -36,8 +36,6 @@ export default class QuakePointParser implements QuakePointParserInterface {
       throw new QuakeMapParserException(this.loggerBreadcrumbs.add("parse"), "Point consists of invalid numbers.");
     }
 
-    // translate Quake coordinates to THREE coordinates
-    // (X,Y,Z) -> (X, Z, -Y)
-    return new THREE.Vector3(x, z, -1 * y);
+    return new THREE.Vector3(x, y, z);
   }
 }

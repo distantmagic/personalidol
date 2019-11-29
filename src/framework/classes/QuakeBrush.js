@@ -13,10 +13,6 @@ import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush
 import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
 
-function vectorToString(vector: Vector3): string {
-  return vector.toArray().join("/");
-}
-
 export default class QuakeBrush implements QuakeBrushInterface {
   +halfSpaces: $ReadOnlyArray<QuakeBrushHalfSpace>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -44,18 +40,18 @@ export default class QuakeBrush implements QuakeBrushInterface {
   }
 
   *generateVertices(): Generator<Vector3, void, void> {
-    const unique: {
-      [string]: boolean,
-    } = {};
+    const unique: Set<Vector3> = new Set<Vector3>();
 
-    outer: for (let trio of this.generateHalfSpaceTrios()) {
+    for (let trio of this.generateHalfSpaceTrios()) {
       if (trio.hasIntersectingPoint()) {
         const intersectingPoint = trio.getIntersectingPoint();
-        const pointAsString = vectorToString(intersectingPoint);
 
-        if (!unique.hasOwnProperty(pointAsString)) {
-          unique[pointAsString] = true;
-          yield intersectingPoint;
+        if (!unique.has(intersectingPoint)) {
+          unique.add(intersectingPoint);
+
+          if (this.hasPoint(intersectingPoint)) {
+            yield intersectingPoint;
+          }
         }
       }
     }
@@ -63,6 +59,16 @@ export default class QuakeBrush implements QuakeBrushInterface {
 
   getVertices(): $ReadOnlyArray<Vector3> {
     return Array.from(this.generateVertices());
+  }
+
+  hasPoint(point: Vector3): bool {
+    for (let halfSpace of this.getHalfSpaces()) {
+      if (!halfSpace.hasPoint(point)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   isEqual(other: QuakeBrushInterface): boolean {

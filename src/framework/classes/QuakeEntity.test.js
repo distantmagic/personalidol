@@ -22,7 +22,7 @@ test("is able to get entity origin translated to THREE coordinates", function() 
 
   expect(quakeEntity.hasOrigin()).toBe(true);
 
-  const origin = new THREE.Vector3(-32, 40, 32);
+  const origin = new THREE.Vector3(-32, -32, 40);
 
   expect(quakeEntity.getOrigin().equals(origin)).toBe(true);
 });

@@ -49,22 +49,29 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
 
   getPlane(): Plane {
     // THREE's Plane is actually a half-space in Quake map terms
-    const plane = new THREE.Plane();
+    // const plane = new THREE.Plane();
 
     // THREE expects points to be in counter-clockwise order
     // https://threejs.org/docs/#api/en/math/Plane.setFromCoplanarPoints
     //
     // Quake map format stores vertices in a clockwise order
     // http://www.gamers.org/dEngine/quake2/Q2DP/Q2DP_Map/Q2DP_Map-2.html
-    //
-    // to put something in a counter-clockwise order, you need to reverse
-    // clockwise elements array and then put the last one in the first plance,
-    // so 1,3,2 is not a mistake, it's actually 1,2,3 -> 3,2,1 -> 1,3,2
-    return plane.setFromCoplanarPoints(this.getVector1(), this.getVector2(), this.getVector3());
+
+    const p1 = this.getVector1();
+    const p2 = this.getVector2();
+    const p3 = this.getVector3();
+
+    const v1 = p2.clone().sub(p1);
+    const v2 = p3.clone().sub(p1);
+
+    const normal = v1.clone().cross(v2).normalize();
+    const constant = -1 * normal.dot(p3);
+
+    return new THREE.Plane(normal, constant);
   }
 
   getRandomPoint(): Vector3 {
-    const point = new THREE.Vector3(0, 0, 0);
+    const point = this.getVector1();
     const target = new THREE.Vector3(0, 0, 0);
 
     this.getPlane().projectPoint(point, target);
@@ -75,7 +82,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
   getRandomVector(point: Vector3): Vector3 {
     const randomPoint = this.getRandomPoint();
 
-    return point.sub(randomPoint);
+    return point.clone().sub(randomPoint);
   }
 
   getTexture(): string {
@@ -95,15 +102,15 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
   }
 
   getVector1(): Vector3 {
-    return this.v1;
+    return this.v1.clone();
   }
 
   getVector2(): Vector3 {
-    return this.v2;
+    return this.v2.clone();
   }
 
   getVector3(): Vector3 {
-    return this.v3;
+    return this.v3.clone();
   }
 
   getXOffset(): number {
@@ -116,9 +123,15 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
 
   hasPoint(point: Vector3): bool {
     const randomVector = this.getRandomVector(point);
+    const dotProduct = this.getPlane().normal.dot(randomVector);
+
+    // floating point imperfections
+    if (round.isEqualWithEpsilon(dotProduct, 0, 0.1)) {
+      return true;
+    }
 
     // the point is 'in front' of the plane or lies on it
-    return this.getPlane().normal.dot(randomVector) >= 0;
+    return dotProduct >= 0;
   }
 
   isEqual(other: QuakeBrushHalfSpaceInterface): boolean {
