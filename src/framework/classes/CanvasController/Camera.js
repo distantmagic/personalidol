@@ -48,8 +48,8 @@ export default class CameraController extends CanvasController implements Camera
     this.renderer = renderer;
     this.scene = scene;
     this.viewportSize = viewportSize;
-    this.zoom = Ola(ZOOM_2, 100);
-    this.zoomStep = 2;
+    this.zoom = Ola(ZOOM_3, 100);
+    this.zoomStep = 3;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
