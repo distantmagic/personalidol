@@ -10,7 +10,7 @@ type Props = {|
   debug: Debugger,
 |};
 
-export default function HudDebuggerListing(props: Props) {
+export default React.memo<Props>(function HudDebuggerListing(props: Props) {
   const [debuggerState, setDebuggetState] = React.useState(props.debug.getState());
 
   React.useEffect(
@@ -44,4 +44,4 @@ export default function HudDebuggerListing(props: Props) {
       </div>
     </div>
   );
-}
+});

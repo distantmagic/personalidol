@@ -122,6 +122,7 @@ body {
   }
 
   &:before {
+    background-image: url($texture-mineshaft-marble-512);
     bottom: 0;
     content: "";
     left: 0;

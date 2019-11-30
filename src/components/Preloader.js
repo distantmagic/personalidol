@@ -55,7 +55,7 @@ const images = [
 let loaded = [];
 
 type Props = {|
-  onPreloaded: true => any,
+  onPreloaded: true => void,
 |};
 
 export default function Preloader(props: Props) {

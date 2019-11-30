@@ -4,7 +4,7 @@ import * as React from "react";
 
 type Props = {||};
 
-export default function HudSettings(props: Props) {
+export default React.memo<Props>(function HudSettings(props: Props) {
   function onToggleFullScreenClick(evt: SyntheticEvent<HTMLButtonElement>) {
     evt.preventDefault();
 
@@ -31,4 +31,4 @@ export default function HudSettings(props: Props) {
       </button>
     </div>
   );
-}
+});

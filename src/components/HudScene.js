@@ -23,7 +23,7 @@ type Props = {|
   queryBus: QueryBus,
 |};
 
-export default function HudScene(props: Props) {
+export default React.memo<Props>(function HudScene(props: Props) {
   const [customElements] = React.useState<?CustomElementRegistry>(window.customElements);
   const [isSceneCanvasDefined, setIsSceneCanvasDefined] = React.useState<boolean>(false);
   const [sceneCanvas, setSceneCanvas] = React.useState<?SceneCanvas>(null);
@@ -100,4 +100,4 @@ export default function HudScene(props: Props) {
       <HudSceneOverlay loadingManager={props.loadingManager} />
     </div>
   );
-}
+});

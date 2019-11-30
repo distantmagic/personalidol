@@ -13,10 +13,12 @@ type Total = {
 };
 
 class Foo implements Query<number> {
+  +id: number;
   +reference: number;
   +total: Total;
 
-  constructor(total: Total, reference: number) {
+  constructor(total: Total, reference: number, id: number) {
+    this.id = id;
     this.reference = reference;
     this.total = total;
   }
@@ -41,13 +43,13 @@ test("executes similar queries only once", async function() {
   };
 
   const promises = Promise.all([
-    queryBus.enqueue(cancelToken, new Foo(total, 1)),
-    queryBus.enqueue(cancelToken, new Foo(total, 1)),
-    queryBus.enqueue(cancelToken, new Foo(total, 2)),
-    queryBus.enqueue(cancelToken, new Foo(total, 3)),
-    queryBus.enqueue(cancelToken, new Foo(total, 4)),
-    queryBus.enqueue(cancelToken, new Foo(total, 4)),
-    queryBus.enqueue(cancelToken, new Foo(total, 4)),
+    queryBus.enqueue(cancelToken, new Foo(total, 1, 1)),
+    queryBus.enqueue(cancelToken, new Foo(total, 1, 2)),
+    queryBus.enqueue(cancelToken, new Foo(total, 2, 3)),
+    queryBus.enqueue(cancelToken, new Foo(total, 3, 4)),
+    queryBus.enqueue(cancelToken, new Foo(total, 4, 5)),
+    queryBus.enqueue(cancelToken, new Foo(total, 4, 6)),
+    queryBus.enqueue(cancelToken, new Foo(total, 4, 7)),
   ]);
 
   await queryBus.tick(new ForcedTick(false));

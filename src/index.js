@@ -48,7 +48,7 @@ async function init(rootElement: HTMLElement): Promise<void> {
 
   // serviceWorker.register();
   debug.setIsEnabled(
-    yn(process.env.REACT_APP_DEBUG && false, {
+    yn(process.env.REACT_APP_DEBUG, {
       default: false,
     })
   );

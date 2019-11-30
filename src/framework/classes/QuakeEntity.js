@@ -24,6 +24,10 @@ export default class QuakeEntity implements QuakeEntityInterface {
     return this.brushes;
   }
 
+  getClassName(): string {
+    return this.props.getPropertyByKey("classname").getValue();
+  }
+
   getOrigin(): Vector3 {
     const breadcrumbs = this.loggerBreadcrumbs.add("getOrigin");
     const origin = this.props.getPropertyByKey("origin");
@@ -46,11 +50,7 @@ export default class QuakeEntity implements QuakeEntityInterface {
   }
 
   isOfClass(className: string): boolean {
-    if (!this.props.hasPropertyKey("classname")) {
-      return false;
-    }
-
-    return this.props.getPropertyByKey("classname").getValue() === className;
+    return this.getClassName() === className;
   }
 
   isEqual(other: QuakeEntityInterface): boolean {

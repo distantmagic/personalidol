@@ -12,6 +12,7 @@ import PointerEventResponder from "../CanvasPointerResponder/PointerEventRespond
 import THREEPointerInteraction from "../THREEPointerInteraction";
 import { default as CameraController } from "./Camera";
 import { default as QuakeMapView } from "../CanvasView/QuakeMap";
+// import { default as THREEHelpersView } from "../CanvasView/THREEHelpers";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
 import type { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, OrthographicCamera, Scene, WebGLRenderer } from "three";
@@ -113,12 +114,21 @@ export default class Root extends CanvasController {
           this.queryBus,
           this.scene,
           this.threeLoadingManager,
-          "/assets/map-desert-hut.map"
+          "/maps/map-desert-hut.map"
         )
       ),
       "Loading map"
     );
-    // this.scene.add(new THREE.AxesHelper(256));
+    // await this.loadingManager.blocking(
+    //   this.canvasViewBag.add(
+    //     cancelToken,
+    //     new THREEHelpersView(
+    //       this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
+    //       this.scene,
+    //     )
+    //   ),
+    //   "Loading map helpers"
+    // );
 
     this.scheduler.onBegin(this.canvasPointerController.begin);
     this.scheduler.onUpdate(this.threePointerInteraction.update);

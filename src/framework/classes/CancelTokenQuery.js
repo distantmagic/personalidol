@@ -27,7 +27,7 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     this.query = query;
   }
 
-  execute(): Promise<?T> {
+  execute(): Promise<T> {
     if (this.isExecuting() || this.isExecuted()) {
       throw new CancelTokenException(this.loggerBreadcrumbs.add("execute"), "You cannot execute query more than once.");
     }
@@ -59,12 +59,23 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     return this._result;
   }
 
+  infer(other: CancelTokenQueryInterface<T>): T {
+    const result = other.getResult();
+
+    this.setExecuted(result);
+
+    return result;
+  }
+
   isCanceled(): boolean {
     return this.cancelToken.isCanceled();
   }
 
   isEqual(other: CancelTokenQuery<T>) {
-    return this.query.isEqual(other.query);
+    const thisQuery = this.getQuery();
+    const otherQuery = other.getQuery();
+
+    return thisQuery.isEqual(otherQuery);
   }
 
   isExecuted(): boolean {
@@ -82,7 +93,7 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     });
   }
 
-  setExecuted(result: ?T): void {
+  setExecuted(result: T): void {
     if (this.isExecuted()) {
       throw new CancelTokenException(this.loggerBreadcrumbs.add("setExecuted"), "Query is already executed.");
     }

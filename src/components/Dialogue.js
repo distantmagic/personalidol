@@ -18,26 +18,29 @@ type Props = {|
   dialogueInitiator: Identifiable & Speaks,
   exceptionHandler: ExceptionHandler,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  onDialogueEnd: boolean => any,
+  onDialogueEnd: boolean => void,
 |};
 
-export default function Dialogue(props: Props) {
+export default React.memo<Props>(function Dialogue(props: Props) {
   const [dialogueTurn, setDialogueTurn] = React.useState<?DialogueTurn>(null);
 
-  async function onAnswerClick(message: DialogueMessage): Promise<void> {
-    if (!dialogueTurn) {
-      return;
-    }
+  const onAnswerClick = React.useCallback(
+    function(message: DialogueMessage): void {
+      if (!dialogueTurn) {
+        return;
+      }
 
-    const nextDialogueTurn = await dialogueTurn.answer(message);
-
-    if (nextDialogueTurn) {
-      setDialogueTurn(nextDialogueTurn);
-    } else {
-      setDialogueTurn(null);
-      props.onDialogueEnd(true);
-    }
-  }
+      dialogueTurn.answer(message).then(function(nextDialogueTurn) {
+        if (nextDialogueTurn) {
+          setDialogueTurn(nextDialogueTurn);
+        } else {
+          setDialogueTurn(null);
+          props.onDialogueEnd(true);
+        }
+      });
+    },
+    [dialogueTurn, props]
+  );
 
   React.useEffect(
     function() {
@@ -64,4 +67,4 @@ export default function Dialogue(props: Props) {
       onDialogueEnd={props.onDialogueEnd}
     />
   );
-}
+});

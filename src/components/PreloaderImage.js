@@ -4,7 +4,7 @@ import * as React from "react";
 import classnames from "classnames";
 
 type Props = {|
-  onLoad: (src: string) => any,
+  onLoad: (src: string) => void,
   src: string,
 |};
 

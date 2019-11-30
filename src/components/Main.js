@@ -10,6 +10,7 @@ import HudDebuggerListing from "./HudDebuggerListing";
 import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
 import HudSettings from "./HudSettings";
+import HudToolbar from "./HudToolbar";
 import Person from "../framework/classes/Entity/Person";
 import Preloader from "./Preloader";
 
@@ -106,6 +107,7 @@ export default function Main(props: Props) {
         queryBus={props.queryBus}
       />
       <HudSettings />
+      <HudToolbar />
     </div>
   );
 }

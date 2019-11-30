@@ -18,8 +18,8 @@ type Props = {|
   dialogueTurn: DialogueTurnInterface,
   exceptionHandler: ExceptionHandler,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  onAnswerClick: DialogueMessage => any,
-  onDialogueEnd: boolean => any,
+  onAnswerClick: DialogueMessage => void,
+  onDialogueEnd: boolean => void,
 |};
 
 function updateScrollDelta(ref: HTMLElement, refSize: HTMLElementSize, setScrollPercentage): void {

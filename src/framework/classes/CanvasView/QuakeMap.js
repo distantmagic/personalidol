@@ -51,7 +51,7 @@ export default class QuakeMap extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const promises: Promise<any>[] = [];
+    const promises: Promise<void>[] = [];
     const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
     const quakeMap = await this.queryBus.enqueue(cancelToken, query);
 

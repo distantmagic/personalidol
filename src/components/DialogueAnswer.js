@@ -10,7 +10,7 @@ type Props = {|
   dialogueMessage: DialogueMessage,
   exceptionHandler: ExceptionHandler,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  onAnswerClick: DialogueMessage => any,
+  onAnswerClick: DialogueMessage => void,
 |};
 
 export default function DialogueAnswer(props: Props) {
@@ -35,7 +35,7 @@ export default function DialogueAnswer(props: Props) {
     [props.dialogueMessage, props.exceptionHandler, props.loggerBreadcrumbs]
   );
 
-  function onAnswerClick(evt: SyntheticEvent<any>): void {
+  function onAnswerClick(evt: SyntheticEvent<HTMLElement>): void {
     evt.preventDefault();
 
     props.onAnswerClick(props.dialogueMessage);

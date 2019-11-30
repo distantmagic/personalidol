@@ -1,0 +1,11 @@
+.dd__button.dd__button--toolbar {
+  min-height: 50px;
+}
+
+.dd__toolbar {
+  align-content: flex-start;
+  display: grid;
+  grid-row-gap: $dd-frame-padding;
+  grid-template-columns: 1;
+  padding: $dd-frame-padding;
+}

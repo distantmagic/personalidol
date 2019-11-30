@@ -16,7 +16,7 @@ import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 export default class QueryBus implements QueryBusInterface {
   +enqueuedCallbacks: EventListenerSetInterface<[Query<any>]>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  collection: QueryBusQueueCollection;
+  collection: QueryBusQueueCollection<any>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.collection = [];
@@ -25,19 +25,12 @@ export default class QueryBus implements QueryBusInterface {
   }
 
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<?T> {
-    const pickedQuery = this.findSimilarQuery(query) || query;
-    const cancelTokenQuery = new CancelTokenQuery(this.loggerBreadcrumbs.add("enqueue"), cancelToken, pickedQuery);
+    const cancelTokenQuery = new CancelTokenQuery(this.loggerBreadcrumbs.add("enqueue"), cancelToken, query);
 
     this.collection.push(cancelTokenQuery);
-    this.enqueuedCallbacks.notify([pickedQuery]);
+    this.enqueuedCallbacks.notify([query]);
 
     return cancelTokenQuery.onExecuted();
-  }
-
-  findSimilarQuery<T>(other: Query<T>): ?Query<T> {
-    const found = this.collection.find(cancelTokenQuery => cancelTokenQuery.getQuery().isEqual(other));
-
-    return found ? found.getQuery() : null;
   }
 
   flush(): QueryBatch {

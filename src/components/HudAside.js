@@ -10,7 +10,7 @@ import imagePortraitCircassia from "../assets/portrait-circassia.jpg";
 
 type Props = {||};
 
-export default function HudAside(props: Props) {
+export default React.memo<Props>(function HudAside(props: Props) {
   return (
     <div className="dd__aside dd__aside--hud dd__frame">
       <HudAsidePortrait isActive={true} name="Arlance" src={imagePortraitArlance} />
@@ -18,4 +18,4 @@ export default function HudAside(props: Props) {
       <HudAsidePortrait isActive={false} name="Circassia" src={imagePortraitCircassia} />
     </div>
   );
-}
+});

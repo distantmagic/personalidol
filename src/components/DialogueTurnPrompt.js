@@ -18,13 +18,13 @@ type Props = {|
   exceptionHandler: ExceptionHandler,
   illustration: ?string,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  onAnswerClick: DialogueMessage => any,
-  onDialogueEnd: boolean => any,
+  onAnswerClick: DialogueMessage => void,
+  onDialogueEnd: boolean => void,
   prompt: string,
 |};
 
 export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
-  function onDialogueEndClick(evt: SyntheticEvent<any>): void {
+  function onDialogueEndClick(evt: SyntheticEvent<HTMLElement>): void {
     evt.preventDefault();
 
     props.onDialogueEnd(true);

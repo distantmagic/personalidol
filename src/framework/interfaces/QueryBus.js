@@ -9,8 +9,6 @@ import type { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCall
 export interface QueryBus extends ClockReactive {
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): Promise<T>;
 
-  findSimilarQuery<T>(Query<T>): ?Query<T>;
-
   flush(): QueryBatch;
 
   onEnqueued(QueryBusOnEnqueuedCallback): void;

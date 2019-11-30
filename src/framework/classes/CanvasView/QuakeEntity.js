@@ -10,6 +10,7 @@ import { default as AmbientSoundView } from "./AmbientSound";
 import { default as MD2CharacterView } from "./MD2Character";
 import { default as PointLightView } from "./PointLight";
 import { default as QuakeBrushView } from "./QuakeBrush";
+import { default as QuakeMapException } from "../Exception/QuakeMap";
 
 import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Mesh, Scene } from "three";
 
@@ -86,65 +87,64 @@ export default class QuakeEntity extends CanvasView {
       );
     }
 
-    if (this.entity.isOfClass("worldspawn")) {
-      const entityProperties = this.entity.getProperties();
+    const entityClassName = this.entity.getClassName();
+    const entityProperties = this.entity.getProperties();
 
-      if (entityProperties.hasPropertyKey("light")) {
-        const ambientLightBrightness = getIntensity(this);
-        await this.loadingManager.blocking(
-          this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.scene, ambientLightBrightness)),
-          "Loading world ambient light"
-        );
-      }
-      if (entityProperties.hasPropertyKey("sounds")) {
-        const ambientSoundSource: string = entityProperties.getPropertyByKey("sounds").getValue();
+    switch (entityClassName) {
+      case "info_player_start":
+        const modelName = entityProperties.getPropertyByKey("model_name").getValue();
+
         await this.loadingManager.blocking(
           this.canvasViewBag.add(
             cancelToken,
-            new AmbientSoundView(
-              this.audioListener,
-              this.audioLoader,
-              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
-              this.loadingManager,
-              this.loggerBreadcrumbs.add("AmbientSound"),
-              ambientSoundSource
+            new MD2CharacterView(
+              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
+              quake2three(this.entity.getOrigin()),
+              this.queryBus,
+              this.scene,
+              this.threeLoadingManager,
+              `/gfx/model-md2-${modelName}/`
             )
           ),
-          "Loading world ambient sound"
+          "Loading character"
         );
-      }
-    } else if (this.entity.isOfClass("info_player_start")) {
-      const entityProperties = this.entity.getProperties();
-      const modelName = entityProperties.getPropertyByKey("model_name").getValue();
-
-      await this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          cancelToken,
-          new MD2CharacterView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
-            quake2three(this.entity.getOrigin()),
-            this.queryBus,
-            this.scene,
-            this.threeLoadingManager,
-            `/assets/model-md2-${modelName}/`
-          )
-        ),
-        "Loading character"
-      );
-    } else if (this.entity.isOfClass("light")) {
-      const brightness = getIntensity(this);
-      await this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          cancelToken,
-          new PointLightView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
-            this.scene,
-            quake2three(this.entity.getOrigin()),
-            brightness
-          )
-        ),
-        "Loading point light"
-      );
+        break;
+      case "light":
+        await this.loadingManager.blocking(
+          this.canvasViewBag.add(
+            cancelToken,
+            new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.scene, quake2three(this.entity.getOrigin()), getIntensity(this))
+          ),
+          "Loading point light"
+        );
+        break;
+      case "worldspawn":
+        if (entityProperties.hasPropertyKey("light")) {
+          await this.loadingManager.blocking(
+            this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.scene, getIntensity(this))),
+            "Loading world ambient light"
+          );
+        }
+        if (entityProperties.hasPropertyKey("sounds")) {
+          const ambientSoundSource: string = entityProperties.getPropertyByKey("sounds").getValue();
+          await this.loadingManager.blocking(
+            this.canvasViewBag.add(
+              cancelToken,
+              new AmbientSoundView(
+                this.audioListener,
+                this.audioLoader,
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
+                this.loadingManager,
+                this.loggerBreadcrumbs.add("AmbientSound"),
+                ambientSoundSource
+              )
+            ),
+            "Loading world ambient sound"
+          );
+        }
+        break;
+      default:
+        throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unsupported entity class name: "${entityClassName}"`);
     }
   }
 }

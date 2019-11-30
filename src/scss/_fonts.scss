@@ -1,3 +1,30 @@
 $font-family-alemdra: "Almendra", serif;
-$font-family-space-mono: "Space Mono", monospace;
+$font-family-undefined: "undefined", monospace;
 $font-family-vesper-libre: "Vesper Libre", Garamond, Georgia, serif;
+
+// Almendra
+
+@font-face {
+  font-family: "Almendra";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Almendra Regular"), local("Almendra-Regular"), url("/fonts/Almendra-Regular.ttf") format("ttf");
+}
+
+// undefined
+
+@font-face {
+  font-family: "undefined";
+  font-style: normal;
+  font-weight: 400;
+  src: local("undefined"), local("undefined medium"), local("undefined-medium"), url("/fonts/undefined-medium.ttf") format("ttf");
+}
+
+// Vesper Libre
+
+@font-face {
+  font-family: "Vesper Libre";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Vesper Libre"), local("VesperLibre-Regular"), url("/fonts/VesperLibre-Regular.ttf") format("ttf");
+}
