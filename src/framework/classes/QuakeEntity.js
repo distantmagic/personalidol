@@ -1,7 +1,7 @@
 // @flow
 
-import * as equality from "../helpers/equality";
 import Exception from "./Exception";
+import isArrayEqual from "../helpers/isArrayEqual";
 import QuakePointParser from "./QuakePointParser";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
@@ -58,6 +58,6 @@ export default class QuakeEntity implements QuakeEntityInterface {
       return false;
     }
 
-    return equality.isArrayEqual(this.getBrushes(), other.getBrushes());
+    return isArrayEqual(this.loggerBreadcrumbs.add("isEqual"), this.getBrushes(), other.getBrushes());
   }
 }

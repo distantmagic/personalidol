@@ -1,6 +1,6 @@
 // @flow
 
-import * as round from "../helpers/round";
+import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
 import type { ElementRotation as ElementRotationInterface } from "../interfaces/ElementRotation";
 import type { ElementRotationUnit } from "../types/ElementRotationUnit";
@@ -34,9 +34,9 @@ export default class ElementRotation<Unit: ElementRotationUnit> implements Eleme
 
   isEqualWithPrecision(other: ElementRotationInterface<Unit>, precision: number): boolean {
     return (
-      round.isEqualWithPrecision(this.getRotationX(), other.getRotationX(), precision) &&
-      round.isEqualWithPrecision(this.getRotationY(), other.getRotationY(), precision) &&
-      round.isEqualWithPrecision(this.getRotationZ(), other.getRotationZ(), precision)
+      isEqualWithPrecision(this.getRotationX(), other.getRotationX(), precision) &&
+      isEqualWithPrecision(this.getRotationY(), other.getRotationY(), precision) &&
+      isEqualWithPrecision(this.getRotationZ(), other.getRotationZ(), precision)
     );
   }
 }

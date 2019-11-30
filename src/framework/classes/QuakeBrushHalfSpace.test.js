@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 
-import * as round from "../helpers/round";
+import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
 
@@ -31,7 +31,7 @@ test.each([
   ],
 ])("determines halfspace plane", function(halfSpace: QuakeBrushHalfSpaceInterface, plane: Plane) {
   expect(halfSpace.getPlane().normal.equals(plane.normal)).toBe(true);
-  expect(round.isEqualWithPrecision(halfSpace.getPlane().constant, plane.constant, 3)).toBe(true);
+  expect(isEqualWithPrecision(halfSpace.getPlane().constant, plane.constant, 3)).toBe(true);
 });
 
 test.each([

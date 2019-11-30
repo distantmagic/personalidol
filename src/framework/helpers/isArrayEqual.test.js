@@ -1,6 +1,7 @@
 // @flow
 
-import * as equality from "./equality";
+import isArrayEqual from "./isArrayEqual";
+import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
 
 import type { Equatable } from "../interfaces/Equatable";
 
@@ -24,5 +25,7 @@ test.each([
   [[new Foo(1), new Foo(2), new Foo(3)], [new Foo(3), new Foo(2), new Foo(1)], true],
   [[new Foo(1), new Foo(2), new Foo(3)], [new Foo(3), new Foo(2), new Foo(2)], false],
 ])("checks if arrays of items are equal", function(a, b, result) {
-  expect(equality.isArrayEqual(a, b)).toBe(result);
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+
+  expect(isArrayEqual(loggerBreadcrumbs, a, b)).toBe(result);
 });

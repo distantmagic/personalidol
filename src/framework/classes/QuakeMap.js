@@ -1,6 +1,6 @@
 // @flow
 
-import * as equality from "../helpers/equality";
+import isArrayEqual from "../helpers/isArrayEqual";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity } from "../interfaces/QuakeEntity";
@@ -23,6 +23,6 @@ export default class QuakeMap implements QuakeMapInterface {
     const thisEntities = this.getEntities();
     const otherEntities = other.getEntities();
 
-    return equality.isArrayEqual(thisEntities, otherEntities);
+    return isArrayEqual(this.loggerBreadcrumbs.add("isEqual"), thisEntities, otherEntities);
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import * as equality from "../helpers/equality";
+import isArrayEqual from "../helpers/isArrayEqual";
 import combineWithoutRepetitions from "../helpers/combineWithoutRepetitions";
 
 import Exception from "./Exception";
@@ -72,6 +72,6 @@ export default class QuakeBrush implements QuakeBrushInterface {
     const thisHalfSpaces = this.getHalfSpaces();
     const otherHalfSpaces = other.getHalfSpaces();
 
-    return equality.isArrayEqual(thisHalfSpaces, otherHalfSpaces);
+    return isArrayEqual(this.loggerBreadcrumbs.add("isEqual"), thisHalfSpaces, otherHalfSpaces);
   }
 }

@@ -3,29 +3,14 @@
 import type { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
 import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
-function checkIsQueryMergeable<T>(element: CancelTokenQuery<T>): (CancelTokenQuery<T>) => boolean {
+function checkIsQueryInferable<T>(element: CancelTokenQuery<T>): (CancelTokenQuery<T>) => boolean {
   return function(other: CancelTokenQuery<any>) {
-    return isCancelTokenQueryMergeable(element, other);
+    return element.isInferableFrom(other);
   };
 }
 
-function includesSimilar(collection: QueryBusQueueCollection<any>, other: CancelTokenQuery<any>): boolean {
-  return collection.some(checkIsQueryMergeable(other));
-}
-
-function isCancelTokenQueryMergeable(a: CancelTokenQuery<any>, b: CancelTokenQuery<any>): boolean {
-  if (a === b) {
-    return false;
-  }
-
-  const aQuery = a.getQuery();
-  const bQuery = b.getQuery();
-
-  if (aQuery.constructor !== bQuery.constructor || aQuery === bQuery) {
-    return false;
-  }
-
-  return a.isEqual(b);
+function includesInferable(collection: QueryBusQueueCollection<any>, other: CancelTokenQuery<any>): boolean {
+  return collection.some(checkIsQueryInferable(other));
 }
 
 export default class QueryBatch {
@@ -44,14 +29,14 @@ export default class QueryBatch {
   }
 
   getSimilar<T>(cancelTokenQuery: CancelTokenQuery<T>): QueryBusQueueCollection<T> {
-    return this.getActive().filter(checkIsQueryMergeable(cancelTokenQuery));
+    return this.getActive().filter(checkIsQueryInferable(cancelTokenQuery));
   }
 
   getUnique(): QueryBusQueueCollection<any> {
     const unique: CancelTokenQuery<any>[] = [];
 
     for (let cancelTokenQuery of this.getActive()) {
-      if (!includesSimilar(unique, cancelTokenQuery)) {
+      if (!includesInferable(unique, cancelTokenQuery)) {
         unique.push(cancelTokenQuery);
       }
     }

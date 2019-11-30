@@ -1,6 +1,7 @@
 // @flow
 
 import CancelTokenException from "./Exception/CancelToken";
+import canCompare from "../helpers/canCompare";
 import EventListenerSet from "./EventListenerSet";
 
 import type { CancelToken } from "../interfaces/CancelToken";
@@ -71,11 +72,23 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     return this.cancelToken.isCanceled();
   }
 
-  isEqual(other: CancelTokenQuery<T>) {
-    const thisQuery = this.getQuery();
-    const otherQuery = other.getQuery();
+  isInferableFrom(other: CancelTokenQueryInterface<any>): boolean {
+    if (this === other) {
+      return false;
+    }
 
-    return thisQuery.isEqual(otherQuery);
+    const aQuery = this.getQuery();
+    const bQuery = other.getQuery();
+
+    if (aQuery === bQuery) {
+      return false;
+    }
+
+    if (!canCompare(aQuery, bQuery)) {
+      return false;
+    }
+
+    return aQuery.isEqual(bQuery);
   }
 
   isExecuted(): boolean {

@@ -1,6 +1,6 @@
 // @flow
 
-import * as round from "../helpers/round";
+import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
 import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 import type { ElementPositionUnit } from "../types/ElementPositionUnit";
@@ -42,9 +42,9 @@ export default class ElementSize<Unit: ElementPositionUnit> implements ElementSi
 
   isEqualWithPrecision(other: ElementSizeInterface<Unit>, precision: number): boolean {
     return (
-      round.isEqualWithPrecision(this.getDepth(), other.getDepth(), precision) &&
-      round.isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) &&
-      round.isEqualWithPrecision(this.getWidth(), other.getWidth(), precision)
+      isEqualWithPrecision(this.getDepth(), other.getDepth(), precision) &&
+      isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) &&
+      isEqualWithPrecision(this.getWidth(), other.getWidth(), precision)
     );
   }
 }

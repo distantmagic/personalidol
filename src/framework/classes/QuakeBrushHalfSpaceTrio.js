@@ -3,8 +3,8 @@
 import * as math from "mathjs";
 import * as THREE from "three";
 
-import * as round from "../helpers/round";
 import Exception from "./Exception";
+import isEqualWithEpsilon from "../helpers/isEqualWithEpsilon";
 
 import type { Plane, Vector3 } from "three";
 
@@ -15,7 +15,7 @@ import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from
 function checkIntersectingPointDeterminant(det: number): boolean {
   // normally it should be enough to check if determinant !== 0, but due to
   // floating point limitations, there is some margin considered
-  return !round.isEqualWithEpsilon(det, 0, 0.1);
+  return !isEqualWithEpsilon(det, 0, 0.1);
 }
 
 function getIntersectionDeterminant(trio: QuakeBrushHalfSpaceTrioInterface, plane1: Plane, plane2: Plane, plane3: Plane): number {

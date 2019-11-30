@@ -1,7 +1,7 @@
 // @flow
 
-import * as equality from "../helpers/equality";
 import Exception from "./Exception";
+import isArrayEqual from "../helpers/isArrayEqual";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
@@ -48,6 +48,6 @@ export default class QuakeEntityProperties implements QuakeEntityPropertiesInter
     const thisProps = this.getProperties();
     const otherProps = other.getProperties();
 
-    return equality.isArrayEqual(thisProps, otherProps);
+    return isArrayEqual(this.loggerBreadcrumbs.add("isEqual"), thisProps, otherProps);
   }
 }

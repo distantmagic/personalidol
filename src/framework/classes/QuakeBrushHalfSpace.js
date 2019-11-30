@@ -2,7 +2,8 @@
 
 import * as THREE from "three";
 
-import * as round from "../helpers/round";
+import isEqualWithEpsilon from "../helpers/isEqualWithEpsilon";
+import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
 import type { Plane, Vector3 } from "three";
 
@@ -115,7 +116,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     const dotProduct = this.getPlane().normal.dot(randomVector);
 
     // floating point imperfections
-    if (round.isEqualWithEpsilon(dotProduct, 0, 0.1)) {
+    if (isEqualWithEpsilon(dotProduct, 0, 0.1)) {
       return true;
     }
 
@@ -131,7 +132,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
       this.getTexture() === other.getTexture() &&
       this.getXOffset() === other.getXOffset() &&
       this.getYOffset() === other.getYOffset() &&
-      round.isEqualWithPrecision(this.getTextureRotationAngle(), other.getTextureRotationAngle(), 2) &&
+      isEqualWithPrecision(this.getTextureRotationAngle(), other.getTextureRotationAngle(), 2) &&
       this.getTextureXScale() === other.getTextureXScale() &&
       this.getTextureYScale() === other.getTextureYScale()
     );
