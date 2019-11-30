@@ -7,7 +7,6 @@ import InvalidTransitionException from "../classes/Exception/StateMachine/Invali
 
 import type { TransitionsConfiguration, TransitionEvent } from "javascript-state-machine";
 
-import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
 import type { FSMDefaultData } from "../types/FSMDefaultData";
 import type { FSMDefaultConstructorArguments } from "../types/FSMDefaultConstructorArguments";
 import type { FSMDefaultFactoryClass } from "../interfaces/FSMDefaultFactoryClass";
@@ -23,9 +22,8 @@ export default function fsm<States: string, Transitions: {}>(config: {|
 
   return StateMachine.factory<States, Transitions, FSMDefaultMethods, FSMDefaultData<States, Transitions>, FSMDefaultConstructorArguments>({
     init: config.init,
-    data: function(exceptionHandler: ExceptionHandler, loggerBreadcrumbs: LoggerBreadcrumbs) {
+    data: function(loggerBreadcrumbs: LoggerBreadcrumbs) {
       return {
-        exceptionHandler: exceptionHandler,
         loggerBreadcrumbs: loggerBreadcrumbs,
 
         addEventListener: function(state: States, callback: FSMTransitionEventCallback<States, Transitions>) {
@@ -62,11 +60,8 @@ export default function fsm<States: string, Transitions: {}>(config: {|
         });
       },
       onInvalidTransition: function(transition: $Keys<Transitions>, from: States, to: States): void {
-        const exceptionHandler: ExceptionHandler = this.exceptionHandler;
         const loggerBreadcrumbs: LoggerBreadcrumbs = this.loggerBreadcrumbs;
         const error = new InvalidTransitionException(loggerBreadcrumbs, transition, from, to);
-
-        exceptionHandler.captureException(loggerBreadcrumbs, error);
 
         throw error;
       },

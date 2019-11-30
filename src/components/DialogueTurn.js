@@ -81,9 +81,6 @@ export default function DialogueTurn(props: Props) {
             isLoading: false,
             prompt: prompt,
           });
-        })
-        .catch((error: Error) => {
-          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("dialogueTurnDetails"), error);
         });
     },
     [props.dialogueTurn, props.exceptionHandler, props.loggerBreadcrumbs]

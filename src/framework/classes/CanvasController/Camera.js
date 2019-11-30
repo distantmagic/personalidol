@@ -5,6 +5,7 @@ import Ola from "ola";
 
 import CanvasController from "../CanvasController";
 
+import type { Ola as OlaInterface } from "ola";
 import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
@@ -27,7 +28,7 @@ export default class CameraController extends CanvasController implements Camera
   +renderer: WebGLRenderer;
   +scene: Scene;
   viewportSize: ElementSize<"px">;
-  zoom: any;
+  zoom: OlaInterface;
   zoomStep: CameraZoomEnum;
 
   constructor(

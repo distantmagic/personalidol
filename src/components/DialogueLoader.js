@@ -38,9 +38,7 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
       props.queryBus
         .enqueue(cancelToken, query)
         .then(setDialogue)
-        .catch((error: Error) => {
-          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("dialogueQuery"), error);
-        });
+      ;
 
       return function() {
         cancelToken.cancel(props.loggerBreadcrumbs.add("React.useEffect").add("cleanup"));

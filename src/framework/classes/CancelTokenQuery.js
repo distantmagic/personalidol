@@ -80,11 +80,7 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     const aQuery = this.getQuery();
     const bQuery = other.getQuery();
 
-    if (aQuery === bQuery) {
-      return false;
-    }
-
-    if (!canCompare(aQuery, bQuery)) {
+    if (aQuery === bQuery || !canCompare(aQuery, bQuery)) {
       return false;
     }
 

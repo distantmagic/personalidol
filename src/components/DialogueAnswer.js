@@ -19,18 +19,8 @@ export default function DialogueAnswer(props: Props) {
 
   React.useEffect(
     function() {
-      props.dialogueMessage
-        .actor()
-        .then(setActor)
-        .catch((error: Error) => {
-          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("dialogueMessageActor"), error);
-        });
-      props.dialogueMessage
-        .prompt()
-        .then(setPrompt)
-        .catch((error: Error) => {
-          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("dialogueMessagePrompt"), error);
-        });
+      props.dialogueMessage.actor().then(setActor);
+      props.dialogueMessage.prompt().then(setPrompt);
     },
     [props.dialogueMessage, props.exceptionHandler, props.loggerBreadcrumbs]
   );

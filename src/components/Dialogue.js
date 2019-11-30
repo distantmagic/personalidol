@@ -44,12 +44,7 @@ export default React.memo<Props>(function Dialogue(props: Props) {
 
   React.useEffect(
     function() {
-      props.dialogue
-        .initiate(props.dialogueInitiator)
-        .then(setDialogueTurn)
-        .catch((error: Error) => {
-          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("initiateDialogue"), error);
-        });
+      props.dialogue.initiate(props.dialogueInitiator).then(setDialogueTurn);
     },
     [props.dialogue, props.dialogueInitiator, props.exceptionHandler, props.loggerBreadcrumbs]
   );

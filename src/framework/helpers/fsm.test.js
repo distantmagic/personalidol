@@ -1,7 +1,5 @@
 // @flow
 
-import ExceptionHandler from "../classes/ExceptionHandler";
-import ExceptionHandlerFilter from "../classes/ExceptionHandlerFilter";
 import fsm from "./fsm";
 import InvalidTransitionException from "../classes/Exception/StateMachine/InvalidTransition";
 import Logger from "../classes/Logger";
@@ -30,9 +28,7 @@ const Phases = fsm<States, Transitions>({
 test("keeps state", async function() {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const exceptionHandlerFilter = new ExceptionHandlerFilter();
-  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
-  const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
+  const phases = new Phases(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve) {
     function listener(evt) {
@@ -51,9 +47,7 @@ test("keeps state", async function() {
 test("handles errors", function() {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const exceptionHandlerFilter = new ExceptionHandlerFilter();
-  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
-  const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
+  const phases = new Phases(loggerBreadcrumbs);
 
   phases.melt();
 
@@ -65,9 +59,7 @@ test("handles errors", function() {
 test("notifies about any kind of event", function() {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const exceptionHandlerFilter = new ExceptionHandlerFilter();
-  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
-  const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
+  const phases = new Phases(loggerBreadcrumbs);
   const transitions = [];
 
   function onAny(evt) {
@@ -92,9 +84,7 @@ test("notifies about any kind of event", function() {
 test("does not notify when state is not changed", function() {
   const logger = new Logger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const exceptionHandlerFilter = new ExceptionHandlerFilter();
-  const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
-  const phases = new Phases(exceptionHandler, loggerBreadcrumbs);
+  const phases = new Phases(loggerBreadcrumbs);
   const transitions = [];
 
   function onAny(evt) {

@@ -50,10 +50,7 @@ export default function HudModalCharacterLoader(props: Props) {
             character: character,
             isLoading: false,
           })
-        )
-        .catch((error: Error) => {
-          return props.exceptionHandler.captureException(props.loggerBreadcrumbs.add("characterQuery"), error);
-        });
+        );
 
       return function() {
         cancelToken.cancel(props.loggerBreadcrumbs.add("React.useEffect").add("cleanup"));
