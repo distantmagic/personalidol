@@ -72,8 +72,8 @@ export default function DialogueTurn(props: Props) {
 
   React.useEffect(
     function() {
-      Promise.all([props.dialogueTurn.actor(), props.dialogueTurn.answers(), props.dialogueTurn.getIllustration(), props.dialogueTurn.prompt()])
-        .then(([actor, answers, illustration, prompt]) => {
+      Promise.all([props.dialogueTurn.actor(), props.dialogueTurn.answers(), props.dialogueTurn.getIllustration(), props.dialogueTurn.prompt()]).then(
+        ([actor, answers, illustration, prompt]) => {
           setState({
             actor: actor,
             answers: answers,
@@ -81,7 +81,8 @@ export default function DialogueTurn(props: Props) {
             isLoading: false,
             prompt: prompt,
           });
-        });
+        }
+      );
     },
     [props.dialogueTurn, props.exceptionHandler, props.loggerBreadcrumbs]
   );

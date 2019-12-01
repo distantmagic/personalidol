@@ -1,8 +1,11 @@
 // @flow
 
 import * as React from "react";
+import classnames from "classnames";
 
-type Props = {||};
+type Props = {|
+  isModalOpened: boolean,
+|};
 
 export default React.memo<Props>(function HudSettings(props: Props) {
   function onToggleFullScreenClick(evt: SyntheticEvent<HTMLButtonElement>) {
@@ -22,10 +25,14 @@ export default React.memo<Props>(function HudSettings(props: Props) {
   }
 
   return (
-    <div className="dd__settings dd__settings--hud dd__frame">
-      <button className="dd__button dd__button--icon dd__button--cogs" disabled>
+    <div
+      className={classnames("dd__settings dd__settings--hud dd__frame", {
+        dd__blur: props.isModalOpened,
+      })}
+    >
+      <a className="dd__button dd__button--icon dd__button--cogs" href="#/settings">
         Settings
-      </button>
+      </a>
       <button className="dd__button dd__button--icon dd__button--magnifying-glass" disabled={!document.fullscreenEnabled} onClick={onToggleFullScreenClick}>
         Toggle Fullscreen
       </button>

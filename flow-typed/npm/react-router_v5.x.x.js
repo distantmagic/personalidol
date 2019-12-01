@@ -1,5 +1,5 @@
-// flow-typed signature: 5595c53c8ca75353c6fbc461ffcf8a20
-// flow-typed version: be05cd918c/react-router_v5.x.x/flow_>=v0.63.x
+// flow-typed signature: 1f000048434229fbad1dbd00c6046a0c
+// flow-typed version: 822e55b7ba/react-router_v5.x.x/flow_>=v0.104.x
 
 declare module "react-router" {
   // NOTE: many of these are re-exported by react-router-dom and
@@ -11,6 +11,7 @@ declare module "react-router" {
     hash: string,
     state?: any,
     key?: string,
+    ...
   };
 
   declare export type LocationShape = {
@@ -18,6 +19,7 @@ declare module "react-router" {
     search?: string,
     hash?: string,
     state?: any,
+    ...
   };
 
   declare export type HistoryAction = "PUSH" | "REPLACE" | "POP";
@@ -37,13 +39,15 @@ declare module "react-router" {
     // createMemoryHistory
     index?: number,
     entries?: Array<Location>,
+    ...
   };
 
   declare export type Match = {
-    params: { [key: string]: ?string },
+    params: { [key: string]: ?string, ... },
     isExact: boolean,
     path: string,
     url: string,
+    ...
   };
 
   declare export type ContextRouter = {|
@@ -55,15 +59,14 @@ declare module "react-router" {
 
   declare export type GetUserConfirmation = (message: string, callback: (confirmed: boolean) => void) => void;
 
-  declare type StaticRouterContext = {
-    url?: string,
-  };
+  declare type StaticRouterContext = { url?: string, ... };
 
   declare export class StaticRouter extends React$Component<{
     basename?: string,
     location?: string | Location,
     context: StaticRouterContext,
     children?: React$Node,
+    ...
   }> {}
 
   declare export class MemoryRouter extends React$Component<{
@@ -72,16 +75,19 @@ declare module "react-router" {
     getUserConfirmation?: GetUserConfirmation,
     keyLength?: number,
     children?: React$Node,
+    ...
   }> {}
 
   declare export class Router extends React$Component<{
     history: RouterHistory,
     children?: React$Node,
+    ...
   }> {}
 
   declare export class Prompt extends React$Component<{
     message: string | ((location: Location) => string | true),
     when?: boolean,
+    ...
   }> {}
 
   declare export class Redirect extends React$Component<{|
@@ -111,11 +117,33 @@ declare module "react-router" {
   declare export function withRouter<P>(Component: React$ComponentType<{| ...ContextRouter, ...P |}>): React$ComponentType<P>;
 
   declare type MatchPathOptions = {
-    path?: string,
+    path?: string | string[],
     exact?: boolean,
     strict?: boolean,
     sensitive?: boolean,
+    ...
   };
 
-  declare export function matchPath(pathname: string, options?: MatchPathOptions | string): null | Match;
+  declare export function matchPath(pathname: string, options?: MatchPathOptions | string | string[]): null | Match;
+
+  declare export function useHistory(): $PropertyType<ContextRouter, "history">;
+  declare export function useLocation(): $PropertyType<ContextRouter, "location">;
+  declare export function useParams(): $PropertyType<$PropertyType<ContextRouter, "match">, "params">;
+  declare export function useRouteMatch(path?: MatchPathOptions | string | string[]): $PropertyType<ContextRouter, "match">;
+
+  declare export function generatePath(pattern?: string, params?: { ... }): string;
+
+  declare export default {
+    StaticRouter: typeof StaticRouter,
+    MemoryRouter: typeof MemoryRouter,
+    Router: typeof Router,
+    Prompt: typeof Prompt,
+    Redirect: typeof Redirect,
+    Route: typeof Route,
+    Switch: typeof Switch,
+    withRouter: typeof withRouter,
+    matchPath: typeof matchPath,
+    generatePath: typeof generatePath,
+    ...
+  };
 }

@@ -1,7 +1,17 @@
 @import-normalize;
 
+$dd-frame-border-width: 2px;
+$dd-frame-border-radius: 4px;
+$dd-frame-padding: 6px;
+
+@import "animations";
+@import "breakpoints";
+@import "colors";
+@import "fonts";
+@import "functions";
 @import "images";
-@import "variables";
+@import "typography";
+@import "z-index";
 
 @import "globals";
 
@@ -10,6 +20,9 @@
 @import "dd__debugger";
 @import "dd__hud";
 @import "dd__modal";
+@import "dd__modal__character";
+@import "dd__modal__character__inventory";
+@import "dd__modal__settings";
 @import "dd__preloader";
 @import "dd__scene";
 @import "dd__settings";

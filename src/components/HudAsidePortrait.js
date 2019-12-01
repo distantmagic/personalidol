@@ -11,10 +11,6 @@ type Props = {|
   src: string,
 |};
 
-function HudAsidePortraitLoader() {
-  return <div className="dd__frame dd__frame--inset dd__aside__portrait__image dd__aside__portrait__image--loading" />;
-}
-
 export default function HudAsidePortrait(props: Props) {
   return (
     <div
@@ -22,7 +18,9 @@ export default function HudAsidePortrait(props: Props) {
         "dd__aside__portrait--active": props.isActive,
       })}
     >
-      <img alt="arthurian knight" className="dd__aside__portrait__image dd__aside__portrait__image--loaded" loader={<HudAsidePortraitLoader />} src={props.src} />
+      <a className="dd__aside__portrait__link" href={`#/character/${props.name.toLowerCase()}`}>
+        <img alt="" className="dd__aside__portrait__image dd__aside__portrait__image--loaded" src={props.src} />
+      </a>
       <ul className="dd__aside__portrait__statuses">
         <HudAsidePortraitIcon name={props.name} />
         <li className="dd__aside__portrait__status dd__frame dd__frame--inset" />

@@ -1,14 +1,12 @@
 // @flow
 
 import * as React from "react";
-import { Redirect } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 
 import CancelToken from "../framework/classes/CancelToken";
 import CharacterQuery from "../framework/classes/Query/Character";
-import HudModalCharacter from "./HudModalCharacter";
-import HudModalLoader from "./HudModalLoader";
-
-import type { Match } from "react-router";
+import ModalCharacter from "./ModalCharacter";
+import ModalLoader from "./ModalLoader";
 
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
@@ -17,11 +15,11 @@ import type { QueryBus } from "../framework/interfaces/QueryBus";
 type Props = {|
   exceptionHandler: ExceptionHandler,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  match: Match,
   queryBus: QueryBus,
 |};
 
-export default function HudModalCharacterLoader(props: Props) {
+export default function ModalCharacterLoader(props: Props) {
+  const params = useParams();
   const [state, setState] = React.useState({
     character: null,
     isLoading: true,
@@ -29,7 +27,7 @@ export default function HudModalCharacterLoader(props: Props) {
 
   React.useEffect(
     function() {
-      const characterId = props.match.params.characterId;
+      const characterId = params.characterId;
 
       setState({
         character: null,
@@ -43,24 +41,22 @@ export default function HudModalCharacterLoader(props: Props) {
       const cancelToken = new CancelToken(props.loggerBreadcrumbs.add("CharacterQuery"));
       const query = new CharacterQuery(characterId);
 
-      props.queryBus
-        .enqueue(cancelToken, query)
-        .then(character =>
-          setState({
-            character: character,
-            isLoading: false,
-          })
-        );
+      props.queryBus.enqueue(cancelToken, query).then(character => {
+        setState({
+          character: character,
+          isLoading: false,
+        });
+      });
 
       return function() {
         cancelToken.cancel(props.loggerBreadcrumbs.add("React.useEffect").add("cleanup"));
       };
     },
-    [props.exceptionHandler, props.loggerBreadcrumbs, props.match.params.characterId, props.queryBus]
+    [props.exceptionHandler, props.loggerBreadcrumbs, params.characterId, props.queryBus]
   );
 
   if (state.isLoading) {
-    return <HudModalLoader label="Loading character" />;
+    return <ModalLoader label="Loading character" />;
   }
 
   const character = state.character;
@@ -69,5 +65,5 @@ export default function HudModalCharacterLoader(props: Props) {
     return <Redirect to="/" />;
   }
 
-  return <HudModalCharacter character={character} />;
+  return <ModalCharacter character={character} />;
 }

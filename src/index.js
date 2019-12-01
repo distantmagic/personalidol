@@ -4,6 +4,7 @@ import raf from "raf";
 import React from "react";
 import ReactDOM from "react-dom";
 import yn from "yn";
+import { HashRouter } from "react-router-dom";
 
 // import * as serviceWorker from './serviceWorker';
 import BusClock from "./framework/classes/BusClock";
@@ -55,16 +56,18 @@ async function init(rootElement: HTMLElement): Promise<void> {
 
   ReactDOM.render(
     <React.StrictMode>
-      <Main
-        clockReactiveController={clockReactiveController}
-        debug={debug}
-        exceptionHandler={exceptionHandler}
-        expressionBus={expressionBus}
-        expressionContext={expressionContext}
-        loadingManager={loadingManager}
-        loggerBreadcrumbs={loggerBreadcrumbs}
-        queryBus={queryBus}
-      />
+      <HashRouter>
+        <Main
+          clockReactiveController={clockReactiveController}
+          debug={debug}
+          exceptionHandler={exceptionHandler}
+          expressionBus={expressionBus}
+          expressionContext={expressionContext}
+          loadingManager={loadingManager}
+          loggerBreadcrumbs={loggerBreadcrumbs}
+          queryBus={queryBus}
+        />
+      </HashRouter>
     </React.StrictMode>,
     rootElement
   );

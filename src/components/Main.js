@@ -2,15 +2,16 @@
 
 import * as React from "react";
 import classnames from "classnames";
+import { useLocation } from "react-router-dom";
 
 import CancelToken from "../framework/classes/CancelToken";
 import DialogueLoader from "./DialogueLoader";
 import HudAside from "./HudAside";
 import HudDebuggerListing from "./HudDebuggerListing";
-import HudModalRouter from "./HudModalRouter";
 import HudScene from "./HudScene";
 import HudSettings from "./HudSettings";
 import HudToolbar from "./HudToolbar";
+import ModalRouter from "./ModalRouter";
 import Person from "../framework/classes/Entity/Person";
 import Preloader from "./Preloader";
 
@@ -41,6 +42,8 @@ export default function Main(props: Props) {
   const [isPreloaded, setIsPreloaded] = React.useState<boolean>(Preloader.isLoaded());
 
   const hasDialogue = false;
+  const location = useLocation();
+  const isModalOpened = location.pathname !== "/";
 
   React.useEffect(
     function() {
@@ -78,36 +81,38 @@ export default function Main(props: Props) {
   }
 
   return (
-    <div
-      className={classnames("dd__container", "dd__hud", {
-        "dd__hud--debugger": props.debug.isEnabled(),
-        "dd__hud--dialogue": hasDialogue,
-      })}
-    >
-      {hasDialogue && (
-        <DialogueLoader
-          dialogueResourceReference={dialogueResourceReference}
-          dialogueInitiator={dialogueInitiator}
+    <React.Fragment>
+      <div
+        className={classnames("dd__container", "dd__hud", {
+          "dd__hud--debugger": props.debug.isEnabled(),
+          "dd__hud--dialogue": hasDialogue,
+        })}
+      >
+        {hasDialogue && (
+          <DialogueLoader
+            dialogueResourceReference={dialogueResourceReference}
+            dialogueInitiator={dialogueInitiator}
+            exceptionHandler={props.exceptionHandler}
+            expressionBus={props.expressionBus}
+            expressionContext={props.expressionContext}
+            loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
+            queryBus={props.queryBus}
+          />
+        )}
+        <HudAside isModalOpened={isModalOpened} />
+        <HudDebuggerListing debug={props.debug} />
+        <HudScene
+          debug={props.debug}
           exceptionHandler={props.exceptionHandler}
-          expressionBus={props.expressionBus}
-          expressionContext={props.expressionContext}
-          loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueLoader")}
+          isDocumentHidden={isDocumentHidden}
+          loadingManager={props.loadingManager}
+          loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
           queryBus={props.queryBus}
         />
-      )}
-      <HudAside />
-      <HudDebuggerListing debug={props.debug} />
-      <HudModalRouter exceptionHandler={props.exceptionHandler} loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudModalRouter")} queryBus={props.queryBus} />
-      <HudScene
-        debug={props.debug}
-        exceptionHandler={props.exceptionHandler}
-        isDocumentHidden={isDocumentHidden}
-        loadingManager={props.loadingManager}
-        loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
-        queryBus={props.queryBus}
-      />
-      <HudSettings />
-      <HudToolbar />
-    </div>
+        <HudSettings isModalOpened={isModalOpened} />
+        <HudToolbar isModalOpened={isModalOpened} />
+      </div>
+      <ModalRouter exceptionHandler={props.exceptionHandler} loggerBreadcrumbs={props.loggerBreadcrumbs.add("ModalRouter")} queryBus={props.queryBus} />
+    </React.Fragment>
   );
 }

@@ -3,13 +3,13 @@
 import * as React from "react";
 
 import Character from "../framework/classes/Entity/Person/Character";
-import HudModalCharacterInventorySlot from "./HudModalCharacterInventorySlot";
+import ModalCharacterInventorySlot from "./ModalCharacterInventorySlot";
 
 type Props = {|
   character: Character,
 |};
 
-export default function HudModalCharacterInventory(props: Props) {
+export default function ModalCharacterInventory(props: Props) {
   const slots = [
     "back",
     "belt",
@@ -37,7 +37,7 @@ export default function HudModalCharacterInventory(props: Props) {
     <div className="dd__modal__character__inventory">
       <div className="dd__modal__character__inventory__paperdoll">
         {slots.map(slot => (
-          <HudModalCharacterInventorySlot key={slot} slot={slot} />
+          <ModalCharacterInventorySlot key={slot} slot={slot} />
         ))}
       </div>
     </div>

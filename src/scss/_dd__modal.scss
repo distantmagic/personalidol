@@ -1,6 +1,6 @@
-@import "dd__modal__character";
-
 .dd__modal {
+  animation-name: fadein;
+  animation-duration: 0.3s;
   align-items: center;
   display: flex;
   height: 100%;
@@ -13,15 +13,38 @@
   z-index: $z-index-dd-modal;
 }
 
+.dd__modal.dd__modal--disappear {
+  animation-name: fadeout;
+  animation-duration: 0.3s;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .dd__modal__content {
+  align-content: stretch;
+  display: grid;
+  justify-content: stretch;
+  overflow: auto;
   position: relative;
+
+  @include breakpoint(mobile-only) {
+    height: 80vh;
+    width: 80vw;
+  }
+  @include breakpoint(tablet-only) {
+    height: 500px;
+    width: 800px;
+  }
+  @include breakpoint(desktop-and-up) {
+    height: 600px;
+    width: 960px;
+  }
 }
 
 .dd__modal__overlay {
-  animation-name: fadein;
-  animation-duration: 0.3s;
-  background-color: rgba(black, 0.8);
-  background-image: radial-gradient(rgba(black, 0.6) 30%, transparent);
+  background-color: rgba(black, 0.4);
+  background-image: radial-gradient(rgba(black, 0.8) 30%, transparent);
+  filter: blur(2px);
   height: 100%;
   right: 0;
   position: absolute;

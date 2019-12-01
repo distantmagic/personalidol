@@ -7,6 +7,15 @@
   }
 }
 
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @keyframes spin {
   from {
     transform: rotateZ(0);

@@ -5,11 +5,11 @@ import upperFirst from "lodash/upperFirst";
 import { NavLink, Route, Switch } from "react-router-dom";
 
 import Character from "../framework/classes/Entity/Person/Character";
-import HudModalCharacterBiography from "./HudModalCharacterBiography";
-import HudModalCharacterBody from "./HudModalCharacterBody";
-import HudModalCharacterInventory from "./HudModalCharacterInventory";
-import HudModalCharacterSoul from "./HudModalCharacterSoul";
-import HudModalLoader from "./HudModalLoader";
+import ModalCharacterBiography from "./ModalCharacterBiography";
+import ModalCharacterBody from "./ModalCharacterBody";
+import ModalCharacterInventory from "./ModalCharacterInventory";
+import ModalCharacterSoul from "./ModalCharacterSoul";
+import ModalLoader from "./ModalLoader";
 
 import imagePortraitArlance from "../assets/portrait-arlance.jpg";
 import imagePortraitMoore from "../assets/portrait-moore.jpg";
@@ -32,7 +32,7 @@ function getPortraitSrc(id: string): string {
   }
 }
 
-export default function HudModalCharacter(props: Props) {
+export default React.memo<Props>(function ModalCharacter(props: Props) {
   const [state, setState] = React.useState({
     id: null,
     isLoading: true,
@@ -53,7 +53,7 @@ export default function HudModalCharacter(props: Props) {
   );
 
   if (state.isLoading) {
-    return <HudModalLoader label="Loading character attributes" />;
+    return <ModalLoader label="Loading character attributes" />;
   }
 
   return (
@@ -73,15 +73,13 @@ export default function HudModalCharacter(props: Props) {
         <NavLink
           activeClassName="dd__modal__character__tab--active dd__frame--active"
           className="dd__frame dd__frame--tab dd__modal__character__tab"
-          exact
-          to={`/character/${state.id}`}
+          to={`/character/${state.id}/body`}
         >
           Ciało
         </NavLink>
         <NavLink
           activeClassName="dd__modal__character__tab--active dd__frame--active"
           className="dd__frame dd__frame--tab dd__modal__character__tab"
-          exact
           to={`/character/${state.id}/soul`}
         >
           Dusza
@@ -89,19 +87,28 @@ export default function HudModalCharacter(props: Props) {
         <NavLink
           activeClassName="dd__modal__character__tab--active dd__frame--active"
           className="dd__frame dd__frame--tab dd__modal__character__tab"
-          to={`/character/${state.id}/inventory`}
+          exact
+          to={`/character/${state.id}`}
         >
           Ekwipunek i efekty
         </NavLink>
       </nav>
       <div className="dd__modal__character__content">
         <Switch>
-          <Route exact path="/character/:characterId/inventory" component={() => <HudModalCharacterInventory character={props.character} />} />
-          <Route exact path="/character/:characterId/biography" component={() => <HudModalCharacterBiography character={props.character} />} />
-          <Route exact path="/character/:characterId" component={() => <HudModalCharacterBody character={props.character} />} />
-          <Route exact path="/character/:characterId/soul" component={() => <HudModalCharacterSoul character={props.character} />} />
+          <Route exact path="/character/:characterId/body">
+            <ModalCharacterBody character={props.character} />
+          </Route>
+          <Route exact path="/character/:characterId/biography">
+            <ModalCharacterBiography character={props.character} />
+          </Route>
+          <Route exact path="/character/:characterId">
+            <ModalCharacterInventory character={props.character} />
+          </Route>
+          <Route exact path="/character/:characterId/soul">
+            <ModalCharacterSoul character={props.character} />
+          </Route>
         </Switch>
       </div>
     </section>
   );
-}
+});

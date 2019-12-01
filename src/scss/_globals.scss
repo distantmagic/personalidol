@@ -5,6 +5,10 @@ body {
   font-family: $font-family-vesper-libre;
 }
 
+.dd__blur {
+  filter: blur(2px);
+}
+
 .dd__container {
   align-items: flex-start;
   background-image: url($texture-texture-cod-gray-marble-512);
@@ -106,6 +110,7 @@ body {
 .dd__button {
   background-color: transparent;
   color: white;
+  font-family: $font-family-undefined;
   overflow: hidden;
   position: relative;
   z-index: $z-index-dd-button;

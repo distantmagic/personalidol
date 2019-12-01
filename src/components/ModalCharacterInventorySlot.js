@@ -9,7 +9,7 @@ type Props = {|
   slot: InventorySlotEnum,
 |};
 
-export default function HudModalCharacterInventorySlot(props: Props) {
+export default function ModalCharacterInventorySlot(props: Props) {
   return (
     <div
       className={classnames(

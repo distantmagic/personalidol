@@ -1,8 +1,6 @@
 $dd-modal-grid-gap: 2 * $dd-frame-padding;
 $dd-modal-character-avatar-column-width: 204px;
 
-@import "dd__modal__character__inventory";
-
 dl.dd__modal__character__specifics {
   align-content: flex-start;
   display: grid;
@@ -35,8 +33,8 @@ dl.dd__modal__character__specifics {
   grid-template-rows: 1fr 1rem;
   padding: $dd-modal-grid-gap;
   position: relative;
-  max-width: 800px;
-  width: calc(100vw - 326px);
+  height: 100%;
+  width: 100%;
 }
 
 .dd__modal__character__avatar {

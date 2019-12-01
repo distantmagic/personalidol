@@ -1,5 +1,3 @@
-@import "variables";
-
 .dd__aside {
   align-content: flex-start;
   background-image: url($image-rise-and-fall), url($texture-mineshaft-marble-512);
@@ -14,12 +12,16 @@
   padding: $dd-frame-padding;
 }
 
+.dd__aside__portrait,
+.dd__aside__portrait__link {
+  height: 96px;
+}
+
 .dd__aside__portrait {
   border-radius: $dd-frame-border-radius;
   display: grid;
   grid-template-columns: 64px auto;
   grid-template-rows: 1fr;
-  height: 96px;
 
   &:nth-of-type(4n) .dd__aside__portrait__statuses {
     background-position: 128px;

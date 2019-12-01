@@ -8,7 +8,7 @@ type Props = {|
   character: Character,
 |};
 
-export default function HudModalCharacterSoul(props: Props) {
+export default function ModalCharacterSoul(props: Props) {
   return (
     <div className="dd__modal__character__attributes">
       <blockquote className="dd-tp__blockquote">
