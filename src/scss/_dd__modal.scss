@@ -22,21 +22,23 @@
 
 .dd__modal__content {
   align-content: stretch;
+  box-shadow: 0 0 50px rgba(black, 0.6);
   display: grid;
   justify-content: stretch;
   overflow: auto;
   position: relative;
 
   @include breakpoint(mobile-only) {
+    height: 100%;
+    width: 100%;
+  }
+  @include breakpoint(tablet-and-up) {
     height: 80vh;
-    width: 80vw;
   }
   @include breakpoint(tablet-only) {
-    height: 500px;
     width: 800px;
   }
   @include breakpoint(desktop-and-up) {
-    height: 600px;
     width: 960px;
   }
 }
@@ -50,4 +52,11 @@
   position: absolute;
   top: 0;
   width: 100%;
+}
+
+.dd__modal__toolbar {
+  display: grid;
+  grid-area: toolbar;
+  grid-template-columns: 1fr auto;
+  padding: $dd-frame-padding;
 }

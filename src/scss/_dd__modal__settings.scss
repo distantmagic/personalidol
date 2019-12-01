@@ -1,2 +1,25 @@
 .dd__modal__settings {
+  display: grid;
+  grid-template-areas:
+    "toolbar toolbar"
+    "navigation body";
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto 1fr;
+}
+
+.dd__modal__settings__body,
+.dd__modal__settings__navigation {
+  padding: $dd-frame-padding;
+}
+
+.dd__modal__settings__body {
+  grid-area: body;
+}
+
+.dd__modal__settings__navigation {
+  align-content: flex-start;
+  display: grid;
+  grid-area: navigation;
+  grid-row-gap: $dd-frame-padding;
+  grid-template-columns: 1fr;
 }
