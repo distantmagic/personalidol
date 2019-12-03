@@ -13,11 +13,11 @@ $dd-hud-gap: 2 * $dd-frame-padding;
 .dd__hud {
   display: grid;
   grid-template-areas:
-    "scene toolbar aside"
-    "scene toolbar settings";
+    "toolbar scene aside"
+    "toolbar scene settings";
   grid-template-columns:
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(3)})
     $dd-hud-toolbar-width
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(3)})
     $dd-hud-aside-width;
   grid-gap: $dd-hud-gap;
   grid-template-rows: 1fr $dd-hud-settings-height;
@@ -28,35 +28,35 @@ $dd-hud-gap: 2 * $dd-frame-padding;
 
 .dd__hud.dd__hud--debugger {
   grid-template-areas:
-    "debugger scene toolbar aside"
-    "debugger scene toolbar settings";
+    "debugger toolbar scene aside"
+    "debugger toolbar scene settings";
   grid-template-columns:
     $dd-hud-debugger-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(4)})
     $dd-hud-toolbar-width
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(4)})
     $dd-hud-aside-width;
 }
 
 .dd__hud.dd__hud--debugger.dd__hud--dialogue {
   grid-template-areas:
-    "debugger dialogue scene toolbar aside"
-    "debugger dialogue scene toolbar settings";
+    "debugger toolbar dialogue scene aside"
+    "debugger toolbar dialogue scene settings";
   grid-template-columns:
     $dd-hud-debugger-width
+    $dd-hud-toolbar-width
     $dd-hud-dialogue-width
     calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(5)})
-    $dd-hud-toolbar-width
     $dd-hud-aside-width;
 }
 
 .dd__hud.dd__hud--dialogue {
   grid-template-areas:
-    "dialogue scene toolbar aside"
-    "dialogue scene toolbar settings";
+    "toolbar dialogue scene aside"
+    "toolbar dialogue scene settings";
   grid-template-columns:
+    $dd-hud-toolbar-width
     $dd-hud-dialogue-width
     calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(4)})
-    $dd-hud-toolbar-width
     $dd-hud-aside-width;
 }
 

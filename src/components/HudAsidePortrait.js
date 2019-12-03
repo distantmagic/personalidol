@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import classnames from "classnames";
+import { NavLink } from "react-router-dom";
 
 import HudAsidePortraitIcon from "./HudAsidePortraitIcon";
 
@@ -18,9 +19,9 @@ export default function HudAsidePortrait(props: Props) {
         "dd__aside__portrait--active": props.isActive,
       })}
     >
-      <a className="dd__aside__portrait__link" href={`#/character/${props.name.toLowerCase()}`}>
+      <NavLink className="dd__aside__portrait__link" to={`/character/${props.name.toLowerCase()}`}>
         <img alt="" className="dd__aside__portrait__image dd__aside__portrait__image--loaded" src={props.src} />
-      </a>
+      </NavLink>
       <ul className="dd__aside__portrait__statuses">
         <HudAsidePortraitIcon name={props.name} />
         <li className="dd__aside__portrait__status dd__frame dd__frame--inset" />

@@ -3,6 +3,7 @@
 import * as React from "react";
 import { NavLink, Route, Switch } from "react-router-dom";
 
+import ModalSettingsGraphics from "./ModalSettingsGraphics";
 import ModalToolbar from "./ModalToolbar";
 
 export default function ModalSettings() {
@@ -10,21 +11,23 @@ export default function ModalSettings() {
     <div className="dd__modal__settings">
       <ModalToolbar title="Ustawienia" />
       <nav className="dd__modal__settings__navigation">
-        <NavLink to="/settings">Ogólne</NavLink>
-        <NavLink to="/settings/gfx">Grafika</NavLink>
-        <NavLink to="/settings/sound">Dźwięk</NavLink>
+        <NavLink activeClassName="dd__button--active dd__button--pressed" className="dd__button dd__button--text" exact to="/settings">
+          Ogólne
+        </NavLink>
+        <NavLink activeClassName="dd__button--active dd__button--pressed" className="dd__button dd__button--text" to="/settings/gfx">
+          Grafika
+        </NavLink>
+        <NavLink activeClassName="dd__button--active dd__button--pressed" className="dd__button dd__button--text" to="/settings/sound">
+          Dźwięk
+        </NavLink>
       </nav>
       <div className="dd__modal__settings__body">
         <Switch>
-          <Route exact path="/settings">
-            :D
-          </Route>
+          <Route exact path="/settings"></Route>
           <Route exact path="/settings/gfx">
-            GFX
+            <ModalSettingsGraphics />
           </Route>
-          <Route exact path="/settings/sound">
-            Sound
-          </Route>
+          <Route exact path="/settings/sound"></Route>
         </Switch>
       </div>
     </div>

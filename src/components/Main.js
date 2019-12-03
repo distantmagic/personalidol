@@ -2,9 +2,7 @@
 
 import * as React from "react";
 import classnames from "classnames";
-import { useLocation } from "react-router-dom";
 
-import CancelToken from "../framework/classes/CancelToken";
 import DialogueLoader from "./DialogueLoader";
 import HudAside from "./HudAside";
 import HudDebuggerListing from "./HudDebuggerListing";
@@ -14,6 +12,8 @@ import HudToolbar from "./HudToolbar";
 import ModalRouter from "./ModalRouter";
 import Person from "../framework/classes/Entity/Person";
 import Preloader from "./Preloader";
+import useClockReactiveController from "../effects/useClockReactiveController";
+import useIsDocumentHidden from "../effects/useIsDocumentHidden";
 
 import type { ClockReactiveController } from "../framework/interfaces/ClockReactiveController";
 import type { Debugger } from "../framework/interfaces/Debugger";
@@ -38,43 +38,12 @@ type Props = {|
 export default function Main(props: Props) {
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
-  const [isDocumentHidden, setIsDocumentHidden] = React.useState<boolean>(document.hidden);
   const [isPreloaded, setIsPreloaded] = React.useState<boolean>(Preloader.isLoaded());
 
   const hasDialogue = false;
-  const location = useLocation();
-  const isModalOpened = location.pathname !== "/";
+  const isDocumentHidden = useIsDocumentHidden();
 
-  React.useEffect(
-    function() {
-      const intervalId = setInterval(function() {
-        setIsDocumentHidden(document.hidden);
-      }, 100);
-
-      return function() {
-        clearInterval(intervalId);
-      };
-    },
-    [isDocumentHidden]
-  );
-
-  React.useEffect(
-    function() {
-      if (isDocumentHidden) {
-        return;
-      }
-
-      const breadcrumbs = props.loggerBreadcrumbs.add("useEffect(isDocumentHidden)");
-      const cancelToken = new CancelToken(breadcrumbs.add("CancelToken"));
-
-      props.clockReactiveController.interval(cancelToken);
-
-      return function() {
-        cancelToken.cancel(breadcrumbs.add("cleanup"));
-      };
-    },
-    [isDocumentHidden, props.clockReactiveController, props.loggerBreadcrumbs]
-  );
+  useClockReactiveController(props.clockReactiveController, isDocumentHidden, props.loggerBreadcrumbs);
 
   if (!isPreloaded) {
     return <Preloader onPreloaded={setIsPreloaded} />;
@@ -99,7 +68,7 @@ export default function Main(props: Props) {
             queryBus={props.queryBus}
           />
         )}
-        <HudAside isModalOpened={isModalOpened} />
+        <HudAside />
         <HudDebuggerListing debug={props.debug} />
         <HudScene
           debug={props.debug}
@@ -109,8 +78,8 @@ export default function Main(props: Props) {
           loggerBreadcrumbs={props.loggerBreadcrumbs.add("HudScene")}
           queryBus={props.queryBus}
         />
-        <HudSettings isModalOpened={isModalOpened} />
-        <HudToolbar isModalOpened={isModalOpened} />
+        <HudSettings />
+        <HudToolbar />
       </div>
       <ModalRouter exceptionHandler={props.exceptionHandler} loggerBreadcrumbs={props.loggerBreadcrumbs.add("ModalRouter")} queryBus={props.queryBus} />
     </React.Fragment>

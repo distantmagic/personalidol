@@ -1,11 +1,9 @@
 // @flow
 
 import * as React from "react";
-import classnames from "classnames";
+import { NavLink } from "react-router-dom";
 
-type Props = {|
-  isModalOpened: boolean,
-|};
+type Props = {||};
 
 export default React.memo<Props>(function HudSettings(props: Props) {
   function onToggleFullScreenClick(evt: SyntheticEvent<HTMLButtonElement>) {
@@ -25,14 +23,10 @@ export default React.memo<Props>(function HudSettings(props: Props) {
   }
 
   return (
-    <div
-      className={classnames("dd__settings dd__settings--hud dd__frame", {
-        dd__blur: props.isModalOpened,
-      })}
-    >
-      <a className="dd__button dd__button--icon dd__button--cogs" href="#/settings">
+    <div className="dd__settings dd__settings--hud dd__frame">
+      <NavLink activeClassName="dd__button--pressed" className="dd__button dd__button--cogs dd__button--icon" to="/settings">
         Settings
-      </a>
+      </NavLink>
       <button className="dd__button dd__button--icon dd__button--magnifying-glass" disabled={!document.fullscreenEnabled} onClick={onToggleFullScreenClick}>
         Toggle Fullscreen
       </button>

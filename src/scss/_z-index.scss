@@ -2,4 +2,6 @@ $z-index-dd-button: 2;
 $z-index-dd-modal-character-inventory-slot: $z-index-dd-button;
 $z-index-dd-scroll-indicator: $z-index-dd-button + 1;
 $z-index-dd-modal: $z-index-dd-scroll-indicator + 1;
-$z-index-dd-aside-portrait-status-tooltip: $z-index-dd-modal + 1;
+$z-index-dd-modal-overlay: $z-index-dd-modal + 1;
+$z-index-dd-modal-content: $z-index-dd-modal-overlay + 1;
+$z-index-dd-aside-portrait-status-tooltip: $z-index-dd-modal-content + 1;

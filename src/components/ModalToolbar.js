@@ -11,7 +11,10 @@ export default React.memo<Props>(function ModalToolbar(props: Props) {
   return (
     <div className="dd__modal__toolbar">
       <span className="dd__modal__toolbar__title">{props.title}</span>
-      <NavLink to="/">Zamknij</NavLink>
+      <NavLink
+        className="dd__modal__toolbar__button"
+        to="/"
+      >Zamknij</NavLink>
     </div>
   );
 });

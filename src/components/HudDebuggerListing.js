@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import HudDebuggerStateListingItem from "./HudDebuggerStateListingItem";
+import useDebuggerState from "../effects/useDebuggerState";
 
 import type { Debugger } from "../framework/interfaces/Debugger";
 
@@ -11,20 +12,7 @@ type Props = {|
 |};
 
 export default React.memo<Props>(function HudDebuggerListing(props: Props) {
-  const [debuggerState, setDebuggetState] = React.useState(props.debug.getState());
-
-  React.useEffect(
-    function() {
-      const debug = props.debug;
-
-      debug.onStateChange(setDebuggetState);
-
-      return function() {
-        debug.offStateChange(setDebuggetState);
-      };
-    },
-    [props.debug]
-  );
+  const debuggerState = useDebuggerState(props.debug);
 
   if (!props.debug.isEnabled()) {
     return null;

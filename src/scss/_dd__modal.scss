@@ -1,6 +1,10 @@
+.dd__frame.dd__frame--modal {
+  border-radius: 0;
+}
+
 .dd__modal {
   animation-name: fadein;
-  animation-duration: 0.3s;
+  animation-duration: 0.2s;
   align-items: center;
   display: flex;
   height: 100%;
@@ -15,7 +19,7 @@
 
 .dd__modal.dd__modal--disappear {
   animation-name: fadeout;
-  animation-duration: 0.3s;
+  animation-duration: 0.2s;
   opacity: 0;
   pointer-events: none;
 }
@@ -25,8 +29,9 @@
   box-shadow: 0 0 50px rgba(black, 0.6);
   display: grid;
   justify-content: stretch;
-  overflow: auto;
+  // overflow: auto;
   position: relative;
+  z-index: $z-index-dd-modal-content;
 
   @include breakpoint(mobile-only) {
     height: 100%;
@@ -52,11 +57,39 @@
   position: absolute;
   top: 0;
   width: 100%;
+  z-index: $z-index-dd-modal-overlay;
 }
 
 .dd__modal__toolbar {
+  border: 1px solid transparent;
+  border-image-slice: 178 406 314 406;
+  border-image-width: 20px 20px 20px 20px;
+  border-image-outset: 20px 20px 20px 20px;
+  border-image-repeat: round stretch;
+  border-image-source: url($image-scroll-title);
+
+  background-color: $color-double-spanish-white;
+  color: black;
   display: grid;
   grid-area: toolbar;
   grid-template-columns: 1fr auto;
-  padding: $dd-frame-padding;
+  grid-template-rows: 1fr;
+  margin-bottom: $dd-modal-padding;
+  padding: #{$dd-frame-border-width - 1px} #{$dd-modal-padding - 1px};
+  position: relative;
+  text-shadow: none;
+}
+
+.dd__modal__toolbar__title {
+  // font-weight: bold;
+  // font-family: $font-family-alemdra;
+  // font-family: $font-family-undefined;
+}
+
+.dd__modal__toolbar__button {
+  background-color: $color-woody-brown;
+  border-radius: 100%;
+  font-size: 0;
+  height: 16px;
+  width: 16px;
 }

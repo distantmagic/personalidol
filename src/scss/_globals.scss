@@ -1,12 +1,13 @@
 body {
   @include tp-text(1);
-
-  color: rgba(white, 0.85);
-  font-family: $font-family-vesper-libre;
 }
 
-.dd__blur {
-  filter: blur(2px);
+body,
+a.dd__button {
+  color: rgba(white, 0.85);
+  font-family: $font-family-vesper-libre;
+  text-decoration: none;
+  text-shadow: 0 0 $dd-frame-border-width black;
 }
 
 .dd__container {
@@ -110,7 +111,7 @@ body {
 .dd__button {
   background-color: transparent;
   color: white;
-  font-family: $font-family-undefined;
+  font-family: $font-family-vesper-libre;
   overflow: hidden;
   position: relative;
   z-index: $z-index-dd-button;
@@ -142,11 +143,7 @@ body {
     filter: grayscale(1);
   }
 
-  &:enabled:active {
-    padding-left: $dd-frame-border-width;
-    padding-top: $dd-frame-border-width;
-  }
-
+  &.dd__button--pressed:before,
   &:enabled:active:before {
     filter: brightness(0.8);
     transform: translateX($dd-frame-border-width) translateY($dd-frame-border-width);
@@ -157,11 +154,11 @@ body {
   }
 }
 
-.dd__button:nth-of-type(3n):before {
+.dd__button:nth-of-type(2n):before {
   border-top-left-radius: 20px;
 }
 
-.dd__button:nth-of-type(4n):before {
+.dd__button:nth-of-type(3n):before {
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
@@ -191,6 +188,18 @@ body {
   .dd__button.dd__button--icon.dd__button--#{$icon}:before {
     background-image: url("../assets/icon-#{$icon}.png"), url($texture-mineshaft-marble-512);
     background-size: 80%, auto;
+  }
+}
+
+.dd__button.dd__button--text {
+  padding: 2 * $dd-frame-padding;
+
+  &.dd__button--pressed,
+  &:enabled:active {
+    padding-bottom: 2 * $dd-frame-padding - $dd-frame-border-width;
+    padding-left: 2 * $dd-frame-padding + $dd-frame-border-width;
+    padding-right: 2 * $dd-frame-padding - $dd-frame-border-width;
+    padding-top: 2 * $dd-frame-padding + $dd-frame-border-width;
   }
 }
 

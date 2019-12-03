@@ -57,7 +57,7 @@ export default React.memo<Props>(function ModalCharacter(props: Props) {
   }
 
   return (
-    <section className="dd__frame dd__modal__character">
+    <section className="dd__modal__character">
       <div className="dd__modal__character__avatar">
         <img alt="portrait" className="dd__modal__character__avatar__image" src={getPortraitSrc(state.id)} />
       </div>
