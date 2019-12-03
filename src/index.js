@@ -41,7 +41,7 @@ async function init(rootElement: HTMLElement): Promise<void> {
   const expressionBus = new ExpressionBus();
   const expressionContext = new ExpressionContext(loggerBreadcrumbs.add("ExpressionContext"));
   const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"), exceptionHandler);
-  const queryBus = new QueryBus(loggerBreadcrumbs.add("QueryBus"));
+  const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs.add("QueryBus"));
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
   // const worker: PrimaryWorkerInterface = new PrimaryWorker();
 

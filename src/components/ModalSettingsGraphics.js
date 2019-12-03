@@ -9,22 +9,6 @@ export default function ModalSettingsGraphics() {
         <input type="checkbox" />
         <span>Cienie</span>
       </label>
-      <label className="dd__modal__settings__form__label">
-        <input type="checkbox" />
-        <span>Cienie</span>
-      </label>
-      <label className="dd__modal__settings__form__label">
-        <input type="checkbox" />
-        <span>Cienie</span>
-      </label>
-      <label className="dd__modal__settings__form__label">
-        <input type="checkbox" />
-        <span>Cienie</span>
-      </label>
-      <label className="dd__modal__settings__form__label">
-        <input type="checkbox" />
-        <span>Cienie</span>
-      </label>
     </form>
   );
 }

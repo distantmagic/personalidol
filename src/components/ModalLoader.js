@@ -2,10 +2,18 @@
 
 import * as React from "react";
 
+import ModalToolbar from "./ModalToolbar";
+
 type Props = {|
-  label: string,
+  comment: string,
+  label?: string,
 |};
 
 export default function ModalLoader(props: Props) {
-  return <span className="dd__loader">{props.label}</span>;
+  return (
+    <div className="dd__modal__window dd__frame">
+      <ModalToolbar label={props.label} />
+      <span className="dd__loader">{props.comment}</span>
+    </div>
+  );
 }

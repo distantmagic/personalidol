@@ -34,7 +34,8 @@ export default class MD2Character extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const config = await this.queryBus.enqueue(cancelToken, new RemoteJSONQuery(`${this.baseUrl}parts.json`));
+    const query = new RemoteJSONQuery(`${this.baseUrl}parts.json`);
+    const config = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
     const configMerged = {
       ...config,
       baseUrl: this.baseUrl,

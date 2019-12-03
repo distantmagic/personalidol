@@ -38,17 +38,15 @@ export default React.memo<Props>(function ModalOverlay(props: Props) {
   return (
     <div className="dd__modal">
       <div className="dd__modal__overlay" onClick={onOverlayClick} />
-      <div className="dd__modal__content dd__frame dd__frame--modal">
-        <Switch>
-          <Route path="/character/:characterId">
-            <ModalCharacterLoader exceptionHandler={props.exceptionHandler} loggerBreadcrumbs={props.loggerBreadcrumbs.add("ModalCharacterLoader")} queryBus={props.queryBus} />
-          </Route>
-          <Route path="/settings">
-            <ModalSettings loggerBreadcrumbs={props.loggerBreadcrumbs.add("ModalSettings")} />
-          </Route>
-          <Route component={ModalRouterNotFound} />
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/character/:characterId">
+          <ModalCharacterLoader exceptionHandler={props.exceptionHandler} loggerBreadcrumbs={props.loggerBreadcrumbs.add("ModalCharacterLoader")} queryBus={props.queryBus} />
+        </Route>
+        <Route path="/settings">
+          <ModalSettings loggerBreadcrumbs={props.loggerBreadcrumbs.add("ModalSettings")} />
+        </Route>
+        <Route component={ModalRouterNotFound} />
+      </Switch>
     </div>
   );
 });

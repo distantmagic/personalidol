@@ -1,12 +1,11 @@
 .dd__modal__settings {
   display: grid;
   grid-column-gap: $dd-modal-grid-gap;
-  grid-row-gap: $dd-modal-padding;
-  grid-template-areas:
-    "toolbar toolbar"
-    "navigation body";
+  grid-row-gap: $dd-modal-grid-gap;
+  grid-template-areas: "navigation body";
   grid-template-columns: 1fr 2fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 1fr;
+  padding: $dd-modal-grid-gap;
 
   &:before {
     background-image: url($image-rise-and-fall);
@@ -29,8 +28,7 @@
 
 .dd__modal__settings__body {
   grid-area: body;
-  padding: $dd-frame-padding;
-  padding-right: $dd-frame-padding + $dd-modal-padding;
+  padding: $dd-modal-padding;
 }
 
 .dd__modal__settings__form {
@@ -41,13 +39,4 @@
 
 .dd__modal__settings__form__label {
   padding: $dd-frame-padding;
-}
-
-.dd__modal__settings__navigation {
-  align-content: flex-start;
-  display: grid;
-  grid-area: navigation;
-  grid-row-gap: $dd-frame-padding;
-  grid-template-columns: 1fr;
-  padding-left: $dd-modal-padding;
 }

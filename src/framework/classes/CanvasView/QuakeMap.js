@@ -53,7 +53,7 @@ export default class QuakeMap extends CanvasView {
 
     const promises: Promise<void>[] = [];
     const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
-    const quakeMap = await this.queryBus.enqueue(cancelToken, query);
+    const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
 
     for (let entity of quakeMap.getEntities()) {
       const viewLoader = this.loadingManager.blocking(

@@ -1,6 +1,7 @@
 // @flow
 
 import type { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
+import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
 import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
 function checkIsQueryInferable<T>(element: CancelTokenQuery<T>): (CancelTokenQuery<T>) => boolean {
@@ -15,8 +16,9 @@ function includesInferable(collection: QueryBusQueueCollection<any>, other: Canc
 
 export default class QueryBatch {
   +collection: QueryBusQueueCollection<any>;
+  +exceptionHandler: ExceptionHandler;
 
-  constructor(collection: QueryBusQueueCollection<any>) {
+  constructor(exceptionHandler: ExceptionHandler, collection: QueryBusQueueCollection<any>) {
     this.collection = collection;
   }
 

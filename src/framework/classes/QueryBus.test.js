@@ -1,7 +1,10 @@
 // @flow
 
 import CancelToken from "./CancelToken";
+import ExceptionHandler from "./ExceptionHandler";
+import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
 import ForcedTick from "./ForcedTick";
+import Logger from "./Logger";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBus from "./QueryBus";
 
@@ -37,19 +40,20 @@ class Foo implements Query<number> {
 test("executes similar queries only once", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const queryBus = new QueryBus(loggerBreadcrumbs);
+  const exceptionHandler = new ExceptionHandler(new Logger(), new ExceptionHandlerFilter());
+  const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs);
   const total: Total = {
     executed: 0,
   };
 
   const promises = Promise.all([
-    queryBus.enqueue(cancelToken, new Foo(total, 1, 1)),
-    queryBus.enqueue(cancelToken, new Foo(total, 1, 2)),
-    queryBus.enqueue(cancelToken, new Foo(total, 2, 3)),
-    queryBus.enqueue(cancelToken, new Foo(total, 3, 4)),
-    queryBus.enqueue(cancelToken, new Foo(total, 4, 5)),
-    queryBus.enqueue(cancelToken, new Foo(total, 4, 6)),
-    queryBus.enqueue(cancelToken, new Foo(total, 4, 7)),
+    queryBus.enqueue(cancelToken, new Foo(total, 1, 1)).whenExecuted(),
+    queryBus.enqueue(cancelToken, new Foo(total, 1, 2)).whenExecuted(),
+    queryBus.enqueue(cancelToken, new Foo(total, 2, 3)).whenExecuted(),
+    queryBus.enqueue(cancelToken, new Foo(total, 3, 4)).whenExecuted(),
+    queryBus.enqueue(cancelToken, new Foo(total, 4, 5)).whenExecuted(),
+    queryBus.enqueue(cancelToken, new Foo(total, 4, 6)).whenExecuted(),
+    queryBus.enqueue(cancelToken, new Foo(total, 4, 7)).whenExecuted(),
   ]);
 
   await queryBus.tick(new ForcedTick(false));

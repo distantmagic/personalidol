@@ -22,7 +22,7 @@ export interface CancelTokenQuery<T> {
 
   isExecuting(): boolean;
 
-  onExecuted(): Promise<?T>;
-
   setExecuted(result: T): void;
+
+  whenExecuted(): Promise<T>;
 }

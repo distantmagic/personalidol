@@ -13,5 +13,7 @@ export interface CanvasView extends Animatable, CanvasPointerEventHandler, Dispo
 
   useEnd(): boolean;
 
+  useSettings(): boolean;
+
   useUpdate(): boolean;
 }

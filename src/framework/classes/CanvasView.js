@@ -57,6 +57,10 @@ export default class CanvasView implements CanvasViewInterface {
     return false;
   }
 
+  useSettings(): boolean {
+    return false;
+  }
+
   useUpdate(): boolean {
     return false;
   }

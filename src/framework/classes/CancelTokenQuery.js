@@ -15,14 +15,14 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
   _isExecuting: boolean;
   _result: ?T;
   +cancelToken: CancelToken;
-  +callbacks: EventListenerSetInterface<[?T]>;
+  +callbacks: EventListenerSetInterface<[T]>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +query: Query<T>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, query: Query<T>) {
     this._isExecuted = false;
     this._isExecuting = false;
-    this.callbacks = new EventListenerSet<[?T]>();
+    this.callbacks = new EventListenerSet<[T]>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.cancelToken = cancelToken;
     this.query = query;
@@ -95,13 +95,6 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     return this._isExecuting;
   }
 
-  onExecuted(): Promise<?T> {
-    return new Promise<?T>((resolve, reject) => {
-      this.cancelToken.onCanceled(reject);
-      this.callbacks.add(resolve);
-    });
-  }
-
   setExecuted(result: T): void {
     if (this.isExecuted()) {
       throw new CancelTokenException(this.loggerBreadcrumbs.add("setExecuted"), "Query is already executed.");
@@ -113,5 +106,12 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
 
     this.callbacks.notify([result]);
     this.callbacks.clear();
+  }
+
+  whenExecuted(): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+      this.cancelToken.onCanceled(reject);
+      this.callbacks.add(resolve);
+    });
   }
 }

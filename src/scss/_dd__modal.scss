@@ -1,7 +1,3 @@
-.dd__frame.dd__frame--modal {
-  border-radius: 0;
-}
-
 .dd__modal {
   animation-name: fadein;
   animation-duration: 0.2s;
@@ -24,10 +20,77 @@
   pointer-events: none;
 }
 
-.dd__modal__content {
+.dd__modal__navigation {
+  align-content: flex-start;
+  display: grid;
+  grid-area: navigation;
+  grid-row-gap: $dd-frame-padding;
+  grid-template-columns: 1fr;
+  padding: $dd-modal-grid-gap;
+}
+
+.dd__modal__overlay {
+  background-color: rgba(black, 0.4);
+  background-image: radial-gradient(rgba(black, 0.8) 30%, transparent);
+  filter: blur(2px);
+  height: 100%;
+  right: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: $z-index-dd-modal-overlay;
+}
+
+.dd__modal__toolbar {
+  // START: order is important
+  // border: 1px solid transparent;
+  border-image-outset: 20px 20px 20px 20px;
+  border-image-repeat: round stretch;
+  border-image-slice: 178 406 314 406;
+  border-image-source: url($image-scroll-title);
+  border-image-width: 20px 20px 20px 20px;
+  // END: order is important
+
+  background-color: $color-double-spanish-white;
+  color: black;
+  display: grid;
+  grid-area: toolbar;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr;
+  padding-top: #{$dd-frame-border-width - 1px};
+  padding-bottom: #{$dd-frame-border-width - 1px};
+  padding-left: #{$dd-modal-padding - 1px};
+  padding-right: #{$dd-modal-padding - 1px};
+  position: relative;
+  text-shadow: none;
+  z-index: $z-index-dd-modal-toolbar;
+
+  @include breakpoint(mobile-only) {
+    padding-top: #{$dd-modal-padding / 1.6};
+  }
+  @include breakpoint(tablet-and-up) {
+    background-image: url($image-horizontal-rule-ornamental),
+      linear-gradient(
+        90deg,
+        $color-double-spanish-white 0%,
+        $color-double-spanish-white calc(100% - 10px),
+        darken($color-double-spanish-white, 5%) 100% // rgba(224, 207, 173, 1) 100%
+      );
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
+
+.dd__modal__window {
   align-content: stretch;
   box-shadow: 0 0 50px rgba(black, 0.6);
   display: grid;
+  display: grid;
+  grid-column-gap: $dd-modal-grid-gap;
+  grid-row-gap: $dd-modal-grid-gap;
+  grid-template-areas: "toolbar" "body";
+  grid-template-rows: auto 1fr;
   justify-content: stretch;
   // overflow: auto;
   position: relative;
@@ -46,50 +109,4 @@
   @include breakpoint(desktop-and-up) {
     width: 960px;
   }
-}
-
-.dd__modal__overlay {
-  background-color: rgba(black, 0.4);
-  background-image: radial-gradient(rgba(black, 0.8) 30%, transparent);
-  filter: blur(2px);
-  height: 100%;
-  right: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: $z-index-dd-modal-overlay;
-}
-
-.dd__modal__toolbar {
-  border: 1px solid transparent;
-  border-image-slice: 178 406 314 406;
-  border-image-width: 20px 20px 20px 20px;
-  border-image-outset: 20px 20px 20px 20px;
-  border-image-repeat: round stretch;
-  border-image-source: url($image-scroll-title);
-
-  background-color: $color-double-spanish-white;
-  color: black;
-  display: grid;
-  grid-area: toolbar;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: 1fr;
-  margin-bottom: $dd-modal-padding;
-  padding: #{$dd-frame-border-width - 1px} #{$dd-modal-padding - 1px};
-  position: relative;
-  text-shadow: none;
-}
-
-.dd__modal__toolbar__title {
-  // font-weight: bold;
-  // font-family: $font-family-alemdra;
-  // font-family: $font-family-undefined;
-}
-
-.dd__modal__toolbar__button {
-  background-color: $color-woody-brown;
-  border-radius: 100%;
-  font-size: 0;
-  height: 16px;
-  width: 16px;
 }

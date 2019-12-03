@@ -7,9 +7,9 @@ import { NavLink, Route, Switch } from "react-router-dom";
 import Character from "../framework/classes/Entity/Person/Character";
 import ModalCharacterBiography from "./ModalCharacterBiography";
 import ModalCharacterBody from "./ModalCharacterBody";
-import ModalCharacterInventory from "./ModalCharacterInventory";
 import ModalCharacterSoul from "./ModalCharacterSoul";
 import ModalLoader from "./ModalLoader";
+import ModalToolbar from "./ModalToolbar";
 
 import imagePortraitArlance from "../assets/portrait-arlance.jpg";
 import imagePortraitMoore from "../assets/portrait-moore.jpg";
@@ -53,62 +53,41 @@ export default React.memo<Props>(function ModalCharacter(props: Props) {
   );
 
   if (state.isLoading) {
-    return <ModalLoader label="Loading character attributes" />;
+    return <ModalLoader comment="Loading character attributes" />;
   }
 
   return (
-    <section className="dd__modal__character">
-      <div className="dd__modal__character__avatar">
-        <img alt="portrait" className="dd__modal__character__avatar__image" src={getPortraitSrc(state.id)} />
-      </div>
-      <h1 className="dd__modal__character__name">{state.name}</h1>
-      <nav className="dd__modal__character__tabs">
-        <NavLink
-          activeClassName="dd__modal__character__tab--active dd__frame--active"
-          className="dd__frame dd__frame--tab dd__modal__character__tab"
-          to={`/character/${state.id}/biography`}
-        >
-          Biografia
-        </NavLink>
-        <NavLink
-          activeClassName="dd__modal__character__tab--active dd__frame--active"
-          className="dd__frame dd__frame--tab dd__modal__character__tab"
-          to={`/character/${state.id}/body`}
-        >
-          Ciało
-        </NavLink>
-        <NavLink
-          activeClassName="dd__modal__character__tab--active dd__frame--active"
-          className="dd__frame dd__frame--tab dd__modal__character__tab"
-          to={`/character/${state.id}/soul`}
-        >
-          Dusza
-        </NavLink>
-        <NavLink
-          activeClassName="dd__modal__character__tab--active dd__frame--active"
-          className="dd__frame dd__frame--tab dd__modal__character__tab"
-          exact
-          to={`/character/${state.id}`}
-        >
-          Ekwipunek i efekty
-        </NavLink>
-      </nav>
-      <div className="dd__modal__character__content">
-        <Switch>
-          <Route exact path="/character/:characterId/body">
-            <ModalCharacterBody character={props.character} />
-          </Route>
-          <Route exact path="/character/:characterId/biography">
-            <ModalCharacterBiography character={props.character} />
-          </Route>
-          <Route exact path="/character/:characterId">
-            <ModalCharacterInventory character={props.character} />
-          </Route>
-          <Route exact path="/character/:characterId/soul">
-            <ModalCharacterSoul character={props.character} />
-          </Route>
-        </Switch>
-      </div>
-    </section>
+    <div className="dd__modal__window dd__frame">
+      <ModalToolbar label={state.name} />
+      <section className="dd__modal__body dd__modal__character">
+        <div className="dd__frame dd__modal__character__avatar">
+          <img alt="portrait" className="dd__modal__character__avatar__image" src={getPortraitSrc(state.id)} />
+        </div>
+        <nav className="dd__frame dd__modal__navigation">
+          <NavLink activeClassName="dd__button--active dd__button--pressed" className="dd__button dd__button--text" exact to={`/character/${state.id}`}>
+            Biografia
+          </NavLink>
+          <NavLink activeClassName="dd__button--active dd__button--pressed" className="dd__button dd__button--text" to={`/character/${state.id}/body`}>
+            Ciało
+          </NavLink>
+          <NavLink activeClassName="dd__button--active dd__button--pressed" className="dd__button dd__button--text" to={`/character/${state.id}/soul`}>
+            Dusza
+          </NavLink>
+        </nav>
+        <div className="dd__frame dd__modal__character__body">
+          <Switch>
+            <Route exact path="/character/:characterId/body">
+              <ModalCharacterBody character={props.character} />
+            </Route>
+            <Route exact path="/character/:characterId">
+              <ModalCharacterBiography character={props.character} />
+            </Route>
+            <Route exact path="/character/:characterId/soul">
+              <ModalCharacterSoul character={props.character} />
+            </Route>
+          </Switch>
+        </div>
+      </section>
+    </div>
   );
 });

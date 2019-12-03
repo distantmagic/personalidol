@@ -35,7 +35,10 @@ export default React.memo<Props>(function DialogueLoader(props: Props) {
       const cancelToken = new CancelToken(props.loggerBreadcrumbs.add("DialogueQuery"));
       const query = new DialogueQuery(props.expressionBus, props.expressionContext, props.dialogueResourceReference);
 
-      props.queryBus.enqueue(cancelToken, query).then(setDialogue);
+      props.queryBus
+        .enqueue(cancelToken, query)
+        .whenExecuted()
+        .then(setDialogue);
 
       return function() {
         cancelToken.cancel(props.loggerBreadcrumbs.add("React.useEffect").add("cleanup"));
