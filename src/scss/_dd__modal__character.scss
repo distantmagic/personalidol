@@ -1,5 +1,6 @@
 $dd-modal-grid-gap: 2 * $dd-frame-padding;
 $dd-modal-character-avatar-column-width: 204px;
+$dd-modal-character-avatar-column-height: 1.6 * $dd-modal-character-avatar-column-width;
 
 dl.dd__modal__character__specifics {
   align-content: flex-start;
@@ -24,7 +25,7 @@ dl.dd__modal__character__specifics {
     "avatar body"
     "navigation body";
   grid-template-columns: $dd-modal-character-avatar-column-width 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: $dd-modal-character-avatar-column-height 1fr;
   padding: $dd-modal-grid-gap;
   position: relative;
   height: 100%;
