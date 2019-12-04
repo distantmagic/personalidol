@@ -1,3 +1,11 @@
+.dd__frame.dd__frame--modal {
+  background-image: url($texture-cod-gray-marble-512);
+  border-bottom-color: darken($color-cod-gray, 5%);
+  border-left-color: darken($color-mine-shaft, 5%);
+  border-right-color: darken($color-cod-gray, 5%);
+  border-top-color: darken($color-mine-shaft, 5%);
+}
+
 .dd__modal {
   animation-name: fadein;
   animation-duration: 0.2s;

@@ -11,7 +11,7 @@ type Props = {|
 
 export default function ModalLoader(props: Props) {
   return (
-    <div className="dd__modal__window dd__frame">
+    <div className="dd__modal__window dd__frame dd__frame--modal">
       <ModalToolbar label={props.label} />
       <span className="dd__loader">{props.comment}</span>
     </div>

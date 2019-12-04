@@ -24,6 +24,7 @@ import image_rise_and_fall from "../assets/image-rise-and-fall.png";
 import image_scroll_title from "../assets/image-scroll-title.png";
 import texture_blood_marble_512 from "../assets/texture-blood-marble-512.png";
 import texture_cardboard_512 from "../assets/texture-cardboard-512.jpg";
+import texture_cod_gray_dark_marble_512 from "../assets/texture-cod-gray-dark-marble-512.png";
 import texture_cod_gray_marble_512 from "../assets/texture-cod-gray-marble-512.png";
 import texture_mineshaft_marble_512 from "../assets/texture-mineshaft-marble-512.png";
 import texture_navy_blue_marble_512 from "../assets/texture-navy-blue-marble-512.jpg";
@@ -50,6 +51,7 @@ const images = [
   image_scroll_title,
   texture_blood_marble_512,
   texture_cardboard_512,
+  texture_cod_gray_dark_marble_512,
   texture_cod_gray_marble_512,
   texture_mineshaft_marble_512,
   texture_navy_blue_marble_512,

@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = all
-.PHONY = pretty.backend pretty.frontend
+.PHONY = optimize pretty.backend pretty.frontend
 
 JS_SOURCES = $(shell find src -name "*.js")
 RUST_SOURCES = $(shell find backend/src -name "*.rs")
@@ -24,6 +24,9 @@ frontend.dependencies: node_modules public/vendor/modernizr.js
 
 node_modules: yarn.lock
 	yarn install --network-timeout 9000000
+
+optimize:
+	find src/assets/*.png -exec pngout {} \;
 
 pretty: pretty.backend pretty.frontend
 

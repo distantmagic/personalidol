@@ -57,7 +57,7 @@ export default React.memo<Props>(function ModalCharacter(props: Props) {
   }
 
   return (
-    <div className="dd__modal__window dd__frame">
+    <div className="dd__modal__window dd__frame dd__frame--modal">
       <ModalToolbar label={state.name} />
       <section className="dd__modal__body dd__modal__character">
         <div className="dd__frame dd__modal__character__avatar">

@@ -8,7 +8,7 @@ import ModalToolbar from "./ModalToolbar";
 
 export default function ModalSettings() {
   return (
-    <div className="dd__modal__window dd__frame">
+    <div className="dd__modal__window dd__frame dd__frame--modal">
       <ModalToolbar label="Ustawienia" />
       <div className="dd__modal__body dd__modal__settings">
         <nav className="dd__frame dd__modal__navigation">
