@@ -43,6 +43,10 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
 
     await this.logger.error(loggerBreadcrumbs, message);
 
+    if (this.exceptionHandlerFilter.isRethrowable(error)) {
+      throw error;
+    }
+
     return true;
   }
 

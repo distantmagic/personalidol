@@ -1,5 +1,7 @@
 // @flow
 
+import autoBind from "auto-bind";
+
 import type { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
 import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
 import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
@@ -19,7 +21,15 @@ export default class QueryBatch {
   +exceptionHandler: ExceptionHandler;
 
   constructor(exceptionHandler: ExceptionHandler, collection: QueryBusQueueCollection<any>) {
+    autoBind(this);
+
     this.collection = collection;
+  }
+
+  async executeQuery<T>(query: CancelTokenQuery<T>): Promise<T> {
+    await query.execute();
+
+    return this.infer(query);
   }
 
   getActive(): QueryBusQueueCollection<any> {
@@ -57,9 +67,7 @@ export default class QueryBatch {
   async process(): Promise<void> {
     const unique = this.getUnique();
 
-    const executions = unique.map(query => {
-      return query.execute().then(() => this.infer(query));
-    });
+    const executions = unique.map(this.executeQuery);
 
     await Promise.all(executions);
   }

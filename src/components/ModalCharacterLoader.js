@@ -29,7 +29,7 @@ function createCharacterQuery(characterId: ?string): ?CharacterQuery {
 
 export default function ModalCharacterLoader(props: Props) {
   const params = useParams();
-  const character = useQuery(props.loggerBreadcrumbs.add("ModalCharacterLoader"), props.queryBus, memoize(createCharacterQuery, [params.characterId]));
+  const character = useQuery(props.exceptionHandler, props.loggerBreadcrumbs.add("ModalCharacterLoader"), props.queryBus, memoize(createCharacterQuery, [params.characterId]));
 
   if (!character || !character.isExecuted()) {
     return <ModalLoader comment="Loading character" />;
