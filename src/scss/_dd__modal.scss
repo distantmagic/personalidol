@@ -96,13 +96,11 @@
   align-content: stretch;
   box-shadow: 0 0 50px rgba(black, 0.6);
   display: grid;
-  display: grid;
   grid-column-gap: $dd-modal-grid-gap;
   grid-row-gap: $dd-modal-grid-gap;
   grid-template-areas: "toolbar" "body";
   grid-template-rows: auto 1fr;
   justify-content: stretch;
-  // overflow: auto;
   position: relative;
   z-index: $z-index-dd-modal-content;
 

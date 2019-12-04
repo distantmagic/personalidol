@@ -50,5 +50,13 @@ dl.dd__modal__character__specifics {
 
 .dd__modal__character__body {
   grid-area: body;
+  overflow: auto;
   padding: $dd-modal-padding;
+
+  @include breakpoint(mobile-only) {
+    height: calc(100vh - 75px);
+  }
+  @include breakpoint(tablet-and-up) {
+    height: calc(80vh - 65px);
+  }
 }
