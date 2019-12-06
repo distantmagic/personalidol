@@ -44,12 +44,14 @@ export default class Logger implements LoggerInterface {
   }
 
   async log(breadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): Promise<void> {
-    const baseMessage = `[DD][${severity}] ${message}`;
+    const baseMessage = `${message}\n\nLog entry produced at:\n[${breadcrumbs.asString()}]`;
 
     if ("debug" === severity) {
-      console.info(`%c${baseMessage}`, "background-color: #222; color: tomato");
+      console.debug(`%c${baseMessage}`, "background-color: #222; color: gold");
+    } else if ("info" === severity) {
+      console.info(`%c${baseMessage}`, "background-color: #222; color: lightskyblue");
     } else {
-      console.log(baseMessage);
+      console.error(baseMessage);
     }
   }
 }

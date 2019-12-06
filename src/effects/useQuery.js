@@ -32,8 +32,12 @@ export default function useQuery<T>(exceptionHandler: ExceptionHandler, loggerBr
         .then(() => {
           return setIsExecuted(true);
         })
-        .catch(err => {
-          return exceptionHandler.captureException(breadcrumbs, err);
+        .catch(async function(err) {
+          const isCaptured = await exceptionHandler.captureException(breadcrumbs, err);
+
+          if (!isCaptured) {
+            throw err;
+          }
         });
 
       return function() {

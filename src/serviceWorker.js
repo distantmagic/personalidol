@@ -1,129 +1,137 @@
-// This optional code is used to register a service worker.
-// register() is not called by default.
+// @flow
 
-// This lets the app load faster on subsequent visits in production, and gives
-// it offline capabilities. However, it also means that developers (and users)
-// will only see deployed updates on subsequent visits to a page, after all the
-// existing tabs open on the page have been closed, since previously cached
-// resources are updated in the background.
+import { default as MissingException } from "./framework/classes/Exception/ServiceWorker/Missing";
+import { default as SecurityException } from "./framework/classes/Exception/ServiceWorker/Security";
+import { default as UnsupportedException } from "./framework/classes/Exception/ServiceWorker/Unsupported";
 
-// To learn more about the benefits of this model and instructions on how to
-// opt-in, read https://bit.ly/CRA-PWA
+import type { Logger } from "./framework/interfaces/Logger";
+import type { LoggerBreadcrumbs } from "./framework/interfaces/LoggerBreadcrumbs";
 
-const isLocalhost = Boolean(
-  window.location.hostname === "localhost" ||
-    // [::1] is the IPv6 localhost address.
-    window.location.hostname === "[::1]" ||
-    // 127.0.0.0/8 are considered localhost for IPv4.
-    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
-);
+const PUBLIC_URL = process.env.PUBLIC_URL || "";
 
-type Config = {
-  onSuccess?: (registration: ServiceWorkerRegistration) => void,
-  onUpdate?: (registration: ServiceWorkerRegistration) => void,
-};
+function getServiceWorkerAPI(loggerBreadcrumbs: LoggerBreadcrumbs): ServiceWorkerContainer {
+  const serviceWorker = navigator.serviceWorker;
 
-export function register(config?: Config) {
-  if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
-    // The URL constructor is available in all browsers that support SW.
-    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
-    if (publicUrl.origin !== window.location.origin) {
-      // Our service worker won't work if PUBLIC_URL is on a different origin
-      // from what our page is served on. This might happen if a CDN is used to
-      // serve assets; see https://github.com/facebook/create-react-app/issues/2374
-      return;
-    }
+  if (!serviceWorker) {
+    throw new UnsupportedException(loggerBreadcrumbs, "Service worker is not supported.");
+  }
 
-    window.addEventListener("load", () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+  return serviceWorker;
+}
 
-      if (isLocalhost) {
-        // This is running on localhost. Let's check if a service worker still exists or not.
-        checkValidServiceWorker(swUrl, config);
+function isLocalhost(): boolean {
+  return Boolean(
+    window.location.hostname === "localhost" ||
+      // [::1] is the IPv6 localhost address.
+      window.location.hostname === "[::1]" ||
+      // 127.0.0.0/8 are considered localhost for IPv4.
+      window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+  );
+}
 
-        // Add some additional logging to localhost, pointing developers to the
-        // service worker/PWA documentation.
-        navigator.serviceWorker.ready.then(() => {
-          console.log("This web app is being served cache-first by a service " + "worker. To learn more, visit https://bit.ly/CRA-PWA");
-        });
-      } else {
-        // Is not localhost. Just register service worker
-        registerValidSW(swUrl, config);
-      }
-    });
+export async function register(loggerBreadcrumbs: LoggerBreadcrumbs, logger: Logger): Promise<ServiceWorkerRegistration> {
+  const serviceWorker = getServiceWorkerAPI(loggerBreadcrumbs.add("getServiceWorkerAPI"));
+
+  // The URL constructor is available in all browsers that support SW.
+  const publicUrl = new URL(PUBLIC_URL, window.location.href);
+
+  if (publicUrl.origin !== window.location.origin) {
+    // Our service worker won't work if PUBLIC_URL is on a different origin
+    // from what our page is served on. This might happen if a CDN is used to
+    // serve assets; see https://github.com/facebook/create-react-app/issues/2374
+    throw new SecurityException(loggerBreadcrumbs, "Public URL and actual origin do not match.");
+  }
+
+  const swUrl = `${PUBLIC_URL}/service-worker.js`;
+
+  if (isLocalhost()) {
+    // This is running on localhost. Let's check if a service worker still exists or not.
+    const registration = await checkValidServiceWorker(loggerBreadcrumbs.add("checkValidServiceWorker"), logger, serviceWorker, swUrl);
+
+    await serviceWorker.ready;
+
+    // Add some additional logging to localhost, pointing developers to the
+    // service worker/PWA documentation.
+    await logger.debug(loggerBreadcrumbs, "This web app is being served cache-first by a service worker.");
+
+    return registration;
+  } else {
+    // Is not localhost. Just register service worker
+    return registerValidSW(loggerBreadcrumbs.add("registerValidSW"), logger, serviceWorker, swUrl);
   }
 }
 
-function registerValidSW(swUrl: string, config?: Config) {
-  navigator.serviceWorker
-    .register(swUrl)
-    .then(registration => {
-      registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
-        if (installingWorker == null) {
-          return;
-        }
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === "installed") {
-            if (navigator.serviceWorker.controller) {
-              // At this point, the updated precached content has been fetched,
-              // but the previous service worker will still serve the older
-              // content until all client tabs are closed.
-              console.log("New content is available and will be used when all " + "tabs for this page are closed. See https://bit.ly/CRA-PWA.");
+async function registerValidSW(loggerBreadcrumbs: LoggerBreadcrumbs, logger: Logger, serviceWorker: ServiceWorkerContainer, swUrl: string): Promise<ServiceWorkerRegistration> {
+  const registration = await serviceWorker.register(swUrl);
 
-              // Execute callback
-              if (config && config.onUpdate) {
-                config.onUpdate(registration);
-              }
-            } else {
-              // At this point, everything has been precached.
-              // It's the perfect time to display a
-              // "Content is cached for offline use." message.
-              console.log("Content is cached for offline use.");
+  if (registration.active) {
+    return registration;
+  }
 
-              // Execute callback
-              if (config && config.onSuccess) {
-                config.onSuccess(registration);
-              }
-            }
+  return new Promise(resolve => {
+    registration.onupdatefound = function() {
+      const installingWorker = registration.installing;
+
+      if (installingWorker == null) {
+        return resolve(registration);
+      }
+
+      installingWorker.onstatechange = async function() {
+        if (installingWorker.state === "installed") {
+          if (serviceWorker.controller) {
+            // At this point, the updated precached content has been fetched,
+            // but the previous service worker will still serve the older
+            // content until all client tabs are closed.
+            await logger.debug(loggerBreadcrumbs, "New content is available and will be used when all tabs for this page are closed. See https://bit.ly/CRA-PWA.");
+
+            return resolve(registration);
+          } else {
+            // At this point, everything has been precached.
+            // It's the perfect time to display a
+            // "Content is cached for offline use." message.
+            await logger.debug(loggerBreadcrumbs, "Content is cached for offline use.");
+
+            // Execute callback
+            return resolve(registration);
           }
-        };
+        }
       };
-    })
-    .catch(error => {
-      console.error("Error during service worker registration:", error);
-    });
+    };
+  });
 }
 
-function checkValidServiceWorker(swUrl: string, config?: Config) {
+async function checkValidServiceWorker(
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  logger: Logger,
+  serviceWorker: ServiceWorkerContainer,
+  swUrl: string
+): Promise<ServiceWorkerRegistration> {
   // Check if the service worker can be found. If it can't reload the page.
-  fetch(swUrl, {
-    headers: { "Service-Worker": "script" },
-  })
-    .then(response => {
-      // Ensure service worker exists, and that we really are getting a JS file.
-      const contentType = response.headers.get("content-type");
-      if (response.status === 404 || (contentType != null && contentType.indexOf("javascript") === -1)) {
-        // No service worker found. Probably a different app. Reload the page.
-        navigator.serviceWorker.ready.then(registration => {
-          registration.unregister().then(() => {
-            window.location.reload();
-          });
-        });
-      } else {
-        // Service worker found. Proceed as normal.
-        registerValidSW(swUrl, config);
-      }
-    })
-    .catch(() => {
-      console.log("No internet connection found. App is running in offline mode.");
+  const response = await fetch(swUrl, {
+    headers: {
+      "Service-Worker": "script",
+    },
+  });
+
+  // Ensure service worker exists, and that we really are getting a JS file.
+  const contentType = response.headers.get("content-type");
+
+  if (response.status === 404 || (contentType != null && contentType.indexOf("javascript") === -1)) {
+    // No service worker found. Probably a different app. Reload the page.
+    // This step may get stuck in an infinite wait for service worker.
+    serviceWorker.ready.then(function() {
+      return unregister(loggerBreadcrumbs.add("unregister"));
     });
+
+    throw new MissingException(loggerBreadcrumbs, `Service worker file is not found or contains invalid contents: "${swUrl}"`);
+  }
+
+  return registerValidSW(loggerBreadcrumbs.add("registerValidSW"), logger, serviceWorker, swUrl);
 }
 
-export function unregister() {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.ready.then(registration => {
-      registration.unregister();
-    });
-  }
+export async function unregister(loggerBreadcrumbs: LoggerBreadcrumbs): Promise<boolean> {
+  const serviceWorker = getServiceWorkerAPI(loggerBreadcrumbs.add("getServiceWorkerAPI"));
+  const registration = await serviceWorker.ready;
+
+  return registration.unregister();
 }

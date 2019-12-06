@@ -13,7 +13,7 @@ backend/target/debug/personalidol: $(RUST_SOURCES)
 	cd backend && cargo build
 
 build/index.html: $(JS_SOURCES)
-	REACT_APP_DEBUG=false yarn run build
+	yarn run build
 
 flow.watch: node_modules
 	yarn run flow:watch:inotify
@@ -40,6 +40,9 @@ pretty.frontend:
 public/vendor/modernizr.js: frontend.dependencies
 	yarn run modernizr
 
+start: frontend.dependencies
+	yarn run start
+
 test: test.backend test.frontend
 
 test.backend: $(RUST_SOURCES)
@@ -50,6 +53,3 @@ test.frontend: $(JS_SOURCES) frontend.dependencies
 
 test.frontend.watch: frontend.dependencies
 	yarn run test
-
-start: frontend.dependencies
-	REACT_APP_DEBUG=true yarn run start

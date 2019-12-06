@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 import yn from "yn";
 import { HashRouter } from "react-router-dom";
 
-// import * as serviceWorker from './serviceWorker';
+import * as serviceWorker from "./serviceWorker";
 import BusClock from "./framework/classes/BusClock";
 import ClockReactiveController from "./framework/classes/ClockReactiveController";
 import Debugger from "./framework/classes/Debugger";
@@ -17,8 +17,8 @@ import LoadingManager from "./framework/classes/LoadingManager";
 import LoggerBreadcrumbs from "./framework/classes/LoggerBreadcrumbs";
 import Main from "./components/Main";
 import QueryBus from "./framework/classes/QueryBus";
-import { default as UnexpectedExceptionHandlerFilter } from "./framework/classes/ExceptionHandlerFilter/Unexpected";
 import { default as ConsoleLogger } from "./framework/classes/Logger/Console";
+import { default as UnexpectedExceptionHandlerFilter } from "./framework/classes/ExceptionHandlerFilter/Unexpected";
 
 // import type { PrimaryWorker as PrimaryWorkerInterface } from "./framework/interfaces/PrimaryWorker";
 
@@ -34,8 +34,8 @@ import "./scss/index.scss";
 
 async function init(rootElement: HTMLElement): Promise<void> {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const logger = new ConsoleLogger();
   const debug = new Debugger();
+  const logger = new ConsoleLogger();
   const exceptionHandlerFilter = new UnexpectedExceptionHandlerFilter();
   const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const expressionBus = new ExpressionBus();
@@ -43,11 +43,16 @@ async function init(rootElement: HTMLElement): Promise<void> {
   const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"), exceptionHandler);
   const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs.add("QueryBus"));
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
-  // const worker: PrimaryWorkerInterface = new PrimaryWorker();
 
+  try {
+    await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
+  } catch (exception) {
+    await exceptionHandler.captureException(loggerBreadcrumbs, exception);
+  }
+
+  // const worker: PrimaryWorkerInterface = new PrimaryWorker();
   // console.log(await worker.hello());
 
-  // serviceWorker.register();
   debug.setIsEnabled(
     yn(process.env.REACT_APP_DEBUG && false, {
       default: false,

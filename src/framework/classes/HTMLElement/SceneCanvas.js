@@ -184,9 +184,7 @@ export default class SceneCanvas extends HTMLElement {
       threeLoadingManager
     );
 
-    await exceptionHandler.guard(breadcrumbs, () => {
-      return loadingManager.blocking(this.canvasControllerBus.add(cancelToken, canvasController), "Loading initial game resources");
-    });
+    await loadingManager.blocking(this.canvasControllerBus.add(cancelToken, canvasController), "Loading initial game resources");
 
     canvasController.resize(new HTMLElementSize(this.canvasWrapperElement));
 
@@ -204,10 +202,7 @@ export default class SceneCanvas extends HTMLElement {
     this.canvasElement.remove();
 
     await loadingManager.blocking(this.canvasViewBag.dispose(cancelToken), "Disposing root canvas controller");
-
-    await exceptionHandler.guard(breadcrumbs, () => {
-      return loadingManager.blocking(this.canvasControllerBus.delete(cancelToken, canvasController), "Disposing game resources");
-    });
+    await loadingManager.blocking(this.canvasControllerBus.delete(cancelToken, canvasController), "Disposing game resources");
 
     this.isLooping = false;
     this.onComponentStateChange();

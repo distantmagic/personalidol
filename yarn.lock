@@ -1108,6 +1108,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@leops/fgdparser@https://github.com/leops/fgdparser.git":
+  version "1.0.0"
+  resolved "https://github.com/leops/fgdparser.git#c5f5b47a1db654699ce0300bc3e82fcb88518e8c"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

@@ -6,8 +6,4 @@ export default class ExceptionHandlerFilter implements ExceptionHandlerFilterInt
   isCapturable(error: Error): boolean {
     return true;
   }
-
-  isRethrowable(error: Error): boolean {
-    return true;
-  }
 }

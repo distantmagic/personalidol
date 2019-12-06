@@ -38,7 +38,7 @@ export default class LoadingManager implements LoadingManagerInterface {
       return await blocker;
     } catch (err) {
       this.failedItems.set(blocker, comment);
-      this.exceptionHandler.captureException(this.loggerBreadcrumbs.add("background"), err);
+      await this.exceptionHandler.captureException(this.loggerBreadcrumbs.add("background"), err);
       throw err;
     } finally {
       this.backgroundItems.delete(blocker);
@@ -54,7 +54,7 @@ export default class LoadingManager implements LoadingManagerInterface {
       return await blocker;
     } catch (err) {
       this.failedItems.set(blocker, comment);
-      this.exceptionHandler.captureException(this.loggerBreadcrumbs.add("blocking"), err);
+      await this.exceptionHandler.captureException(this.loggerBreadcrumbs.add("blocking"), err);
       throw err;
     } finally {
       this.blockingItems.delete(blocker);

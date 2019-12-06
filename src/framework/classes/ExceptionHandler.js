@@ -2,17 +2,16 @@
 
 import autoBind from "auto-bind";
 
-import Exception from "./Exception";
-
 import type { ExceptionHandler as ExceptionHandlerInterface } from "../interfaces/ExceptionHandler";
 import type { ExceptionHandlerFilter } from "../interfaces/ExceptionHandlerFilter";
-import type { ExceptionHandlerGuardCallback } from "../types/ExceptionHandlerGuardCallback";
 import type { Logger } from "../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class ExceptionHandler implements ExceptionHandlerInterface {
   +exceptionHandlerFilter: ExceptionHandlerFilter;
   +logger: Logger;
+
+  static reportId: number = 0;
 
   constructor(logger: Logger, exceptionHandlerFilter: ExceptionHandlerFilter) {
     autoBind(this);
@@ -27,35 +26,10 @@ export default class ExceptionHandler implements ExceptionHandlerInterface {
       return false;
     }
 
-    await this.logger.debug(loggerBreadcrumbs, "ExceptionHandler");
+    await this.logger.error(loggerBreadcrumbs.add("captureException"), `Report #${ExceptionHandler.reportId}:\n${error.message}\n\nStack trace:\n${error.stack}`);
 
-    for (let breadcrumb of loggerBreadcrumbs.getBreadcrumbs()) {
-      await this.logger.debug(loggerBreadcrumbs, `${breadcrumb}`);
-    }
-    if (error instanceof Exception) {
-      for (let breadcrumb of error.loggerBreadcrumbs.getBreadcrumbs()) {
-        await this.logger.debug(loggerBreadcrumbs, `${breadcrumb}`);
-      }
-    }
-    await this.logger.debug(loggerBreadcrumbs, `${error.message}`);
-
-    const message = [loggerBreadcrumbs.asString(), error instanceof Exception ? "Reported at: " + error.loggerBreadcrumbs.asString() : "", error.stack].join(" ");
-
-    await this.logger.error(loggerBreadcrumbs, message);
-
-    if (this.exceptionHandlerFilter.isRethrowable(error)) {
-      throw error;
-    }
+    ExceptionHandler.reportId += 1;
 
     return true;
-  }
-
-  async guard<T>(loggerBreadcrumbs: LoggerBreadcrumbs, callback: ExceptionHandlerGuardCallback<T>): Promise<T> {
-    try {
-      return callback();
-    } catch (err) {
-      this.captureException(loggerBreadcrumbs, err);
-      throw err;
-    }
   }
 }
