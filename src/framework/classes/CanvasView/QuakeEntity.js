@@ -33,7 +33,7 @@ function getIntensity(self: QuakeEntity): number {
     throw new Exception(self.loggerBreadcrumbs.add("attach"), "Light intensity is not a number.");
   }
 
-  return brightness / 255;
+  return brightness / 300;
 }
 
 export default class QuakeEntity extends CanvasView {

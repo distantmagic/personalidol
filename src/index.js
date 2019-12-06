@@ -20,16 +20,6 @@ import QueryBus from "./framework/classes/QueryBus";
 import { default as ConsoleLogger } from "./framework/classes/Logger/Console";
 import { default as UnexpectedExceptionHandlerFilter } from "./framework/classes/ExceptionHandlerFilter/Unexpected";
 
-// import type { PrimaryWorker as PrimaryWorkerInterface } from "./framework/interfaces/PrimaryWorker";
-
-// those are a few hacks, but in the end it's possible to load web workers
-// with create-react-app without ejecting
-//
-/* eslint-disable import/no-webpack-loader-syntax */
-// $FlowFixMe
-// import PrimaryWorker from "workerize-loader!./worker";
-/* eslint-enable import/no-webpack-loader-syntax */
-
 import "./scss/index.scss";
 
 async function init(rootElement: HTMLElement): Promise<void> {

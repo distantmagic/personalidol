@@ -8,6 +8,16 @@ import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeMap as QuakeMapInterface } from "../../interfaces/QuakeMap";
 import type { Query } from "../../interfaces/Query";
 
+// import type { PrimaryWorker as PrimaryWorkerInterface } from "./framework/interfaces/PrimaryWorker";
+
+// those are a few hacks, but in the end it's possible to load web workers
+// with create-react-app without ejecting
+//
+/* eslint-disable import/no-webpack-loader-syntax */
+// $FlowFixMe
+// import PrimaryWorker from "workerize-loader!./worker";
+/* eslint-enable import/no-webpack-loader-syntax */
+
 export default class QuakeMap implements Query<QuakeMapInterface> {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +remoteText: RemoteText;

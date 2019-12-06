@@ -10,6 +10,7 @@
     "eventemitter3": "^4.0.0",
     "fengari": "^0.1.4",
     "fengari-interop": "^0.1.2",
+    "fgdparser": "github:leops/fgdparser",
     "howler": "^2.1.2",
     "immutable": "^4.0.0-rc.12",
     "javascript-state-machine": "^3.1.0",
