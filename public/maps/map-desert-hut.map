@@ -1,10 +1,10 @@
-// Game: Generic
+// Game: PersonalIdol
 // Format: Standard
 // entity 0
 {
 "classname" "worldspawn"
 "light" "0"
-"_tb_def" "external:PersonalIdol.fgd"
+"_tb_textures" "./textures"
 // brush 0
 {
 ( -224 288 16 ) ( -224 289 16 ) ( -224 288 17 ) __TB_empty -0 -0 -0 1 1
@@ -287,7 +287,7 @@
 // entity 2
 {
 "classname" "light"
-"origin" "40 80 168"
+"origin" "48 88 168"
 "light" "255"
 "angle" "90"
 }

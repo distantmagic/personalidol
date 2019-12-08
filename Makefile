@@ -40,6 +40,12 @@ pretty.frontend:
 public/vendor/modernizr.js: frontend.dependencies
 	yarn run modernizr
 
+setup: setup.trenchbroom
+
+setup.trenchbroom:
+	rm -rf ~/.TrenchBroom/games/PersonalIdol
+	cp -r ./trenchbroom ~/.TrenchBroom/games/PersonalIdol
+
 start: frontend.dependencies
 	yarn run start
 

@@ -103,7 +103,7 @@ export default class QuakeEntity extends CanvasView {
               this.queryBus,
               this.scene,
               this.threeLoadingManager,
-              `/gfx/model-md2-${modelName}/`
+              `/models/model-md2-${modelName}/`
             )
           ),
           "Loading character"

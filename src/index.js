@@ -44,7 +44,7 @@ async function init(rootElement: HTMLElement): Promise<void> {
   // console.log(await worker.hello());
 
   debug.setIsEnabled(
-    yn(process.env.REACT_APP_DEBUG && false, {
+    yn(process.env.REACT_APP_FEATURE_DEBUGGER, {
       default: false,
     })
   );

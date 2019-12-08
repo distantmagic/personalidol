@@ -34,8 +34,8 @@ export default class QuakeBrush extends CanvasView {
 
     const material = new THREE.MeshLambertMaterial({
       color: 0xffffff,
-      opacity: 0.6,
-      transparent: true,
+      // opacity: 0.6,
+      // transparent: true,
     });
 
     const geometry = new ConvexBufferGeometry(vertices);
