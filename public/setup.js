@@ -50,30 +50,17 @@
       setup.getElementById("dd-root-loader-incompatible").classList.remove("dd__setup--hidden");
     },
 
-    setInternalError: function(caption, message) {
+    setInternalError: function(label, message) {
       setup.disableProgress();
 
       setup.getElementById("dd-root-loader-error").classList.remove("dd__setup--hidden");
-      setup.getElementById("dd-root-loader-error-caption").textContent = caption;
+      setup.getElementById("dd-root-loader-error-label").textContent = label;
       setup.getElementById("dd-root-loader-error-message").textContent = message;
-    },
-
-    setProgress: function(message, max, value) {
-      setup.setProgressMessage(message);
-      setup.setProgressBar(max, value);
     },
 
     setProgressMessage: function(message) {
       setup.getElementById("dd-root-loader-message").textContent = message;
-    },
-
-    setProgressBar: function(max, value) {
-      var progressBarElement = setup.getElementById("dd-root-loader-progress");
-
-      progressBarElement.setAttribute("max", String(max));
-      progressBarElement.setAttribute("value", String(value));
-      progressBarElement.textContent = String(value) + "/" + String(max);
-    },
+    }
   };
 
   var allFeatures = 0;
@@ -86,7 +73,7 @@
 
   function onAllFeaturesChecked() {
     if (isCapable) {
-      setup.setProgress("Loading game engine...", 5, 1);
+      setup.setProgressMessage("Finishing setup...");
       setup.getRootElement().dispatchEvent(
         new CustomEvent("dd-capable", {
           bubbles: true,
@@ -103,7 +90,6 @@
     doneFeatures += 1;
 
     setIsFeatureSupported(feature, isFeatureSupported);
-    setup.setProgressBar(allFeatures, doneFeatures);
 
     if (doneFeatures < allFeatures) {
       return;
@@ -115,6 +101,8 @@
   function setIsFeatureSupported(feature, isFeatureSupported) {
     setup.getElementById("browser-feature-" + requiredBrowserFeatures[feature]).classList.add(isFeatureSupported ? supportedClassName : notSupportedClassName);
   }
+
+  setup.setProgressMessage("Checking browser capabilities...");
 
   for (feature in requiredBrowserFeatures) {
     if (requiredBrowserFeatures.hasOwnProperty(feature)) {

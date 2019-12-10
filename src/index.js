@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import yn from "yn";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 import * as serviceWorker from "./serviceWorker";
 import BusClock from "./framework/classes/BusClock";
@@ -18,8 +18,6 @@ import Main from "./components/Main";
 import QueryBus from "./framework/classes/QueryBus";
 import { default as ConsoleLogger } from "./framework/classes/Logger/Console";
 import { default as UnexpectedExceptionHandlerFilter } from "./framework/classes/ExceptionHandlerFilter/Unexpected";
-
-import "./scss/index.scss";
 
 import type { Logger } from "./framework/interfaces/Logger";
 import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "./framework/interfaces/LoggerBreadcrumbs";
@@ -48,7 +46,7 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
 
   ReactDOM.render(
     <React.StrictMode>
-      <HashRouter>
+      <BrowserRouter>
         <Main
           clockReactiveController={clockReactiveController}
           debug={debug}
@@ -60,7 +58,7 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
           loggerBreadcrumbs={loggerBreadcrumbs}
           queryBus={queryBus}
         />
-      </HashRouter>
+      </BrowserRouter>
     </React.StrictMode>,
     rootElement
   );

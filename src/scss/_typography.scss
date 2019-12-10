@@ -31,12 +31,10 @@ $dd-font-size-base: 16px;
 .dd-tp__formatted-text p,
 .dd-tp__p {
   @include tp-text(1);
-  // max-width: 80ch;
 }
 
 .dd-tp__formatted-text p + p,
 .dd-tp__p + .dd-tp__p {
-  // content: "\2767";
   text-indent: 1em;
 }
 

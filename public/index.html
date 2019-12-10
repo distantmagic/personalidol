@@ -26,6 +26,7 @@
       body,
       #dd-root {
         align-items: center;
+        color: #eee;
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: 1fr;
@@ -35,7 +36,7 @@
       body {
         background-color: black;
         color: #eee;
-        font-family: "Vesper Libre", Garamond, Georgia, serif;
+        font-family: Garamond, Georgia, serif;
         height: 100%;
         min-height: 100vh;
         width: 100%;
@@ -130,8 +131,14 @@
       .dd__setup__progress::-webkit-progress-value {
         background-color: #333;
       }
+      .dd__setup__progress:not([value])::-webkit-progress-value {
+        background-color: black;
+      }
       .dd__setup__progress::-moz-progress-bar {
         background-color: #333;
+      }
+      .dd__setup__progress:not([value])::-moz-progress-bar {
+        background-color: black;
       }
       .dd__setup__recommended-browsers {
         display: block;
@@ -162,14 +169,13 @@
       <div id="dd-root-loader">
         <!-- START root loader feedback -->
         <div class="dd__setup" id="dd-root-loader-feedback">
-          <span id="dd-root-loader-message">Loading game setup...</span>
-          <progress class="dd__setup__progress" id="dd-root-loader-progress" max="5" value="1"></progress>
+          <p id="dd-root-loader-message">Loading setup...</p>
         </div>
         <!-- END root loader feedback -->
         <!-- START game internal error -->
         <div class="dd__setup dd__setup--hidden" id="dd-root-loader-error">
           <div class="dd__setup__content">
-            <p class="dd__setup__error-message" id="dd-root-loader-error-caption">
+            <p class="dd__setup__error-message" id="dd-root-loader-error-label">
               You need to enable JavaScript to run this application.
             </p>
             <p id="dd-root-loader-error-message">

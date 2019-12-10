@@ -12,6 +12,7 @@ $dd-hud-gap: 2 * $dd-frame-padding;
 
 .dd__hud {
   display: grid;
+  font-family: $font-family-vesper-libre;
   grid-template-areas:
     "toolbar scene aside"
     "toolbar scene settings";

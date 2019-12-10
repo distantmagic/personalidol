@@ -7,10 +7,9 @@
 }
 
 .dd__modal {
-  animation-name: fadein;
-  animation-duration: 0.2s;
   align-items: center;
   display: flex;
+  font-family: $font-family-vesper-libre;
   height: 100%;
   left: 0;
   justify-content: center;
@@ -22,8 +21,6 @@
 }
 
 .dd__modal.dd__modal--disappear {
-  animation-name: fadeout;
-  animation-duration: 0.2s;
   opacity: 0;
   pointer-events: none;
 }

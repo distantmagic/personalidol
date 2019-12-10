@@ -28,11 +28,7 @@ export default React.memo<Props>(function ModalOverlay(props: Props) {
   }
 
   if (location.pathname === "/") {
-    return (
-      <div className="dd__modal dd__modal--disappear">
-        <div className="dd__modal__overlay" />
-      </div>
-    );
+    return null;
   }
 
   return (
