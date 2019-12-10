@@ -26,6 +26,7 @@ import type { Debugger } from "../../interfaces/Debugger";
 import type { ElementSize as ElementSizeInterface } from "../../interfaces/ElementSize";
 import type { KeyboardState } from "../../interfaces/KeyboardState";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
+import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { PointerState } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
@@ -43,6 +44,7 @@ export default class Root extends CanvasController {
   +effectComposer: EffectComposerInterface;
   +keyboardState: KeyboardState;
   +loadingManager: LoadingManager;
+  +logger: Logger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
   +renderer: WebGLRenderer;
@@ -57,6 +59,7 @@ export default class Root extends CanvasController {
     debug: Debugger,
     keyboardState: KeyboardState,
     loadingManager: LoadingManager,
+    logger: Logger,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     pointerState: PointerState,
     queryBus: QueryBus,
@@ -77,6 +80,7 @@ export default class Root extends CanvasController {
     this.debug = debug;
     this.keyboardState = keyboardState;
     this.loadingManager = loadingManager;
+    this.logger = logger;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.renderer = renderer;
@@ -110,6 +114,7 @@ export default class Root extends CanvasController {
           this.audioLoader,
           this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
           this.loadingManager,
+          this.logger,
           this.loggerBreadcrumbs.add("QuakeMap"),
           this.queryBus,
           this.scene,

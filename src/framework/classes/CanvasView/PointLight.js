@@ -5,21 +5,21 @@ import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 
-import type { OrthographicCamera, PointLight as PointLightInterface, Scene } from "three";
+import type { Group, OrthographicCamera, PointLight as PointLightInterface } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class PointLight extends CanvasView {
   +cancelToken: CancelToken;
-  +scene: Scene;
+  +group: Group;
   +light: PointLightInterface<OrthographicCamera>;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: Scene, origin: Vector3, intensity: number) {
+  constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3, intensity: number) {
     super(canvasViewBag);
     autoBind(this);
 
-    this.scene = scene;
+    this.group = group;
 
     this.light = new THREE.PointLight<OrthographicCamera>(0xffffff, intensity, 512, 2);
     this.light.position.copy(origin);
@@ -37,12 +37,12 @@ export default class PointLight extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    this.scene.add(this.light);
+    this.group.add(this.light);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.scene.remove(this.light);
+    this.group.remove(this.light);
   }
 }

@@ -4,6 +4,7 @@ import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
+import disposeObject3D from "../../helpers/disposeObject3D";
 
 import type { AxesHelper, GridHelper, Scene } from "three";
 
@@ -36,6 +37,9 @@ export default class Cube extends CanvasView {
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
+
+    disposeObject3D(this.axesHelper);
+    disposeObject3D(this.gridHelper);
 
     this.scene.remove(this.axesHelper);
     this.scene.remove(this.gridHelper);

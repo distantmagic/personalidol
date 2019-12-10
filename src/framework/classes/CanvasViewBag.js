@@ -11,41 +11,37 @@ import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 export default class CanvasViewBag implements CanvasViewBagInterface {
   +canvasViewBus: CanvasViewBusInterface;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +canvasViews: Set<CanvasView>;
-  #isDisposed: boolean;
+  +canvasViews: CanvasView[];
 
   constructor(canvasViewBus: CanvasViewBusInterface, loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
 
-    this.#isDisposed = false;
     this.canvasViewBus = canvasViewBus;
-    this.canvasViews = new Set();
+    this.canvasViews = [];
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
   add(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
-    this.canvasViews.add(canvasView);
+    this.canvasViews.push(canvasView);
 
     return this.canvasViewBus.add(cancelToken, canvasView);
   }
 
-  delete(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
-    return this.canvasViewBus.delete(cancelToken, canvasView);
+  async delete(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
+    while (this.canvasViews.includes(canvasView)) {
+      for (let i = 0; i < this.canvasViews.length; i += 1) {
+        if (this.canvasViews[i] === canvasView) {
+          this.canvasViews.splice(i, 1);
+          await this.canvasViewBus.delete(cancelToken, canvasView);
+        }
+      }
+    }
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
-    await Promise.all(
-      Array.from(this.canvasViews).map((canvasView: CanvasView) => {
-        return this.delete(cancelToken, canvasView);
-      })
-    );
-
-    this.canvasViews.clear();
-    this.#isDisposed = true;
-  }
-
-  isDisposed(): boolean {
-    return this.#isDisposed;
+    for (let canvasView of this.canvasViews.slice().reverse()) {
+      await this.delete(cancelToken, canvasView);
+    }
   }
 
   fork(loggerBreadcrumbs: LoggerBreadcrumbs): CanvasViewBagInterface {

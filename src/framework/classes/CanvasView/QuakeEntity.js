@@ -12,7 +12,7 @@ import { default as PointLightView } from "./PointLight";
 import { default as QuakeBrushView } from "./QuakeBrush";
 import { default as QuakeMapException } from "../Exception/QuakeMap";
 
-import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Mesh, Scene } from "three";
+import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Mesh } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -41,10 +41,10 @@ export default class QuakeEntity extends CanvasView {
   +audioLoader: AudioLoader;
   +brushes: Group[];
   +entity: QuakeEntityInterface;
+  +group: Group;
   +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
-  +scene: Scene;
   +threeLoadingManager: THREELoadingManager;
   cube: ?Mesh;
   material: ?Material;
@@ -57,7 +57,7 @@ export default class QuakeEntity extends CanvasView {
     loadingManager: LoadingManager,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
-    scene: Scene,
+    group: Group,
     threeLoadingManager: THREELoadingManager
   ) {
     super(canvasViewBag);
@@ -71,7 +71,7 @@ export default class QuakeEntity extends CanvasView {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.material = null;
     this.queryBus = queryBus;
-    this.scene = scene;
+    this.group = group;
     this.threeLoadingManager = threeLoadingManager;
   }
 
@@ -82,7 +82,7 @@ export default class QuakeEntity extends CanvasView {
 
     for (let brush of brushes) {
       await this.loadingManager.blocking(
-        this.canvasViewBag.add(cancelToken, new QuakeBrushView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")), brush, this.scene)),
+        this.canvasViewBag.add(cancelToken, new QuakeBrushView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")), brush, this.group)),
         "Loading entity brush"
       );
     }
@@ -101,7 +101,7 @@ export default class QuakeEntity extends CanvasView {
               this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
               quake2three(this.entity.getOrigin()),
               this.queryBus,
-              this.scene,
+              this.group,
               this.threeLoadingManager,
               `/models/model-md2-${modelName}/`
             )
@@ -113,7 +113,7 @@ export default class QuakeEntity extends CanvasView {
         await this.loadingManager.blocking(
           this.canvasViewBag.add(
             cancelToken,
-            new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.scene, quake2three(this.entity.getOrigin()), getIntensity(this))
+            new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.group, quake2three(this.entity.getOrigin()), getIntensity(this))
           ),
           "Loading point light"
         );
@@ -121,7 +121,7 @@ export default class QuakeEntity extends CanvasView {
       case "worldspawn":
         if (entityProperties.hasPropertyKey("light")) {
           await this.loadingManager.blocking(
-            this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.scene, getIntensity(this))),
+            this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.group, getIntensity(this))),
             "Loading world ambient light"
           );
         }

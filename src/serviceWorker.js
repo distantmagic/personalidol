@@ -43,7 +43,7 @@ export async function register(loggerBreadcrumbs: LoggerBreadcrumbs, logger: Log
 
     // Add some additional logging to localhost, pointing developers to the
     // service worker/PWA documentation.
-    await logger.debug(loggerBreadcrumbs, "This web app is being served cache-first by a service worker.");
+    await logger.info(loggerBreadcrumbs, "This web app is being served cache-first by a service worker.");
 
     return registration;
   } else {
@@ -73,14 +73,14 @@ async function registerValidSW(loggerBreadcrumbs: LoggerBreadcrumbs, logger: Log
             // At this point, the updated precached content has been fetched,
             // but the previous service worker will still serve the older
             // content until all client tabs are closed.
-            await logger.debug(loggerBreadcrumbs, "New content is available and will be used when all tabs for this page are closed. See https://bit.ly/CRA-PWA.");
+            await logger.info(loggerBreadcrumbs, "New content is available and will be used when all tabs for this page are closed. See https://bit.ly/CRA-PWA.");
 
             return resolve(registration);
           } else {
             // At this point, everything has been precached.
             // It's the perfect time to display a
             // "Content is cached for offline use." message.
-            await logger.debug(loggerBreadcrumbs, "Content is cached for offline use.");
+            await logger.info(loggerBreadcrumbs, "Content is cached for offline use.");
 
             // Execute callback
             return resolve(registration);

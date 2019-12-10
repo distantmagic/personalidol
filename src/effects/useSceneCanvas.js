@@ -9,6 +9,7 @@ import SceneCanvas from "../framework/classes/HTMLElement/SceneCanvas";
 import type { Debugger } from "../framework/interfaces/Debugger";
 import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
 import type { LoadingManager } from "../framework/interfaces/LoadingManager";
+import type { Logger } from "../framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../framework/interfaces/QueryBus";
 
@@ -16,6 +17,7 @@ export default function useSceneCanvas(
   debug: Debugger,
   exceptionHandler: ExceptionHandler,
   loadingManager: LoadingManager,
+  logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
   sceneCanvas: ?SceneCanvas
@@ -37,13 +39,13 @@ export default function useSceneCanvas(
       window.addEventListener("beforeunload", beforeUnload, {
         once: true,
       });
-      sceneCanvas.attachRenderer(cancelToken, debug, exceptionHandler, loadingManager, queryBus, threeLoadingManager);
+      sceneCanvas.attachRenderer(cancelToken, debug, exceptionHandler, loadingManager, logger, queryBus, threeLoadingManager);
 
       return function() {
         window.removeEventListener("beforeunload", beforeUnload);
         cancelToken.cancel(breadcrumbs.add("cleanup"));
       };
     },
-    [debug, exceptionHandler, loadingManager, loggerBreadcrumbs, queryBus, sceneCanvas]
+    [debug, exceptionHandler, loadingManager, logger, loggerBreadcrumbs, queryBus, sceneCanvas]
   );
 }

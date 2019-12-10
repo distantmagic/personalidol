@@ -56,6 +56,7 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
           expressionBus={expressionBus}
           expressionContext={expressionContext}
           loadingManager={loadingManager}
+          logger={logger}
           loggerBreadcrumbs={loggerBreadcrumbs}
           queryBus={queryBus}
         />
@@ -79,7 +80,6 @@ document.addEventListener(
 
       // $FlowFixMe
       evt.detail.setInternalError("Internal setup error", message);
-
       logger.error(loggerBreadcrumbs, message);
     }
   },

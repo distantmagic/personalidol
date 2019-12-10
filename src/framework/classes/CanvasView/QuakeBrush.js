@@ -5,9 +5,10 @@ import autoBind from "auto-bind";
 import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
 
 import CanvasView from "../CanvasView";
+import disposeObject3D from "../../helpers/disposeObject3D";
 import quake2three from "../../helpers/quake2three";
 
-import type { Mesh, Scene } from "three";
+import type { Group, Mesh } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -15,16 +16,16 @@ import type { QuakeBrush as QuakeBrushInterface } from "../../interfaces/QuakeBr
 
 export default class QuakeBrush extends CanvasView {
   +brush: QuakeBrushInterface;
-  +scene: Scene;
+  +group: Group;
   mesh: ?Mesh;
 
-  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, group: Scene) {
     super(canvasViewBag);
     autoBind(this);
 
     this.brush = brush;
     this.mesh = null;
-    this.scene = scene;
+    this.group = group;
   }
 
   async loadTexture(): Promise<any> {
@@ -42,7 +43,6 @@ export default class QuakeBrush extends CanvasView {
     await super.attach(cancelToken);
 
     const vertices = this.brush.getVertices().map(quake2three);
-
     const material = new THREE.MeshLambertMaterial({
       // color: 0xffffff,
       map: await this.loadTexture(),
@@ -56,7 +56,7 @@ export default class QuakeBrush extends CanvasView {
     mesh.receiveShadow = true;
 
     this.mesh = mesh;
-    this.scene.add(mesh);
+    this.group.add(mesh);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
@@ -68,8 +68,7 @@ export default class QuakeBrush extends CanvasView {
       return;
     }
 
-    this.scene.remove(mesh);
-    mesh.geometry.dispose();
-    mesh.material.dispose();
+    disposeObject3D(mesh);
+    this.group.remove(mesh);
   }
 }

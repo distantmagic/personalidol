@@ -29,6 +29,7 @@ import type { ExceptionHandler } from "../../interfaces/ExceptionHandler";
 import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../../interfaces/HTMLElementResizeObserver";
 import type { KeyboardState as KeyboardStateInterface } from "../../interfaces/KeyboardState";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
+import type { Logger } from "../../interfaces/Logger";
 import type { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
 import type { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
 import type { QueryBus } from "../../interfaces/QueryBus";
@@ -150,6 +151,7 @@ export default class SceneCanvas extends HTMLElement {
     debug: Debugger,
     exceptionHandler: ExceptionHandler,
     loadingManager: LoadingManager,
+    logger: Logger,
     queryBus: QueryBus,
     threeLoadingManager: THREELoadingManager
   ): Promise<void> {
@@ -176,6 +178,7 @@ export default class SceneCanvas extends HTMLElement {
       debug,
       this.keyboardState,
       loadingManager,
+      logger,
       this.loggerBreadcrumbs.add("RootCanvasController"),
       this.pointerState,
       queryBus,
@@ -187,12 +190,11 @@ export default class SceneCanvas extends HTMLElement {
     await loadingManager.blocking(this.canvasControllerBus.add(cancelToken, canvasController), "Loading initial game resources");
 
     canvasController.resize(new HTMLElementSize(this.canvasWrapperElement));
-
     this.canvasWrapperElement.classList.add("dm-canvas-wrapper--loaded");
 
     // setTimeout(() => {
     //   cancelToken.cancel(this.loggerBreadcrumbs);
-    // }, 2000);
+    // }, 100);
 
     await cancelToken.whenCanceled();
 

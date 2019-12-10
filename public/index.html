@@ -150,11 +150,11 @@
       <!-- START JS Disabled -->
       <noscript class="dd__noscript">
         <style>
+          #dd-root-loader-error {
+            display: block;
+          }
           #dd-root-loader-feedback {
             display: none;
-          }
-          #dd-root-loader-internal-error {
-            display: block;
           }
         </style>
       </noscript>
@@ -162,7 +162,7 @@
       <div id="dd-root-loader">
         <!-- START root loader feedback -->
         <div class="dd__setup" id="dd-root-loader-feedback">
-          <span id="dd-root-loader-message">Loading setup...</span>
+          <span id="dd-root-loader-message">Loading game setup...</span>
           <progress class="dd__setup__progress" id="dd-root-loader-progress" max="5" value="1"></progress>
         </div>
         <!-- END root loader feedback -->

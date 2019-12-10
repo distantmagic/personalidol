@@ -502,6 +502,8 @@ declare module "three" {
     remove(Object3D): void;
 
     lookAt(Vector3): void;
+
+    traverse((Object3D) => void): void;
   }
 
   declare export interface OrthographicCamera extends Camera {

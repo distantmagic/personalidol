@@ -1,23 +1,27 @@
 // @flow
 
 import autoBind from "auto-bind";
+import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 import { default as QuakeEntityView } from "./QuakeEntity";
 import { default as QuakeMapQuery } from "../Query/QuakeMap";
 
-import type { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, Scene } from "three";
+import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Scene } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
+import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class QuakeMap extends CanvasView {
   +audioListener: AudioListener;
   +audioLoader: AudioLoader;
+  +group: Group;
   +loadingManager: LoadingManager;
+  +logger: Logger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
   +scene: Scene;
@@ -29,6 +33,7 @@ export default class QuakeMap extends CanvasView {
     audioLoader: AudioLoader,
     canvasViewBag: CanvasViewBag,
     loadingManager: LoadingManager,
+    logger: Logger,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
     scene: Scene,
@@ -40,7 +45,9 @@ export default class QuakeMap extends CanvasView {
 
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
+    this.group = new THREE.Group();
     this.loadingManager = loadingManager;
+    this.logger = logger;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.scene = scene;
@@ -67,7 +74,7 @@ export default class QuakeMap extends CanvasView {
             this.loadingManager,
             this.loggerBreadcrumbs.add("QuakeMap"),
             this.queryBus,
-            this.scene,
+            this.group,
             this.threeLoadingManager
           )
         ),
@@ -78,5 +85,12 @@ export default class QuakeMap extends CanvasView {
     }
 
     await Promise.all(promises);
+    this.scene.add(this.group);
+  }
+
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await super.dispose(cancelToken);
+
+    this.scene.remove(this.group);
   }
 }
