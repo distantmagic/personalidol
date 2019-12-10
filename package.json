@@ -13,7 +13,7 @@
     "jsdom": "^15.2.1",
     "lodash": "^4.17.15",
     "mainloop.js": "^1.0.4",
-    "mathjs": "^6.2.3",
+    "mathjs": "^6.2.5",
     "modernizr": "^3.8.0",
     "ola": "^1.1.0",
     "pathfinding": "^0.4.18",
@@ -22,21 +22,21 @@
     "react-markdown": "^4.2.2",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.2.0",
+    "react-scripts": "^3.3.0",
     "resize-observer-polyfill": "^1.5.1",
-    "three": "^0.110.0",
+    "three": "^0.111.0",
     "twig": "^1.14.0",
     "workerize-loader": "^1.1.0",
     "yaml": "^1.7.2",
-    "yn": "^3.1.1"
+    "yn": "^4.0.0"
   },
   "devDependencies": {
     "eslint-plugin-react-hooks": "^2.3.0",
-    "flow-bin": "^0.112.0",
+    "flow-bin": "^0.113.0",
     "fs-extra": "^8.1.0",
     "node-sass": "^4.13.0",
     "prettier": "1.19.1",
-    "websocket": "^1.0.30"
+    "websocket": "^1.0.31"
   },
   "browserslist": [
     ">0.2%",
@@ -46,6 +46,11 @@
   ],
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!three).+\\.js$"
+    ]
   },
   "scripts": {
     "build": "REACT_APP_DEBUG=false react-scripts build",

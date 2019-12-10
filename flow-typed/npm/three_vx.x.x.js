@@ -299,6 +299,10 @@ declare module "three" {
   }
 
   declare export interface Color {
+    +isColor: true;
+
+    constructor(number, ?number, ?number): void;
+
     set(number): void;
   }
 
@@ -369,8 +373,32 @@ declare module "three" {
     ): void;
   }
 
+  declare export interface Face3 {
+    +a: number;
+    +b: number;
+    +c: number;
+    +materialIndex: number;
+    +normal: Vector3;
+    +vertexColors: [Color, Color, Color];
+    +vertexNormals: [Vector3, Vector3, Vector3];
+
+    constructor(a: number, b: number, c: number, normal?: Vector3, color?: Color, materialIndex?: number): void;
+
+    clone(): Face3;
+
+    copy(Face3): Face3;
+  }
+
   declare export interface Geometry extends BaseGeometry {
+    +faces: Face3[];
+    +vertices: Vector3[];
     +isGeometry: true;
+
+    constructor(): void;
+
+    computeFaceNormals(): void;
+
+    computeVertexNormals(): void;
   }
 
   declare export interface GridHelper extends Object3D {
@@ -544,6 +572,8 @@ declare module "three" {
     normal: Vector3;
 
     constructor(normal?: Vector3, constant?: number): void;
+
+    distanceToPoint(Vector3): number;
 
     equals(Plane): boolean;
 

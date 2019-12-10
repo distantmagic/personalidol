@@ -10,7 +10,6 @@ import type { Plane, Vector3 } from "three";
 import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 
 export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface {
-  +plane: Plane;
   +texture: string;
   +textureRotationAngle: number;
   +textureXScale: number;
@@ -20,6 +19,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
   +v3: Vector3;
   +xOffset: number;
   +yOffset: number;
+  cachedPlane: ?Plane;
 
   constructor(
     v1: Vector3,
@@ -49,7 +49,24 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     this.textureYScale = textureYScale;
   }
 
+  containsPoint(point: Vector3): boolean {
+    const distanceToPoint = this.getPlane().distanceToPoint(point);
+
+    if (this.planeContainsPoint(point, distanceToPoint)) {
+      return true;
+    }
+
+    // the point is 'in front' of the plane or lies on it
+    return distanceToPoint >= 0;
+  }
+
   getPlane(): Plane {
+    const cachedPlane = this.cachedPlane;
+
+    if (cachedPlane)  {
+      return cachedPlane;
+    }
+
     // THREE's Plane is actually a half-space in Quake map terms
     // const plane = new THREE.Plane();
 
@@ -58,9 +75,11 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     //
     // Quake map format stores vertices in a clockwise order
     // http://www.gamers.org/dEngine/quake2/Q2DP/Q2DP_Map/Q2DP_Map-2.html
-    const plane = new THREE.Plane();
+    const plane = (new THREE.Plane()).setFromCoplanarPoints(this.getPlaneDefiningPoint1(), this.getPlaneDefiningPoint2(), this.getPlaneDefiningPoint3());
 
-    return plane.setFromCoplanarPoints(this.getPlaneDefiningPoint1(), this.getPlaneDefiningPoint2(), this.getPlaneDefiningPoint3());
+    this.cachedPlane = plane;
+
+    return plane;
   }
 
   getPlaneDefiningPoint1(): Vector3 {
@@ -73,18 +92,6 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
 
   getPlaneDefiningPoint3(): Vector3 {
     return this.v3;
-  }
-
-  getRandomPoint(): Vector3 {
-    // I know it's not exactly random, but for the sake of object inheritance
-    // someone might want to override this somewhere else
-    return this.getPlaneDefiningPoint1();
-  }
-
-  getRandomVector(point: Vector3): Vector3 {
-    const randomPoint = this.getRandomPoint();
-
-    return point.clone().sub(randomPoint);
   }
 
   getTexture(): string {
@@ -111,19 +118,6 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     return this.yOffset;
   }
 
-  hasPoint(point: Vector3): boolean {
-    const randomVector = this.getRandomVector(point);
-    const dotProduct = this.getPlane().normal.dot(randomVector);
-
-    // floating point imperfections
-    if (isEqualWithEpsilon(dotProduct, 0, 0.1)) {
-      return true;
-    }
-
-    // the point is 'in front' of the plane or lies on it
-    return dotProduct >= 0;
-  }
-
   isEqual(other: QuakeBrushHalfSpaceInterface): boolean {
     return (
       this.getPlaneDefiningPoint1().equals(other.getPlaneDefiningPoint1()) &&
@@ -138,10 +132,13 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     );
   }
 
-  isParallel(other: QuakeBrushHalfSpaceInterface): boolean {
-    const thisPlane = this.getPlane();
-    const otherPlane = other.getPlane();
+  planeContainsPoint(point: Vector3, distanceToPoint?: number): boolean {
+    const distance = "number" === typeof distanceToPoint
+      ? distanceToPoint
+      : this.getPlane().distanceToPoint(point)
+    ;
 
-    return thisPlane.normal.equals(otherPlane.normal) || thisPlane.normal.multiplyScalar(-1).equals(otherPlane.normal);
+    // floating point imperfections
+    return isEqualWithEpsilon(distance, 0, 0.0001);
   }
 }

@@ -27,6 +27,16 @@ export default class QuakeBrush implements QuakeBrushInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
+  containsPoint(point: Vector3): boolean {
+    for (let halfSpace of this.getHalfSpaces()) {
+      if (!halfSpace.containsPoint(point)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   *generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrioInterface, void, void> {
     for (let combo of combineWithoutRepetitions(this.halfSpaces, 3)) {
       yield new QuakeBrushHalfSpaceTrio(this.loggerBreadcrumbs.add("QuakeBrushHalfSpaceTrio"), ...combo);
@@ -48,7 +58,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
         if (!unique.hasOwnProperty(serialized)) {
           unique[serialized] = true;
 
-          if (this.hasPoint(intersectingPoint)) {
+          if (this.containsPoint(intersectingPoint)) {
             yield intersectingPoint;
           }
         }
@@ -58,16 +68,6 @@ export default class QuakeBrush implements QuakeBrushInterface {
 
   getVertices(): $ReadOnlyArray<Vector3> {
     return Array.from(this.generateVertices());
-  }
-
-  hasPoint(point: Vector3): boolean {
-    for (let halfSpace of this.getHalfSpaces()) {
-      if (!halfSpace.hasPoint(point)) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   isEqual(other: QuakeBrushInterface): boolean {

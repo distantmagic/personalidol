@@ -15,11 +15,7 @@ test("arguments are not changed", function() {
   const halfSpace = new QuakeBrushHalfSpace(new THREE.Vector3(128, 128, 0), new THREE.Vector3(128, 0, 128), new THREE.Vector3(0, 128, 128), "__TB_empty", 0, 0, 0, 1, 1);
   const point = new THREE.Vector3(0, 0, 0);
 
-  halfSpace.hasPoint(point);
-
-  expect(point.equals(new THREE.Vector3(0, 0, 0))).toBe(true);
-
-  halfSpace.getRandomVector(point);
+  halfSpace.containsPoint(point);
 
   expect(point.equals(new THREE.Vector3(0, 0, 0))).toBe(true);
 });
@@ -43,5 +39,5 @@ test.each([
   [new THREE.Vector3(0, 0, 128), true],
 ])("detects if point is inside the plane", function(vector: Vector3, isContained: boolean) {
   const halfSpace = new QuakeBrushHalfSpace(new THREE.Vector3(128, 128, 0), new THREE.Vector3(128, 0, 128), new THREE.Vector3(0, 128, 128), "__TB_empty", 0, 0, 0, 1, 1);
-  expect(halfSpace.hasPoint(vector)).toBe(isContained);
+  expect(halfSpace.containsPoint(vector)).toBe(isContained);
 });
