@@ -2,7 +2,6 @@ $dd-hud-aside-width: 128px;
 $dd-hud-debugger-width: 327px;
 $dd-hud-dialogue-width: 524px;
 $dd-hud-settings-height: 80px;
-$dd-hud-toolbar-width: 80px;
 
 $dd-hud-gap: 2 * $dd-frame-padding;
 
@@ -14,12 +13,12 @@ $dd-hud-gap: 2 * $dd-frame-padding;
   display: grid;
   font-family: $font-family-vesper-libre;
   grid-template-areas:
-    "toolbar scene aside"
-    "toolbar scene settings";
+    "aside scene"
+    "settings scene";
   grid-template-columns:
-    $dd-hud-toolbar-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(3)})
-    $dd-hud-aside-width;
+    $dd-hud-aside-width
+    calc(100vw - #{$dd-hud-aside-width} - #{dd__hud_gap_diff(2)})
+  ;
   grid-gap: $dd-hud-gap;
   grid-template-rows: 1fr $dd-hud-settings-height;
   // height: 100%;
@@ -29,36 +28,36 @@ $dd-hud-gap: 2 * $dd-frame-padding;
 
 .dd__hud.dd__hud--debugger {
   grid-template-areas:
-    "debugger toolbar scene aside"
-    "debugger toolbar scene settings";
+    "debugger aside scene"
+    "debugger settings scene";
   grid-template-columns:
     $dd-hud-debugger-width
-    $dd-hud-toolbar-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(4)})
-    $dd-hud-aside-width;
+    $dd-hud-aside-width
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{dd__hud_gap_diff(3)})
+  ;
 }
 
 .dd__hud.dd__hud--debugger.dd__hud--dialogue {
   grid-template-areas:
-    "debugger toolbar dialogue scene aside"
-    "debugger toolbar dialogue scene settings";
+    "debugger aside dialogue scene"
+    "debugger settings dialogue scene";
   grid-template-columns:
     $dd-hud-debugger-width
-    $dd-hud-toolbar-width
     $dd-hud-dialogue-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(5)})
-    $dd-hud-aside-width;
+    $dd-hud-aside-width
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(4)})
+  ;
 }
 
 .dd__hud.dd__hud--dialogue {
   grid-template-areas:
-    "toolbar dialogue scene aside"
-    "toolbar dialogue scene settings";
+    "aside dialogue scene"
+    "settings dialogue scene";
   grid-template-columns:
-    $dd-hud-toolbar-width
+    $dd-hud-aside-width
     $dd-hud-dialogue-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{$dd-hud-toolbar-width} - #{dd__hud_gap_diff(4)})
-    $dd-hud-aside-width;
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(3)})
+  ;
 }
 
 .dd__aside.dd__aside--hud,

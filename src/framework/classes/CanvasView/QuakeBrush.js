@@ -2,11 +2,9 @@
 
 import * as THREE from "three";
 import autoBind from "auto-bind";
-import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry";
 
 import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
-import quake2three from "../../helpers/quake2three";
 import QuakeBrushGeometry from "../QuakeBrushGeometry";
 
 import type { Group, Mesh } from "three";
@@ -31,9 +29,9 @@ export default class QuakeBrush extends CanvasView {
 
   async loadTexture(): Promise<any> {
     return new Promise(resolve => {
-      new THREE.TextureLoader().load("textures/texture-cardboard-512x512.png", texture => {
+      new THREE.TextureLoader().load("textures/texture-uv-1024x1024.png", texture => {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(0.01, 0.01);
+        // texture.repeat.set(0.001, 0.001);
 
         resolve(texture);
       });
@@ -51,9 +49,7 @@ export default class QuakeBrush extends CanvasView {
       // transparent: true,
     });
 
-    // const geometry = new ConvexGeometry(vertices);
     const geometry = (new QuakeBrushGeometry(this.brush)).getGeometry();
-    // console.log(geometry);
     const mesh = new THREE.Mesh(geometry, material);
 
     mesh.receiveShadow = true;

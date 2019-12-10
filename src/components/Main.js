@@ -8,7 +8,6 @@ import HudAside from "./HudAside";
 import HudDebuggerListing from "./HudDebuggerListing";
 import HudScene from "./HudScene";
 import HudSettings from "./HudSettings";
-import HudToolbar from "./HudToolbar";
 import ModalRouter from "./ModalRouter";
 import Person from "../framework/classes/Entity/Person";
 import PreloaderImages from "./PreloaderImages";
@@ -84,7 +83,6 @@ export default function Main(props: Props) {
           queryBus={props.queryBus}
         />
         <HudSettings />
-        <HudToolbar />
       </div>
       <ModalRouter exceptionHandler={props.exceptionHandler} loggerBreadcrumbs={props.loggerBreadcrumbs.add("ModalRouter")} queryBus={props.queryBus} />
     </React.Fragment>
