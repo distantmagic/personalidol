@@ -7,8 +7,8 @@ import type { ElementSize } from "../interfaces/ElementSize";
 
 export default class CanvasController implements CanvasControllerInterface {
   +canvasViewBag: CanvasViewBag;
-  #isAttached: bool;
-  #isDisposed: bool;
+  #isAttached: boolean;
+  #isDisposed: boolean;
 
   constructor(canvasViewBag: CanvasViewBag) {
     this.canvasViewBag = canvasViewBag;
@@ -31,11 +31,11 @@ export default class CanvasController implements CanvasControllerInterface {
 
   end(fps: number, isPanicked: boolean): void {}
 
-  isAttached(): bool {
+  isAttached(): boolean {
     return this.#isAttached;
   }
 
-  isDisposed(): bool {
+  isDisposed(): boolean {
     return this.#isDisposed;
   }
 

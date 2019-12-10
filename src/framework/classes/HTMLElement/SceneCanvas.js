@@ -192,6 +192,8 @@ export default class SceneCanvas extends HTMLElement {
     canvasController.resize(new HTMLElementSize(this.canvasWrapperElement));
     this.canvasWrapperElement.classList.add("dm-canvas-wrapper--loaded");
 
+    logger.debug(this.loggerBreadcrumbs.add("attachRenderer"), "Game is ready.");
+
     // setTimeout(() => {
     //   cancelToken.cancel(this.loggerBreadcrumbs);
     // }, 100);
@@ -208,5 +210,7 @@ export default class SceneCanvas extends HTMLElement {
 
     this.isLooping = false;
     this.onComponentStateChange();
+
+    await logger.debug(this.loggerBreadcrumbs.add("attachRenderer"), "Game is completely disposed of.");
   }
 }

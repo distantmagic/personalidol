@@ -6,8 +6,8 @@ import type { CanvasViewBag } from "../interfaces/CanvasViewBag";
 
 export default class CanvasView implements CanvasViewInterface {
   +canvasViewBag: CanvasViewBag;
-  #isAttached: bool;
-  #isDisposed: bool;
+  #isAttached: boolean;
+  #isDisposed: boolean;
 
   static useBegin: boolean = true;
   static useEnd: boolean = true;
@@ -34,11 +34,11 @@ export default class CanvasView implements CanvasViewInterface {
 
   end(fps: number, isPanicked: boolean): void {}
 
-  isAttached(): bool {
+  isAttached(): boolean {
     return this.#isAttached;
   }
 
-  isDisposed(): bool {
+  isDisposed(): boolean {
     return this.#isDisposed;
   }
 

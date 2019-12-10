@@ -5,7 +5,7 @@ import combineWithoutRepetitions from "../helpers/combineWithoutRepetitions";
 
 import Exception from "./Exception";
 import QuakeBrushHalfSpaceTrio from "./QuakeBrushHalfSpaceTrio";
-import { default as vector3serialize } from "../helpers/serialize/vector3";
+import serializeVector3 from "../helpers/serializeVector3";
 
 import type { Vector3 } from "three";
 
@@ -43,7 +43,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     for (let trio of this.generateHalfSpaceTrios()) {
       if (trio.hasIntersectingPoint()) {
         const intersectingPoint = trio.getIntersectingPoint();
-        const serialized = vector3serialize(intersectingPoint);
+        const serialized = serializeVector3(intersectingPoint);
 
         if (!unique.hasOwnProperty(serialized)) {
           unique[serialized] = true;

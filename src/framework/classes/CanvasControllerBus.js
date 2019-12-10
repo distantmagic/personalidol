@@ -44,7 +44,10 @@ export default class CanvasControllerBus implements CanvasControllerBusInterface
     await canvasController.dispose(cancelToken);
 
     if (!canvasController.isDisposed()) {
-      throw new CanvasControllerException(this.loggerBreadcrumbs.add("delete"), "Canvas controller wasn't properly disposed. Did you forget to call parent 'super.dispose' method?");
+      throw new CanvasControllerException(
+        this.loggerBreadcrumbs.add("delete"),
+        "Canvas controller wasn't properly disposed. Did you forget to call parent 'super.dispose' method?"
+      );
     }
   }
 }

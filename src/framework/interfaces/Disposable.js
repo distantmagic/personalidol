@@ -5,9 +5,9 @@ import type { CancelToken } from "./CancelToken";
 export interface Disposable {
   attach(CancelToken): Promise<void>;
 
-  isAttached(): bool;
+  isAttached(): boolean;
 
   dispose(CancelToken): Promise<void>;
 
-  isDisposed(): bool;
+  isDisposed(): boolean;
 }

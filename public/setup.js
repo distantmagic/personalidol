@@ -60,7 +60,7 @@
 
     setProgressMessage: function(message) {
       setup.getElementById("dd-root-loader-message").textContent = message;
-    }
+    },
   };
 
   var allFeatures = 0;
