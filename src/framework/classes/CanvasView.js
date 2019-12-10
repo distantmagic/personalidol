@@ -6,6 +6,8 @@ import type { CanvasViewBag } from "../interfaces/CanvasViewBag";
 
 export default class CanvasView implements CanvasViewInterface {
   +canvasViewBag: CanvasViewBag;
+  #isAttached: bool;
+  #isDisposed: bool;
 
   static useBegin: boolean = true;
   static useEnd: boolean = true;
@@ -13,17 +15,32 @@ export default class CanvasView implements CanvasViewInterface {
 
   constructor(canvasViewBag: CanvasViewBag): void {
     this.canvasViewBag = canvasViewBag;
+    this.#isAttached = false;
+    this.#isDisposed = false;
   }
 
-  async attach(cancelToken: CancelToken): Promise<void> {}
+  async attach(cancelToken: CancelToken): Promise<void> {
+    this.#isAttached = true;
+    this.#isDisposed = false;
+  }
 
   begin(): void {}
 
   async dispose(cancelToken: CancelToken): Promise<void> {
-    return this.canvasViewBag.dispose(cancelToken);
+    this.#isAttached = false;
+    await this.canvasViewBag.dispose(cancelToken);
+    this.#isDisposed = true;
   }
 
   end(fps: number, isPanicked: boolean): void {}
+
+  isAttached(): bool {
+    return this.#isAttached;
+  }
+
+  isDisposed(): bool {
+    return this.#isDisposed;
+  }
 
   onPointerAuxiliaryClick(): void {}
 

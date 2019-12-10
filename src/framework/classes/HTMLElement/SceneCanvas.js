@@ -82,13 +82,13 @@ export default class SceneCanvas extends HTMLElement {
 
     this.loggerBreadcrumbs = new LoggerBreadcrumbs(["SceneCanvas"]);
     this.scheduler = new Scheduler();
-    this.canvasViewBus = new CanvasViewBus(this.scheduler);
+    this.canvasViewBus = new CanvasViewBus(this.loggerBreadcrumbs, this.scheduler);
     this.canvasViewBag = new CanvasViewBag(this.canvasViewBus, this.loggerBreadcrumbs);
     this.keyboardState = new KeyboardState(this.loggerBreadcrumbs.add("KeyboardState"));
     this.mainLoop = MainLoop.getInstance();
     this.pointerState = new PointerState(this.loggerBreadcrumbs.add("PointerState"), this.canvasElement);
     this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this.canvasWrapperElement);
-    this.canvasControllerBus = new CanvasControllerBus(this.resizeObserver, this.scheduler);
+    this.canvasControllerBus = new CanvasControllerBus(this.loggerBreadcrumbs, this.resizeObserver, this.scheduler);
 
     // this.mainLoop.setMaxAllowedFPS(10);
     this.mainLoop.attachScheduler(this.scheduler);
