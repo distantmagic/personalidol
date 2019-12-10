@@ -87,6 +87,9 @@
       .dd__browser-feature.dd__browser-feature--not-supported {
         color: crimson;
       }
+      .dd__noscript {
+        display: none;
+      }
       .dd__setup {
         display: block;
         line-height: 1.3;
@@ -140,153 +143,156 @@
         padding: 0.6rem;
       }
     </style>
-
     <title>Personal Idol</title>
   </head>
   <body>
-    <div class="js-dd-pending" id="dd-root">
+    <div id="dd-root">
+      <!-- START JS Disabled -->
       <noscript class="dd__noscript">
-        <div class="dd__setup dd__setup--error">
-          <p class="dd__setup__error-message">
-            You need to enable JavaScript to run this application.
-          </p>
-          <p>
-            <a href="https://www.wikihow.com/Enable-JavaScript">
-              How do I enable JavaScript?
-            </a>
-          </p>
-        </div>
+        <style>
+          #dd-root-loader-feedback {
+            display: none;
+          }
+          #dd-root-loader-internal-error {
+            display: block;
+          }
+        </style>
       </noscript>
-      <div class="dd__setup dd__setup--hidden" id="dd-root-loader-setup">
-        Loading setup...
-        <progress class="dd__setup__progress" id="dd-capabilities-progress" max="5" value="1"></progress>
-      </div>
-      <div class="dd__setup dd__setup--hidden" id="dd-root-loader-capabilities">
-        Checking browser capabilities...
-        <progress class="dd__setup__progress" id="dd-capabilities-progress" max="5" value="2"></progress>
-      </div>
-      <div class="dd__setup dd__setup--hidden" id="dd-root-loader-app">
-        Loading game engine...
-        <progress class="dd__setup__progress" id="dd-capabilities-progress" max="5" value="3"></progress>
-      </div>
-      <div class="dd__setup dd__setup--error dd__setup--hidden" id="dd-root-error">
-        <div class="dd__setup__content">
-          <strong class="dd__setup__error-message">
-            Your browser is not capable of running this application.
-          </strong>
-          <p>
-            I am using latest web development technologies to provide the most optimal and safe experience possible (or at least the best possible for me to provide 🙂). I want to
-            do that without using any kind of coding tricks or polyfills to overcome browser limitations (or at least keep them at minimum) and instead to rely on native browser
-            features.
-          </p>
-          <p>
-            Thanks to that I also want to make sure that the app will be experienced under optimal conditions and never in a degraded state.
-          </p>
-          <p>
-            Sorry for not letting you try to run this app nonetheless, but I am completely sure that without those required features it will break anyway.
-          </p>
-          <p>It is recommended to use the <strong>latest</strong> version of any of these browsers:</p>
-          <nav class="dd__setup__recommended-browsers">
-            <a class="dd__setup__recommended-browsers__browser" href="https://www.google.com/chrome/">
-              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/chrome/chrome_64x64.png" />
-            </a>
-            <a class="dd__setup__recommended-browsers__browser" href="https://www.mozilla.org/en-US/firefox/">
-              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/firefox/firefox_64x64.png" />
-            </a>
-            <a class="dd__setup__recommended-browsers__browser" href="https://www.apple.com/lae/safari/">
-              <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/safari/safari_64x64.png" />
-            </a>
-          </nav>
-          <p>
-            If your are not interested in using any of the above, you can always pick your own browser, but it has to fully support those technical features:
-          </p>
-          <details class="dd__browser-details">
-            <p>
-              ✓ - your current browser supports this one
-            </p>
-            <p>
-              Click feature name for more info.
-            </p>
-            <ul class="dd__browser-features">
-              <li class="dd__browser-feature" id="browser-feature-flexbox">
-                <a href="https://caniuse.com/#feat=flexbox">
-                  CSS Flexible Box Layout Module (for UI rendering)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-cssgrid">
-                <a href="https://caniuse.com/#feat=css-grid">
-                  CSS Grid Layout (for UI rendering)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-customelements">
-                <a href="https://caniuse.com/#feat=mdn-api_window_customelements">
-                  Custom Elements (for 3D scene rendering)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-es5">
-                <a href="https://caniuse.com/#feat=es5">
-                  ECMAScript 5 (coding features)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-es6">
-                <a href="https://caniuse.com/#feat=es6">
-                  ECMAScript 6 (coding features)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-fetch">
-                <a href="https://caniuse.com/#feat=fetch">
-                  Fetch (coding feature)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-intl">
-                <a href="https://caniuse.com/#feat=mdn-javascript_builtins_intl">
-                  Intl (browser extension for internationalization)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-passiveeventlisteners">
-                <a href="https://caniuse.com/#feat=passive-event-listener">
-                  Passive event listeners (coding feature)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-promises">
-                <a href="https://caniuse.com/#feat=promises">
-                  Promises (coding feature)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-srcset">
-                <a href="https://caniuse.com/#search=srcset">
-                  Srcset and sizes attributes (for image loading optimization)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-webworkers">
-                <a href="https://caniuse.com/#feat=webworkers">
-                  Web Workers (for performance)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-webgl">
-                <a href="https://caniuse.com/#feat=webgl">
-                  WebGL (for 3D scene rendering)
-                </a>
-              </li>
-              <li class="dd__browser-feature" id="browser-feature-webrtc">
-                <a href="https://caniuse.com/#feat=rtcpeerconnection">
-                  WebRTC (for P2P chat between players)
-                </a>
-              </li>
-            </ul>
-          </details>
+      <!-- END JS Disabled -->
+      <div id="dd-root-loader">
+        <!-- START root loader feedback -->
+        <div class="dd__setup" id="dd-root-loader-feedback">
+          <span id="dd-root-loader-message">Loading setup...</span>
+          <progress class="dd__setup__progress" id="dd-root-loader-progress" max="5" value="1"></progress>
         </div>
+        <!-- END root loader feedback -->
+        <!-- START game internal error -->
+        <div class="dd__setup dd__setup--hidden" id="dd-root-loader-error">
+          <div class="dd__setup__content">
+            <p class="dd__setup__error-message" id="dd-root-loader-error-caption">
+              You need to enable JavaScript to run this application.
+            </p>
+            <p id="dd-root-loader-error-message">
+              <a href="https://www.wikihow.com/Enable-JavaScript">
+                How do I enable JavaScript?
+              </a>
+            </p>
+          </div>
+        </div>
+        <!-- END game internal error -->
+        <!-- START game incompatible -->
+        <div class="dd__setup dd__setup--hidden" id="dd-root-loader-incompatible">
+          <div class="dd__setup__content">
+            <strong class="dd__setup__error-message">
+              Your browser is not capable of running this application.
+            </strong>
+            <p>
+              I am using latest web development technologies to provide the most optimal and safe experience possible (or at least the best possible for me to provide 🙂). I want
+              to do that without using any kind of coding tricks or polyfills to overcome browser limitations (or at least keep them at minimum) and instead to rely on native
+              browser features.
+            </p>
+            <p>
+              Thanks to that I also want to make sure that the app will be experienced under optimal conditions and never in a degraded state.
+            </p>
+            <p>
+              Sorry for not letting you try to run this app nonetheless, but I am completely sure that without those required features it will break anyway.
+            </p>
+            <p>It is recommended to use the <strong>latest</strong> version of any of these browsers:</p>
+            <nav class="dd__setup__recommended-browsers">
+              <a class="dd__setup__recommended-browsers__browser" href="https://www.google.com/chrome/">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/chrome/chrome_64x64.png" />
+              </a>
+              <a class="dd__setup__recommended-browsers__browser" href="https://www.mozilla.org/en-US/firefox/">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/firefox/firefox_64x64.png" />
+              </a>
+              <a class="dd__setup__recommended-browsers__browser" href="https://www.apple.com/lae/safari/">
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/58.1.3/safari/safari_64x64.png" />
+              </a>
+            </nav>
+            <p>
+              If your are not interested in using any of the above, you can always pick your own browser, but it has to fully support those technical features:
+            </p>
+            <details class="dd__browser-details">
+              <p>
+                ✓ - your current browser supports this one
+              </p>
+              <p>
+                Click feature name for more info.
+              </p>
+              <ul class="dd__browser-features">
+                <li class="dd__browser-feature" id="browser-feature-flexbox">
+                  <a href="https://caniuse.com/#feat=flexbox">
+                    CSS Flexible Box Layout Module (for UI rendering)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-cssgrid">
+                  <a href="https://caniuse.com/#feat=css-grid">
+                    CSS Grid Layout (for UI rendering)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-customelements">
+                  <a href="https://caniuse.com/#feat=mdn-api_window_customelements">
+                    Custom Elements (for 3D scene rendering)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-es5">
+                  <a href="https://caniuse.com/#feat=es5">
+                    ECMAScript 5 (coding features)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-es6">
+                  <a href="https://caniuse.com/#feat=es6">
+                    ECMAScript 6 (coding features)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-fetch">
+                  <a href="https://caniuse.com/#feat=fetch">
+                    Fetch (coding feature)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-intl">
+                  <a href="https://caniuse.com/#feat=mdn-javascript_builtins_intl">
+                    Intl (browser extension for internationalization)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-passiveeventlisteners">
+                  <a href="https://caniuse.com/#feat=passive-event-listener">
+                    Passive event listeners (coding feature)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-promises">
+                  <a href="https://caniuse.com/#feat=promises">
+                    Promises (coding feature)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-srcset">
+                  <a href="https://caniuse.com/#search=srcset">
+                    Srcset and sizes attributes (for image loading optimization)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-webworkers">
+                  <a href="https://caniuse.com/#feat=webworkers">
+                    Web Workers (for performance)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-webgl">
+                  <a href="https://caniuse.com/#feat=webgl">
+                    WebGL (for 3D scene rendering)
+                  </a>
+                </li>
+                <li class="dd__browser-feature" id="browser-feature-webrtc">
+                  <a href="https://caniuse.com/#feat=rtcpeerconnection">
+                    WebRTC (for P2P chat between players)
+                  </a>
+                </li>
+              </ul>
+            </details>
+          </div>
+        </div>
+        <!-- END game incompatible -->
       </div>
     </div>
-    <script>
-      (function() {
-        // this one is here to make sure that setup contents is shown only to
-        // users that have JavaScript enabled
-        document.getElementById("dd-root-loader-setup").classList.remove("dd__setup--hidden");
-      })();
-    </script>
-
-    <script src="%PUBLIC_URL%/vendor/modernizr.js"></script>
-    <script src="%PUBLIC_URL%/setup.js"></script>
+    <script defer src="%PUBLIC_URL%/vendor/modernizr.js"></script>
+    <script defer src="%PUBLIC_URL%/setup.js"></script>
   </body>
 </html>

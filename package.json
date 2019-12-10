@@ -61,9 +61,7 @@
   },
   "scripts": {
     "build": "REACT_APP_DEBUG=false react-scripts build",
-    "flow:watch": "$npm_execpath run flow:watch:fswatch",
-    "flow:watch:fswatch": "fswatch --one-event --one-per-batch src | xargs -n1 -I{} yarn run flow status",
-    "flow:watch:inotify": "inotifywait -e close_write -r -m src | xargs -n1 -I{} yarn run flow status",
+    "flow:watch": "inotifywait -e close_write -r -m public src | xargs -n1 -I{} yarn run flow status",
     "modernizr": "./node_modules/.bin/modernizr -c ./modernizr.json -d ./public/vendor -u",
     "postinstall": "$npm_execpath run modernizr",
     "prettier": "./node_modules/.bin/prettier --write \"./{flow-typed,public,src}/**/*.{htm,html,js,scss}\"",

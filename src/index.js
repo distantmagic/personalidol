@@ -1,6 +1,5 @@
 // @flow
 
-import raf from "raf";
 import React from "react";
 import ReactDOM from "react-dom";
 import yn from "yn";
@@ -22,10 +21,11 @@ import { default as UnexpectedExceptionHandlerFilter } from "./framework/classes
 
 import "./scss/index.scss";
 
-async function init(rootElement: HTMLElement): Promise<void> {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+import type { Logger } from "./framework/interfaces/Logger";
+import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "./framework/interfaces/LoggerBreadcrumbs";
+
+async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterface, rootElement: HTMLElement): Promise<void> {
   const debug = new Debugger();
-  const logger = new ConsoleLogger();
   const exceptionHandlerFilter = new UnexpectedExceptionHandlerFilter();
   const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
   const expressionBus = new ExpressionBus();
@@ -39,9 +39,6 @@ async function init(rootElement: HTMLElement): Promise<void> {
   } catch (exception) {
     await exceptionHandler.captureException(loggerBreadcrumbs, exception);
   }
-
-  // const worker: PrimaryWorkerInterface = new PrimaryWorker();
-  // console.log(await worker.hello());
 
   debug.setIsEnabled(
     yn(process.env.REACT_APP_FEATURE_DEBUGGER, {
@@ -68,20 +65,25 @@ async function init(rootElement: HTMLElement): Promise<void> {
   );
 }
 
-async function checkInit(): Promise<void> {
-  const rootElement = document.getElementById("dd-root");
+document.addEventListener(
+  "dd-capable",
+  function(evt: Event) {
+    const loggerBreadcrumbs = new LoggerBreadcrumbs();
+    const logger = new ConsoleLogger();
+    const target = evt.target;
 
-  if (rootElement) {
-    if (rootElement.classList.contains("js-dd-capable")) {
-      rootElement.classList.add("dd__capable");
+    if (target instanceof HTMLElement) {
+      init(logger, loggerBreadcrumbs, target);
+    } else {
+      const message = "Game loader target has to be a valid HTML element.";
 
-      return init(rootElement);
-    } else if (rootElement.classList.contains("js-dd-incapable")) {
-      return;
+      // $FlowFixMe
+      evt.detail.setInternalError("Internal setup error", message);
+
+      logger.error(loggerBreadcrumbs, message);
     }
+  },
+  {
+    once: true,
   }
-
-  raf(checkInit);
-}
-
-raf(checkInit);
+);

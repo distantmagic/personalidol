@@ -1,7 +1,8 @@
-(function() {
+// @flow
+
+(function(Modernizr) {
   "use strict";
 
-  var rootElement = document.getElementById("dd-root");
   var requiredBrowserFeatures = {
     cssgrid: "cssgrid",
     customelements: "customelements",
@@ -24,6 +25,57 @@
     webgl: "webgl",
     webworkers: "webworkers",
   };
+
+  var setup = {
+    getElementById(id) {
+      var element = document.getElementById(id);
+
+      if (!element) {
+        throw new Error(String("Could not find element by ID: ") + id);
+      }
+
+      return element;
+    },
+
+    getRootElement() {
+      return setup.getElementById("dd-root");
+    },
+
+    disableProgress: function() {
+      setup.getElementById("dd-root-loader-feedback").classList.add("dd__setup--hidden");
+    },
+
+    setIncompatible: function() {
+      setup.disableProgress();
+      setup.getElementById("dd-root-loader-incompatible").classList.remove("dd__setup--hidden");
+    },
+
+    setInternalError: function(caption, message) {
+      setup.disableProgress();
+
+      setup.getElementById("dd-root-loader-error").classList.remove("dd__setup--hidden");
+      setup.getElementById("dd-root-loader-error-caption").textContent = caption;
+      setup.getElementById("dd-root-loader-error-message").textContent = message;
+    },
+
+    setProgress: function(message, max, value) {
+      setup.setProgressMessage(message);
+      setup.setProgressBar(max, value);
+    },
+
+    setProgressMessage: function(message) {
+      setup.getElementById("dd-root-loader-message").textContent = message;
+    },
+
+    setProgressBar: function(max, value) {
+      var progressBarElement = setup.getElementById("dd-root-loader-progress");
+
+      progressBarElement.setAttribute("max", String(max));
+      progressBarElement.setAttribute("value", String(value));
+      progressBarElement.textContent = String(value) + "/" + String(max);
+    },
+  };
+
   var allFeatures = 0;
   var doneFeatures = 0;
   var feature = void 0;
@@ -32,59 +84,43 @@
   var notSupportedClassName = "dd__browser-feature--not-supported";
   var supportedClassName = "dd__browser-feature--supported";
 
+  function onAllFeaturesChecked() {
+    if (isCapable) {
+      setup.setProgress("Loading game engine...", 5, 1);
+      setup.getRootElement().dispatchEvent(
+        new CustomEvent("dd-capable", {
+          bubbles: true,
+          detail: setup,
+        })
+      );
+    } else {
+      setup.setIncompatible();
+    }
+  }
+
   function onFeatureChecked(feature, isFeatureSupported) {
     isCapable = isCapable && isFeatureSupported;
     doneFeatures += 1;
 
-    markSupported(feature, isFeatureSupported);
-    updateProgress(allFeatures, doneFeatures);
+    setIsFeatureSupported(feature, isFeatureSupported);
+    setup.setProgressBar(allFeatures, doneFeatures);
 
     if (doneFeatures < allFeatures) {
       return;
     }
 
-    onFinished();
+    onAllFeaturesChecked();
   }
 
-  function onFinished() {
-    document.getElementById("dd-root-loader-capabilities").classList.add("dd__setup--hidden");
-
-    if (isCapable) {
-      rootElement.className = "js-dd-capable";
-      document.getElementById("dd-root-loader-app").classList.remove("dd__setup--hidden");
-    } else {
-      rootElement.className = "js-dd-incapable";
-      document.getElementById("dd-root-error").classList.remove("dd__setup--hidden");
-    }
+  function setIsFeatureSupported(feature, isFeatureSupported) {
+    setup.getElementById("browser-feature-" + requiredBrowserFeatures[feature]).classList.add(isFeatureSupported ? supportedClassName : notSupportedClassName);
   }
-
-  function updateProgress(max, value) {
-    var progressBarElement = document.getElementById("dd-capabilities-progress");
-
-    progressBarElement.setAttribute("max", max);
-    progressBarElement.setAttribute("value", value);
-    progressBarElement.textContent = String(value) + "/" + String(max);
-  }
-
-  function markSupported(feature, isFeatureSupported) {
-    document.getElementById("browser-feature-" + requiredBrowserFeatures[feature]).classList.add(isFeatureSupported ? supportedClassName : notSupportedClassName);
-  }
-
-  document.getElementById("dd-root-loader-setup").classList.add("dd__setup--hidden");
-  document.getElementById("dd-root-loader-capabilities").classList.remove("dd__setup--hidden");
 
   for (feature in requiredBrowserFeatures) {
     if (requiredBrowserFeatures.hasOwnProperty(feature)) {
       allFeatures += 1;
 
-      Modernizr.on(
-        feature,
-        (function(thisFeature) {
-          return function(result) {
-            return onFeatureChecked(thisFeature, result);
-          };
-        })(feature)
-      );
+      Modernizr.on(feature, onFeatureChecked.bind(null, feature));
     }
   }
-})();
+})(window.Modernizr);

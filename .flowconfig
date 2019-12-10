@@ -3,6 +3,7 @@
 
 [include]
 <PROJECT_ROOT>/src
+<PROJECT_ROOT>/public/setup.js
 
 [libs]
 flow-typed

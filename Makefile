@@ -16,7 +16,7 @@ build/index.html: $(JS_SOURCES)
 	yarn run build
 
 flow.watch: node_modules
-	yarn run flow:watch:inotify
+	yarn run flow:watch
 
 frontend: build/index.html
 
@@ -45,6 +45,8 @@ setup: setup.trenchbroom
 setup.trenchbroom:
 	rm -rf ~/.TrenchBroom/games/PersonalIdol
 	cp -r ./trenchbroom ~/.TrenchBroom/games/PersonalIdol
+# 	rm -rf ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
+# 	cp -r ./trenchbroom ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
 
 start: frontend.dependencies
 	yarn run start
