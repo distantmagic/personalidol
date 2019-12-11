@@ -17,8 +17,7 @@ $dd-hud-gap: 2 * $dd-frame-padding;
     "settings scene";
   grid-template-columns:
     $dd-hud-aside-width
-    calc(100vw - #{$dd-hud-aside-width} - #{dd__hud_gap_diff(2)})
-  ;
+    calc(100vw - #{$dd-hud-aside-width} - #{dd__hud_gap_diff(2)});
   grid-gap: $dd-hud-gap;
   grid-template-rows: 1fr $dd-hud-settings-height;
   // height: 100%;
@@ -33,8 +32,7 @@ $dd-hud-gap: 2 * $dd-frame-padding;
   grid-template-columns:
     $dd-hud-debugger-width
     $dd-hud-aside-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{dd__hud_gap_diff(3)})
-  ;
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{dd__hud_gap_diff(3)});
 }
 
 .dd__hud.dd__hud--debugger.dd__hud--dialogue {
@@ -45,8 +43,7 @@ $dd-hud-gap: 2 * $dd-frame-padding;
     $dd-hud-debugger-width
     $dd-hud-dialogue-width
     $dd-hud-aside-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(4)})
-  ;
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(4)});
 }
 
 .dd__hud.dd__hud--dialogue {
@@ -56,8 +53,7 @@ $dd-hud-gap: 2 * $dd-frame-padding;
   grid-template-columns:
     $dd-hud-aside-width
     $dd-hud-dialogue-width
-    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(3)})
-  ;
+    calc(100vw - #{$dd-hud-aside-width} - #{$dd-hud-debugger-width} - #{$dd-hud-dialogue-width} - #{dd__hud_gap_diff(3)});
 }
 
 .dd__aside.dd__aside--hud,

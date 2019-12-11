@@ -22,7 +22,7 @@ import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
 //   const geometry = quakeBrushGeometry.getGeometry();
 // });
 
-test("generates faces from quake brush", function () {
+test("generates faces from quake brush", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush = new QuakeBrush(loggerBreadcrumbs, [
     new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0 1 1").parse(),

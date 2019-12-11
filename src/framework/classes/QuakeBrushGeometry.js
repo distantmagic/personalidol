@@ -26,46 +26,39 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
     convexHull.setFromPoints(vertices);
 
     let i = 0;
-    for (let face of convexHull.faces) {
-      let edge = face.edge;
+    for (let rawFace of convexHull.faces) {
+      let edge = rawFace.edge;
 
       do {
         let point = edge.head().point;
         geometry.vertices.push(point);
         edge = edge.next;
-      } while ( edge !== face.edge );
+      } while (edge !== rawFace.edge);
 
-      geometry.faces.push(new THREE.Face3(
-        i,
-        i + 1,
-        i + 2,
-        face.normal,
-        face.color,
-        0
-      ));
+      const face = new THREE.Face3(i, i + 1, i + 2, rawFace.normal, rawFace.color, 0);
+      const v1 = geometry.vertices[face.a];
+      const v2 = geometry.vertices[face.b];
+      const v3 = geometry.vertices[face.c];
 
+      if (face.normal.x > face.normal.y && face.normal.x > face.normal.z) {
+        geometry.faceVertexUvs[0].push([new THREE.Vector2(v1.z / 1024, v1.y / 1024), new THREE.Vector2(v2.z / 1024, v2.y / 1024), new THREE.Vector2(v3.z / 1024, v3.y / 1024)]);
+      } else if (face.normal.y > face.normal.x && face.normal.y > face.normal.z) {
+        geometry.faceVertexUvs[0].push([new THREE.Vector2(v1.z / 1024, v1.x / 1024), new THREE.Vector2(v2.z / 1024, v2.x / 1024), new THREE.Vector2(v3.z / 1024, v3.x / 1024)]);
+      } else if (face.normal.z > face.normal.x && face.normal.z > face.normal.y) {
+        geometry.faceVertexUvs[0].push([new THREE.Vector2(v1.x / 1024, v1.y / 1024), new THREE.Vector2(v2.x / 1024, v2.y / 1024), new THREE.Vector2(v3.x / 1024, v3.y / 1024)]);
+      } else if (face.normal.x < face.normal.y && face.normal.x < face.normal.z) {
+        geometry.faceVertexUvs[0].push([new THREE.Vector2(v1.z / 1024, v1.y / 1024), new THREE.Vector2(v2.z / 1024, v2.y / 1024), new THREE.Vector2(v3.z / 1024, v3.y / 1024)]);
+      } else if (face.normal.y < face.normal.x && face.normal.y < face.normal.z) {
+        geometry.faceVertexUvs[0].push([new THREE.Vector2(v1.z / 1024, v1.x / 1024), new THREE.Vector2(v2.z / 1024, v2.x / 1024), new THREE.Vector2(v3.z / 1024, v3.x / 1024)]);
+      } else if (face.normal.z < face.normal.x && face.normal.z < face.normal.y) {
+        geometry.faceVertexUvs[0].push([new THREE.Vector2(v1.x / 1024, v1.y / 1024), new THREE.Vector2(v2.x / 1024, v2.y / 1024), new THREE.Vector2(v3.x / 1024, v3.y / 1024)]);
+      } else {
+        geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 0), new THREE.Vector2(0, 0), new THREE.Vector2(0, 0)]);
+      }
+
+      geometry.faces.push(face);
       i += 3;
     }
-
-    geometry.faceVertexUvs[0] = [];
-    geometry.faces.forEach(function(face) {
-      var components = ['x', 'y', 'z'].sort(function(a, b) {
-        return Math.abs(face.normal[a]) > Math.abs(face.normal[b]);
-      });
-
-      var v1 = geometry.vertices[face.a];
-      var v2 = geometry.vertices[face.b];
-      var v3 = geometry.vertices[face.c];
-
-      // dv->st[0] = s->vecs[0][3] + DotProduct( s->vecs[0], dv->xyz );
-      // dv->st[1] = s->vecs[1][3] + DotProduct( s->vecs[1], dv->xyz );
-
-      geometry.faceVertexUvs[0].push([
-        new THREE.Vector2(v1[components[0]] / 1024, v1[components[1]] / 1024),
-        new THREE.Vector2(v2[components[0]] / 1024, v2[components[1]] / 1024),
-        new THREE.Vector2(v3[components[0]] / 1024, v3[components[1]] / 1024),
-      ]);
-    });
 
     return geometry;
   }

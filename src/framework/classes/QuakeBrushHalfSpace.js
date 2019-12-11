@@ -63,7 +63,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
   getPlane(): Plane {
     const cachedPlane = this.cachedPlane;
 
-    if (cachedPlane)  {
+    if (cachedPlane) {
       return cachedPlane;
     }
 
@@ -75,7 +75,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     //
     // Quake map format stores vertices in a clockwise order
     // http://www.gamers.org/dEngine/quake2/Q2DP/Q2DP_Map/Q2DP_Map-2.html
-    const plane = (new THREE.Plane()).setFromCoplanarPoints(this.getPlaneDefiningPoint1(), this.getPlaneDefiningPoint2(), this.getPlaneDefiningPoint3());
+    const plane = new THREE.Plane().setFromCoplanarPoints(this.getPlaneDefiningPoint1(), this.getPlaneDefiningPoint2(), this.getPlaneDefiningPoint3());
 
     this.cachedPlane = plane;
 
@@ -133,11 +133,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
   }
 
   planeContainsPoint(point: Vector3, distanceToPoint?: number): boolean {
-    const distance = "number" === typeof distanceToPoint
-      ? distanceToPoint
-      : this.getPlane().distanceToPoint(point)
-    ;
-
+    const distance = "number" === typeof distanceToPoint ? distanceToPoint : this.getPlane().distanceToPoint(point);
     // floating point imperfections
     return isEqualWithEpsilon(distance, 0, 0.0001);
   }

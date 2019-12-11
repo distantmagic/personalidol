@@ -49,7 +49,7 @@ export default class QuakeBrush extends CanvasView {
       // transparent: true,
     });
 
-    const geometry = (new QuakeBrushGeometry(this.brush)).getGeometry();
+    const geometry = new QuakeBrushGeometry(this.brush).getGeometry();
     const mesh = new THREE.Mesh(geometry, material);
 
     mesh.receiveShadow = true;

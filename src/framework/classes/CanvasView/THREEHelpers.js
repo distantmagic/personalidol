@@ -24,6 +24,8 @@ export default class Cube extends CanvasView {
     const gridSideLength = 32 + 1;
 
     this.axesHelper = new THREE.AxesHelper(256);
+    this.axesHelper.position.y = 64;
+
     this.gridHelper = new THREE.GridHelper(gridSideLength * gridTileSize, gridSideLength);
     this.scene = scene;
   }
