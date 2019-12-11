@@ -21,7 +21,7 @@ export default class QuakeEntityPropertyParser implements QuakeEntityPropertyPar
       throw new QuakeMapParserException(this.loggerBreadcrumbs.add("entityPropertySplits"), "Unexpected number of brush splits.");
     }
 
-    return new QuakeEntityProperty(splits[1], splits[3]);
+    return new QuakeEntityProperty(this.loggerBreadcrumbs.add("entityPropertySplits"), splits[1], splits[3]);
   }
 
   parse(): QuakeEntityPropertyInterface {

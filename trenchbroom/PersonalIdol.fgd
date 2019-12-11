@@ -1,6 +1,6 @@
 @SolidClass = worldspawn : "World entity"
 [
-    light(integer) : "Ambient light" : 300
+    light(integer) : "Ambient light" : 0.1
 ]
 
 @baseclass size(-16 -16 -24, 16 16 32) color(0 255 0) = PlayerClass []
@@ -8,8 +8,8 @@
 @PointClass base(PlayerClass) = info_player_start : "Player 1 start" []
 
 @baseclass color(255 255 40) = Light [
-    light(integer) : "Intensity" : 300
-    decay(integer) : "Decay" : 1
+    light(integer) : "Intensity" : 2
+    decay(integer) : "Decay" : 2
 ]
 
 @PointClass size(-8 -8 -8, 8 8 8) base(Light, Target, Targetname) = light : "Invisible light source" []

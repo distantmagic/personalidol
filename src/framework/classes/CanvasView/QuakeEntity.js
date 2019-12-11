@@ -3,7 +3,6 @@
 import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
-import Exception from "../Exception";
 import quake2three from "../../helpers/quake2three";
 import { default as AmbientLightView } from "./AmbientLight";
 import { default as AmbientSoundView } from "./AmbientSound";
@@ -21,21 +20,6 @@ import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
 import type { QueryBus } from "../../interfaces/QueryBus";
 import type { TextureLoader } from "../../interfaces/TextureLoader";
-
-function getIntensity(self: QuakeEntity): number {
-  const brightness = Number(
-    self.entity
-      .getProperties()
-      .getPropertyByKey("light")
-      .getValue()
-  );
-
-  if (isNaN(brightness)) {
-    throw new Exception(self.loggerBreadcrumbs.add("attach"), "Light intensity is not a number.");
-  }
-
-  return brightness / 100;
-}
 
 export default class QuakeEntity extends CanvasView {
   +audioListener: AudioListener;
@@ -134,7 +118,8 @@ export default class QuakeEntity extends CanvasView {
               this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
               this.group,
               quake2three(this.entity.getOrigin()),
-              getIntensity(this)
+              entityProperties.getPropertyByKey("light").asNumber(),
+              entityProperties.getPropertyByKey("decay").asNumber()
             )
           ),
           "Loading point light"
@@ -149,7 +134,7 @@ export default class QuakeEntity extends CanvasView {
               new AmbientLightView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
                 this.group,
-                getIntensity(this)
+                entityProperties.getPropertyByKey("light").asNumber()
               )
             ),
             "Loading world ambient light"

@@ -9,7 +9,7 @@ import QuakeEntityProperty from "./QuakeEntityProperty";
 
 test("determines if Entity belongs to a quake class", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const quakeEntityProperties = new QuakeEntityProperties(loggerBreadcrumbs, [new QuakeEntityProperty("classname", "info_player_start")]);
+  const quakeEntityProperties = new QuakeEntityProperties(loggerBreadcrumbs, [new QuakeEntityProperty(loggerBreadcrumbs, "classname", "info_player_start")]);
   const quakeEntity = new QuakeEntity(loggerBreadcrumbs, quakeEntityProperties);
 
   expect(quakeEntity.isOfClass("info_player_start")).toBe(true);
@@ -17,7 +17,7 @@ test("determines if Entity belongs to a quake class", function() {
 
 test("is able to get entity origin translated to THREE coordinates", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const quakeEntityProperties = new QuakeEntityProperties(loggerBreadcrumbs, [new QuakeEntityProperty("origin", "-32 -32 40")]);
+  const quakeEntityProperties = new QuakeEntityProperties(loggerBreadcrumbs, [new QuakeEntityProperty(loggerBreadcrumbs, "origin", "-32 -32 40")]);
   const quakeEntity = new QuakeEntity(loggerBreadcrumbs, quakeEntityProperties);
 
   expect(quakeEntity.hasOrigin()).toBe(true);

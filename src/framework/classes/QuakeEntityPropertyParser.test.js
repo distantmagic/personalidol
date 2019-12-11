@@ -11,7 +11,7 @@ test.each([
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const parser = new QuakeEntityPropertyParser(loggerBreadcrumbs, line);
   const entityProperty = parser.parse();
-  const correct = new QuakeEntityProperty(expectedKey, expectedValue);
+  const correct = new QuakeEntityProperty(loggerBreadcrumbs, expectedKey, expectedValue);
 
   expect(entityProperty.getKey()).toBe(correct.getKey());
   expect(entityProperty.getValue()).toBe(correct.getValue());

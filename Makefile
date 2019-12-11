@@ -1,6 +1,8 @@
 .DEFAULT_GOAL = all
 .PHONY = optimize pretty.backend pretty.frontend
 
+FACT_OS = $(shell uname)
+
 JS_SOURCES = $(shell find src -name "*.js")
 RUST_SOURCES = $(shell find backend/src -name "*.rs")
 SCSS_SOURCES = $(shell find scss -name "*.scss")
@@ -49,10 +51,13 @@ public/vendor/modernizr.js: frontend.dependencies
 setup: setup.trenchbroom
 
 setup.trenchbroom:
+ifeq ($(OS), Darwin)
+	rm -rf ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
+	cp -r ./trenchbroom ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
+else
 	rm -rf ~/.TrenchBroom/games/PersonalIdol
 	cp -r ./trenchbroom ~/.TrenchBroom/games/PersonalIdol
-# 	rm -rf ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
-# 	cp -r ./trenchbroom ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
+endif
 
 start: frontend.dependencies
 	yarn run start
