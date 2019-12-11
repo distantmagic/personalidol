@@ -15,7 +15,7 @@ export default class PointLight extends CanvasView {
   +group: Group;
   +light: PointLightInterface<OrthographicCamera>;
 
-  constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3, intensity: number) {
+  constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3, intensity: number, decay: number = 0.2) {
     super(canvasViewBag);
     autoBind(this);
 
@@ -24,7 +24,7 @@ export default class PointLight extends CanvasView {
     this.light = new THREE.PointLight<OrthographicCamera>(0xffffff, intensity, 512, 2);
     this.light.position.copy(origin);
 
-    this.light.decay = 2;
+    this.light.decay = 0.2;
     this.light.castShadow = true;
     this.light.shadow.mapSize.width = 512;
     this.light.shadow.mapSize.height = 512;

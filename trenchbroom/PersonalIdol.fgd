@@ -9,6 +9,7 @@
 
 @baseclass color(255 255 40) = Light [
     light(integer) : "Intensity" : 300
+    decay(integer) : "Decay" : 1
 ]
 
 @PointClass size(-8 -8 -8, 8 8 8) base(Light, Target, Targetname) = light : "Invisible light source" []
