@@ -552,6 +552,7 @@
 "origin" "102 75 48"
 "angle" "90"
 "model_name" "ogro"
+"skin" "7"
 }
 // entity 2
 {
@@ -560,4 +561,12 @@
 "light" "3"
 "angle" "90"
 "decay" "1"
+}
+// entity 3
+{
+"classname" "model_md2"
+"origin" "128 16 48"
+"angle" "90"
+"model_name" "chicken"
+"skin" "0"
 }

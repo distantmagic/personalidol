@@ -20,10 +20,11 @@ export default class MD2Character extends CanvasView {
   +group: Group;
   +origin: Vector3;
   +queryBus: QueryBus;
+  +skin: number;
   +threeLoadingManager: THREELoadingManager;
   character: ?Object;
 
-  constructor(canvasViewBag: CanvasViewBag, origin: Vector3, queryBus: QueryBus, group: Group, threeLoadingManager: THREELoadingManager, baseUrl: string) {
+  constructor(canvasViewBag: CanvasViewBag, origin: Vector3, queryBus: QueryBus, group: Group, threeLoadingManager: THREELoadingManager, baseUrl: string, skin: number) {
     super(canvasViewBag);
     autoBind(this);
 
@@ -31,6 +32,7 @@ export default class MD2Character extends CanvasView {
     this.origin = origin;
     this.queryBus = queryBus;
     this.group = group;
+    this.skin = skin;
     this.threeLoadingManager = threeLoadingManager;
   }
 
@@ -51,7 +53,7 @@ export default class MD2Character extends CanvasView {
         character.setAnimation(character.meshBody.geometry.animations[0].name);
         character.setPlaybackRate(1000);
         character.setWeapon(0);
-        character.setSkin(0);
+        character.setSkin(this.skin);
         this.character = character;
         this.character.root.position.copy(this.origin);
 
