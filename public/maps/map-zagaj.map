@@ -31,7 +31,7 @@
 }
 // entity 2
 {
-"classname" "info_player_start"
+"classname" "model_md2"
 "origin" "-16 -16 40"
 "model_name" "chicken"
 }

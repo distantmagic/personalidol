@@ -91,7 +91,7 @@ export default class QuakeEntity extends CanvasView {
     const entityProperties = this.entity.getProperties();
 
     switch (entityClassName) {
-      case "info_player_start":
+      case "model_md2":
         const modelName = entityProperties.getPropertyByKey("model_name").getValue();
 
         await this.loadingManager.blocking(

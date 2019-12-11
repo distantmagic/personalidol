@@ -548,7 +548,7 @@
 }
 // entity 1
 {
-"classname" "info_player_start"
+"classname" "model_md2"
 "origin" "102 75 48"
 "angle" "90"
 "model_name" "ogro"

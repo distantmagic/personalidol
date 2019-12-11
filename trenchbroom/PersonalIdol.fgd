@@ -3,9 +3,11 @@
     light(integer) : "Ambient light" : 0.1
 ]
 
-@baseclass size(-16 -16 -24, 16 16 32) color(0 255 0) = PlayerClass []
+@baseclass size(-16 -16 -24, 16 16 32) color(0 255 0) = ExternalModel []
 
-@PointClass base(PlayerClass) = info_player_start : "Player 1 start" []
+@PointClass base(ExternalModel) = model_md2 : "External MD2 model loaded into map" [
+    model_name(string) : "Model base name to load" : "chicken"
+]
 
 @baseclass color(255 255 40) = Light [
     light(integer) : "Intensity" : 2
