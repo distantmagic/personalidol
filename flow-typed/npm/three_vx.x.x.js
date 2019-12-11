@@ -390,6 +390,7 @@ declare module "three" {
   }
 
   declare export interface Geometry extends BaseGeometry {
+    +faceVertexUvs: Array<Array<[Vector2, Vector2, Vector2]>>;
     +faces: Face3[];
     +vertices: Vector3[];
     +isGeometry: true;
@@ -478,7 +479,7 @@ declare module "three" {
   declare export interface Mesh extends Object3D {
     +isMesh: true;
 
-    constructor(BufferGeometry | Geometry, Material): void;
+    constructor(BufferGeometry | Geometry, Material | $ReadOnlyArray<Material>): void;
 
     clone(): Mesh;
   }

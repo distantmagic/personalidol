@@ -13,7 +13,11 @@ export interface QuakeBrush extends Equatable<QuakeBrush> {
 
   getVertices(): $ReadOnlyArray<Vector3>;
 
+  getHalfSpaceByCopolarPoints(Vector3, Vector3, Vector3): QuakeBrushHalfSpace;
+
   getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace>;
+
+  getTextures(): $ReadOnlyArray<string>;
 
   containsPoint(Vector3): boolean;
 }

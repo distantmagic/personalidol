@@ -3,16 +3,16 @@
 // entity 0
 {
 "classname" "worldspawn"
-"light" "0"
+"light" "10"
 "_tb_textures" "./textures"
 // brush 0
 {
-( -144 368 16 ) ( -144 369 16 ) ( -144 368 17 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 368 -144 -0 ) ( 367 -144 -0 ) ( 368 -144 1 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 368 -144 -0 ) ( 368 -143 -0 ) ( 367 -144 -0 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( -144 368 16 ) ( -145 368 16 ) ( -144 369 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( -144 368 16 ) ( -144 368 17 ) ( -145 368 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 368 -144 -0 ) ( 368 -144 1 ) ( 368 -143 -0 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( -144 368 16 ) ( -144 369 16 ) ( -144 368 17 ) textures/texture-asphalt-256x256 0 0 0 1 1
+( 368 -144 -0 ) ( 367 -144 -0 ) ( 368 -144 1 ) textures/texture-asphalt-256x256 0 0 0 1 1
+( 368 -144 -0 ) ( 368 -143 -0 ) ( 367 -144 -0 ) textures/texture-asphalt-256x256 0 0 0 1 1
+( -144 368 16 ) ( -145 368 16 ) ( -144 369 16 ) textures/texture-asphalt-256x256 0 0 0 1 1
+( -144 368 16 ) ( -144 368 17 ) ( -145 368 16 ) textures/texture-asphalt-256x256 0 0 0 1 1
+( 368 -144 -0 ) ( 368 -144 1 ) ( 368 -143 -0 ) textures/texture-asphalt-256x256 0 0 0 1 1
 }
 // brush 1
 {
@@ -66,44 +66,44 @@
 ( -16 -144 24 ) ( -16 -16 24 ) ( -144 -16 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
 ( -144 -144 136 ) ( -144 -16 136 ) ( -16 -144 136 ) textures/texture-uv-1024x1024 0 0 0 1 1
 ( -16 -16 24 ) ( -144 -16 136 ) ( -144 -16 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( -16 -144 136 ) ( -144 -16 136 ) ( -16 -16 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( -16 -144 136 ) ( -16 -16 24 ) ( -16 -144 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( -16 -144 136 ) ( -144 -16 136 ) ( -16 -16 24 ) textures/texture-asphalt-256x256 0 0 0 1 1
+( -16 -144 136 ) ( -16 -16 24 ) ( -16 -144 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 7
 {
-( 104 232 16 ) ( 104 232 24 ) ( 128 192 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 104 232 16 ) ( 144 256 16 ) ( 144 256 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 168 216 16 ) ( 144 256 16 ) ( 104 232 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 104 232 24 ) ( 144 256 24 ) ( 168 216 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 168 216 24 ) ( 168 216 16 ) ( 128 192 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 144 256 24 ) ( 144 256 16 ) ( 168 216 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 104 232 16 ) ( 104 232 24 ) ( 128 192 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 104 232 16 ) ( 144 256 16 ) ( 144 256 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 168 216 16 ) ( 144 256 16 ) ( 104 232 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 104 232 24 ) ( 144 256 24 ) ( 168 216 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 168 216 24 ) ( 168 216 16 ) ( 128 192 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 144 256 24 ) ( 144 256 16 ) ( 168 216 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 8
 {
-( 102 224 40 ) ( 102 224 48 ) ( 126 182 48 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 102 224 40 ) ( 144 248 40 ) ( 144 248 48 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 168 206 40 ) ( 144 248 40 ) ( 102 224 40 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 102 224 48 ) ( 144 248 48 ) ( 168 206 48 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 168 206 48 ) ( 168 206 40 ) ( 126 182 40 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 144 248 48 ) ( 144 248 40 ) ( 168 206 40 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 102 224 40 ) ( 102 224 48 ) ( 126 182 48 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 102 224 40 ) ( 144 248 40 ) ( 144 248 48 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 168 206 40 ) ( 144 248 40 ) ( 102 224 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 102 224 48 ) ( 144 248 48 ) ( 168 206 48 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 168 206 48 ) ( 168 206 40 ) ( 126 182 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 144 248 48 ) ( 144 248 40 ) ( 168 206 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 9
 {
-( 118 248 32 ) ( 118 248 40 ) ( 94 206 40 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 94 206 40 ) ( 136 182 40 ) ( 136 182 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 136 182 32 ) ( 160 224 32 ) ( 118 248 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 118 248 40 ) ( 160 224 40 ) ( 136 182 40 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 118 248 32 ) ( 160 224 32 ) ( 160 224 40 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 160 224 40 ) ( 160 224 32 ) ( 136 182 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 118 248 32 ) ( 118 248 40 ) ( 94 206 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 94 206 40 ) ( 136 182 40 ) ( 136 182 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 136 182 32 ) ( 160 224 32 ) ( 118 248 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 118 248 40 ) ( 160 224 40 ) ( 136 182 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 118 248 32 ) ( 160 224 32 ) ( 160 224 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 160 224 40 ) ( 160 224 32 ) ( 136 182 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 10
 {
-( 102 224 32 ) ( 136 190 32 ) ( 136 190 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 136 256 24 ) ( 136 256 32 ) ( 102 224 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 136 190 24 ) ( 170 224 24 ) ( 136 256 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 136 256 32 ) ( 170 224 32 ) ( 136 190 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 136 256 24 ) ( 170 224 24 ) ( 170 224 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 170 224 32 ) ( 170 224 24 ) ( 136 190 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 102 224 32 ) ( 136 190 32 ) ( 136 190 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 136 256 24 ) ( 136 256 32 ) ( 102 224 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 136 190 24 ) ( 170 224 24 ) ( 136 256 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 136 256 32 ) ( 170 224 32 ) ( 136 190 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 136 256 24 ) ( 170 224 24 ) ( 170 224 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 170 224 32 ) ( 170 224 24 ) ( 136 190 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 11
 {
@@ -161,30 +161,30 @@
 }
 // brush 17
 {
-( 40 288 16 ) ( 40 289 16 ) ( 40 288 17 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 40 288 16 ) ( 40 288 17 ) ( 41 288 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 40 288 16 ) ( 41 288 16 ) ( 40 289 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 320 24 ) ( 72 321 24 ) ( 73 320 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 320 24 ) ( 73 320 24 ) ( 72 320 25 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 320 24 ) ( 72 320 25 ) ( 72 321 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 40 288 16 ) ( 40 289 16 ) ( 40 288 17 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 288 16 ) ( 40 288 17 ) ( 41 288 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 288 16 ) ( 41 288 16 ) ( 40 289 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 320 24 ) ( 72 321 24 ) ( 73 320 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 320 24 ) ( 73 320 24 ) ( 72 320 25 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 320 24 ) ( 72 320 25 ) ( 72 321 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 18
 {
-( 40 328 16 ) ( 40 329 16 ) ( 40 328 17 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 40 328 16 ) ( 40 328 17 ) ( 41 328 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 40 328 16 ) ( 41 328 16 ) ( 40 329 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 360 24 ) ( 72 361 24 ) ( 73 360 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 360 24 ) ( 73 360 24 ) ( 72 360 25 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 360 24 ) ( 72 360 25 ) ( 72 361 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 40 328 16 ) ( 40 329 16 ) ( 40 328 17 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 328 16 ) ( 40 328 17 ) ( 41 328 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 328 16 ) ( 41 328 16 ) ( 40 329 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 360 24 ) ( 72 361 24 ) ( 73 360 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 360 24 ) ( 73 360 24 ) ( 72 360 25 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 360 24 ) ( 72 360 25 ) ( 72 361 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 19
 {
-( 40 304 24 ) ( 40 305 24 ) ( 40 304 25 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 40 304 24 ) ( 40 304 25 ) ( 41 304 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 40 304 24 ) ( 41 304 24 ) ( 40 305 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 336 32 ) ( 72 337 32 ) ( 73 336 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 336 32 ) ( 73 336 32 ) ( 72 336 33 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 72 336 32 ) ( 72 336 33 ) ( 72 337 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 40 304 24 ) ( 40 305 24 ) ( 40 304 25 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 304 24 ) ( 40 304 25 ) ( 41 304 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 304 24 ) ( 41 304 24 ) ( 40 305 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 336 32 ) ( 72 337 32 ) ( 73 336 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 336 32 ) ( 73 336 32 ) ( 72 336 33 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 72 336 32 ) ( 72 336 33 ) ( 72 337 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 20
 {
@@ -215,29 +215,29 @@
 }
 // brush 23
 {
-( 85 356 24 ) ( 76 325 24 ) ( 76 325 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 107 316 24 ) ( 107 316 16 ) ( 76 325 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 76 325 16 ) ( 107 316 16 ) ( 116 347 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 116 347 24 ) ( 107 316 24 ) ( 76 325 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 116 347 16 ) ( 116 347 24 ) ( 85 356 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 116 347 16 ) ( 107 316 16 ) ( 107 316 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 85 356 24 ) ( 76 325 24 ) ( 76 325 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 107 316 24 ) ( 107 316 16 ) ( 76 325 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 76 325 16 ) ( 107 316 16 ) ( 116 347 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 116 347 24 ) ( 107 316 24 ) ( 76 325 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 116 347 16 ) ( 116 347 24 ) ( 85 356 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 116 347 16 ) ( 107 316 16 ) ( 107 316 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 24
 {
-( 88 336 24 ) ( 88 337 24 ) ( 88 336 25 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 88 336 24 ) ( 88 336 25 ) ( 89 336 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 88 336 24 ) ( 89 336 24 ) ( 88 337 24 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 104 352 32 ) ( 104 353 32 ) ( 105 352 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 104 352 32 ) ( 105 352 32 ) ( 104 352 33 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 104 352 32 ) ( 104 352 33 ) ( 104 353 32 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 88 336 24 ) ( 88 337 24 ) ( 88 336 25 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 88 336 24 ) ( 88 336 25 ) ( 89 336 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 88 336 24 ) ( 89 336 24 ) ( 88 337 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 104 352 32 ) ( 104 353 32 ) ( 105 352 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 104 352 32 ) ( 105 352 32 ) ( 104 352 33 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 104 352 32 ) ( 104 352 33 ) ( 104 353 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
 }
 // brush 25
 {
 ( 73 -64 128 ) ( 41 -55 73 ) ( 73 -0 64 ) textures/texture-uv-1024x1024 0 0 0 1 1
 ( 87 -87 41 ) ( 41 -55 73 ) ( 73 -64 128 ) textures/texture-uv-1024x1024 0 0 0 1 1
 ( 73 -0 64 ) ( 41 -55 73 ) ( 87 -87 41 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 119 -96 96 ) ( 73 -64 128 ) ( 105 -9 119 ) textures/texture-uv-1024x1024 0 0 0 1 1
-( 151 -41 87 ) ( 105 -9 119 ) ( 73 -0 64 ) textures/texture-uv-1024x1024 0 0 0 1 1
+( 119 -96 96 ) ( 73 -64 128 ) ( 105 -9 119 ) textures/texture-asphalt-256x256 0 0 0 1 1
+( 151 -41 87 ) ( 105 -9 119 ) ( 73 -0 64 ) textures/texture-cardboard-512x512 0 0 0 1 1
 ( 87 -87 41 ) ( 119 -96 96 ) ( 151 -41 87 ) textures/texture-uv-1024x1024 0 0 0 1 1
 }
 // brush 26
@@ -276,6 +276,15 @@
 ( 368 -144 16 ) ( 368 -144 17 ) ( 367 -144 16 ) textures/texture-uv-1024x1024 0 0 0 1 1
 ( 368 -144 16 ) ( 368 -145 16 ) ( 368 -144 17 ) textures/texture-uv-1024x1024 0 0 0 1 1
 }
+// brush 30
+{
+( 208 160 80 ) ( 208 96 80 ) ( 208 96 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 272 96 80 ) ( 272 96 16 ) ( 208 96 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 208 96 16 ) ( 272 96 16 ) ( 272 160 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 272 160 80 ) ( 272 96 80 ) ( 208 96 80 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 272 160 16 ) ( 272 160 80 ) ( 208 160 80 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 272 160 16 ) ( 272 96 16 ) ( 272 96 80 ) textures/texture-cardboard-512x512 0 0 0 1 1
+}
 }
 // entity 1
 {
@@ -287,7 +296,7 @@
 // entity 2
 {
 "classname" "light"
-"origin" "128 168 168"
+"origin" "192 184 136"
 "light" "255"
 "angle" "90"
 }

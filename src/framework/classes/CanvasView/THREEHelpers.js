@@ -40,8 +40,8 @@ export default class Cube extends CanvasView {
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    disposeObject3D(this.axesHelper);
-    disposeObject3D(this.gridHelper);
+    disposeObject3D(this.axesHelper, true);
+    disposeObject3D(this.gridHelper, true);
 
     this.scene.remove(this.axesHelper);
     this.scene.remove(this.gridHelper);

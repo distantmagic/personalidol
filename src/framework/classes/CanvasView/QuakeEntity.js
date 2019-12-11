@@ -20,6 +20,7 @@ import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
 import type { QueryBus } from "../../interfaces/QueryBus";
+import type { TextureLoader } from "../../interfaces/TextureLoader";
 
 function getIntensity(self: QuakeEntity): number {
   const brightness = Number(
@@ -45,6 +46,7 @@ export default class QuakeEntity extends CanvasView {
   +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
+  +textureLoader: TextureLoader;
   +threeLoadingManager: THREELoadingManager;
   cube: ?Mesh;
   material: ?Material;
@@ -58,6 +60,7 @@ export default class QuakeEntity extends CanvasView {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
     group: Group,
+    textureLoader: TextureLoader,
     threeLoadingManager: THREELoadingManager
   ) {
     super(canvasViewBag);
@@ -72,6 +75,7 @@ export default class QuakeEntity extends CanvasView {
     this.material = null;
     this.queryBus = queryBus;
     this.group = group;
+    this.textureLoader = textureLoader;
     this.threeLoadingManager = threeLoadingManager;
   }
 
@@ -79,13 +83,25 @@ export default class QuakeEntity extends CanvasView {
     await super.attach(cancelToken);
 
     const brushes = this.entity.getBrushes();
+    const brushesPromises = [];
 
     for (let brush of brushes) {
-      await this.loadingManager.blocking(
-        this.canvasViewBag.add(cancelToken, new QuakeBrushView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")), brush, this.group)),
+      // prettier-ignore
+      brushesPromises.push(this.loadingManager.blocking(
+        this.canvasViewBag.add(
+          cancelToken,
+          new QuakeBrushView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
+            brush,
+            this.group,
+            this.textureLoader
+          )
+        ),
         "Loading entity brush"
-      );
+      ));
     }
+
+    await brushesPromises;
 
     const entityClassName = this.entity.getClassName();
     const entityProperties = this.entity.getProperties();
@@ -111,17 +127,31 @@ export default class QuakeEntity extends CanvasView {
         break;
       case "light":
         await this.loadingManager.blocking(
+          // prettier-ignore
           this.canvasViewBag.add(
             cancelToken,
-            new PointLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")), this.group, quake2three(this.entity.getOrigin()), getIntensity(this))
+            new PointLightView(
+              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
+              this.group,
+              quake2three(this.entity.getOrigin()),
+              getIntensity(this)
+            )
           ),
           "Loading point light"
         );
         break;
       case "worldspawn":
         if (entityProperties.hasPropertyKey("light")) {
+          // prettier-ignore
           await this.loadingManager.blocking(
-            this.canvasViewBag.add(cancelToken, new AmbientLightView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.group, getIntensity(this))),
+            this.canvasViewBag.add(
+              cancelToken,
+              new AmbientLightView(
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
+                this.group,
+                getIntensity(this)
+              )
+            ),
             "Loading world ambient light"
           );
         }

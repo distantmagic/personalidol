@@ -28,3 +28,21 @@ test("generates vertices from parsed halfspaces", function() {
   expect(vertices[6].equals(new THREE.Vector3(64, 64, -16))).toBe(true);
   expect(vertices[7].equals(new THREE.Vector3(64, 64, 16))).toBe(true);
 });
+
+test("finds halfspace by copolar points", function() {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const quakeBrush = new QuakeBrush(loggerBreadcrumbs, [
+    new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0 1 1").parse(),
+    new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( -64 -64 -16 ) ( -64 -64 -15 ) ( -63 -64 -16 ) __TB_empty 0 0 0 1 1").parse(),
+    new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( -64 -64 -16 ) ( -63 -64 -16 ) ( -64 -63 -16 ) __TB_empty 0 0 0 1 1").parse(),
+    new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( 64 64 16 ) ( 64 65 16 ) ( 65 64 16 ) __TB_empty 0 0 0 1 1").parse(),
+    new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( 64 64 16 ) ( 65 64 16 ) ( 64 64 17 ) __TB_empty 0 0 0 1 1").parse(),
+    new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( 64 64 16 ) ( 64 64 17 ) ( 64 65 16 ) __TB_empty 0 0 0 1 1").parse(),
+  ]);
+
+  const v1 = new THREE.Vector3(64, 64, 16);
+  const v2 = new THREE.Vector3(32, 64, 16);
+  const v3 = new THREE.Vector3(32, 32, 16);
+
+  quakeBrush.getHalfSpaceByCopolarPoints(v1, v2, v3);
+});

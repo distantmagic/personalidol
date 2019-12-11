@@ -12,46 +12,47 @@ import type { Group, Mesh } from "three";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { QuakeBrush as QuakeBrushInterface } from "../../interfaces/QuakeBrush";
+import type { TextureLoader } from "../../interfaces/TextureLoader";
 
 export default class QuakeBrush extends CanvasView {
   +brush: QuakeBrushInterface;
   +group: Group;
+  +textureLoader: TextureLoader;
   mesh: ?Mesh;
 
-  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, group: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, group: Scene, textureLoader: TextureLoader) {
     super(canvasViewBag);
     autoBind(this);
 
     this.brush = brush;
     this.mesh = null;
     this.group = group;
-  }
-
-  async loadTexture(): Promise<any> {
-    return new Promise(resolve => {
-      new THREE.TextureLoader().load("textures/texture-uv-1024x1024.png", texture => {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        // texture.repeat.set(0.001, 0.001);
-
-        resolve(texture);
-      });
-    });
+    this.textureLoader = textureLoader;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    // const vertices = this.brush.getVertices().map(quake2three);
-    const material = new THREE.MeshLambertMaterial({
-      // color: 0xffffff,
-      map: await this.loadTexture(),
-      // opacity: 0.6,
-      // transparent: true,
-    });
+    const textures = this.brush.getTextures();
 
-    const geometry = new QuakeBrushGeometry(this.brush).getGeometry();
-    const mesh = new THREE.Mesh(geometry, material);
+    for (let texture of textures) {
+      this.textureLoader.registerTexture(texture, `${texture}.png`);
+    }
 
+    const quakeBrushGeometry = new QuakeBrushGeometry(this.brush);
+    const geometry = quakeBrushGeometry.getGeometry(textures);
+    const loadedTextures = await this.textureLoader.loadTextures(cancelToken, textures);
+
+    const mesh = new THREE.Mesh(
+      geometry,
+      loadedTextures.map(texture => {
+        return new THREE.MeshLambertMaterial({
+          map: texture,
+        });
+      })
+    );
+
+    mesh.castShadow = true;
     mesh.receiveShadow = true;
 
     this.mesh = mesh;
@@ -67,7 +68,7 @@ export default class QuakeBrush extends CanvasView {
       return;
     }
 
-    disposeObject3D(mesh);
+    disposeObject3D(mesh, false);
     this.group.remove(mesh);
   }
 }

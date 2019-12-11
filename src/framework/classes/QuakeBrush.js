@@ -1,11 +1,12 @@
 // @flow
 
-import isArrayEqual from "../helpers/isArrayEqual";
-import combineWithoutRepetitions from "../helpers/combineWithoutRepetitions";
+import uniq from "lodash/uniq";
 
-import Exception from "./Exception";
+import combineWithoutRepetitions from "../helpers/combineWithoutRepetitions";
+import isArrayEqual from "../helpers/isArrayEqual";
 import QuakeBrushHalfSpaceTrio from "./QuakeBrushHalfSpaceTrio";
 import serializeVector3 from "../helpers/serializeVector3";
+import { default as QuakeBrushException } from "./Exception/QuakeBrush";
 
 import type { Vector3 } from "three";
 
@@ -20,7 +21,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: $ReadOnlyArray<QuakeBrushHalfSpace>) {
     if (halfSpaces.length < 4) {
-      throw new Exception(loggerBreadcrumbs.add("constructor"), "You need at least 4 half-spaces to have a chance of forming a polyhedron.");
+      throw new QuakeBrushException(loggerBreadcrumbs.add("constructor"), "You need at least 4 half-spaces to have a chance of forming a polyhedron.");
     }
 
     this.halfSpaces = Object.freeze(halfSpaces);
@@ -43,10 +44,6 @@ export default class QuakeBrush implements QuakeBrushInterface {
     }
   }
 
-  getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace> {
-    return this.halfSpaces;
-  }
-
   *generateVertices(): Generator<Vector3, void, void> {
     const unique: { [string]: boolean } = {};
 
@@ -64,6 +61,24 @@ export default class QuakeBrush implements QuakeBrushInterface {
         }
       }
     }
+  }
+
+  getHalfSpaceByCopolarPoints(v1: Vector3, v2: Vector3, v3: Vector3): QuakeBrushHalfSpace {
+    for (let halfSpace of this.getHalfSpaces()) {
+      if (halfSpace.planeContainsPoint(v1) && halfSpace.planeContainsPoint(v2) && halfSpace.planeContainsPoint(v3)) {
+        return halfSpace;
+      }
+    }
+
+    throw new QuakeBrushException(this.loggerBreadcrumbs.add("getHalfSpaceByCopolarPoints"), "Half space does not exist, but it was expected.");
+  }
+
+  getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace> {
+    return this.halfSpaces;
+  }
+
+  getTextures(): $ReadOnlyArray<string> {
+    return uniq(this.getHalfSpaces().map(halfSpace => halfSpace.getTexture()));
   }
 
   getVertices(): $ReadOnlyArray<Vector3> {

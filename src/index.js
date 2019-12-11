@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import yn from "yn";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 import * as serviceWorker from "./serviceWorker";
 import BusClock from "./framework/classes/BusClock";
@@ -46,7 +46,7 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
 
   ReactDOM.render(
     <React.StrictMode>
-      <BrowserRouter>
+      <HashRouter>
         <Main
           clockReactiveController={clockReactiveController}
           debug={debug}
@@ -58,7 +58,7 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
           loggerBreadcrumbs={loggerBreadcrumbs}
           queryBus={queryBus}
         />
-      </BrowserRouter>
+      </HashRouter>
     </React.StrictMode>,
     rootElement
   );

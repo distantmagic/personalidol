@@ -4,6 +4,7 @@ import autoBind from "auto-bind";
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
+import TextureLoader from "../TextureLoader";
 import { default as QuakeEntityView } from "./QuakeEntity";
 import { default as QuakeMapQuery } from "../Query/QuakeMap";
 
@@ -15,6 +16,7 @@ import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../../interfaces/QueryBus";
+import type { TextureLoader as TextureLoaderInterface } from "../../interfaces/TextureLoader";
 
 export default class QuakeMap extends CanvasView {
   +audioListener: AudioListener;
@@ -26,6 +28,7 @@ export default class QuakeMap extends CanvasView {
   +queryBus: QueryBus;
   +scene: Scene;
   +source: string;
+  +textureLoader: TextureLoaderInterface;
   +threeLoadingManager: THREELoadingManager;
 
   constructor(
@@ -52,6 +55,7 @@ export default class QuakeMap extends CanvasView {
     this.queryBus = queryBus;
     this.scene = scene;
     this.source = source;
+    this.textureLoader = new TextureLoader(loggerBreadcrumbs.add("TextureLoader"), threeLoadingManager, queryBus);
     this.threeLoadingManager = threeLoadingManager;
   }
 
@@ -75,6 +79,7 @@ export default class QuakeMap extends CanvasView {
             this.loggerBreadcrumbs.add("QuakeMap"),
             this.queryBus,
             this.group,
+            this.textureLoader,
             this.threeLoadingManager
           )
         ),
@@ -92,5 +97,6 @@ export default class QuakeMap extends CanvasView {
     await super.dispose(cancelToken);
 
     this.scene.remove(this.group);
+    this.textureLoader.dispose();
   }
 }

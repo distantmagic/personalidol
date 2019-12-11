@@ -1,7 +1,9 @@
 // @flow
 
 import * as React from "react";
+import groupBy from "lodash/groupBy";
 
+import HudSceneOverlayComment from "./HudSceneOverlayComment";
 import HudSceneOverlayError from "./HudSceneOverlayError";
 import useLoadingManagerState from "../effects/useLoadingManagerState";
 
@@ -28,11 +30,14 @@ export default React.memo<Props>(function HudSceneOverlay(props: Props) {
     return <div className="dd__frame dd__loader dd__scene__loader">Loading...</div>;
   }
 
+  // $FlowFixMe
+  const groupedComments: $ReadOnlyArray<[string, $ReadOnlyArray<string>]> = Object.entries(groupBy(comments));
+
   return (
     <div className="dd__frame dd__loader dd__scene__loader">
       <ul className="dd__scene__loader__list">
-        {comments.map((comment, index) => (
-          <li key={index}>{comment}...</li>
+        {groupedComments.map(([comment, comments]) => (
+          <HudSceneOverlayComment key={comment} comment={comment} quantity={comments.length} />
         ))}
       </ul>
     </div>

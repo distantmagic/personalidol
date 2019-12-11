@@ -10,7 +10,6 @@ import HudScene from "./HudScene";
 import HudSettings from "./HudSettings";
 import ModalRouter from "./ModalRouter";
 import Person from "../framework/classes/Entity/Person";
-import PreloaderImages from "./PreloaderImages";
 import useClockReactiveController from "../effects/useClockReactiveController";
 import useIsDocumentHidden from "../effects/useIsDocumentHidden";
 
@@ -41,16 +40,11 @@ type Props = {|
 export default function Main(props: Props) {
   const [dialogueInitiator] = React.useState(new Person("Laelaps"));
   const [dialogueResourceReference] = React.useState("/data/dialogues/hermit-intro.yml");
-  const [isPreloaded, setIsPreloaded] = React.useState<boolean>(PreloaderImages.isLoaded());
 
   const hasDialogue = false;
   const isDocumentHidden = useIsDocumentHidden();
 
   useClockReactiveController(props.clockReactiveController, isDocumentHidden, props.loggerBreadcrumbs);
-
-  if (!isPreloaded) {
-    return <PreloaderImages onPreloaded={setIsPreloaded} />;
-  }
 
   return (
     <React.Fragment>

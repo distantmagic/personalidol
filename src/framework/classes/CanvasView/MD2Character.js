@@ -72,12 +72,14 @@ export default class MD2Character extends CanvasView {
       return;
     }
 
-    character.skinsBody.map(disposeTexture);
-    character.skinsWeapon.map(disposeTexture);
-    character.weapons.map(disposeObject3D);
-    disposeObject3D(character.meshBody);
-    disposeObject3D(character.meshWeapon);
-    disposeObject3D(character.root);
+    character.skinsBody.forEach(disposeTexture);
+    character.skinsWeapon.forEach(disposeTexture);
+    character.weapons.forEach(function(child) {
+      disposeObject3D(child, true);
+    });
+    disposeObject3D(character.meshBody, true);
+    disposeObject3D(character.meshWeapon, true);
+    disposeObject3D(character.root, true);
     this.group.remove(character.root);
   }
 
