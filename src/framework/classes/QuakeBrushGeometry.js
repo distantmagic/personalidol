@@ -13,6 +13,10 @@ import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometry as QuakeBrushGeometryInterface } from "../interfaces/QuakeBrushGeometry";
 
 function textureDimensions(textureName: string): number {
+  if ("__TB_empty" === textureName) {
+    return 1024;
+  }
+
   return Number(textureName.split("x").splice(-1));
 }
 

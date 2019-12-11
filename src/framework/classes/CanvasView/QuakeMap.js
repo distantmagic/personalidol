@@ -66,6 +66,8 @@ export default class QuakeMap extends CanvasView {
     const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
     const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
 
+    this.textureLoader.registerTexture("__TB_empty", "/textures/texture-uv-1024x1024.png");
+
     for (let entity of quakeMap.getEntities()) {
       const viewLoader = this.loadingManager.blocking(
         this.canvasViewBag.add(

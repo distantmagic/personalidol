@@ -121,6 +121,7 @@ export default class Root extends CanvasController {
           this.threeLoadingManager,
           // "/maps/map-cube-chipped.map"
           "/maps/map-desert-hut.map"
+          // "/maps/map-zagaj.map"
         )
       ),
       "Loading map"

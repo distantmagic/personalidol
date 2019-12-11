@@ -33,4 +33,5 @@
 {
 "classname" "info_player_start"
 "origin" "-16 -16 40"
+"model_name" "chicken"
 }

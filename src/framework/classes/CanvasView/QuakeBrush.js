@@ -36,7 +36,9 @@ export default class QuakeBrush extends CanvasView {
     const textures = this.brush.getTextures();
 
     for (let texture of textures) {
-      this.textureLoader.registerTexture(texture, `${texture}.png`);
+      if ("__TB_empty" !== texture) {
+        this.textureLoader.registerTexture(texture, `${texture}.png`);
+      }
     }
 
     const quakeBrushGeometry = new QuakeBrushGeometry(this.brush);
