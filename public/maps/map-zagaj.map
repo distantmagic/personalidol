@@ -28,6 +28,7 @@
 "classname" "light"
 "origin" "16 48 40"
 "light" "50"
+"decay" "2"
 }
 // entity 2
 {
