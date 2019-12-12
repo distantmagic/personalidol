@@ -1,10 +1,6 @@
 // @flow
 
-import type {
-  Mesh,
-  Object3D,
-  Texture,
-} from "three";
+import type { Mesh, Object3D, Texture } from "three";
 import type { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
 export interface MD2Character {
@@ -20,7 +16,9 @@ export interface MD2Character {
   skinsBody: Texture[];
   skinsWeapon: Texture[];
 
-  enableShadows(bool): void;
+  dispose(): void;
+
+  enableShadows(boolean): void;
 
   setPlaybackRate(number): void;
 

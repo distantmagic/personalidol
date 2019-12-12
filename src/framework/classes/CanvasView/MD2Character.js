@@ -3,8 +3,6 @@
 import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
-import disposeObject3D from "../../helpers/disposeObject3D";
-import disposeTexture from "../../helpers/disposeTexture";
 import { default as MD2CharacterQuery } from "../Query/MD2Character";
 import { default as RemoteJSONQuery } from "../Query/RemoteJSON";
 import { default as THREEMD2Character } from "../MD2Character";
@@ -23,6 +21,7 @@ export default class MD2Character extends CanvasView {
   +queryBus: QueryBus;
   +skin: number;
   +threeLoadingManager: THREELoadingManager;
+  baseCharacter: ?THREEMD2CharacterInterface;
   character: ?THREEMD2CharacterInterface;
 
   constructor(canvasViewBag: CanvasViewBag, origin: Vector3, queryBus: QueryBus, group: Group, threeLoadingManager: THREELoadingManager, baseUrl: string, skin: number) {
@@ -30,9 +29,9 @@ export default class MD2Character extends CanvasView {
     autoBind(this);
 
     this.baseUrl = baseUrl;
+    this.group = group;
     this.origin = origin;
     this.queryBus = queryBus;
-    this.group = group;
     this.skin = skin;
     this.threeLoadingManager = threeLoadingManager;
   }
@@ -52,9 +51,11 @@ export default class MD2Character extends CanvasView {
     const character: THREEMD2CharacterInterface = new THREEMD2Character(this.threeLoadingManager);
 
     character.controls = {
-      crouch: true,
-      moveForward: false,
+      attack: false,
+      crouch: false,
+      jump: false,
       moveBackward: false,
+      moveForward: false,
       moveLeft: false,
       moveRight: false,
     };
@@ -64,7 +65,8 @@ export default class MD2Character extends CanvasView {
     character.enableShadows(true);
     character.setWeapon(0);
     character.setSkin(this.skin);
-    character.setPlaybackRate(1000);
+    character.update(Math.random() * 100);
+    // character.setPlaybackRate(1000);
 
     character.root.position.copy(this.origin);
 
@@ -78,26 +80,23 @@ export default class MD2Character extends CanvasView {
 
     const character = this.character;
 
-    if (!character) {
-      return;
+    if (character) {
+      character.dispose();
+      this.group.remove(character.root);
     }
 
-    // character.skinsBody.forEach(disposeTexture);
-    // character.skinsWeapon.forEach(disposeTexture);
-    // character.weapons.forEach(function(child) {
-    //   disposeObject3D(child, true);
-    // });
-    // disposeObject3D(character.meshBody, true);
-    // disposeObject3D(character.meshWeapon, true);
-    // disposeObject3D(character.root, true);
-    // this.group.remove(character.root);
+    const baseCharacter = this.baseCharacter;
+
+    if (baseCharacter) {
+      baseCharacter.dispose();
+    }
   }
 
   update(delta: number): void {
     const character = this.character;
 
     if (character) {
-      character.update(delta);
+      character.update(delta / 1000);
     }
   }
 

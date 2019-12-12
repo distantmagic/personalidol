@@ -8,22 +8,21 @@ import * as THREE from "three";
 import { MD2Loader } from "three/examples/jsm/loaders/MD2Loader";
 import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
-import type {
-  Geometry,
-  LoadingManager,
-  MeshLambertMaterial
-} from "three";
+import disposeObject3D from "../helpers/disposeObject3D";
+import disposeTexture from "../helpers/disposeTexture";
+
+import type { Geometry, LoadingManager } from "three";
 import type { MorphBlendMesh as MorphBlendMeshInterface } from "three/examples/jsm/misc/MorphBlendMesh";
 
 import type { MD2Character as MD2CharacterInterface } from "../interfaces/MD2Character";
 
 // internal helpers
 
-function loadTextures(scope: MD2CharacterInterface, baseUrl: string, textureUrls: $ReadOnlyArray<string>): Texture[] {
-  var textureLoader = new THREE.TextureLoader();
+function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: LoadingManager, textureUrls: $ReadOnlyArray<string>): Texture[] {
+  var textureLoader = new THREE.TextureLoader(loadingManager);
   var textures = [];
 
-  for (var i = 0; i < textureUrls.length; i++) {
+  for (let i = 0; i < textureUrls.length; i++) {
     textures[i] = textureLoader.load(baseUrl + textureUrls[i], checkLoadingComplete.bind(null, scope));
     textures[i].mapping = THREE.UVMapping;
     textures[i].name = textureUrls[i];
@@ -138,15 +137,15 @@ export default class MD2Character implements MD2CharacterInterface {
 
   // API
 
-  enableShadows(enable: bool) {
-    for (var i = 0; i < this.meshes.length; i++) {
+  enableShadows(enable: boolean) {
+    for (let i = 0; i < this.meshes.length; i++) {
       this.meshes[i].castShadow = enable;
       this.meshes[i].receiveShadow = enable;
     }
   }
 
-  setVisible(enable: bool) {
-    for (var i = 0; i < this.meshes.length; i++) {
+  setVisible(enable: boolean) {
+    for (let i = 0; i < this.meshes.length; i++) {
       this.meshes[i].visible = enable;
       this.meshes[i].visible = enable;
     }
@@ -181,7 +180,7 @@ export default class MD2Character implements MD2CharacterInterface {
 
     // WEAPONS
 
-    for (var i = 0; i < original.weapons.length; i++) {
+    for (let i = 0; i < original.weapons.length; i++) {
       var meshWeapon = createPart(this, original.weapons[i].geometry, this.skinsWeapon[i]);
       meshWeapon.scale.set(this.scale, this.scale, this.scale);
       meshWeapon.visible = false;
@@ -207,12 +206,12 @@ export default class MD2Character implements MD2CharacterInterface {
     this.loadCounter = config.weapons.length * 2 + config.skins.length + 1;
 
     var weaponsTextures = [];
-    for (var i = 0; i < config.weapons.length; i++) weaponsTextures[i] = config.weapons[i][1];
+    for (let i = 0; i < config.weapons.length; i++) weaponsTextures[i] = config.weapons[i][1];
 
     // SKINS
 
-    this.skinsBody = loadTextures(this, config.baseUrl + "skins/", config.skins);
-    this.skinsWeapon = loadTextures(this, config.baseUrl + "skins/", weaponsTextures);
+    this.skinsBody = loadTextures(this, config.baseUrl + "skins/", this.loadingManager, config.skins);
+    this.skinsWeapon = loadTextures(this, config.baseUrl + "skins/", this.loadingManager, weaponsTextures);
 
     // BODY
 
@@ -255,7 +254,7 @@ export default class MD2Character implements MD2CharacterInterface {
       };
     };
 
-    for (var i = 0; i < config.weapons.length; i++) {
+    for (let i = 0; i < config.weapons.length; i++) {
       loader.load(config.baseUrl + config.weapons[i][0], generateCallback(i, config.weapons[i][0]));
     }
   }
@@ -294,7 +293,7 @@ export default class MD2Character implements MD2CharacterInterface {
       throw new Error("meshWeapon is not loaded yet.");
     }
 
-    for (var i = 0; i < this.weapons.length; i++) this.weapons[i].visible = false;
+    for (let i = 0; i < this.weapons.length; i++) this.weapons[i].visible = false;
 
     var activeWeapon = this.weapons[index];
 
@@ -446,7 +445,6 @@ export default class MD2Character implements MD2CharacterInterface {
   }
 
   updateMovementModel(controls: Object, delta: number) {
-
     // speed based on controls
 
     if (controls.crouch) this.maxSpeed = this.crouchSpeed;
@@ -476,23 +474,38 @@ export default class MD2Character implements MD2CharacterInterface {
 
     if (!(controls.moveForward || controls.moveBackward)) {
       if (this.speed > 0) {
-        var k = exponentialEaseOut(this.speed / this.maxSpeed);
+        let k = exponentialEaseOut(this.speed / this.maxSpeed);
         this.speed = THREE.Math.clamp(this.speed - k * delta * this.frontDecceleration, 0, this.maxSpeed);
       } else {
-        var k = exponentialEaseOut(this.speed / this.maxReverseSpeed);
+        let k = exponentialEaseOut(this.speed / this.maxReverseSpeed);
         this.speed = THREE.Math.clamp(this.speed + k * delta * this.backAcceleration, this.maxReverseSpeed, 0);
       }
     }
 
-    // // displacement
-
-    var forwardDelta = this.speed * delta;
-
-    this.root.position.x += Math.sin( this.bodyOrientation ) * forwardDelta;
-    this.root.position.z += Math.cos( this.bodyOrientation ) * forwardDelta;
-
     // // steering
 
     this.root.rotation.y = this.bodyOrientation;
+  }
+
+  dispose(): void {
+    this.skinsBody.forEach(disposeTexture);
+    this.skinsWeapon.forEach(disposeTexture);
+    this.weapons.forEach(function(child) {
+      disposeObject3D(child, true);
+    });
+
+    const meshBody = this.meshBody;
+
+    if (meshBody) {
+      disposeObject3D(meshBody, true);
+    }
+
+    const meshWeapon = this.meshWeapon;
+
+    if (meshWeapon) {
+      disposeObject3D(meshWeapon, true);
+    }
+
+    disposeObject3D(this.root, true);
   }
 }

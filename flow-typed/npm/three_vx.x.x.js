@@ -268,7 +268,7 @@ declare module "three" {
   }
 
   declare export interface Box3 {
-    +isBox3: bool;
+    +isBox3: boolean;
     +max: Vector3;
     +min: Vector3;
 
@@ -297,7 +297,7 @@ declare module "three" {
   declare export interface BufferAttribute {
     +isBufferAttribute: true;
 
-    constructor($TypedArray, itemSize: number, normalized: bool): void;
+    constructor($TypedArray, itemSize: number, normalized: boolean): void;
   }
 
   declare export interface BufferGeometry extends BaseGeometry {
@@ -509,8 +509,8 @@ declare module "three" {
     constructor({|
       color?: number,
       map?: Texture,
-      morphNormals?: bool,
-      morphTargets?: bool,
+      morphNormals?: boolean,
+      morphTargets?: boolean,
       opacity?: number,
       transparent?: boolean,
       wireframe?: boolean,
