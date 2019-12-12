@@ -15,6 +15,7 @@ import type { MD2Character as THREEMD2CharacterInterface } from "../../interface
 import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class MD2Character extends CanvasView {
+  +animationOffset: number;
   +baseUrl: string;
   +group: Group;
   +origin: Vector3;
@@ -24,10 +25,11 @@ export default class MD2Character extends CanvasView {
   baseCharacter: ?THREEMD2CharacterInterface;
   character: ?THREEMD2CharacterInterface;
 
-  constructor(canvasViewBag: CanvasViewBag, origin: Vector3, queryBus: QueryBus, group: Group, threeLoadingManager: THREELoadingManager, baseUrl: string, skin: number) {
+  constructor(canvasViewBag: CanvasViewBag, origin: Vector3, queryBus: QueryBus, group: Group, threeLoadingManager: THREELoadingManager, baseUrl: string, animationOffset: number, skin: number) {
     super(canvasViewBag);
     autoBind(this);
 
+    this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
     this.group = group;
     this.origin = origin;
@@ -65,7 +67,7 @@ export default class MD2Character extends CanvasView {
     character.enableShadows(true);
     character.setWeapon(0);
     character.setSkin(this.skin);
-    character.update(Math.random() * 100);
+    character.update(this.animationOffset);
     // character.setPlaybackRate(1000);
 
     character.root.position.copy(this.origin);

@@ -22,6 +22,7 @@ import type { QueryBus } from "../../interfaces/QueryBus";
 import type { TextureLoader } from "../../interfaces/TextureLoader";
 
 export default class QuakeEntity extends CanvasView {
+  +animationOffset: number;
   +audioListener: AudioListener;
   +audioLoader: AudioLoader;
   +brushes: Group[];
@@ -45,13 +46,15 @@ export default class QuakeEntity extends CanvasView {
     queryBus: QueryBus,
     group: Group,
     textureLoader: TextureLoader,
-    threeLoadingManager: THREELoadingManager
+    threeLoadingManager: THREELoadingManager,
+    animationOffset: number,
   ) {
     super(canvasViewBag);
     autoBind(this);
 
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
+    this.animationOffset = animationOffset;
     this.brushes = [];
     this.entity = entity;
     this.loadingManager = loadingManager;
@@ -104,6 +107,7 @@ export default class QuakeEntity extends CanvasView {
               this.group,
               this.threeLoadingManager,
               `/models/model-md2-${modelName}/`,
+              this.animationOffset,
               entityProperties.getPropertyByKey("skin").asNumber()
             )
           ),

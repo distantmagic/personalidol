@@ -65,6 +65,7 @@ export default class QuakeMap extends CanvasView {
     const promises: Promise<void>[] = [];
     const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
     const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
+    let animationOffset = 0;
 
     this.textureLoader.registerTexture("__TB_empty", "/debug/texture-uv-1024x1024.png");
 
@@ -82,7 +83,8 @@ export default class QuakeMap extends CanvasView {
             this.queryBus,
             this.group,
             this.textureLoader,
-            this.threeLoadingManager
+            this.threeLoadingManager,
+            animationOffset += 200
           )
         ),
         "Loading map entity"
