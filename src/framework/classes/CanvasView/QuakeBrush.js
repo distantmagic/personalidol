@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
@@ -20,9 +19,8 @@ export default class QuakeBrush extends CanvasView {
   +textureLoader: TextureLoader;
   mesh: ?Mesh;
 
-  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, group: Scene, textureLoader: TextureLoader) {
+  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, group: Group, textureLoader: TextureLoader) {
     super(canvasViewBag);
-    autoBind(this);
 
     this.brush = brush;
     this.mesh = null;

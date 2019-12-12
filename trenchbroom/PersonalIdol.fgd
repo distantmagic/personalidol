@@ -5,14 +5,14 @@
 
 @baseclass size(-16 -16 -24, 16 16 32) color(0 255 0) = ExternalModel []
 
-@PointClass base(ExternalModel) = model_md2 : "External MD2 model loaded into map" [
-    model_name(string) : "Model base name to load" : "chicken"
-    skin(integer) : "Skin ID" : 0
-]
-
 @baseclass color(255 255 40) = Light [
     light(integer) : "Intensity" : 2
     decay(integer) : "Decay" : 2
+]
+
+@PointClass base(ExternalModel) = model_md2 : "External MD2 model loaded into map" [
+    model_name(string) : "Model base name to load" : "chicken"
+    skin(integer) : "Skin ID" : 0
 ]
 
 @PointClass size(-8 -8 -8, 8 8 8) base(Light, Target, Targetname) = light : "Invisible light source" []

@@ -21,8 +21,7 @@ export default class Texture implements Query<THREETexture> {
       this.textureLoader.load(
         this.textureSource,
         texture => {
-          texture.wrapS = THREE.RepeatWrapping;
-          texture.wrapT = THREE.RepeatWrapping;
+          texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
           resolve(texture);
         },

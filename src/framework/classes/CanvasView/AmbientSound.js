@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import autoBind from "auto-bind";
 
 import Canceled from "../Exception/CancelToken/Canceled";
 import CanvasView from "../CanvasView";
@@ -31,7 +30,6 @@ export default class AmbientSound extends CanvasView {
     source: string
   ) {
     super(canvasViewBag);
-    autoBind(this);
 
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;

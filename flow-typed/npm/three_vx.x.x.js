@@ -276,7 +276,11 @@ declare module "three" {
 
     constructor(min?: number, max?: number): void;
 
+    getSize(Vector3): Box3;
+
     setFromBufferAttribute(BufferAttribute): Box3;
+
+    setFromPoints($ReadOnlyArray<Vector3>): Box3;
   }
 
   declare export interface BoxBufferGeometry extends BoxGeometryBase, BufferGeometry {}

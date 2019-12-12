@@ -235,25 +235,22 @@ export default class MD2Character implements MD2CharacterInterface {
 
     // WEAPONS
 
-    config.weapons.forEach(function ([name, texture], index) {
-      loader.load(
-        config.baseUrl + name,
-        function(geo) {
-          var mesh = createPart(scope, geo, scope.skinsWeapon[index]);
-          mesh.scale.set(scope.scale, scope.scale, scope.scale);
-          mesh.visible = false;
+    config.weapons.forEach(function([name, texture], index) {
+      loader.load(config.baseUrl + name, function(geo) {
+        var mesh = createPart(scope, geo, scope.skinsWeapon[index]);
+        mesh.scale.set(scope.scale, scope.scale, scope.scale);
+        mesh.visible = false;
 
-          mesh.name = name;
+        mesh.name = name;
 
-          scope.root.add(mesh);
+        scope.root.add(mesh);
 
-          scope.weapons[index] = mesh;
-          scope.meshWeapon = mesh;
-          scope.meshes.push(mesh);
+        scope.weapons[index] = mesh;
+        scope.meshWeapon = mesh;
+        scope.meshes.push(mesh);
 
-          checkLoadingComplete(scope);
-        }
-      );
+        checkLoadingComplete(scope);
+      });
     });
   }
 

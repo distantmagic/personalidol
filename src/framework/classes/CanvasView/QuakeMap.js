@@ -1,6 +1,5 @@
 // @flow
 
-import autoBind from "auto-bind";
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
@@ -44,7 +43,6 @@ export default class QuakeMap extends CanvasView {
     source: string
   ) {
     super(canvasViewBag);
-    autoBind(this);
 
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;

@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 
@@ -16,7 +15,6 @@ export default class Cube extends CanvasView {
 
   constructor(canvasViewBag: CanvasViewBag, scene: Scene) {
     super(canvasViewBag);
-    autoBind(this);
 
     this.scene = scene;
   }

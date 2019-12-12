@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 
@@ -17,7 +16,6 @@ export default class AmbientLight extends CanvasView {
 
   constructor(canvasViewBag: CanvasViewBag, group: Group, brightness: number) {
     super(canvasViewBag);
-    autoBind(this);
 
     this.group = group;
     this.light = new THREE.AmbientLight(0xffffff, brightness);

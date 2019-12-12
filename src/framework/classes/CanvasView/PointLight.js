@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 
@@ -17,7 +16,6 @@ export default class PointLight extends CanvasView {
 
   constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3, intensity: number, decay: number) {
     super(canvasViewBag);
-    autoBind(this);
 
     this.group = group;
 

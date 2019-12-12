@@ -1,6 +1,6 @@
 // @flow
 
-import autoBind from "auto-bind";
+import isEmpty from "lodash/isEmpty";
 
 import CanvasView from "../CanvasView";
 import quake2three from "../../helpers/quake2three";
@@ -50,7 +50,6 @@ export default class QuakeEntity extends CanvasView {
     animationOffset: number
   ) {
     super(canvasViewBag);
-    autoBind(this);
 
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
@@ -70,32 +69,58 @@ export default class QuakeEntity extends CanvasView {
     await super.attach(cancelToken);
 
     const brushes = this.entity.getBrushes();
-    const brushesPromises = [];
-
-    for (let brush of brushes) {
-      // prettier-ignore
-      brushesPromises.push(this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          cancelToken,
-          new QuakeBrushView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
-            brush,
-            this.group,
-            this.textureLoader
-          )
-        ),
-        "Loading entity brush"
-      ));
-    }
-
-    await brushesPromises;
-
     const entityClassName = this.entity.getClassName();
     const entityProperties = this.entity.getProperties();
 
     switch (entityClassName) {
+      case "worldspawn":
+        const brushesPromises = [];
+
+        for (let brush of brushes) {
+          // prettier-ignore
+          brushesPromises.push(this.loadingManager.blocking(
+            this.canvasViewBag.add(
+              cancelToken,
+              new QuakeBrushView(
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
+                brush,
+                this.group,
+                this.textureLoader
+              )
+            ),
+            "Loading entity brush"
+          ));
+        }
+
+        await Promise.all(brushesPromises);
+        break;
+      default:
+        // only special entities may contain brushes
+        if (!isEmpty(brushes)) {
+          throw new QuakeMapException(this.loggerBreadcrumbs, `Entity class must not contain brush: "${entityClassName}"`);
+        }
+        break;
+    }
+
+    switch (entityClassName) {
       case "func_group":
         // this is the editor entity, can be ignored here
+        break;
+      case "light":
+        await this.loadingManager.blocking(
+          // prettier-ignore
+          this.canvasViewBag.add(
+            cancelToken,
+            new PointLightView(
+              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
+              this.group,
+              quake2three(this.entity.getOrigin()),
+              entityProperties.getPropertyByKey("light").asNumber(),
+              entityProperties.getPropertyByKey("decay").asNumber()
+            )
+          ),
+          "Loading point light"
+        );
         break;
       case "model_md2":
         const modelName = entityProperties.getPropertyByKey("model_name").getValue();
@@ -116,22 +141,6 @@ export default class QuakeEntity extends CanvasView {
             )
           ),
           "Loading character"
-        );
-        break;
-      case "light":
-        await this.loadingManager.blocking(
-          // prettier-ignore
-          this.canvasViewBag.add(
-            cancelToken,
-            new PointLightView(
-              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
-              this.group,
-              quake2three(this.entity.getOrigin()),
-              entityProperties.getPropertyByKey("light").asNumber(),
-              entityProperties.getPropertyByKey("decay").asNumber()
-            )
-          ),
-          "Loading point light"
         );
         break;
       case "worldspawn":
