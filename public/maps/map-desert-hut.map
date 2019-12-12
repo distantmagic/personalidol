@@ -3,7 +3,7 @@
 // entity 0
 {
 "classname" "worldspawn"
-"light" "0.04"
+"light" "0.2"
 "_tb_textures" "./textures"
 // brush 0
 {
@@ -25,12 +25,12 @@
 }
 // brush 2
 {
-( -144 192 360 ) ( -144 176 360 ) ( -144 176 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 16 176 360 ) ( 16 176 32 ) ( -144 176 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( -144 192 152 ) ( -144 176 152 ) ( -144 176 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 176 152 ) ( 16 176 32 ) ( -144 176 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( -144 176 32 ) ( 16 176 32 ) ( 16 192 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 16 192 360 ) ( 16 176 360 ) ( -144 176 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 16 192 32 ) ( 16 192 360 ) ( -144 192 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 16 192 32 ) ( 16 176 32 ) ( 16 176 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 192 152 ) ( 16 176 152 ) ( -144 176 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 192 32 ) ( 16 192 152 ) ( -144 192 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 192 32 ) ( 16 176 32 ) ( 16 176 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
 // brush 3
 {
@@ -61,66 +61,66 @@
 }
 // brush 6
 {
-( 128 192 24 ) ( 128 192 16 ) ( 104 232 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 144 256 16 ) ( 144 256 24 ) ( 104 232 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 128 192 16 ) ( 168 216 16 ) ( 144 256 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 144 256 24 ) ( 168 216 24 ) ( 128 192 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 168 216 24 ) ( 168 216 16 ) ( 128 192 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 144 256 16 ) ( 168 216 16 ) ( 168 216 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 128 192 24 ) ( 128 192 16 ) ( 104 232 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 144 256 16 ) ( 144 256 24 ) ( 104 232 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 128 192 16 ) ( 168 216 16 ) ( 144 256 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 144 256 24 ) ( 168 216 24 ) ( 128 192 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 168 216 24 ) ( 168 216 16 ) ( 128 192 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 144 256 16 ) ( 168 216 16 ) ( 168 216 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 7
 {
-( 126 182 48 ) ( 126 182 40 ) ( 102 224 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 144 248 40 ) ( 144 248 48 ) ( 102 224 48 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 126 182 40 ) ( 168 206 40 ) ( 144 248 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 144 248 48 ) ( 168 206 48 ) ( 126 182 48 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 168 206 48 ) ( 168 206 40 ) ( 126 182 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 144 248 40 ) ( 168 206 40 ) ( 168 206 48 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 126 182 48 ) ( 126 182 40 ) ( 102 224 40 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 144 248 40 ) ( 144 248 48 ) ( 102 224 48 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 126 182 40 ) ( 168 206 40 ) ( 144 248 40 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 144 248 48 ) ( 168 206 48 ) ( 126 182 48 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 168 206 48 ) ( 168 206 40 ) ( 126 182 40 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 144 248 40 ) ( 168 206 40 ) ( 168 206 48 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 8
 {
-( 118 248 40 ) ( 94 206 40 ) ( 94 206 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 136 182 40 ) ( 136 182 32 ) ( 94 206 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 94 206 32 ) ( 136 182 32 ) ( 160 224 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 160 224 40 ) ( 136 182 40 ) ( 94 206 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 160 224 32 ) ( 160 224 40 ) ( 118 248 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 160 224 32 ) ( 136 182 32 ) ( 136 182 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 118 248 40 ) ( 94 206 40 ) ( 94 206 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 136 182 40 ) ( 136 182 32 ) ( 94 206 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 94 206 32 ) ( 136 182 32 ) ( 160 224 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 160 224 40 ) ( 136 182 40 ) ( 94 206 40 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 160 224 32 ) ( 160 224 40 ) ( 118 248 40 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 160 224 32 ) ( 136 182 32 ) ( 136 182 40 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 9
 {
-( 136 190 32 ) ( 136 190 24 ) ( 102 224 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 136 256 24 ) ( 136 256 32 ) ( 102 224 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 102 224 24 ) ( 136 190 24 ) ( 170 224 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 170 224 32 ) ( 136 190 32 ) ( 102 224 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 170 224 24 ) ( 170 224 32 ) ( 136 256 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 170 224 24 ) ( 136 190 24 ) ( 136 190 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 136 190 32 ) ( 136 190 24 ) ( 102 224 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 136 256 24 ) ( 136 256 32 ) ( 102 224 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 102 224 24 ) ( 136 190 24 ) ( 170 224 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 170 224 32 ) ( 136 190 32 ) ( 102 224 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 170 224 24 ) ( 170 224 32 ) ( 136 256 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 170 224 24 ) ( 136 190 24 ) ( 136 190 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 10
 {
-( 40 320 24 ) ( 40 288 24 ) ( 40 288 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 288 24 ) ( 72 288 16 ) ( 40 288 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 40 288 16 ) ( 72 288 16 ) ( 72 320 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 320 24 ) ( 72 288 24 ) ( 40 288 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 320 16 ) ( 72 320 24 ) ( 40 320 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 320 16 ) ( 72 288 16 ) ( 72 288 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 320 24 ) ( 40 288 24 ) ( 40 288 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 288 24 ) ( 72 288 16 ) ( 40 288 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 40 288 16 ) ( 72 288 16 ) ( 72 320 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 320 24 ) ( 72 288 24 ) ( 40 288 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 320 16 ) ( 72 320 24 ) ( 40 320 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 320 16 ) ( 72 288 16 ) ( 72 288 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 11
 {
-( 40 360 24 ) ( 40 328 24 ) ( 40 328 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 328 24 ) ( 72 328 16 ) ( 40 328 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 40 328 16 ) ( 72 328 16 ) ( 72 360 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 360 24 ) ( 72 328 24 ) ( 40 328 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 360 16 ) ( 72 360 24 ) ( 40 360 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 360 16 ) ( 72 328 16 ) ( 72 328 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 360 24 ) ( 40 328 24 ) ( 40 328 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 328 24 ) ( 72 328 16 ) ( 40 328 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 40 328 16 ) ( 72 328 16 ) ( 72 360 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 360 24 ) ( 72 328 24 ) ( 40 328 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 360 16 ) ( 72 360 24 ) ( 40 360 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 360 16 ) ( 72 328 16 ) ( 72 328 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 12
 {
-( 40 336 32 ) ( 40 304 32 ) ( 40 304 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 304 32 ) ( 72 304 24 ) ( 40 304 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 40 304 24 ) ( 72 304 24 ) ( 72 336 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 336 32 ) ( 72 304 32 ) ( 40 304 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 336 24 ) ( 72 336 32 ) ( 40 336 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 72 336 24 ) ( 72 304 24 ) ( 72 304 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 40 336 32 ) ( 40 304 32 ) ( 40 304 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 304 32 ) ( 72 304 24 ) ( 40 304 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 40 304 24 ) ( 72 304 24 ) ( 72 336 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 336 32 ) ( 72 304 32 ) ( 40 304 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 336 24 ) ( 72 336 32 ) ( 40 336 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 72 336 24 ) ( 72 304 24 ) ( 72 304 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 13
 {
@@ -151,32 +151,23 @@
 }
 // brush 16
 {
-( 85 356 24 ) ( 76 325 24 ) ( 76 325 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 107 316 24 ) ( 107 316 16 ) ( 76 325 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 76 325 16 ) ( 107 316 16 ) ( 116 347 16 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 116 347 24 ) ( 107 316 24 ) ( 76 325 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 116 347 16 ) ( 116 347 24 ) ( 85 356 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 116 347 16 ) ( 107 316 16 ) ( 107 316 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 85 356 24 ) ( 76 325 24 ) ( 76 325 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 107 316 24 ) ( 107 316 16 ) ( 76 325 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 76 325 16 ) ( 107 316 16 ) ( 116 347 16 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 116 347 24 ) ( 107 316 24 ) ( 76 325 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 116 347 16 ) ( 116 347 24 ) ( 85 356 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 116 347 16 ) ( 107 316 16 ) ( 107 316 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 17
 {
-( 88 352 32 ) ( 88 336 32 ) ( 88 336 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 104 336 32 ) ( 104 336 24 ) ( 88 336 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 88 336 24 ) ( 104 336 24 ) ( 104 352 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 104 352 32 ) ( 104 336 32 ) ( 88 336 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 104 352 24 ) ( 104 352 32 ) ( 88 352 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 104 352 24 ) ( 104 336 24 ) ( 104 336 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 88 352 32 ) ( 88 336 32 ) ( 88 336 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 104 336 32 ) ( 104 336 24 ) ( 88 336 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 88 336 24 ) ( 104 336 24 ) ( 104 352 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 104 352 32 ) ( 104 336 32 ) ( 88 336 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 104 352 24 ) ( 104 352 32 ) ( 88 352 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 104 352 24 ) ( 104 336 24 ) ( 104 336 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
 // brush 18
-{
-( 16 368 144 ) ( 16 352 144 ) ( 16 352 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 352 144 ) ( 32 352 16 ) ( 16 352 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 16 352 16 ) ( 32 352 16 ) ( 32 368 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 144 ) ( 32 352 144 ) ( 16 352 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 16 ) ( 32 368 144 ) ( 16 368 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 16 ) ( 32 352 16 ) ( 32 352 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-}
-// brush 19
 {
 ( -160 1392 528 ) ( -160 -144 528 ) ( -160 -144 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( -144 -144 528 ) ( -144 -144 16 ) ( -160 -144 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -185,7 +176,7 @@
 ( -144 1392 16 ) ( -144 1392 528 ) ( -160 1392 528 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( -144 1392 16 ) ( -144 -144 16 ) ( -144 -144 528 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 20
+// brush 19
 {
 ( -160 -144 528 ) ( -160 -160 528 ) ( -160 -160 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 368 -160 528 ) ( 368 -160 16 ) ( -160 -160 16 ) textures/texture-rust-panel-128x128 -0 -0 0 1 1
@@ -194,7 +185,7 @@
 ( 368 -144 16 ) ( 368 -144 528 ) ( -160 -144 528 ) textures/texture-rust-panel-128x128 -0 -0 0 1 1
 ( 368 -144 16 ) ( 368 -160 16 ) ( 368 -160 528 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 21
+// brush 20
 {
 ( 16 -0 152 ) ( 16 -16 152 ) ( 16 -16 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 -16 152 ) ( 32 -16 32 ) ( 16 -16 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -203,7 +194,7 @@
 ( 32 -0 32 ) ( 32 -0 152 ) ( 16 -0 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 -0 32 ) ( 32 -16 32 ) ( 32 -16 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 22
+// brush 21
 {
 ( 16 16 152 ) ( 16 -0 152 ) ( 16 -0 112 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 16 -0 112 ) ( 16 -0 152 ) ( 32 -0 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -212,7 +203,7 @@
 ( 32 16 152 ) ( 16 16 152 ) ( 16 16 128 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 -0 152 ) ( 32 16 152 ) ( 32 16 128 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 23
+// brush 22
 {
 ( 16 32 152 ) ( 16 16 152 ) ( 16 16 128 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 16 16 128 ) ( 16 16 152 ) ( 32 16 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -221,7 +212,7 @@
 ( 32 32 152 ) ( 16 32 152 ) ( 16 32 136 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 16 152 ) ( 32 32 152 ) ( 32 32 136 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 24
+// brush 23
 {
 ( 16 48 152 ) ( 16 32 152 ) ( 16 32 136 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 32 152 ) ( 32 32 136 ) ( 16 32 136 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -230,7 +221,7 @@
 ( 32 48 136 ) ( 32 48 152 ) ( 16 48 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 48 136 ) ( 32 32 136 ) ( 32 32 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 25
+// brush 24
 {
 ( 16 64 152 ) ( 16 48 152 ) ( 16 48 136 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 48 152 ) ( 32 48 136 ) ( 16 48 136 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -239,7 +230,7 @@
 ( 32 64 136 ) ( 32 64 152 ) ( 16 64 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 64 136 ) ( 32 48 136 ) ( 32 48 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 26
+// brush 25
 {
 ( 16 80 152 ) ( 16 64 152 ) ( 16 64 136 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 64 152 ) ( 32 64 136 ) ( 16 64 136 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -248,7 +239,7 @@
 ( 32 80 128 ) ( 32 80 152 ) ( 16 80 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 80 128 ) ( 32 64 136 ) ( 32 64 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 27
+// brush 26
 {
 ( 16 96 152 ) ( 16 80 152 ) ( 16 80 128 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 80 152 ) ( 32 80 128 ) ( 16 80 128 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -257,25 +248,7 @@
 ( 32 96 112 ) ( 32 96 152 ) ( 16 96 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 96 112 ) ( 32 80 128 ) ( 32 80 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 28
-{
-( 16 368 152 ) ( 16 176 152 ) ( 16 176 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 176 152 ) ( 32 176 144 ) ( 16 176 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 16 176 144 ) ( 32 176 144 ) ( 32 368 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 152 ) ( 32 176 152 ) ( 16 176 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 144 ) ( 32 368 152 ) ( 16 368 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 144 ) ( 32 176 144 ) ( 32 176 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-}
-// brush 29
-{
-( 16 368 360 ) ( 16 -144 360 ) ( 16 -144 152 ) textures/texture-rust-panel-128x128 -0 -0 0 1 1
-( 32 -144 360 ) ( 32 -144 152 ) ( 16 -144 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 16 -144 152 ) ( 32 -144 152 ) ( 32 368 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 360 ) ( 32 -144 360 ) ( 16 -144 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 152 ) ( 32 368 360 ) ( 16 368 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 368 152 ) ( 32 -144 152 ) ( 32 -144 360 ) textures/texture-rust-panel-128x128 -0 -0 0 1 1
-}
-// brush 30
+// brush 27
 {
 ( 16 -16 152 ) ( 16 -144 152 ) ( 16 -144 32 ) textures/texture-wood-128x128 0 0 0 1 1
 ( 32 -144 152 ) ( 32 -144 32 ) ( 16 -144 32 ) textures/texture-wood-128x128 0 0 0 1 1
@@ -284,7 +257,7 @@
 ( 32 -16 32 ) ( 32 -16 152 ) ( 16 -16 152 ) textures/texture-wood-128x128 0 0 0 1 1
 ( 32 -16 32 ) ( 32 -144 32 ) ( 32 -144 152 ) textures/texture-wood-128x128 0 0 0 1 1
 }
-// brush 31
+// brush 28
 {
 ( 103 -129 72 ) ( 103 -129 24 ) ( 75 -80 24 ) textures/texture-crate-128x128 -0 -0 0 1 1
 ( 117 -56 24 ) ( 117 -56 72 ) ( 75 -80 72 ) textures/texture-crate-128x128 -0 -0 0 1 1
@@ -293,25 +266,25 @@
 ( 145 -105 72 ) ( 145 -105 24 ) ( 103 -129 24 ) textures/texture-crate-128x128 -0 -0 0 1 1
 ( 117 -56 24 ) ( 145 -105 24 ) ( 145 -105 72 ) textures/texture-crate-128x128 -0 -0 0 1 1
 }
-// brush 32
+// brush 29
 {
-( 88 -16 32 ) ( 88 -48 32 ) ( 88 -48 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 120 -48 32 ) ( 120 -48 24 ) ( 88 -48 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 88 -48 24 ) ( 120 -48 24 ) ( 120 -16 24 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 120 -16 32 ) ( 120 -48 32 ) ( 88 -48 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 120 -16 24 ) ( 120 -16 32 ) ( 88 -16 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 120 -16 24 ) ( 120 -48 24 ) ( 120 -48 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
+( 88 -16 32 ) ( 88 -48 32 ) ( 88 -48 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 120 -48 32 ) ( 120 -48 24 ) ( 88 -48 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 88 -48 24 ) ( 120 -48 24 ) ( 120 -16 24 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 120 -16 32 ) ( 120 -48 32 ) ( 88 -48 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 120 -16 24 ) ( 120 -16 32 ) ( 88 -16 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 120 -16 24 ) ( 120 -48 24 ) ( 120 -48 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
 }
-// brush 33
+// brush 30
 {
-( 90 -10 40 ) ( 74 -38 40 ) ( 74 -38 32 ) textures/texture-cardboard-512x512 -0 -0 0 1 1
-( 102 -54 40 ) ( 102 -54 32 ) ( 74 -38 32 ) textures/texture-cardboard-512x512 -0 -0 0 1 1
-( 74 -38 32 ) ( 102 -54 32 ) ( 118 -26 32 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 118 -26 40 ) ( 102 -54 40 ) ( 74 -38 40 ) textures/texture-cardboard-512x512 0 0 0 1 1
-( 118 -26 32 ) ( 118 -26 40 ) ( 90 -10 40 ) textures/texture-cardboard-512x512 -0 -0 0 1 1
-( 118 -26 32 ) ( 102 -54 32 ) ( 102 -54 40 ) textures/texture-cardboard-512x512 -0 -0 0 1 1
+( 90 -10 40 ) ( 74 -38 40 ) ( 74 -38 32 ) textures/texture-cardboard-128x128 -0 -0 0 1 1
+( 102 -54 40 ) ( 102 -54 32 ) ( 74 -38 32 ) textures/texture-cardboard-128x128 -0 -0 0 1 1
+( 74 -38 32 ) ( 102 -54 32 ) ( 118 -26 32 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 118 -26 40 ) ( 102 -54 40 ) ( 74 -38 40 ) textures/texture-cardboard-128x128 0 0 0 1 1
+( 118 -26 32 ) ( 118 -26 40 ) ( 90 -10 40 ) textures/texture-cardboard-128x128 -0 -0 0 1 1
+( 118 -26 32 ) ( 102 -54 32 ) ( 102 -54 40 ) textures/texture-cardboard-128x128 -0 -0 0 1 1
 }
-// brush 34
+// brush 31
 {
 ( 252 -128 20 ) ( 252 -128 16 ) ( 219 -5 16 ) textures/texture-wood-128x128 0 0 0 1 1
 ( 250 4 16 ) ( 250 4 20 ) ( 219 -5 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -320,7 +293,7 @@
 ( 283 -120 20 ) ( 283 -120 16 ) ( 252 -128 16 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 250 4 16 ) ( 283 -120 16 ) ( 283 -120 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 35
+// brush 32
 {
 ( 287 -119 20 ) ( 287 -119 16 ) ( 254 5 16 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 285 13 16 ) ( 285 13 20 ) ( 254 5 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -329,7 +302,7 @@
 ( 318 -111 20 ) ( 318 -111 16 ) ( 287 -119 16 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 285 13 16 ) ( 318 -111 16 ) ( 318 -111 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 36
+// brush 33
 {
 ( 322 -110 20 ) ( 322 -110 16 ) ( 289 14 16 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 320 22 16 ) ( 320 22 20 ) ( 289 14 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -338,7 +311,7 @@
 ( 353 -101 20 ) ( 353 -101 16 ) ( 322 -110 16 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 320 22 16 ) ( 353 -101 16 ) ( 353 -101 20 ) textures/texture-wood-128x128 0 0 0 1 1
 }
-// brush 37
+// brush 34
 {
 ( 237 -132 24 ) ( 237 -132 20 ) ( 228 -101 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 352 -68 20 ) ( 352 -68 24 ) ( 228 -101 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -347,7 +320,7 @@
 ( 360 -99 24 ) ( 360 -99 20 ) ( 237 -132 20 ) textures/texture-wood-128x128 0 0 0 1 1
 ( 352 -68 20 ) ( 360 -99 20 ) ( 360 -99 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 38
+// brush 35
 {
 ( 224 -86 24 ) ( 224 -86 20 ) ( 216 -55 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 340 -22 20 ) ( 340 -22 24 ) ( 216 -55 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -356,7 +329,7 @@
 ( 348 -53 24 ) ( 348 -53 20 ) ( 224 -86 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 340 -22 20 ) ( 348 -53 20 ) ( 348 -53 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 39
+// brush 36
 {
 ( 214 -47 24 ) ( 214 -47 20 ) ( 206 -16 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 329 17 20 ) ( 329 17 24 ) ( 206 -16 24 ) textures/texture-wood-128x128 0 0 0 1 1
@@ -365,7 +338,7 @@
 ( 338 -14 24 ) ( 338 -14 20 ) ( 214 -47 20 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 329 17 20 ) ( 338 -14 20 ) ( 338 -14 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 40
+// brush 37
 {
 ( 139 110 30 ) ( 139 110 28 ) ( 142 142 28 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 266 98 16 ) ( 139 110 28 ) ( 139 110 30 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -374,7 +347,7 @@
 ( 269 130 18 ) ( 142 142 30 ) ( 142 142 28 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 266 98 16 ) ( 266 98 18 ) ( 269 130 18 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 41
+// brush 38
 {
 ( 146 32 28 ) ( 146 32 26 ) ( 146 64 26 ) textures/texture-wood-128x128 0 0 0 1 1
 ( 146 64 26 ) ( 146 32 26 ) ( 274 32 16 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -383,7 +356,7 @@
 ( 274 32 18 ) ( 146 32 28 ) ( 146 64 28 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 274 32 16 ) ( 274 32 18 ) ( 274 64 18 ) textures/texture-wood-128x128 0 0 0 1 1
 }
-// brush 42
+// brush 39
 {
 ( 248 -133 28 ) ( 248 -133 24 ) ( 214 -9 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 245 -1 24 ) ( 245 -1 28 ) ( 214 -9 28 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -392,7 +365,7 @@
 ( 278 -124 28 ) ( 278 -124 24 ) ( 248 -133 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 245 -1 24 ) ( 278 -124 24 ) ( 278 -124 28 ) textures/texture-wood-128x128 0 0 0 1 1
 }
-// brush 43
+// brush 40
 {
 ( 282 -123 28 ) ( 282 -123 24 ) ( 249 -0 24 ) textures/texture-wood-128x128 0 0 0 1 1
 ( 280 9 24 ) ( 280 9 28 ) ( 249 -0 28 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -401,7 +374,7 @@
 ( 313 -115 28 ) ( 313 -115 24 ) ( 282 -123 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 280 9 24 ) ( 313 -115 24 ) ( 313 -115 28 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 44
+// brush 41
 {
 ( 317 -114 28 ) ( 317 -114 24 ) ( 284 10 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 315 18 24 ) ( 315 18 28 ) ( 284 10 28 ) textures/texture-wood-128x128 -0 -0 0 1 1
@@ -410,7 +383,7 @@
 ( 348 -106 28 ) ( 348 -106 24 ) ( 317 -114 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 315 18 24 ) ( 348 -106 24 ) ( 348 -106 28 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 45
+// brush 42
 {
 ( -144 368 376 ) ( -144 -144 376 ) ( -144 -144 360 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 32 -144 376 ) ( 32 -144 360 ) ( -144 -144 360 ) textures/texture-wood-128x128 0 0 0 1 1
@@ -419,7 +392,7 @@
 ( 32 368 360 ) ( 32 368 376 ) ( -144 368 376 ) textures/texture-wood-128x128 0 0 0 1 1
 ( 32 368 360 ) ( 32 -144 360 ) ( 32 -144 376 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 46
+// brush 43
 {
 ( 16 -0 32 ) ( 16 -144 32 ) ( 16 -144 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 32 -144 32 ) ( 32 -144 24 ) ( 16 -144 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -428,7 +401,7 @@
 ( 32 -0 24 ) ( 32 -0 32 ) ( 16 -0 32 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 32 -0 24 ) ( 32 -144 24 ) ( 32 -144 32 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 47
+// brush 44
 {
 ( 16 192 32 ) ( 16 96 32 ) ( 16 96 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 32 96 32 ) ( 32 96 24 ) ( 16 96 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -437,7 +410,7 @@
 ( 32 192 24 ) ( 32 192 32 ) ( 16 192 32 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 32 192 24 ) ( 32 96 24 ) ( 32 96 32 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 48
+// brush 45
 {
 ( 32 -24 136 ) ( 32 -64 136 ) ( 48 -64 24 ) textures/texture-wood-128x128 -0 -0 0 1 1
 ( 40 -64 136 ) ( 56 -64 24 ) ( 48 -64 24 ) textures/texture-wood-128x128 0 0 0 1 1
@@ -446,7 +419,7 @@
 ( 56 -24 24 ) ( 40 -24 136 ) ( 32 -24 136 ) textures/texture-wood-128x128 0 0 0 1 1
 ( 56 -24 24 ) ( 56 -64 24 ) ( 40 -64 136 ) textures/texture-wood-128x128 -0 -0 0 1 1
 }
-// brush 49
+// brush 46
 {
 ( 32 32 144 ) ( 32 16 144 ) ( 32 16 120 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 32 16 120 ) ( 32 16 144 ) ( 40 16 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -455,7 +428,7 @@
 ( 40 32 144 ) ( 32 32 144 ) ( 32 32 128 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 16 144 ) ( 40 32 144 ) ( 40 32 128 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 50
+// brush 47
 {
 ( 32 48 144 ) ( 32 32 144 ) ( 32 32 128 ) textures/texture-cobblestone-128x128 -0 -0 0 1 1
 ( 40 32 144 ) ( 40 32 128 ) ( 32 32 128 ) textures/texture-cobblestone-128x128 -0 -0 0 1 1
@@ -464,7 +437,7 @@
 ( 40 48 128 ) ( 40 48 144 ) ( 32 48 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 48 128 ) ( 40 32 128 ) ( 40 32 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 51
+// brush 48
 {
 ( 32 64 144 ) ( 32 48 144 ) ( 32 48 128 ) textures/texture-cobblestone-128x128 -0 -0 0 1 1
 ( 40 48 144 ) ( 40 48 128 ) ( 32 48 128 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -473,7 +446,7 @@
 ( 40 64 128 ) ( 40 64 144 ) ( 32 64 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 64 128 ) ( 40 48 128 ) ( 40 48 144 ) textures/texture-cobblestone-128x128 -0 -0 0 1 1
 }
-// brush 52
+// brush 49
 {
 ( 32 64 144 ) ( 32 64 128 ) ( 32 80 120 ) textures/texture-cobblestone-128x128 -0 -0 0 1 1
 ( 32 64 144 ) ( 40 64 144 ) ( 40 64 128 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -482,7 +455,7 @@
 ( 40 80 120 ) ( 40 80 144 ) ( 32 80 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 64 128 ) ( 40 64 144 ) ( 40 80 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 53
+// brush 50
 {
 ( 32 96 144 ) ( 32 80 144 ) ( 32 80 120 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 80 144 ) ( 40 80 120 ) ( 32 80 120 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -491,7 +464,7 @@
 ( 40 96 104 ) ( 40 96 144 ) ( 32 96 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 96 104 ) ( 40 80 120 ) ( 40 80 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 54
+// brush 51
 {
 ( 32 112 144 ) ( 32 96 144 ) ( 32 96 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 96 144 ) ( 40 96 24 ) ( 32 96 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -500,7 +473,7 @@
 ( 40 112 24 ) ( 40 112 144 ) ( 32 112 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 112 24 ) ( 40 96 24 ) ( 40 96 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 55
+// brush 52
 {
 ( 32 -0 144 ) ( 32 -16 144 ) ( 32 -16 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 -16 144 ) ( 40 -16 24 ) ( 32 -16 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -509,7 +482,7 @@
 ( 40 -0 24 ) ( 40 -0 144 ) ( 32 -0 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 -0 24 ) ( 40 -16 24 ) ( 40 -16 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 56
+// brush 53
 {
 ( 32 16 144 ) ( 32 -0 144 ) ( 32 -0 104 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 32 -0 104 ) ( 32 -0 144 ) ( 40 -0 144 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -518,16 +491,16 @@
 ( 40 16 144 ) ( 32 16 144 ) ( 32 16 120 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 40 -0 144 ) ( 40 16 144 ) ( 40 16 120 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
-// brush 57
+// brush 54
 {
-( 16 192 144 ) ( 16 176 144 ) ( 16 176 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 176 144 ) ( 32 176 32 ) ( 16 176 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 192 152 ) ( 16 176 152 ) ( 16 176 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 176 152 ) ( 32 176 32 ) ( 16 176 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 16 176 32 ) ( 32 176 32 ) ( 32 192 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 192 144 ) ( 32 176 144 ) ( 16 176 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 192 32 ) ( 32 192 144 ) ( 16 192 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
-( 32 192 32 ) ( 32 176 32 ) ( 32 176 144 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 192 152 ) ( 32 176 152 ) ( 16 176 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 192 32 ) ( 32 192 152 ) ( 16 192 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 192 32 ) ( 32 176 32 ) ( 32 176 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 58
+// brush 55
 {
 ( 16 176 152 ) ( 16 96 152 ) ( 16 96 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 96 152 ) ( 32 96 32 ) ( 16 96 32 ) textures/texture-rust-panel-128x128 0 0 0 1 1
@@ -536,7 +509,7 @@
 ( 32 176 32 ) ( 32 176 152 ) ( 16 176 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 ( 32 176 32 ) ( 32 96 32 ) ( 32 96 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
 }
-// brush 59
+// brush 56
 {
 ( -144 176 24 ) ( -144 177 24 ) ( -144 176 25 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( -144 176 24 ) ( -144 176 25 ) ( -143 176 24 ) textures/texture-cobblestone-128x128 0 0 0 1 1
@@ -545,12 +518,48 @@
 ( 16 192 32 ) ( 17 192 32 ) ( 16 192 33 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 ( 16 192 32 ) ( 16 192 33 ) ( 16 193 32 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
+// brush 57
+{
+( 16 368 360 ) ( 16 -144 360 ) ( 16 -144 152 ) textures/texture-rust-panel-128x128 -0 -0 0 1 1
+( 32 -144 360 ) ( 32 -144 152 ) ( 16 -144 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 -144 152 ) ( 32 -144 152 ) ( 32 368 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 360 ) ( 32 -144 360 ) ( 16 -144 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 152 ) ( 32 368 360 ) ( 16 368 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 152 ) ( 32 -144 152 ) ( 32 -144 360 ) textures/texture-rust-panel-128x128 -0 -0 0 1 1
+}
+// brush 58
+{
+( -144 368 168 ) ( -144 176 168 ) ( -144 176 152 ) textures/texture-rust-panel-128x128 -0 -0 0 1 1
+( 16 176 168 ) ( 16 176 152 ) ( -144 176 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( -144 176 152 ) ( 16 176 152 ) ( 16 368 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 368 168 ) ( 16 176 168 ) ( -144 176 168 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 368 152 ) ( 16 368 168 ) ( -144 368 168 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 368 152 ) ( 16 176 152 ) ( 16 176 168 ) textures/texture-rust-panel-128x128 -0 -0 0 1 1
+}
+// brush 59
+{
+( -144 368 360 ) ( -144 352 360 ) ( -144 352 168 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 352 360 ) ( 16 352 168 ) ( -144 352 168 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( -144 352 168 ) ( 16 352 168 ) ( 16 368 168 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 368 360 ) ( 16 352 360 ) ( -144 352 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 368 168 ) ( 16 368 360 ) ( -144 368 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 368 168 ) ( 16 352 168 ) ( 16 352 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+}
+// brush 60
+{
+( 16 368 152 ) ( 16 352 152 ) ( 16 352 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 352 152 ) ( 32 352 16 ) ( 16 352 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 352 16 ) ( 32 352 16 ) ( 32 368 16 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 152 ) ( 32 352 152 ) ( 16 352 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 16 ) ( 32 368 152 ) ( 16 368 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 16 ) ( 32 352 16 ) ( 32 352 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+}
 }
 // entity 1
 {
 "classname" "model_md2"
 "origin" "102 75 48"
-"angle" "90"
+"angle" "0"
 "model_name" "ogro"
 "skin" "7"
 }
@@ -560,13 +569,21 @@
 "origin" "-10 48 44"
 "light" "3"
 "angle" "90"
-"decay" "1"
+"decay" "2"
 }
 // entity 3
 {
 "classname" "model_md2"
-"origin" "128 16 48"
-"angle" "90"
+"origin" "112 128 48"
+"angle" "345"
+"model_name" "ogro"
+"skin" "5"
+}
+// entity 4
+{
+"classname" "model_md2"
+"origin" "104 -88 96"
+"angle" "60"
 "model_name" "chicken"
 "skin" "0"
 }

@@ -267,6 +267,16 @@ declare module "three" {
     translate(x: number, y: number, z: number): Geometry;
   }
 
+  declare export interface Box3 {
+    +isBox3: bool;
+    +max: Vector3;
+    +min: Vector3;
+
+    constructor(min?: number, max?: number): void;
+
+    setFromBufferAttribute(BufferAttribute): Box3;
+  }
+
   declare export interface BoxBufferGeometry extends BoxGeometryBase, BufferGeometry {}
 
   declare export interface BoxGeometry extends BoxGeometryBase, Geometry {}
@@ -282,6 +292,12 @@ declare module "three" {
     |};
 
     constructor(width?: number, height?: number, depth?: number, widthSegments?: number, heightSegments?: number, depthSegments?: number): void;
+  }
+
+  declare export interface BufferAttribute {
+    +isBufferAttribute: true;
+
+    constructor($TypedArray, itemSize: number, normalized: bool): void;
   }
 
   declare export interface BufferGeometry extends BaseGeometry {
@@ -458,11 +474,9 @@ declare module "three" {
   declare export interface Material extends Geometry {
     +color: Color;
     +isMaterial: true;
-    +map: Texture;
 
     constructor({|
       color?: number,
-      map?: Texture,
       opacity?: number,
       transparent?: boolean,
     |}): void;
@@ -490,6 +504,17 @@ declare module "three" {
 
   declare export interface MeshLambertMaterial extends Material {
     +isMeshLambertMaterial: true;
+    +map: Texture;
+
+    constructor({|
+      color?: number,
+      map?: Texture,
+      morphNormals?: bool,
+      morphTargets?: bool,
+      opacity?: number,
+      transparent?: boolean,
+      wireframe?: boolean,
+    |}): void;
   }
 
   declare export interface MeshNormalMaterial extends Material {
@@ -520,6 +545,7 @@ declare module "three" {
     +rotation: Euler;
     +scale: Vector3;
     castShadow: boolean;
+    name: string;
     receiveShadow: boolean;
     userData: any;
     visible: boolean;
@@ -669,16 +695,39 @@ declare module "three" {
     constructor(color?: number): void;
   }
 
-  declare export interface Texture extends Geometry {
+  // prettier-ignore
+  declare export interface Texture {
+    +isTexture: number;
     +repeat: Vector2;
-    wrapS: typeof ClampToEdgeWrapping | typeof RepeatWrapping | typeof MirroredRepeatWrapping;
-    wrapT: typeof ClampToEdgeWrapping | typeof RepeatWrapping | typeof MirroredRepeatWrapping;
+    mapping:
+      | typeof UVMapping
+      | typeof CubeReflectionMapping
+      | typeof CubeRefractionMapping
+      | typeof EquirectangularReflectionMapping
+      | typeof EquirectangularRefractionMapping
+      | typeof SphericalReflectionMapping
+      | typeof CubeUVReflectionMapping
+      | typeof CubeUVRefractionMapping
+    ;
+    name: string;
+    wrapS:
+      | typeof ClampToEdgeWrapping
+      | typeof RepeatWrapping
+      | typeof MirroredRepeatWrapping
+    ;
+    wrapT:
+      | typeof ClampToEdgeWrapping
+      | typeof RepeatWrapping
+      | typeof MirroredRepeatWrapping
+    ;
+
+    dispose(): void;
   }
 
   declare export interface TextureLoader {
     constructor(?LoadingManager): void;
 
-    load(url: string, onLoad?: Function, onProgress?: Function, onError?: Function): Texture;
+    load(url: string, onLoad: ?(Texture) => void, onProgress: ?() => void, onError: ?() => void): Texture;
   }
 
   declare export interface Vector2 {

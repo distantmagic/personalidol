@@ -10,7 +10,7 @@ export default class Fetch implements Query<Response> {
     this.ref = ref;
   }
 
-  async execute(cancelToken: CancelToken): Promise<Response> {
+  execute(cancelToken: CancelToken): Promise<Response> {
     return fetch(this.ref, {
       signal: cancelToken.getAbortSignal(),
     });

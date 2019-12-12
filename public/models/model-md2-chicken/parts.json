@@ -1,4 +1,13 @@
 {
+  "animations": {
+    "attack": "attack",
+    "crouchAttach": "crattack",
+    "crouchIdle": "cstand",
+    "crouchMove": "cwalk",
+    "idle": "stand",
+    "jump": "jump",
+    "move": "run"
+  },
   "body": "tris.md2",
   "skins": ["skin.png", "skin_1.png"],
   "weapons": [["weapon.md2", "weapon.png"]]

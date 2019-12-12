@@ -1,4 +1,13 @@
 {
+  "animations": {
+    "attack": "attack",
+    "crouchAttach": "crattack",
+    "crouchIdle": "cstand",
+    "crouchMove": "cwalk",
+    "idle": "stand",
+    "jump": "jump",
+    "move": "run"
+  },
   "body": "ogro.md2",
   "skins": [
     "arboshak.png",
@@ -15,5 +24,7 @@
     "ogrobase.png",
     "sharokh.png"
   ],
-  "weapons": [["weapon.md2", "weapon.jpg"]]
+  "weapons": [
+    ["weapon.md2", "weapon.jpg"]
+  ]
 }

@@ -1,4 +1,13 @@
 {
+  "animations": {
+    "attack": "attack",
+    "crouchAttach": "crattack",
+    "crouchIdle": "cstand",
+    "crouchMove": "cwalk",
+    "idle": "stand",
+    "jump": "jump",
+    "move": "run"
+  },
   "body": "ratamahatta.md2",
   "skins": [
     "ratamahatta.png",
