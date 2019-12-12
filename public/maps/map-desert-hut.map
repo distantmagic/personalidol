@@ -574,8 +574,8 @@
 // entity 3
 {
 "classname" "model_md2"
-"origin" "112 128 48"
-"angle" "345"
+"origin" "144 -32 48"
+"angle" "-120"
 "model_name" "ogro"
 "skin" "5"
 }
@@ -592,5 +592,14 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Walkability"
-"_tb_id" "1"
+"_tb_id" "20"
+}
+// entity 6
+{
+"classname" "model_md2"
+"origin" "96 -32 64"
+"angle" "-90"
+"model_name" "ogro"
+"skin" "9"
+"_tb_layer" "20"
 }

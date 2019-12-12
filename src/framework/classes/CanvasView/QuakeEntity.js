@@ -111,6 +111,7 @@ export default class QuakeEntity extends CanvasView {
               this.threeLoadingManager,
               `/models/model-md2-${modelName}/`,
               this.animationOffset,
+              entityProperties.getPropertyByKey("angle").asNumber(),
               entityProperties.getPropertyByKey("skin").asNumber()
             )
           ),

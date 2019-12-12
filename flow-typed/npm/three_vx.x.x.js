@@ -186,6 +186,8 @@ declare module "three" {
 
   declare export class Math {
     static clamp(number, number, number): number;
+
+    static degToRad(number): number;
   }
 
   declare export interface AmbientLight<T: Camera> extends Light<T> {

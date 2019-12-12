@@ -1,5 +1,6 @@
 // @flow
 
+import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
@@ -15,6 +16,7 @@ import type { MD2Character as THREEMD2CharacterInterface } from "../../interface
 import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class MD2Character extends CanvasView {
+  +angle: number;
   +animationOffset: number;
   +baseUrl: string;
   +group: Group;
@@ -33,6 +35,7 @@ export default class MD2Character extends CanvasView {
     threeLoadingManager: THREELoadingManager,
     baseUrl: string,
     animationOffset: number,
+    angle: number,
     skin: number
   ) {
     super(canvasViewBag);
@@ -43,6 +46,7 @@ export default class MD2Character extends CanvasView {
     this.group = group;
     this.origin = origin;
     this.queryBus = queryBus;
+    this.angle = angle;
     this.skin = skin;
     this.threeLoadingManager = threeLoadingManager;
   }
@@ -77,9 +81,9 @@ export default class MD2Character extends CanvasView {
     character.setWeapon(0);
     character.setSkin(this.skin);
     character.update(this.animationOffset);
-    // character.setPlaybackRate(1000);
 
     character.root.position.copy(this.origin);
+    character.root.rotation.y = THREE.Math.degToRad(this.angle);
 
     this.group.add(character.root);
 

@@ -118,7 +118,6 @@ export default class MD2Character implements MD2CharacterInterface {
   // internal movement control variables
 
   speed = 0;
-  bodyOrientation = 0;
 
   // internal animation parameters
 
@@ -236,27 +235,26 @@ export default class MD2Character implements MD2CharacterInterface {
 
     // WEAPONS
 
-    var generateCallback = function(index, name) {
-      return function(geo) {
-        var mesh = createPart(scope, geo, scope.skinsWeapon[index]);
-        mesh.scale.set(scope.scale, scope.scale, scope.scale);
-        mesh.visible = false;
+    config.weapons.forEach(function ([name, texture], index) {
+      loader.load(
+        config.baseUrl + name,
+        function(geo) {
+          var mesh = createPart(scope, geo, scope.skinsWeapon[index]);
+          mesh.scale.set(scope.scale, scope.scale, scope.scale);
+          mesh.visible = false;
 
-        mesh.name = name;
+          mesh.name = name;
 
-        scope.root.add(mesh);
+          scope.root.add(mesh);
 
-        scope.weapons[index] = mesh;
-        scope.meshWeapon = mesh;
-        scope.meshes.push(mesh);
+          scope.weapons[index] = mesh;
+          scope.meshWeapon = mesh;
+          scope.meshes.push(mesh);
 
-        checkLoadingComplete(scope);
-      };
-    };
-
-    for (let i = 0; i < config.weapons.length; i++) {
-      loader.load(config.baseUrl + config.weapons[i][0], generateCallback(i, config.weapons[i][0]));
-    }
+          checkLoadingComplete(scope);
+        }
+      );
+    });
   }
 
   setPlaybackRate(rate: number) {
@@ -461,12 +459,10 @@ export default class MD2Character implements MD2CharacterInterface {
     var dir = 1;
 
     if (controls.moveLeft) {
-      this.bodyOrientation += delta * this.angularSpeed;
       this.speed = THREE.Math.clamp(this.speed + dir * delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed);
     }
 
     if (controls.moveRight) {
-      this.bodyOrientation -= delta * this.angularSpeed;
       this.speed = THREE.Math.clamp(this.speed + dir * delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed);
     }
 
@@ -481,10 +477,6 @@ export default class MD2Character implements MD2CharacterInterface {
         this.speed = THREE.Math.clamp(this.speed + k * delta * this.backAcceleration, this.maxReverseSpeed, 0);
       }
     }
-
-    // // steering
-
-    this.root.rotation.y = this.bodyOrientation;
   }
 
   dispose(): void {
