@@ -1,6 +1,7 @@
 // @flow
 
 import autoBind from "auto-bind";
+import clamp from "lodash/clamp";
 import Ola from "ola";
 
 import CanvasController from "../CanvasController";
@@ -9,17 +10,11 @@ import type { Ola as OlaInterface } from "ola";
 import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
-import type { CameraZoomEnum } from "../../types/CameraZoomEnum";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { Debugger } from "../../interfaces/Debugger";
 import type { ElementSize } from "../../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-
-const ZOOM_2 = 2;
-const ZOOM_3 = 4;
-const ZOOM_4 = 8;
-const ZOOM_5 = 16;
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
   +camera: OrthographicCamera;
@@ -27,19 +22,10 @@ export default class CameraController extends CanvasController implements Camera
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +renderer: WebGLRenderer;
   +scene: Scene;
-  viewportSize: ElementSize<"px">;
-  zoom: OlaInterface;
-  zoomStep: CameraZoomEnum;
+  +zoomTween: OlaInterface;
+  zoomTarget: number;
 
-  constructor(
-    canvasViewBag: CanvasViewBag,
-    camera: OrthographicCamera,
-    debug: Debugger,
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    renderer: WebGLRenderer,
-    scene: Scene,
-    viewportSize: ElementSize<"px">
-  ) {
+  constructor(canvasViewBag: CanvasViewBag, camera: OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
     super(canvasViewBag);
     autoBind(this);
 
@@ -48,17 +34,17 @@ export default class CameraController extends CanvasController implements Camera
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.renderer = renderer;
     this.scene = scene;
-    this.viewportSize = viewportSize;
-    this.zoom = Ola(ZOOM_3, 100);
-    this.zoomStep = 3;
+    this.zoomTarget = 4;
+    this.zoomTween = Ola(this.zoomTarget, 100);
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
-    this.camera.position.set(128, 128, 128);
+    this.camera.position.set(512, 512, 512);
     this.camera.lookAt(this.scene.position);
     this.updateProjection();
+
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
     this.debug.updateState(this.loggerBreadcrumbs.add("camera").add("position"), this.camera.position);
   }
@@ -73,73 +59,51 @@ export default class CameraController extends CanvasController implements Camera
   draw(interpolationPercentage: number): void {
     super.draw(interpolationPercentage);
 
+    if (this.camera.zoom === this.zoomTarget) {
+      return;
+    }
+
+    this.camera.zoom = this.zoomTween.value;
     this.updateProjection();
   }
 
   onWheel(evt: WheelEvent): void {
     evt.preventDefault();
 
-    const delta = evt.deltaY > 0 ? 1 : -1;
-    const adjustedZoomStep = this.zoomStep - delta;
+    const delta = evt.deltaY > 0 ? 3 : -3;
+    const adjustedZoom = this.zoomTarget - delta;
 
-    // this switch is mostly for flowjs typechecking
-    switch (adjustedZoomStep) {
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-        this.setZoomStep(adjustedZoomStep);
-        return;
-      default:
-        if (adjustedZoomStep > 5) {
-          this.setZoomStep(5);
-        } else {
-          this.setZoomStep(2);
-        }
-        break;
-    }
+    this.setZoom(adjustedZoom);
   }
 
   resize(viewportSize: ElementSize<"px">): void {
     super.resize(viewportSize);
 
-    this.viewportSize = viewportSize;
+    const height = viewportSize.getHeight();
+    const width = viewportSize.getWidth();
+
+    this.camera.left = -1 * width;
+    this.camera.far = 1024;
+    this.camera.near = 0;
+    this.camera.right = width;
+    this.camera.top = height;
+    this.camera.bottom = -1 * height;
+
     this.updateProjection();
   }
 
-  setZoomStep(zoomStep: CameraZoomEnum): void {
-    if (this.zoomStep === zoomStep) {
+  setZoom(zoom: number): void {
+    const clampedZoom = clamp(zoom, 2, 8);
+
+    if (this.zoomTarget === clampedZoom) {
       return;
     }
 
-    this.zoomStep = zoomStep;
-
-    switch (this.zoomStep) {
-      case 3:
-        this.zoom.value = ZOOM_3;
-        break;
-      case 4:
-        this.zoom.value = ZOOM_4;
-        break;
-      case 5:
-        this.zoom.value = ZOOM_5;
-        break;
-      default:
-        this.zoom.value = ZOOM_2;
-        break;
-    }
+    this.zoomTarget = clampedZoom;
+    this.zoomTween.value = clampedZoom;
   }
 
   updateProjection(): void {
-    const height = this.viewportSize.getHeight();
-    const width = this.viewportSize.getWidth();
-
-    this.camera.left = -1 * (width / this.zoom.value);
-    this.camera.far = 1024;
-    this.camera.near = -512;
-    this.camera.right = width / this.zoom.value;
-    this.camera.top = height / this.zoom.value;
-    this.camera.bottom = -1 * (height / this.zoom.value);
     this.camera.updateProjectionMatrix();
   }
 }

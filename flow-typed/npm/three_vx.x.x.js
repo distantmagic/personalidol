@@ -569,6 +569,7 @@ declare module "three" {
     near: number;
     right: number;
     top: number;
+    zoom: number;
 
     constructor(bottom?: number, far?: number, left?: number, near?: number, right?: number, top?: number): void;
 
@@ -580,6 +581,7 @@ declare module "three" {
     aspect: number;
     far: number;
     near: number;
+    zoom: number;
 
     constructor(fov: number, aspect: number, near: number, far: number): void;
 

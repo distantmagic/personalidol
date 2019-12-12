@@ -47,7 +47,7 @@ export default class QuakeEntity extends CanvasView {
     group: Group,
     textureLoader: TextureLoader,
     threeLoadingManager: THREELoadingManager,
-    animationOffset: number,
+    animationOffset: number
   ) {
     super(canvasViewBag);
     autoBind(this);
@@ -94,6 +94,9 @@ export default class QuakeEntity extends CanvasView {
     const entityProperties = this.entity.getProperties();
 
     switch (entityClassName) {
+      case "func_group":
+        // this is the editor entity, can be ignored here
+        break;
       case "model_md2":
         const modelName = entityProperties.getPropertyByKey("model_name").getValue();
 

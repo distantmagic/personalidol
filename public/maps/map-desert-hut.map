@@ -587,3 +587,10 @@
 "model_name" "chicken"
 "skin" "0"
 }
+// entity 5
+{
+"classname" "func_group"
+"_tb_type" "_tb_layer"
+"_tb_name" "Walkability"
+"_tb_id" "1"
+}

@@ -84,7 +84,7 @@ export default class QuakeMap extends CanvasView {
             this.group,
             this.textureLoader,
             this.threeLoadingManager,
-            animationOffset += 200
+            (animationOffset += 200)
           )
         ),
         "Loading map entity"

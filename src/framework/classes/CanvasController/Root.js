@@ -7,7 +7,6 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 
 import CanvasController from "../CanvasController";
 import CanvasPointerController from "../CanvasPointerController";
-import ElementSize from "../ElementSize";
 import PointerEventResponder from "../CanvasPointerResponder/PointerEventResponder";
 import THREEPointerInteraction from "../THREEPointerInteraction";
 import { default as CameraController } from "./Camera";
@@ -23,7 +22,7 @@ import type { CanvasControllerBus } from "../../interfaces/CanvasControllerBus";
 import type { CanvasPointerController as CanvasPointerControllerInterface } from "../../interfaces/CanvasPointerController";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { Debugger } from "../../interfaces/Debugger";
-import type { ElementSize as ElementSizeInterface } from "../../interfaces/ElementSize";
+import type { ElementSize } from "../../interfaces/ElementSize";
 import type { KeyboardState } from "../../interfaces/KeyboardState";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { Logger } from "../../interfaces/Logger";
@@ -89,7 +88,7 @@ export default class Root extends CanvasController {
     // this.scene.fog = new THREE.Fog(0x000000, 256, 1024);
 
     this.scheduler = scheduler;
-    this.cameraController = new CameraController(canvasViewBag, this.camera, debug, loggerBreadcrumbs, renderer, this.scene, new ElementSize<"px">(0, 0));
+    this.cameraController = new CameraController(canvasViewBag, this.camera, debug, loggerBreadcrumbs, renderer, this.scene);
     this.threeLoadingManager = threeLoadingManager;
     this.threePointerInteraction = new THREEPointerInteraction(renderer, this.camera);
 
@@ -165,7 +164,7 @@ export default class Root extends CanvasController {
     this.debug.updateState(this.loggerBreadcrumbs.add("fps"), fps);
   }
 
-  resize(elementSize: ElementSizeInterface<"px">): void {
+  resize(elementSize: ElementSize<"px">): void {
     super.resize(elementSize);
 
     const height = elementSize.getHeight();

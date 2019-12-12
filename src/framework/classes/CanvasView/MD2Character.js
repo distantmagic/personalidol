@@ -25,7 +25,16 @@ export default class MD2Character extends CanvasView {
   baseCharacter: ?THREEMD2CharacterInterface;
   character: ?THREEMD2CharacterInterface;
 
-  constructor(canvasViewBag: CanvasViewBag, origin: Vector3, queryBus: QueryBus, group: Group, threeLoadingManager: THREELoadingManager, baseUrl: string, animationOffset: number, skin: number) {
+  constructor(
+    canvasViewBag: CanvasViewBag,
+    origin: Vector3,
+    queryBus: QueryBus,
+    group: Group,
+    threeLoadingManager: THREELoadingManager,
+    baseUrl: string,
+    animationOffset: number,
+    skin: number
+  ) {
     super(canvasViewBag);
     autoBind(this);
 
