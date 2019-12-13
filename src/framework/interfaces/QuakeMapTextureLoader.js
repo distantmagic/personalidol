@@ -4,7 +4,7 @@ import type { Texture } from "three";
 
 import type { CancelToken } from "./CancelToken";
 
-export interface TextureLoader {
+export interface QuakeMapTextureLoader {
   dispose(): void;
 
   getTextureSource(textureName: string): string;

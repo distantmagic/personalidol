@@ -11,15 +11,15 @@ import type { Group, Mesh } from "three";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { QuakeBrush as QuakeBrushInterface } from "../../interfaces/QuakeBrush";
-import type { TextureLoader } from "../../interfaces/TextureLoader";
+import type { QuakeMapTextureLoader } from "../../interfaces/QuakeMapTextureLoader";
 
 export default class QuakeBrush extends CanvasView {
   +brush: QuakeBrushInterface;
   +group: Group;
-  +textureLoader: TextureLoader;
+  +textureLoader: QuakeMapTextureLoader;
   mesh: ?Mesh;
 
-  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, group: Group, textureLoader: TextureLoader) {
+  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, group: Group, textureLoader: QuakeMapTextureLoader) {
     super(canvasViewBag);
 
     this.brush = brush;

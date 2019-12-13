@@ -19,7 +19,7 @@ import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
 import type { QueryBus } from "../../interfaces/QueryBus";
-import type { TextureLoader } from "../../interfaces/TextureLoader";
+import type { QuakeMapTextureLoader } from "../../interfaces/QuakeMapTextureLoader";
 
 export default class QuakeEntity extends CanvasView {
   +animationOffset: number;
@@ -31,7 +31,7 @@ export default class QuakeEntity extends CanvasView {
   +loadingManager: LoadingManager;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
-  +textureLoader: TextureLoader;
+  +textureLoader: QuakeMapTextureLoader;
   +threeLoadingManager: THREELoadingManager;
   cube: ?Mesh;
   material: ?Material;
@@ -45,7 +45,7 @@ export default class QuakeEntity extends CanvasView {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
     group: Group,
-    textureLoader: TextureLoader,
+    textureLoader: QuakeMapTextureLoader,
     threeLoadingManager: THREELoadingManager,
     animationOffset: number
   ) {
@@ -107,8 +107,8 @@ export default class QuakeEntity extends CanvasView {
         // this is the editor entity, can be ignored here
         break;
       case "light":
+        // prettier-ignore
         await this.loadingManager.blocking(
-          // prettier-ignore
           this.canvasViewBag.add(
             cancelToken,
             new PointLightView(
@@ -125,6 +125,7 @@ export default class QuakeEntity extends CanvasView {
       case "model_md2":
         const modelName = entityProperties.getPropertyByKey("model_name").getValue();
 
+        // prettier-ignore
         await this.loadingManager.blocking(
           this.canvasViewBag.add(
             cancelToken,
@@ -143,6 +144,9 @@ export default class QuakeEntity extends CanvasView {
           "Loading character"
         );
         break;
+      case "player":
+        console.log("PLAYER MODEL :D");
+        break;
       case "worldspawn":
         if (entityProperties.hasPropertyKey("light")) {
           // prettier-ignore
@@ -160,6 +164,7 @@ export default class QuakeEntity extends CanvasView {
         }
         if (entityProperties.hasPropertyKey("sounds")) {
           const ambientSoundSource: string = entityProperties.getPropertyByKey("sounds").getValue();
+          // prettier-ignore
           await this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,

@@ -41,8 +41,12 @@ export default class CameraController extends CanvasController implements Camera
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
+    // this.camera.position.set(512 + 256, 512, 512 + 256);
+    // this.camera.lookAt(new THREE.Vector3(256, 0, 256));
+
     this.camera.position.set(512, 512, 512);
     this.camera.lookAt(this.scene.position);
+
     this.updateProjection();
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);

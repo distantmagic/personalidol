@@ -6,7 +6,7 @@ import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QuakeBrush from "./QuakeBrush";
 import QuakeBrushGeometry from "./QuakeBrushGeometry";
 import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
-import TextureLoader from "./TextureLoader";
+import QuakeMapTextureLoader from "./QuakeMapTextureLoader";
 
 test("generates faces from quake brush", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

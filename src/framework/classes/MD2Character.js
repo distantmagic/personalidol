@@ -31,8 +31,9 @@ function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingMana
   return textures;
 }
 
+
 function createPart(scope: MD2CharacterInterface, geometry: Geometry, skinMap: Texture) {
-  var materialWireframe = new THREE.MeshLambertMaterial({ color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true });
+  // var materialWireframe = new THREE.MeshLambertMaterial({ color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true });
   var materialTexture = new THREE.MeshLambertMaterial({ color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true });
 
   //
@@ -43,7 +44,7 @@ function createPart(scope: MD2CharacterInterface, geometry: Geometry, skinMap: T
   //
 
   mesh.materialTexture = materialTexture;
-  mesh.materialWireframe = materialWireframe;
+  // mesh.materialWireframe = materialWireframe;
 
   //
 
@@ -253,21 +254,6 @@ export default class MD2Character implements MD2CharacterInterface {
       });
     });
   }
-
-  setPlaybackRate(rate: number) {
-    if (this.meshBody) this.meshBody.duration = this.meshBody.baseDuration / rate;
-    if (this.meshWeapon) this.meshWeapon.duration = this.meshWeapon.baseDuration / rate;
-  }
-
-  // setWireframe(wireframeEnabled) {
-  //   if (wireframeEnabled) {
-  //     if (this.meshBody) this.meshBody.material = this.meshBody.materialWireframe;
-  //     if (this.meshWeapon) this.meshWeapon.material = this.meshWeapon.materialWireframe;
-  //   } else {
-  //     if (this.meshBody) this.meshBody.material = this.meshBody.materialTexture;
-  //     if (this.meshWeapon) this.meshWeapon.material = this.meshWeapon.materialTexture;
-  //   }
-  // }
 
   setSkin(index: number) {
     if (this.meshBody && this.meshBody.material.wireframe === false) {

@@ -6,8 +6,6 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 
 import CanvasController from "../CanvasController";
-import CanvasPointerController from "../CanvasPointerController";
-import PointerEventResponder from "../CanvasPointerResponder/PointerEventResponder";
 import THREEPointerInteraction from "../THREEPointerInteraction";
 import { default as CameraController } from "./Camera";
 import { default as QuakeMapView } from "../CanvasView/QuakeMap";
@@ -19,7 +17,6 @@ import type { AudioListener, AudioLoader, LoadingManager as THREELoadingManager,
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasControllerBus } from "../../interfaces/CanvasControllerBus";
-import type { CanvasPointerController as CanvasPointerControllerInterface } from "../../interfaces/CanvasPointerController";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { Debugger } from "../../interfaces/Debugger";
 import type { ElementSize } from "../../interfaces/ElementSize";
@@ -38,7 +35,6 @@ export default class Root extends CanvasController {
   +camera: OrthographicCamera;
   +cameraController: CameraControllerInterface;
   +canvasControllerBus: CanvasControllerBus;
-  +canvasPointerController: CanvasPointerControllerInterface;
   +debug: Debugger;
   +effectComposer: EffectComposerInterface;
   +keyboardState: KeyboardState;
@@ -96,9 +92,6 @@ export default class Root extends CanvasController {
 
     this.effectComposer = new EffectComposer(renderer);
     this.effectComposer.addPass(renderPass);
-
-    this.canvasPointerController = new CanvasPointerController(this.threePointerInteraction.getCameraRaycaster(), this.scene);
-    this.canvasPointerController.addResponder(new PointerEventResponder(pointerState));
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
@@ -134,7 +127,6 @@ export default class Root extends CanvasController {
     //   "Loading map helpers"
     // );
 
-    this.scheduler.onBegin(this.canvasPointerController.begin);
     this.scheduler.onUpdate(this.threePointerInteraction.update);
     this.threePointerInteraction.observe();
   }
@@ -144,7 +136,6 @@ export default class Root extends CanvasController {
 
     await this.canvasControllerBus.delete(cancelToken, this.cameraController);
 
-    this.scheduler.offBegin(this.canvasPointerController.begin);
     this.scheduler.offUpdate(this.threePointerInteraction.update);
 
     this.threePointerInteraction.disconnect();

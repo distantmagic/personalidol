@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 
-import { default as TextureLoaderException } from "./Exception/TextureLoader";
+import { default as QuakeMapException } from "./Exception/QuakeMap";
 import { default as TextureQuery } from "./Query/Texture";
 
 import type { LoadingManager, Texture, TextureLoader as THREETextureLoader } from "three";
@@ -10,9 +10,9 @@ import type { LoadingManager, Texture, TextureLoader as THREETextureLoader } fro
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../interfaces/QueryBus";
-import type { TextureLoader as TextureLoaderInterface } from "../interfaces/TextureLoader";
+import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../interfaces/QuakeMapTextureLoader";
 
-export default class TextureLoader implements TextureLoaderInterface {
+export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInterface {
   +loadedTextures: Set<Texture>;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
@@ -39,7 +39,7 @@ export default class TextureLoader implements TextureLoaderInterface {
     const textureSource = this.texturesSources.get(textureName);
 
     if ("string" !== typeof textureSource) {
-      throw new TextureLoaderException(this.loggerBreadcrumbs.add("getTextureSource"), `Texture is not registered: ${textureName}`);
+      throw new QuakeMapException(this.loggerBreadcrumbs.add("getTextureSource"), `Texture is not registered: ${textureName}`);
     }
 
     return textureSource;
@@ -64,7 +64,7 @@ export default class TextureLoader implements TextureLoaderInterface {
   registerTexture(textureName: string, src: string): void {
     if (this.texturesSources.has(textureName)) {
       if (src !== this.getTextureSource(textureName)) {
-        throw new TextureLoaderException(this.loggerBreadcrumbs.add("registerTexture"), `Texture data is inconsistent: "${textureName}": "${src}"`);
+        throw new QuakeMapException(this.loggerBreadcrumbs.add("registerTexture"), `Texture data is inconsistent: "${textureName}": "${src}"`);
       }
 
       return;

@@ -20,8 +20,6 @@ export interface MD2Character {
 
   enableShadows(boolean): void;
 
-  setPlaybackRate(number): void;
-
   setSkin(number): void;
 
   setWeapon(number): void;
