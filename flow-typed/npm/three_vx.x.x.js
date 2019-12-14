@@ -303,11 +303,17 @@ declare module "three" {
   declare export interface BufferAttribute {
     +isBufferAttribute: true;
 
-    constructor($TypedArray, itemSize: number, normalized: boolean): void;
+    constructor($TypedArray, itemSize: number, normalized?: boolean): void;
   }
 
   declare export interface BufferGeometry extends BaseGeometry {
     +isBufferGeometry: true;
+
+    constructor(): void;
+
+    addGroup(number, number, number): void;
+
+    setAttribute(string, BufferAttribute): void;
   }
 
   declare export interface Camera extends Object3D {
@@ -409,6 +415,10 @@ declare module "three" {
     clone(): Face3;
 
     copy(Face3): Face3;
+  }
+
+  declare export interface Float32BufferAttribute extends BufferAttribute {
+    constructor(number[], number): void;
   }
 
   declare export interface Geometry extends BaseGeometry {

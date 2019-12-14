@@ -42,14 +42,16 @@ export default class QuakeBrush extends CanvasView {
     const loadedTextures = await this.textureLoader.loadTextures(cancelToken, textures);
     const quakeBrushGeometry = new QuakeBrushGeometry(this.brush);
     const geometry = quakeBrushGeometry.getGeometry(loadedTextures);
+    const materials = loadedTextures.map(texture => {
+      return new THREE.MeshLambertMaterial({
+        map: texture,
+      });
+    });
 
     const mesh = new THREE.Mesh(
       geometry,
-      loadedTextures.map(texture => {
-        return new THREE.MeshLambertMaterial({
-          map: texture,
-        });
-      })
+      // do not use array as it triggers multi-material
+      materials.length > 1 ? materials : materials[0]
     );
 
     mesh.castShadow = true;

@@ -31,7 +31,6 @@ function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingMana
   return textures;
 }
 
-
 function createPart(scope: MD2CharacterInterface, geometry: Geometry, skinMap: Texture) {
   // var materialWireframe = new THREE.MeshLambertMaterial({ color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true });
   var materialTexture = new THREE.MeshLambertMaterial({ color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true });

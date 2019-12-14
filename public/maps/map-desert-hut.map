@@ -590,7 +590,7 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Walkability"
-"_tb_id" "11"
+"_tb_id" "16"
 }
 // entity 6
 {
@@ -599,5 +599,5 @@
 "angle" "-90"
 "model_name" "ogro"
 "skin" "9"
-"_tb_layer" "11"
+"_tb_layer" "16"
 }

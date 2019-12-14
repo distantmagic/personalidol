@@ -8,57 +8,10 @@ import quake2three from "../helpers/quake2three";
 import three2quake from "../helpers/three2quake";
 
 import type { ConvexHull as ConvexHullInterface } from "three/examples/jsm/math/ConvexHull";
-import type { Geometry, Texture, Vector2, Vector3 } from "three";
+import type { BufferGeometry, Texture } from "three";
 
 import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometry as QuakeBrushGeometryInterface } from "../interfaces/QuakeBrushGeometry";
-
-function generateUVs(face: Face3, textureSide: number, v1: Vector3, v2: Vector3, v3: Vector3): [Vector2, Vector2, Vector2] {
-  // prettier-ignore
-  if (face.normal.x > face.normal.y && face.normal.x > face.normal.z) {
-    return [
-      new THREE.Vector2(v1.z / textureSide, v1.y / textureSide),
-      new THREE.Vector2(v2.z / textureSide, v2.y / textureSide),
-      new THREE.Vector2(v3.z / textureSide, v3.y / textureSide)
-    ];
-  } else if (face.normal.y > face.normal.x && face.normal.y > face.normal.z) {
-    return [
-      new THREE.Vector2(v1.z / textureSide, v1.x / textureSide),
-      new THREE.Vector2(v2.z / textureSide, v2.x / textureSide),
-      new THREE.Vector2(v3.z / textureSide, v3.x / textureSide)
-    ];
-  } else if (face.normal.z > face.normal.x && face.normal.z > face.normal.y) {
-    return [
-      new THREE.Vector2(v1.x / textureSide, v1.y / textureSide),
-      new THREE.Vector2(v2.x / textureSide, v2.y / textureSide),
-      new THREE.Vector2(v3.x / textureSide, v3.y / textureSide)
-    ];
-  } else if (face.normal.x < face.normal.y && face.normal.x < face.normal.z) {
-    return [
-      new THREE.Vector2(v1.z / textureSide, v1.y / textureSide),
-      new THREE.Vector2(v2.z / textureSide, v2.y / textureSide),
-      new THREE.Vector2(v3.z / textureSide, v3.y / textureSide)
-    ];
-  } else if (face.normal.y < face.normal.x && face.normal.y < face.normal.z) {
-    return [
-      new THREE.Vector2(v1.z / textureSide, v1.x / textureSide),
-      new THREE.Vector2(v2.z / textureSide, v2.x / textureSide),
-      new THREE.Vector2(v3.z / textureSide, v3.x / textureSide)
-    ];
-  } else if (face.normal.z < face.normal.x && face.normal.z < face.normal.y) {
-    return [
-      new THREE.Vector2(v1.x / textureSide, v1.y / textureSide),
-      new THREE.Vector2(v2.x / textureSide, v2.y / textureSide),
-      new THREE.Vector2(v3.x / textureSide, v3.y / textureSide)
-    ];
-  } else {
-    return [
-      new THREE.Vector2(0, 0),
-      new THREE.Vector2(0, 0),
-      new THREE.Vector2(0, 0)
-    ];
-  }
-}
 
 export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
   +quakeBrush: QuakeBrush;
@@ -76,41 +29,96 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
     return convexHull;
   }
 
-  getGeometry(textures: $ReadOnlyArray<Texture>): Geometry {
-    const geometry = new THREE.Geometry();
+  getGeometry(textures: $ReadOnlyArray<Texture>): BufferGeometry {
+    const geometry = new THREE.BufferGeometry();
     const convexHull = this.getConvexHull();
 
-    let i = 0;
-    for (let rawFace of convexHull.faces) {
-      let edge = rawFace.edge;
+    const vertices = [];
+    const normals = [];
+    const uvs = [];
+
+    let groupStart = 0;
+
+    for (let face of convexHull.faces) {
+      const points = [];
+      let edge = face.edge;
 
       do {
-        let point = edge.head().point;
-        geometry.vertices.push(point);
+        const point = edge.head().point;
+        vertices.push(point.x, point.y, point.z);
+        normals.push(face.normal.x, face.normal.y, face.normal.z);
         edge = edge.next;
-      } while (edge !== rawFace.edge);
+        points.push(point);
+      } while (edge !== face.edge);
 
-      const v1 = geometry.vertices[i];
-      const v2 = geometry.vertices[i + 1];
-      const v3 = geometry.vertices[i + 2];
+      const v1 = points[0];
+      const v2 = points[1];
+      const v3 = points[2];
 
-      const halfSpace = this.quakeBrush.getHalfSpaceByCopolarPoints(
-        three2quake(v1),
-        three2quake(v2),
-        three2quake(v3),
-      );
+      const v1three = three2quake(v1);
+      const v2three = three2quake(v2);
+      const v3three = three2quake(v3);
+
+      const halfSpace = this.quakeBrush.getHalfSpaceByCopolarPoints(v1three, v2three, v3three);
       const textureName = halfSpace.getTexture();
 
       const textureIndex = textures.findIndex(texture => texture.name === textureName);
       const texture: Texture = textures[textureIndex];
       const textureSide = texture.image.naturalWidth;
-      const face = new THREE.Face3(i, i + 1, i + 2, rawFace.normal, rawFace.color, textureIndex);
 
-      geometry.faceVertexUvs[0].push(generateUVs(face, textureSide, v1, v2, v3));
+      // prettier-ignore
+      if (face.normal.x > face.normal.y && face.normal.x > face.normal.z) {
+        uvs.push(
+          v1.z / textureSide, v1.y / textureSide,
+          v2.z / textureSide, v2.y / textureSide,
+          v3.z / textureSide, v3.y / textureSide,
+        );
+      } else if (face.normal.y > face.normal.x && face.normal.y > face.normal.z) {
+        uvs.push(
+          v1.z / textureSide, v1.x / textureSide,
+          v2.z / textureSide, v2.x / textureSide,
+          v3.z / textureSide, v3.x / textureSide,
+        );
+      } else if (face.normal.z > face.normal.x && face.normal.z > face.normal.y) {
+        uvs.push(
+          v1.x / textureSide, v1.y / textureSide,
+          v2.x / textureSide, v2.y / textureSide,
+          v3.x / textureSide, v3.y / textureSide,
+        );
+      } else if (face.normal.x < face.normal.y && face.normal.x < face.normal.z) {
+        uvs.push(
+          v1.z / textureSide, v1.y / textureSide,
+          v2.z / textureSide, v2.y / textureSide,
+          v3.z / textureSide, v3.y / textureSide,
+        );
+      } else if (face.normal.y < face.normal.x && face.normal.y < face.normal.z) {
+        uvs.push(
+          v1.z / textureSide, v1.x / textureSide,
+          v2.z / textureSide, v2.x / textureSide,
+          v3.z / textureSide, v3.x / textureSide,
+        );
+      } else if (face.normal.z < face.normal.x && face.normal.z < face.normal.y) {
+        uvs.push(
+          v1.x / textureSide, v1.y / textureSide,
+          v2.x / textureSide, v2.y / textureSide,
+          v3.x / textureSide, v3.y / textureSide,
+        );
+      } else {
+        uvs.push(
+          0, 0,
+          0, 0,
+          0, 0,
+        );
+      }
 
-      geometry.faces.push(face);
-      i += 3;
+      geometry.addGroup(groupStart, 3, textureIndex);
+
+      groupStart += 3;
     }
+
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+    geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+    geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
 
     return geometry;
   }
