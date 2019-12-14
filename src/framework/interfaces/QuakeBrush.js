@@ -13,7 +13,7 @@ export interface QuakeBrush extends Equatable<QuakeBrush> {
 
   getVertices(): $ReadOnlyArray<Vector3>;
 
-  getHalfSpaceByCopolarPoints(Vector3, Vector3, Vector3): QuakeBrushHalfSpace;
+  getHalfSpaceByCoplanarPoints(Vector3, Vector3, Vector3): QuakeBrushHalfSpace;
 
   getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace>;
 

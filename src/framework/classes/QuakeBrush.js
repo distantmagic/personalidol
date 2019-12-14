@@ -63,14 +63,14 @@ export default class QuakeBrush implements QuakeBrushInterface {
     }
   }
 
-  getHalfSpaceByCopolarPoints(v1: Vector3, v2: Vector3, v3: Vector3): QuakeBrushHalfSpace {
+  getHalfSpaceByCoplanarPoints(v1: Vector3, v2: Vector3, v3: Vector3): QuakeBrushHalfSpace {
     for (let halfSpace of this.getHalfSpaces()) {
       if (halfSpace.planeContainsPoint(v1) && halfSpace.planeContainsPoint(v2) && halfSpace.planeContainsPoint(v3)) {
         return halfSpace;
       }
     }
 
-    throw new QuakeBrushException(this.loggerBreadcrumbs.add("getHalfSpaceByCopolarPoints"), "Half space does not exist, but it was expected.");
+    throw new QuakeBrushException(this.loggerBreadcrumbs.add("getHalfSpaceByCoplanarPoints"), "Half space does not exist, but it was expected.");
   }
 
   getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace> {

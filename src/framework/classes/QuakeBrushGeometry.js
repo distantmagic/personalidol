@@ -59,49 +59,50 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
       const v2three = three2quake(v2);
       const v3three = three2quake(v3);
 
-      const halfSpace = this.quakeBrush.getHalfSpaceByCopolarPoints(v1three, v2three, v3three);
+      const halfSpace = this.quakeBrush.getHalfSpaceByCoplanarPoints(v1three, v2three, v3three);
       const textureName = halfSpace.getTexture();
 
       const textureIndex = textures.findIndex(texture => texture.name === textureName);
       const texture: Texture = textures[textureIndex];
-      const textureSide = texture.image.naturalWidth;
+      const textureSideHeight = texture.image.naturalHeight * halfSpace.getTextureXScale();
+      const textureSideWidth = texture.image.naturalWidth * halfSpace.getTextureYScale();
 
       // prettier-ignore
       if (face.normal.x > face.normal.y && face.normal.x > face.normal.z) {
         uvs.push(
-          v1.z / textureSide, v1.y / textureSide,
-          v2.z / textureSide, v2.y / textureSide,
-          v3.z / textureSide, v3.y / textureSide,
+          v1.z / textureSideHeight, v1.y / textureSideWidth,
+          v2.z / textureSideHeight, v2.y / textureSideWidth,
+          v3.z / textureSideHeight, v3.y / textureSideWidth,
         );
       } else if (face.normal.y > face.normal.x && face.normal.y > face.normal.z) {
         uvs.push(
-          v1.z / textureSide, v1.x / textureSide,
-          v2.z / textureSide, v2.x / textureSide,
-          v3.z / textureSide, v3.x / textureSide,
+          v1.z / textureSideHeight, v1.x / textureSideWidth,
+          v2.z / textureSideHeight, v2.x / textureSideWidth,
+          v3.z / textureSideHeight, v3.x / textureSideWidth,
         );
       } else if (face.normal.z > face.normal.x && face.normal.z > face.normal.y) {
         uvs.push(
-          v1.x / textureSide, v1.y / textureSide,
-          v2.x / textureSide, v2.y / textureSide,
-          v3.x / textureSide, v3.y / textureSide,
+          v1.x / textureSideHeight, v1.y / textureSideWidth,
+          v2.x / textureSideHeight, v2.y / textureSideWidth,
+          v3.x / textureSideHeight, v3.y / textureSideWidth,
         );
       } else if (face.normal.x < face.normal.y && face.normal.x < face.normal.z) {
         uvs.push(
-          v1.z / textureSide, v1.y / textureSide,
-          v2.z / textureSide, v2.y / textureSide,
-          v3.z / textureSide, v3.y / textureSide,
+          v1.z / textureSideHeight, v1.y / textureSideWidth,
+          v2.z / textureSideHeight, v2.y / textureSideWidth,
+          v3.z / textureSideHeight, v3.y / textureSideWidth,
         );
       } else if (face.normal.y < face.normal.x && face.normal.y < face.normal.z) {
         uvs.push(
-          v1.z / textureSide, v1.x / textureSide,
-          v2.z / textureSide, v2.x / textureSide,
-          v3.z / textureSide, v3.x / textureSide,
+          v1.z / textureSideHeight, v1.x / textureSideWidth,
+          v2.z / textureSideHeight, v2.x / textureSideWidth,
+          v3.z / textureSideHeight, v3.x / textureSideWidth,
         );
       } else if (face.normal.z < face.normal.x && face.normal.z < face.normal.y) {
         uvs.push(
-          v1.x / textureSide, v1.y / textureSide,
-          v2.x / textureSide, v2.y / textureSide,
-          v3.x / textureSide, v3.y / textureSide,
+          v1.x / textureSideHeight, v1.y / textureSideWidth,
+          v2.x / textureSideHeight, v2.y / textureSideWidth,
+          v3.x / textureSideHeight, v3.y / textureSideWidth,
         );
       } else {
         uvs.push(
@@ -112,7 +113,6 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
       }
 
       geometry.addGroup(groupStart, 3, textureIndex);
-
       groupStart += 3;
     }
 
