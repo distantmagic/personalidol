@@ -20,5 +20,10 @@ test("generates faces from quake brush", function() {
   ]);
 
   const quakeBrushGeometry = new QuakeBrushGeometry(quakeBrush);
-  const geometry = quakeBrushGeometry.getGeometry(["__TB_empty"]);
+  const imageMock = document.createElement("img");
+  const texture = new THREE.Texture(imageMock);
+
+  texture.name = "__TB_empty";
+
+  const geometry = quakeBrushGeometry.getGeometry([texture]);
 });

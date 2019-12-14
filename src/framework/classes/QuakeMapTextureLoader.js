@@ -50,6 +50,7 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
 
     const texture = await this.queryBus.enqueue(cancelToken, new TextureQuery(this.textureLoader, src)).whenExecuted();
 
+    texture.name = textureName;
     this.loadedTextures.add(texture);
 
     return texture;

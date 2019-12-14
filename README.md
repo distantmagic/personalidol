@@ -6,7 +6,10 @@ Simultaneously I am working on an isometric RPG game (non-free), but I am open s
 
 It's not documented very well as I didn't have enough time to do so and I am the only maintainer. If anyone is interested to know/understand more, I'd be happy to help or at least start documenting the project. I am also looking for some help / maintainers.
 
+## Screenshots
+
 ![screenshot](screenshots/personalidol.png)
+![screenshot](screenshots/trenchbroom.png)
 
 ## Social
 

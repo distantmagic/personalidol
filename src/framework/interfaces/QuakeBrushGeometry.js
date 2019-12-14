@@ -1,10 +1,10 @@
 // @flow
 
 import type { ConvexHull } from "three/examples/jsm/math/ConvexHull";
-import type { Geometry } from "three";
+import type { Geometry, Texture } from "three";
 
 export interface QuakeBrushGeometry {
   getConvexHull(): ConvexHull;
 
-  getGeometry(textures: $ReadOnlyArray<string>): Geometry;
+  getGeometry(textures: $ReadOnlyArray<Texture>): Geometry;
 }

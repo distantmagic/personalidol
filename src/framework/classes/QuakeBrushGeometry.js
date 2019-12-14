@@ -8,18 +8,10 @@ import quake2three from "../helpers/quake2three";
 import three2quake from "../helpers/three2quake";
 
 import type { ConvexHull as ConvexHullInterface } from "three/examples/jsm/math/ConvexHull";
-import type { Geometry } from "three";
+import type { Geometry, Texture } from "three";
 
 import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometry as QuakeBrushGeometryInterface } from "../interfaces/QuakeBrushGeometry";
-
-function textureDimensions(textureName: string): number {
-  if ("__TB_empty" === textureName) {
-    return 1024;
-  }
-
-  return Number(textureName.split("x").splice(-1));
-}
 
 export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
   +quakeBrush: QuakeBrush;
@@ -37,7 +29,7 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
     return convexHull;
   }
 
-  getGeometry(textures: $ReadOnlyArray<string>): Geometry {
+  getGeometry(textures: $ReadOnlyArray<Texture>): Geometry {
     const geometry = new THREE.Geometry();
     const convexHull = this.getConvexHull();
 
@@ -61,9 +53,10 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
 
       const halfSpace = this.quakeBrush.getHalfSpaceByCopolarPoints(v1three, v2three, v3three);
       const textureName = halfSpace.getTexture();
-      const textureSide = textureDimensions(textureName);
 
-      const textureIndex = textures.indexOf(textureName);
+      const textureIndex = textures.findIndex(texture => texture.name === textureName);
+      const texture: Texture = textures[textureIndex];
+      const textureSide = texture.image.naturalWidth;
       const face = new THREE.Face3(i, i + 1, i + 2, rawFace.normal, rawFace.color, textureIndex);
 
       // prettier-ignore

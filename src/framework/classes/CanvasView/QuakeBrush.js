@@ -39,9 +39,9 @@ export default class QuakeBrush extends CanvasView {
       }
     }
 
-    const quakeBrushGeometry = new QuakeBrushGeometry(this.brush);
-    const geometry = quakeBrushGeometry.getGeometry(textures);
     const loadedTextures = await this.textureLoader.loadTextures(cancelToken, textures);
+    const quakeBrushGeometry = new QuakeBrushGeometry(this.brush);
+    const geometry = quakeBrushGeometry.getGeometry(loadedTextures);
 
     const mesh = new THREE.Mesh(
       geometry,

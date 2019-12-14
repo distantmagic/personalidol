@@ -705,6 +705,7 @@ declare module "three" {
 
   // prettier-ignore
   declare export interface Texture {
+    +image: HTMLImageElement;
     +isTexture: number;
     +repeat: Vector2;
     mapping:
@@ -728,6 +729,8 @@ declare module "three" {
       | typeof RepeatWrapping
       | typeof MirroredRepeatWrapping
     ;
+
+    constructor(HTMLImageElement): void;
 
     dispose(): void;
   }
