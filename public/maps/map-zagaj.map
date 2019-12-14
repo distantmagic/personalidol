@@ -3,37 +3,84 @@
 // entity 0
 {
 "classname" "worldspawn"
-"light" "30"
+"light" "0.5"
+"_tb_textures" "./textures"
 // brush 0
 {
-( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0 1 1
-( -64 -64 -16 ) ( -64 -64 -15 ) ( -63 -64 -16 ) __TB_empty 0 0 0 1 1
-( -64 -64 -16 ) ( -63 -64 -16 ) ( -64 -63 -16 ) __TB_empty 0 0 0 1 1
-( 64 64 16 ) ( 64 65 16 ) ( 65 64 16 ) __TB_empty 0 0 0 1 1
-( 64 64 16 ) ( 65 64 16 ) ( 64 64 17 ) __TB_empty 0 0 0 1 1
-( 64 64 16 ) ( 64 64 17 ) ( 64 65 16 ) __TB_empty 0 0 0 1 1
+( -72 -112 16 ) ( -72 -112 -16 ) ( -72 16 -16 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+( 184 -112 16 ) ( 184 -112 -16 ) ( -72 -112 -16 ) textures/texture-cobblestone-128x128 -0 -0 0 1 1
+( -72 -112 -16 ) ( 184 -112 -16 ) ( 184 16 -16 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+( 184 16 16 ) ( 184 -112 16 ) ( -72 -112 16 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+( 184 16 -16 ) ( 184 16 16 ) ( -72 16 16 ) textures/texture-cobblestone-128x128 -0 -0 0 1 1
+( 184 16 -16 ) ( 184 -112 -16 ) ( 184 -112 16 ) textures/texture-cobblestone-128x128 0 0 0 1 1
 }
 // brush 1
 {
-( -64 64 80 ) ( -64 48 80 ) ( -64 48 16 ) __TB_empty 0 0 0 1 1
-( -48 48 80 ) ( -48 48 16 ) ( -64 48 16 ) __TB_empty 0 0 0 1 1
-( -64 48 16 ) ( -48 48 16 ) ( -48 64 16 ) __TB_empty 0 0 0 1 1
-( -48 64 80 ) ( -48 48 80 ) ( -64 48 80 ) __TB_empty 0 0 0 1 1
-( -48 64 16 ) ( -48 64 80 ) ( -64 64 80 ) __TB_empty 0 0 0 1 1
-( -48 64 16 ) ( -48 48 16 ) ( -48 48 80 ) __TB_empty 0 0 0 1 1
+( -64 64 80 ) ( -64 48 80 ) ( -64 48 16 ) textures/texture-crate-128x128 0 0 0 1 1
+( -48 48 80 ) ( -48 48 16 ) ( -64 48 16 ) textures/texture-crate-128x128 0 0 0 1 1
+( -64 48 16 ) ( -48 48 16 ) ( -48 64 16 ) textures/texture-crate-128x128 0 0 0 1 1
+( -48 64 80 ) ( -48 48 80 ) ( -64 48 80 ) textures/texture-crate-128x128 0 0 0 1 1
+( -48 64 16 ) ( -48 64 80 ) ( -64 64 80 ) textures/texture-crate-128x128 0 0 0 1 1
+( -48 64 16 ) ( -48 48 16 ) ( -48 48 80 ) textures/texture-crate-128x128 0 0 0 1 1
+}
+// brush 2
+{
+( -64 -112 16 ) ( -64 -111 16 ) ( -64 -112 17 ) textures/texture-crate-128x128 0 0 0 1 1
+( -64 -112 16 ) ( -64 -112 17 ) ( -63 -112 16 ) textures/texture-crate-128x128 0 0 0 1 1
+( -64 -112 16 ) ( -63 -112 16 ) ( -64 -111 16 ) textures/texture-crate-128x128 0 0 0 1 1
+( 184 -64 24 ) ( 184 -63 24 ) ( 185 -64 24 ) textures/texture-crate-128x128 0 0 0 1 1
+( 184 -64 24 ) ( 185 -64 24 ) ( 184 -64 25 ) textures/texture-crate-128x128 0 0 0 1 1
+( 184 -64 24 ) ( 184 -64 25 ) ( 184 -63 24 ) textures/texture-crate-128x128 0 0 0 1 1
+}
+// brush 3
+{
+( -64 -128 24 ) ( -64 -127 24 ) ( -64 -128 25 ) textures/texture-crate-128x128 0 0 0 1 1
+( -64 -128 24 ) ( -64 -128 25 ) ( -63 -128 24 ) textures/texture-crate-128x128 0 0 0 1 1
+( -64 -128 24 ) ( -63 -128 24 ) ( -64 -127 24 ) textures/texture-crate-128x128 0 0 0 1 1
+( 184 -80 32 ) ( 184 -79 32 ) ( 185 -80 32 ) textures/texture-crate-128x128 0 0 0 1 1
+( 184 -80 32 ) ( 185 -80 32 ) ( 184 -80 33 ) textures/texture-crate-128x128 0 0 0 1 1
+( 184 -80 32 ) ( 184 -80 33 ) ( 184 -79 32 ) textures/texture-crate-128x128 0 0 0 1 1
+}
+// brush 4
+{
+( -72 -144 40 ) ( -72 -144 41 ) ( -72 -145 40 ) textures/texture-crate-128x128 0 0 0 1 1
+( -72 -144 40 ) ( -73 -144 40 ) ( -72 -144 41 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -96 32 ) ( 175 -96 32 ) ( 176 -97 32 ) textures/texture-crate-128x128 0 0 0 1 1
+( -72 -144 40 ) ( -72 -145 40 ) ( -73 -144 40 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -96 32 ) ( 176 -96 33 ) ( 175 -96 32 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -96 32 ) ( 176 -97 32 ) ( 176 -96 33 ) textures/texture-crate-128x128 0 0 0 1 1
+}
+// brush 5
+{
+( -72 -176 48 ) ( -72 -175 48 ) ( -72 -176 49 ) textures/texture-crate-128x128 0 0 0 1 1
+( -72 -176 48 ) ( -72 -176 49 ) ( -71 -176 48 ) textures/texture-crate-128x128 0 0 0 1 1
+( -72 -176 48 ) ( -71 -176 48 ) ( -72 -175 48 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -128 56 ) ( 176 -127 56 ) ( 177 -128 56 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -128 56 ) ( 177 -128 56 ) ( 176 -128 57 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -128 56 ) ( 176 -128 57 ) ( 176 -127 56 ) textures/texture-crate-128x128 0 0 0 1 1
+}
+// brush 6
+{
+( -72 -160 40 ) ( -72 -159 40 ) ( -72 -160 41 ) textures/texture-crate-128x128 0 0 0 1 1
+( -72 -160 40 ) ( -72 -160 41 ) ( -71 -160 40 ) textures/texture-crate-128x128 0 0 0 1 1
+( -72 -160 40 ) ( -71 -160 40 ) ( -72 -159 40 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -112 48 ) ( 176 -111 48 ) ( 177 -112 48 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -112 48 ) ( 177 -112 48 ) ( 176 -112 49 ) textures/texture-crate-128x128 0 0 0 1 1
+( 176 -112 48 ) ( 176 -112 49 ) ( 176 -111 48 ) textures/texture-crate-128x128 0 0 0 1 1
 }
 }
 // entity 1
 {
 "classname" "light"
 "origin" "16 48 40"
-"light" "50"
+"light" "1"
 "decay" "2"
 }
 // entity 2
 {
 "classname" "model_md2"
-"origin" "-16 -16 40"
+"origin" "-56 56 104"
 "model_name" "chicken"
 "skin" "0"
+"angle" "90"
 }

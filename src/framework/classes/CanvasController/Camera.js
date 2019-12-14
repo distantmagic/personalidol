@@ -88,7 +88,7 @@ export default class CameraController extends CanvasController implements Camera
 
     this.camera.left = -1 * width;
     this.camera.far = 1024;
-    this.camera.near = 0;
+    this.camera.near = -128;
     this.camera.right = width;
     this.camera.top = height;
     this.camera.bottom = -1 * height;
