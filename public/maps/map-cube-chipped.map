@@ -1,0 +1,24 @@
+// Game: PersonalIdol
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"light" "0.3"
+"_tb_textures" "./textures"
+// brush 0
+{
+( -64 64 128 ) ( -64 -64 128 ) ( -64 -64 -0 ) textures/texture-crate-128x128 0 0 0 1 1
+( 64 -64 128 ) ( 64 -64 -0 ) ( -64 -64 -0 ) textures/texture-crate-128x128 0 0 0 1 1
+( -64 -64 -0 ) ( 64 -64 -0 ) ( 64 64 -0 ) textures/texture-crate-128x128 0 0 0 1 1
+( 64 64 128 ) ( 64 -64 128 ) ( -64 -64 128 ) textures/texture-crate-128x128 0 0 0 1 1
+( 64 64 -0 ) ( 64 64 128 ) ( -64 64 128 ) textures/texture-crate-128x128 0 64 0 1 1
+( 64 64 -0 ) ( 64 -64 -0 ) ( 64 -64 128 ) textures/texture-crate-128x128 0 64 0 1 1
+}
+}
+// entity 1
+{
+"classname" "light"
+"origin" "-96 -128 192"
+"decay" "2"
+"light" "1"
+}

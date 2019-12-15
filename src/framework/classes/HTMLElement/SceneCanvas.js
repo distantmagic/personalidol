@@ -165,7 +165,7 @@ export default class SceneCanvas extends HTMLElement {
     this.onComponentStateChange();
 
     const renderer = new THREE.WebGLRenderer({
-      // alpha: true,
+      alpha: true,
       // antialias: true,
       canvas: this.canvasElement,
     });

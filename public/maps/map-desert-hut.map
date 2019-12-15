@@ -520,12 +520,12 @@
 }
 // brush 57
 {
-( 16 368 360 ) ( 16 -144 360 ) ( 16 -144 152 ) textures/texture-rust-panel-128x128 54 -0 0 1 1
-( 32 -144 360 ) ( 32 -144 152 ) ( 16 -144 152 ) textures/texture-rust-panel-128x128 54 0 0 1 1
-( 16 -144 152 ) ( 32 -144 152 ) ( 32 368 152 ) textures/texture-rust-panel-128x128 54 0 0 1 1
-( 32 368 360 ) ( 32 -144 360 ) ( 16 -144 360 ) textures/texture-rust-panel-128x128 54 0 0 1 1
-( 32 368 152 ) ( 32 368 360 ) ( 16 368 360 ) textures/texture-rust-panel-128x128 54 0 0 1 1
-( 32 368 152 ) ( 32 -144 152 ) ( 32 -144 360 ) textures/texture-rust-panel-128x128 54 -0 0 1 1
+( 16 368 360 ) ( 16 -144 360 ) ( 16 -144 152 ) textures/texture-rust-panel-128x128 0 -0 0 1 1
+( 32 -144 360 ) ( 32 -144 152 ) ( 16 -144 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 16 -144 152 ) ( 32 -144 152 ) ( 32 368 152 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 360 ) ( 32 -144 360 ) ( 16 -144 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 152 ) ( 32 368 360 ) ( 16 368 360 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 32 368 152 ) ( 32 -144 152 ) ( 32 -144 360 ) textures/texture-rust-panel-128x128 0 -0 0 1 1
 }
 // brush 58
 {
@@ -590,7 +590,7 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Walkability"
-"_tb_id" "24"
+"_tb_id" "29"
 }
 // entity 6
 {
@@ -599,5 +599,5 @@
 "angle" "-90"
 "model_name" "ogro"
 "skin" "9"
-"_tb_layer" "24"
+"_tb_layer" "29"
 }

@@ -112,6 +112,7 @@ export default class Root extends CanvasController {
           this.scene,
           this.threeLoadingManager,
           String(process.env.REACT_APP_MAP_OVERRIDE || "") || "/maps/map-desert-hut.map"
+          // "/maps/map-desert-hut.map"
         )
       ),
       "Loading map"

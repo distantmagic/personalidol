@@ -50,7 +50,8 @@ export default class QuakeBrush extends CanvasView {
 
     const mesh = new THREE.Mesh(
       geometry,
-      // do not use array as it triggers multi-material
+      // do not use array with only one material as it triggers multi-material
+      // support which is more costly
       materials.length > 1 ? materials : materials[0]
     );
 
