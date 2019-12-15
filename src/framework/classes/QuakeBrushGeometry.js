@@ -106,9 +106,9 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
         );
       } else {
         uvs.push(
-          0, 0,
-          0, 0,
-          0, 0,
+          v1.z / textureSideHeight, v1.x / textureSideWidth,
+          v2.z / textureSideHeight, v2.x / textureSideWidth,
+          v3.z / textureSideHeight, v3.x / textureSideWidth,
         );
       }
 

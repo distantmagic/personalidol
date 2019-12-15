@@ -4,21 +4,22 @@
 {
 "classname" "worldspawn"
 "light" "0.3"
-"_tb_textures" "./textures"
+"_tb_textures" "./debug;./textures"
 // brush 0
 {
-( -64 64 128 ) ( -64 -64 128 ) ( -64 -64 -0 ) textures/texture-crate-128x128 0 0 0 1 1
+( -64 -64 128 ) ( -64 -64 -0 ) ( -64 64 -0 ) textures/texture-crate-128x128 0 0 0 1 1
 ( 64 -64 128 ) ( 64 -64 -0 ) ( -64 -64 -0 ) textures/texture-crate-128x128 0 0 0 1 1
 ( -64 -64 -0 ) ( 64 -64 -0 ) ( 64 64 -0 ) textures/texture-crate-128x128 0 0 0 1 1
-( 64 64 128 ) ( 64 -64 128 ) ( -64 -64 128 ) textures/texture-crate-128x128 0 0 0 1 1
-( 64 64 -0 ) ( 64 64 128 ) ( -64 64 128 ) textures/texture-crate-128x128 0 64 0 1 1
+( 64 -64 128 ) ( -64 -64 128 ) ( -64 64 128 ) textures/texture-crate-128x128 0 0 0 1 1
+( -64 64 -0 ) ( 64 64 -0 ) ( -64 64 128 ) textures/texture-crate-128x128 0 64 0 1 1
+( -64 64 128 ) ( 64 64 -0 ) ( 64 -64 128 ) debug/texture-uv-1024x1024 0 -0 0 1 1
 ( 64 64 -0 ) ( 64 -64 -0 ) ( 64 -64 128 ) textures/texture-crate-128x128 0 64 0 1 1
 }
 }
 // entity 1
 {
 "classname" "light"
-"origin" "-96 -128 192"
+"origin" "224 192 192"
 "decay" "2"
 "light" "1"
 }
