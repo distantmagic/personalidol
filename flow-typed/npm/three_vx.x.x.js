@@ -329,7 +329,7 @@ declare module "three" {
   declare export interface Color {
     +isColor: true;
 
-    constructor(number, ?number, ?number): void;
+    constructor(number | string, ?number, ?number): void;
 
     set(number): void;
   }
@@ -434,6 +434,19 @@ declare module "three" {
     computeVertexNormals(): void;
   }
 
+  declare export interface Fog {
+    color: Color;
+    far: number;
+    name: string;
+    near: number;
+
+    constructor(color: number, far: number, near: number): void;
+
+    clone(): Fog;
+
+    toJSON(): Object;
+  }
+
   declare export interface GridHelper extends Object3D {
     constructor(size: number, divisions: number): void;
   }
@@ -499,6 +512,8 @@ declare module "three" {
   declare export interface Material extends Geometry {
     +color: Color;
     +isMaterial: true;
+    map: Texture;
+    needsUpdate: boolean;
 
     constructor({|
       color?: number,
@@ -529,7 +544,6 @@ declare module "three" {
 
   declare export interface MeshLambertMaterial extends Material {
     +isMeshLambertMaterial: true;
-    +map: Texture;
 
     constructor({|
       color?: number,
@@ -648,7 +662,7 @@ declare module "three" {
     +position: Vector3;
     decay: number;
 
-    constructor(color?: number, intensity?: number, distance?: number, decay?: number): void;
+    constructor(color?: Color | number, intensity?: number, distance?: number, decay?: number): void;
   }
 
   declare export interface Raycaster {
@@ -683,9 +697,16 @@ declare module "three" {
   }
 
   declare export interface Scene extends Object3D {
+    autoUpdate: boolean;
+    background: ?Object3D;
+    fog: Fog;
+    overrideMaterial: ?Material;
+
     constructor(): void;
 
     dispose(): void;
+
+    toJSON(): Object;
   }
 
   declare export interface Shader {

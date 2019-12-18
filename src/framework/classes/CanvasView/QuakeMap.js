@@ -74,10 +74,11 @@ export default class QuakeMap extends CanvasView {
           new QuakeEntityView(
             this.audioListener,
             this.audioLoader,
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeEntity")),
             entity,
             this.loadingManager,
-            this.loggerBreadcrumbs.add("QuakeMap"),
+            this.logger,
+            this.loggerBreadcrumbs.add("QuakeEntity"),
             this.queryBus,
             this.group,
             this.textureLoader,

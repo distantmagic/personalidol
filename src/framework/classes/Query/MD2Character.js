@@ -17,7 +17,7 @@ export default class MD2Character implements Query<THREEMD2CharacterInterface> {
     this.loadingManager = loadingManager;
   }
 
-  async execute(cancelToken: CancelToken): Promise<THREEMD2CharacterInterface> {
+  execute(cancelToken: CancelToken): Promise<THREEMD2CharacterInterface> {
     const character = new THREEMD2Character(this.loadingManager);
 
     return new Promise(resolve => {

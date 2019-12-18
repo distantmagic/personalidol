@@ -34,19 +34,19 @@ export default class MD2Character extends CanvasView {
     group: Group,
     threeLoadingManager: THREELoadingManager,
     baseUrl: string,
-    animationOffset: number,
     angle: number,
+    animationOffset: number,
     skin: number
   ) {
     super(canvasViewBag);
     autoBind(this);
 
+    this.angle = angle;
     this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
     this.group = group;
     this.origin = origin;
     this.queryBus = queryBus;
-    this.angle = angle;
     this.skin = skin;
     this.threeLoadingManager = threeLoadingManager;
   }

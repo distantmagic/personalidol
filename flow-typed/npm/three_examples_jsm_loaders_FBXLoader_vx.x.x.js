@@ -1,7 +1,7 @@
-import type { Loader } from "three";
+import type { Loader, Mesh } from "three";
 
 declare module "three/examples/jsm/loaders/FBXLoader" {
-  declare export interface FBXLoader extends Loader<Object3D> {
+  declare export interface FBXLoader extends Loader<Mesh> {
     setResourcePath(string): void;
   }
 }

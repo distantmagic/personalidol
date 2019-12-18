@@ -4,19 +4,19 @@ import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 
-import type { Mesh, Scene } from "three";
+import type { Group, Mesh } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class Cube extends CanvasView {
-  +scene: Scene;
+  +group: Group;
   cube: ?Mesh;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, group: Group) {
     super(canvasViewBag);
 
-    this.scene = scene;
+    this.group = group;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
@@ -28,7 +28,7 @@ export default class Cube extends CanvasView {
     });
 
     this.cube = new THREE.Mesh(geometry, material);
-    this.scene.add(this.cube);
+    this.group.add(this.cube);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
@@ -38,7 +38,7 @@ export default class Cube extends CanvasView {
       return;
     }
 
-    this.scene.remove(this.cube);
+    this.group.remove(this.cube);
   }
 
   update(delta: number): void {

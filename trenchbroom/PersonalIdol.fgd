@@ -9,24 +9,31 @@
 ]
 
 @baseclass color(255 255 40) = Light [
+    color(string) : "Color HEX" : "0xFFC000"
     light(integer) : "Intensity" : 2
     decay(integer) : "Decay" : 2
 ]
 
-@baseclass size(-16 -16 -24, 16 16 32) color(0 150 255) = ExternalModel []
+@baseclass size(-16 -16 -24, 16 16 32) color(0 150 255) = ExternalModel
+[
+    angle(integer) : "Rotation angle" : 0
+]
 
 @baseclass size(-16 -16 -24, 16 16 32) color(0 255 0) = PlayerModel []
 
-@PointClass base(ExternalModel) = model_md2 : "External MD2 model loaded into map" [
+@PointClass base(ExternalModel) = model_md2 : "External MD2 model loaded into map"
+[
     model_name(string) : "Model base name to load" : "chicken"
     skin(integer) : "Skin ID" : 0
 ]
 
-@PointClass base(ExternalModel) = model_fbx : "External FBX model loaded into map" [
+@PointClass base(ExternalModel) = model_fbx : "External FBX model loaded into map"
+[
     model_name(string) : "Model base name" : "bonfire"
+    model_texture(string) : "Model texture filename relative to model directory" : "bonfire.png"
+    scale(integer) : "Model scale (1 = as defined in .FBX)" : 1
 ]
 
-@PointClass base(PlayerModel) = player : "Player entry point" [
-]
+@PointClass base(PlayerModel) = player : "Player entry point" []
 
 @PointClass size(-8 -8 -8, 8 8 8) base(Light, Target, Targetname) = light : "Invisible light source" []

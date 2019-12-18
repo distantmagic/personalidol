@@ -29,10 +29,13 @@ export default class BusClock implements BusClockInterface {
       };
 
       timeoutId = setTimeout(tick, this.delay);
-      cancelToken.whenCanceled().then(function () {
-        clearTimeout(timeoutId);
-        resolve();
-      }).catch(reject);
+      cancelToken
+        .whenCanceled()
+        .then(function() {
+          clearTimeout(timeoutId);
+          resolve();
+        })
+        .catch(reject);
     });
   }
 }

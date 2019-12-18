@@ -1,11 +1,13 @@
 // @flow
 
+import * as THREE from "three";
 import isEmpty from "lodash/isEmpty";
 
 import CanvasView from "../CanvasView";
 import quake2three from "../../helpers/quake2three";
 import { default as AmbientLightView } from "./AmbientLight";
 import { default as AmbientSoundView } from "./AmbientSound";
+import { default as FBXModelView } from "./FBXModel";
 import { default as HemisphereLightView } from "./HemisphereLight";
 import { default as MD2CharacterView } from "./MD2Character";
 import { default as PointLightView } from "./PointLight";
@@ -17,6 +19,7 @@ import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingM
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
+import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
 import type { QueryBus } from "../../interfaces/QueryBus";
@@ -33,6 +36,7 @@ export default class QuakeEntity extends CanvasView {
   +entity: QuakeEntityInterface;
   +group: Group;
   +loadingManager: LoadingManager;
+  +logger: Logger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
   +textureLoader: QuakeMapTextureLoader;
@@ -46,6 +50,7 @@ export default class QuakeEntity extends CanvasView {
     canvasViewBag: CanvasViewBag,
     entity: QuakeEntityInterface,
     loadingManager: LoadingManager,
+    logger: Logger,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
     group: Group,
@@ -61,6 +66,7 @@ export default class QuakeEntity extends CanvasView {
     this.brushes = [];
     this.entity = entity;
     this.loadingManager = loadingManager;
+    this.logger = logger;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.material = null;
     this.queryBus = queryBus;
@@ -119,6 +125,7 @@ export default class QuakeEntity extends CanvasView {
               this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
               this.group,
               quake2three(this.entity.getOrigin()),
+              new THREE.Color(parseInt(entityProperties.getPropertyByKey("color").getValue(), 16)),
               entityProperties.getPropertyByKey("light").asNumber(),
               entityProperties.getPropertyByKey("decay").asNumber()
             )
@@ -126,9 +133,28 @@ export default class QuakeEntity extends CanvasView {
           "Loading point light"
         );
         break;
+      case "model_fbx":
+        // prettier-ignore
+        await this.loadingManager.blocking(
+          this.canvasViewBag.add(
+            cancelToken,
+            new FBXModelView(
+              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
+              quake2three(this.entity.getOrigin()),
+              this.queryBus,
+              this.group,
+              this.threeLoadingManager,
+              `/models/model-fbx-${entityProperties.getPropertyByKey("model_name").getValue()}/`,
+              entityProperties.getPropertyByKey("angle").asNumber(),
+              this.animationOffset,
+              entityProperties.getPropertyByKey("scale").asNumber(),
+              entityProperties.getPropertyByKey("model_texture").getValue(),
+            )
+          ),
+          "Loading FBX model"
+        );
+        break;
       case "model_md2":
-        const modelName = entityProperties.getPropertyByKey("model_name").getValue();
-
         // prettier-ignore
         await this.loadingManager.blocking(
           this.canvasViewBag.add(
@@ -139,17 +165,17 @@ export default class QuakeEntity extends CanvasView {
               this.queryBus,
               this.group,
               this.threeLoadingManager,
-              `/models/model-md2-${modelName}/`,
-              this.animationOffset,
+              `/models/model-md2-${entityProperties.getPropertyByKey("model_name").getValue()}/`,
               entityProperties.getPropertyByKey("angle").asNumber(),
+              this.animationOffset,
               entityProperties.getPropertyByKey("skin").asNumber()
             )
           ),
-          "Loading character"
+          "Loading MD2 model"
         );
         break;
       case "player":
-        console.log("PLAYER MODEL :D");
+        this.logger.debug(this.loggerBreadcrumbs.add("attach"), "Player model is expected to be placed.");
         break;
       case "worldspawn":
         if (entityProperties.hasPropertyKey("light")) {
