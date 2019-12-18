@@ -6,6 +6,7 @@ import CanvasView from "../CanvasView";
 import quake2three from "../../helpers/quake2three";
 import { default as AmbientLightView } from "./AmbientLight";
 import { default as AmbientSoundView } from "./AmbientSound";
+import { default as HemisphereLightView } from "./HemisphereLight";
 import { default as MD2CharacterView } from "./MD2Character";
 import { default as PointLightView } from "./PointLight";
 import { default as QuakeBrushView } from "./QuakeBrush";
@@ -20,6 +21,9 @@ import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
 import type { QueryBus } from "../../interfaces/QueryBus";
 import type { QuakeMapTextureLoader } from "../../interfaces/QuakeMapTextureLoader";
+
+const SCENERY_INDOORS = 0;
+const SCENERY_OUTDOORS = 1;
 
 export default class QuakeEntity extends CanvasView {
   +animationOffset: number;
@@ -149,18 +153,39 @@ export default class QuakeEntity extends CanvasView {
         break;
       case "worldspawn":
         if (entityProperties.hasPropertyKey("light")) {
+          const sceneryType = entityProperties.getPropertyByKey("scenery").asNumber();
+
           // prettier-ignore
-          await this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new AmbientLightView(
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
-                this.group,
-                entityProperties.getPropertyByKey("light").asNumber()
-              )
-            ),
-            "Loading world ambient light"
-          );
+          switch (sceneryType) {
+            case SCENERY_INDOORS:
+              await this.loadingManager.blocking(
+                this.canvasViewBag.add(
+                  cancelToken,
+                  new AmbientLightView(
+                    this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
+                    this.group,
+                    entityProperties.getPropertyByKey("light").asNumber()
+                  )
+                ),
+                "Loading world ambient light"
+              );
+              break;
+            case SCENERY_OUTDOORS:
+              await this.loadingManager.blocking(
+                this.canvasViewBag.add(
+                  cancelToken,
+                  new HemisphereLightView(
+                    this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
+                    this.group,
+                    entityProperties.getPropertyByKey("light").asNumber()
+                  )
+                ),
+                "Loading world hemisphere light"
+              );
+              break;
+              default:
+                throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unknown map scenery type: "${sceneryType}".`);
+          }
         }
         if (entityProperties.hasPropertyKey("sounds")) {
           const ambientSoundSource: string = entityProperties.getPropertyByKey("sounds").getValue();

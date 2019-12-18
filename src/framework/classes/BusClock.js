@@ -1,11 +1,8 @@
 // @flow
 
-import BusClockTick from "./BusClockTick";
-import interval from "../helpers/interval";
-
-import type { CancelToken } from "../interfaces/CancelToken";
 import type { BusClock as BusClockInterface } from "../interfaces/BusClock";
-import type { BusClockTick as BusClockTickInterface } from "../interfaces/BusClockTick";
+import type { BusClockCallback } from "../types/BusClockCallback";
+import type { CancelToken } from "../interfaces/CancelToken";
 
 export default class BusClock implements BusClockInterface {
   delay: number;
@@ -14,11 +11,18 @@ export default class BusClock implements BusClockInterface {
     this.delay = delay;
   }
 
-  async *interval(cancelToken: CancelToken): AsyncGenerator<BusClockTickInterface, void, void> {
-    let tick;
+  async interval(cancelToken: CancelToken, callback: BusClockCallback): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const tick = () => {
+        if (cancelToken.isCanceled()) {
+          resolve();
+        } else {
+          callback();
+          setTimeout(tick, this.delay);
+        }
+      };
 
-    for await (tick of interval(cancelToken, this.delay)) {
-      yield new BusClockTick(tick);
-    }
+      setTimeout(tick, this.delay);
+    });
   }
 }

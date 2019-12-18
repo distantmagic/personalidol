@@ -15,9 +15,9 @@ test("ticks", async function() {
     cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));
   }, 50);
 
-  for await (let tick of clock.interval(cancelToken)) {
+  await clock.interval(cancelToken, function() {
     ticks += 1;
-  }
+  });
 
   expect(ticks).toBe(expectedTicks);
 });

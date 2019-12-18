@@ -51,15 +51,9 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
         points.push(point);
       } while (edge !== face.edge);
 
-      const v1 = points[0];
-      const v2 = points[1];
-      const v3 = points[2];
+      const [v1, v2, v3] = points;
 
-      const v1three = three2quake(v1);
-      const v2three = three2quake(v2);
-      const v3three = three2quake(v3);
-
-      const halfSpace = this.quakeBrush.getHalfSpaceByCoplanarPoints(v1three, v2three, v3three);
+      const halfSpace = this.quakeBrush.getHalfSpaceByCoplanarPoints(...points.map(three2quake));
       const textureName = halfSpace.getTexture();
 
       const textureIndex = textures.findIndex(texture => texture.name === textureName);
@@ -68,48 +62,56 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
       const textureSideWidth = texture.image.naturalWidth * halfSpace.getTextureYScale();
 
       // prettier-ignore
-      if (face.normal.x > face.normal.y && face.normal.x > face.normal.z) {
-        uvs.push(
-          v1.z / textureSideHeight, v1.y / textureSideWidth,
-          v2.z / textureSideHeight, v2.y / textureSideWidth,
-          v3.z / textureSideHeight, v3.y / textureSideWidth,
-        );
-      } else if (face.normal.y > face.normal.x && face.normal.y > face.normal.z) {
-        uvs.push(
-          v1.z / textureSideHeight, v1.x / textureSideWidth,
-          v2.z / textureSideHeight, v2.x / textureSideWidth,
-          v3.z / textureSideHeight, v3.x / textureSideWidth,
-        );
-      } else if (face.normal.z > face.normal.x && face.normal.z > face.normal.y) {
-        uvs.push(
-          v1.x / textureSideHeight, v1.y / textureSideWidth,
-          v2.x / textureSideHeight, v2.y / textureSideWidth,
-          v3.x / textureSideHeight, v3.y / textureSideWidth,
-        );
-      } else if (face.normal.x < face.normal.y && face.normal.x < face.normal.z) {
-        uvs.push(
-          v1.z / textureSideHeight, v1.y / textureSideWidth,
-          v2.z / textureSideHeight, v2.y / textureSideWidth,
-          v3.z / textureSideHeight, v3.y / textureSideWidth,
-        );
-      } else if (face.normal.y < face.normal.x && face.normal.y < face.normal.z) {
-        uvs.push(
-          v1.z / textureSideHeight, v1.x / textureSideWidth,
-          v2.z / textureSideHeight, v2.x / textureSideWidth,
-          v3.z / textureSideHeight, v3.x / textureSideWidth,
-        );
-      } else if (face.normal.z < face.normal.x && face.normal.z < face.normal.y) {
-        uvs.push(
-          v1.x / textureSideHeight, v1.y / textureSideWidth,
-          v2.x / textureSideHeight, v2.y / textureSideWidth,
-          v3.x / textureSideHeight, v3.y / textureSideWidth,
-        );
-      } else {
-        uvs.push(
-          v1.z / textureSideHeight, v1.x / textureSideWidth,
-          v2.z / textureSideHeight, v2.x / textureSideWidth,
-          v3.z / textureSideHeight, v3.x / textureSideWidth,
-        );
+      switch (true) {
+        case face.normal.x > face.normal.y && face.normal.x > face.normal.z:
+          uvs.push(
+            v1.z / textureSideHeight, v1.y / textureSideWidth,
+            v2.z / textureSideHeight, v2.y / textureSideWidth,
+            v3.z / textureSideHeight, v3.y / textureSideWidth,
+          );
+          break;
+        case face.normal.y > face.normal.x && face.normal.y > face.normal.z:
+          uvs.push(
+            v1.z / textureSideHeight, v1.x / textureSideWidth,
+            v2.z / textureSideHeight, v2.x / textureSideWidth,
+            v3.z / textureSideHeight, v3.x / textureSideWidth,
+          );
+          break;
+        case face.normal.z > face.normal.x && face.normal.z > face.normal.y:
+          uvs.push(
+            v1.x / textureSideHeight, v1.y / textureSideWidth,
+            v2.x / textureSideHeight, v2.y / textureSideWidth,
+            v3.x / textureSideHeight, v3.y / textureSideWidth,
+          );
+          break;
+        case face.normal.x < face.normal.y && face.normal.x < face.normal.z:
+          uvs.push(
+            v1.z / textureSideHeight, v1.y / textureSideWidth,
+            v2.z / textureSideHeight, v2.y / textureSideWidth,
+            v3.z / textureSideHeight, v3.y / textureSideWidth,
+          );
+          break;
+        case face.normal.y < face.normal.x && face.normal.y < face.normal.z:
+          uvs.push(
+            v1.z / textureSideHeight, v1.x / textureSideWidth,
+            v2.z / textureSideHeight, v2.x / textureSideWidth,
+            v3.z / textureSideHeight, v3.x / textureSideWidth,
+          );
+          break;
+        case face.normal.z < face.normal.x && face.normal.z < face.normal.y:
+          uvs.push(
+            v1.x / textureSideHeight, v1.y / textureSideWidth,
+            v2.x / textureSideHeight, v2.y / textureSideWidth,
+            v3.x / textureSideHeight, v3.y / textureSideWidth,
+          );
+          break;
+        default:
+          uvs.push(
+            v1.z / textureSideHeight, v1.x / textureSideWidth,
+            v2.z / textureSideHeight, v2.x / textureSideWidth,
+            v3.z / textureSideHeight, v3.x / textureSideWidth,
+          );
+          break;
       }
 
       geometry.addGroup(groupStart, 3, textureIndex);

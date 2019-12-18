@@ -69,6 +69,6 @@ export default class THREEPointerInteraction implements THREEPointerInteractionI
   }
 
   update(delta: number): void {
-    this.raycaster.setFromCamera(this.mouseVector, this.camera);
+    // this.raycaster.setFromCamera(this.mouseVector, this.camera);
   }
 }

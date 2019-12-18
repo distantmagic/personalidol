@@ -3,7 +3,6 @@
 import CancelToken from "./CancelToken";
 import ExceptionHandler from "./ExceptionHandler";
 import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
-import ForcedTick from "./ForcedTick";
 import Logger from "./Logger";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBus from "./QueryBus";
@@ -56,7 +55,7 @@ test("executes similar queries only once", async function() {
     queryBus.enqueue(cancelToken, new Foo(total, 4, 7)).whenExecuted(),
   ]);
 
-  await queryBus.tick(new ForcedTick(false));
+  queryBus.tick();
 
   const results = await promises;
 

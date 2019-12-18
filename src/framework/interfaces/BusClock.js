@@ -1,8 +1,8 @@
 // @flow
 
-import type { BusClockTick } from "./BusClockTick";
+import type { BusClockCallback } from "../types/BusClockCallback";
 import type { CancelToken } from "../interfaces/CancelToken";
 
 export interface BusClock {
-  interval(CancelToken): AsyncGenerator<BusClockTick, void, void>;
+  interval(CancelToken, BusClockCallback): Promise<void>;
 }

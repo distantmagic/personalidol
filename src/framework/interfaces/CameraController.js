@@ -7,6 +7,4 @@ import type { ElementSize } from "./ElementSize";
 
 export interface CameraController extends CanvasController {
   setZoom(number): void;
-
-  updateProjection(): void;
 }

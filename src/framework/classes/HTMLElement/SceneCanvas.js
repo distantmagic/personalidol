@@ -90,7 +90,7 @@ export default class SceneCanvas extends HTMLElement {
     this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this.canvasWrapperElement);
     this.canvasControllerBus = new CanvasControllerBus(this.loggerBreadcrumbs, this.resizeObserver, this.scheduler);
 
-    // this.mainLoop.setMaxAllowedFPS(10);
+    // this.mainLoop.setMaxAllowedFPS(30);
     this.mainLoop.attachScheduler(this.scheduler);
   }
 
@@ -165,7 +165,7 @@ export default class SceneCanvas extends HTMLElement {
     this.onComponentStateChange();
 
     const renderer = new THREE.WebGLRenderer({
-      alpha: true,
+      // alpha: true,
       // antialias: true,
       canvas: this.canvasElement,
     });

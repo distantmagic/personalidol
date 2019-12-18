@@ -7,16 +7,16 @@ export default function useIsDocumentHidden(): boolean {
 
   React.useEffect(
     function() {
-      const intervalId = setInterval(function() {
-        // I know that 'document.onvisibilitychange' event handler exists, but
-        // sometimes it does not trigger or just produces incorrect state when
-        // document visibility is changed quickly, so using interval is safer
-        // and eliminates some edge cases.
+      function onVisibilityChange() {
         setIsDocumentHidden(document.hidden);
-      }, 100);
+      }
+
+      document.addEventListener("visibilitychange", onVisibilityChange, {
+        once: true,
+      });
 
       return function() {
-        clearInterval(intervalId);
+        document.removeEventListener("visibilitychange", onVisibilityChange);
       };
     },
     [isDocumentHidden]

@@ -4,22 +4,22 @@ import type { EventListenerSet as EventListenerSetInterface } from "../interface
 import type { EventListenerSetCallback } from "../types/EventListenerSetCallback";
 
 export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements EventListenerSetInterface<Arguments> {
-  +callbacks: Set<EventListenerSetCallback<Arguments>>;
+  callbacks: EventListenerSetCallback<Arguments>[];
 
   constructor(): void {
-    this.callbacks = new Set<EventListenerSetCallback<Arguments>>();
+    this.callbacks = [];
   }
 
   add(callback: EventListenerSetCallback<Arguments>): void {
-    this.callbacks.add(callback);
+    this.callbacks.push(callback);
   }
 
   delete(callback: EventListenerSetCallback<Arguments>): void {
-    this.callbacks.delete(callback);
+    this.callbacks.splice(this.callbacks.indexOf(callback), 1);
   }
 
   notify(args: Arguments, clearAfter: boolean = false): void {
-    for (let callback of this.callbacks.values()) {
+    for (let callback of this.callbacks) {
       callback(...args);
     }
 
@@ -29,20 +29,18 @@ export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements
   }
 
   async notifyAwait(args: Arguments, clearAfter: boolean = false): Promise<void> {
-    const callbacks = Array.from(this.callbacks.values());
+    await Promise.all(
+      this.callbacks.map(callback => {
+        return callback(...args);
+      })
+    );
 
     if (clearAfter) {
       this.clear();
     }
-
-    await Promise.all(
-      callbacks.map(callback => {
-        return callback(...args);
-      })
-    );
   }
 
   clear(): void {
-    this.callbacks.clear();
+    this.callbacks = [];
   }
 }

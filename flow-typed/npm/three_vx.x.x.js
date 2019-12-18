@@ -444,6 +444,15 @@ declare module "three" {
     constructor(): void;
   }
 
+  declare export interface HemisphereLight<T: Camera> extends Light<T> {
+    +color: number;
+    +groundColor: number;
+    +isHemisphereLight: true;
+    +position: Vector3;
+
+    constructor(skyColor?: number, groundColor?: number, intensity?: number): void;
+  }
+
   declare export interface Light<T: Camera> extends Object3D {
     +isLight: true;
     intensity: number;
@@ -539,6 +548,13 @@ declare module "three" {
 
   declare export interface MeshPhongMaterial extends Material {
     +isMeshPhongMaterial: true;
+
+    constructor({|
+      color?: number,
+      map?: Texture,
+      reflectivity?: number,
+      shininess?: number,
+    |}): void;
   }
 
   declare export interface MeshStandardMaterial extends Material {

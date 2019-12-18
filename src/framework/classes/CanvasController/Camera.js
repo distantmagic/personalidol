@@ -1,5 +1,6 @@
 // @flow
 
+import * as THREE from "three";
 import autoBind from "auto-bind";
 import clamp from "lodash/clamp";
 import Ola from "ola";
@@ -41,13 +42,10 @@ export default class CameraController extends CanvasController implements Camera
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
-    // this.camera.position.set(512 + 256, 512, 512 + 256);
-    // this.camera.lookAt(new THREE.Vector3(256, 0, 256));
+    // this.lookAt(this.scene.position);
+    this.lookAt(new THREE.Vector3(512, 0, 256));
 
-    this.camera.position.set(512, 512, 512);
-    this.camera.lookAt(this.scene.position);
-
-    this.updateProjection();
+    this.camera.updateProjectionMatrix();
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
     this.debug.updateState(this.loggerBreadcrumbs.add("camera").add("position"), this.camera.position);
@@ -68,7 +66,14 @@ export default class CameraController extends CanvasController implements Camera
     }
 
     this.camera.zoom = this.zoomTween.value;
-    this.updateProjection();
+    this.camera.updateProjectionMatrix();
+  }
+
+  lookAt(position: Vector3): void {
+    const cameraPosition = position.clone().addScalar(512 + 256);
+
+    this.camera.position.copy(cameraPosition);
+    this.camera.lookAt(position);
   }
 
   onWheel(evt: WheelEvent): void {
@@ -87,13 +92,13 @@ export default class CameraController extends CanvasController implements Camera
     const width = viewportSize.getWidth();
 
     this.camera.left = -1 * width;
-    this.camera.far = 1024;
-    this.camera.near = -128;
+    this.camera.far = 2048;
+    this.camera.near = 0;
     this.camera.right = width;
     this.camera.top = height;
     this.camera.bottom = -1 * height;
 
-    this.updateProjection();
+    this.camera.updateProjectionMatrix();
   }
 
   setZoom(zoom: number): void {
@@ -105,9 +110,5 @@ export default class CameraController extends CanvasController implements Camera
 
     this.zoomTarget = clampedZoom;
     this.zoomTween.value = clampedZoom;
-  }
-
-  updateProjection(): void {
-    this.camera.updateProjectionMatrix();
   }
 }

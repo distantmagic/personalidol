@@ -43,8 +43,10 @@ export default class QuakeBrush extends CanvasView {
     const quakeBrushGeometry = new QuakeBrushGeometry(this.brush);
     const geometry = quakeBrushGeometry.getGeometry(loadedTextures);
     const materials = loadedTextures.map(texture => {
-      return new THREE.MeshLambertMaterial({
+      return new THREE.MeshPhongMaterial({
         map: texture,
+        reflectivity: 0,
+        shininess: 0,
       });
     });
 

@@ -14,13 +14,9 @@ export default class ClockReactiveController implements ClockReactiveControllerI
     this.clockReactive = clockReactive;
   }
 
-  async interval(cancelToken: CancelToken): Promise<void> {
-    for await (let tick of this.clock.interval(cancelToken)) {
-      if (cancelToken.isCanceled()) {
-        return;
-      }
-
-      await this.clockReactive.tick(tick);
-    }
+  interval(cancelToken: CancelToken): Promise<void> {
+    return this.clock.interval(cancelToken, () => {
+      this.clockReactive.tick();
+    });
   }
 }

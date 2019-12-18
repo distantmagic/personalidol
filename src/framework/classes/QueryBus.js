@@ -6,7 +6,6 @@ import QueryBatch from "./QueryBatch";
 
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
-import type { ClockTick } from "../interfaces/ClockTick";
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
@@ -54,15 +53,7 @@ export default class QueryBus implements QueryBusInterface {
     this.enqueuedCallbacks.add(callback);
   }
 
-  tick(tick: ClockTick): Promise<void> {
-    // Random things happen, timeouts and intervals are not reliable (those are
-    // definitely not real time clocks) and QueryBus is really important to
-    // the system.
-    // It's better to have this additional check here, just for safety.
-    if (tick.isCanceled()) {
-      return Promise.resolve(void 0);
-    }
-
-    return this.flush().process();
+  tick(): void {
+    this.flush().process();
   }
 }
