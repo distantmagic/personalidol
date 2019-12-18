@@ -12,17 +12,27 @@ export default class BusClock implements BusClockInterface {
   }
 
   async interval(cancelToken: CancelToken, callback: BusClockCallback): Promise<void> {
+    if (cancelToken.isCanceled()) {
+      // nothing to do here
+      return;
+    }
+
     return new Promise((resolve, reject) => {
+      let timeoutId;
       const tick = () => {
         if (cancelToken.isCanceled()) {
           resolve();
         } else {
           callback();
-          setTimeout(tick, this.delay);
+          timeoutId = setTimeout(tick, this.delay);
         }
       };
 
-      setTimeout(tick, this.delay);
+      timeoutId = setTimeout(tick, this.delay);
+      cancelToken.whenCanceled().then(function () {
+        clearTimeout(timeoutId);
+        resolve();
+      }).catch(reject);
     });
   }
 }

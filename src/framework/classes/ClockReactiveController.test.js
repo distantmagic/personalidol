@@ -9,7 +9,7 @@ import Logger from "./Logger";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBus from "./QueryBus";
 
-test("supports cancel token", async function() {
+test("supports cancel token", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const clock = new BusClock(10000);
@@ -21,5 +21,5 @@ test("supports cancel token", async function() {
     cancelToken.cancel(loggerBreadcrumbs.add("setTimeout"));
   });
 
-  await controller.interval(cancelToken);
+  return controller.interval(cancelToken);
 }, 100);
