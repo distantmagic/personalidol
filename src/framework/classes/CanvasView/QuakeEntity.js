@@ -95,7 +95,7 @@ export default class QuakeEntity extends CanvasView {
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
                 brush,
                 this.group,
-                this.textureLoader
+                this.textureLoader,
               )
             ),
             "Loading entity brush"

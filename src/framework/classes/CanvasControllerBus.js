@@ -28,14 +28,36 @@ export default class CanvasControllerBus implements CanvasControllerBusInterface
     await canvasController.attach(cancelToken);
 
     this.resizeObserver.notify(canvasController);
-    this.scheduler.onDraw(canvasController.draw);
-    this.scheduler.onEnd(canvasController.end);
+
+    if (canvasController.useBegin()) {
+      this.scheduler.onBegin(canvasController.begin);
+    }
+    if (canvasController.useDraw()) {
+      this.scheduler.onDraw(canvasController.draw);
+    }
+    if (canvasController.useEnd()) {
+      this.scheduler.onEnd(canvasController.end);
+    }
+    if (canvasController.useUpdate()) {
+      this.scheduler.onUpdate(canvasController.update);
+    }
   }
 
   async delete(cancelToken: CancelToken, canvasController: CanvasController): Promise<void> {
+    if (canvasController.useBegin()) {
+      this.scheduler.offBegin(canvasController.begin);
+    }
+    if (canvasController.useDraw()) {
+      this.scheduler.offDraw(canvasController.draw);
+    }
+    if (canvasController.useEnd()) {
+      this.scheduler.offEnd(canvasController.end);
+    }
+    if (canvasController.useUpdate()) {
+      this.scheduler.offUpdate(canvasController.update);
+    }
+
     this.resizeObserver.off(canvasController);
-    this.scheduler.offDraw(canvasController.draw);
-    this.scheduler.offEnd(canvasController.end);
 
     if (canvasController.isDisposed()) {
       throw new CanvasControllerException(this.loggerBreadcrumbs.add("delete"), "Canvas controller cannot is already disposed and cannot be disposed again.");

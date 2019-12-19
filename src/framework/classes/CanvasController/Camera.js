@@ -13,25 +13,22 @@ import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { Debugger } from "../../interfaces/Debugger";
 import type { ElementSize } from "../../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
   +camera: OrthographicCamera;
-  +debug: Debugger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +renderer: WebGLRenderer;
   +scene: Scene;
   +zoomTween: OlaInterface;
   zoomTarget: number;
 
-  constructor(canvasViewBag: CanvasViewBag, camera: OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, camera: OrthographicCamera, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
     super(canvasViewBag);
     autoBind(this);
 
     this.camera = camera;
-    this.debug = debug;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.renderer = renderer;
     this.scene = scene;
@@ -48,14 +45,12 @@ export default class CameraController extends CanvasController implements Camera
     this.camera.updateProjectionMatrix();
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
-    this.debug.updateState(this.loggerBreadcrumbs.add("camera").add("position"), this.camera.position);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     super.dispose(cancelToken);
 
     this.renderer.domElement.removeEventListener("wheel", this.onWheel);
-    this.debug.deleteState(this.loggerBreadcrumbs.add("camera").add("position"));
   }
 
   draw(interpolationPercentage: number): void {
@@ -110,5 +105,9 @@ export default class CameraController extends CanvasController implements Camera
 
     this.zoomTarget = clampedZoom;
     this.zoomTween.value = clampedZoom;
+  }
+
+  useDraw(): boolean {
+    return true;
   }
 }

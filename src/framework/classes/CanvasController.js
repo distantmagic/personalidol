@@ -21,6 +21,8 @@ export default class CanvasController implements CanvasControllerInterface {
     this.#isDisposed = false;
   }
 
+  begin(): void {}
+
   async dispose(cancelToken: CancelToken): Promise<void> {
     this.#isAttached = false;
     await this.canvasViewBag.dispose(cancelToken);
@@ -39,5 +41,49 @@ export default class CanvasController implements CanvasControllerInterface {
     return this.#isDisposed;
   }
 
+  onPointerAuxiliaryClick(): void {}
+
+  onPointerAuxiliaryDepressed(): void {}
+
+  onPointerAuxiliaryPressed(): void {}
+
+  onPointerOut(): void {}
+
+  onPointerOver(): void {}
+
+  onPointerPrimaryClick(): void {}
+
+  onPointerPrimaryDepressed(): void {}
+
+  onPointerPrimaryPressed(): void {}
+
+  onPointerSecondaryClick(): void {}
+
+  onPointerSecondaryDepressed(): void {}
+
+  onPointerSecondaryPressed(): void {}
+
   resize(elementSize: ElementSize<"px">): void {}
+
+  update(delta: number): void {}
+
+  useBegin(): boolean {
+    return false;
+  }
+
+  useDraw(): boolean {
+    return false;
+  }
+
+  useEnd(): boolean {
+    return false;
+  }
+
+  useSettings(): boolean {
+    return false;
+  }
+
+  useUpdate(): boolean {
+    return false;
+  }
 }

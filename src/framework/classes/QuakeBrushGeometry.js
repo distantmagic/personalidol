@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
 
 import quake2three from "../helpers/quake2three";
+import serializeVector3 from "../helpers/serializeVector3";
 import three2quake from "../helpers/three2quake";
 
 import type { ConvexHull as ConvexHullInterface } from "three/examples/jsm/math/ConvexHull";
@@ -45,6 +46,8 @@ export default class QuakeBrushGeometry implements QuakeBrushGeometryInterface {
 
       do {
         const point = edge.head().point;
+        const serializedPoint = serializeVector3(point);
+
         vertices.push(point.x, point.y, point.z);
         normals.push(face.normal.x, face.normal.y, face.normal.z);
         edge = edge.next;

@@ -2,6 +2,7 @@
 
 import * as THREE from "three";
 import autoBind from "auto-bind";
+import yn from "yn";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 
@@ -84,7 +85,7 @@ export default class Root extends CanvasController {
     // this.scene.fog = new THREE.Fog(0x000000, 256, 1024);
 
     this.scheduler = scheduler;
-    this.cameraController = new CameraController(canvasViewBag, this.camera, debug, loggerBreadcrumbs, renderer, this.scene);
+    this.cameraController = new CameraController(canvasViewBag, this.camera, loggerBreadcrumbs, renderer, this.scene);
     this.threeLoadingManager = threeLoadingManager;
     this.threePointerInteraction = new THREEPointerInteraction(renderer, this.camera);
 
@@ -165,5 +166,15 @@ export default class Root extends CanvasController {
     this.effectComposer.setSize(width, height);
     this.renderer.setSize(width, height);
     this.threePointerInteraction.resize(elementSize);
+  }
+
+  useDraw(): boolean {
+    return true;
+  }
+
+  useEnd(): boolean {
+    return yn(process.env.REACT_APP_FEATURE_DEBUGGER, {
+      default: false,
+    });
   }
 }
