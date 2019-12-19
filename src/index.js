@@ -33,8 +33,7 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 
   try {
-    // await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
-    await serviceWorker.unregister(loggerBreadcrumbs.add("serviceWorker").add("register"));
+    await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
   } catch (exception) {
     await exceptionHandler.captureException(loggerBreadcrumbs, exception);
   }
@@ -65,24 +64,30 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
   );
 }
 
-document.addEventListener(
-  "dd-capable",
-  function(evt: Event) {
-    const loggerBreadcrumbs = new LoggerBreadcrumbs();
-    const logger = new ConsoleLogger();
-    const target = evt.target;
+function onCapable() {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const logger = new ConsoleLogger();
+  const target = window.dd.rootElement;
 
-    if (target instanceof HTMLElement) {
-      init(logger, loggerBreadcrumbs, target);
-    } else {
-      const message = "Game loader target has to be a valid HTML element.";
+  document.removeEventListener("dd-capable", onCapable);
 
-      // $FlowFixMe
-      evt.detail.setInternalError("Internal setup error", message);
-      logger.error(loggerBreadcrumbs, message);
-    }
-  },
-  {
-    once: true,
+  if (target instanceof HTMLElement) {
+    init(logger, loggerBreadcrumbs, target);
+  } else {
+    const message = "Game loader target has to be a valid HTML element.";
+
+    // $FlowFixMe
+    window.dd.setup.setInternalError("Internal setup error", message);
+    logger.error(loggerBreadcrumbs, message);
   }
-);
+}
+
+function checkCapable() {
+  if (window.dd?.isCapable) {
+    onCapable();
+  } else {
+    requestAnimationFrame(checkCapable);
+  }
+}
+
+checkCapable();

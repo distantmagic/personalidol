@@ -12,6 +12,7 @@ flow-typed
 all=warn
 
 [options]
+esproposal.optional_chaining=enable
 module.file_ext=.js
 module.file_ext=.jsx
 module.file_ext=.mjs

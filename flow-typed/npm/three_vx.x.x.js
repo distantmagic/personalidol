@@ -30,6 +30,10 @@ declare module "three" {
 
   declare export type LoadingManagerOnStartCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
+  declare type ShaderDefines = {
+    [string]: string,
+  };
+
   declare type UniformValue = UniformValueType | $ReadOnlyArray<UniformValueType>;
 
   declare type UniformValueType = number | string | Vector2 | Vector3 | Vector4 | Texture;
@@ -194,6 +198,141 @@ declare module "three" {
     static clamp(number, number, number): number;
 
     static degToRad(number): number;
+  }
+
+  declare export class ShaderChunk {
+    static alphamap_fragment: string;
+    static alphamap_pars_fragment: string;
+    static alphatest_fragment: string;
+    static aomap_fragment: string;
+    static aomap_pars_fragment: string;
+    static background_frag: string;
+    static background_vert: string;
+    static begin_vertex: string;
+    static beginnormal_vertex: string;
+    static bsdfs: string;
+    static bumpmap_pars_fragment: string;
+    static clearcoat_normal_fragment_begin: string;
+    static clearcoat_normal_fragment_maps: string;
+    static clearcoat_normalmap_pars_fragment: string;
+    static clipping_planes_fragment: string;
+    static clipping_planes_pars_fragment: string;
+    static clipping_planes_pars_vertex: string;
+    static clipping_planes_vertex: string;
+    static color_fragment: string;
+    static color_pars_fragment: string;
+    static color_pars_vertex: string;
+    static color_vertex: string;
+    static common: string;
+    static cube_frag: string;
+    static cube_uv_reflection_fragment: string;
+    static cube_vert: string;
+    static defaultnormal_vertex: string;
+    static depth_frag: string;
+    static depth_vert: string;
+    static displacementmap_pars_vertex: string;
+    static displacementmap_vertex: string;
+    static distanceRGBA_frag: string;
+    static distanceRGBA_vert: string;
+    static dithering_fragment: string;
+    static dithering_pars_fragment: string;
+    static emissivemap_fragment: string;
+    static emissivemap_pars_fragment: string;
+    static encodings_fragment: string;
+    static encodings_pars_fragment: string;
+    static envmap_common_pars_fragment: string;
+    static envmap_fragment: string;
+    static envmap_pars_fragment: string;
+    static envmap_pars_vertex: string;
+    static envmap_physical_pars_fragment: string;
+    static envmap_vertex: string;
+    static equirect_frag: string;
+    static equirect_vert: string;
+    static fog_fragment: string;
+    static fog_pars_fragment: string;
+    static fog_pars_vertex: string;
+    static fog_vertex: string;
+    static gradientmap_pars_fragment: string;
+    static lightmap_fragment: string;
+    static lightmap_pars_fragment: string;
+    static lights_fragment_begin: string;
+    static lights_fragment_end: string;
+    static lights_fragment_maps: string;
+    static lights_lambert_vertex: string;
+    static lights_pars_begin: string;
+    static lights_phong_fragment: string;
+    static lights_phong_pars_fragment: string;
+    static lights_physical_fragment: string;
+    static lights_physical_pars_fragment: string;
+    static linedashed_frag: string;
+    static linedashed_vert: string;
+    static logdepthbuf_fragment: string;
+    static logdepthbuf_pars_fragment: string;
+    static logdepthbuf_pars_vertex: string;
+    static logdepthbuf_vertex: string;
+    static map_fragment: string;
+    static map_pars_fragment: string;
+    static map_particle_fragment: string;
+    static map_particle_pars_fragment: string;
+    static meshbasic_frag: string;
+    static meshbasic_vert: string;
+    static meshlambert_frag: string;
+    static meshlambert_vert: string;
+    static meshmatcap_frag: string;
+    static meshmatcap_vert: string;
+    static meshphong_frag: string;
+    static meshphong_vert: string;
+    static meshphysical_frag: string;
+    static meshphysical_vert: string;
+    static metalnessmap_fragment: string;
+    static metalnessmap_pars_fragment: string;
+    static morphnormal_vertex: string;
+    static morphtarget_pars_vertex: string;
+    static morphtarget_vertex: string;
+    static normal_frag: string;
+    static normal_fragment_begin: string;
+    static normal_fragment_maps: string;
+    static normal_vert: string;
+    static normalmap_pars_fragment: string;
+    static packing: string;
+    static points_frag: string;
+    static points_vert: string;
+    static premultiplied_alpha_fragment: string;
+    static project_vertex: string;
+    static roughnessmap_fragment: string;
+    static roughnessmap_pars_fragment: string;
+    static shadow_frag: string;
+    static shadow_vert: string;
+    static shadowmap_pars_fragment: string;
+    static shadowmap_pars_vertex: string;
+    static shadowmap_vertex: string;
+    static shadowmask_pars_fragment: string;
+    static skinbase_vertex: string;
+    static skinning_pars_vertex: string;
+    static skinning_vertex: string;
+    static skinnormal_vertex: string;
+    static specularmap_fragment: string;
+    static specularmap_pars_fragment: string;
+    static sprite_frag: string;
+    static sprite_vert: string;
+    static tonemapping_fragment: string;
+    static tonemapping_pars_fragment: string;
+    static uv2_pars_fragment: string;
+    static uv2_pars_vertex: string;
+    static uv2_vertex: string;
+    static uv_pars_fragment: string;
+    static uv_pars_vertex: string;
+    static uv_vertex: string;
+    static worldpos_vertex: string;
+  }
+
+  declare export class UniformsLib {
+    static lights: Uniforms;
+    static shadowmap: Uniforms;
+  }
+
+  declare export class UniformsUtils {
+    static merge($ReadOnlyArray<Uniforms>): Uniforms;
   }
 
   declare export interface AmbientLight<T: Camera> extends Light<T> {
@@ -720,8 +859,10 @@ declare module "three" {
   }
 
   declare export interface Shader {
-    uniforms?: Uniforms;
+    defines: ShaderDefines;
     fragmentShader: string;
+    lights?: boolean;
+    uniforms?: Uniforms;
     vertexShader: string;
   }
 

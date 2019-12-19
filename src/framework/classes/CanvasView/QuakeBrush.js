@@ -63,39 +63,57 @@ export default class QuakeBrush extends CanvasView {
     }
     // console.timeEnd("BRUSH");
 
-    const geometry = quakeBrushGeometryBuilder.getGeometry();
-
     const mesh = new THREE.Mesh(
-      geometry,
+      quakeBrushGeometryBuilder.getGeometry(),
       new THREE.ShaderMaterial({
-        uniforms: {
-          u_textures: new THREE.Uniform(loadedTextures),
+        lights: true,
+
+        defines: {
+          NUM_TEXTURES: String(loadedTextures.length),
+          PHONG: "1",
+          USE_UV: "1",
         },
+
+        uniforms: THREE.UniformsUtils.merge([
+          THREE.UniformsLib.lights,
+          {
+            u_time: new THREE.Uniform(0),
+            u_textures: new THREE.Uniform(loadedTextures),
+          }
+        ]),
+
         vertexShader: `
+          ${THREE.ShaderChunk.uv_pars_vertex}
+
           attribute float a_textureIndex;
 
           varying float v_textureIndex;
-          varying vec2 v_uv;
 
           void main() {
+            // replace "uv_vertex" with this to skip transforms
+            vUv = uv;
+
             v_textureIndex = a_textureIndex;
-            v_uv = uv;
+
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
           }
         `,
+
+        // Clumsy for loop here is to overcome some WebGL shader limitations
+        // Also, int attributes are not supported in WebGL, so I had to cast
+        // float to int to use array indexes.
         fragmentShader: `
-          #define NUM_TEXTURES ${loadedTextures.length}
+          ${THREE.ShaderChunk.uv_pars_fragment}
 
           uniform sampler2D u_textures[NUM_TEXTURES];
-          varying float v_textureIndex;
 
-          varying vec2 v_uv;
+          varying float v_textureIndex;
           varying vec3 vNormal;
 
           vec4 sample_texture(int textureIndex) {
             for (int i = 0; i < NUM_TEXTURES; i += 1) {
               if (i == textureIndex) {
-                return texture2D(u_textures[i], v_uv);
+                return texture2D(u_textures[i], vUv);
               }
             }
 

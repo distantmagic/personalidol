@@ -4,7 +4,7 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
-    "auto-bind": "^3.0.0",
+    "auto-bind": "^4.0.0",
     "classnames": "^2.2.6",
     "eventemitter3": "^4.0.0",
     "fgdparser": "github:leops/fgdparser",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "eslint-plugin-react-hooks": "^2.3.0",
-    "flow-bin": "^0.113.0",
+    "flow-bin": "^0.114.0",
     "fs-extra": "^8.1.0",
     "node-sass": "^4.13.0",
     "prettier": "1.19.1",
