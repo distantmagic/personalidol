@@ -34,9 +34,7 @@ const vertexShader = `
   varying vec3 vViewPosition;
 
   #ifndef FLAT_SHADED
-
     varying vec3 vNormal;
-
   #endif
 
   ${THREE.ShaderChunk.common}
@@ -49,16 +47,16 @@ const vertexShader = `
   void main() {
     // replace "uv_vertex" with this to skip transforms
     vUv = uv;
-    v_textureIndex = a_textureIndex;
 
+    // use custom 'a_textureIndex' buffer geometry parameter to select
+    // appropriate texture in fragment shader
+    v_textureIndex = a_textureIndex;
 
     ${THREE.ShaderChunk.beginnormal_vertex}
     ${THREE.ShaderChunk.defaultnormal_vertex}
 
     #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
-
       vNormal = normalize( transformedNormal );
-
     #endif
 
     ${THREE.ShaderChunk.begin_vertex}
@@ -107,26 +105,22 @@ const fragmentShader = `
   }
 
   void main() {
+    // phong shader chunk
     vec4 diffuseColor = vec4( diffuse, opacity );
     ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
     vec3 totalEmissiveRadiance = emissive;
 
     // replace 'map_fragment' with multi-texture sampling
-    vec4 texelColor = sample_texture( int( v_textureIndex ) );
-
-    texelColor = mapTexelToLinear( texelColor );
-    diffuseColor *= texelColor;
+    diffuseColor *= mapTexelToLinear( sample_texture( int( v_textureIndex ) ) );
 
     ${THREE.ShaderChunk.specularmap_fragment}
     ${THREE.ShaderChunk.normal_fragment_begin}
-
-    // accumulation
     ${THREE.ShaderChunk.lights_phong_fragment}
     ${THREE.ShaderChunk.lights_fragment_begin}
     ${THREE.ShaderChunk.lights_fragment_end}
 
+    // phong shader chunk
     vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
-
     gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 
     ${THREE.ShaderChunk.tonemapping_fragment}
