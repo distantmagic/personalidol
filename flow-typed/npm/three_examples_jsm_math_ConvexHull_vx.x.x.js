@@ -8,4 +8,22 @@ declare module "three/examples/jsm/math/ConvexHull" {
 
     setFromPoints($ReadOnlyArray<Vector3>): ConvexHull;
   }
+
+  declare export interface Face {
+    +edge: HalfEdge;
+    +midpoint: Vector3;
+    +normal: Vector3;
+  }
+
+  declare export interface HalfEdge {
+    +prev: HalfEdge;
+    +next: HalfEdge;
+    +twin: HalfEdge;
+
+    head(): VertexNode;
+  }
+
+  declare export interface VertexNode {
+    +point: Vector3;
+  }
 }

@@ -17,6 +17,7 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
   +textureLoader: THREETextureLoader;
+  +texturesIndex: string[];
   +texturesSources: Map<string, string>;
   #lastId: number;
 
@@ -26,6 +27,7 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.textureLoader = new THREE.TextureLoader(loadingManager);
+    this.texturesIndex = [];
     this.texturesSources = new Map<string, string>();
   }
 
@@ -33,6 +35,16 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
     for (let texture of this.loadedTextures.values()) {
       texture.dispose();
     }
+  }
+
+  getTextureIndex(textureName: string): number {
+    const index = this.texturesIndex.findIndex(storedTextureName => storedTextureName === textureName);
+
+    if (-1 === index) {
+      throw new QuakeMapException(this.loggerBreadcrumbs.add("getTextureIndex"), `Texture is not indexed: ${textureName}`);
+    }
+
+    return index;
   }
 
   getTextureSource(textureName: string): string {
@@ -56,6 +68,10 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
     return texture;
   }
 
+  loadRegisteredTextures(cancelToken: CancelToken): Promise<$ReadOnlyArray<Texture>> {
+    return this.loadTextures(cancelToken, this.texturesIndex);
+  }
+
   loadTextures(cancelToken: CancelToken, textureNames: $ReadOnlyArray<string>): Promise<$ReadOnlyArray<Texture>> {
     const loadedTextures = textureNames.map(this.loadTexture.bind(this, cancelToken));
 
@@ -71,6 +87,7 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
       return;
     }
 
+    this.texturesIndex.push(textureName);
     this.texturesSources.set(textureName, src);
 
     this.#lastId += 1;

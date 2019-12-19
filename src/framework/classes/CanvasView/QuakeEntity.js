@@ -23,7 +23,6 @@ import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
 import type { QueryBus } from "../../interfaces/QueryBus";
-import type { QuakeMapTextureLoader } from "../../interfaces/QuakeMapTextureLoader";
 
 const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
@@ -39,7 +38,6 @@ export default class QuakeEntity extends CanvasView {
   +logger: Logger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +queryBus: QueryBus;
-  +textureLoader: QuakeMapTextureLoader;
   +threeLoadingManager: THREELoadingManager;
   cube: ?Mesh;
   material: ?Material;
@@ -54,7 +52,6 @@ export default class QuakeEntity extends CanvasView {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
     group: Group,
-    textureLoader: QuakeMapTextureLoader,
     threeLoadingManager: THREELoadingManager,
     animationOffset: number
   ) {
@@ -71,42 +68,35 @@ export default class QuakeEntity extends CanvasView {
     this.material = null;
     this.queryBus = queryBus;
     this.group = group;
-    this.textureLoader = textureLoader;
     this.threeLoadingManager = threeLoadingManager;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const brushes = this.entity.getBrushes();
     const entityClassName = this.entity.getClassName();
     const entityProperties = this.entity.getProperties();
 
     switch (entityClassName) {
       case "worldspawn":
-        const brushesPromises = [];
-
-        for (let brush of brushes) {
-          // prettier-ignore
-          brushesPromises.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new QuakeBrushView(
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
-                brush,
-                this.group,
-                this.textureLoader,
-              )
-            ),
-            "Loading entity brush"
-          ));
-        }
-
-        await Promise.all(brushesPromises);
+        await this.loadingManager.blocking(
+          this.canvasViewBag.add(
+            cancelToken,
+            new QuakeBrushView(
+              this.loggerBreadcrumbs.add("QuakeBrush"),
+              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
+              this.entity,
+              this.group,
+              this.queryBus,
+              this.threeLoadingManager
+            )
+          ),
+          "Loading entity brush"
+        );
         break;
       default:
         // only special entities may contain brushes
-        if (!isEmpty(brushes)) {
+        if (!isEmpty(this.entity.getBrushes())) {
           throw new QuakeMapException(this.loggerBreadcrumbs, `Entity class must not contain brush: "${entityClassName}"`);
         }
         break;

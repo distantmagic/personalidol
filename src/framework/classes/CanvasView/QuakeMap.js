@@ -3,7 +3,6 @@
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
-import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 import { default as QuakeEntityView } from "./QuakeEntity";
 import { default as QuakeMapQuery } from "../Query/QuakeMap";
 
@@ -15,7 +14,6 @@ import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QueryBus } from "../../interfaces/QueryBus";
-import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
 
 export default class QuakeMap extends CanvasView {
   +audioListener: AudioListener;
@@ -27,7 +25,6 @@ export default class QuakeMap extends CanvasView {
   +queryBus: QueryBus;
   +scene: Scene;
   +source: string;
-  +textureLoader: QuakeMapTextureLoaderInterface;
   +threeLoadingManager: THREELoadingManager;
 
   constructor(
@@ -53,7 +50,6 @@ export default class QuakeMap extends CanvasView {
     this.queryBus = queryBus;
     this.scene = scene;
     this.source = source;
-    this.textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs.add("QuakeMapTextureLoader"), threeLoadingManager, queryBus);
     this.threeLoadingManager = threeLoadingManager;
   }
 
@@ -64,8 +60,6 @@ export default class QuakeMap extends CanvasView {
     const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
     const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
     let animationOffset = 0;
-
-    this.textureLoader.registerTexture("__TB_empty", "/debug/texture-uv-1024x1024.png");
 
     for (let entity of quakeMap.getEntities()) {
       const viewLoader = this.loadingManager.blocking(
@@ -81,7 +75,6 @@ export default class QuakeMap extends CanvasView {
             this.loggerBreadcrumbs.add("QuakeEntity"),
             this.queryBus,
             this.group,
-            this.textureLoader,
             this.threeLoadingManager,
             (animationOffset += 200)
           )
@@ -100,6 +93,5 @@ export default class QuakeMap extends CanvasView {
     await super.dispose(cancelToken);
 
     this.scene.remove(this.group);
-    this.textureLoader.dispose();
   }
 }

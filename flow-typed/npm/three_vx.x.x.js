@@ -30,11 +30,17 @@ declare module "three" {
 
   declare export type LoadingManagerOnStartCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
-  declare type Uniforms = {|
-    [string]: {|
-      value: number | string | Vector2 | Vector3 | Vector4,
-    |},
-  |};
+  declare type UniformValue = UniformValueType | $ReadOnlyArray<UniformValueType>;
+
+  declare type UniformValueType = number | string | Vector2 | Vector3 | Vector4 | Texture;
+
+  declare type Uniforms = {
+    [string]:
+      | {|
+          value: UniformValue,
+        |}
+      | Uniform,
+  };
 
   // export var MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2, ROTATE: 0, DOLLY: 1, PAN: 2 };
   // export var TOUCH = { ROTATE: 0, PAN: 1, DOLLY_PAN: 2, DOLLY_ROTATE: 3 };
@@ -466,6 +472,10 @@ declare module "three" {
     constructor(skyColor?: number, groundColor?: number, intensity?: number): void;
   }
 
+  declare export interface Int32BufferAttribute extends BufferAttribute {
+    constructor(number[], number): void;
+  }
+
   declare export interface Light<T: Camera> extends Object3D {
     +isLight: true;
     intensity: number;
@@ -710,7 +720,7 @@ declare module "three" {
   }
 
   declare export interface Shader {
-    uniforms: Uniforms;
+    uniforms?: Uniforms;
     fragmentShader: string;
     vertexShader: string;
   }
@@ -718,9 +728,7 @@ declare module "three" {
   declare export interface ShaderMaterial extends Material, Shader {
     +isShaderMaterial: true;
 
-    constructor({|
-      uniforms?: Uniforms,
-    |}): void;
+    constructor(Shader): void;
 
     clone(): ShaderMaterial;
   }
@@ -786,6 +794,16 @@ declare module "three" {
     constructor(?LoadingManager): void;
 
     load(url: string, onLoad: ?(Texture) => void, onProgress: ?() => void, onError: ?() => void): Texture;
+  }
+
+  declare export interface Uint8BufferAttribute extends BufferAttribute {
+    constructor(number[], number): void;
+  }
+
+  declare export interface Uniform {
+    +value: UniformValue;
+
+    constructor(UniformValue): void;
   }
 
   declare export interface Vector2 {

@@ -4,58 +4,109 @@ import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
-import QuakeBrushGeometry from "../QuakeBrushGeometry";
+import QuakeBrushGeometryBuilder from "../QuakeBrushGeometryBuilder";
+import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 
-import type { Group, Mesh } from "three";
+import type { Group, LoadingManager as THREELoadingManager, Mesh } from "three";
+
+// those are a few hacks, but in the end it's possible to load web workers
+// with create-react-app without ejecting
+/* eslint-disable import/no-webpack-loader-syntax */
+// $FlowFixMe
+// import QuakeBrushGeometryBuilderWorker from "workerize-loader?inline!../QuakeBrushGeometryBuilder.worker";
+/* eslint-enable import/no-webpack-loader-syntax */
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { QuakeBrush as QuakeBrushInterface } from "../../interfaces/QuakeBrush";
-import type { QuakeMapTextureLoader } from "../../interfaces/QuakeMapTextureLoader";
+import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import type { QuakeEntity } from "../../interfaces/QuakeEntity";
+import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
+import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class QuakeBrush extends CanvasView {
-  +brush: QuakeBrushInterface;
+  +entity: QuakeEntity;
   +group: Group;
-  +textureLoader: QuakeMapTextureLoader;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +textureLoader: QuakeMapTextureLoaderInterface;
+  +threeLoadingManager: THREELoadingManager;
   mesh: ?Mesh;
 
-  constructor(canvasViewBag: CanvasViewBag, brush: QuakeBrushInterface, group: Group, textureLoader: QuakeMapTextureLoader) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, entity: QuakeEntity, group: Group, queryBus: QueryBus, threeLoadingManager: THREELoadingManager) {
     super(canvasViewBag);
 
-    this.brush = brush;
+    this.entity = entity;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mesh = null;
     this.group = group;
-    this.textureLoader = textureLoader;
+
+    this.textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs.add("QuakeMapTextureLoader"), threeLoadingManager, queryBus);
+    this.textureLoader.registerTexture("__TB_empty", "/debug/texture-uv-1024x1024.png");
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const textures = this.brush.getTextures();
-
-    for (let texture of textures) {
-      if ("__TB_empty" !== texture) {
-        this.textureLoader.registerTexture(texture, `${texture}.png`);
+    // console.time("BRUSH");
+    for (let brush of this.entity.getBrushes()) {
+      for (let texture of brush.getTextures()) {
+        if ("__TB_empty" !== texture) {
+          this.textureLoader.registerTexture(texture, `${texture}.png`);
+        }
       }
     }
 
-    const loadedTextures = await this.textureLoader.loadTextures(cancelToken, textures);
-    const quakeBrushGeometry = new QuakeBrushGeometry(this.brush);
-    const geometry = quakeBrushGeometry.getGeometry(loadedTextures);
+    const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
+    const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder(this.textureLoader);
 
-    const materials = loadedTextures.map(texture => {
-      return new THREE.MeshPhongMaterial({
-        map: texture,
-        reflectivity: 0,
-        shininess: 0,
-      });
-    });
+    for (let brush of this.entity.getBrushes()) {
+      quakeBrushGeometryBuilder.addBrush(brush, loadedTextures);
+    }
+    // console.timeEnd("BRUSH");
+
+    const geometry = quakeBrushGeometryBuilder.getGeometry();
 
     const mesh = new THREE.Mesh(
       geometry,
-      // do not use array with only one material as it triggers multi-material
-      // support which is more costly
-      materials.length > 1 ? materials : materials[0]
+      new THREE.ShaderMaterial({
+        uniforms: {
+          u_textures: new THREE.Uniform(loadedTextures),
+        },
+        vertexShader: `
+          attribute float a_textureIndex;
+
+          varying float v_textureIndex;
+          varying vec2 v_uv;
+
+          void main() {
+            v_textureIndex = a_textureIndex;
+            v_uv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+          }
+        `,
+        fragmentShader: `
+          #define NUM_TEXTURES ${loadedTextures.length}
+
+          uniform sampler2D u_textures[NUM_TEXTURES];
+          varying float v_textureIndex;
+
+          varying vec2 v_uv;
+          varying vec3 vNormal;
+
+          vec4 sample_texture(int textureIndex) {
+            for (int i = 0; i < NUM_TEXTURES; i += 1) {
+              if (i == textureIndex) {
+                return texture2D(u_textures[i], v_uv);
+              }
+            }
+
+            return vec4(1.0, 0.0, 0.0, 1.0);
+          }
+
+          void main() {
+            gl_FragColor = sample_texture(int(v_textureIndex));
+          }
+        `,
+      })
     );
 
     mesh.castShadow = true;
@@ -75,6 +126,7 @@ export default class QuakeBrush extends CanvasView {
     }
 
     disposeObject3D(mesh, false);
+    this.textureLoader.dispose();
     this.group.remove(mesh);
   }
 }
