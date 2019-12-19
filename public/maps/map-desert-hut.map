@@ -1253,7 +1253,7 @@
 {
 "classname" "light"
 "origin" "744 344 64"
-"light" "0.4"
+"light" "1"
 "angle" "90"
 "decay" "2"
 "color" "FFC000"

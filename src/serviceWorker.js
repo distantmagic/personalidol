@@ -120,9 +120,10 @@ async function checkValidServiceWorker(
   return registerValidSW(loggerBreadcrumbs.add("registerValidSW"), logger, serviceWorker, swUrl);
 }
 
-export async function unregister(loggerBreadcrumbs: LoggerBreadcrumbs): Promise<boolean> {
+export async function unregister(loggerBreadcrumbs: LoggerBreadcrumbs): Promise<void> {
   const serviceWorker = getServiceWorkerAPI(loggerBreadcrumbs.add("getServiceWorkerAPI"));
-  const registration = await serviceWorker.ready;
 
-  return registration.unregister();
+  serviceWorker.ready.then(function(registration) {
+    registration.unregister();
+  });
 }

@@ -36,7 +36,7 @@ declare module "three" {
 
   declare type UniformValue = UniformValueType | $ReadOnlyArray<UniformValueType>;
 
-  declare type UniformValueType = number | string | Vector2 | Vector3 | Vector4 | Texture;
+  declare type UniformValueType = number | string | Color | Vector2 | Vector3 | Vector4 | Texture;
 
   declare type Uniforms = {
     [string]:
@@ -327,8 +327,22 @@ declare module "three" {
   }
 
   declare export class UniformsLib {
+    static aomap: Uniforms;
+    static bumpmap: Uniforms;
+    static common: Uniforms;
+    static displacementmap: Uniforms;
+    static emissivemap: Uniforms;
+    static envmap: Uniforms;
+    static fog: Uniforms;
+    static gradientmap: Uniforms;
+    static lightmap: Uniforms;
     static lights: Uniforms;
-    static shadowmap: Uniforms;
+    static metalnessmap: Uniforms;
+    static normalmap: Uniforms;
+    static points: Uniforms;
+    static roughnessmap: Uniforms;
+    static specularmap: Uniforms;
+    static sprite: Uniforms;
   }
 
   declare export class UniformsUtils {

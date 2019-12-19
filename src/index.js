@@ -33,7 +33,8 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 
   try {
-    await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
+    // await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
+    await serviceWorker.unregister(loggerBreadcrumbs.add("serviceWorker").add("unregister"));
   } catch (exception) {
     await exceptionHandler.captureException(loggerBreadcrumbs, exception);
   }
@@ -69,8 +70,6 @@ function onCapable() {
   const logger = new ConsoleLogger();
   const target = window.dd.rootElement;
 
-  document.removeEventListener("dd-capable", onCapable);
-
   if (target instanceof HTMLElement) {
     init(logger, loggerBreadcrumbs, target);
   } else {
@@ -90,4 +89,4 @@ function checkCapable() {
   }
 }
 
-checkCapable();
+requestAnimationFrame(checkCapable);
