@@ -33,7 +33,8 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
   const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 
   try {
-    await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
+    // await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
+    await serviceWorker.unregister(loggerBreadcrumbs.add("serviceWorker").add("register"));
   } catch (exception) {
     await exceptionHandler.captureException(loggerBreadcrumbs, exception);
   }
