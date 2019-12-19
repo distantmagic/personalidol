@@ -41,16 +41,7 @@ const vertexShader = `
 
   ${THREE.ShaderChunk.common}
   ${THREE.ShaderChunk.uv_pars_vertex}
-  ${THREE.ShaderChunk.uv2_pars_vertex}
-  ${THREE.ShaderChunk.displacementmap_pars_vertex}
-  ${THREE.ShaderChunk.envmap_pars_vertex}
-  ${THREE.ShaderChunk.color_pars_vertex}
-  ${THREE.ShaderChunk.fog_pars_vertex}
-  ${THREE.ShaderChunk.morphtarget_pars_vertex}
-  ${THREE.ShaderChunk.skinning_pars_vertex}
   ${THREE.ShaderChunk.shadowmap_pars_vertex}
-  ${THREE.ShaderChunk.logdepthbuf_pars_vertex}
-  ${THREE.ShaderChunk.clipping_planes_pars_vertex}
 
   attribute float a_textureIndex;
   varying float v_textureIndex;
@@ -60,13 +51,8 @@ const vertexShader = `
     vUv = uv;
     v_textureIndex = a_textureIndex;
 
-    ${THREE.ShaderChunk.uv2_vertex}
-    ${THREE.ShaderChunk.color_vertex}
 
     ${THREE.ShaderChunk.beginnormal_vertex}
-    ${THREE.ShaderChunk.morphnormal_vertex}
-    ${THREE.ShaderChunk.skinbase_vertex}
-    ${THREE.ShaderChunk.skinnormal_vertex}
     ${THREE.ShaderChunk.defaultnormal_vertex}
 
     #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
@@ -76,19 +62,12 @@ const vertexShader = `
     #endif
 
     ${THREE.ShaderChunk.begin_vertex}
-    ${THREE.ShaderChunk.morphtarget_vertex}
-    ${THREE.ShaderChunk.skinning_vertex}
-    ${THREE.ShaderChunk.displacementmap_vertex}
     ${THREE.ShaderChunk.project_vertex}
-    ${THREE.ShaderChunk.logdepthbuf_vertex}
-    ${THREE.ShaderChunk.clipping_planes_vertex}
 
     vViewPosition = - mvPosition.xyz;
 
     ${THREE.ShaderChunk.worldpos_vertex}
-    ${THREE.ShaderChunk.envmap_vertex}
     ${THREE.ShaderChunk.shadowmap_vertex}
-    ${THREE.ShaderChunk.fog_vertex}
   }
 `;
 
@@ -108,27 +87,11 @@ const fragmentShader = `
 
   ${THREE.ShaderChunk.common}
   ${THREE.ShaderChunk.packing}
-  ${THREE.ShaderChunk.dithering_pars_fragment}
-  ${THREE.ShaderChunk.color_pars_fragment}
   ${THREE.ShaderChunk.uv_pars_fragment}
-  ${THREE.ShaderChunk.uv2_pars_fragment}
-  ${THREE.ShaderChunk.alphamap_pars_fragment}
-  ${THREE.ShaderChunk.aomap_pars_fragment}
-  ${THREE.ShaderChunk.lightmap_pars_fragment}
-  ${THREE.ShaderChunk.emissivemap_pars_fragment}
-  ${THREE.ShaderChunk.envmap_common_pars_fragment}
-  ${THREE.ShaderChunk.envmap_pars_fragment}
-  ${THREE.ShaderChunk.gradientmap_pars_fragment}
-  ${THREE.ShaderChunk.fog_pars_fragment}
   ${THREE.ShaderChunk.bsdfs}
   ${THREE.ShaderChunk.lights_pars_begin}
   ${THREE.ShaderChunk.lights_phong_pars_fragment}
   ${THREE.ShaderChunk.shadowmap_pars_fragment}
-  ${THREE.ShaderChunk.bumpmap_pars_fragment}
-  ${THREE.ShaderChunk.normalmap_pars_fragment}
-  ${THREE.ShaderChunk.specularmap_pars_fragment}
-  ${THREE.ShaderChunk.logdepthbuf_pars_fragment}
-  ${THREE.ShaderChunk.clipping_planes_pars_fragment}
 
   vec4 sample_texture(int textureIndex) {
     // Clumsy for loop here is to overcome some WebGL shader limitations
@@ -144,13 +107,9 @@ const fragmentShader = `
   }
 
   void main() {
-    ${THREE.ShaderChunk.clipping_planes_fragment}
-
     vec4 diffuseColor = vec4( diffuse, opacity );
     ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
     vec3 totalEmissiveRadiance = emissive;
-
-    ${THREE.ShaderChunk.logdepthbuf_fragment}
 
     // replace 'map_fragment' with multi-texture sampling
     vec4 texelColor = sample_texture( int( v_textureIndex ) );
@@ -158,34 +117,20 @@ const fragmentShader = `
     texelColor = mapTexelToLinear( texelColor );
     diffuseColor *= texelColor;
 
-    ${THREE.ShaderChunk.color_fragment}
-    ${THREE.ShaderChunk.alphamap_fragment}
-    ${THREE.ShaderChunk.alphatest_fragment}
     ${THREE.ShaderChunk.specularmap_fragment}
     ${THREE.ShaderChunk.normal_fragment_begin}
-    ${THREE.ShaderChunk.normal_fragment_maps}
-    ${THREE.ShaderChunk.emissivemap_fragment}
 
     // accumulation
     ${THREE.ShaderChunk.lights_phong_fragment}
     ${THREE.ShaderChunk.lights_fragment_begin}
-    ${THREE.ShaderChunk.lights_fragment_maps}
     ${THREE.ShaderChunk.lights_fragment_end}
 
-    // modulation
-    ${THREE.ShaderChunk.aomap_fragment}
-
     vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
-
-    ${THREE.ShaderChunk.envmap_fragment}
 
     gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 
     ${THREE.ShaderChunk.tonemapping_fragment}
     ${THREE.ShaderChunk.encodings_fragment}
-    ${THREE.ShaderChunk.fog_fragment}
-    ${THREE.ShaderChunk.premultiplied_alpha_fragment}
-    ${THREE.ShaderChunk.dithering_fragment}
   }
 `;
 
@@ -242,16 +187,6 @@ export default class QuakeBrush extends CanvasView {
 
         uniforms: THREE.UniformsUtils.merge([
           THREE.UniformsLib.common,
-          THREE.UniformsLib.specularmap,
-          THREE.UniformsLib.envmap,
-          THREE.UniformsLib.aomap,
-          THREE.UniformsLib.lightmap,
-          THREE.UniformsLib.emissivemap,
-          THREE.UniformsLib.bumpmap,
-          THREE.UniformsLib.normalmap,
-          THREE.UniformsLib.displacementmap,
-          THREE.UniformsLib.gradientmap,
-          THREE.UniformsLib.fog,
           THREE.UniformsLib.lights,
           {
             emissive: new THREE.Uniform(new THREE.Color(0x000000)),
