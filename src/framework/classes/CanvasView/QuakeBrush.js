@@ -23,14 +23,7 @@ import type { QuakeEntity } from "../../interfaces/QuakeEntity";
 import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
-const shaderDefines = `
-  #define PHONG
-  #define USE_UV
-`;
-
 const vertexShader = `
-  ${shaderDefines}
-
   varying vec3 vViewPosition;
 
   #ifndef FLAT_SHADED
@@ -45,8 +38,7 @@ const vertexShader = `
   varying float v_textureIndex;
 
   void main() {
-    // replace "uv_vertex" with this to skip transforms
-    vUv = uv;
+    ${THREE.ShaderChunk.uv_vertex}
 
     // use custom 'a_textureIndex' buffer geometry parameter to select
     // appropriate texture in fragment shader
@@ -70,8 +62,6 @@ const vertexShader = `
 `;
 
 const fragmentShader = `
-  ${shaderDefines}
-
   // THREE Uniforms
   uniform vec3 diffuse;
   uniform vec3 emissive;
@@ -168,31 +158,29 @@ export default class QuakeBrush extends CanvasView {
     }
     // console.timeEnd("BRUSH");
 
-    const mesh = new THREE.Mesh(
-      quakeBrushGeometryBuilder.getGeometry(),
-      new THREE.ShaderMaterial({
-        lights: true,
+    const material = new THREE.ShaderMaterial({
+      lights: true,
 
-        defines: {
-          NUM_TEXTURES: String(loadedTextures.length),
+      defines: {
+        NUM_TEXTURES: String(loadedTextures.length),
+        PHONG: "",
+        USE_UV: "",
+      },
+
+      fragmentShader: fragmentShader,
+
+      uniforms: THREE.UniformsUtils.merge([
+        THREE.ShaderLib.phong.uniforms,
+        {
+          shininess: new THREE.Uniform(1),
+          u_textures: new THREE.Uniform(loadedTextures),
         },
+      ]),
 
-        fragmentShader: fragmentShader,
+      vertexShader: vertexShader,
+    });
 
-        uniforms: THREE.UniformsUtils.merge([
-          THREE.UniformsLib.common,
-          THREE.UniformsLib.lights,
-          {
-            emissive: new THREE.Uniform(new THREE.Color(0x000000)),
-            specular: new THREE.Uniform(new THREE.Color(0x111111)),
-            shininess: new THREE.Uniform(3),
-            u_textures: new THREE.Uniform(loadedTextures),
-          },
-        ]),
-
-        vertexShader: vertexShader,
-      })
-    );
+    const mesh = new THREE.Mesh(quakeBrushGeometryBuilder.getGeometry(), material);
 
     mesh.castShadow = true;
     mesh.receiveShadow = true;

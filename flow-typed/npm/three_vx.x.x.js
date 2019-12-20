@@ -326,6 +326,14 @@ declare module "three" {
     static worldpos_vertex: string;
   }
 
+  declare export class ShaderLib {
+    static phong: {|
+      uniforms: Uniforms,
+      fragmentShader: string,
+      vertexShader: string,
+    |};
+  }
+
   declare export class UniformsLib {
     static aomap: Uniforms;
     static bumpmap: Uniforms;

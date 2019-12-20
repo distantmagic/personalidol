@@ -172,8 +172,8 @@ export default class SceneCanvas extends HTMLElement {
 
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
-    // renderer.physicallyCorrectLights = true;
     renderer.shadowMap.enabled = true;
+    renderer.setPixelRatio(window.devicePixelRatio);
 
     const canvasController = new RootCanvasController(
       this.canvasControllerBus,
