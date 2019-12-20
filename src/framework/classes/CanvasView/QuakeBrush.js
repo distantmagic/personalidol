@@ -141,7 +141,7 @@ export default class QuakeBrush extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    // console.time("BRUSH");
+    console.time("BRUSH");
     for (let brush of this.entity.getBrushes()) {
       for (let texture of brush.getTextures()) {
         if ("__TB_empty" !== texture) {
@@ -156,7 +156,7 @@ export default class QuakeBrush extends CanvasView {
     for (let brush of this.entity.getBrushes()) {
       quakeBrushGeometryBuilder.addBrush(brush, loadedTextures);
     }
-    // console.timeEnd("BRUSH");
+    console.timeEnd("BRUSH");
 
     const material = new THREE.ShaderMaterial({
       lights: true,

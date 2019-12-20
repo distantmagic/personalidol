@@ -771,6 +771,8 @@ declare module "three" {
 
     add(Object3D): void;
 
+    clone(): Object3D;
+
     remove(Object3D): void;
 
     lookAt(Vector3): void;

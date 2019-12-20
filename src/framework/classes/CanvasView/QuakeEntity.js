@@ -10,6 +10,7 @@ import { default as AmbientSoundView } from "./AmbientSound";
 import { default as FBXModelView } from "./FBXModel";
 import { default as HemisphereLightView } from "./HemisphereLight";
 import { default as MD2CharacterView } from "./MD2Character";
+import { default as ParticlesView } from "./Particles";
 import { default as PointLightView } from "./PointLight";
 import { default as QuakeBrushView } from "./QuakeBrush";
 import { default as QuakeMapException } from "../Exception/QuakeMap";
@@ -166,6 +167,15 @@ export default class QuakeEntity extends CanvasView {
         break;
       case "player":
         this.logger.debug(this.loggerBreadcrumbs.add("attach"), "Player model is expected to be placed.");
+        break;
+      case "spark_particles":
+        await this.loadingManager.blocking(
+          this.canvasViewBag.add(
+            cancelToken,
+            new ParticlesView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")), this.group, quake2three(this.entity.getOrigin()))
+          ),
+          "Loading particles"
+        );
         break;
       case "worldspawn":
         if (entityProperties.hasPropertyKey("light")) {

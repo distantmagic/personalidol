@@ -39,6 +39,20 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
     await exceptionHandler.captureException(loggerBreadcrumbs, exception);
   }
 
+  function onWindowResize() {
+    const root = document.documentElement;
+
+    if (!root) {
+      return;
+    }
+
+    root.style.setProperty("--dd-window-inner-height", `${window.innerHeight}px`);
+    root.style.setProperty("--dd-window-inner-width", `${window.innerWidth}px`);
+  }
+
+  window.addEventListener("resize", onWindowResize);
+  onWindowResize();
+
   debug.setIsEnabled(
     yn(process.env.REACT_APP_FEATURE_DEBUGGER, {
       default: false,

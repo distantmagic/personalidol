@@ -6,7 +6,7 @@ import CanvasView from "../CanvasView";
 import { default as FBXModelQuery } from "../Query/FBXModel";
 import { default as TextureQuery } from "../Query/Texture";
 
-import type { Group, LoadingManager as THREELoadingManager, Vector3 } from "three";
+import type { Group, LoadingManager as THREELoadingManager, Object3D, Vector3 } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -52,7 +52,8 @@ export default class FBXModel extends CanvasView {
     await super.attach(cancelToken);
 
     const modelQuery = new FBXModelQuery(this.threeLoadingManager, this.baseUrl, `${this.baseUrl}model.fbx`);
-    const model = await this.queryBus.enqueue(cancelToken, modelQuery).whenExecuted();
+    const baseModel: Object3D = await this.queryBus.enqueue(cancelToken, modelQuery).whenExecuted();
+    const model = baseModel.clone();
 
     const textureQuery = new TextureQuery(new THREE.TextureLoader(this.threeLoadingManager), `${this.baseUrl}${this.texture}`);
     const texture = await this.queryBus.enqueue(cancelToken, textureQuery).whenExecuted();

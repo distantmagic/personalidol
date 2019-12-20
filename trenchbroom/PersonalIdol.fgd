@@ -8,7 +8,8 @@
     ]
 ]
 
-@baseclass color(255 255 40) = Light [
+@baseclass color(255 255 40) = Light
+[
     color(string) : "Color HEX" : "0xFFC000"
     light(integer) : "Intensity" : 2
     decay(integer) : "Decay" : 2
@@ -17,6 +18,10 @@
 @baseclass size(-16 -16 -24, 16 16 32) color(0 150 255) = ExternalModel
 [
     angle(integer) : "Rotation angle" : 0
+]
+
+@baseclass color(220 20 60) = Particles
+[
 ]
 
 @baseclass size(-16 -16 -24, 16 16 32) color(0 255 0) = PlayerModel []
@@ -36,4 +41,6 @@
 
 @PointClass base(PlayerModel) = player : "Player entry point" []
 
-@PointClass size(-8 -8 -8, 8 8 8) base(Light, Target, Targetname) = light : "Invisible light source" []
+@PointClass size(-8 -8 -8, 8 8 8) base(Light) = light : "Invisible light source" []
+
+@PointClass size(-8 -8 -8, 8 8 8) base(Particles) = spark_particles : "Fire like particles emitter" []
