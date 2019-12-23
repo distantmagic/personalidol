@@ -24,6 +24,7 @@ import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity as QuakeEntityInterface } from "../../interfaces/QuakeEntity";
 import type { QueryBus } from "../../interfaces/QueryBus";
+import type { QuakeMap as QuakeMapWorkerInterface } from "../../../workers/interfaces/QuakeMap";
 
 const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
@@ -38,6 +39,7 @@ export default class QuakeEntity extends CanvasView {
   +loadingManager: LoadingManager;
   +logger: Logger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +quakeMapWorker: QuakeMapWorkerInterface;
   +queryBus: QueryBus;
   +threeLoadingManager: THREELoadingManager;
   cube: ?Mesh;
@@ -53,6 +55,7 @@ export default class QuakeEntity extends CanvasView {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
     group: Group,
+    quakeMapWorker: QuakeMapWorkerInterface,
     threeLoadingManager: THREELoadingManager,
     animationOffset: number
   ) {
@@ -69,6 +72,7 @@ export default class QuakeEntity extends CanvasView {
     this.material = null;
     this.queryBus = queryBus;
     this.group = group;
+    this.quakeMapWorker = quakeMapWorker;
     this.threeLoadingManager = threeLoadingManager;
   }
 
@@ -88,6 +92,7 @@ export default class QuakeEntity extends CanvasView {
               this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
               this.entity,
               this.group,
+              this.quakeMapWorker,
               this.queryBus,
               this.threeLoadingManager
             )

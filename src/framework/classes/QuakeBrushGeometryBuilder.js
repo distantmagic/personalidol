@@ -12,22 +12,19 @@ import type { BufferGeometry, Texture } from "three";
 
 import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
-import type { QuakeMapTextureLoader } from "../interfaces/QuakeMapTextureLoader";
 
 export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuilderInterface {
   +geometry: BufferGeometry;
   +normals: number[];
-  +textureLoader: QuakeMapTextureLoader;
   +textures: number[];
   +uvs: number[];
   +vertices: number[];
   groupStart: number;
 
-  constructor(textureLoader: QuakeMapTextureLoader) {
+  constructor() {
     this.geometry = new THREE.BufferGeometry();
     this.groupStart = 0;
     this.normals = [];
-    this.textureLoader = textureLoader;
     this.textures = [];
     this.uvs = [];
     this.vertices = [];
@@ -59,10 +56,13 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     const halfSpace = quakeBrush.getHalfSpaceByCoplanarPoints(...points.map(three2quake));
     const textureName = halfSpace.getTexture();
 
-    const textureIndex = textures.findIndex(texture => texture.name === textureName);
-    const texture: Texture = textures[textureIndex];
-    const textureSideHeight = texture.image.naturalHeight * halfSpace.getTextureXScale();
-    const textureSideWidth = texture.image.naturalWidth * halfSpace.getTextureYScale();
+    // const textureIndex = textures.findIndex(texture => texture.name === textureName);
+    // const texture: Texture = textures[textureIndex];
+    // const textureSideHeight = texture.image.naturalHeight * halfSpace.getTextureXScale();
+    // const textureSideWidth = texture.image.naturalWidth * halfSpace.getTextureYScale();
+    const textureIndex = 0;
+    const textureSideWidth = 1024;
+    const textureSideHeight = 1024;
 
     // one per point
     this.textures.push(textureIndex, textureIndex, textureIndex);

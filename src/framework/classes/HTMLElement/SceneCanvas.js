@@ -166,8 +166,9 @@ export default class SceneCanvas extends HTMLElement {
 
     const renderer = new THREE.WebGLRenderer({
       // alpha: true,
-      // antialias: true,
+      antialias: false,
       canvas: this.canvasElement,
+      precision: "highp"
     });
 
     renderer.gammaInput = true;

@@ -6,6 +6,13 @@ import CanvasView from "../CanvasView";
 import { default as QuakeEntityView } from "./QuakeEntity";
 import { default as QuakeMapQuery } from "../Query/QuakeMap";
 
+// those are a few hacks, but in the end it's possible to load web workers
+// with create-react-app without ejecting
+/* eslint-disable import/no-webpack-loader-syntax */
+// $FlowFixMe
+import { default as QuakeMapWorker } from "workerize-loader?inline!../../../workers/exports/QuakeMap";
+/* eslint-enable import/no-webpack-loader-syntax */
+
 import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Scene } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
@@ -13,6 +20,7 @@ import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import type { QuakeMap as QuakeMapWorkerInterface } from "../../../workers/interfaces/QuakeMap";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class QuakeMap extends CanvasView {
@@ -26,6 +34,7 @@ export default class QuakeMap extends CanvasView {
   +scene: Scene;
   +source: string;
   +threeLoadingManager: THREELoadingManager;
+  quakeMapWorker: ?QuakeMapWorkerInterface;
 
   constructor(
     audioListener: AudioListener,
@@ -56,6 +65,10 @@ export default class QuakeMap extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
+    const quakeMapWorker = new QuakeMapWorker();
+
+    this.quakeMapWorker = quakeMapWorker;
+
     const promises: Promise<void>[] = [];
     const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
     const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
@@ -75,6 +88,7 @@ export default class QuakeMap extends CanvasView {
             this.loggerBreadcrumbs.add("QuakeEntity"),
             this.queryBus,
             this.group,
+            quakeMapWorker,
             this.threeLoadingManager,
             (animationOffset += 200)
           )
@@ -93,5 +107,13 @@ export default class QuakeMap extends CanvasView {
     await super.dispose(cancelToken);
 
     this.scene.remove(this.group);
+
+    const quakeMapWorker = this.quakeMapWorker;
+
+    if (!quakeMapWorker) {
+      return;
+    }
+
+    quakeMapWorker.terminate();
   }
 }
