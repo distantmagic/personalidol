@@ -1,6 +1,7 @@
 // @flow
 
 import * as THREE from "three";
+import range from "lodash/range";
 
 import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
@@ -22,101 +23,6 @@ import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity } from "../../interfaces/QuakeEntity";
 import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
 import type { QueryBus } from "../../interfaces/QueryBus";
-
-const vertexShader = `
-  varying vec3 vViewPosition;
-
-  #ifndef FLAT_SHADED
-    varying vec3 vNormal;
-  #endif
-
-  ${THREE.ShaderChunk.common}
-  ${THREE.ShaderChunk.uv_pars_vertex}
-  ${THREE.ShaderChunk.shadowmap_pars_vertex}
-
-  attribute float a_textureIndex;
-  varying float v_textureIndex;
-
-  void main() {
-    ${THREE.ShaderChunk.uv_vertex}
-
-    // use custom 'a_textureIndex' buffer geometry parameter to select
-    // appropriate texture in fragment shader
-    v_textureIndex = a_textureIndex;
-
-    ${THREE.ShaderChunk.beginnormal_vertex}
-    ${THREE.ShaderChunk.defaultnormal_vertex}
-
-    #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
-      vNormal = normalize( transformedNormal );
-    #endif
-
-    ${THREE.ShaderChunk.begin_vertex}
-    ${THREE.ShaderChunk.project_vertex}
-
-    vViewPosition = - mvPosition.xyz;
-
-    ${THREE.ShaderChunk.worldpos_vertex}
-    ${THREE.ShaderChunk.shadowmap_vertex}
-  }
-`;
-
-const fragmentShader = `
-  // THREE Uniforms
-  uniform vec3 diffuse;
-  uniform vec3 emissive;
-  uniform vec3 specular;
-  uniform float shininess;
-  uniform float opacity;
-
-  // Custom variables
-  uniform sampler2D u_textures[NUM_TEXTURES];
-  varying float v_textureIndex;
-
-  ${THREE.ShaderChunk.common}
-  ${THREE.ShaderChunk.packing}
-  ${THREE.ShaderChunk.uv_pars_fragment}
-  ${THREE.ShaderChunk.bsdfs}
-  ${THREE.ShaderChunk.lights_pars_begin}
-  ${THREE.ShaderChunk.lights_phong_pars_fragment}
-  ${THREE.ShaderChunk.shadowmap_pars_fragment}
-
-  vec4 sample_texture(int textureIndex) {
-    // Clumsy for loop here is to overcome some WebGL shader limitations
-    // Also, int attributes are not supported in WebGL, so I had to cast
-    // float to int to use array indexes.
-    for (int i = 0; i < NUM_TEXTURES; i += 1) {
-      if (i == textureIndex) {
-        return texture2D( u_textures[i], vUv );
-      }
-    }
-
-    return vec4( 1.0, 0.0, 0.0, 1.0 );
-  }
-
-  void main() {
-    // phong shader chunk
-    vec4 diffuseColor = vec4( diffuse, opacity );
-    ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-    vec3 totalEmissiveRadiance = emissive;
-
-    // replace 'map_fragment' with multi-texture sampling
-    diffuseColor *= mapTexelToLinear( sample_texture( int( v_textureIndex ) ) );
-
-    ${THREE.ShaderChunk.specularmap_fragment}
-    ${THREE.ShaderChunk.normal_fragment_begin}
-    ${THREE.ShaderChunk.lights_phong_fragment}
-    ${THREE.ShaderChunk.lights_fragment_begin}
-    ${THREE.ShaderChunk.lights_fragment_end}
-
-    // phong shader chunk
-    vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
-    gl_FragColor = vec4( outgoingLight, diffuseColor.a );
-
-    ${THREE.ShaderChunk.tonemapping_fragment}
-    ${THREE.ShaderChunk.encodings_fragment}
-  }
-`;
 
 export default class QuakeBrush extends CanvasView {
   +entity: QuakeEntity;
@@ -167,7 +73,60 @@ export default class QuakeBrush extends CanvasView {
         USE_UV: "",
       },
 
-      fragmentShader: fragmentShader,
+      fragmentShader: `
+        // THREE Uniforms
+        uniform vec3 diffuse;
+        uniform vec3 emissive;
+        uniform vec3 specular;
+        uniform float shininess;
+        uniform float opacity;
+
+        // Custom variables
+        uniform sampler2D u_textures[NUM_TEXTURES];
+        varying float v_textureIndex;
+
+        ${THREE.ShaderChunk.common}
+        ${THREE.ShaderChunk.packing}
+        ${THREE.ShaderChunk.uv_pars_fragment}
+        ${THREE.ShaderChunk.bsdfs}
+        ${THREE.ShaderChunk.lights_pars_begin}
+        ${THREE.ShaderChunk.lights_phong_pars_fragment}
+        ${THREE.ShaderChunk.shadowmap_pars_fragment}
+
+        void main() {
+          // phong shader chunk
+          vec4 diffuseColor = vec4( diffuse, opacity );
+          ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
+          vec3 totalEmissiveRadiance = emissive;
+
+          // replace 'map_fragment' with multi-texture sampling
+          int textureIndex = int( v_textureIndex );
+
+          ${range(loadedTextures.length)
+            .map(
+              textureIndex =>
+                `
+              if (textureIndex == ${textureIndex}) {
+                diffuseColor *= mapTexelToLinear( texture2D( u_textures[ ${textureIndex} ], vUv ) );
+              }
+            `
+            )
+            .join(" else ")}
+
+          ${THREE.ShaderChunk.specularmap_fragment}
+          ${THREE.ShaderChunk.normal_fragment_begin}
+          ${THREE.ShaderChunk.lights_phong_fragment}
+          ${THREE.ShaderChunk.lights_fragment_begin}
+          ${THREE.ShaderChunk.lights_fragment_end}
+
+          // phong shader chunk
+          vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
+          gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+          ${THREE.ShaderChunk.tonemapping_fragment}
+          ${THREE.ShaderChunk.encodings_fragment}
+        }
+      `,
 
       uniforms: THREE.UniformsUtils.merge([
         THREE.ShaderLib.phong.uniforms,
@@ -177,7 +136,43 @@ export default class QuakeBrush extends CanvasView {
         },
       ]),
 
-      vertexShader: vertexShader,
+      vertexShader: `
+        varying vec3 vViewPosition;
+
+        #ifndef FLAT_SHADED
+          varying vec3 vNormal;
+        #endif
+
+        ${THREE.ShaderChunk.common}
+        ${THREE.ShaderChunk.uv_pars_vertex}
+        ${THREE.ShaderChunk.shadowmap_pars_vertex}
+
+        attribute float a_textureIndex;
+        varying float v_textureIndex;
+
+        void main() {
+          ${THREE.ShaderChunk.uv_vertex}
+
+          // use custom 'a_textureIndex' buffer geometry parameter to select
+          // appropriate texture in fragment shader
+          v_textureIndex = a_textureIndex + 0.5;
+
+          ${THREE.ShaderChunk.beginnormal_vertex}
+          ${THREE.ShaderChunk.defaultnormal_vertex}
+
+          #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
+            vNormal = normalize( transformedNormal );
+          #endif
+
+          ${THREE.ShaderChunk.begin_vertex}
+          ${THREE.ShaderChunk.project_vertex}
+
+          vViewPosition = - mvPosition.xyz;
+
+          ${THREE.ShaderChunk.worldpos_vertex}
+          ${THREE.ShaderChunk.shadowmap_vertex}
+        }
+      `,
     });
 
     const mesh = new THREE.Mesh(quakeBrushGeometryBuilder.getGeometry(), material);

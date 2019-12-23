@@ -18,7 +18,11 @@ build/index.html: $(JS_SOURCES)
 	yarn run build
 
 flow.watch: node_modules
-	yarn run flow:watch
+ifeq ($(FACT_OS), Darwin)
+	yarn run flow:watch:fswatch
+else
+	yarn run flow:watch:inotify
+endif
 
 frontend: build/index.html
 
@@ -51,7 +55,7 @@ public/vendor/modernizr.js: frontend.dependencies
 setup: setup.trenchbroom
 
 setup.trenchbroom:
-ifeq ($(OS), Darwin)
+ifeq ($(FACT_OS), Darwin)
 	rm -rf ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
 	cp -r ./trenchbroom ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
 else

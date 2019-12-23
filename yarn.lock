@@ -7714,9 +7714,9 @@ parseurl@~1.3.2, parseurl@~1.3.3:
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.3.tgz#9da19e7bee8d12dff0513ed5b76957793bc2e8d4"
   integrity sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==
 
-"partykals@github:mcharytoniuk/partykals":
-  version "0.0.0"
-  resolved "https://codeload.github.com/mcharytoniuk/partykals/tar.gz/061f60964b69d15ae870380dd32c1aedde496292"
+"partykals@github:RonenNess/partykals":
+  version "1.0.1"
+  resolved "https://codeload.github.com/RonenNess/partykals/tar.gz/96538f0d5725a77cdce65efbf88d34e97335bf0e"
 
 pascalcase@^0.1.1:
   version "0.1.1"

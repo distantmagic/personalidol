@@ -13,7 +13,7 @@ import { default as QuakeMapView } from "../CanvasView/QuakeMap";
 // import { default as THREEHelpersView } from "../CanvasView/THREEHelpers";
 
 import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
-import type { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, OrthographicCamera, Scene, WebGLRenderer } from "three";
+import type { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import type { CancelToken } from "../../interfaces/CancelToken";
@@ -33,7 +33,7 @@ import type { THREEPointerInteraction as THREEPointerInteractionInterface } from
 export default class Root extends CanvasController {
   +audioListener: AudioListener;
   +audioLoader: AudioLoader;
-  +camera: OrthographicCamera;
+  +camera: PerspectiveCamera;
   +cameraController: CameraControllerInterface;
   +canvasControllerBus: CanvasControllerBus;
   +debug: Debugger;
@@ -69,7 +69,7 @@ export default class Root extends CanvasController {
     this.audioListener = new THREE.AudioListener();
     this.audioLoader = new THREE.AudioLoader(threeLoadingManager);
 
-    this.camera = new THREE.OrthographicCamera();
+    this.camera = new THREE.PerspectiveCamera();
     this.camera.add(this.audioListener);
 
     this.canvasControllerBus = canvasControllerBus;

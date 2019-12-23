@@ -799,10 +799,11 @@ declare module "three" {
     +isPerspectiveCamera: true;
     aspect: number;
     far: number;
+    fov: nubmer;
     near: number;
     zoom: number;
 
-    constructor(fov: number, aspect: number, near: number, far: number): void;
+    constructor(fov?: number, aspect?: number, near?: number, far?: number): void;
 
     updateProjectionMatrix(): void;
   }

@@ -15,7 +15,7 @@
     "mathjs": "^6.2.5",
     "modernizr": "^3.8.0",
     "ola": "^1.1.0",
-    "partykals": "github:mcharytoniuk/partykals",
+    "partykals": "github:RonenNess/partykals",
     "pathfinding": "^0.4.18",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -54,7 +54,8 @@
   },
   "scripts": {
     "build": "REACT_APP_DEBUG=false react-scripts build",
-    "flow:watch": "inotifywait -e close_write -r -m public src | xargs -n1 -I{} yarn run flow status",
+    "flow:watch:fswatch": "fswatch --one-event --one-per-batch src | xargs -n1 -I{} yarn run flow status",
+    "flow:watch:inotify": "inotifywait -e close_write -r -m public src | xargs -n1 -I{} yarn run flow status",
     "modernizr": "./node_modules/.bin/modernizr -c ./modernizr.json -d ./public/vendor -u",
     "postinstall": "$npm_execpath run modernizr",
     "prettier": "./node_modules/.bin/prettier --write \"./{flow-typed,public,src}/**/*.{htm,html,js,scss}\"",

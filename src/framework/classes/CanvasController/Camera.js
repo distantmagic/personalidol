@@ -8,7 +8,7 @@ import Ola from "ola";
 import CanvasController from "../CanvasController";
 
 import type { Ola as OlaInterface } from "ola";
-import type { OrthographicCamera, Scene, WebGLRenderer } from "three";
+import type { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import type { CancelToken } from "../../interfaces/CancelToken";
@@ -17,14 +17,14 @@ import type { ElementSize } from "../../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
-  +camera: OrthographicCamera;
+  +camera: PerspectiveCamera;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +renderer: WebGLRenderer;
   +scene: Scene;
   +zoomTween: OlaInterface;
   zoomTarget: number;
 
-  constructor(canvasViewBag: CanvasViewBag, camera: OrthographicCamera, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, camera: PerspectiveCamera, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
     super(canvasViewBag);
     autoBind(this);
 
@@ -41,8 +41,6 @@ export default class CameraController extends CanvasController implements Camera
 
     // this.lookAt(this.scene.position);
     this.lookAt(new THREE.Vector3(256, 0, 256));
-
-    this.camera.updateProjectionMatrix();
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
   }
@@ -65,10 +63,17 @@ export default class CameraController extends CanvasController implements Camera
   }
 
   lookAt(position: Vector3): void {
-    const cameraPosition = position.clone().addScalar(512 + 256);
+    const cameraPosition = position.clone();
+
+    cameraPosition.x += 512;
+    cameraPosition.y += 512 * 1.6;
+    cameraPosition.z += 512;
 
     this.camera.position.copy(cameraPosition);
+    this.camera.far = this.camera.position.distanceTo(this.scene.position);
+    this.camera.near = 1;
     this.camera.lookAt(position);
+    this.camera.updateProjectionMatrix();
   }
 
   onWheel(evt: WheelEvent): void {
@@ -86,12 +91,8 @@ export default class CameraController extends CanvasController implements Camera
     const height = viewportSize.getHeight();
     const width = viewportSize.getWidth();
 
-    this.camera.left = -1 * width;
-    this.camera.far = 2048;
-    this.camera.near = 0;
-    this.camera.right = width;
-    this.camera.top = height;
-    this.camera.bottom = -1 * height;
+    this.camera.aspect = width / height;
+    this.camera.fov = 120;
 
     this.camera.updateProjectionMatrix();
   }
