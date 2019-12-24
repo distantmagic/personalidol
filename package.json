@@ -24,9 +24,10 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
     "resize-observer-polyfill": "^1.5.1",
+    "route-recognizer": "^0.3.4",
     "three": "^0.111.0",
     "twig": "^1.14.0",
-    "workerize-loader": "^1.1.0",
+    "uuid": "^3.3.3",
     "yaml": "^1.7.2",
     "yn": "^4.0.0"
   },
@@ -53,13 +54,13 @@
     ]
   },
   "scripts": {
-    "build": "REACT_APP_DEBUG=false react-scripts build",
+    "build": "react-scripts build",
     "flow:watch:fswatch": "fswatch --one-event --one-per-batch src | xargs -n1 -I{} yarn run flow status",
     "flow:watch:inotify": "inotifywait -e close_write -r -m public src | xargs -n1 -I{} yarn run flow status",
     "modernizr": "./node_modules/.bin/modernizr -c ./modernizr.json -d ./public/vendor -u",
     "postinstall": "$npm_execpath run modernizr",
     "prettier": "./node_modules/.bin/prettier --write \"./{flow-typed,public,src}/**/*.{htm,html,js,scss}\"",
-    "start": "PUBLIC_URL=http://localhost:9023 PORT=9023 react-scripts start",
+    "start": "REACT_APP_PUBLIC_URL=http://localhost:9023 PORT=9023 react-scripts start",
     "test": "react-scripts test --env=jsdom",
     "test:once": "$npm_execpath run test --watchAll=false"
   }

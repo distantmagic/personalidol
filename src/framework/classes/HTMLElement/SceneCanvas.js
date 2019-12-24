@@ -168,7 +168,7 @@ export default class SceneCanvas extends HTMLElement {
       // alpha: true,
       antialias: false,
       canvas: this.canvasElement,
-      precision: "highp"
+      precision: "highp",
     });
 
     renderer.gammaInput = true;

@@ -27,7 +27,15 @@ export default class QuakeBrush extends CanvasView {
   +threeLoadingManager: THREELoadingManager;
   mesh: ?Mesh;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, entity: QuakeEntity, group: Group, quakeMapWorker: QuakeMapWorkerInterface, queryBus: QueryBus, threeLoadingManager: THREELoadingManager) {
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    canvasViewBag: CanvasViewBag,
+    entity: QuakeEntity,
+    group: Group,
+    quakeMapWorker: QuakeMapWorkerInterface,
+    queryBus: QueryBus,
+    threeLoadingManager: THREELoadingManager
+  ) {
     super(canvasViewBag);
 
     this.entity = entity;

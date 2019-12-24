@@ -10,7 +10,7 @@ import { default as QuakeMapQuery } from "../Query/QuakeMap";
 // with create-react-app without ejecting
 /* eslint-disable import/no-webpack-loader-syntax */
 // $FlowFixMe
-import { default as QuakeMapWorker } from "workerize-loader?inline!../../../workers/exports/QuakeMap";
+import { default as QuakeMapWorker } from "../../../workers/loader?name=QuakeMapWorker!../../../workers/exports/QuakeMap";
 /* eslint-enable import/no-webpack-loader-syntax */
 
 import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Scene } from "three";
@@ -20,7 +20,6 @@ import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { QuakeMap as QuakeMapWorkerInterface } from "../../../workers/interfaces/QuakeMap";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class QuakeMap extends CanvasView {
@@ -34,7 +33,7 @@ export default class QuakeMap extends CanvasView {
   +scene: Scene;
   +source: string;
   +threeLoadingManager: THREELoadingManager;
-  quakeMapWorker: ?QuakeMapWorkerInterface;
+  quakeMapWorker: ?Worker;
 
   constructor(
     audioListener: AudioListener,
@@ -65,41 +64,48 @@ export default class QuakeMap extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const quakeMapWorker = new QuakeMapWorker();
+    const quakeMapWorker: Worker = new QuakeMapWorker();
+
+    quakeMapWorker.onmessage = function(oEvent) {
+      console.log('Worker said : ', oEvent.data);
+    };
+
+    quakeMapWorker.postMessage('test');
 
     this.quakeMapWorker = quakeMapWorker;
 
-    const promises: Promise<void>[] = [];
-    const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
-    const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
-    let animationOffset = 0;
+    // const commands = await this.loadingManager.blocking(quakeMapWorker.loadMap(this.source), "Loading map entities");
 
-    for (let entity of quakeMap.getEntities()) {
-      const viewLoader = this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          cancelToken,
-          new QuakeEntityView(
-            this.audioListener,
-            this.audioLoader,
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeEntity")),
-            entity,
-            this.loadingManager,
-            this.logger,
-            this.loggerBreadcrumbs.add("QuakeEntity"),
-            this.queryBus,
-            this.group,
-            quakeMapWorker,
-            this.threeLoadingManager,
-            (animationOffset += 200)
-          )
-        ),
-        "Loading map entity"
-      );
+    // const promises: Promise<void>[] = [];
+    // const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
+    // const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
+    // let animationOffset = 0;
 
-      promises.push(viewLoader);
-    }
+    // for (let entity of quakeMap.getEntities()) {
+    //   const viewLoader = this.loadingManager.blocking(
+    //     this.canvasViewBag.add(
+    //       cancelToken,
+    //       new QuakeEntityView(
+    //         this.audioListener,
+    //         this.audioLoader,
+    //         this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeEntity")),
+    //         entity,
+    //         this.loadingManager,
+    //         this.logger,
+    //         this.loggerBreadcrumbs.add("QuakeEntity"),
+    //         this.queryBus,
+    //         this.group,
+    //         this.threeLoadingManager,
+    //         (animationOffset += 200)
+    //       )
+    //     ),
+    //     "Loading map entity"
+    //   );
 
-    await Promise.all(promises);
+    //   promises.push(viewLoader);
+    // }
+
+    // await Promise.all(promises);
     this.scene.add(this.group);
   }
 

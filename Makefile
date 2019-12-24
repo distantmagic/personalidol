@@ -49,7 +49,7 @@ pretty.backend:
 pretty.frontend:
 	yarn run prettier
 
-public/vendor/modernizr.js: frontend.dependencies
+public/vendor/modernizr.js: node_modules
 	yarn run modernizr
 
 setup: setup.trenchbroom
