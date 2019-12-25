@@ -1047,6 +1047,7 @@ declare module "three" {
 
     constructor({|
       alpha?: boolean,
+      antialias?: boolean,
       canvas?: HTMLCanvasElement,
       depth?: boolean,
       logarithmicDepthBuffer?: boolean,

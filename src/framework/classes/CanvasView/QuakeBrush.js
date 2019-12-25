@@ -10,35 +10,39 @@ import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 
 import type { Group, LoadingManager as THREELoadingManager, Mesh } from "three";
 
-// those are a few hacks, but in the end it's possible to load web workers
-// with create-react-app without ejecting
-/* eslint-disable import/no-webpack-loader-syntax */
-// $FlowFixMe
-// import QuakeBrushGeometryBuilderWorker from "workerize-loader?inline!../QuakeBrushGeometryBuilder.worker";
-/* eslint-enable import/no-webpack-loader-syntax */
-
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity } from "../../interfaces/QuakeEntity";
 import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
+import type { QuakeMap as QuakeMapWorkerInterface } from "../../../workers/interfaces/QuakeMap";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class QuakeBrush extends CanvasView {
   +entity: QuakeEntity;
   +group: Group;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
+  +quakeMapWorker: QuakeMapWorkerInterface;
   +textureLoader: QuakeMapTextureLoaderInterface;
   +threeLoadingManager: THREELoadingManager;
   mesh: ?Mesh;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, entity: QuakeEntity, group: Group, queryBus: QueryBus, threeLoadingManager: THREELoadingManager) {
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    canvasViewBag: CanvasViewBag,
+    entity: QuakeEntity,
+    group: Group,
+    quakeMapWorker: QuakeMapWorkerInterface,
+    queryBus: QueryBus,
+    threeLoadingManager: THREELoadingManager
+  ) {
     super(canvasViewBag);
 
     this.entity = entity;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mesh = null;
     this.group = group;
+    this.quakeMapWorker = quakeMapWorker;
 
     this.textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs.add("QuakeMapTextureLoader"), threeLoadingManager, queryBus);
     this.textureLoader.registerTexture("__TB_empty", "/debug/texture-uv-1024x1024.png");
@@ -57,7 +61,7 @@ export default class QuakeBrush extends CanvasView {
     }
 
     const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
-    const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder(this.textureLoader);
+    const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
     for (let brush of this.entity.getBrushes()) {
       quakeBrushGeometryBuilder.addBrush(brush, loadedTextures);

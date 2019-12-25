@@ -9,6 +9,7 @@ import * as serviceWorker from "./serviceWorker";
 import BusClock from "./framework/classes/BusClock";
 import ClockReactiveController from "./framework/classes/ClockReactiveController";
 import Debugger from "./framework/classes/Debugger";
+import env from "./framework/helpers/env";
 import ExceptionHandler from "./framework/classes/ExceptionHandler";
 import ExpressionBus from "./framework/classes/ExpressionBus";
 import ExpressionContext from "./framework/classes/ExpressionContext";
@@ -54,7 +55,7 @@ async function init(logger: Logger, loggerBreadcrumbs: LoggerBreadcrumbsInterfac
   onWindowResize();
 
   debug.setIsEnabled(
-    yn(process.env.REACT_APP_FEATURE_DEBUGGER, {
+    yn(env(loggerBreadcrumbs.add("debug"), "REACT_APP_FEATURE_DEBUGGER", ""), {
       default: false,
     })
   );

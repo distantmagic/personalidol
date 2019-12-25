@@ -1,5 +1,6 @@
 // @flow
 
+import env from "./framework/helpers/env";
 import isLocalhost from "./framework/helpers/isLocalhost";
 import { default as MissingException } from "./framework/classes/Exception/ServiceWorker/Missing";
 import { default as SecurityException } from "./framework/classes/Exception/ServiceWorker/Security";
@@ -7,8 +8,6 @@ import { default as UnsupportedException } from "./framework/classes/Exception/S
 
 import type { Logger } from "./framework/interfaces/Logger";
 import type { LoggerBreadcrumbs } from "./framework/interfaces/LoggerBreadcrumbs";
-
-const PUBLIC_URL = process.env.PUBLIC_URL || "";
 
 function getServiceWorkerAPI(loggerBreadcrumbs: LoggerBreadcrumbs): ServiceWorkerContainer {
   const serviceWorker = navigator.serviceWorker;
@@ -21,6 +20,7 @@ function getServiceWorkerAPI(loggerBreadcrumbs: LoggerBreadcrumbs): ServiceWorke
 }
 
 export async function register(loggerBreadcrumbs: LoggerBreadcrumbs, logger: Logger): Promise<ServiceWorkerRegistration> {
+  const PUBLIC_URL = env(loggerBreadcrumbs.add("env"), "REACT_APP_PUBLIC_URL");
   const serviceWorker = getServiceWorkerAPI(loggerBreadcrumbs.add("getServiceWorkerAPI"));
 
   // The URL constructor is available in all browsers that support SW.

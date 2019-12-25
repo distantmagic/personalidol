@@ -6,6 +6,13 @@ import CanvasView from "../CanvasView";
 import { default as QuakeEntityView } from "./QuakeEntity";
 import { default as QuakeMapQuery } from "../Query/QuakeMap";
 
+// those are a few hacks, but in the end it's possible to load web workers
+// with create-react-app without ejecting
+/* eslint-disable import/no-webpack-loader-syntax */
+// $FlowFixMe
+import { default as QuakeMapWorker } from "../../../workers/loader?name=QuakeMapWorker!../../../workers/exports/QuakeMap";
+/* eslint-enable import/no-webpack-loader-syntax */
+
 import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Scene } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
@@ -26,6 +33,7 @@ export default class QuakeMap extends CanvasView {
   +scene: Scene;
   +source: string;
   +threeLoadingManager: THREELoadingManager;
+  quakeMapWorker: ?Worker;
 
   constructor(
     audioListener: AudioListener,
@@ -56,36 +64,48 @@ export default class QuakeMap extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const promises: Promise<void>[] = [];
-    const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
-    const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
-    let animationOffset = 0;
+    const quakeMapWorker: Worker = new QuakeMapWorker();
 
-    for (let entity of quakeMap.getEntities()) {
-      const viewLoader = this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          cancelToken,
-          new QuakeEntityView(
-            this.audioListener,
-            this.audioLoader,
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeEntity")),
-            entity,
-            this.loadingManager,
-            this.logger,
-            this.loggerBreadcrumbs.add("QuakeEntity"),
-            this.queryBus,
-            this.group,
-            this.threeLoadingManager,
-            (animationOffset += 200)
-          )
-        ),
-        "Loading map entity"
-      );
+    quakeMapWorker.onmessage = function(oEvent) {
+      console.log('Worker said : ', oEvent.data);
+    };
 
-      promises.push(viewLoader);
-    }
+    quakeMapWorker.postMessage('test');
 
-    await Promise.all(promises);
+    this.quakeMapWorker = quakeMapWorker;
+
+    // const commands = await this.loadingManager.blocking(quakeMapWorker.loadMap(this.source), "Loading map entities");
+
+    // const promises: Promise<void>[] = [];
+    // const query = new QuakeMapQuery(this.loggerBreadcrumbs.add("QuakeMapQuery"), this.source);
+    // const quakeMap = await this.queryBus.enqueue(cancelToken, query).whenExecuted();
+    // let animationOffset = 0;
+
+    // for (let entity of quakeMap.getEntities()) {
+    //   const viewLoader = this.loadingManager.blocking(
+    //     this.canvasViewBag.add(
+    //       cancelToken,
+    //       new QuakeEntityView(
+    //         this.audioListener,
+    //         this.audioLoader,
+    //         this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeEntity")),
+    //         entity,
+    //         this.loadingManager,
+    //         this.logger,
+    //         this.loggerBreadcrumbs.add("QuakeEntity"),
+    //         this.queryBus,
+    //         this.group,
+    //         this.threeLoadingManager,
+    //         (animationOffset += 200)
+    //       )
+    //     ),
+    //     "Loading map entity"
+    //   );
+
+    //   promises.push(viewLoader);
+    // }
+
+    // await Promise.all(promises);
     this.scene.add(this.group);
   }
 
@@ -93,5 +113,13 @@ export default class QuakeMap extends CanvasView {
     await super.dispose(cancelToken);
 
     this.scene.remove(this.group);
+
+    const quakeMapWorker = this.quakeMapWorker;
+
+    if (!quakeMapWorker) {
+      return;
+    }
+
+    quakeMapWorker.terminate();
   }
 }
