@@ -5,7 +5,6 @@ import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
 import QuakeEntity from "./QuakeEntity";
 import QuakeEntityProperties from "./QuakeEntityProperties";
 import QuakeEntityPropertyParser from "./QuakeEntityPropertyParser";
-import QuakeMap from "./QuakeMap";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
@@ -13,7 +12,6 @@ import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush
 import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import type { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
 import type { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
-import type { QuakeMap as QuakeMapInterface } from "../interfaces/QuakeMap";
 import type { QuakeMapParser as QuakeMapParserInterface } from "../interfaces/QuakeMapParser";
 
 const REGEXP_NEWLINE = /\r?\n/;
@@ -35,8 +33,8 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     return new QuakeEntityPropertyParser(breadcrumbs.add("entityProperty"), line).parse();
   }
 
-  parse(): QuakeMapInterface {
-    const entities: QuakeEntityInterface[] = [];
+  *parse(): Generator<QuakeEntityInterface, void, void> {
+    const loggerBreadcrumbs = this.loggerBreadcrumbs.add("parse");
     const lines: $ReadOnlyArray<string> = this.splitLines(this.content);
     let currentBrushSketch: ?(QuakeBrushHalfSpace[]) = null;
     let currentEntitySketch: ?{|
@@ -46,7 +44,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
 
     for (let lineno = 0; lineno < lines.length; lineno += 1) {
       const line = lines[lineno];
-      const breadcrumbs = this.loggerBreadcrumbs.addVariable(String(lineno + 1));
+      const breadcrumbs = loggerBreadcrumbs.addVariable(String(lineno + 1));
 
       if (this.isComment(line) || this.isEmpty(line)) {
         continue;
@@ -77,9 +75,9 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
           continue;
         } else if (currentEntitySketch) {
           const quakeEntityProperties = new QuakeEntityProperties(breadcrumbs.add("QuakeEntityProperties"), currentEntitySketch.props);
-          const quakeEntity = new QuakeEntity(breadcrumbs.add("QuakeEntity"), quakeEntityProperties, currentEntitySketch.brushes);
 
-          entities.push(quakeEntity);
+          yield new QuakeEntity(breadcrumbs.add("QuakeEntity"), quakeEntityProperties, currentEntitySketch.brushes);
+
           currentEntitySketch = null;
           continue;
         } else {
@@ -100,7 +98,13 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
       throw new QuakeMapParserException(breadcrumbs, "Unexpected line.");
     }
 
-    return new QuakeMap(this.loggerBreadcrumbs.add("QuakeMap"), entities);
+    if (currentBrushSketch) {
+      throw new QuakeMapParserException(loggerBreadcrumbs, "Unexpected end of brush data.");
+    }
+
+    if (currentEntitySketch) {
+      throw new QuakeMapParserException(loggerBreadcrumbs, "Unexpected end of entity data.");
+    }
   }
 
   isClosingBracket(line: string): boolean {

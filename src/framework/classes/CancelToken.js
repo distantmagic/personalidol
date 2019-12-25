@@ -16,9 +16,11 @@ export default class CancelToken implements CancelTokenInterface {
   +loggerBreadcrumbsCreate: LoggerBreadcrumbs;
   loggerBreadcrumbsCancel: ?LoggerBreadcrumbs;
   _isCanceled: boolean;
+  _isSettled: boolean;
 
   constructor(loggerBreadcrumbsCreate: LoggerBreadcrumbs) {
     this._isCanceled = false;
+    this._isSettled = false;
     this.abortController = new AbortController();
     this.callbacks = new EventListenerSet<[CanceledInterface]>();
     this.loggerBreadcrumbsCancel = null;
@@ -26,11 +28,16 @@ export default class CancelToken implements CancelTokenInterface {
   }
 
   cancel(loggerBreadcrumbsCancel: LoggerBreadcrumbs): void {
+    if (this._isSettled) {
+      throw new Exception(this.loggerBreadcrumbsCreate, "Cancel token is settled and cannot be canceled.");
+    }
+
     this.loggerBreadcrumbsCancel = loggerBreadcrumbsCancel;
     this.abortController.abort();
     this._isCanceled = true;
 
-    return this.callbacks.notify([new Canceled(this.loggerBreadcrumbsCreate, `Token was canceled at: ${loggerBreadcrumbsCancel.asString()}`)], true);
+    this.callbacks.notify([new Canceled(this.loggerBreadcrumbsCreate, `Token was canceled at: ${loggerBreadcrumbsCancel.asString()}`)]);
+    this.callbacks.clear();
   }
 
   getAbortSignal(): AbortSignal {
@@ -42,6 +49,9 @@ export default class CancelToken implements CancelTokenInterface {
   }
 
   onCanceled(callback: CancelTokenCallback): void {
+    if (this._isSettled) {
+      throw new Exception(this.loggerBreadcrumbsCreate, "Cancel token is settled and will never be canceled.");
+    }
     if (this._isCanceled) {
       const loggerBreadcrumbsCancel = this.loggerBreadcrumbsCancel;
 
@@ -53,6 +63,11 @@ export default class CancelToken implements CancelTokenInterface {
     } else {
       this.callbacks.add(callback);
     }
+  }
+
+  settle(): void {
+    this._isSettled = true;
+    this.callbacks.clear();
   }
 
   whenCanceled(): Promise<CanceledInterface> {

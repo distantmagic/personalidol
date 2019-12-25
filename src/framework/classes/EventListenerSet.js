@@ -14,33 +14,17 @@ export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements
     this.callbacks.push(callback);
   }
 
+  clear(): void {
+    this.callbacks = [];
+  }
+
   delete(callback: EventListenerSetCallback<Arguments>): void {
     this.callbacks.splice(this.callbacks.indexOf(callback), 1);
   }
 
-  notify(args: Arguments, clearAfter: boolean = false): void {
+  notify(args: Arguments): void {
     for (let callback of this.callbacks) {
       callback(...args);
     }
-
-    if (clearAfter) {
-      this.clear();
-    }
-  }
-
-  async notifyAwait(args: Arguments, clearAfter: boolean = false): Promise<void> {
-    await Promise.all(
-      this.callbacks.map(callback => {
-        return callback(...args);
-      })
-    );
-
-    if (clearAfter) {
-      this.clear();
-    }
-  }
-
-  clear(): void {
-    this.callbacks = [];
   }
 }

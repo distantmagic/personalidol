@@ -51,141 +51,141 @@ export default class QuakeBrush extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    console.time("BRUSH");
-    for (let brush of this.entity.getBrushes()) {
-      for (let texture of brush.getTextures()) {
-        if ("__TB_empty" !== texture) {
-          this.textureLoader.registerTexture(texture, `${texture}.png`);
-        }
-      }
-    }
+    // console.time("BRUSH");
+    // for (let brush of this.entity.getBrushes()) {
+    //   for (let texture of brush.getTextures()) {
+    //     if ("__TB_empty" !== texture) {
+    //       this.textureLoader.registerTexture(texture, `${texture}.png`);
+    //     }
+    //   }
+    // }
 
-    const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
-    const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
+    // const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
+    // const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
-    for (let brush of this.entity.getBrushes()) {
-      quakeBrushGeometryBuilder.addBrush(brush, loadedTextures);
-    }
-    console.timeEnd("BRUSH");
+    // for (let brush of this.entity.getBrushes()) {
+    //   quakeBrushGeometryBuilder.addBrush(brush, loadedTextures);
+    // }
+    // console.timeEnd("BRUSH");
 
-    const material = new THREE.ShaderMaterial({
-      lights: true,
+    // const material = new THREE.ShaderMaterial({
+    //   lights: true,
 
-      defines: {
-        NUM_TEXTURES: String(loadedTextures.length),
-        PHONG: "",
-        USE_UV: "",
-      },
+    //   defines: {
+    //     NUM_TEXTURES: String(loadedTextures.length),
+    //     PHONG: "",
+    //     USE_UV: "",
+    //   },
 
-      fragmentShader: `
-        // THREE Uniforms
-        uniform vec3 diffuse;
-        uniform vec3 emissive;
-        uniform vec3 specular;
-        uniform float shininess;
-        uniform float opacity;
+    //   fragmentShader: `
+    //     // THREE Uniforms
+    //     uniform vec3 diffuse;
+    //     uniform vec3 emissive;
+    //     uniform vec3 specular;
+    //     uniform float shininess;
+    //     uniform float opacity;
 
-        // Custom variables
-        uniform sampler2D u_textures[NUM_TEXTURES];
-        varying float v_textureIndex;
+    //     // Custom variables
+    //     uniform sampler2D u_textures[NUM_TEXTURES];
+    //     varying float v_textureIndex;
 
-        ${THREE.ShaderChunk.common}
-        ${THREE.ShaderChunk.packing}
-        ${THREE.ShaderChunk.uv_pars_fragment}
-        ${THREE.ShaderChunk.bsdfs}
-        ${THREE.ShaderChunk.lights_pars_begin}
-        ${THREE.ShaderChunk.lights_phong_pars_fragment}
-        ${THREE.ShaderChunk.shadowmap_pars_fragment}
+    //     ${THREE.ShaderChunk.common}
+    //     ${THREE.ShaderChunk.packing}
+    //     ${THREE.ShaderChunk.uv_pars_fragment}
+    //     ${THREE.ShaderChunk.bsdfs}
+    //     ${THREE.ShaderChunk.lights_pars_begin}
+    //     ${THREE.ShaderChunk.lights_phong_pars_fragment}
+    //     ${THREE.ShaderChunk.shadowmap_pars_fragment}
 
-        void main() {
-          // phong shader chunk
-          vec4 diffuseColor = vec4( diffuse, opacity );
-          ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-          vec3 totalEmissiveRadiance = emissive;
+    //     void main() {
+    //       // phong shader chunk
+    //       vec4 diffuseColor = vec4( diffuse, opacity );
+    //       ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
+    //       vec3 totalEmissiveRadiance = emissive;
 
-          // replace 'map_fragment' with multi-texture sampling
-          int textureIndex = int( v_textureIndex );
+    //       // replace 'map_fragment' with multi-texture sampling
+    //       int textureIndex = int( v_textureIndex );
 
-          ${range(loadedTextures.length)
-            .map(
-              textureIndex =>
-                `
-              if (textureIndex == ${textureIndex}) {
-                diffuseColor *= mapTexelToLinear( texture2D( u_textures[ ${textureIndex} ], vUv ) );
-              }
-            `
-            )
-            .join(" else ")}
+    //       ${range(loadedTextures.length)
+    //         .map(
+    //           textureIndex =>
+    //             `
+    //           if (textureIndex == ${textureIndex}) {
+    //             diffuseColor *= mapTexelToLinear( texture2D( u_textures[ ${textureIndex} ], vUv ) );
+    //           }
+    //         `
+    //         )
+    //         .join(" else ")}
 
-          ${THREE.ShaderChunk.specularmap_fragment}
-          ${THREE.ShaderChunk.normal_fragment_begin}
-          ${THREE.ShaderChunk.lights_phong_fragment}
-          ${THREE.ShaderChunk.lights_fragment_begin}
-          ${THREE.ShaderChunk.lights_fragment_end}
+    //       ${THREE.ShaderChunk.specularmap_fragment}
+    //       ${THREE.ShaderChunk.normal_fragment_begin}
+    //       ${THREE.ShaderChunk.lights_phong_fragment}
+    //       ${THREE.ShaderChunk.lights_fragment_begin}
+    //       ${THREE.ShaderChunk.lights_fragment_end}
 
-          // phong shader chunk
-          vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
-          gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+    //       // phong shader chunk
+    //       vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
+    //       gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 
-          ${THREE.ShaderChunk.tonemapping_fragment}
-          ${THREE.ShaderChunk.encodings_fragment}
-        }
-      `,
+    //       ${THREE.ShaderChunk.tonemapping_fragment}
+    //       ${THREE.ShaderChunk.encodings_fragment}
+    //     }
+    //   `,
 
-      uniforms: THREE.UniformsUtils.merge([
-        THREE.ShaderLib.phong.uniforms,
-        {
-          shininess: new THREE.Uniform(1),
-          u_textures: new THREE.Uniform(loadedTextures),
-        },
-      ]),
+    //   uniforms: THREE.UniformsUtils.merge([
+    //     THREE.ShaderLib.phong.uniforms,
+    //     {
+    //       shininess: new THREE.Uniform(1),
+    //       u_textures: new THREE.Uniform(loadedTextures),
+    //     },
+    //   ]),
 
-      vertexShader: `
-        varying vec3 vViewPosition;
+    //   vertexShader: `
+    //     varying vec3 vViewPosition;
 
-        #ifndef FLAT_SHADED
-          varying vec3 vNormal;
-        #endif
+    //     #ifndef FLAT_SHADED
+    //       varying vec3 vNormal;
+    //     #endif
 
-        ${THREE.ShaderChunk.common}
-        ${THREE.ShaderChunk.uv_pars_vertex}
-        ${THREE.ShaderChunk.shadowmap_pars_vertex}
+    //     ${THREE.ShaderChunk.common}
+    //     ${THREE.ShaderChunk.uv_pars_vertex}
+    //     ${THREE.ShaderChunk.shadowmap_pars_vertex}
 
-        attribute float a_textureIndex;
-        varying float v_textureIndex;
+    //     attribute float a_textureIndex;
+    //     varying float v_textureIndex;
 
-        void main() {
-          ${THREE.ShaderChunk.uv_vertex}
+    //     void main() {
+    //       ${THREE.ShaderChunk.uv_vertex}
 
-          // use custom 'a_textureIndex' buffer geometry parameter to select
-          // appropriate texture in fragment shader
-          v_textureIndex = a_textureIndex + 0.5;
+    //       // use custom 'a_textureIndex' buffer geometry parameter to select
+    //       // appropriate texture in fragment shader
+    //       v_textureIndex = a_textureIndex + 0.5;
 
-          ${THREE.ShaderChunk.beginnormal_vertex}
-          ${THREE.ShaderChunk.defaultnormal_vertex}
+    //       ${THREE.ShaderChunk.beginnormal_vertex}
+    //       ${THREE.ShaderChunk.defaultnormal_vertex}
 
-          #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
-            vNormal = normalize( transformedNormal );
-          #endif
+    //       #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
+    //         vNormal = normalize( transformedNormal );
+    //       #endif
 
-          ${THREE.ShaderChunk.begin_vertex}
-          ${THREE.ShaderChunk.project_vertex}
+    //       ${THREE.ShaderChunk.begin_vertex}
+    //       ${THREE.ShaderChunk.project_vertex}
 
-          vViewPosition = - mvPosition.xyz;
+    //       vViewPosition = - mvPosition.xyz;
 
-          ${THREE.ShaderChunk.worldpos_vertex}
-          ${THREE.ShaderChunk.shadowmap_vertex}
-        }
-      `,
-    });
+    //       ${THREE.ShaderChunk.worldpos_vertex}
+    //       ${THREE.ShaderChunk.shadowmap_vertex}
+    //     }
+    //   `,
+    // });
 
-    const mesh = new THREE.Mesh(quakeBrushGeometryBuilder.getGeometry(), material);
+    // const mesh = new THREE.Mesh(quakeBrushGeometryBuilder.getGeometry(), material);
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    // mesh.castShadow = true;
+    // mesh.receiveShadow = true;
 
-    this.mesh = mesh;
-    this.group.add(mesh);
+    // this.mesh = mesh;
+    // this.group.add(mesh);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {

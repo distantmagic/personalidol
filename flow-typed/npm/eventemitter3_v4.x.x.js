@@ -2,20 +2,20 @@
 // flow-typed version: 6347e0da2b/eventemitter3_v3.x.x/flow_>=v0.25.x
 
 declare module "eventemitter3" {
-  declare type ListenerFn = (...args: any[]) => mixed;
+  declare type ListenerFn<T> = (args: T) => mixed;
   declare class EventEmitter {
     static constructor(): EventEmitter;
     static prefixed: string | boolean;
     eventNames(): (string | Symbol)[];
-    listeners(event: string | Symbol): ListenerFn[];
+    listeners(event: string | Symbol): ListenerFn<any>[];
     listenerCount(event: string | Symbol): number;
-    on(event: string | Symbol, listener: ListenerFn, context?: any): this;
-    addListener(event: string | Symbol, listener: ListenerFn, context?: any): this;
-    once(event: string | Symbol, listener: ListenerFn, context?: any): this;
+    on<T>(event: string | Symbol, listener: ListenerFn<T>, context?: any): this;
+    addListener<T>(event: string | Symbol, listener: ListenerFn<T>, context?: any): this;
+    once<T>(event: string | Symbol, listener: ListenerFn<T>, context?: any): this;
     removeAllListeners(event?: string | Symbol): this;
-    removeListener(event: string | Symbol, listener?: ListenerFn, context?: any, once?: boolean): this;
-    off(event: string | Symbol, listener?: ListenerFn, context?: any, once?: boolean): this;
-    emit(event: string, ...params?: any[]): this;
+    removeListener<T>(event: string | Symbol, listener?: ListenerFn<T>, context?: any, once?: boolean): this;
+    off<T>(event: string | Symbol, listener?: ListenerFn<T>, context?: any, once?: boolean): this;
+    emit<T>(event: string, params?: T): this;
   }
   declare module.exports: Class<EventEmitter>;
 }

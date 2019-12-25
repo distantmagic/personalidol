@@ -5,7 +5,7 @@ import Fetch from "./Fetch";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { Query } from "../../interfaces/Query";
 
-export default class RemoteText implements Query<string> {
+export default class PlainText implements Query<string> {
   +fetch: Fetch;
 
   constructor(ref: string) {
@@ -18,7 +18,7 @@ export default class RemoteText implements Query<string> {
     return response.text();
   }
 
-  isEqual(other: RemoteText): boolean {
+  isEqual(other: PlainText): boolean {
     return this.fetch.isEqual(other.fetch);
   }
 }

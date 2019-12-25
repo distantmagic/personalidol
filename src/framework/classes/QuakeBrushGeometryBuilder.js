@@ -8,7 +8,7 @@ import quake2three from "../helpers/quake2three";
 import three2quake from "../helpers/three2quake";
 
 import type { ConvexHull as ConvexHullInterface, Face as ConvexHullFace } from "three/examples/jsm/math/ConvexHull";
-import type { BufferGeometry, Texture } from "three";
+import type { BufferGeometry } from "three";
 
 import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
@@ -30,15 +30,15 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     this.vertices = [];
   }
 
-  addBrush(quakeBrush: QuakeBrush, textures: $ReadOnlyArray<Texture>): void {
+  addBrush(quakeBrush: QuakeBrush): void {
     const convexHull = this.getConvexHull(quakeBrush);
 
     for (let face of convexHull.faces) {
-      this.addConvexHullFace(quakeBrush, face, textures);
+      this.addConvexHullFace(quakeBrush, face);
     }
   }
 
-  addConvexHullFace(quakeBrush: QuakeBrush, face: ConvexHullFace, textures: $ReadOnlyArray<Texture>): void {
+  addConvexHullFace(quakeBrush: QuakeBrush, face: ConvexHullFace): void {
     const points = [];
     let edge = face.edge;
 

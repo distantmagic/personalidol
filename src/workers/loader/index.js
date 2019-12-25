@@ -49,6 +49,8 @@ function getWorkerURL(options, compilation, file) {
 }
 
 function pitch(request) {
+  this.cacheable(false);
+
   const options = loaderUtils.getOptions(this) || {};
   const compilerOptions = this._compiler.options || {};
   const cb = this.async();
@@ -63,7 +65,7 @@ function pitch(request) {
 
   createChildCompiler(this, request, filename).runAsChild((err, entries, compilation) => {
     if (err) {
-      return cb(err)
+      return cb(err);
     }
 
     const entry = entries[0];
@@ -83,7 +85,7 @@ function pitch(request) {
     `
     );
   });
-};
+}
 
 module.exports = {
   pitch: pitch,

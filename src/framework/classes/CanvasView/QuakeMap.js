@@ -3,8 +3,8 @@
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
+import JSONRPCClient from "../JSONRPCClient";
 import { default as QuakeEntityView } from "./QuakeEntity";
-import { default as QuakeMapQuery } from "../Query/QuakeMap";
 
 // those are a few hacks, but in the end it's possible to load web workers
 // with create-react-app without ejecting
@@ -65,14 +65,13 @@ export default class QuakeMap extends CanvasView {
     await super.attach(cancelToken);
 
     const quakeMapWorker: Worker = new QuakeMapWorker();
+    const jsonRpcClient = new JSONRPCClient(this.loggerBreadcrumbs.add("JSONRPCClient"), quakeMapWorker.postMessage.bind(quakeMapWorker));
 
-    quakeMapWorker.onmessage = function(oEvent) {
-      console.log('Worker said : ', oEvent.data);
-    };
-
-    quakeMapWorker.postMessage('test');
+    quakeMapWorker.onmessage = jsonRpcClient.useMessageHandler(cancelToken);
 
     this.quakeMapWorker = quakeMapWorker;
+
+    await this.loadingManager.blocking(jsonRpcClient.requestPromise(cancelToken, "/map/load", [this.source]), "Loading entities");
 
     // const commands = await this.loadingManager.blocking(quakeMapWorker.loadMap(this.source), "Loading map entities");
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type { Parser } from "./Parser";
-import type { QuakeMap } from "./QuakeMap";
+import type { GeneratorParser } from "./GeneratorParser";
+import type { QuakeEntity } from "./QuakeEntity";
 
-export interface QuakeMapParser extends Parser<QuakeMap> {}
+export interface QuakeMapParser extends GeneratorParser<QuakeEntity> {}
