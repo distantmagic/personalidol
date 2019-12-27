@@ -1,9 +1,9 @@
 // @flow
 
 import type { JSONRPCMessageType } from "../types/JSONRPCMessageType";
-import type { Serializable } from "./Serializable";
+import type { Objectable } from "./Objectable";
 
-export interface JSONRPCMessage extends Serializable {
+export interface JSONRPCMessage<U: {}> extends Objectable<U> {
   getId(): string;
 
   getMethod(): string;

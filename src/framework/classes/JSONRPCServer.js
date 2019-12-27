@@ -1,6 +1,7 @@
 // @flow
 
 import JSONRPCRequest from "./JSONRPCRequest";
+import JSONRPCResponseData from "./JSONRPCResponseData";
 import JSONRPCServerGeneratorBuffer from "./JSONRPCServerGeneratorBuffer";
 import { default as CanceledException } from "./Exception/CancelToken/Canceled";
 import { default as JSONRPCErrorResponse } from "./JSONRPCResponse/Error";
@@ -10,6 +11,7 @@ import type { CancelToken } from "../interfaces/CancelToken";
 import type { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
 import type { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
 import type { JSONRPCResponse } from "../interfaces/JSONRPCResponse";
+import type { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../interfaces/JSONRPCResponseData";
 import type { JSONRPCServer as JSONRPCServerInterface } from "../interfaces/JSONRPCServer";
 import type { JSONRPCServerGeneratorCallback } from "../types/JSONRPCServerGeneratorCallback";
 import type { JSONRPCServerPromiseCallback } from "../types/JSONRPCServerPromiseCallback";
@@ -34,16 +36,10 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
       return requestHandler.call(this, jsonRpcRequest);
     }
 
-    // prettier-ignore
-    const response = new JSONRPCErrorResponse(
-      this.loggerBreadcrumbs.add("handleRequest"),
-      jsonRpcRequest.getId(),
-      method,
-      "error",
-      "Method not found"
-    );
+    const data = new JSONRPCResponseData("Method not found");
+    const response = new JSONRPCErrorResponse(this.loggerBreadcrumbs.add("handleRequest"), jsonRpcRequest.getId(), method, "error", data);
 
-    this.postMessage(response.serialize());
+    this.postMessage(response.asObject(), response.getData().getTransferables());
 
     return Promise.resolve();
   }
@@ -55,12 +51,12 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
       }
 
       const onMessageReady = (message: JSONRPCGeneratorChunkResponseInterface<T>) => {
-        this.postMessage(message.serialize());
+        this.postMessage(message.asObject());
       };
 
       const jsonRpcGeneratorResponseBuffer = new JSONRPCServerGeneratorBuffer(this.loggerBreadcrumbs.add("JSONRPCServerGeneratorBuffer"), onMessageReady);
 
-      for await (let responseDataChunk: T of handle(cancelToken, request)) {
+      for await (let responseDataChunk: JSONRPCResponseDataInterface<T> of handle(cancelToken, request)) {
         jsonRpcGeneratorResponseBuffer.add(request, responseDataChunk);
       }
 
@@ -92,7 +88,7 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
         result
       );
 
-      this.postMessage(response.serialize());
+      this.postMessage(response.asObject(), response.getData().getTransferables());
     });
 
     await cancelToken.whenCanceled();
@@ -102,6 +98,13 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
   useMessageHandler(cancelToken: CancelToken): $PropertyType<DedicatedWorkerGlobalScope, "onmessage"> {
     const breadcrumbs = this.loggerBreadcrumbs.add("useMessageHandler");
 
+    function invalidRequest(): void {
+      const data = new JSONRPCResponseData("Invalid request");
+      const response = new JSONRPCErrorResponse(breadcrumbs, "", "", "error", data);
+
+      this.postMessage(response.asObject(), response.getData().getTransferables());
+    }
+
     return (evt: MessageEvent) => {
       if (cancelToken.isCanceled()) {
         return;
@@ -109,13 +112,31 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
 
       const data = evt.data;
 
-      if ("string" === typeof data) {
-        this.handleRequest(JSONRPCRequest.unserialize(breadcrumbs, data));
-      } else {
-        const response = new JSONRPCErrorResponse(breadcrumbs, "", "", "error", "Invalid request");
-
-        this.postMessage(response.serialize());
+      if (!data || "object" !== typeof data) {
+        return invalidRequest.call(this);
       }
+
+      const { id, jsonrpc, method, params, type } = data;
+
+      // prettier-ignore
+      if ( "string" !== typeof id
+        || "2.0-x-personalidol" !== jsonrpc
+        || "string" !== typeof method
+        || !Array.isArray(params)
+        || ("error" !== type && "generator" !== type && "promise" !== type)
+      ) {
+        return invalidRequest.call(this);
+      }
+
+      this.handleRequest(
+        JSONRPCRequest.unobjectify(breadcrumbs, {
+          id: id,
+          jsonrpc: jsonrpc,
+          method: method,
+          params: params,
+          type: type,
+        })
+      );
     };
   }
 }

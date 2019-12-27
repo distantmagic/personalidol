@@ -1,30 +1,49 @@
 // @flow
 
 import JSONRPCResponse from "../JSONRPCResponse";
+import JSONRPCResponseData from "../JSONRPCResponseData";
 import { default as JSONRPCException } from "../Exception/JSONRPC";
 
 import type { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../../interfaces/JSONRPCGeneratorChunkResponse";
+import type { JSONRPCGeneratorChunkResponseObjectified } from "../../types/JSONRPCGeneratorChunkResponseObjectified";
 import type { JSONRPCMessageType } from "../../types/JSONRPCMessageType";
+import type { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../../interfaces/JSONRPCResponseData";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { UnserializerCallback } from "../../types/UnserializerCallback";
+import type { UnobjectifyCallback } from "../../types/UnobjectifyCallback";
 
-export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T> implements JSONRPCGeneratorChunkResponseInterface<T> {
+export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> implements JSONRPCGeneratorChunkResponseInterface<T> {
   +chunk: string;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +head: string;
   next: ?string;
 
-  static unserialize: UnserializerCallback<JSONRPCGeneratorChunkResponseInterface<T>> = function(
+  static unobjectify: UnobjectifyCallback<JSONRPCGeneratorChunkResponseObjectified<T>, JSONRPCGeneratorChunkResponseInterface<T>> = function(
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    serialized: string
+    objectified: JSONRPCGeneratorChunkResponseObjectified<T>
   ): JSONRPCGeneratorChunkResponseInterface<T> {
-    const { id, head, chunk, next, method, type, result } = JSON.parse(serialized);
-
-    return new JSONRPCGeneratorChunkResponse<T>(loggerBreadcrumbs, id, head, chunk, next, method, type, result);
+    return new JSONRPCGeneratorChunkResponse<T>(
+      loggerBreadcrumbs,
+      objectified.id,
+      objectified.head,
+      objectified.chunk,
+      objectified.next,
+      objectified.method,
+      objectified.type,
+      new JSONRPCResponseData<T>(objectified.result)
+    );
   };
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, id: string, head: string, chunk: string, next: ?string, method: string, type: JSONRPCMessageType, result: T) {
-    super(id, method, result);
+  constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    id: string,
+    head: string,
+    chunk: string,
+    next: ?string,
+    method: string,
+    type: JSONRPCMessageType,
+    data: JSONRPCResponseDataInterface<T>
+  ) {
+    super(id, method, data);
 
     if ("generator" !== type) {
       throw new JSONRPCException(loggerBreadcrumbs, "Expected 'generator' type. Got something else");
@@ -34,6 +53,19 @@ export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T>
     this.head = head;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.next = next;
+  }
+
+  asObject(): JSONRPCGeneratorChunkResponseObjectified<T> {
+    return {
+      chunk: this.getChunk(),
+      head: this.getHead(),
+      id: this.getId(),
+      jsonrpc: "2.0-x-personalidol",
+      method: this.getMethod(),
+      next: this.hasNext() ? this.getNext() : null,
+      result: this.getData().getResult(),
+      type: this.getType(),
+    };
   }
 
   getHead(): string {
@@ -64,19 +96,6 @@ export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T>
 
   isHead(): boolean {
     return this.getHead() === this.getChunk();
-  }
-
-  serialize(): string {
-    return JSON.stringify({
-      chunk: this.getChunk(),
-      head: this.getHead(),
-      id: this.getId(),
-      jsonrpc: "2.0-x-personalidol",
-      method: this.getMethod(),
-      next: this.hasNext() ? this.getNext() : null,
-      result: this.getResult(),
-      type: this.getType(),
-    });
   }
 
   setNext(next: string): void {

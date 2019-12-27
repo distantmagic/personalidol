@@ -1,9 +1,10 @@
 // @flow
 
 import type { JSONRPCRequest } from "./JSONRPCRequest";
+import type { JSONRPCResponseData } from "./JSONRPCResponseData";
 
 export interface JSONRPCServerGeneratorBuffer<T> {
-  add(JSONRPCRequest, T): void;
+  add(JSONRPCRequest, JSONRPCResponseData<T>): void;
 
   flushRemaining(JSONRPCRequest): void;
 }

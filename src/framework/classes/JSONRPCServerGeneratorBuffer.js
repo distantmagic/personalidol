@@ -6,6 +6,7 @@ import { default as JSONRPCGeneratorChunkResponse } from "./JSONRPCResponse/Gene
 
 import type { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
 import type { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
+import type { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
 import type { JSONRPCServerGeneratorBuffer as JSONRPCServerGeneratorBufferInterface } from "../interfaces/JSONRPCServerGeneratorBuffer";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
@@ -25,7 +26,7 @@ export default class JSONRPCServerGeneratorBuffer<T> implements JSONRPCServerGen
     this.onMessageReady = onMessageReady;
   }
 
-  add(request: JSONRPCRequestInterface, responseDataChunk: T): void {
+  add(request: JSONRPCRequestInterface, responseDataChunk: JSONRPCResponseData<T>): void {
     const currentChunkId = uuidv4();
     const headChunkId = this.headChunkId || currentChunkId;
     const previous = this.previous;

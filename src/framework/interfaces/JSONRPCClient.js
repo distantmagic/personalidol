@@ -6,6 +6,9 @@ import type { JSONRPCGeneratorChunkResponse } from "../interfaces/JSONRPCGenerat
 import type { JSONRPCMessageHandler } from "../interfaces/JSONRPCMessageHandler";
 import type { JSONRPCParams } from "../types/JSONRPCParams";
 import type { JSONRPCPromiseResponse } from "../interfaces/JSONRPCPromiseResponse";
+import type { JSONRPCErrorResponseObjectified } from "../types/JSONRPCErrorResponseObjectified";
+import type { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
+import type { JSONRPCPromiseResponseObjectified } from "../types/JSONRPCPromiseResponseObjectified";
 
 export interface JSONRPCClient extends JSONRPCMessageHandler {
   handleErrorResponse<T>(JSONRPCErrorResponse<T>): Promise<void>;
@@ -14,7 +17,7 @@ export interface JSONRPCClient extends JSONRPCMessageHandler {
 
   handlePromiseResponse<T>(JSONRPCPromiseResponse<T>): Promise<void>;
 
-  handleSerializedResponse(string): Promise<void>;
+  handleSerializedResponse({ +[string]: any }): Promise<void>;
 
   requestGenerator<T>(CancelToken, method: string, JSONRPCParams): AsyncGenerator<T, void, void>;
 

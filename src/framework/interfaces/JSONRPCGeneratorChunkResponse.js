@@ -1,8 +1,9 @@
 // @flow
 
 import type { JSONRPCResponse } from "./JSONRPCResponse";
+import type { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
 
-export interface JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T> {
+export interface JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> {
   getChunk(): string;
 
   getHead(): string;

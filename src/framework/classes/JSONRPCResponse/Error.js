@@ -1,42 +1,43 @@
 // @flow
 
 import JSONRPCResponse from "../JSONRPCResponse";
+import JSONRPCResponseData from "../JSONRPCResponseData";
 import { default as JSONRPCException } from "../Exception/JSONRPC";
 
-import type { JSONRPCMessageType } from "../../types/JSONRPCMessageType";
 import type { JSONRPCErrorResponse as JSONRPCErrorResponseInterface } from "../../interfaces/JSONRPCErrorResponse";
+import type { JSONRPCErrorResponseObjectified } from "../../types/JSONRPCErrorResponseObjectified";
+import type { JSONRPCMessageType } from "../../types/JSONRPCMessageType";
+import type { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../../interfaces/JSONRPCResponseData";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { UnserializerCallback } from "../../types/UnserializerCallback";
+import type { UnobjectifyCallback } from "../../types/UnobjectifyCallback";
 
-export default class JSONRPCErrorResponse<T> extends JSONRPCResponse<T> implements JSONRPCErrorResponseInterface<T> {
-  static unserialize: UnserializerCallback<JSONRPCErrorResponseInterface<T>> = function(
+export default class JSONRPCErrorResponse<T> extends JSONRPCResponse<T, JSONRPCErrorResponseObjectified<T>> implements JSONRPCErrorResponseInterface<T> {
+  static unobjectify: UnobjectifyCallback<JSONRPCErrorResponseObjectified<T>, JSONRPCErrorResponseInterface<T>> = function(
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    serialized: string
+    objectified: JSONRPCErrorResponseObjectified<T>
   ): JSONRPCErrorResponseInterface<T> {
-    const { id, method, type, result } = JSON.parse(serialized);
-
-    return new JSONRPCErrorResponse<T>(loggerBreadcrumbs, id, method, type, result);
+    return new JSONRPCErrorResponse<T>(loggerBreadcrumbs, objectified.id, objectified.method, objectified.type, new JSONRPCResponseData(objectified.result));
   };
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, id: string, method: string, type: JSONRPCMessageType, result: T) {
-    super(id, method, result);
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, id: string, method: string, type: JSONRPCMessageType, data: JSONRPCResponseDataInterface<T>) {
+    super(id, method, data);
 
     if ("error" !== type) {
       throw new JSONRPCException(loggerBreadcrumbs, "Expected 'error' type. Got something else");
     }
   }
 
-  getType(): "error" {
-    return "error";
-  }
-
-  serialize(): string {
-    return JSON.stringify({
+  asObject(): JSONRPCErrorResponseObjectified<T> {
+    return {
       id: this.getId(),
       jsonrpc: "2.0-x-personalidol",
       method: this.getMethod(),
-      result: this.getResult(),
+      result: this.getData().getResult(),
       type: this.getType(),
-    });
+    };
+  }
+
+  getType(): "error" {
+    return "error";
   }
 }

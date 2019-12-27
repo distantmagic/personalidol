@@ -1,3 +1,3 @@
 // @flow
 
-export type JSONRPCParams = $ReadOnlyArray<string>;
+export type JSONRPCParams = $ReadOnlyArray<any>;

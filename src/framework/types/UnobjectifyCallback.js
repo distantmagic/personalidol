@@ -2,4 +2,4 @@
 
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
-export type UnserializerCallback<T> = (LoggerBreadcrumbs, string) => T;
+export type UnobjectifyCallback<T, U> = (LoggerBreadcrumbs, T) => U;

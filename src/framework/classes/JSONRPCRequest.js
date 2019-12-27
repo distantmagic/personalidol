@@ -6,8 +6,9 @@ import { default as JSONRPCException } from "./Exception/JSONRPC";
 import type { JSONRPCMessageType } from "../types/JSONRPCMessageType";
 import type { JSONRPCParams } from "../types/JSONRPCParams";
 import type { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
+import type { JSONRPCRequestObjectified } from "../types/JSONRPCRequestObjectified";
 import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
-import type { UnserializerCallback } from "../types/UnserializerCallback";
+import type { UnobjectifyCallback } from "../types/UnobjectifyCallback";
 
 export default class JSONRPCRequest implements JSONRPCRequestInterface {
   +id: string;
@@ -15,26 +16,11 @@ export default class JSONRPCRequest implements JSONRPCRequestInterface {
   +params: JSONRPCParams;
   +type: JSONRPCMessageType;
 
-  static unserialize: UnserializerCallback<JSONRPCRequestInterface> = function(loggerBreadcrumbs: LoggerBreadcrumbsInterface, serialized: string): JSONRPCRequestInterface {
-    const { id, method, type, params } = JSON.parse(serialized);
-
-    if ("string" !== typeof id) {
-      throw new JSONRPCException(loggerBreadcrumbs, `"id": expected 'string', got something else: "${id}"`);
-    }
-
-    if ("string" !== typeof method) {
-      throw new JSONRPCException(loggerBreadcrumbs, `"method": expected 'string', got something else: "${id}"`);
-    }
-
-    if (!isJsonRpcMessageType(type)) {
-      throw new JSONRPCException(loggerBreadcrumbs, `"type": expected JSONRPCMessageType, got something else: "${id}"`);
-    }
-
-    if (!Array.isArray(params)) {
-      throw new JSONRPCException(loggerBreadcrumbs, `"params": expected 'array', got something else: "${id}"`);
-    }
-
-    return new JSONRPCRequest(id, method, type, params);
+  static unobjectify: UnobjectifyCallback<JSONRPCRequestObjectified, JSONRPCRequestInterface> = function(
+    loggerBreadcrumbs: LoggerBreadcrumbsInterface,
+    objectified: JSONRPCRequestObjectified
+  ): JSONRPCRequestInterface {
+    return new JSONRPCRequest(objectified.id, objectified.method, objectified.type, objectified.params);
   };
 
   constructor(id: string, method: string, type: JSONRPCMessageType, params: JSONRPCParams) {
@@ -42,6 +28,16 @@ export default class JSONRPCRequest implements JSONRPCRequestInterface {
     this.method = method;
     this.params = params;
     this.type = type;
+  }
+
+  asObject(): JSONRPCRequestObjectified {
+    return {
+      id: this.getId(),
+      jsonrpc: "2.0-x-personalidol",
+      method: this.getMethod(),
+      params: this.getParams(),
+      type: this.getType(),
+    };
   }
 
   getId(): string {
@@ -66,15 +62,5 @@ export default class JSONRPCRequest implements JSONRPCRequestInterface {
 
   isResponse(): false {
     return false;
-  }
-
-  serialize(): string {
-    return JSON.stringify({
-      id: this.getId(),
-      jsonrpc: "2.0-x-personalidol",
-      method: this.getMethod(),
-      params: this.getParams(),
-      type: this.getType(),
-    });
   }
 }

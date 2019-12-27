@@ -1,6 +1,7 @@
 // @flow
 
 import CancelToken from "../../framework/classes/CancelToken";
+import JSONRPCResponseData from "../../framework/classes/JSONRPCResponseData";
 import JSONRPCServer from "../../framework/classes/JSONRPCServer";
 import LoggerBreadcrumbs from "../../framework/classes/LoggerBreadcrumbs";
 import QuakeBrushGeometryBuilder from "../../framework/classes/QuakeBrushGeometryBuilder";
@@ -16,7 +17,7 @@ const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker", "QuakeMap"]);
 const cancelToken = new CancelToken(loggerBreadcrumbs);
 const jsonRpcServer = new JSONRPCServer(loggerBreadcrumbs, self.postMessage.bind(self));
 
-jsonRpcServer.returnPromise(cancelToken, "/map/load", async function(cancelToken: CancelTokenInterface, request: JSONRPCRequest): Promise<void> {
+jsonRpcServer.returnPromise(cancelToken, "/map/load", async function(cancelToken: CancelTokenInterface, request: JSONRPCRequest) {
   const breadcrumbs = loggerBreadcrumbs.add("/map/load");
   const [source: string] = request.getParams();
   const quakeMapQuery = new PlainTextQuery(source);
@@ -36,6 +37,8 @@ jsonRpcServer.returnPromise(cancelToken, "/map/load", async function(cancelToken
     }
   }
   console.timeEnd("BRUSH");
+
+  return new JSONRPCResponseData();
 });
 
 self.onmessage = jsonRpcServer.useMessageHandler(cancelToken);

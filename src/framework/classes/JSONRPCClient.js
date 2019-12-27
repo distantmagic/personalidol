@@ -15,9 +15,12 @@ import type { CancelToken } from "../interfaces/CancelToken";
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { JSONRPCClient as JSONRPCClientInterface } from "../interfaces/JSONRPCClient";
 import type { JSONRPCErrorResponse as JSONRPCErrorResponseInterface } from "../interfaces/JSONRPCErrorResponse";
+import type { JSONRPCErrorResponseObjectified } from "../types/JSONRPCErrorResponseObjectified";
 import type { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
+import type { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
 import type { JSONRPCParams } from "../types/JSONRPCParams";
 import type { JSONRPCPromiseResponse as JSONRPCPromiseResponseInterface } from "../interfaces/JSONRPCPromiseResponse";
+import type { JSONRPCPromiseResponseObjectified } from "../types/JSONRPCPromiseResponseObjectified";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class JSONRPCClient implements JSONRPCClientInterface {
@@ -36,7 +39,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
   }
 
   async handleErrorResponse<T>(response: JSONRPCErrorResponseInterface<T>): Promise<void> {
-    const message = JSON.stringify(response.getResult()) || "";
+    const message = JSON.stringify(response.getData().getResult()) || "";
 
     throw new JSONRPCException(this.loggerBreadcrumbs.add("handleErrorResponse"), `RPCServer error response: ${message}`);
   }
@@ -61,26 +64,76 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
       throw new JSONRPCException(breadcrumbs, `Nothing awaited this promise response: "${responseId}"`);
     }
 
-    return promiseHandler(response.getResult());
+    return promiseHandler(response.getData().getResult());
   }
 
-  handleSerializedResponse(response: string): Promise<void> {
+  handleSerializedResponse(response: { +[string]: any }): Promise<void> {
     const breadcrumbs = this.loggerBreadcrumbs.add("handleSerializedResponse");
-    const pojo = JSON.parse(response);
 
-    switch (pojo.type) {
+    const { id, jsonrpc, method, result, type } = response;
+
+    // prettier-ignore
+    if ( "string" !== typeof id
+      || "2.0-x-personalidol" !== jsonrpc
+      || "string" !== typeof method
+      || "string" !== typeof type
+    ) {
+      throw new JSONRPCException(breadcrumbs, "Invalid response.");
+    }
+
+    const validated: {|
+      +id: string,
+      +jsonrpc: "2.0-x-personalidol",
+      +method: string,
+      +result: any,
+    |} = {
+      id: id,
+      jsonrpc: jsonrpc,
+      method: method,
+      result: result,
+    };
+
+    switch (type) {
       case "error":
-        return this.handleErrorResponse(JSONRPCErrorResponse.unserialize(breadcrumbs, response));
+        return this.handleErrorResponse(
+          JSONRPCErrorResponse.unobjectify(breadcrumbs, {
+            ...validated,
+            type: "error",
+          })
+        );
       case "generator":
-        return this.handleGeneratorChunkResponse(JSONRPCGeneratorChunkResponse.unserialize(breadcrumbs, response));
+        const { chunk, head, next } = response;
+
+        // prettier-ignore
+        if ( "string" !== typeof chunk
+          || "string" !== typeof head
+          || (next && "string" !== typeof next)
+        ) {
+          throw new JSONRPCException(breadcrumbs, "Invalid generator response.");
+        }
+
+        return this.handleGeneratorChunkResponse(
+          JSONRPCGeneratorChunkResponse.unobjectify(breadcrumbs, {
+            ...validated,
+            chunk: chunk,
+            head: head,
+            next: next,
+            type: "generator",
+          })
+        );
       case "promise":
-        return this.handlePromiseResponse(JSONRPCPromiseResponse.unserialize(breadcrumbs, response));
+        return this.handlePromiseResponse(
+          JSONRPCPromiseResponse.unobjectify(breadcrumbs, {
+            ...validated,
+            type: "promise",
+          })
+        );
       default:
-        throw new JSONRPCException(breadcrumbs, `Unknown response type: "${pojo.type}"`);
+        throw new JSONRPCException(breadcrumbs, `Unknown response type: "${type}"`);
     }
   }
 
-  async *requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): AsyncGenerator<T, void, void> {
+  async *requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams = []): AsyncGenerator<T, void, void> {
     const requestId = this.uuid();
     const request = new JSONRPCRequest(requestId, method, "generator", params);
     const eventListenerSet = new EventListenerSet();
@@ -89,7 +142,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
 
     // send message to the server
     this.awaitingGeneratorRequests.set(requestId, eventListenerSet);
-    this.postMessage(request.serialize());
+    this.postMessage(request.asObject());
 
     // await response
     const buffer = new JSONRPCClientGeneratorBuffer(this.loggerBreadcrumbs.add("JSONRPCClientGeneratorBuffer"));
@@ -98,7 +151,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
       buffer.add(response);
 
       for (let buffered of buffer.flush()) {
-        yield buffered.getResult();
+        yield buffered.getData().getResult();
       }
 
       if (!buffer.isExpectingMore()) {
@@ -107,7 +160,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
     }
   }
 
-  requestPromise<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): Promise<T> {
+  requestPromise<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams = []): Promise<T> {
     const requestId = this.uuid();
     const request = new JSONRPCRequest(requestId, method, "promise", params);
 
@@ -119,7 +172,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
       });
 
       // send message to the server
-      this.postMessage(request.serialize());
+      this.postMessage(request.asObject());
     });
   }
 
@@ -133,11 +186,11 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
 
       const data = evt.data;
 
-      if ("string" === typeof data) {
-        this.handleSerializedResponse(data);
-      } else {
+      if (!data || "object" !== typeof data) {
         throw new JSONRPCException(breadcrumbs, "Invalid response.");
       }
+
+      this.handleSerializedResponse(data);
     };
   }
 }
