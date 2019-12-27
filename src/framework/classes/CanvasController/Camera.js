@@ -39,11 +39,7 @@ export default class CameraController extends CanvasController implements Camera
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
-    // this.lookAt(this.scene.position);
-    // this.lookAt(new THREE.Vector3(512 * 4, 0, 256 + 512));
-    // this.lookAt(new THREE.Vector3(512, 0, 256 + 512));
-    this.lookAt(new THREE.Vector3(256, 0, 256));
-
+    this.lookAt(new THREE.Vector3(256 * 3, 0, 256 * 2));
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
   }
 
@@ -68,8 +64,8 @@ export default class CameraController extends CanvasController implements Camera
     const cameraPosition = position.clone();
 
     cameraPosition.x += 512;
-    cameraPosition.y += 512 * 1.6;
-    cameraPosition.z += 512;
+    cameraPosition.y += 512 * 1.3;
+    cameraPosition.z += 512 * 1.3;
 
     this.camera.position.copy(cameraPosition);
     this.camera.far = this.camera.position.distanceTo(this.scene.position);
