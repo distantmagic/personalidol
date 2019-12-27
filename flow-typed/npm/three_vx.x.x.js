@@ -1049,6 +1049,7 @@ declare module "three" {
       alpha?: boolean,
       antialias?: boolean,
       canvas?: HTMLCanvasElement,
+      context?: ?(CanvasRenderingContext2D | WebGLRenderingContext),
       depth?: boolean,
       logarithmicDepthBuffer?: boolean,
       powerPreference?: "high-performance" | "low-power" | "default",

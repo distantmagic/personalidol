@@ -3,6 +3,7 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import yn from "yn";
+import { WEBGL } from 'three/examples/jsm/WebGL';
 
 import CanvasControllerBus from "../CanvasControllerBus";
 import CanvasViewBag from "../CanvasViewBag";
@@ -165,9 +166,14 @@ export default class SceneCanvas extends HTMLElement {
     this.onComponentStateChange();
 
     const renderer = new THREE.WebGLRenderer({
-      // alpha: true,
       antialias: false,
       canvas: this.canvasElement,
+      context: this.canvasElement.getContext(
+        WEBGL.isWebGL2Available() ? 'webgl2': 'webgl',
+        {
+          alpha: false
+        }
+      ),
       precision: "highp",
     });
 

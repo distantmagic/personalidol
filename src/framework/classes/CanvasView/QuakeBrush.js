@@ -2,12 +2,13 @@
 
 import * as THREE from "three";
 import range from "lodash/range";
+import { WEBGL } from 'three/examples/jsm/WebGL';
 
 import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
 import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 
-import type { Group, LoadingManager as THREELoadingManager, Mesh } from "three";
+import type { Group, LoadingManager as THREELoadingManager, Mesh, Texture } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -23,6 +24,44 @@ type WorkerQuakeBrush = {|
   +uvs: ArrayBuffer,
   +vertices: ArrayBuffer,
 |};
+
+const vertexShader = `
+  varying vec3 vViewPosition;
+
+  #ifndef FLAT_SHADED
+    varying vec3 vNormal;
+  #endif
+
+  ${THREE.ShaderChunk.common}
+  ${THREE.ShaderChunk.uv_pars_vertex}
+  ${THREE.ShaderChunk.shadowmap_pars_vertex}
+
+  attribute float a_textureIndex;
+  varying float v_textureIndex;
+
+  void main() {
+    ${THREE.ShaderChunk.uv_vertex}
+
+    // use custom 'a_textureIndex' buffer geometry parameter to select
+    // appropriate texture in fragment shader
+    v_textureIndex = a_textureIndex + 0.5;
+
+    ${THREE.ShaderChunk.beginnormal_vertex}
+    ${THREE.ShaderChunk.defaultnormal_vertex}
+
+    #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
+      vNormal = normalize( transformedNormal );
+    #endif
+
+    ${THREE.ShaderChunk.begin_vertex}
+    ${THREE.ShaderChunk.project_vertex}
+
+    vViewPosition = - mvPosition.xyz;
+
+    ${THREE.ShaderChunk.worldpos_vertex}
+    ${THREE.ShaderChunk.shadowmap_vertex}
+  }
+`;
 
 export default class QuakeBrush extends CanvasView {
   +entity: WorkerQuakeBrush;
@@ -75,7 +114,33 @@ export default class QuakeBrush extends CanvasView {
 
     const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
 
-    const material = new THREE.ShaderMaterial({
+    const material = this.getMaterial(loadedTextures);
+    const mesh = new THREE.Mesh(geometry, material);
+
+    // TODO ios material behaves like if 'castShadow' if 'false'
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    this.mesh = mesh;
+    this.group.add(mesh);
+  }
+
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await super.dispose(cancelToken);
+
+    const mesh = this.mesh;
+
+    if (!mesh) {
+      return;
+    }
+
+    disposeObject3D(mesh, false);
+    this.textureLoader.dispose();
+    this.group.remove(mesh);
+  }
+
+  getMaterial(loadedTextures: $ReadOnlyArray<Texture>): Material {
+    return new THREE.ShaderMaterial({
       lights: true,
 
       defines: {
@@ -147,65 +212,7 @@ export default class QuakeBrush extends CanvasView {
         },
       ]),
 
-      vertexShader: `
-        varying vec3 vViewPosition;
-
-        #ifndef FLAT_SHADED
-          varying vec3 vNormal;
-        #endif
-
-        ${THREE.ShaderChunk.common}
-        ${THREE.ShaderChunk.uv_pars_vertex}
-        ${THREE.ShaderChunk.shadowmap_pars_vertex}
-
-        attribute float a_textureIndex;
-        varying float v_textureIndex;
-
-        void main() {
-          ${THREE.ShaderChunk.uv_vertex}
-
-          // use custom 'a_textureIndex' buffer geometry parameter to select
-          // appropriate texture in fragment shader
-          v_textureIndex = a_textureIndex + 0.5;
-
-          ${THREE.ShaderChunk.beginnormal_vertex}
-          ${THREE.ShaderChunk.defaultnormal_vertex}
-
-          #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
-            vNormal = normalize( transformedNormal );
-          #endif
-
-          ${THREE.ShaderChunk.begin_vertex}
-          ${THREE.ShaderChunk.project_vertex}
-
-          vViewPosition = - mvPosition.xyz;
-
-          ${THREE.ShaderChunk.worldpos_vertex}
-          ${THREE.ShaderChunk.shadowmap_vertex}
-        }
-      `,
+      vertexShader: vertexShader,
     });
-
-    const mesh = new THREE.Mesh(geometry, material);
-
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-
-    this.mesh = mesh;
-    this.group.add(mesh);
-  }
-
-  async dispose(cancelToken: CancelToken): Promise<void> {
-    await super.dispose(cancelToken);
-
-    const mesh = this.mesh;
-
-    if (!mesh) {
-      return;
-    }
-
-    disposeObject3D(mesh, false);
-    this.textureLoader.dispose();
-    this.group.remove(mesh);
   }
 }
