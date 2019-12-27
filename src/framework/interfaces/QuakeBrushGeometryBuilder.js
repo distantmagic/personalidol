@@ -13,4 +13,14 @@ export interface QuakeBrushGeometryBuilder {
   getConvexHull(QuakeBrush): ConvexHull;
 
   getGeometry(): BufferGeometry;
+
+  getNormals(): $ReadOnlyArray<number>;
+
+  getTexturesIndices(): $ReadOnlyArray<number>;
+
+  getTexturesNames(): $ReadOnlyArray<string>;
+
+  getUvs(): $ReadOnlyArray<number>;
+
+  getVertices(): $ReadOnlyArray<number>;
 }

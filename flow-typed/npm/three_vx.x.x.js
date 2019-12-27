@@ -585,7 +585,7 @@ declare module "three" {
   }
 
   declare export interface Float32BufferAttribute extends BufferAttribute {
-    constructor(number[], number): void;
+    constructor($ReadOnlyArray<number>, number): void;
   }
 
   declare export interface Geometry extends BaseGeometry {
@@ -634,7 +634,7 @@ declare module "three" {
   }
 
   declare export interface Int32BufferAttribute extends BufferAttribute {
-    constructor(number[], number): void;
+    constructor($ReadOnlyArray<number>, number): void;
   }
 
   declare export interface Light<T: Camera> extends Object3D {
@@ -963,7 +963,7 @@ declare module "three" {
   }
 
   declare export interface Uint8BufferAttribute extends BufferAttribute {
-    constructor(number[], number): void;
+    constructor($ReadOnlyArray<number>, number): void;
   }
 
   declare export interface Uniform {

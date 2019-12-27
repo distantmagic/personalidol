@@ -1,8 +1,5 @@
 // @flow
 
-import isJsonRpcMessageType from "../helpers/isJsonRpcMessageType";
-import { default as JSONRPCException } from "./Exception/JSONRPC";
-
 import type { JSONRPCMessageType } from "../types/JSONRPCMessageType";
 import type { JSONRPCParams } from "../types/JSONRPCParams";
 import type { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";

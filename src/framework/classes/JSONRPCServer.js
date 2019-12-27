@@ -1,5 +1,7 @@
 // @flow
 
+import autoBind from "auto-bind";
+
 import JSONRPCRequest from "./JSONRPCRequest";
 import JSONRPCResponseData from "./JSONRPCResponseData";
 import JSONRPCServerGeneratorBuffer from "./JSONRPCServerGeneratorBuffer";
@@ -23,6 +25,8 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
   +requestHandlers: Map<string, (JSONRPCRequestInterface) => Promise<void>>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: $PropertyType<DedicatedWorkerGlobalScope, "postMessage">) {
+    autoBind(this);
+
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.postMessage = postMessage;
     this.requestHandlers = new Map();
@@ -37,9 +41,8 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
     }
 
     const data = new JSONRPCResponseData("Method not found");
-    const response = new JSONRPCErrorResponse(this.loggerBreadcrumbs.add("handleRequest"), jsonRpcRequest.getId(), method, "error", data);
 
-    this.postMessage(response.asObject(), response.getData().getTransferables());
+    this.sendResponse(new JSONRPCErrorResponse(this.loggerBreadcrumbs.add("handleRequest"), jsonRpcRequest.getId(), method, "error", data));
 
     return Promise.resolve();
   }
@@ -50,17 +53,19 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
         return;
       }
 
-      const onMessageReady = (message: JSONRPCGeneratorChunkResponseInterface<T>) => {
-        this.postMessage(message.asObject());
-      };
+      const jsonRpcGeneratorResponseBuffer = new JSONRPCServerGeneratorBuffer(this.loggerBreadcrumbs.add("JSONRPCServerGeneratorBuffer"), this.sendResponse);
 
-      const jsonRpcGeneratorResponseBuffer = new JSONRPCServerGeneratorBuffer(this.loggerBreadcrumbs.add("JSONRPCServerGeneratorBuffer"), onMessageReady);
+      try {
+        for await (let responseDataChunk: JSONRPCResponseDataInterface<T> of handle(cancelToken, request)) {
+          jsonRpcGeneratorResponseBuffer.add(request, responseDataChunk);
+        }
 
-      for await (let responseDataChunk: JSONRPCResponseDataInterface<T> of handle(cancelToken, request)) {
-        jsonRpcGeneratorResponseBuffer.add(request, responseDataChunk);
+        jsonRpcGeneratorResponseBuffer.flushRemaining(request);
+      } catch (err) {
+        const data = new JSONRPCResponseData(err.message);
+
+        this.sendResponse(new JSONRPCErrorResponse(this.loggerBreadcrumbs.add("returnGenerator"), "", "", "error", data));
       }
-
-      jsonRpcGeneratorResponseBuffer.flushRemaining(request);
     });
 
     await cancelToken.whenCanceled();
@@ -73,26 +78,36 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
         return;
       }
 
-      const result = await handle(cancelToken, request);
+      let result;
+
+      try {
+        result = await handle(cancelToken, request);
+      } catch (err) {
+        const data = new JSONRPCResponseData(err.message);
+
+        return this.sendResponse(new JSONRPCErrorResponse(this.loggerBreadcrumbs.add("returnPromise"), "", "", "error", data));
+      }
 
       if (cancelToken.isCanceled()) {
         return;
       }
 
       // prettier-ignore
-      const response = new JSONRPCPromiseResponse<T>(
+      this.sendResponse(new JSONRPCPromiseResponse<T>(
         this.loggerBreadcrumbs.add("returnPromise"),
         request.getId(),
         request.getMethod(),
         request.getType(),
         result
-      );
-
-      this.postMessage(response.asObject(), response.getData().getTransferables());
+      ));
     });
 
     await cancelToken.whenCanceled();
     this.requestHandlers.delete(method);
+  }
+
+  async sendResponse<T, U: {}>(response: JSONRPCResponse<T, U>): Promise<void> {
+    this.postMessage(response.asObject(), response.getData().getTransferables());
   }
 
   useMessageHandler(cancelToken: CancelToken): $PropertyType<DedicatedWorkerGlobalScope, "onmessage"> {
@@ -100,9 +115,8 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
 
     function invalidRequest(): void {
       const data = new JSONRPCResponseData("Invalid request");
-      const response = new JSONRPCErrorResponse(breadcrumbs, "", "", "error", data);
 
-      this.postMessage(response.asObject(), response.getData().getTransferables());
+      this.sendResponse(new JSONRPCErrorResponse(breadcrumbs, "", "", "error", data));
     }
 
     return (evt: MessageEvent) => {

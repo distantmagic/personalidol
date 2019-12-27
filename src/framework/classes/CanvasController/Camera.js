@@ -40,7 +40,9 @@ export default class CameraController extends CanvasController implements Camera
     super.attach(cancelToken);
 
     // this.lookAt(this.scene.position);
-    this.lookAt(new THREE.Vector3(512 * 4, 0, 256 + 512));
+    // this.lookAt(new THREE.Vector3(512 * 4, 0, 256 + 512));
+    this.lookAt(new THREE.Vector3(512, 0, 256 + 512));
+    // this.lookAt(new THREE.Vector3(256, 0, 256));
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
   }

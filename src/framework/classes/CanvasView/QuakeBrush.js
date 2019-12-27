@@ -5,7 +5,6 @@ import range from "lodash/range";
 
 import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
-import QuakeBrushGeometryBuilder from "../QuakeBrushGeometryBuilder";
 import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 
 import type { Group, LoadingManager as THREELoadingManager, Mesh } from "three";
@@ -13,16 +12,22 @@ import type { Group, LoadingManager as THREELoadingManager, Mesh } from "three";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { QuakeEntity } from "../../interfaces/QuakeEntity";
 import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
-import type { QuakeMap as QuakeMapWorkerInterface } from "../../../workers/interfaces/QuakeMap";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
+type WorkerQuakeBrush = {|
+  +classname: "worldspawn",
+  +normals: ArrayBuffer,
+  +texturesIndices: ArrayBuffer,
+  +texturesNames: $ReadOnlyArray<string>,
+  +uvs: ArrayBuffer,
+  +vertices: ArrayBuffer,
+|};
+
 export default class QuakeBrush extends CanvasView {
-  +entity: QuakeEntity;
+  +entity: WorkerQuakeBrush;
   +group: Group;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +quakeMapWorker: QuakeMapWorkerInterface;
   +textureLoader: QuakeMapTextureLoaderInterface;
   +threeLoadingManager: THREELoadingManager;
   mesh: ?Mesh;
@@ -30,9 +35,8 @@ export default class QuakeBrush extends CanvasView {
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
-    entity: QuakeEntity,
+    entity: WorkerQuakeBrush,
     group: Group,
-    quakeMapWorker: QuakeMapWorkerInterface,
     queryBus: QueryBus,
     threeLoadingManager: THREELoadingManager
   ) {
@@ -42,150 +46,153 @@ export default class QuakeBrush extends CanvasView {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.mesh = null;
     this.group = group;
-    this.quakeMapWorker = quakeMapWorker;
 
     this.textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs.add("QuakeMapTextureLoader"), threeLoadingManager, queryBus);
-    this.textureLoader.registerTexture("__TB_empty", "/debug/texture-uv-1024x1024.png");
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    // console.time("BRUSH");
-    // for (let brush of this.entity.getBrushes()) {
-    //   for (let texture of brush.getTextures()) {
-    //     if ("__TB_empty" !== texture) {
-    //       this.textureLoader.registerTexture(texture, `${texture}.png`);
-    //     }
-    //   }
-    // }
+    const normals = new Float32Array(this.entity.normals);
+    const texturesIndices = new Float32Array(this.entity.texturesIndices);
+    const uvs = new Float32Array(this.entity.uvs);
+    const vertices = new Float32Array(this.entity.vertices);
 
-    // const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
-    // const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
+    const geometry = new THREE.BufferGeometry();
 
-    // for (let brush of this.entity.getBrushes()) {
-    //   quakeBrushGeometryBuilder.addBrush(brush, loadedTextures);
-    // }
-    // console.timeEnd("BRUSH");
+    geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+    geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
+    geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+    geometry.setAttribute("a_textureIndex", new THREE.BufferAttribute(texturesIndices, 1));
 
-    // const material = new THREE.ShaderMaterial({
-    //   lights: true,
+    for (let texture of this.entity.texturesNames) {
+      if ("__TB_empty" === texture) {
+        this.textureLoader.registerTexture("__TB_empty", "/debug/texture-uv-1024x1024.png");
+      } else {
+        this.textureLoader.registerTexture(texture, `${texture}.png`);
+      }
+    }
 
-    //   defines: {
-    //     NUM_TEXTURES: String(loadedTextures.length),
-    //     PHONG: "",
-    //     USE_UV: "",
-    //   },
+    const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
 
-    //   fragmentShader: `
-    //     // THREE Uniforms
-    //     uniform vec3 diffuse;
-    //     uniform vec3 emissive;
-    //     uniform vec3 specular;
-    //     uniform float shininess;
-    //     uniform float opacity;
+    const material = new THREE.ShaderMaterial({
+      lights: true,
 
-    //     // Custom variables
-    //     uniform sampler2D u_textures[NUM_TEXTURES];
-    //     varying float v_textureIndex;
+      defines: {
+        NUM_TEXTURES: String(loadedTextures.length),
+        PHONG: "",
+        USE_UV: "",
+      },
 
-    //     ${THREE.ShaderChunk.common}
-    //     ${THREE.ShaderChunk.packing}
-    //     ${THREE.ShaderChunk.uv_pars_fragment}
-    //     ${THREE.ShaderChunk.bsdfs}
-    //     ${THREE.ShaderChunk.lights_pars_begin}
-    //     ${THREE.ShaderChunk.lights_phong_pars_fragment}
-    //     ${THREE.ShaderChunk.shadowmap_pars_fragment}
+      fragmentShader: `
+        // THREE Uniforms
+        uniform vec3 diffuse;
+        uniform vec3 emissive;
+        uniform vec3 specular;
+        uniform float shininess;
+        uniform float opacity;
 
-    //     void main() {
-    //       // phong shader chunk
-    //       vec4 diffuseColor = vec4( diffuse, opacity );
-    //       ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-    //       vec3 totalEmissiveRadiance = emissive;
+        // Custom variables
+        uniform sampler2D u_textures[NUM_TEXTURES];
+        varying float v_textureIndex;
 
-    //       // replace 'map_fragment' with multi-texture sampling
-    //       int textureIndex = int( v_textureIndex );
+        ${THREE.ShaderChunk.common}
+        ${THREE.ShaderChunk.packing}
+        ${THREE.ShaderChunk.uv_pars_fragment}
+        ${THREE.ShaderChunk.bsdfs}
+        ${THREE.ShaderChunk.lights_pars_begin}
+        ${THREE.ShaderChunk.lights_phong_pars_fragment}
+        ${THREE.ShaderChunk.shadowmap_pars_fragment}
 
-    //       ${range(loadedTextures.length)
-    //         .map(
-    //           textureIndex =>
-    //             `
-    //           if (textureIndex == ${textureIndex}) {
-    //             diffuseColor *= mapTexelToLinear( texture2D( u_textures[ ${textureIndex} ], vUv ) );
-    //           }
-    //         `
-    //         )
-    //         .join(" else ")}
+        void main() {
+          // phong shader chunk
+          vec4 diffuseColor = vec4( diffuse, opacity );
+          ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
+          vec3 totalEmissiveRadiance = emissive;
 
-    //       ${THREE.ShaderChunk.specularmap_fragment}
-    //       ${THREE.ShaderChunk.normal_fragment_begin}
-    //       ${THREE.ShaderChunk.lights_phong_fragment}
-    //       ${THREE.ShaderChunk.lights_fragment_begin}
-    //       ${THREE.ShaderChunk.lights_fragment_end}
+          // replace 'map_fragment' with multi-texture sampling
+          int textureIndex = int( v_textureIndex );
 
-    //       // phong shader chunk
-    //       vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
-    //       gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+          ${range(loadedTextures.length)
+            .map(
+              textureIndex =>
+                `
+              if (textureIndex == ${textureIndex}) {
+                diffuseColor *= mapTexelToLinear( texture2D( u_textures[ ${textureIndex} ], vUv ) );
+              }
+            `
+            )
+            .join(" else ")}
 
-    //       ${THREE.ShaderChunk.tonemapping_fragment}
-    //       ${THREE.ShaderChunk.encodings_fragment}
-    //     }
-    //   `,
+          ${THREE.ShaderChunk.specularmap_fragment}
+          ${THREE.ShaderChunk.normal_fragment_begin}
+          ${THREE.ShaderChunk.lights_phong_fragment}
+          ${THREE.ShaderChunk.lights_fragment_begin}
+          ${THREE.ShaderChunk.lights_fragment_end}
 
-    //   uniforms: THREE.UniformsUtils.merge([
-    //     THREE.ShaderLib.phong.uniforms,
-    //     {
-    //       shininess: new THREE.Uniform(1),
-    //       u_textures: new THREE.Uniform(loadedTextures),
-    //     },
-    //   ]),
+          // phong shader chunk
+          vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
+          gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 
-    //   vertexShader: `
-    //     varying vec3 vViewPosition;
+          ${THREE.ShaderChunk.tonemapping_fragment}
+          ${THREE.ShaderChunk.encodings_fragment}
+        }
+      `,
 
-    //     #ifndef FLAT_SHADED
-    //       varying vec3 vNormal;
-    //     #endif
+      uniforms: THREE.UniformsUtils.merge([
+        THREE.ShaderLib.phong.uniforms,
+        {
+          shininess: new THREE.Uniform(1),
+          u_textures: new THREE.Uniform(loadedTextures),
+        },
+      ]),
 
-    //     ${THREE.ShaderChunk.common}
-    //     ${THREE.ShaderChunk.uv_pars_vertex}
-    //     ${THREE.ShaderChunk.shadowmap_pars_vertex}
+      vertexShader: `
+        varying vec3 vViewPosition;
 
-    //     attribute float a_textureIndex;
-    //     varying float v_textureIndex;
+        #ifndef FLAT_SHADED
+          varying vec3 vNormal;
+        #endif
 
-    //     void main() {
-    //       ${THREE.ShaderChunk.uv_vertex}
+        ${THREE.ShaderChunk.common}
+        ${THREE.ShaderChunk.uv_pars_vertex}
+        ${THREE.ShaderChunk.shadowmap_pars_vertex}
 
-    //       // use custom 'a_textureIndex' buffer geometry parameter to select
-    //       // appropriate texture in fragment shader
-    //       v_textureIndex = a_textureIndex + 0.5;
+        attribute float a_textureIndex;
+        varying float v_textureIndex;
 
-    //       ${THREE.ShaderChunk.beginnormal_vertex}
-    //       ${THREE.ShaderChunk.defaultnormal_vertex}
+        void main() {
+          ${THREE.ShaderChunk.uv_vertex}
 
-    //       #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
-    //         vNormal = normalize( transformedNormal );
-    //       #endif
+          // use custom 'a_textureIndex' buffer geometry parameter to select
+          // appropriate texture in fragment shader
+          v_textureIndex = a_textureIndex + 0.5;
 
-    //       ${THREE.ShaderChunk.begin_vertex}
-    //       ${THREE.ShaderChunk.project_vertex}
+          ${THREE.ShaderChunk.beginnormal_vertex}
+          ${THREE.ShaderChunk.defaultnormal_vertex}
 
-    //       vViewPosition = - mvPosition.xyz;
+          #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
+            vNormal = normalize( transformedNormal );
+          #endif
 
-    //       ${THREE.ShaderChunk.worldpos_vertex}
-    //       ${THREE.ShaderChunk.shadowmap_vertex}
-    //     }
-    //   `,
-    // });
+          ${THREE.ShaderChunk.begin_vertex}
+          ${THREE.ShaderChunk.project_vertex}
 
-    // const mesh = new THREE.Mesh(quakeBrushGeometryBuilder.getGeometry(), material);
+          vViewPosition = - mvPosition.xyz;
 
-    // mesh.castShadow = true;
-    // mesh.receiveShadow = true;
+          ${THREE.ShaderChunk.worldpos_vertex}
+          ${THREE.ShaderChunk.shadowmap_vertex}
+        }
+      `,
+    });
 
-    // this.mesh = mesh;
-    // this.group.add(mesh);
+    const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    this.mesh = mesh;
+    this.group.add(mesh);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {

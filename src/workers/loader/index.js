@@ -33,12 +33,12 @@ function createChildCompiler(self, request, filename) {
 function getWorkerURL(options, compilation, file) {
   let workerURL;
 
-  if (options.external) {
-    workerURL = `__webpack_public_path__ + ${JSON.stringify(file)}`;
-  } else {
+  if (options.inline) {
     let contents = compilation.assets[file].source();
 
     workerURL = `URL.createObjectURL(new Blob([${JSON.stringify(contents)}]))`;
+  } else {
+    workerURL = `__webpack_public_path__ + ${JSON.stringify(file)}`;
   }
 
   if (options.import) {

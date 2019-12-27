@@ -10,7 +10,7 @@ import type { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
 import type { JSONRPCServerGeneratorBuffer as JSONRPCServerGeneratorBufferInterface } from "../interfaces/JSONRPCServerGeneratorBuffer";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
-type OnMessageReadyCallback<T> = (JSONRPCGeneratorChunkResponseInterface<T>) => void;
+type OnMessageReadyCallback<T> = (JSONRPCGeneratorChunkResponseInterface<T>) => any;
 
 export default class JSONRPCServerGeneratorBuffer<T> implements JSONRPCServerGeneratorBufferInterface<T> {
   +loggerBreadcrumbs: LoggerBreadcrumbs;

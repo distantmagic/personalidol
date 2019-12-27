@@ -1,6 +1,7 @@
 // @flow
 
 import * as THREE from "three";
+import memoize from "lodash/memoize";
 
 import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
 
@@ -13,18 +14,39 @@ import type { BufferGeometry } from "three";
 import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
 
+const REGEXP_TEXTURE_NAME = /([0-9]+)x([0-9]+)$/;
+
+function getTextureDimensions(textureName: string): [number, number] {
+  const match = textureName.match(REGEXP_TEXTURE_NAME);
+
+  if (!match) {
+    return [1024, 1024];
+  }
+
+  return [Number(match[1]), Number(match[2])];
+}
+
+const getTextureDimensionsMemoized = memoize(getTextureDimensions);
+
+function getTextureHeight(textureName: string): number {
+  return getTextureDimensionsMemoized(textureName)[1];
+}
+
+function getTextureWidth(textureName: string): number {
+  return getTextureDimensionsMemoized(textureName)[0];
+}
+
 export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuilderInterface {
   +geometry: BufferGeometry;
   +normals: number[];
+  +textureNames: string[];
   +textures: number[];
   +uvs: number[];
   +vertices: number[];
-  groupStart: number;
 
   constructor() {
-    this.geometry = new THREE.BufferGeometry();
-    this.groupStart = 0;
     this.normals = [];
+    this.textureNames = [];
     this.textures = [];
     this.uvs = [];
     this.vertices = [];
@@ -56,13 +78,13 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     const halfSpace = quakeBrush.getHalfSpaceByCoplanarPoints(...points.map(three2quake));
     const textureName = halfSpace.getTexture();
 
-    // const textureIndex = textures.findIndex(texture => texture.name === textureName);
-    // const texture: Texture = textures[textureIndex];
-    // const textureSideHeight = texture.image.naturalHeight * halfSpace.getTextureXScale();
-    // const textureSideWidth = texture.image.naturalWidth * halfSpace.getTextureYScale();
-    const textureIndex = 0;
-    const textureSideWidth = 1024;
-    const textureSideHeight = 1024;
+    if (!this.textureNames.includes(textureName)) {
+      this.textureNames.push(textureName);
+    }
+
+    const textureIndex = this.textureNames.indexOf(textureName);
+    const textureSideHeight = getTextureHeight(textureName) * halfSpace.getTextureXScale();
+    const textureSideWidth = getTextureWidth(textureName) * halfSpace.getTextureYScale();
 
     // one per point
     this.textures.push(textureIndex, textureIndex, textureIndex);
@@ -119,9 +141,6 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
         );
         break;
     }
-
-    this.geometry.addGroup(this.groupStart, 3, textureIndex);
-    this.groupStart += 3;
   }
 
   getConvexHull(quakeBrush: QuakeBrush): ConvexHullInterface {
@@ -134,11 +153,33 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
   }
 
   getGeometry(): BufferGeometry {
-    this.geometry.setAttribute("position", new THREE.Float32BufferAttribute(this.vertices, 3));
-    this.geometry.setAttribute("normal", new THREE.Float32BufferAttribute(this.normals, 3));
-    this.geometry.setAttribute("uv", new THREE.Float32BufferAttribute(this.uvs, 2));
-    this.geometry.setAttribute("a_textureIndex", new THREE.Float32BufferAttribute(this.textures, 1));
+    const geometry = new THREE.BufferGeometry();
 
-    return this.geometry;
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(this.getVertices(), 3));
+    geometry.setAttribute("normal", new THREE.Float32BufferAttribute(this.getNormals(), 3));
+    geometry.setAttribute("uv", new THREE.Float32BufferAttribute(this.getUvs(), 2));
+    geometry.setAttribute("a_textureIndex", new THREE.Float32BufferAttribute(this.getTexturesIndices(), 1));
+
+    return geometry;
+  }
+
+  getNormals(): $ReadOnlyArray<number> {
+    return this.normals;
+  }
+
+  getTexturesIndices(): $ReadOnlyArray<number> {
+    return this.textures;
+  }
+
+  getTexturesNames(): $ReadOnlyArray<string> {
+    return this.textureNames;
+  }
+
+  getUvs(): $ReadOnlyArray<number> {
+    return this.uvs;
+  }
+
+  getVertices(): $ReadOnlyArray<number> {
+    return this.vertices;
   }
 }

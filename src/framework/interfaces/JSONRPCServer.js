@@ -13,4 +13,6 @@ export interface JSONRPCServer extends JSONRPCMessageHandler {
   returnGenerator<T>(CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T>): Promise<void>;
 
   returnPromise<T>(CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T>): Promise<void>;
+
+  sendResponse<T, U: {}>(JSONRPCResponse<T, U>): Promise<void>;
 }

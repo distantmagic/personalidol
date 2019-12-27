@@ -5,6 +5,7 @@ import type { JSONRPCErrorResponse } from "../interfaces/JSONRPCErrorResponse";
 import type { JSONRPCGeneratorChunkResponse } from "../interfaces/JSONRPCGeneratorChunkResponse";
 import type { JSONRPCMessageHandler } from "../interfaces/JSONRPCMessageHandler";
 import type { JSONRPCParams } from "../types/JSONRPCParams";
+import type { JSONRPCRequest } from "./JSONRPCRequest";
 import type { JSONRPCPromiseResponse } from "../interfaces/JSONRPCPromiseResponse";
 import type { JSONRPCErrorResponseObjectified } from "../types/JSONRPCErrorResponseObjectified";
 import type { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
@@ -22,4 +23,6 @@ export interface JSONRPCClient extends JSONRPCMessageHandler {
   requestGenerator<T>(CancelToken, method: string, JSONRPCParams): AsyncGenerator<T, void, void>;
 
   requestPromise<T>(CancelToken, method: string, JSONRPCParams): Promise<T>;
+
+  sendRequest(JSONRPCRequest): Promise<void>;
 }

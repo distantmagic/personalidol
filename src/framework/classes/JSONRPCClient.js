@@ -15,12 +15,11 @@ import type { CancelToken } from "../interfaces/CancelToken";
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { JSONRPCClient as JSONRPCClientInterface } from "../interfaces/JSONRPCClient";
 import type { JSONRPCErrorResponse as JSONRPCErrorResponseInterface } from "../interfaces/JSONRPCErrorResponse";
-import type { JSONRPCErrorResponseObjectified } from "../types/JSONRPCErrorResponseObjectified";
 import type { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import type { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
 import type { JSONRPCParams } from "../types/JSONRPCParams";
 import type { JSONRPCPromiseResponse as JSONRPCPromiseResponseInterface } from "../interfaces/JSONRPCPromiseResponse";
-import type { JSONRPCPromiseResponseObjectified } from "../types/JSONRPCPromiseResponseObjectified";
+import type { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
+import type { JSONRPCVersion } from "../types/JSONRPCVersion";
 import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class JSONRPCClient implements JSONRPCClientInterface {
@@ -83,7 +82,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
 
     const validated: {|
       +id: string,
-      +jsonrpc: "2.0-x-personalidol",
+      +jsonrpc: JSONRPCVersion,
       +method: string,
       +result: any,
     |} = {
@@ -142,7 +141,8 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
 
     // send message to the server
     this.awaitingGeneratorRequests.set(requestId, eventListenerSet);
-    this.postMessage(request.asObject());
+
+    await this.sendRequest(request);
 
     // await response
     const buffer = new JSONRPCClientGeneratorBuffer(this.loggerBreadcrumbs.add("JSONRPCClientGeneratorBuffer"));
@@ -172,8 +172,12 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
       });
 
       // send message to the server
-      this.postMessage(request.asObject());
+      this.sendRequest(request);
     });
+  }
+
+  async sendRequest(request: JSONRPCRequestInterface): Promise<void> {
+    this.postMessage(request.asObject());
   }
 
   useMessageHandler(cancelToken: CancelToken): $PropertyType<DedicatedWorkerGlobalScope, "onmessage"> {
