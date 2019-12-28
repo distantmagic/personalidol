@@ -1,6 +1,8 @@
 // @flow
 
 import * as THREE from "three";
+import groupBy from "lodash/groupBy";
+import uniqBy from "lodash/uniqBy";
 
 import CanvasView from "../CanvasView";
 import JSONRPCClient from "../JSONRPCClient";
@@ -80,6 +82,7 @@ export default class QuakeMap extends CanvasView {
 
     const promises: Promise<void>[] = [];
     let animationOffset = 0;
+    let fbxModels = [];
     let md2Models = [];
 
     for await (let entity of jsonRpcClient.requestGenerator(cancelToken, "/map", [this.source])) {
@@ -132,25 +135,7 @@ export default class QuakeMap extends CanvasView {
           ));
           break;
         case "model_fbx":
-          // prettier-ignore
-          promises.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new FBXModelView(
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
-                new THREE.Vector3(...entity.origin),
-                this.queryBus,
-                this.group,
-                this.threeLoadingManager,
-                `/models/model-fbx-${entity.model_name}/`,
-                entity.angle,
-                animationOffset,
-                entity.scale,
-                entity.model_texture,
-              )
-            ),
-            "Loading FBX model"
-          ));
+          fbxModels.push(entity);
           break;
         case "model_md2":
           md2Models.push(entity);
@@ -205,6 +190,27 @@ export default class QuakeMap extends CanvasView {
         default:
           throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unsupported entity class name: "${entity.classname}"`);
       }
+    }
+
+    const fbxGrouped = groupBy(fbxModels, "model_name");
+    for (let entity of uniqBy(fbxModels, "model_name")) {
+      // prettier-ignore
+      promises.push(this.loadingManager.blocking(
+        this.canvasViewBag.add(
+          cancelToken,
+          new FBXModelView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
+            this.queryBus,
+            this.group,
+            this.threeLoadingManager,
+            `/models/model-fbx-${entity.model_name}/`,
+            entity.model_texture,
+            animationOffset,
+            fbxGrouped[entity.model_name]
+          )
+        ),
+        "Loading FBX model"
+      ));
     }
 
     for (let entity of md2Models) {

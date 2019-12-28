@@ -142,7 +142,12 @@ export default class Root extends CanvasController {
 
     this.threePointerInteraction.disconnect();
     this.scene.dispose();
+
     this.debug.deleteState(this.loggerBreadcrumbs.add("fps"));
+    this.debug.deleteState(this.loggerBreadcrumbs.add("draw").add("calls"));
+    this.debug.deleteState(this.loggerBreadcrumbs.add("memory").add("geometries"));
+    this.debug.deleteState(this.loggerBreadcrumbs.add("memory").add("textures"));
+    this.debug.deleteState(this.loggerBreadcrumbs.add("performance").add("memory").add("usedJSHeapSize"));
   }
 
   draw(interpolationPercentage: number): void {
@@ -154,7 +159,25 @@ export default class Root extends CanvasController {
   end(fps: number, isPanicked: boolean): void {
     super.end(fps, isPanicked);
 
-    this.debug.updateState(this.loggerBreadcrumbs.add("fps"), fps);
+    this.debug.updateState(this.loggerBreadcrumbs.add("fps"), Math.floor(fps));
+    this.debug.updateState(this.loggerBreadcrumbs.add("draw").add("calls"), this.renderer.info.render.calls);
+    this.debug.updateState(this.loggerBreadcrumbs.add("memory").add("geometries"), this.renderer.info.memory.geometries);
+    this.debug.updateState(this.loggerBreadcrumbs.add("memory").add("textures"), this.renderer.info.memory.textures);
+
+    const rendererSize = new THREE.Vector2();
+
+    this.renderer.getSize(rendererSize);
+    this.debug.updateState(this.loggerBreadcrumbs.add("renderer").add("size"), rendererSize);
+
+    // $FlowFixMe
+    const memory = performance.memory;
+
+    if (!memory) {
+      return;
+    }
+
+    // $FlowFixMe
+    this.debug.updateState(this.loggerBreadcrumbs.add("performance").add("memory").add("usedJSHeapSize"), `${Math.round(performance.memory.usedJSHeapSize / 1024 / 1024)} MB`);
   }
 
   resize(elementSize: ElementSize<"px">): void {
@@ -163,8 +186,9 @@ export default class Root extends CanvasController {
     const height = elementSize.getHeight();
     const width = elementSize.getWidth();
 
-    this.effectComposer.setSize(width, height);
     this.renderer.setSize(width, height);
+
+    this.effectComposer.setSize(width, height);
     this.threePointerInteraction.resize(elementSize);
   }
 

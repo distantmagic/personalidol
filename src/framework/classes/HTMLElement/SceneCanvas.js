@@ -174,6 +174,7 @@ export default class SceneCanvas extends HTMLElement {
           alpha: false
         }
       ),
+      // physicallyCorrectLights: true,
       precision: "highp",
     });
 

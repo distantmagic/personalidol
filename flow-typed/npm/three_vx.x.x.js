@@ -469,6 +469,7 @@ declare module "three" {
 
   declare export interface BufferAttribute {
     +isBufferAttribute: true;
+    needsUpdate: boolean;
 
     constructor($TypedArray, itemSize: number, normalized?: boolean): void;
   }
@@ -481,6 +482,8 @@ declare module "three" {
     addGroup(number, number, number): void;
 
     setAttribute(string, BufferAttribute): void;
+
+    setIndex(number[] | BufferAttribute): void;
   }
 
   declare export interface Camera extends Object3D {
@@ -633,6 +636,17 @@ declare module "three" {
     constructor(skyColor?: number, groundColor?: number, intensity?: number): void;
   }
 
+  declare export interface InstancedMesh extends Mesh {
+    +count: number;
+    +instanceMatrix: BufferAttribute;
+
+    constructor(geometry: BufferGeometry, material: Material, count: number): void;
+
+    getMatrixAt(index: number, matrix: Matrix4): void;
+
+    setMatrixAt(index: number, matrix: Matrix4): void;
+  }
+
   declare export interface Int32BufferAttribute extends BufferAttribute {
     constructor($ReadOnlyArray<number>, number): void;
   }
@@ -757,6 +771,7 @@ declare module "three" {
     +geometry: Geometry;
     +isObject3D: true;
     +material: Material;
+    +matrix: Matrix4;
     +parent: Object3D;
     +position: Vector3;
     +rotation: Euler;
@@ -778,6 +793,8 @@ declare module "three" {
     lookAt(Vector3): void;
 
     traverse((Object3D) => void): void;
+
+    updateMatrix(): void;
   }
 
   declare export interface OrthographicCamera extends Camera {
@@ -854,16 +871,23 @@ declare module "three" {
   }
 
   declare export interface Renderer {
+    +info: {|
+      +memory: {|
+        +geometries: number,
+        +textures: number,
+      |},
+      +render: {|
+        +calls: number,
+      |},
+    |};
+
     dispose(): void;
 
     forceContextLoss(): void;
 
     render(Scene, Camera): void;
 
-    getSize(): {|
-      height: number,
-      width: number,
-    |};
+    getSize(Vector2): void;
 
     setPixelRatio(number): void;
 
@@ -984,6 +1008,8 @@ declare module "three" {
     clone(): Vector2;
 
     set(number, number): Vector2;
+
+    toArray(): [number, number];
   }
 
   declare export interface Vector3 {

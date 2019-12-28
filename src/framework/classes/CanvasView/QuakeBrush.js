@@ -2,7 +2,6 @@
 
 import * as THREE from "three";
 import range from "lodash/range";
-import { WEBGL } from 'three/examples/jsm/WebGL';
 
 import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
@@ -18,6 +17,7 @@ import type { QueryBus } from "../../interfaces/QueryBus";
 
 type WorkerQuakeBrush = {|
   +classname: "worldspawn",
+  +indices: ArrayBuffer,
   +normals: ArrayBuffer,
   +texturesIndices: ArrayBuffer,
   +texturesNames: $ReadOnlyArray<string>,
@@ -92,6 +92,7 @@ export default class QuakeBrush extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
+    const indices = new Uint16Array(this.entity.indices);
     const normals = new Float32Array(this.entity.normals);
     const texturesIndices = new Float32Array(this.entity.texturesIndices);
     const uvs = new Float32Array(this.entity.uvs);
@@ -99,6 +100,7 @@ export default class QuakeBrush extends CanvasView {
 
     const geometry = new THREE.BufferGeometry();
 
+    geometry.setIndex(new THREE.BufferAttribute(indices, 1));
     geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
     geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));

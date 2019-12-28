@@ -130,21 +130,30 @@ jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: 
       quakeBrushGeometryBuilder.addBrush(brush);
     }
 
+    const indices = Uint16Array.from(quakeBrushGeometryBuilder.getIndices());
     const normals = Float32Array.from(quakeBrushGeometryBuilder.getNormals());
     const textures = Float32Array.from(quakeBrushGeometryBuilder.getTexturesIndices());
     const uvs = Float32Array.from(quakeBrushGeometryBuilder.getUvs());
     const vertices = Float32Array.from(quakeBrushGeometryBuilder.getVertices());
 
+    // prettier-ignore
     yield new JSONRPCResponseData(
       {
         classname: "worldspawn",
+        indices: indices.buffer,
         normals: normals.buffer,
         texturesIndices: textures.buffer,
         texturesNames: quakeBrushGeometryBuilder.getTexturesNames(),
         uvs: uvs.buffer,
         vertices: vertices.buffer,
       },
-      [normals.buffer, textures.buffer, uvs.buffer, vertices.buffer]
+      [
+        indices.buffer,
+        normals.buffer,
+        textures.buffer,
+        uvs.buffer,
+        vertices.buffer
+      ]
     );
   }
 });

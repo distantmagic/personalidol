@@ -3,6 +3,7 @@
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
+import disposeObject3D from "../../helpers/disposeObject3D";
 import { default as FBXModelQuery } from "../Query/FBXModel";
 import { default as TextureQuery } from "../Query/Texture";
 
@@ -12,38 +13,53 @@ import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
-export default class FBXModel extends CanvasView {
+type WorkerFBXModel = {|
   +angle: number;
+  +classname: "model_fbx",
+  +model_name: string;
+  +model_texture: string;
+  +origin: [number, number, number],
+  +scale: number;
+|};
+
+function getMesh(model: Object3D): Mesh {
+  for (let child of model.children) {
+    if (child instanceof THREE.Mesh) {
+      return child;
+    }
+  }
+
+  throw new Error("Could not find mesh.");
+}
+
+export default class FBXModel extends CanvasView {
   +animationOffset: number;
   +baseUrl: string;
+  +entities: $ReadOnlyArray<WorkerFBXModel>;
   +group: Group;
-  +origin: Vector3;
   +queryBus: QueryBus;
-  +scale: number;
   +texture: string;
   +threeLoadingManager: THREELoadingManager;
+  mesh: ?Object3D;
 
   constructor(
     canvasViewBag: CanvasViewBag,
-    origin: Vector3,
     queryBus: QueryBus,
     group: Group,
     threeLoadingManager: THREELoadingManager,
     baseUrl: string,
-    angle: number,
+    texture: string,
     animationOffset: number,
-    scale: number,
-    texture: string
+    entities: $ReadOnlyArray<WorkerFBXModel>,
   ) {
     super(canvasViewBag);
 
-    this.angle = angle;
     this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
+    this.entities = entities;
     this.group = group;
-    this.origin = origin;
+    this.mesh = null;
     this.queryBus = queryBus;
-    this.scale = scale;
     this.texture = texture;
     this.threeLoadingManager = threeLoadingManager;
   }
@@ -52,29 +68,49 @@ export default class FBXModel extends CanvasView {
     await super.attach(cancelToken);
 
     const modelQuery = new FBXModelQuery(this.threeLoadingManager, this.baseUrl, `${this.baseUrl}model.fbx`);
-    const baseModel: Object3D = await this.queryBus.enqueue(cancelToken, modelQuery).whenExecuted();
-    const model = baseModel.clone();
+    const model: Object3D = await this.queryBus.enqueue(cancelToken, modelQuery).whenExecuted();
 
     const textureQuery = new TextureQuery(new THREE.TextureLoader(this.threeLoadingManager), `${this.baseUrl}${this.texture}`);
     const texture = await this.queryBus.enqueue(cancelToken, textureQuery).whenExecuted();
 
-    model.traverse(function(child) {
-      if (child instanceof THREE.Mesh) {
-        child.castShadow = true;
-        child.material.map = texture;
-        child.material.needsUpdate = true;
-        child.receiveShadow = true;
-      }
-    });
+    const baseMesh = getMesh(model);
 
-    model.position.copy(this.origin);
-    model.rotation.y = THREE.Math.degToRad(-1 * this.angle);
-    model.scale.set(this.scale, this.scale, this.scale);
+    baseMesh.castShadow = true;
+    baseMesh.receiveShadow = true;
 
-    this.group.add(model);
+    baseMesh.material.map = texture;
+    baseMesh.material.needsUpdate = true;
+
+    const mesh = new THREE.InstancedMesh( baseMesh.geometry, baseMesh.material, this.entities.length );
+
+    this.mesh = mesh;
+
+    const dummy = new THREE.Object3D();
+
+    for (let i = 0; i < this.entities.length; i += 1) {
+      const entity = this.entities[i];
+
+      dummy.position.set( ...entity.origin );
+      dummy.rotation.set(0, THREE.Math.degToRad(-1 * entity.angle), 0);
+      dummy.scale.set(entity.scale, entity.scale, entity.scale);
+      dummy.updateMatrix();
+      mesh.setMatrixAt( i, dummy.matrix );
+    }
+
+    mesh.instanceMatrix.needsUpdate = true;
+
+    this.group.add(mesh);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
+
+    const mesh = this.mesh;
+
+    if (!mesh)  {
+      return;
+    }
+
+    disposeObject3D(mesh, true);
   }
 }

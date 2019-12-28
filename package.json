@@ -60,7 +60,7 @@
     "modernizr": "./node_modules/.bin/modernizr -c ./modernizr.json -d ./public/vendor -u",
     "postinstall": "$npm_execpath run modernizr",
     "prettier": "./node_modules/.bin/prettier --write \"./{flow-typed,public,src}/**/*.{htm,html,js,scss}\"",
-    "start": "REACT_APP_PUBLIC_URL=http://localhost:9023 PORT=9023 react-scripts start",
+    "start": "PORT=9023 react-scripts start",
     "test": "react-scripts test --env=jsdom",
     "test:once": "$npm_execpath run test --watchAll=false"
   }

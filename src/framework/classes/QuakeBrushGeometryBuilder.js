@@ -9,7 +9,7 @@ import quake2three from "../helpers/quake2three";
 import three2quake from "../helpers/three2quake";
 
 import type { ConvexHull as ConvexHullInterface, Face as ConvexHullFace } from "three/examples/jsm/math/ConvexHull";
-import type { BufferGeometry } from "three";
+import type { BufferGeometry, Vector3 } from "three";
 
 import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
@@ -38,6 +38,7 @@ function getTextureWidth(textureName: string): number {
 
 export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuilderInterface {
   +geometry: BufferGeometry;
+  +indices: number[];
   +normals: number[];
   +textureNames: string[];
   +textures: number[];
@@ -50,6 +51,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     this.textures = [];
     this.uvs = [];
     this.vertices = [];
+    this.indices = [];
   }
 
   addBrush(quakeBrush: QuakeBrush): void {
@@ -60,6 +62,23 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     }
   }
 
+  addNormal(normal: Vector3): void {
+    this.normals.push(normal.x, normal.y, normal.z);
+  }
+
+  addTextureIndex(vertex: Vector3, textureIndex: number): void {
+    this.textures.push(textureIndex);
+  }
+
+  addVertex(vertex: Vector3): void {
+    this.indices.push(this.indices.length);
+    this.vertices.push(vertex.x, vertex.y, vertex.z);
+  }
+
+  addVertexUVs(vertex: Vector3, x: number, y: number): void {
+    this.uvs.push(x, y);
+  }
+
   addConvexHullFace(quakeBrush: QuakeBrush, face: ConvexHullFace): void {
     const points = [];
     let edge = face.edge;
@@ -67,8 +86,8 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     do {
       const point = edge.head().point;
 
-      this.vertices.push(point.x, point.y, point.z);
-      this.normals.push(face.normal.x, face.normal.y, face.normal.z);
+      this.addVertex(point);
+      this.addNormal(face.normal);
       edge = edge.next;
       points.push(point);
     } while (edge !== face.edge);
@@ -87,58 +106,46 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     const textureSideWidth = getTextureWidth(textureName) * halfSpace.getTextureYScale();
 
     // one per point
-    this.textures.push(textureIndex, textureIndex, textureIndex);
+    this.addTextureIndex(v1, textureIndex);
+    this.addTextureIndex(v2, textureIndex);
+    this.addTextureIndex(v3, textureIndex);
 
     // prettier-ignore
     switch (true) {
       case face.normal.x > face.normal.y && face.normal.x > face.normal.z:
-        this.uvs.push(
-          v1.z / textureSideHeight, v1.y / textureSideWidth,
-          v2.z / textureSideHeight, v2.y / textureSideWidth,
-          v3.z / textureSideHeight, v3.y / textureSideWidth,
-        );
+        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.y / textureSideWidth);
+        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.y / textureSideWidth);
+        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.y / textureSideWidth);
         break;
       case face.normal.y > face.normal.x && face.normal.y > face.normal.z:
-        this.uvs.push(
-          v1.z / textureSideHeight, v1.x / textureSideWidth,
-          v2.z / textureSideHeight, v2.x / textureSideWidth,
-          v3.z / textureSideHeight, v3.x / textureSideWidth,
-        );
+        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.x / textureSideWidth);
+        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.x / textureSideWidth);
+        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.x / textureSideWidth);
         break;
       case face.normal.z > face.normal.x && face.normal.z > face.normal.y:
-        this.uvs.push(
-          v1.x / textureSideHeight, v1.y / textureSideWidth,
-          v2.x / textureSideHeight, v2.y / textureSideWidth,
-          v3.x / textureSideHeight, v3.y / textureSideWidth,
-        );
+        this.addVertexUVs(v1, v1.x / textureSideHeight, v1.y / textureSideWidth);
+        this.addVertexUVs(v2, v2.x / textureSideHeight, v2.y / textureSideWidth);
+        this.addVertexUVs(v3, v3.x / textureSideHeight, v3.y / textureSideWidth);
         break;
       case face.normal.x < face.normal.y && face.normal.x < face.normal.z:
-        this.uvs.push(
-          v1.z / textureSideHeight, v1.y / textureSideWidth,
-          v2.z / textureSideHeight, v2.y / textureSideWidth,
-          v3.z / textureSideHeight, v3.y / textureSideWidth,
-        );
+        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.y / textureSideWidth);
+        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.y / textureSideWidth);
+        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.y / textureSideWidth);
         break;
       case face.normal.y < face.normal.x && face.normal.y < face.normal.z:
-        this.uvs.push(
-          v1.z / textureSideHeight, v1.x / textureSideWidth,
-          v2.z / textureSideHeight, v2.x / textureSideWidth,
-          v3.z / textureSideHeight, v3.x / textureSideWidth,
-        );
+        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.x / textureSideWidth);
+        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.x / textureSideWidth);
+        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.x / textureSideWidth);
         break;
       case face.normal.z < face.normal.x && face.normal.z < face.normal.y:
-        this.uvs.push(
-          v1.x / textureSideHeight, v1.y / textureSideWidth,
-          v2.x / textureSideHeight, v2.y / textureSideWidth,
-          v3.x / textureSideHeight, v3.y / textureSideWidth,
-        );
+        this.addVertexUVs(v1, v1.x / textureSideHeight, v1.y / textureSideWidth);
+        this.addVertexUVs(v2, v2.x / textureSideHeight, v2.y / textureSideWidth);
+        this.addVertexUVs(v3, v3.x / textureSideHeight, v3.y / textureSideWidth);
         break;
       default:
-        this.uvs.push(
-          v1.z / textureSideHeight, v1.x / textureSideWidth,
-          v2.z / textureSideHeight, v2.x / textureSideWidth,
-          v3.z / textureSideHeight, v3.x / textureSideWidth,
-        );
+        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.x / textureSideWidth);
+        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.x / textureSideWidth);
+        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.x / textureSideWidth);
         break;
     }
   }
@@ -161,6 +168,10 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     geometry.setAttribute("a_textureIndex", new THREE.Float32BufferAttribute(this.getTexturesIndices(), 1));
 
     return geometry;
+  }
+
+  getIndices(): $ReadOnlyArray<number> {
+    return this.indices;
   }
 
   getNormals(): $ReadOnlyArray<number> {

@@ -14,6 +14,8 @@ export interface QuakeBrushGeometryBuilder {
 
   getGeometry(): BufferGeometry;
 
+  getIndices(): $ReadOnlyArray<number>;
+
   getNormals(): $ReadOnlyArray<number>;
 
   getTexturesIndices(): $ReadOnlyArray<number>;

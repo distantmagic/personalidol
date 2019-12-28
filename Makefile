@@ -64,7 +64,7 @@ else
 endif
 
 start: frontend.dependencies
-	yarn run start
+	REACT_APP_PUBLIC_URL=http://localhost:9023 yarn run start
 
 test: test.backend test.frontend
 
