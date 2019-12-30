@@ -4,14 +4,14 @@ import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 
-import type { Group, Mesh } from "three";
+import type { BoxGeometry, Group, Mesh, MeshBasicMaterial } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class Cube extends CanvasView {
   +group: Group;
-  cube: ?Mesh;
+  cube: ?Mesh<BoxGeometry, MeshBasicMaterial>;
 
   constructor(canvasViewBag: CanvasViewBag, group: Group) {
     super(canvasViewBag);

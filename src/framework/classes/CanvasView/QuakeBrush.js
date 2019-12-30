@@ -7,7 +7,7 @@ import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
 import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 
-import type { Group, LoadingManager as THREELoadingManager, Mesh, Texture } from "three";
+import type { BufferGeometry, Group, LoadingManager as THREELoadingManager, Mesh, ShaderMaterial, Texture } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -69,7 +69,7 @@ export default class QuakeBrush extends CanvasView {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +textureLoader: QuakeMapTextureLoaderInterface;
   +threeLoadingManager: THREELoadingManager;
-  mesh: ?Mesh;
+  mesh: ?Mesh<BufferGeometry, ShaderMaterial>;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,

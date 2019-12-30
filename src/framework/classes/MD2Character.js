@@ -5,16 +5,16 @@
  */
 
 import * as THREE from "three";
-import { MD2Loader } from "three/examples/jsm/loaders/MD2Loader";
 import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
 import disposeObject3D from "../helpers/disposeObject3D";
 import disposeTexture from "../helpers/disposeTexture";
+import MD2Loader from "./MD2Loader";
 
-import type { Geometry, LoadingManager } from "three";
-import type { MorphBlendMesh as MorphBlendMeshInterface } from "three/examples/jsm/misc/MorphBlendMesh";
+import type { BufferGeometry, LoadingManager } from "three";
 
 import type { MD2Character as MD2CharacterInterface } from "../interfaces/MD2Character";
+import type { MD2CharacterMesh } from "../types/MD2CharacterMesh";
 
 // internal helpers
 
@@ -31,7 +31,7 @@ function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingMana
   return textures;
 }
 
-function createPart(scope: MD2CharacterInterface, geometry: Geometry, skinMap: Texture) {
+function createPart(scope: MD2CharacterInterface, geometry: BufferGeometry, skinMap: Texture): MD2CharacterMesh {
   // var materialWireframe = new THREE.MeshLambertMaterial({ color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true });
   var materialTexture = new THREE.MeshLambertMaterial({ color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true });
 
@@ -52,12 +52,12 @@ function createPart(scope: MD2CharacterInterface, geometry: Geometry, skinMap: T
   return mesh;
 }
 
-function checkLoadingComplete(scope: MD2CharacterInterface) {
+function checkLoadingComplete(scope: MD2CharacterInterface): void {
   scope.loadCounter -= 1;
   if (scope.loadCounter === 0) scope.onLoadComplete();
 }
 
-function exponentialEaseOut(k) {
+function exponentialEaseOut(k): number {
   return k === 1 ? 1 : -Math.pow(2, -10 * k) + 1;
 }
 
@@ -90,8 +90,8 @@ export default class MD2Character implements MD2CharacterInterface {
 
   root = new THREE.Object3D();
 
-  meshBody: ?MorphBlendMeshInterface = null;
-  meshWeapon: ?MorphBlendMeshInterface = null;
+  meshBody: ?MD2CharacterMesh = null;
+  meshWeapon: ?MD2CharacterMesh = null;
 
   controls = null;
 

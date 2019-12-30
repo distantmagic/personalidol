@@ -30,6 +30,17 @@ declare module "three" {
 
   declare export type LoadingManagerOnStartCallback = (url: string, itemsLoaded: number, itemsTotal: number) => void;
 
+  declare export type MorphNormal = {
+    +name: string,
+    +normals: $ReadOnlyArray<Vector3> | $ReadOnlyArray<Vector3Plain>
+  };
+
+  declare export type MorphTarget = {
+    +name: string,
+    +normals: $ReadOnlyArray<number>,
+    +vertices: $ReadOnlyArray<number>
+  };
+
   declare type ShaderDefines = {
     [string]: string,
   };
@@ -45,6 +56,12 @@ declare module "three" {
         |}
       | Uniform,
   };
+
+  declare type Vector3Plain = {|
+    x: number,
+    y: number,
+    z: number,
+  |};
 
   // export var MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2, ROTATE: 0, DOLLY: 1, PAN: 2 };
   // export var TOUCH = { ROTATE: 0, PAN: 1, DOLLY_PAN: 2, DOLLY_ROTATE: 3 };
@@ -193,6 +210,10 @@ declare module "three" {
   declare export var RGBADepthPacking: 3201;
   declare export var TangentSpaceNormalMap: 0;
   declare export var ObjectSpaceNormalMap: 1;
+
+  declare export class AnimationClip {
+    static CreateClipsFromMorphTargetSequences(morphTargets: MorphTarget[], fps: number, noLoop?: bool): AnimationClip[];
+  }
 
   declare export class Math {
     static clamp(number, number, number): number;
@@ -374,8 +395,6 @@ declare module "three" {
     setEffectiveWeight(number): void;
   }
 
-  declare export interface AnimationClip {}
-
   declare export interface AnimationMixer {
     constructor(Object3D): void;
 
@@ -423,6 +442,8 @@ declare module "three" {
   }
 
   declare export interface BaseGeometry {
+    animations: AnimationClip[];
+
     dispose(): void;
 
     rotateX(number): Geometry;
@@ -469,13 +490,21 @@ declare module "three" {
 
   declare export interface BufferAttribute {
     +isBufferAttribute: true;
+    name: string;
     needsUpdate: boolean;
 
     constructor($TypedArray, itemSize: number, normalized?: boolean): void;
   }
 
   declare export interface BufferGeometry extends BaseGeometry {
+    +attributes: {
+      [string]: BufferAttribute,
+    };
     +isBufferGeometry: true;
+    +morphAttributes: {
+      [string]: BufferAttribute[],
+    };
+    morphTargetsRelative: bool;
 
     constructor(): void;
 
@@ -604,6 +633,14 @@ declare module "three" {
     computeVertexNormals(): void;
   }
 
+  declare export interface FileLoader<T> extends Loader<T, XMLHttpRequest> {
+    constructor(LoadingManager): void;
+
+    setResponseType(string): FileLoader<T>;
+
+    setWithCredentials(boolean): FileLoader<T>;
+  }
+
   declare export interface Fog {
     color: Color;
     far: number;
@@ -636,7 +673,7 @@ declare module "three" {
     constructor(skyColor?: number, groundColor?: number, intensity?: number): void;
   }
 
-  declare export interface InstancedMesh extends Mesh {
+  declare export interface InstancedMesh<T: BufferGeometry | Geometry, U: Material> extends Mesh<T, U> {
     +count: number;
     +instanceMatrix: BufferAttribute;
 
@@ -679,10 +716,17 @@ declare module "three" {
     constructor(BaseGeometry, Material): void;
   }
 
-  declare export interface Loader<T> {
+  declare export interface Loader<T, U = void> {
+    +manager: LoadingManager;
+    +path: string;
+
     constructor(?LoadingManager): void;
 
-    load(url: string, LoadingManagerOnLoadCallback<T>, ?LoadingManagerOnProgressCallback, ?LoadingManagerOnErrorCallback): void;
+    load(url: string, LoadingManagerOnLoadCallback<T>, ?LoadingManagerOnProgressCallback, ?LoadingManagerOnErrorCallback): U;
+
+    setPath(string): Loader<T>;
+
+    setResourcePath(string): Loader<T>;
   }
 
   declare export interface LoadingManager {
@@ -715,12 +759,14 @@ declare module "three" {
     set(number, number, number, number, number, number, number, number, number): Matrix3;
   }
 
-  declare export interface Mesh extends Object3D {
+  declare export interface Mesh<T: BufferGeometry | Geometry, U: Material> extends Object3D {
+    +geometry: T;
     +isMesh: true;
+    +material: T;
 
-    constructor(BufferGeometry | Geometry, Material | $ReadOnlyArray<Material>): void;
+    constructor(T, Material | $ReadOnlyArray<Material>): void;
 
-    clone(): Mesh;
+    clone(): Mesh<T, U>;
   }
 
   declare export interface MeshBasicMaterial extends Material {
@@ -768,7 +814,6 @@ declare module "three" {
 
   declare export interface Object3D {
     +children: Array<Object3D>;
-    +geometry: Geometry;
     +isObject3D: true;
     +material: Material;
     +matrix: Matrix4;
@@ -776,6 +821,7 @@ declare module "three" {
     +position: Vector3;
     +rotation: Euler;
     +scale: Vector3;
+    animations: AnimationClip[];
     castShadow: boolean;
     name: string;
     receiveShadow: boolean;

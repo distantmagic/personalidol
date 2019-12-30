@@ -1,10 +1,16 @@
 // @flow
 
+import * as THREE from "three";
+
 import disposeMaterial from "./disposeMaterial";
 
 import type { Object3D } from "three";
 
-function doDispose(obj: Object3D, disposeTextures: boolean): void {
+function doDispose(obj: Mesh | Object3D, disposeTextures: boolean): void {
+  if (!(obj instanceof THREE.Mesh)) {
+    return;
+  }
+
   const geometry = obj.geometry;
 
   if (geometry) {

@@ -92,10 +92,8 @@ export default class CameraController extends CanvasController implements Camera
 
     let delta = evt.deltaY > 0 ? 1 : -1;
 
-    switch (true) {
-      case this.zoomTarget < 4:
-        delta *= 0.5;
-        break;
+    if (this.zoomTarget < 4) {
+      delta *= 0.5;
     }
 
     const adjustedZoom = this.zoomTarget - delta;
@@ -126,7 +124,7 @@ export default class CameraController extends CanvasController implements Camera
   }
 
   setZoom(zoom: number): void {
-    const clampedZoom = clamp(zoom, 1, 7);
+    const clampedZoom = clamp(zoom, 1, 5.5);
 
     if (this.zoomTarget === clampedZoom) {
       return;

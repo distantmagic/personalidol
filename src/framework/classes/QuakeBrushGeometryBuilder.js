@@ -62,23 +62,6 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     }
   }
 
-  addNormal(normal: Vector3): void {
-    this.normals.push(normal.x, normal.y, normal.z);
-  }
-
-  addTextureIndex(vertex: Vector3, textureIndex: number): void {
-    this.textures.push(textureIndex);
-  }
-
-  addVertex(vertex: Vector3): void {
-    this.indices.push(this.indices.length);
-    this.vertices.push(vertex.x, vertex.y, vertex.z);
-  }
-
-  addVertexUVs(vertex: Vector3, x: number, y: number): void {
-    this.uvs.push(x, y);
-  }
-
   addConvexHullFace(quakeBrush: QuakeBrush, face: ConvexHullFace): void {
     const points = [];
     let edge = face.edge;
@@ -148,6 +131,23 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
         this.addVertexUVs(v3, v3.z / textureSideHeight, v3.x / textureSideWidth);
         break;
     }
+  }
+
+  addNormal(normal: Vector3): void {
+    this.normals.push(normal.x, normal.y, normal.z);
+  }
+
+  addTextureIndex(vertex: Vector3, textureIndex: number): void {
+    this.textures.push(textureIndex);
+  }
+
+  addVertex(vertex: Vector3): void {
+    this.indices.push(this.indices.length);
+    this.vertices.push(vertex.x, vertex.y, vertex.z);
+  }
+
+  addVertexUVs(vertex: Vector3, x: number, y: number): void {
+    this.uvs.push(x, y);
   }
 
   getConvexHull(quakeBrush: QuakeBrush): ConvexHullInterface {

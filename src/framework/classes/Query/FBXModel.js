@@ -2,7 +2,7 @@
 
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 
-import type { LoadingManager, Object3D } from "three";
+import type {  LoadingManager, Object3D } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { Query } from "../../interfaces/Query";

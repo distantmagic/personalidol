@@ -1,12 +1,13 @@
 // @flow
 
-import type { Mesh, Object3D, Texture } from "three";
-import type { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
+import type { Object3D, Texture } from "three";
+
+import type { MD2CharacterMesh } from "../types/MD2CharacterMesh";
 
 export interface MD2Character {
-  +weapons: $ReadOnlyArray<Mesh>;
-  +meshBody: ?MorphBlendMesh;
-  +meshWeapon: ?MorphBlendMesh;
+  +weapons: $ReadOnlyArray<MD2CharacterMesh>;
+  +meshBody: ?MD2CharacterMesh;
+  +meshWeapon: ?MD2CharacterMesh;
   +root: Object3D;
   animationFPS: number;
   animations: Object;

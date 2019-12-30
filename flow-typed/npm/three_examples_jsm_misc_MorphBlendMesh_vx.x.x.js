@@ -1,5 +1,5 @@
-import type { Mesh } from "three";
+import type { BufferGeometry, Geometry, Material, Mesh } from "three";
 
 declare module "three/examples/jsm/misc/MorphBlendMesh" {
-  declare export interface MorphBlendMesh extends Mesh {}
+  declare export interface MorphBlendMesh<T: BufferGeometry | Geometry, U: Material> extends Mesh<T, U> {}
 }
