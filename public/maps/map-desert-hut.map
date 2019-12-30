@@ -2138,12 +2138,12 @@
 // entity 8
 {
 "classname" "spark_particles"
-"origin" "976 432 32"
+"origin" "976 432 48"
 }
 // entity 9
 {
 "classname" "model_fbx"
-"origin" "976 432 24"
+"origin" "976 432 40"
 "model_name" "bonfire"
 "angle" "45"
 "scale" "10"
@@ -2152,7 +2152,7 @@
 // entity 10
 {
 "classname" "light"
-"origin" "976 432 64"
+"origin" "976 432 80"
 "light" "0.6"
 "angle" "90"
 "decay" "2"
@@ -2196,7 +2196,7 @@
 // entity 15
 {
 "classname" "model_fbx"
-"origin" "584 912 24"
+"origin" "584 912 48"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2213,7 +2213,7 @@
 // entity 17
 {
 "classname" "model_fbx"
-"origin" "584 1128 68"
+"origin" "584 1128 92"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2222,7 +2222,7 @@
 // entity 18
 {
 "classname" "model_fbx"
-"origin" "432 1192 68"
+"origin" "432 1192 92"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2231,7 +2231,7 @@
 // entity 19
 {
 "classname" "model_fbx"
-"origin" "634 1208 24"
+"origin" "634 1208 48"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2240,7 +2240,7 @@
 // entity 20
 {
 "classname" "model_fbx"
-"origin" "592 1152 24"
+"origin" "592 1152 48"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2249,7 +2249,7 @@
 // entity 21
 {
 "classname" "model_fbx"
-"origin" "608 1136 24"
+"origin" "608 1136 48"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2258,7 +2258,7 @@
 // entity 22
 {
 "classname" "model_fbx"
-"origin" "584 1224 24"
+"origin" "584 1224 48"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2267,7 +2267,7 @@
 // entity 23
 {
 "classname" "model_fbx"
-"origin" "624 1152 24"
+"origin" "624 1152 48"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2276,7 +2276,7 @@
 // entity 24
 {
 "classname" "model_fbx"
-"origin" "600 832 72"
+"origin" "600 832 96"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2285,7 +2285,7 @@
 // entity 25
 {
 "classname" "model_fbx"
-"origin" "600 856 72"
+"origin" "600 856 96"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2294,7 +2294,7 @@
 // entity 26
 {
 "classname" "model_fbx"
-"origin" "616 848 72"
+"origin" "616 848 96"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2303,7 +2303,7 @@
 // entity 27
 {
 "classname" "model_fbx"
-"origin" "600 1176 68"
+"origin" "600 1176 92"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2312,7 +2312,7 @@
 // entity 28
 {
 "classname" "model_fbx"
-"origin" "416 1352 68"
+"origin" "416 1352 92"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2321,7 +2321,7 @@
 // entity 29
 {
 "classname" "model_fbx"
-"origin" "428 1364 68"
+"origin" "428 1364 92"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2330,7 +2330,7 @@
 // entity 30
 {
 "classname" "model_fbx"
-"origin" "648 1124 40"
+"origin" "648 1124 64"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2339,7 +2339,7 @@
 // entity 31
 {
 "classname" "model_fbx"
-"origin" "416 1112 68"
+"origin" "416 1112 92"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2348,7 +2348,7 @@
 // entity 32
 {
 "classname" "model_fbx"
-"origin" "372 1412 68"
+"origin" "372 1412 92"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2357,7 +2357,7 @@
 // entity 33
 {
 "classname" "model_fbx"
-"origin" "392 1300 40"
+"origin" "392 1300 64"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
@@ -2366,7 +2366,7 @@
 // entity 34
 {
 "classname" "model_fbx"
-"origin" "1032 452 16"
+"origin" "1032 452 40"
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"

@@ -41,11 +41,14 @@ export default class CameraController extends CanvasController implements Camera
 
     this.#lookAt = this.scene.position.clone();
 
-    this.cameraPositionTween = Ola({
-      x: 0,
-      y: 0,
-      z: 0,
-    }, 100);
+    this.cameraPositionTween = Ola(
+      {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      100
+    );
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
@@ -69,10 +72,7 @@ export default class CameraController extends CanvasController implements Camera
     const targetY = this.cameraPositionTween.y;
     const targetZ = this.cameraPositionTween.z;
 
-    if ( this.camera.position.x === targetX
-      && this.camera.position.y === targetY
-      && this.camera.position.y === targetZ
-    ) {
+    if (this.camera.position.x === targetX && this.camera.position.y === targetY && this.camera.position.y === targetZ) {
       return;
     }
 

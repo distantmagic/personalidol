@@ -29,6 +29,14 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +postMessage: $PropertyType<DedicatedWorkerGlobalScope, "postMessage">;
 
+  static attachTo(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, worker: Worker): JSONRPCClientInterface {
+    const jsonRpcClient = new JSONRPCClient(loggerBreadcrumbs, worker.postMessage.bind(worker));
+
+    worker.onmessage = jsonRpcClient.useMessageHandler(cancelToken);
+
+    return jsonRpcClient;
+  }
+
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: $PropertyType<DedicatedWorkerGlobalScope, "postMessage">, uuid: () => string = uuidv4) {
     this.awaitingGeneratorRequests = new Map();
     this.awaitingPromiseRequests = new Map();

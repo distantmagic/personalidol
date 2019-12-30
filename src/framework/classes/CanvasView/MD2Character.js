@@ -8,10 +8,11 @@ import { default as MD2CharacterQuery } from "../Query/MD2Character";
 import { default as RemoteJSONQuery } from "../Query/RemoteJSON";
 import { default as THREEMD2Character } from "../MD2Character";
 
-import type { Group, LoadingManager as THREELoadingManager, Vector3 } from "three";
+import type { Group, LoadingManager, Vector3 } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
@@ -20,19 +21,21 @@ export default class MD2Character extends CanvasView {
   +animationOffset: number;
   +baseUrl: string;
   +group: Group;
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   +origin: Vector3;
   +queryBus: QueryBus;
   +skin: number;
-  +threeLoadingManager: THREELoadingManager;
+  +threeLoadingManager: LoadingManager;
   baseCharacter: ?THREEMD2CharacterInterface;
   character: ?THREEMD2CharacterInterface;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
     origin: Vector3,
     queryBus: QueryBus,
     group: Group,
-    threeLoadingManager: THREELoadingManager,
+    threeLoadingManager: LoadingManager,
     baseUrl: string,
     angle: number,
     animationOffset: number,
@@ -45,6 +48,7 @@ export default class MD2Character extends CanvasView {
     this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
     this.group = group;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.origin = origin;
     this.queryBus = queryBus;
     this.skin = skin;

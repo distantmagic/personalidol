@@ -130,7 +130,6 @@ jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: 
       quakeBrushGeometryBuilder.addBrush(brush);
     }
 
-    const indices = Uint16Array.from(quakeBrushGeometryBuilder.getIndices());
     const normals = Float32Array.from(quakeBrushGeometryBuilder.getNormals());
     const textures = Float32Array.from(quakeBrushGeometryBuilder.getTexturesIndices());
     const uvs = Float32Array.from(quakeBrushGeometryBuilder.getUvs());
@@ -140,7 +139,6 @@ jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: 
     yield new JSONRPCResponseData(
       {
         classname: "worldspawn",
-        indices: indices.buffer,
         normals: normals.buffer,
         texturesIndices: textures.buffer,
         texturesNames: quakeBrushGeometryBuilder.getTexturesNames(),
@@ -148,7 +146,6 @@ jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: 
         vertices: vertices.buffer,
       },
       [
-        indices.buffer,
         normals.buffer,
         textures.buffer,
         uvs.buffer,

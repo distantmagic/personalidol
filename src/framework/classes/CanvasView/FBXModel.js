@@ -7,22 +7,22 @@ import disposeObject3D from "../../helpers/disposeObject3D";
 import { default as FBXModelQuery } from "../Query/FBXModel";
 import { default as TextureQuery } from "../Query/Texture";
 
-import type { Group, LoadingManager as THREELoadingManager, Object3D, Vector3 } from "three";
+import type { Group, LoadingManager as THREELoadingManager, Material, Mesh, Object3D, Vector3 } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
 type WorkerFBXModel = {|
-  +angle: number;
+  +angle: number,
   +classname: "model_fbx",
-  +model_name: string;
-  +model_texture: string;
+  +model_name: string,
+  +model_texture: string,
   +origin: [number, number, number],
-  +scale: number;
+  +scale: number,
 |};
 
-function getMesh(model: Object3D): Mesh {
+function getMesh(model: Object3D): Mesh<BufferGeometry, Material> {
   for (let child of model.children) {
     if (child instanceof THREE.Mesh) {
       return child;
@@ -50,7 +50,7 @@ export default class FBXModel extends CanvasView {
     baseUrl: string,
     texture: string,
     animationOffset: number,
-    entities: $ReadOnlyArray<WorkerFBXModel>,
+    entities: $ReadOnlyArray<WorkerFBXModel>
   ) {
     super(canvasViewBag);
 
@@ -74,6 +74,9 @@ export default class FBXModel extends CanvasView {
     const texture = await this.queryBus.enqueue(cancelToken, textureQuery).whenExecuted();
 
     const baseMesh = getMesh(model);
+    const boundingBox = new THREE.Box3();
+
+    boundingBox.setFromBufferAttribute(baseMesh.geometry.attributes.position);
 
     baseMesh.castShadow = true;
     baseMesh.receiveShadow = true;
@@ -81,7 +84,7 @@ export default class FBXModel extends CanvasView {
     baseMesh.material.map = texture;
     baseMesh.material.needsUpdate = true;
 
-    const mesh = new THREE.InstancedMesh( baseMesh.geometry, baseMesh.material, this.entities.length );
+    const mesh = new THREE.InstancedMesh(baseMesh.geometry, baseMesh.material, this.entities.length);
 
     this.mesh = mesh;
 
@@ -90,11 +93,11 @@ export default class FBXModel extends CanvasView {
     for (let i = 0; i < this.entities.length; i += 1) {
       const entity = this.entities[i];
 
-      dummy.position.set( ...entity.origin );
+      dummy.position.set(entity.origin[0], entity.origin[1] + boundingBox.min.y, entity.origin[2]);
       dummy.rotation.set(0, THREE.Math.degToRad(-1 * entity.angle), 0);
       dummy.scale.set(entity.scale, entity.scale, entity.scale);
       dummy.updateMatrix();
-      mesh.setMatrixAt( i, dummy.matrix );
+      mesh.setMatrixAt(i, dummy.matrix);
     }
 
     mesh.instanceMatrix.needsUpdate = true;
@@ -107,7 +110,7 @@ export default class FBXModel extends CanvasView {
 
     const mesh = this.mesh;
 
-    if (!mesh)  {
+    if (!mesh) {
       return;
     }
 

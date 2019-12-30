@@ -147,7 +147,12 @@ export default class Root extends CanvasController {
     this.debug.deleteState(this.loggerBreadcrumbs.add("draw").add("calls"));
     this.debug.deleteState(this.loggerBreadcrumbs.add("memory").add("geometries"));
     this.debug.deleteState(this.loggerBreadcrumbs.add("memory").add("textures"));
-    this.debug.deleteState(this.loggerBreadcrumbs.add("performance").add("memory").add("usedJSHeapSize"));
+    this.debug.deleteState(
+      this.loggerBreadcrumbs
+        .add("performance")
+        .add("memory")
+        .add("usedJSHeapSize")
+    );
   }
 
   draw(interpolationPercentage: number): void {
@@ -177,7 +182,15 @@ export default class Root extends CanvasController {
     }
 
     // $FlowFixMe
-    this.debug.updateState(this.loggerBreadcrumbs.add("performance").add("memory").add("usedJSHeapSize"), `${Math.round(performance.memory.usedJSHeapSize / 1024 / 1024)} MB`);
+    const heapSize = `${Math.round(performance.memory.usedJSHeapSize / 1024 / 1024)} MB`;
+
+    this.debug.updateState(
+      this.loggerBreadcrumbs
+        .add("performance")
+        .add("memory")
+        .add("usedJSHeapSize"),
+      heapSize
+    );
   }
 
   resize(elementSize: ElementSize<"px">): void {

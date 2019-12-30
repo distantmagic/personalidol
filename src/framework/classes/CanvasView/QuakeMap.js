@@ -27,6 +27,7 @@ import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingM
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import type { JSONRPCClient as JSONRPCClientInterface } from "../../interfaces/JSONRPCClient";
 import type { LoadingManager } from "../../interfaces/LoadingManager";
 import type { Logger } from "../../interfaces/Logger";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
@@ -43,6 +44,7 @@ export default class QuakeMap extends CanvasView {
   +scene: Scene;
   +source: string;
   +threeLoadingManager: THREELoadingManager;
+  md2LoaderWorker: ?Worker;
   quakeMapWorker: ?Worker;
 
   constructor(
@@ -74,24 +76,20 @@ export default class QuakeMap extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const quakeMapWorker: Worker = new QuakeMapWorker();
-    const jsonRpcClient = new JSONRPCClient(this.loggerBreadcrumbs.add("JSONRPCClient"), quakeMapWorker.postMessage.bind(quakeMapWorker));
+    const quakeMapRpcClient = this.getQuakeMapRpcClient(cancelToken);
 
-    quakeMapWorker.onmessage = jsonRpcClient.useMessageHandler(cancelToken);
-    this.quakeMapWorker = quakeMapWorker;
-
-    const promises: Promise<void>[] = [];
+    const entities: Promise<void>[] = [];
     let animationOffset = 0;
     let fbxModels = [];
     let md2Models = [];
 
-    for await (let entity of jsonRpcClient.requestGenerator(cancelToken, "/map", [this.source])) {
+    for await (let entity of quakeMapRpcClient.requestGenerator(cancelToken, "/map", [this.source])) {
       animationOffset += 200;
 
       switch (entity.classname) {
         case "light":
           // prettier-ignore
-          promises.push(this.loadingManager.blocking(
+          entities.push(this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,
               new PointLightView(
@@ -108,7 +106,7 @@ export default class QuakeMap extends CanvasView {
           break;
         case "light_ambient":
           // prettier-ignore
-          promises.push(this.loadingManager.blocking(
+          entities.push(this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,
               new AmbientLightView(
@@ -122,7 +120,7 @@ export default class QuakeMap extends CanvasView {
           break;
         case "light_hemisphere":
           // prettier-ignore
-          promises.push(this.loadingManager.blocking(
+          entities.push(this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,
               new HemisphereLightView(
@@ -145,7 +143,7 @@ export default class QuakeMap extends CanvasView {
           break;
         case "sounds":
           // prettier-ignore
-          promises.push(this.loadingManager.blocking(
+          entities.push(this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,
               new AmbientSoundView(
@@ -162,7 +160,7 @@ export default class QuakeMap extends CanvasView {
           break;
         case "spark_particles":
           // prettier-ignore
-          promises.push(this.loadingManager.blocking(
+          entities.push(this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,
               new ParticlesView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")), this.group, new THREE.Vector3(...entity.origin))
@@ -172,7 +170,7 @@ export default class QuakeMap extends CanvasView {
           break;
         case "worldspawn":
           // prettier-ignore
-          promises.push(this.loadingManager.blocking(
+          entities.push(this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,
               new QuakeBrushView(
@@ -192,14 +190,18 @@ export default class QuakeMap extends CanvasView {
       }
     }
 
+    await Promise.all(entities);
+
     const fbxGrouped = groupBy(fbxModels, "model_name");
+    const fbxModelsViews = [];
+
     for (let entity of uniqBy(fbxModels, "model_name")) {
       // prettier-ignore
-      promises.push(this.loadingManager.blocking(
+      fbxModelsViews.push(this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,
           new FBXModelView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("FBXModel")),
             this.queryBus,
             this.group,
             this.threeLoadingManager,
@@ -213,12 +215,14 @@ export default class QuakeMap extends CanvasView {
       ));
     }
 
+    const md2ModelsViews = [];
     for (let entity of md2Models) {
       // prettier-ignore
-      promises.push(this.loadingManager.blocking(
+      md2ModelsViews.push(this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,
           new MD2CharacterView(
+            this.loggerBreadcrumbs.add("MD2Character"),
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
             new THREE.Vector3(...entity.origin),
             this.queryBus,
@@ -234,7 +238,9 @@ export default class QuakeMap extends CanvasView {
       ));
     }
 
-    await Promise.all(promises);
+    await Promise.all(fbxModelsViews);
+    await Promise.all(md2ModelsViews);
+
     this.scene.add(this.group);
   }
 
@@ -243,12 +249,23 @@ export default class QuakeMap extends CanvasView {
 
     this.scene.remove(this.group);
 
-    const quakeMapWorker = this.quakeMapWorker;
-
-    if (!quakeMapWorker) {
-      return;
+    const md2LoaderWorker = this.md2LoaderWorker;
+    if (md2LoaderWorker) {
+      md2LoaderWorker.terminate();
     }
 
-    quakeMapWorker.terminate();
+    const quakeMapWorker = this.quakeMapWorker;
+    if (quakeMapWorker) {
+      quakeMapWorker.terminate();
+    }
+  }
+
+  getQuakeMapRpcClient(cancelToken: CancelToken): JSONRPCClientInterface {
+    const quakeMapWorker: Worker = new QuakeMapWorker();
+    const quakeMapRpcClient = JSONRPCClient.attachTo(this.loggerBreadcrumbs.add("JSONRPCClient"), cancelToken, quakeMapWorker);
+
+    this.quakeMapWorker = quakeMapWorker;
+
+    return quakeMapRpcClient;
   }
 }

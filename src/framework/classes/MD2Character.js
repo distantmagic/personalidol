@@ -5,11 +5,11 @@
  */
 
 import * as THREE from "three";
+import { MD2Loader } from "three/examples/jsm/loaders/MD2Loader";
 import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
 import disposeObject3D from "../helpers/disposeObject3D";
 import disposeTexture from "../helpers/disposeTexture";
-import MD2Loader from "./MD2Loader";
 
 import type { BufferGeometry, LoadingManager } from "three";
 

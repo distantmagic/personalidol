@@ -92,7 +92,6 @@ export default class QuakeBrush extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const indices = new Uint16Array(this.entity.indices);
     const normals = new Float32Array(this.entity.normals);
     const texturesIndices = new Float32Array(this.entity.texturesIndices);
     const uvs = new Float32Array(this.entity.uvs);
@@ -100,7 +99,6 @@ export default class QuakeBrush extends CanvasView {
 
     const geometry = new THREE.BufferGeometry();
 
-    geometry.setIndex(new THREE.BufferAttribute(indices, 1));
     geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
     geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));

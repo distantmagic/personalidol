@@ -32,13 +32,13 @@ declare module "three" {
 
   declare export type MorphNormal = {
     +name: string,
-    +normals: $ReadOnlyArray<Vector3> | $ReadOnlyArray<Vector3Plain>
+    +normals: $ReadOnlyArray<Vector3> | $ReadOnlyArray<Vector3Plain>,
   };
 
   declare export type MorphTarget = {
     +name: string,
     +normals: $ReadOnlyArray<number>,
-    +vertices: $ReadOnlyArray<number>
+    +vertices: $ReadOnlyArray<number>,
   };
 
   declare type ShaderDefines = {
@@ -212,7 +212,7 @@ declare module "three" {
   declare export var ObjectSpaceNormalMap: 1;
 
   declare export class AnimationClip {
-    static CreateClipsFromMorphTargetSequences(morphTargets: MorphTarget[], fps: number, noLoop?: bool): AnimationClip[];
+    static CreateClipsFromMorphTargetSequences(morphTargets: MorphTarget[], fps: number, noLoop?: boolean): AnimationClip[];
   }
 
   declare export class Math {
@@ -489,6 +489,7 @@ declare module "three" {
   }
 
   declare export interface BufferAttribute {
+    +array: $TypedArray;
     +isBufferAttribute: true;
     name: string;
     needsUpdate: boolean;
@@ -504,7 +505,7 @@ declare module "three" {
     +morphAttributes: {
       [string]: BufferAttribute[],
     };
-    morphTargetsRelative: bool;
+    morphTargetsRelative: boolean;
 
     constructor(): void;
 

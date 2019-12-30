@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import yn from "yn";
-import { WEBGL } from 'three/examples/jsm/WebGL';
+import { WEBGL } from "three/examples/jsm/WebGL";
 
 import CanvasControllerBus from "../CanvasControllerBus";
 import CanvasViewBag from "../CanvasViewBag";
@@ -91,7 +91,7 @@ export default class SceneCanvas extends HTMLElement {
     this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this.canvasWrapperElement);
     this.canvasControllerBus = new CanvasControllerBus(this.loggerBreadcrumbs, this.resizeObserver, this.scheduler);
 
-    // this.mainLoop.setMaxAllowedFPS(30);
+    this.mainLoop.setMaxAllowedFPS(120);
     this.mainLoop.attachScheduler(this.scheduler);
   }
 
@@ -168,12 +168,9 @@ export default class SceneCanvas extends HTMLElement {
     const renderer = new THREE.WebGLRenderer({
       antialias: false,
       canvas: this.canvasElement,
-      context: this.canvasElement.getContext(
-        WEBGL.isWebGL2Available() ? 'webgl2': 'webgl',
-        {
-          alpha: false
-        }
-      ),
+      context: this.canvasElement.getContext(WEBGL.isWebGL2Available() ? "webgl2" : "webgl", {
+        alpha: false,
+      }),
       // physicallyCorrectLights: true,
       precision: "highp",
     });
