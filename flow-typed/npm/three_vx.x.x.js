@@ -1186,7 +1186,7 @@ declare module "three" {
     enabled: boolean;
     autoUpdate: boolean;
     needsUpdate: boolean;
-    // type: ShadowMapType;
+    type: BasicShadowMap | PCFShadowMap | PCFSoftShadowMap;
 
     render(Scene, Camera): void;
   }

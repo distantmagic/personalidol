@@ -78,11 +78,10 @@ export default class FBXModel extends CanvasView {
 
     boundingBox.setFromBufferAttribute(baseMesh.geometry.attributes.position);
 
-    baseMesh.castShadow = true;
-    baseMesh.receiveShadow = true;
-
     baseMesh.material.map = texture;
     baseMesh.material.needsUpdate = true;
+
+    console.log(baseMesh.material);
 
     const mesh = new THREE.InstancedMesh(baseMesh.geometry, baseMesh.material, this.entities.length);
 
@@ -93,14 +92,17 @@ export default class FBXModel extends CanvasView {
     for (let i = 0; i < this.entities.length; i += 1) {
       const entity = this.entities[i];
 
-      dummy.position.set(entity.origin[0], entity.origin[1] + boundingBox.min.y, entity.origin[2]);
+      dummy.position.set(...entity.origin);
       dummy.rotation.set(0, THREE.Math.degToRad(-1 * entity.angle), 0);
       dummy.scale.set(entity.scale, entity.scale, entity.scale);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
     }
 
+    mesh.castShadow = true;
     mesh.instanceMatrix.needsUpdate = true;
+    mesh.position.set(0, boundingBox.min.y, 0);
+    mesh.receiveShadow = true;
 
     this.group.add(mesh);
   }
