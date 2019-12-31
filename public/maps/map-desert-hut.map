@@ -2249,7 +2249,7 @@
 "model_name" "bottle-of-beer"
 "angle" "-0"
 "scale" "1"
-"model_texture" "green.png"
+"model_texture" "brown.png"
 }
 // entity 23
 {

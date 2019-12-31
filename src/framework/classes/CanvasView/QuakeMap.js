@@ -63,7 +63,6 @@ export default class QuakeMap extends CanvasView {
 
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
-    this.group = new THREE.Group();
     this.loadingManager = loadingManager;
     this.logger = logger;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
@@ -92,7 +91,7 @@ export default class QuakeMap extends CanvasView {
               cancelToken,
               new PointLightView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
-                this.group,
+                this.children,
                 new THREE.Vector3(...entity.origin),
                 new THREE.Color(parseInt(entity.color, 16)),
                 entity.light,
@@ -109,7 +108,7 @@ export default class QuakeMap extends CanvasView {
               cancelToken,
               new AmbientLightView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
-                this.group,
+                this.children,
                 entity.light
               )
             ),
@@ -123,7 +122,7 @@ export default class QuakeMap extends CanvasView {
               cancelToken,
               new HemisphereLightView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("HemisphereLight")),
-                this.group,
+                this.children,
                 entity.light
               )
             ),
@@ -161,7 +160,7 @@ export default class QuakeMap extends CanvasView {
           entities.push(this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,
-              new ParticlesView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")), this.group, new THREE.Vector3(...entity.origin))
+              new ParticlesView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")), this.children, new THREE.Vector3(...entity.origin))
             ),
             "Loading particles"
           ));
@@ -175,7 +174,7 @@ export default class QuakeMap extends CanvasView {
                 this.loggerBreadcrumbs.add("QuakeBrush"),
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
                 entity,
-                this.group,
+                this.children,
                 this.queryBus,
                 this.threeLoadingManager
               )
@@ -190,29 +189,33 @@ export default class QuakeMap extends CanvasView {
 
     await Promise.all(entities);
 
-    const gltfGrouped = groupBy(gltfModels, "model_name");
+    const gltfByModel = groupBy(gltfModels, "model_name");
     const gltfModelsViews = [];
 
     for (let entity of uniqBy(gltfModels, "model_name")) {
       animationOffset += 200;
 
-      // prettier-ignore
-      gltfModelsViews.push(this.loadingManager.blocking(
-        this.canvasViewBag.add(
-          cancelToken,
-          new GLTFModelView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("GLTFModel")),
-            this.queryBus,
-            this.group,
-            this.threeLoadingManager,
-            `/models/model-glb-${entity.model_name}/`,
-            entity.model_texture,
-            animationOffset,
-            gltfGrouped[entity.model_name]
-          )
-        ),
-        "Loading GLTF model"
-      ));
+      const gltfByTexture = groupBy(gltfByModel[entity.model_name], "model_texture");
+
+      for (let textureName of Object.keys(gltfByTexture)) {
+        // prettier-ignore
+        gltfModelsViews.push(this.loadingManager.blocking(
+          this.canvasViewBag.add(
+            cancelToken,
+            new GLTFModelView(
+              this.canvasViewBag.fork(this.loggerBreadcrumbs.add("GLTFModel")),
+              this.queryBus,
+              this.children,
+              this.threeLoadingManager,
+              `/models/model-glb-${entity.model_name}/`,
+              textureName,
+              animationOffset,
+              gltfByTexture[textureName]
+            )
+          ),
+          "Loading GLTF model"
+        ));
+      }
     }
 
     const md2ModelsViews = [];
@@ -228,7 +231,7 @@ export default class QuakeMap extends CanvasView {
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
             new THREE.Vector3(...entity.origin),
             this.queryBus,
-            this.group,
+            this.children,
             this.threeLoadingManager,
             `/models/model-md2-${entity.model_name}/`,
             entity.angle,
@@ -243,13 +246,13 @@ export default class QuakeMap extends CanvasView {
     await Promise.all(gltfModelsViews);
     await Promise.all(md2ModelsViews);
 
-    this.scene.add(this.group);
+    this.scene.add(this.children);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.scene.remove(this.group);
+    this.scene.remove(this.children);
 
     const md2LoaderWorker = this.md2LoaderWorker;
     if (md2LoaderWorker) {

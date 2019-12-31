@@ -79,7 +79,8 @@ export default class GLTFModel extends CanvasView {
       map: texture,
     });
 
-    const mesh = new THREE.InstancedMesh(baseMesh.geometry, material, this.entities.length);
+    // important - clone geometry as it may be shared between views
+    const mesh = new THREE.InstancedMesh(baseMesh.geometry.clone(), material, this.entities.length);
 
     mesh.frustumCulled = false;
 
