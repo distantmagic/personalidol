@@ -1,7 +1,7 @@
 {
   "animations": {
     "attack": "attack",
-    "crouchAttach": "crattack",
+    "crouchAttack": "crattack",
     "crouchIdle": "cstand",
     "crouchMove": "cwalk",
     "idle": "stand",

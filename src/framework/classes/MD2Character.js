@@ -14,13 +14,15 @@ import disposeTexture from "../helpers/disposeTexture";
 import type { BufferGeometry, LoadingManager } from "three";
 
 import type { MD2Character as MD2CharacterInterface } from "../interfaces/MD2Character";
+import type { MD2CharacterConfig } from "../types/MD2CharacterConfig";
+import type { MD2CharacterControls } from "../types/MD2CharacterControls";
 import type { MD2CharacterMesh } from "../types/MD2CharacterMesh";
 
 // internal helpers
 
 function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: LoadingManager, textureUrls: $ReadOnlyArray<string>): Texture[] {
-  var textureLoader = new THREE.TextureLoader(loadingManager);
-  var textures = [];
+  const textureLoader = new THREE.TextureLoader(loadingManager);
+  const textures = [];
 
   for (let i = 0; i < textureUrls.length; i++) {
     textures[i] = textureLoader.load(baseUrl + textureUrls[i], checkLoadingComplete.bind(null, scope));
@@ -32,12 +34,12 @@ function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingMana
 }
 
 function createPart(scope: MD2CharacterInterface, geometry: BufferGeometry, skinMap: Texture): MD2CharacterMesh {
-  // var materialWireframe = new THREE.MeshLambertMaterial({ color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true });
-  var materialTexture = new THREE.MeshLambertMaterial({ color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true });
+  // const materialWireframe = new THREE.MeshLambertMaterial({ color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true });
+  const materialTexture = new THREE.MeshLambertMaterial({ color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true });
 
   //
 
-  var mesh = new MorphBlendMesh(geometry, materialTexture);
+  const mesh = new MorphBlendMesh(geometry, materialTexture);
   mesh.rotation.y = -Math.PI / 2;
 
   //
@@ -57,34 +59,13 @@ function checkLoadingComplete(scope: MD2CharacterInterface): void {
   if (scope.loadCounter === 0) scope.onLoadComplete();
 }
 
-function exponentialEaseOut(k): number {
-  return k === 1 ? 1 : -Math.pow(2, -10 * k) + 1;
-}
-
 export default class MD2Character implements MD2CharacterInterface {
   +loadingManager: LoadingManager;
-
-  scale = 1;
 
   // animation parameters
 
   animationFPS = 6;
   transitionFrames = 15;
-
-  // movement model parameters
-
-  crouchSpeed: number;
-  walkSpeed: number;
-
-  maxSpeed = 275;
-  maxReverseSpeed = -275;
-
-  frontAcceleration = 600;
-  backAcceleration = 600;
-
-  frontDecceleration = 600;
-
-  angularSpeed = 2.5;
 
   // rig
 
@@ -115,23 +96,15 @@ export default class MD2Character implements MD2CharacterInterface {
 
   loadCounter = 0;
 
-  // internal movement control variables
-
-  speed = 0;
-
   // internal animation parameters
 
   activeAnimation = null;
   oldAnimation = null;
 
-  // wtf
-
   blendCounter = 0;
 
   constructor(loadingManager: LoadingManager) {
     this.loadingManager = loadingManager;
-    this.walkSpeed = this.maxSpeed;
-    this.crouchSpeed = this.maxSpeed * 0.5;
   }
 
   // API
@@ -159,16 +132,12 @@ export default class MD2Character implements MD2CharacterInterface {
 
     this.animations = original.animations;
 
-    // this.walkSpeed = original.walkSpeed;
-    // this.crouchSpeed = original.crouchSpeed;
-
     this.skinsBody = original.skinsBody;
     this.skinsWeapon = original.skinsWeapon;
 
     // BODY
 
-    var mesh = createPart(this, originalMeshBody.geometry, this.skinsBody[0]);
-    mesh.scale.set(this.scale, this.scale, this.scale);
+    const mesh = createPart(this, originalMeshBody.geometry, this.skinsBody[0]);
 
     this.root.position.y = original.root.position.y;
     this.root.add(mesh);
@@ -180,8 +149,7 @@ export default class MD2Character implements MD2CharacterInterface {
     // WEAPONS
 
     for (let i = 0; i < original.weapons.length; i++) {
-      var meshWeapon = createPart(this, original.weapons[i].geometry, this.skinsWeapon[i]);
-      meshWeapon.scale.set(this.scale, this.scale, this.scale);
+      const meshWeapon = createPart(this, original.weapons[i].geometry, this.skinsWeapon[i]);
       meshWeapon.visible = false;
 
       meshWeapon.name = original.weapons[i].name;
@@ -195,16 +163,14 @@ export default class MD2Character implements MD2CharacterInterface {
     }
   }
 
-  loadParts(config: Object) {
+  loadParts(config: MD2CharacterConfig) {
     const scope = this;
 
     this.animations = config.animations;
-    this.walkSpeed = config.walkSpeed;
-    this.crouchSpeed = config.crouchSpeed;
 
     this.loadCounter = config.weapons.length * 2 + config.skins.length + 1;
 
-    var weaponsTextures = [];
+    const weaponsTextures = [];
     for (let i = 0; i < config.weapons.length; i++) weaponsTextures[i] = config.weapons[i][1];
 
     // SKINS
@@ -214,16 +180,13 @@ export default class MD2Character implements MD2CharacterInterface {
 
     // BODY
 
-    var loader = new MD2Loader(this.loadingManager);
+    const loader = new MD2Loader(this.loadingManager);
 
     loader.load(config.baseUrl + config.body, function(geo) {
-      var boundingBox = new THREE.Box3();
+      const boundingBox = new THREE.Box3();
       boundingBox.setFromBufferAttribute(geo.attributes.position);
 
-      scope.root.position.y = -scope.scale * boundingBox.min.y;
-
-      var mesh = createPart(scope, geo, scope.skinsBody[0]);
-      mesh.scale.set(scope.scale, scope.scale, scope.scale);
+      const mesh = createPart(scope, geo, scope.skinsBody[0]);
 
       scope.root.add(mesh);
 
@@ -237,8 +200,7 @@ export default class MD2Character implements MD2CharacterInterface {
 
     config.weapons.forEach(function([name, texture], index) {
       loader.load(config.baseUrl + name, function(geo) {
-        var mesh = createPart(scope, geo, scope.skinsWeapon[index]);
-        mesh.scale.set(scope.scale, scope.scale, scope.scale);
+        const mesh = createPart(scope, geo, scope.skinsWeapon[index]);
         mesh.visible = false;
 
         mesh.name = name;
@@ -275,7 +237,7 @@ export default class MD2Character implements MD2CharacterInterface {
 
     for (let i = 0; i < this.weapons.length; i++) this.weapons[i].visible = false;
 
-    var activeWeapon = this.weapons[index];
+    const activeWeapon = this.weapons[index];
 
     if (activeWeapon) {
       activeWeapon.visible = true;
@@ -313,16 +275,15 @@ export default class MD2Character implements MD2CharacterInterface {
   update(delta: number) {
     const controls = this.controls;
 
-    if (controls) this.updateMovementModel(controls, delta);
-
-    if (this.animations) {
+    if (controls) {
       this.updateBehaviors(controls);
-      this.updateAnimations(delta);
     }
+
+    this.updateAnimations(delta);
   }
 
   updateAnimations(delta: number) {
-    var mix = 1;
+    let mix = 1;
 
     if (this.blendCounter > 0) {
       mix = (this.transitionFrames - this.blendCounter) / this.transitionFrames;
@@ -348,10 +309,10 @@ export default class MD2Character implements MD2CharacterInterface {
     }
   }
 
-  updateBehaviors(controls: Object) {
-    var animations = this.animations;
+  updateBehaviors(controls: MD2CharacterControls) {
+    const animations = this.animations;
 
-    var moveAnimation, idleAnimation;
+    let moveAnimation, idleAnimation;
 
     const meshBody = this.meshBody;
     const meshWeapon = this.meshWeapon;
@@ -359,27 +320,27 @@ export default class MD2Character implements MD2CharacterInterface {
     // crouch vs stand
 
     if (controls.crouch) {
-      moveAnimation = animations["crouchMove"];
-      idleAnimation = animations["crouchIdle"];
+      moveAnimation = animations.crouchMove;
+      idleAnimation = animations.crouchIdle;
     } else {
-      moveAnimation = animations["move"];
-      idleAnimation = animations["idle"];
+      moveAnimation = animations.move;
+      idleAnimation = animations.idle;
     }
 
     // actions
 
     if (controls.jump) {
-      moveAnimation = animations["jump"];
-      idleAnimation = animations["jump"];
+      moveAnimation = animations.jump;
+      idleAnimation = animations.jump;
     }
 
     if (controls.attack) {
       if (controls.crouch) {
-        moveAnimation = animations["crouchAttack"];
-        idleAnimation = animations["crouchAttack"];
+        moveAnimation = animations.crouchAttack;
+        idleAnimation = animations.crouchAttack;
       } else {
-        moveAnimation = animations["attack"];
-        idleAnimation = animations["attack"];
+        moveAnimation = animations.attack;
+        idleAnimation = animations.attack;
       }
     }
 
@@ -391,7 +352,12 @@ export default class MD2Character implements MD2CharacterInterface {
       }
     }
 
-    if (Math.abs(this.speed) < 0.2 * this.maxSpeed && !(controls.moveLeft || controls.moveRight || controls.moveForward || controls.moveBackward)) {
+    // if (Math.abs(this.speed) < 0.2 * this.maxSpeed && !(controls.moveLeft || controls.moveRight || controls.moveForward || controls.moveBackward)) {
+    //   if (this.activeAnimation !== idleAnimation) {
+    //     this.setAnimation(idleAnimation);
+    //   }
+    // }
+    if (!controls.moveLeft || !controls.moveRight || !controls.moveForward || !controls.moveBackward) {
       if (this.activeAnimation !== idleAnimation) {
         this.setAnimation(idleAnimation);
       }
@@ -420,43 +386,6 @@ export default class MD2Character implements MD2CharacterInterface {
       if (meshWeapon) {
         meshWeapon.setAnimationDirectionBackward(this.activeAnimation);
         meshWeapon.setAnimationDirectionBackward(this.oldAnimation);
-      }
-    }
-  }
-
-  updateMovementModel(controls: Object, delta: number) {
-    // speed based on controls
-
-    if (controls.crouch) this.maxSpeed = this.crouchSpeed;
-    else this.maxSpeed = this.walkSpeed;
-
-    this.maxReverseSpeed = -this.maxSpeed;
-
-    if (controls.moveForward) this.speed = THREE.Math.clamp(this.speed + delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed);
-    if (controls.moveBackward) this.speed = THREE.Math.clamp(this.speed - delta * this.backAcceleration, this.maxReverseSpeed, this.maxSpeed);
-
-    // orientation based on controls
-    // (don't just stand while turning)
-
-    var dir = 1;
-
-    if (controls.moveLeft) {
-      this.speed = THREE.Math.clamp(this.speed + dir * delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed);
-    }
-
-    if (controls.moveRight) {
-      this.speed = THREE.Math.clamp(this.speed + dir * delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed);
-    }
-
-    // speed decay
-
-    if (!(controls.moveForward || controls.moveBackward)) {
-      if (this.speed > 0) {
-        let k = exponentialEaseOut(this.speed / this.maxSpeed);
-        this.speed = THREE.Math.clamp(this.speed - k * delta * this.frontDecceleration, 0, this.maxSpeed);
-      } else {
-        let k = exponentialEaseOut(this.speed / this.maxReverseSpeed);
-        this.speed = THREE.Math.clamp(this.speed + k * delta * this.backAcceleration, this.maxReverseSpeed, 0);
       }
     }
   }

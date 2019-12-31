@@ -6,13 +6,14 @@ import type { LoadingManager } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
+import type { MD2CharacterConfig } from "../../types/MD2CharacterConfig";
 import type { Query } from "../../interfaces/Query";
 
 export default class MD2Character implements Query<THREEMD2CharacterInterface> {
-  +config: Object;
+  +config: MD2CharacterConfig;
   +loadingManager: LoadingManager;
 
-  constructor(loadingManager: LoadingManager, config: Object) {
+  constructor(loadingManager: LoadingManager, config: MD2CharacterConfig) {
     this.config = config;
     this.loadingManager = loadingManager;
   }

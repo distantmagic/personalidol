@@ -14,6 +14,7 @@ import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import type { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
+import type { MD2CharacterConfig } from "../../types/MD2CharacterConfig";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
 export default class MD2Character extends CanvasView {
@@ -58,7 +59,7 @@ export default class MD2Character extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const configQuery = new RemoteJSONQuery<Object>(`${this.baseUrl}parts.json`);
+    const configQuery = new RemoteJSONQuery<MD2CharacterConfig>(`${this.baseUrl}parts.json`);
     const config = await this.queryBus.enqueue(cancelToken, configQuery).whenExecuted();
     const configMerged = {
       ...config,

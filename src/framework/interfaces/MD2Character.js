@@ -2,6 +2,7 @@
 
 import type { Object3D, Texture } from "three";
 
+import type { MD2CharacterControls } from "../types/MD2CharacterControls";
 import type { MD2CharacterMesh } from "../types/MD2CharacterMesh";
 
 export interface MD2Character {
@@ -11,7 +12,7 @@ export interface MD2Character {
   +root: Object3D;
   animationFPS: number;
   animations: Object;
-  controls: ?Object;
+  controls: ?MD2CharacterControls;
   loadCounter: number;
   onLoadComplete: () => void;
   skinsBody: Texture[];
