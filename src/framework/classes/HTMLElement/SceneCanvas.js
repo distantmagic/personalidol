@@ -175,8 +175,6 @@ export default class SceneCanvas extends HTMLElement {
       precision: "highp",
     });
 
-    // renderer.gammaInput = true;
-    // renderer.gammaOutput = true;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.BasicShadowMap;
 

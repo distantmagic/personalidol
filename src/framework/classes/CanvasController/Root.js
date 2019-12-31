@@ -153,6 +153,7 @@ export default class Root extends CanvasController {
         .add("memory")
         .add("usedJSHeapSize")
     );
+    this.debug.deleteState(this.loggerBreadcrumbs.add("renderer").add("size"));
   }
 
   draw(interpolationPercentage: number): void {

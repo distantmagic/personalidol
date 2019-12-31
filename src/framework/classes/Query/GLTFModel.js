@@ -1,13 +1,17 @@
 // @flow
 
-import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-import type { LoadingManager, Object3D } from "three";
+import type { LoadingManager, Scene } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { Query } from "../../interfaces/Query";
 
-export default class FBXModel implements Query<Object3D> {
+type GLTFLoaderResponse = {|
+  scene: Scene,
+|};
+
+export default class GLTFModel implements Query<GLTFLoaderResponse> {
   +loadingManager: LoadingManager;
   +resourcesPath: string;
   +url: string;
@@ -18,8 +22,8 @@ export default class FBXModel implements Query<Object3D> {
     this.url = url;
   }
 
-  execute(cancelToken: CancelToken): Promise<Object3D> {
-    const loader = new FBXLoader(this.loadingManager);
+  execute(cancelToken: CancelToken): Promise<GLTFLoaderResponse> {
+    const loader = new GLTFLoader(this.loadingManager);
 
     return new Promise((resolve, reject) => {
       loader.setResourcePath(this.resourcesPath);
@@ -27,7 +31,7 @@ export default class FBXModel implements Query<Object3D> {
     });
   }
 
-  isEqual(other: FBXModel): boolean {
+  isEqual(other: GLTFModel): boolean {
     return this.url === other.url;
   }
 }

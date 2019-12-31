@@ -50,7 +50,7 @@ jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: 
           origin: [entityOrigin.x, entityOrigin.y, entityOrigin.z],
         });
         break;
-      case "model_fbx":
+      case "model_gltf":
         entityOrigin = quake2three(entity.getOrigin());
 
         yield new JSONRPCResponseData({

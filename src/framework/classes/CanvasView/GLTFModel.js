@@ -3,17 +3,16 @@
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
-import disposeObject3D from "../../helpers/disposeObject3D";
-import { default as FBXModelQuery } from "../Query/FBXModel";
+import { default as GLTFModelQuery } from "../Query/GLTFModel";
 import { default as TextureQuery } from "../Query/Texture";
 
-import type { Group, LoadingManager as THREELoadingManager, Material, Mesh, Object3D, Vector3 } from "three";
+import type { Group, LoadingManager as THREELoadingManager, Material, Mesh, Scene } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import type { QueryBus } from "../../interfaces/QueryBus";
 
-type WorkerFBXModel = {|
+type WorkerGLTFModel = {|
   +angle: number,
   +classname: "model_fbx",
   +model_name: string,
@@ -22,8 +21,8 @@ type WorkerFBXModel = {|
   +scale: number,
 |};
 
-function getMesh(model: Object3D): Mesh<BufferGeometry, Material> {
-  for (let child of model.children) {
+function getMesh(scene: Scene): Mesh<BufferGeometry, Material> {
+  for (let child of scene.children) {
     if (child instanceof THREE.Mesh) {
       return child;
     }
@@ -32,15 +31,14 @@ function getMesh(model: Object3D): Mesh<BufferGeometry, Material> {
   throw new Error("Could not find mesh.");
 }
 
-export default class FBXModel extends CanvasView {
+export default class GLTFModel extends CanvasView {
   +animationOffset: number;
   +baseUrl: string;
-  +entities: $ReadOnlyArray<WorkerFBXModel>;
+  +entities: $ReadOnlyArray<WorkerGLTFModel>;
   +group: Group;
   +queryBus: QueryBus;
   +texture: string;
   +threeLoadingManager: THREELoadingManager;
-  mesh: ?Object3D;
 
   constructor(
     canvasViewBag: CanvasViewBag,
@@ -50,7 +48,7 @@ export default class FBXModel extends CanvasView {
     baseUrl: string,
     texture: string,
     animationOffset: number,
-    entities: $ReadOnlyArray<WorkerFBXModel>
+    entities: $ReadOnlyArray<WorkerGLTFModel>
   ) {
     super(canvasViewBag);
 
@@ -58,7 +56,6 @@ export default class FBXModel extends CanvasView {
     this.baseUrl = baseUrl;
     this.entities = entities;
     this.group = group;
-    this.mesh = null;
     this.queryBus = queryBus;
     this.texture = texture;
     this.threeLoadingManager = threeLoadingManager;
@@ -67,55 +64,47 @@ export default class FBXModel extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const modelQuery = new FBXModelQuery(this.threeLoadingManager, this.baseUrl, `${this.baseUrl}model.fbx`);
-    const model: Object3D = await this.queryBus.enqueue(cancelToken, modelQuery).whenExecuted();
+    const modelQuery = new GLTFModelQuery(this.threeLoadingManager, this.baseUrl, `${this.baseUrl}model.glb`);
+    const response = await this.queryBus.enqueue(cancelToken, modelQuery).whenExecuted();
 
     const textureQuery = new TextureQuery(new THREE.TextureLoader(this.threeLoadingManager), `${this.baseUrl}${this.texture}`);
     const texture = await this.queryBus.enqueue(cancelToken, textureQuery).whenExecuted();
 
-    const baseMesh = getMesh(model);
+    const baseMesh = getMesh(response.scene);
     const boundingBox = new THREE.Box3();
 
     boundingBox.setFromBufferAttribute(baseMesh.geometry.attributes.position);
 
-    baseMesh.material.map = texture;
-    baseMesh.material.needsUpdate = true;
+    const material = new THREE.MeshPhongMaterial({
+      map: texture,
+    });
 
-    console.log(baseMesh.material);
+    const mesh = new THREE.InstancedMesh(baseMesh.geometry, material, this.entities.length);
 
-    const mesh = new THREE.InstancedMesh(baseMesh.geometry, baseMesh.material, this.entities.length);
-
-    this.mesh = mesh;
+    mesh.frustumCulled = false;
 
     const dummy = new THREE.Object3D();
 
     for (let i = 0; i < this.entities.length; i += 1) {
       const entity = this.entities[i];
 
-      dummy.position.set(...entity.origin);
+      dummy.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
       dummy.rotation.set(0, THREE.Math.degToRad(-1 * entity.angle), 0);
       dummy.scale.set(entity.scale, entity.scale, entity.scale);
       dummy.updateMatrix();
+
       mesh.setMatrixAt(i, dummy.matrix);
     }
 
     mesh.castShadow = true;
-    mesh.instanceMatrix.needsUpdate = true;
-    mesh.position.set(0, boundingBox.min.y, 0);
     mesh.receiveShadow = true;
 
-    this.group.add(mesh);
-  }
+    // adjust mesh position to compensate Trenchbroom offset
+    mesh.position.set(8, -24, 8);
 
-  async dispose(cancelToken: CancelToken): Promise<void> {
-    await super.dispose(cancelToken);
+    mesh.instanceMatrix.needsUpdate = true;
 
-    const mesh = this.mesh;
-
-    if (!mesh) {
-      return;
-    }
-
-    disposeObject3D(mesh, true);
+    this.children.add(mesh);
+    this.group.add(this.children);
   }
 }

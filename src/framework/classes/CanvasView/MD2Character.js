@@ -89,7 +89,8 @@ export default class MD2Character extends CanvasView {
     character.root.position.copy(this.origin);
     character.root.rotation.y = THREE.Math.degToRad(this.angle);
 
-    this.group.add(character.root);
+    this.children.add(character.root);
+    this.group.add(this.children);
 
     this.character = character;
   }
@@ -97,11 +98,12 @@ export default class MD2Character extends CanvasView {
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
+    this.group.remove(this.children);
+
     const character = this.character;
 
     if (character) {
       character.dispose();
-      this.group.remove(character.root);
     }
 
     const baseCharacter = this.baseCharacter;

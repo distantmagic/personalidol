@@ -4,7 +4,6 @@ import * as THREE from "three";
 import range from "lodash/range";
 
 import CanvasView from "../CanvasView";
-import disposeObject3D from "../../helpers/disposeObject3D";
 import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 
 import type { BufferGeometry, Group, LoadingManager as THREELoadingManager, Mesh, ShaderMaterial, Texture } from "three";
@@ -83,7 +82,6 @@ export default class QuakeBrush extends CanvasView {
 
     this.entity = entity;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.mesh = null;
     this.group = group;
 
     this.textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs.add("QuakeMapTextureLoader"), threeLoadingManager, queryBus);
@@ -121,22 +119,15 @@ export default class QuakeBrush extends CanvasView {
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
-    this.mesh = mesh;
-    this.group.add(mesh);
+    this.children.add(mesh);
+    this.group.add(this.children);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    const mesh = this.mesh;
-
-    if (!mesh) {
-      return;
-    }
-
-    disposeObject3D(mesh, false);
+    this.group.remove(this.children);
     this.textureLoader.dispose();
-    this.group.remove(mesh);
   }
 
   getMaterial(loadedTextures: $ReadOnlyArray<Texture>): Material {

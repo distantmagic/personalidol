@@ -8,7 +8,7 @@ import CanvasView from "../CanvasView";
 import JSONRPCClient from "../JSONRPCClient";
 import { default as AmbientLightView } from "./AmbientLight";
 import { default as AmbientSoundView } from "./AmbientSound";
-import { default as FBXModelView } from "./FBXModel";
+import { default as GLTFModelView } from "./GLTFModel";
 import { default as HemisphereLightView } from "./HemisphereLight";
 import { default as MD2CharacterView } from "./MD2Character";
 import { default as ParticlesView } from "./Particles";
@@ -80,12 +80,10 @@ export default class QuakeMap extends CanvasView {
 
     const entities: Promise<void>[] = [];
     let animationOffset = 0;
-    let fbxModels = [];
+    let gltfModels = [];
     let md2Models = [];
 
     for await (let entity of quakeMapRpcClient.requestGenerator(cancelToken, "/map", [this.source])) {
-      animationOffset += 200;
-
       switch (entity.classname) {
         case "light":
           // prettier-ignore
@@ -132,8 +130,8 @@ export default class QuakeMap extends CanvasView {
             "Loading world hemisphere light"
           ));
           break;
-        case "model_fbx":
-          fbxModels.push(entity);
+        case "model_gltf":
+          gltfModels.push(entity);
           break;
         case "model_md2":
           md2Models.push(entity);
@@ -192,31 +190,35 @@ export default class QuakeMap extends CanvasView {
 
     await Promise.all(entities);
 
-    const fbxGrouped = groupBy(fbxModels, "model_name");
-    const fbxModelsViews = [];
+    const gltfGrouped = groupBy(gltfModels, "model_name");
+    const gltfModelsViews = [];
 
-    for (let entity of uniqBy(fbxModels, "model_name")) {
+    for (let entity of uniqBy(gltfModels, "model_name")) {
+      animationOffset += 200;
+
       // prettier-ignore
-      fbxModelsViews.push(this.loadingManager.blocking(
+      gltfModelsViews.push(this.loadingManager.blocking(
         this.canvasViewBag.add(
           cancelToken,
-          new FBXModelView(
-            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("FBXModel")),
+          new GLTFModelView(
+            this.canvasViewBag.fork(this.loggerBreadcrumbs.add("GLTFModel")),
             this.queryBus,
             this.group,
             this.threeLoadingManager,
-            `/models/model-fbx-${entity.model_name}/`,
+            `/models/model-glb-${entity.model_name}/`,
             entity.model_texture,
             animationOffset,
-            fbxGrouped[entity.model_name]
+            gltfGrouped[entity.model_name]
           )
         ),
-        "Loading FBX model"
+        "Loading GLTF model"
       ));
     }
 
     const md2ModelsViews = [];
     for (let entity of md2Models) {
+      animationOffset += 200;
+
       // prettier-ignore
       md2ModelsViews.push(this.loadingManager.blocking(
         this.canvasViewBag.add(
@@ -238,7 +240,7 @@ export default class QuakeMap extends CanvasView {
       ));
     }
 
-    await Promise.all(fbxModelsViews);
+    await Promise.all(gltfModelsViews);
     await Promise.all(md2ModelsViews);
 
     this.scene.add(this.group);

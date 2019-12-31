@@ -32,11 +32,11 @@
     skin(integer) : "Skin ID" : 0
 ]
 
-@PointClass base(ExternalModel) = model_fbx : "External FBX model loaded into map"
+@PointClass base(ExternalModel) = model_gltf : "External GLTF (.glb) model loaded into map"
 [
     model_name(string) : "Model base name" : "bonfire"
     model_texture(string) : "Model texture filename relative to model directory" : "bonfire.png"
-    scale(integer) : "Model scale (1 = as defined in .FBX)" : 1
+    scale(integer) : "Model scale (1 = as defined in .GLB)" : 1
 ]
 
 @PointClass base(PlayerModel) = player : "Player entry point" []

@@ -1,11 +1,18 @@
 // @flow
 
+import * as THREE from "three";
+
+import disposeObject3D from "../helpers/disposeObject3D";
+
+import type { Group } from "three";
+
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { CanvasView as CanvasViewInterface } from "../interfaces/CanvasView";
 import type { CanvasViewBag } from "../interfaces/CanvasViewBag";
 
 export default class CanvasView implements CanvasViewInterface {
   +canvasViewBag: CanvasViewBag;
+  +children: Group;
   #isAttached: boolean;
   #isDisposed: boolean;
 
@@ -15,6 +22,7 @@ export default class CanvasView implements CanvasViewInterface {
 
   constructor(canvasViewBag: CanvasViewBag): void {
     this.canvasViewBag = canvasViewBag;
+    this.children = new THREE.Group();
     this.#isAttached = false;
     this.#isDisposed = false;
   }
@@ -29,6 +37,7 @@ export default class CanvasView implements CanvasViewInterface {
   async dispose(cancelToken: CancelToken): Promise<void> {
     this.#isAttached = false;
     await this.canvasViewBag.dispose(cancelToken);
+    disposeObject3D(this.children, true);
     this.#isDisposed = true;
   }
 

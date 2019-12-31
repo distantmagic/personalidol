@@ -37,7 +37,7 @@ export default class CameraController extends CanvasController implements Camera
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.renderer = renderer;
     this.scene = scene;
-    this.zoomTarget = 4;
+    this.zoomTarget = 1;
 
     this.#lookAt = this.scene.position.clone();
 
@@ -54,6 +54,7 @@ export default class CameraController extends CanvasController implements Camera
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
+    this.camera.far = 4096;
     this.lookAt(new THREE.Vector3(256 * 3, 0, 256 * 2));
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
@@ -102,7 +103,7 @@ export default class CameraController extends CanvasController implements Camera
   }
 
   panCamera(): void {
-    const baseDistance = 512 / this.zoomTarget;
+    const baseDistance = (256 * 3) / this.zoomTarget;
 
     this.cameraPositionTween.set({
       x: this.#lookAt.x + baseDistance,
@@ -118,8 +119,6 @@ export default class CameraController extends CanvasController implements Camera
     const width = viewportSize.getWidth();
 
     this.camera.aspect = width / height;
-    this.camera.fov = 75;
-
     this.camera.updateProjectionMatrix();
   }
 

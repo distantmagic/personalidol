@@ -65,7 +65,7 @@ export default class Particles extends CanvasView {
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.system.particlesGeometry.dispose();
+    this.system.dispose();
   }
 
   update(delta: number): void {

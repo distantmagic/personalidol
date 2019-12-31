@@ -824,6 +824,7 @@ declare module "three" {
     +scale: Vector3;
     animations: AnimationClip[];
     castShadow: boolean;
+    frustumCulled: boolean;
     name: string;
     receiveShadow: boolean;
     userData: any;
@@ -1186,8 +1187,7 @@ declare module "three" {
     enabled: boolean;
     autoUpdate: boolean;
     needsUpdate: boolean;
-    type: BasicShadowMap | PCFShadowMap | PCFSoftShadowMap;
-
+    type: typeof BasicShadowMap | typeof PCFShadowMap | typeof PCFSoftShadowMap;
     render(Scene, Camera): void;
   }
 }
