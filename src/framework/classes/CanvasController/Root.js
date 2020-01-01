@@ -71,7 +71,7 @@ export default class Root extends CanvasController {
     this.audioLoader = new THREE.AudioLoader(threeLoadingManager);
 
     this.camera = new THREE.PerspectiveCamera();
-    this.camera.add(this.audioListener);
+    // this.camera.add(this.audioListener);
 
     this.canvasControllerBus = canvasControllerBus;
     this.debug = debug;
@@ -86,7 +86,7 @@ export default class Root extends CanvasController {
     // this.scene.fog = new THREE.Fog(0x000000, 256, 1024);
 
     this.scheduler = scheduler;
-    this.cameraController = new CameraController(canvasViewBag, this.camera, loggerBreadcrumbs, renderer, this.scene);
+    this.cameraController = new CameraController(canvasViewBag, this.camera, this.debug, loggerBreadcrumbs.add("CameraController"), renderer, this.scene);
     this.threeLoadingManager = threeLoadingManager;
     this.threePointerInteraction = new THREEPointerInteraction(renderer, this.camera);
 

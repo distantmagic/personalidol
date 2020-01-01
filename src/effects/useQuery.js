@@ -29,7 +29,7 @@ export default function useQuery<T>(exceptionHandler: ExceptionHandler, loggerBr
 
       cancelTokenQuery
         .whenExecuted()
-        .then(() => {
+        .then(function() {
           return setIsExecuted(true);
         })
         .catch(async function(err) {

@@ -1,5 +1,7 @@
 // @flow
 
+import autoBind from "auto-bind";
+
 import CancelTokenQuery from "./CancelTokenQuery";
 import EventListenerSet from "./EventListenerSet";
 import QueryBatch from "./QueryBatch";
@@ -21,6 +23,8 @@ export default class QueryBus implements QueryBusInterface {
   collection: QueryBusQueueCollection<any>;
 
   constructor(exceptionHandler: ExceptionHandler, loggerBreadcrumbs: LoggerBreadcrumbs) {
+    autoBind(this);
+
     this.collection = [];
     this.enqueuedCallbacks = new EventListenerSet<[Query<any>]>();
     this.exceptionHandler = exceptionHandler;

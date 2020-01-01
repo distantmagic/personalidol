@@ -5,6 +5,7 @@ import autoBind from "auto-bind";
 
 import CanvasView from "../CanvasView";
 import { default as MD2CharacterQuery } from "../Query/MD2Character";
+import { default as QuakeMapException } from "../Exception/QuakeMap";
 import { default as RemoteJSONQuery } from "../Query/RemoteJSON";
 import { default as THREEMD2Character } from "../MD2Character";
 
@@ -114,12 +115,20 @@ export default class MD2Character extends CanvasView {
     }
   }
 
-  update(delta: number): void {
+  getCharacter(): THREEMD2CharacterInterface {
     const character = this.character;
 
-    if (character) {
-      character.update(delta / 1000);
+    if (!character) {
+      throw new QuakeMapException(this.loggerBreadcrumbs.add("getCharacter"), "Character is not set, but it was expected.");
     }
+
+    return character;
+  }
+
+  update(delta: number): void {
+    super.update(delta);
+
+    this.getCharacter().update(delta / 1000);
   }
 
   useUpdate(): boolean {

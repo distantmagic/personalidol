@@ -715,6 +715,8 @@ declare module "three" {
   declare export class Frustum {
     +planes: [Plane, Plane, Plane, Plane, Plane, Plane];
 
+    constructor(): void;
+
     constructor(p0: Plane, p1: Plane, p2: Plane, p3: Plane, p4: Plane, p5: Plane): void;
 
     containsPoint(Vector3): boolean;
@@ -726,6 +728,8 @@ declare module "three" {
     intersectsBox(Box3): boolean;
 
     intersectsObject(Object3D): boolean;
+
+    setFromMatrix(Matrix4): Frustum;
   }
 
   declare export class GridHelper extends Object3D {

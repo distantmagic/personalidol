@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from "react";
+import * as THREE from "three";
 
 import type { DebuggerStateValue } from "../framework/types/DebuggerStateValue";
 import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
@@ -25,6 +26,10 @@ function printValue(value: DebuggerStateValue): string {
 
   if ("string" === typeof value) {
     return value;
+  }
+
+  if (value instanceof THREE.Vector2) {
+    return `vec2(${printValue(value.toArray())})`;
   }
 
   return `vec3(${printValue(value.toArray())})`;

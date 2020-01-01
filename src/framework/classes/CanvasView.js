@@ -41,6 +41,8 @@ export default class CanvasView implements CanvasViewInterface {
     this.#isDisposed = true;
   }
 
+  draw(interpolationPercentage: number): void {}
+
   end(fps: number, isPanicked: boolean): void {}
 
   isAttached(): boolean {
@@ -76,6 +78,10 @@ export default class CanvasView implements CanvasViewInterface {
   update(delta: number): void {}
 
   useBegin(): boolean {
+    return false;
+  }
+
+  useDraw(): boolean {
     return false;
   }
 

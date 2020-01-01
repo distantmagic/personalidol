@@ -15,8 +15,6 @@ export default class ClockReactiveController implements ClockReactiveControllerI
   }
 
   interval(cancelToken: CancelToken): Promise<void> {
-    return this.clock.interval(cancelToken, () => {
-      this.clockReactive.tick();
-    });
+    return this.clock.interval(cancelToken, this.clockReactive.tick);
   }
 }

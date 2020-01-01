@@ -12,7 +12,6 @@
     "mainloop.js": "^1.0.4",
     "mathjs": "^6.2.5",
     "modernizr": "^3.8.0",
-    "ola": "^1.1.0",
     "partykals": "github:RonenNess/partykals",
     "raf": "^3.4.1",
     "react": "^16.12.0",
