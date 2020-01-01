@@ -12,6 +12,7 @@ import { default as QuakeMapException } from "../../framework/classes/Exception/
 
 import type { CancelToken as CancelTokenInterface } from "../../framework/interfaces/CancelToken";
 import type { JSONRPCRequest } from "../../framework/interfaces/JSONRPCRequest";
+import type { QuakeEntity as QuakeEntityInterface } from "../../framework/interfaces/QuakeEntity";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -22,13 +23,44 @@ const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker", "QuakeMap"]);
 const cancelToken = new CancelToken(loggerBreadcrumbs);
 const jsonRpcServer = new JSONRPCServer(loggerBreadcrumbs, self.postMessage.bind(self));
 
+function createGeometryBuffers(className: string, entity: QuakeEntityInterface) {
+  const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
+
+  for (let brush of entity.getBrushes()) {
+    quakeBrushGeometryBuilder.addBrush(brush);
+  }
+
+  const normals = Float32Array.from(quakeBrushGeometryBuilder.getNormals());
+  const textures = Float32Array.from(quakeBrushGeometryBuilder.getTexturesIndices());
+  const uvs = Float32Array.from(quakeBrushGeometryBuilder.getUvs());
+  const vertices = Float32Array.from(quakeBrushGeometryBuilder.getVertices());
+
+  // prettier-ignore
+  return new JSONRPCResponseData(
+    {
+      classname: className,
+      normals: normals.buffer,
+      texturesIndices: textures.buffer,
+      texturesNames: quakeBrushGeometryBuilder.getTexturesNames(),
+      uvs: uvs.buffer,
+      vertices: vertices.buffer,
+    },
+    [
+      normals.buffer,
+      textures.buffer,
+      uvs.buffer,
+      vertices.buffer
+    ]
+  );
+}
+
 jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: CancelTokenInterface, request: JSONRPCRequest) {
   const breadcrumbs = loggerBreadcrumbs.add("/map");
   const [source: string] = request.getParams();
   const quakeMapQuery = new PlainTextQuery(source);
   const quakeMapContent = await quakeMapQuery.execute(cancelToken);
   const quakeMapParser = new QuakeMapParser(breadcrumbs, quakeMapContent);
-  const worldspawn = [];
+  const entitiesWithBrushes = [];
 
   for (let entity of quakeMapParser.parse()) {
     const entityClassName = entity.getClassName();
@@ -37,7 +69,9 @@ jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: 
 
     switch (entityClassName) {
       case "func_group":
-        // this is the editor entity, can be ignored here
+        // this func is primarily for a game logic, but it can also group
+        // geometries
+        entitiesWithBrushes.push(["func_group", entity]);
         break;
       case "light":
         entityOrigin = quake2three(entity.getOrigin());
@@ -88,7 +122,7 @@ jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: 
         // leave worldspawn at the end for better performance
         // it takes a long time to parse a map file, in the meantime the main
         // thread can load models, etc
-        worldspawn.push(entity);
+        entitiesWithBrushes.push(["worldspawn", entity]);
 
         if (entityProperties.hasPropertyKey("light")) {
           const sceneryType = entityProperties.getPropertyByKey("scenery").asNumber();
@@ -123,35 +157,8 @@ jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: 
     }
   }
 
-  for (let entity of worldspawn) {
-    const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
-
-    for (let brush of entity.getBrushes()) {
-      quakeBrushGeometryBuilder.addBrush(brush);
-    }
-
-    const normals = Float32Array.from(quakeBrushGeometryBuilder.getNormals());
-    const textures = Float32Array.from(quakeBrushGeometryBuilder.getTexturesIndices());
-    const uvs = Float32Array.from(quakeBrushGeometryBuilder.getUvs());
-    const vertices = Float32Array.from(quakeBrushGeometryBuilder.getVertices());
-
-    // prettier-ignore
-    yield new JSONRPCResponseData(
-      {
-        classname: "worldspawn",
-        normals: normals.buffer,
-        texturesIndices: textures.buffer,
-        texturesNames: quakeBrushGeometryBuilder.getTexturesNames(),
-        uvs: uvs.buffer,
-        vertices: vertices.buffer,
-      },
-      [
-        normals.buffer,
-        textures.buffer,
-        uvs.buffer,
-        vertices.buffer
-      ]
-    );
+  for (let item of entitiesWithBrushes) {
+    yield createGeometryBuffers(...item);
   }
 });
 

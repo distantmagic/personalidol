@@ -131,6 +131,58 @@ export default class QuakeBrush extends CanvasView {
   }
 
   getMaterial(loadedTextures: $ReadOnlyArray<Texture>): Material {
+    const fragmentShader = `
+      // THREE Uniforms
+      uniform vec3 diffuse;
+      uniform vec3 emissive;
+      uniform vec3 specular;
+      uniform float shininess;
+      uniform float opacity;
+
+      // Custom variables
+      uniform sampler2D u_textures[NUM_TEXTURES];
+      varying float v_textureIndex;
+
+      ${THREE.ShaderChunk.common}
+      ${THREE.ShaderChunk.packing}
+      ${THREE.ShaderChunk.uv_pars_fragment}
+      ${THREE.ShaderChunk.bsdfs}
+      ${THREE.ShaderChunk.lights_pars_begin}
+      ${THREE.ShaderChunk.lights_phong_pars_fragment}
+      ${THREE.ShaderChunk.shadowmap_pars_fragment}
+
+      void main() {
+        // phong shader chunk
+        vec4 diffuseColor = vec4( diffuse, opacity );
+        ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
+        vec3 totalEmissiveRadiance = emissive;
+
+        // replace 'map_fragment' with multi-texture sampling
+        ${range(loadedTextures.length)
+          .map(
+            (index: number) => `
+          if ( v_textureIndex < ${index}.9 ) {
+            diffuseColor = mapTexelToLinear( texture2D( u_textures[ ${index} ], vUv ) );
+          }
+        `
+          )
+          .join(" else ")}
+
+        ${THREE.ShaderChunk.specularmap_fragment}
+        ${THREE.ShaderChunk.normal_fragment_begin}
+        ${THREE.ShaderChunk.lights_phong_fragment}
+        ${THREE.ShaderChunk.lights_fragment_begin}
+        ${THREE.ShaderChunk.lights_fragment_end}
+
+        // phong shader chunk
+        vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
+        gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+        ${THREE.ShaderChunk.tonemapping_fragment}
+        ${THREE.ShaderChunk.encodings_fragment}
+      }
+    `;
+
     return new THREE.ShaderMaterial({
       lights: true,
 
@@ -140,60 +192,7 @@ export default class QuakeBrush extends CanvasView {
         USE_UV: "",
       },
 
-      fragmentShader: `
-        // THREE Uniforms
-        uniform vec3 diffuse;
-        uniform vec3 emissive;
-        uniform vec3 specular;
-        uniform float shininess;
-        uniform float opacity;
-
-        // Custom variables
-        uniform sampler2D u_textures[NUM_TEXTURES];
-        varying float v_textureIndex;
-
-        ${THREE.ShaderChunk.common}
-        ${THREE.ShaderChunk.packing}
-        ${THREE.ShaderChunk.uv_pars_fragment}
-        ${THREE.ShaderChunk.bsdfs}
-        ${THREE.ShaderChunk.lights_pars_begin}
-        ${THREE.ShaderChunk.lights_phong_pars_fragment}
-        ${THREE.ShaderChunk.shadowmap_pars_fragment}
-
-        void main() {
-          // phong shader chunk
-          vec4 diffuseColor = vec4( diffuse, opacity );
-          ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-          vec3 totalEmissiveRadiance = emissive;
-
-          // replace 'map_fragment' with multi-texture sampling
-          int textureIndex = int( v_textureIndex );
-
-          ${range(loadedTextures.length)
-            .map(
-              textureIndex =>
-                `
-              if (textureIndex == ${textureIndex}) {
-                diffuseColor *= mapTexelToLinear( texture2D( u_textures[ ${textureIndex} ], vUv ) );
-              }
-            `
-            )
-            .join(" else ")}
-
-          ${THREE.ShaderChunk.specularmap_fragment}
-          ${THREE.ShaderChunk.normal_fragment_begin}
-          ${THREE.ShaderChunk.lights_phong_fragment}
-          ${THREE.ShaderChunk.lights_fragment_begin}
-          ${THREE.ShaderChunk.lights_fragment_end}
-
-          // phong shader chunk
-          vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
-          gl_FragColor = vec4( outgoingLight, diffuseColor.a );
-
-          ${THREE.ShaderChunk.tonemapping_fragment}
-          ${THREE.ShaderChunk.encodings_fragment}
-        }
-      `,
+      fragmentShader: fragmentShader,
 
       uniforms: THREE.UniformsUtils.merge([
         THREE.ShaderLib.phong.uniforms,

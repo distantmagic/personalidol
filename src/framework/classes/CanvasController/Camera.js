@@ -73,9 +73,13 @@ export default class CameraController extends CanvasController implements Camera
     const targetY = this.cameraPositionTween.y;
     const targetZ = this.cameraPositionTween.z;
 
-    if (this.camera.position.x === targetX && this.camera.position.y === targetY && this.camera.position.y === targetZ) {
+    if (this.camera.position.x === targetX && this.camera.position.y === targetY && this.camera.position.z === targetZ) {
       return;
     }
+
+    const frustum = new THREE.Frustum();
+
+    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
 
     this.camera.position.set(targetX, targetY, targetZ);
     this.camera.lookAt(this.#lookAt);

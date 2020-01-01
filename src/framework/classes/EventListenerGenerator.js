@@ -1,7 +1,5 @@
 // @flow
 
-import raf from "raf";
-
 import type { CancelToken } from "../interfaces/CancelToken";
 import type { EventListenerGenerator as EventListenerGeneratorInterface } from "../interfaces/EventListenerGenerator";
 import type { EventListenerSet } from "../interfaces/EventListenerSet";
@@ -15,7 +13,7 @@ type GeneratorBuffer<Arguments> = Array<{|
 function produceBuffered<Arguments>(buffer: GeneratorBuffer<Arguments>): Promise<void> {
   return new Promise(resolve => {
     const bufferedPromise = new Promise(bufferedResolve => {
-      raf(function() {
+      requestAnimationFrame(function() {
         buffer.push({
           isUtilized: false,
           promise: bufferedPromise,

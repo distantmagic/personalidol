@@ -84,6 +84,24 @@ export default class QuakeMap extends CanvasView {
 
     for await (let entity of quakeMapRpcClient.requestGenerator(cancelToken, "/map", [this.source])) {
       switch (entity.classname) {
+        case "func_group":
+        case "worldspawn":
+          // prettier-ignore
+          entities.push(this.loadingManager.blocking(
+            this.canvasViewBag.add(
+              cancelToken,
+              new QuakeBrushView(
+                this.loggerBreadcrumbs.add("QuakeBrush"),
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
+                entity,
+                this.children,
+                this.queryBus,
+                this.threeLoadingManager
+              )
+            ),
+            "Loading entity brush"
+          ));
+          break;
         case "light":
           // prettier-ignore
           entities.push(this.loadingManager.blocking(
@@ -163,23 +181,6 @@ export default class QuakeMap extends CanvasView {
               new ParticlesView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")), this.children, new THREE.Vector3(...entity.origin))
             ),
             "Loading particles"
-          ));
-          break;
-        case "worldspawn":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new QuakeBrushView(
-                this.loggerBreadcrumbs.add("QuakeBrush"),
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
-                entity,
-                this.children,
-                this.queryBus,
-                this.threeLoadingManager
-              )
-            ),
-            "Loading entity brush"
           ));
           break;
         default:

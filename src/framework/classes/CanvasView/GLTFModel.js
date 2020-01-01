@@ -14,7 +14,7 @@ import type { QueryBus } from "../../interfaces/QueryBus";
 
 type WorkerGLTFModel = {|
   +angle: number,
-  +classname: "model_fbx",
+  +classname: "model_gltf",
   +model_name: string,
   +model_texture: string,
   +origin: [number, number, number],
@@ -101,6 +101,7 @@ export default class GLTFModel extends CanvasView {
     mesh.receiveShadow = true;
 
     // adjust mesh position to compensate Trenchbroom offset
+    // model "brick" size is defined in .fgd file
     mesh.position.set(8, -24, 8);
 
     mesh.instanceMatrix.needsUpdate = true;

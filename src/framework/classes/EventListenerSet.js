@@ -23,8 +23,51 @@ export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements
   }
 
   notify(args: Arguments): void {
-    for (let callback of this.callbacks) {
-      callback(...args);
+    // optimize unwinding function calls
+    // this method is called each animation frame, so every milisecond matters
+    switch (args.length) {
+      case 0:
+        for (let i = 0; i < this.callbacks.length; i += 1) {
+          // $FlowFixMe
+          this.callbacks[i].call(null);
+        }
+        break;
+      case 1:
+        for (let i = 0; i < this.callbacks.length; i += 1) {
+          // $FlowFixMe
+          this.callbacks[i].call(null, args[0]);
+        }
+        break;
+      case 2:
+        for (let i = 0; i < this.callbacks.length; i += 1) {
+          // $FlowFixMe
+          this.callbacks[i].call(null, args[0], args[1]);
+        }
+        break;
+      case 3:
+        for (let i = 0; i < this.callbacks.length; i += 1) {
+          // $FlowFixMe
+          this.callbacks[i].call(null, args[0], args[1], args[2]);
+        }
+        break;
+      case 4:
+        for (let i = 0; i < this.callbacks.length; i += 1) {
+          // $FlowFixMe
+          this.callbacks[i].call(null, args[0], args[1], args[2], args[3]);
+        }
+        break;
+      case 5:
+        for (let i = 0; i < this.callbacks.length; i += 1) {
+          // $FlowFixMe
+          this.callbacks[i].call(null, args[0], args[1], args[2], args[3], args[4]);
+        }
+        break;
+      default:
+        for (let i = 0; i < this.callbacks.length; i += 1) {
+          // $FlowFixMe
+          this.callbacks[i].call(null, ...args);
+        }
+        break;
     }
   }
 }
