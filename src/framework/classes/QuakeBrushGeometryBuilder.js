@@ -162,10 +162,10 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
   getGeometry(): BufferGeometry {
     const geometry = new THREE.BufferGeometry();
 
-    geometry.setAttribute("position", new THREE.Float32BufferAttribute(this.getVertices(), 3));
     geometry.setAttribute("normal", new THREE.Float32BufferAttribute(this.getNormals(), 3));
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(this.getVertices(), 3));
+    geometry.setAttribute("texture_index", new THREE.Float32BufferAttribute(this.getTexturesIndices(), 1));
     geometry.setAttribute("uv", new THREE.Float32BufferAttribute(this.getUvs(), 2));
-    geometry.setAttribute("a_textureIndex", new THREE.Float32BufferAttribute(this.getTexturesIndices(), 1));
 
     return geometry;
   }

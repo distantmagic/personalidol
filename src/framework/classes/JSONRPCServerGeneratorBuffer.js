@@ -1,6 +1,6 @@
 // @flow
 
-import uuidv4 from "uuid/v4";
+import * as THREE from "three";
 
 import { default as JSONRPCGeneratorChunkResponse } from "./JSONRPCResponse/GeneratorChunk";
 
@@ -27,7 +27,7 @@ export default class JSONRPCServerGeneratorBuffer<T> implements JSONRPCServerGen
   }
 
   add(request: JSONRPCRequestInterface, responseDataChunk: JSONRPCResponseData<T>): void {
-    const currentChunkId = uuidv4();
+    const currentChunkId = THREE.Math.generateUUID();
     const headChunkId = this.headChunkId || currentChunkId;
     const previous = this.previous;
 

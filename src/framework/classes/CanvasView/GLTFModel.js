@@ -83,6 +83,7 @@ export default class GLTFModel extends CanvasView {
     const mesh = new THREE.InstancedMesh(baseMesh.geometry.clone(), material, this.entities.length);
 
     mesh.frustumCulled = false;
+    mesh.matrixAutoUpdate = false;
 
     const dummy = new THREE.Object3D();
 
@@ -105,6 +106,7 @@ export default class GLTFModel extends CanvasView {
     mesh.position.set(8, -24, 8);
 
     mesh.instanceMatrix.needsUpdate = true;
+    mesh.updateMatrix();
 
     this.children.add(mesh);
     this.group.add(this.children);

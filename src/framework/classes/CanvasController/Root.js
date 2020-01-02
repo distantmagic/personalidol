@@ -83,6 +83,7 @@ export default class Root extends CanvasController {
     this.renderer = renderer;
 
     this.scene = new THREE.Scene();
+    this.scene.matrixAutoUpdate = false;
     // this.scene.fog = new THREE.Fog(0x000000, 256, 1024);
 
     this.scheduler = scheduler;

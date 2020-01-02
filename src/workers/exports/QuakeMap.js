@@ -1,10 +1,13 @@
 // @flow
 
+import * as THREE from "three";
+
 import bootstrapWorker from "../../framework/helpers/bootstrapWorker";
 import JSONRPCResponseData from "../../framework/classes/JSONRPCResponseData";
 import quake2three from "../../framework/helpers/quake2three";
 import QuakeBrushGeometryBuilder from "../../framework/classes/QuakeBrushGeometryBuilder";
 import QuakeMapParser from "../../framework/classes/QuakeMapParser";
+import QuakeMapTextureLoader from "../../framework/classes/QuakeMapTextureLoader";
 import { default as PlainTextQuery } from "../../framework/classes/Query/PlainText";
 import { default as QuakeMapException } from "../../framework/classes/Exception/QuakeMap";
 
@@ -13,6 +16,7 @@ import type { JSONRPCRequest } from "../../framework/interfaces/JSONRPCRequest";
 import type { JSONRPCServer } from "../../framework/interfaces/JSONRPCServer";
 import type { LoggerBreadcrumbs } from "../../framework/interfaces/LoggerBreadcrumbs";
 import type { QuakeEntity } from "../../framework/interfaces/QuakeEntity";
+import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../framework/interfaces/QuakeMapTextureLoader";
 import type { QueryBus } from "../../framework/interfaces/QueryBus";
 
 declare var self: DedicatedWorkerGlobalScope;
@@ -20,11 +24,10 @@ declare var self: DedicatedWorkerGlobalScope;
 const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
 
-async function createGeometryBuffers(className: string, entity: QuakeEntity, queryBus: QueryBus) {
+async function createGeometryBuffers(cancelToken: CancelToken, className: string, entity: QuakeEntity) {
   const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
   for (let brush of entity.getBrushes()) {
-    console.log(brush.getTextures());
     quakeBrushGeometryBuilder.addBrush(brush);
   }
 
@@ -56,8 +59,10 @@ function getEntityOrigin(entity: QuakeEntity): [number, number, number] {
   return quake2three(entity.getOrigin()).toArray();
 }
 
-self.onmessage = bootstrapWorker(function(cancelToken: CancelToken, loggerBreadcrumbs: LoggerBreadcrumbs, jsonRpcServer: JSONRPCServer, queryBus: QueryBus) {
-  jsonRpcServer.returnGenerator(cancelToken, "/map", async function*(cancelToken: CancelToken, request: JSONRPCRequest) {
+self.onmessage = bootstrapWorker(function(serverCancelToken: CancelToken, loggerBreadcrumbs: LoggerBreadcrumbs, jsonRpcServer: JSONRPCServer, queryBus: QueryBus) {
+  const threeLoadingManager = new THREE.LoadingManager();
+
+  jsonRpcServer.returnGenerator(serverCancelToken, "/map", async function*(cancelToken: CancelToken, request: JSONRPCRequest) {
     const breadcrumbs = loggerBreadcrumbs.add("/map");
     const [source: string] = request.getParams();
     const quakeMapQuery = new PlainTextQuery(source);
@@ -157,7 +162,7 @@ self.onmessage = bootstrapWorker(function(cancelToken: CancelToken, loggerBreadc
     }
 
     for (let [entityClassName, entity] of entitiesWithBrushes) {
-      yield await createGeometryBuffers(entityClassName, entity, queryBus);
+      yield await createGeometryBuffers(cancelToken, entityClassName, entity);
     }
   });
 });

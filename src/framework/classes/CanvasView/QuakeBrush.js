@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import range from "lodash/range";
 
 import CanvasView from "../CanvasView";
 import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
@@ -24,6 +23,59 @@ type WorkerQuakeBrush = {|
   +vertices: ArrayBuffer,
 |};
 
+const TEXTURE_SIZE = 128;
+
+const fragmentShader = `
+  // THREE Uniforms
+  uniform vec3 diffuse;
+  uniform vec3 emissive;
+  uniform vec3 specular;
+  uniform float shininess;
+  uniform float opacity;
+
+  // Custom variables
+  uniform sampler2D u_texture_atlas;
+  uniform float u_texture_count;
+  varying float v_textureIndex;
+
+  ${THREE.ShaderChunk.common}
+  ${THREE.ShaderChunk.packing}
+  ${THREE.ShaderChunk.uv_pars_fragment}
+  ${THREE.ShaderChunk.bsdfs}
+  ${THREE.ShaderChunk.lights_pars_begin}
+  ${THREE.ShaderChunk.lights_phong_pars_fragment}
+  ${THREE.ShaderChunk.shadowmap_pars_fragment}
+
+  void main() {
+    // phong shader chunk
+    vec4 diffuseColor = vec4( diffuse, opacity );
+    ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
+    vec3 totalEmissiveRadiance = emissive;
+
+    // replace 'map_fragment' with multi-texture sampling
+    float texture_window_size = 1.0 / u_texture_count;
+    vec2 atlas_uv = vec2(
+      vUv.x,
+      vUv.y
+    );
+
+    diffuseColor = mapTexelToLinear( texture2D( u_texture_atlas, atlas_uv ) );
+
+    ${THREE.ShaderChunk.specularmap_fragment}
+    ${THREE.ShaderChunk.normal_fragment_begin}
+    ${THREE.ShaderChunk.lights_phong_fragment}
+    ${THREE.ShaderChunk.lights_fragment_begin}
+    ${THREE.ShaderChunk.lights_fragment_end}
+
+    // phong shader chunk
+    vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
+    gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+    ${THREE.ShaderChunk.tonemapping_fragment}
+    ${THREE.ShaderChunk.encodings_fragment}
+  }
+`;
+
 const vertexShader = `
   varying vec3 vViewPosition;
 
@@ -35,15 +87,15 @@ const vertexShader = `
   ${THREE.ShaderChunk.uv_pars_vertex}
   ${THREE.ShaderChunk.shadowmap_pars_vertex}
 
-  attribute float a_textureIndex;
+  attribute float texture_index;
   varying float v_textureIndex;
 
   void main() {
     ${THREE.ShaderChunk.uv_vertex}
 
-    // use custom 'a_textureIndex' buffer geometry parameter to select
+    // use custom 'texture_index' buffer geometry parameter to select
     // appropriate texture in fragment shader
-    v_textureIndex = a_textureIndex + 0.5;
+    v_textureIndex = texture_index + 0.5;
 
     ${THREE.ShaderChunk.beginnormal_vertex}
     ${THREE.ShaderChunk.defaultnormal_vertex}
@@ -62,6 +114,30 @@ const vertexShader = `
   }
 `;
 
+function getMaterial(textureAtlas: Texture, textureCount: number): ShaderMaterial {
+  return new THREE.ShaderMaterial({
+    lights: true,
+
+    defines: {
+      PHONG: "",
+      USE_UV: "",
+    },
+
+    fragmentShader: fragmentShader,
+
+    uniforms: THREE.UniformsUtils.merge([
+      THREE.ShaderLib.phong.uniforms,
+      {
+        shininess: new THREE.Uniform(1),
+        u_texture_atlas: new THREE.Uniform(textureAtlas),
+        u_texture_count: new THREE.Uniform(textureCount),
+      },
+    ]),
+
+    vertexShader: vertexShader,
+  });
+}
+
 export default class QuakeBrush extends CanvasView {
   +entity: WorkerQuakeBrush;
   +group: Group;
@@ -69,6 +145,8 @@ export default class QuakeBrush extends CanvasView {
   +textureLoader: QuakeMapTextureLoaderInterface;
   +threeLoadingManager: THREELoadingManager;
   mesh: ?Mesh<BufferGeometry, ShaderMaterial>;
+
+  static shaderMaterial: ?ShaderMaterial;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -97,10 +175,10 @@ export default class QuakeBrush extends CanvasView {
 
     const geometry = new THREE.BufferGeometry();
 
-    geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
+    geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+    geometry.setAttribute("texture_index", new THREE.BufferAttribute(texturesIndices, 1));
     geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
-    geometry.setAttribute("a_textureIndex", new THREE.BufferAttribute(texturesIndices, 1));
 
     for (let texture of this.entity.texturesNames) {
       if ("__TB_empty" === texture) {
@@ -111,8 +189,29 @@ export default class QuakeBrush extends CanvasView {
     }
 
     const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
+    const textureAtlasHeight = loadedTextures.length * TEXTURE_SIZE;
+    const atlasCanvas: HTMLCanvasElement = document.createElement("canvas");
 
-    const material = this.getMaterial(loadedTextures);
+    atlasCanvas.height = textureAtlasHeight;
+    atlasCanvas.width = TEXTURE_SIZE;
+
+    const atlasCanvasContext = atlasCanvas.getContext("2d");
+
+    for (let i = 0; i < loadedTextures.length; i += 1) {
+      atlasCanvasContext.drawImage(loadedTextures[i].image, 0, i * TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE);
+    }
+
+    // make texture atlas size a power of two because of performance reasons
+    const textureAtlasSide = THREE.Math.ceilPowerOfTwo(textureAtlasHeight)
+
+    // iOS/Safari: conversion fixes ArrayBuffer is not Uint8Array
+    const textureData = Uint8Array.from(atlasCanvasContext.getImageData(0, 0, textureAtlasSide, textureAtlasSide).data);
+
+    const textureAtlas = new THREE.DataTexture(textureData, textureAtlasSide, textureAtlasSide);
+
+    textureAtlas.wrapS = textureAtlas.wrapT = THREE.RepeatWrapping;
+
+    const material = getMaterial(textureAtlas, loadedTextures.length);
     const mesh = new THREE.Mesh(geometry, material);
 
     // TODO ios material behaves like if 'castShadow' if 'false'
@@ -128,81 +227,5 @@ export default class QuakeBrush extends CanvasView {
 
     this.group.remove(this.children);
     this.textureLoader.dispose();
-  }
-
-  getMaterial(loadedTextures: $ReadOnlyArray<Texture>): Material {
-    const fragmentShader = `
-      // THREE Uniforms
-      uniform vec3 diffuse;
-      uniform vec3 emissive;
-      uniform vec3 specular;
-      uniform float shininess;
-      uniform float opacity;
-
-      // Custom variables
-      uniform sampler2D u_textures[NUM_TEXTURES];
-      varying float v_textureIndex;
-
-      ${THREE.ShaderChunk.common}
-      ${THREE.ShaderChunk.packing}
-      ${THREE.ShaderChunk.uv_pars_fragment}
-      ${THREE.ShaderChunk.bsdfs}
-      ${THREE.ShaderChunk.lights_pars_begin}
-      ${THREE.ShaderChunk.lights_phong_pars_fragment}
-      ${THREE.ShaderChunk.shadowmap_pars_fragment}
-
-      void main() {
-        // phong shader chunk
-        vec4 diffuseColor = vec4( diffuse, opacity );
-        ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-        vec3 totalEmissiveRadiance = emissive;
-
-        // replace 'map_fragment' with multi-texture sampling
-        ${range(loadedTextures.length)
-          .map(
-            (index: number) => `
-          if ( v_textureIndex < ${index}.9 ) {
-            diffuseColor = mapTexelToLinear( texture2D( u_textures[ ${index} ], vUv ) );
-          }
-        `
-          )
-          .join(" else ")}
-
-        ${THREE.ShaderChunk.specularmap_fragment}
-        ${THREE.ShaderChunk.normal_fragment_begin}
-        ${THREE.ShaderChunk.lights_phong_fragment}
-        ${THREE.ShaderChunk.lights_fragment_begin}
-        ${THREE.ShaderChunk.lights_fragment_end}
-
-        // phong shader chunk
-        vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
-        gl_FragColor = vec4( outgoingLight, diffuseColor.a );
-
-        ${THREE.ShaderChunk.tonemapping_fragment}
-        ${THREE.ShaderChunk.encodings_fragment}
-      }
-    `;
-
-    return new THREE.ShaderMaterial({
-      lights: true,
-
-      defines: {
-        NUM_TEXTURES: String(loadedTextures.length),
-        PHONG: "",
-        USE_UV: "",
-      },
-
-      fragmentShader: fragmentShader,
-
-      uniforms: THREE.UniformsUtils.merge([
-        THREE.ShaderLib.phong.uniforms,
-        {
-          shininess: new THREE.Uniform(1),
-          u_textures: new THREE.Uniform(loadedTextures),
-        },
-      ]),
-
-      vertexShader: vertexShader,
-    });
   }
 }

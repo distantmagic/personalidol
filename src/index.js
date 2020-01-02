@@ -55,7 +55,7 @@ function init(rootElement: HTMLElement): void {
     onWindowResize();
 
     debug.setIsEnabled(
-      yn(env(loggerBreadcrumbs.add("debug"), "REACT_APP_FEATURE_DEBUGGER", ""), {
+      yn(env(loggerBreadcrumbs, "REACT_APP_FEATURE_DEBUGGER", ""), {
         default: false,
       })
     );

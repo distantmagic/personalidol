@@ -180,6 +180,48 @@ declare module "three" {
     [string]: string,
   };
 
+  declare type TextureFormat =
+    | typeof AlphaFormat
+    | typeof DepthFormat
+    | typeof DepthStencilFormat
+    | typeof LuminanceAlphaFormat
+    | typeof LuminanceFormat
+    | typeof RedFormat
+    | typeof RedIntegerFormat
+    | typeof RGBAFormat
+    | typeof RGBAIntegerFormat
+    | typeof RGBEFormat
+    | typeof RGBFormat
+    | typeof RGBIntegerFormat
+    | typeof RGFormat
+    | typeof RGIntegerFormat;
+
+  declare type TextureMappingMode =
+    | typeof CubeReflectionMapping
+    | typeof CubeRefractionMapping
+    | typeof CubeUVReflectionMapping
+    | typeof CubeUVRefractionMapping
+    | typeof EquirectangularReflectionMapping
+    | typeof EquirectangularRefractionMapping
+    | typeof SphericalReflectionMapping
+    | typeof UVMapping;
+
+  declare type TextureType =
+    | typeof ByteType
+    | typeof FloatType
+    | typeof HalfFloatType
+    | typeof IntType
+    | typeof ShortType
+    | typeof UnsignedByteType
+    | typeof UnsignedInt248Type
+    | typeof UnsignedIntType
+    | typeof UnsignedShort4444Type
+    | typeof UnsignedShort5551Type
+    | typeof UnsignedShort565Type
+    | typeof UnsignedShortType;
+
+  declare type TextureWrappingMode = typeof ClampToEdgeWrapping | typeof RepeatWrapping | typeof MirroredRepeatWrapping;
+
   declare type UniformValue = UniformValueType | $ReadOnlyArray<UniformValueType>;
 
   declare type UniformValueType = number | string | Color | Vector2 | Vector3 | Vector4 | Texture;
@@ -554,6 +596,12 @@ declare module "three" {
     ): void;
   }
 
+  declare export class DataTexture extends Texture {
+    +isDataTexture: true;
+
+    constructor($TypedArray, width: number, height: number, ?TextureFormat, ?TextureType, ?TextureMappingMode, ?TextureWrappingMode, ?TextureWrappingMode): void;
+  }
+
   declare export class EdgesGeometry extends BufferGeometry {
     constructor(BufferGeometry | Geometry, thresholdAngle?: number): void;
   }
@@ -846,9 +894,17 @@ declare module "three" {
   }
 
   declare export class Math {
+    static ceilPowerOfTwo(number): number;
+
     static clamp(number, number, number): number;
 
     static degToRad(number): number;
+
+    static floorPowerOfTwo(number): number;
+
+    static generateUUID(): string;
+
+    static isPowerOfTwo(number): boolean;
   }
 
   declare export class Matrix3 {
@@ -950,6 +1006,7 @@ declare module "three" {
     animations: AnimationClip[];
     castShadow: boolean;
     frustumCulled: boolean;
+    matrixAutoUpdate: boolean;
     name: string;
     receiveShadow: boolean;
     userData: any;
@@ -1022,7 +1079,7 @@ declare module "three" {
     setFromCoplanarPoints(Vector3, Vector3, Vector3): Plane;
   }
 
-  declare export class PointLight<T: Camera> extends Light<T> {
+  declare export class PointLight extends Light<PerspectiveCamera> {
     +isPointLight: true;
     +position: Vector3;
     decay: number;
@@ -1334,29 +1391,13 @@ declare module "three" {
     +image: HTMLImageElement;
     +isTexture: number;
     +repeat: Vector2;
-    mapping:
-      | typeof UVMapping
-      | typeof CubeReflectionMapping
-      | typeof CubeRefractionMapping
-      | typeof EquirectangularReflectionMapping
-      | typeof EquirectangularRefractionMapping
-      | typeof SphericalReflectionMapping
-      | typeof CubeUVReflectionMapping
-      | typeof CubeUVRefractionMapping
-    ;
+    mapping: TextureMappingMode;
     name: string;
-    wrapS:
-      | typeof ClampToEdgeWrapping
-      | typeof RepeatWrapping
-      | typeof MirroredRepeatWrapping
-    ;
-    wrapT:
-      | typeof ClampToEdgeWrapping
-      | typeof RepeatWrapping
-      | typeof MirroredRepeatWrapping
-    ;
+    needsUpdate: boolean;
+    wrapS: TextureWrappingMode;
+    wrapT: TextureWrappingMode;
 
-    constructor(HTMLImageElement): void;
+    constructor(HTMLImageElement | ImageData): void;
 
     dispose(): void;
   }
@@ -1438,6 +1479,8 @@ declare module "three" {
     distanceToSquared(v: Vector2): number;
 
     divide(v: Vector2): Vector2;
+
+    normalize(): Vector2;
 
     set(number, number): Vector2;
 
@@ -1591,6 +1634,7 @@ declare module "three" {
       alpha?: boolean,
       antialias?: boolean,
       canvas?: HTMLCanvasElement,
+      checkShaderErrors?: boolean,
       context?: ?(CanvasRenderingContext2D | WebGLRenderingContext),
       depth?: boolean,
       logarithmicDepthBuffer?: boolean,

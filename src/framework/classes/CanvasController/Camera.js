@@ -104,7 +104,7 @@ export default class CameraController extends CanvasController implements Camera
   }
 
   useEnd(): boolean {
-    return yn(env(this.loggerBreadcrumbs.add("useEnd").add("env"), "REACT_APP_FEATURE_DEBUGGER", ""), {
+    return yn(env(this.loggerBreadcrumbs.add("useEnd"), "REACT_APP_FEATURE_DEBUGGER", ""), {
       default: false,
     });
   }
