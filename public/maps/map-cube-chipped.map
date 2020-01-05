@@ -5,6 +5,7 @@
 "classname" "worldspawn"
 "light" "0.3"
 "_tb_textures" "./debug;./textures"
+"scenery" "1"
 // brush 0
 {
 ( -64 -64 128 ) ( -64 -64 -0 ) ( -64 64 -0 ) textures/texture-crate-128x128 0 0 0 1 1
@@ -22,4 +23,5 @@
 "origin" "224 192 192"
 "decay" "2"
 "light" "1"
+"color" "0xffc000"
 }

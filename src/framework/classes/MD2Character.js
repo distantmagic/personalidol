@@ -18,8 +18,6 @@ import type { MD2CharacterConfig } from "../types/MD2CharacterConfig";
 import type { MD2CharacterControls } from "../types/MD2CharacterControls";
 import type { MD2CharacterMesh } from "../types/MD2CharacterMesh";
 
-// internal helpers
-
 function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: LoadingManager, textureUrls: $ReadOnlyArray<string>): Texture[] {
   const textureLoader = new THREE.TextureLoader(loadingManager);
   const textures = [];
@@ -34,20 +32,17 @@ function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingMana
 }
 
 function createPart(scope: MD2CharacterInterface, geometry: BufferGeometry, skinMap: Texture): MD2CharacterMesh {
-  // const materialWireframe = new THREE.MeshLambertMaterial({ color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true });
-  const materialTexture = new THREE.MeshLambertMaterial({ color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true });
-
-  //
-
+  const materialTexture = new THREE.MeshLambertMaterial({
+    color: 0xffffff,
+    wireframe: false,
+    map: skinMap,
+    morphTargets: true,
+    morphNormals: true
+  });
   const mesh = new MorphBlendMesh(geometry, materialTexture);
+
   mesh.rotation.y = -Math.PI / 2;
-
-  //
-
   mesh.materialTexture = materialTexture;
-  // mesh.materialWireframe = materialWireframe;
-
-  //
 
   mesh.autoCreateAnimations(scope.animationFPS);
 
@@ -151,7 +146,6 @@ export default class MD2Character implements MD2CharacterInterface {
     for (let i = 0; i < original.weapons.length; i++) {
       const meshWeapon = createPart(this, original.weapons[i].geometry, this.skinsWeapon[i]);
       meshWeapon.visible = false;
-
       meshWeapon.name = original.weapons[i].name;
 
       this.root.add(meshWeapon);

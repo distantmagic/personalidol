@@ -8,7 +8,7 @@ import yn from "yn";
 import CanvasController from "../CanvasController";
 import env from "../../helpers/env";
 
-import type { PerspectiveCamera, Scene, Vector3, WebGLRenderer } from "three";
+import type { OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import type { CancelToken } from "../../interfaces/CancelToken";
@@ -19,22 +19,26 @@ import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
   #lookAt: Vector3;
-  +camera: PerspectiveCamera;
+  +camera: OrthographicCamera;
   +debug: Debugger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +renderer: WebGLRenderer;
   +scene: Scene;
+  height: number;
+  width: number;
   zoomTarget: number;
 
-  constructor(canvasViewBag: CanvasViewBag, camera: PerspectiveCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, camera: OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
     super(canvasViewBag);
     autoBind(this);
 
     this.camera = camera;
     this.debug = debug;
+    this.height = 0;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.renderer = renderer;
     this.scene = scene;
+    this.width = 0;
     this.zoomTarget = 1;
   }
 
@@ -42,7 +46,8 @@ export default class CameraController extends CanvasController implements Camera
     super.attach(cancelToken);
 
     this.camera.far = 4096;
-    this.lookAt(new THREE.Vector3(256 * 1, 0, 256 * 1));
+    // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
+    this.lookAt(new THREE.Vector3(0, 0, 0));
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
   }
@@ -56,27 +61,27 @@ export default class CameraController extends CanvasController implements Camera
   end(fps: number, isPanicked: boolean): void {
     super.end(fps, isPanicked);
 
-    this.debug.updateState(this.loggerBreadcrumbs.add("aspect"), this.camera.aspect);
     this.debug.updateState(this.loggerBreadcrumbs.add("position"), this.camera.position);
   }
 
   lookAt(position: Vector3): void {
-    const baseDistance = (256 * 3) / this.zoomTarget;
+    const baseDistance = 256 * 3;
 
-    this.camera.position.set(position.x + baseDistance, position.y + baseDistance * 1.6, position.z + baseDistance * 1.6);
+    // prettier-ignore
+    this.camera.position.set(
+      position.x + baseDistance,
+      position.y + baseDistance,
+      position.z + baseDistance
+    );
+
     this.camera.lookAt(position.clone());
-    this.camera.updateProjectionMatrix();
+    this.updateProjectionMatrix();
   }
 
   onWheel(evt: WheelEvent): void {
     evt.preventDefault();
 
-    let delta = evt.deltaY > 0 ? 1 : -1;
-
-    if (this.zoomTarget < 4) {
-      delta *= 0.5;
-    }
-
+    const delta: number = evt.deltaY > 0 ? 1 : -1;
     const adjustedZoom = this.zoomTarget - delta;
 
     this.setZoom(adjustedZoom);
@@ -88,8 +93,14 @@ export default class CameraController extends CanvasController implements Camera
     const height = viewportSize.getHeight();
     const width = viewportSize.getWidth();
 
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
+    if (this.height === height && this.width === width) {
+      return;
+    }
+
+    this.height = height;
+    this.width = width;
+
+    this.updateProjectionMatrix();
   }
 
   setZoom(zoom: number): void {
@@ -100,7 +111,19 @@ export default class CameraController extends CanvasController implements Camera
     }
 
     this.zoomTarget = clampedZoom;
-    this.lookAt(new THREE.Vector3(256 * 1, 0, 256 * 1));
+    this.updateProjectionMatrix();
+  }
+
+  updateProjectionMatrix() {
+    this.camera.left = -1 * (this.width / this.zoomTarget);
+    this.camera.right = this.width / this.zoomTarget;
+    this.camera.top = this.height / this.zoomTarget;
+    this.camera.bottom = -1 * (this.height / this.zoomTarget);
+    this.camera.updateProjectionMatrix();
+
+    // const frustum = new THREE.Frustum();
+    // frustum.setFromMatrix( new THREE.Matrix4().multiplyMatrices( this.camera.projectionMatrix, this.camera.matrixWorldInverse ) );
+    // console.log(frustum);
   }
 
   useEnd(): boolean {

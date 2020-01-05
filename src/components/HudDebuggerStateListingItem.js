@@ -11,6 +11,10 @@ function printValue(value: DebuggerStateValue): string {
     return `[${value.map(printValue).join(",")}]`;
   }
 
+  if ("undefined" === typeof value) {
+    return "undefined";
+  }
+
   if ("function" === typeof value.toString) {
     const stringValue = value.toString();
 
@@ -25,7 +29,7 @@ function printValue(value: DebuggerStateValue): string {
   }
 
   if ("string" === typeof value) {
-    return value;
+    return `"value"`;
   }
 
   if (value instanceof THREE.Vector2) {

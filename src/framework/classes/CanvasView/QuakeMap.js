@@ -148,10 +148,10 @@ export default class QuakeMap extends CanvasView {
           ));
           break;
         case "model_gltf":
-          gltfModels.push(entity);
+          // gltfModels.push(entity);
           break;
         case "model_md2":
-          md2Models.push(entity);
+          // md2Models.push(entity);
           break;
         case "player":
           console.log("player", entity);
