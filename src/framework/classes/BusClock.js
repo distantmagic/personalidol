@@ -7,6 +7,14 @@ import type { CancelToken } from "../interfaces/CancelToken";
 export default class BusClock implements BusClockInterface {
   delay: number;
 
+  static createForMainThread(): BusClockInterface {
+    return new BusClock(400);
+  }
+
+  static createForWorkerThread(): BusClockInterface {
+    return new BusClock(200);
+  }
+
   constructor(delay: number = 400) {
     this.delay = delay;
   }

@@ -52,16 +52,18 @@ export default React.memo<Props>(function DialogueTurnPrompt(props: Props) {
           {props.answers
             .toSet()
             .toArray()
-            .map(dialogueMessage => (
-              <li className="dd__dialogue__turn__answer" key={dialogueMessage.key()}>
-                <DialogueAnswer
-                  dialogueMessage={dialogueMessage}
-                  exceptionHandler={props.exceptionHandler}
-                  loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueAnswer")}
-                  onAnswerClick={props.onAnswerClick}
-                />
-              </li>
-            ))}
+            .map(function(dialogueMessage) {
+              return (
+                <li className="dd__dialogue__turn__answer" key={dialogueMessage.key()}>
+                  <DialogueAnswer
+                    dialogueMessage={dialogueMessage}
+                    exceptionHandler={props.exceptionHandler}
+                    loggerBreadcrumbs={props.loggerBreadcrumbs.add("DialogueAnswer")}
+                    onAnswerClick={props.onAnswerClick}
+                  />
+                </li>
+              );
+            })}
         </ol>
       )}
     </div>

@@ -1,6 +1,6 @@
 // @flow
 
-import uuidv4 from "uuid/v4";
+import * as THREE from "three";
 
 import EventListenerGenerator from "./EventListenerGenerator";
 import EventListenerSet from "./EventListenerSet";
@@ -37,7 +37,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
     return jsonRpcClient;
   }
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: $PropertyType<DedicatedWorkerGlobalScope, "postMessage">, uuid: () => string = uuidv4) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: $PropertyType<DedicatedWorkerGlobalScope, "postMessage">, uuid: () => string = THREE.Math.generateUUID) {
     this.awaitingGeneratorRequests = new Map();
     this.awaitingPromiseRequests = new Map();
     this.loggerBreadcrumbs = loggerBreadcrumbs;

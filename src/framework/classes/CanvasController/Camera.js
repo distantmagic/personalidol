@@ -3,59 +3,46 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import clamp from "lodash/clamp";
-import Ola from "ola";
+import yn from "yn";
 
 import CanvasController from "../CanvasController";
+import env from "../../helpers/env";
 
-import type { Ola as OlaInterface } from "ola";
 import type { PerspectiveCamera, Scene, Vector3, WebGLRenderer } from "three";
 
 import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import type { Debugger } from "../../interfaces/Debugger";
 import type { ElementSize } from "../../interfaces/ElementSize";
 import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
   #lookAt: Vector3;
   +camera: PerspectiveCamera;
-  +cameraPositionTween: OlaInterface<{|
-    x: number,
-    y: number,
-    z: number,
-  |}>;
+  +debug: Debugger;
   +loggerBreadcrumbs: LoggerBreadcrumbs;
   +renderer: WebGLRenderer;
   +scene: Scene;
   zoomTarget: number;
 
-  constructor(canvasViewBag: CanvasViewBag, camera: PerspectiveCamera, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, camera: PerspectiveCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
     super(canvasViewBag);
     autoBind(this);
 
     this.camera = camera;
+    this.debug = debug;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.renderer = renderer;
     this.scene = scene;
     this.zoomTarget = 1;
-
-    this.#lookAt = this.scene.position.clone();
-
-    this.cameraPositionTween = Ola(
-      {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-      100
-    );
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
     this.camera.far = 4096;
-    this.lookAt(new THREE.Vector3(256 * 3, 0, 256 * 2));
+    this.lookAt(new THREE.Vector3(256 * 1, 0, 256 * 1));
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
   }
@@ -66,30 +53,19 @@ export default class CameraController extends CanvasController implements Camera
     this.renderer.domElement.removeEventListener("wheel", this.onWheel);
   }
 
-  draw(interpolationPercentage: number): void {
-    super.draw(interpolationPercentage);
+  end(fps: number, isPanicked: boolean): void {
+    super.end(fps, isPanicked);
 
-    const targetX = this.cameraPositionTween.x;
-    const targetY = this.cameraPositionTween.y;
-    const targetZ = this.cameraPositionTween.z;
-
-    if (this.camera.position.x === targetX && this.camera.position.y === targetY && this.camera.position.z === targetZ) {
-      return;
-    }
-
-    const frustum = new THREE.Frustum();
-
-    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
-
-    this.camera.position.set(targetX, targetY, targetZ);
-    this.camera.lookAt(this.#lookAt);
+    this.debug.updateState(this.loggerBreadcrumbs.add("aspect"), this.camera.aspect);
+    this.debug.updateState(this.loggerBreadcrumbs.add("position"), this.camera.position);
   }
 
   lookAt(position: Vector3): void {
-    this.#lookAt = position.clone();
+    const baseDistance = (256 * 3) / this.zoomTarget;
 
-    this.camera.lookAt(this.#lookAt);
-    this.panCamera();
+    this.camera.position.set(position.x + baseDistance, position.y + baseDistance * 1.6, position.z + baseDistance * 1.6);
+    this.camera.lookAt(position.clone());
+    this.camera.updateProjectionMatrix();
   }
 
   onWheel(evt: WheelEvent): void {
@@ -104,16 +80,6 @@ export default class CameraController extends CanvasController implements Camera
     const adjustedZoom = this.zoomTarget - delta;
 
     this.setZoom(adjustedZoom);
-  }
-
-  panCamera(): void {
-    const baseDistance = (256 * 3) / this.zoomTarget;
-
-    this.cameraPositionTween.set({
-      x: this.#lookAt.x + baseDistance,
-      y: this.#lookAt.y + baseDistance * 1.6,
-      z: this.#lookAt.z + baseDistance * 1.6,
-    });
   }
 
   resize(viewportSize: ElementSize<"px">): void {
@@ -134,10 +100,12 @@ export default class CameraController extends CanvasController implements Camera
     }
 
     this.zoomTarget = clampedZoom;
-    this.panCamera();
+    this.lookAt(new THREE.Vector3(256 * 1, 0, 256 * 1));
   }
 
-  useDraw(): boolean {
-    return true;
+  useEnd(): boolean {
+    return yn(env(this.loggerBreadcrumbs.add("useEnd"), "REACT_APP_FEATURE_DEBUGGER", ""), {
+      default: false,
+    });
   }
 }

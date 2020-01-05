@@ -27,6 +27,9 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
     if (canvasView.useBegin()) {
       this.scheduler.onBegin(canvasView.begin);
     }
+    if (canvasView.useDraw()) {
+      this.scheduler.onDraw(canvasView.draw);
+    }
     if (canvasView.useEnd()) {
       this.scheduler.onEnd(canvasView.end);
     }
@@ -38,6 +41,9 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
   async delete(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
     if (canvasView.useBegin()) {
       this.scheduler.offBegin(canvasView.begin);
+    }
+    if (canvasView.useDraw()) {
+      this.scheduler.offDraw(canvasView.draw);
     }
     if (canvasView.useEnd()) {
       this.scheduler.offEnd(canvasView.end);

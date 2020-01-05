@@ -36,9 +36,9 @@ export default React.memo<Props>(function HudSceneOverlay(props: Props) {
   return (
     <div className="dd__frame dd__loader dd__scene__loader">
       <ul className="dd__scene__loader__list">
-        {groupedComments.map(([comment, comments]) => (
-          <HudSceneOverlayComment key={comment} comment={comment} quantity={comments.length} />
-        ))}
+        {groupedComments.map(function([comment, comments]) {
+          return <HudSceneOverlayComment key={comment} comment={comment} quantity={comments.length} />;
+        })}
       </ul>
     </div>
   );

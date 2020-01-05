@@ -12,7 +12,6 @@
     "mainloop.js": "^1.0.4",
     "mathjs": "^6.2.5",
     "modernizr": "^3.8.0",
-    "ola": "^1.1.0",
     "partykals": "github:RonenNess/partykals",
     "raf": "^3.4.1",
     "react": "^16.12.0",
@@ -22,9 +21,9 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
     "resize-observer-polyfill": "^1.5.1",
+    "screenfull": "^5.0.0",
     "three": "^0.112.0",
     "twig": "^1.14.0",
-    "uuid": "^3.3.3",
     "yaml": "^1.7.2",
     "yn": "^4.0.0"
   },

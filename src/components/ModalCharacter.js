@@ -41,7 +41,7 @@ export default React.memo<Props>(function ModalCharacter(props: Props) {
 
   React.useEffect(
     function() {
-      props.character.name().then(name => {
+      props.character.name().then(function(name) {
         setState({
           id: name,
           isLoading: false,
