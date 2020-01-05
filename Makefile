@@ -1,35 +1,34 @@
 .DEFAULT_GOAL = all
 .PHONY = optimize pretty.backend pretty.frontend
 
+CMD_YARN := $(shell command -v yarnpkg || command -v yarn )
 FACT_OS = $(shell uname)
-
-JS_SOURCES = $(shell find src -name "*.js")
-RUST_SOURCES = $(shell find backend/src -name "*.rs")
-SCSS_SOURCES = $(shell find scss -name "*.scss")
+SOURCES_JS = $(shell find src -name "*.js")
+SOURCES_RUST = $(shell find backend/src -name "*.rs")
 
 all: backend frontend
 
 backend: backend/target/debug/personalidol
 
-backend/target/debug/personalidol: $(RUST_SOURCES)
+backend/target/debug/personalidol: $(SOURCES_RUST)
 	cd backend && cargo build
 
-build/index.html: $(JS_SOURCES)
-	yarn run build
+build/index.html: $(SOURCES_JS)
+	$(CMD_YARN) run build
 
 flow.watch: node_modules
 ifeq ($(FACT_OS), Darwin)
-	yarn run flow:watch:fswatch
+	$(CMD_YARN) run flow:watch:fswatch
 else
-	yarn run flow:watch:inotify
+	$(CMD_YARN) run flow:watch:inotify
 endif
 
-frontend: build/index.html
+frontend: frontend.dependencies build/index.html
 
 frontend.dependencies: node_modules public/vendor/modernizr.js
 
 node_modules: yarn.lock
-	yarn install --network-timeout 9000000
+	$(CMD_YARN) install --network-timeout 0
 
 optimize: optimize.png optimize.jpg
 
@@ -47,10 +46,10 @@ pretty.backend:
 	cd backend && cargo fmt --all
 
 pretty.frontend:
-	yarn run prettier
+	$(CMD_YARN) run prettier
 
 public/vendor/modernizr.js: node_modules
-	yarn run modernizr
+	$(CMD_YARN) run modernizr
 
 setup: setup.trenchbroom
 
@@ -64,15 +63,15 @@ else
 endif
 
 start: frontend.dependencies
-	REACT_APP_PUBLIC_URL=http://localhost:9023 yarn run start
+	REACT_APP_PUBLIC_URL=http://localhost:9023 $(CMD_YARN) run start
 
 test: test.backend test.frontend
 
-test.backend: $(RUST_SOURCES)
+test.backend: $(SOURCES_RUST)
 	cd backend && cargo test
 
-test.frontend: $(JS_SOURCES) frontend.dependencies
-	yarn run test:once
+test.frontend: $(SOURCES_JS) frontend.dependencies
+	$(CMD_YARN) run test:once
 
-test.frontend.watch: frontend.dependencies
-	yarn run test
+test.frontend.watch: frontend.dependenciesfrontend.dependencies
+	$(CMD_YARN) run test
