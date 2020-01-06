@@ -44,6 +44,7 @@ export default class QuakeMap extends CanvasView {
   +scene: Scene;
   +source: string;
   +threeLoadingManager: THREELoadingManager;
+  animationOffset: number;
   md2LoaderWorker: ?Worker;
   quakeMapWorker: ?Worker;
 
@@ -61,6 +62,7 @@ export default class QuakeMap extends CanvasView {
   ) {
     super(canvasViewBag);
 
+    this.animationOffset = 0;
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
     this.loadingManager = loadingManager;
@@ -78,7 +80,6 @@ export default class QuakeMap extends CanvasView {
     const quakeMapRpcClient = this.getQuakeMapRpcClient(cancelToken);
 
     const entities: Promise<void>[] = [];
-    let animationOffset = 0;
     let gltfModels = [];
     let md2Models = [];
 
@@ -148,10 +149,10 @@ export default class QuakeMap extends CanvasView {
           ));
           break;
         case "model_gltf":
-          // gltfModels.push(entity);
+          gltfModels.push(entity);
           break;
         case "model_md2":
-          // md2Models.push(entity);
+          md2Models.push(entity);
           break;
         case "player":
           console.log("player", entity);
@@ -189,12 +190,20 @@ export default class QuakeMap extends CanvasView {
     }
 
     await Promise.all(entities);
+    await Promise.all([
+      this.attachGLTFEntities(cancelToken, gltfModels),
+      this.attachMD2Entities(cancelToken, md2Models),
+    ]);
 
+    this.scene.add(this.children);
+  }
+
+  attachGLTFEntities(cancelToken: CancelToken, gltfModels: Array<any>): Promise<void> {
     const gltfByModel = groupBy(gltfModels, "model_name");
     const gltfModelsViews = [];
 
     for (let entity of uniqBy(gltfModels, "model_name")) {
-      animationOffset += 200;
+      this.animationOffset += 200;
 
       const gltfByTexture = groupBy(gltfByModel[entity.model_name], "model_texture");
 
@@ -210,7 +219,7 @@ export default class QuakeMap extends CanvasView {
               this.threeLoadingManager,
               `/models/model-glb-${entity.model_name}/`,
               textureName,
-              animationOffset,
+              this.animationOffset,
               gltfByTexture[textureName]
             )
           ),
@@ -219,9 +228,19 @@ export default class QuakeMap extends CanvasView {
       }
     }
 
+    return Promise.all(gltfModelsViews);
+  }
+
+  attachMD2Entities(cancelToken: CancelToken, md2Models: Array<{|
+    +angle: number,
+    +model_name: string,
+    +origin: [number, number, number],
+    +skin: number,
+  |}>): Promise<void> {
     const md2ModelsViews = [];
+
     for (let entity of md2Models) {
-      animationOffset += 200;
+      this.animationOffset += 200;
 
       // prettier-ignore
       md2ModelsViews.push(this.loadingManager.blocking(
@@ -236,7 +255,7 @@ export default class QuakeMap extends CanvasView {
             this.threeLoadingManager,
             `/models/model-md2-${entity.model_name}/`,
             entity.angle,
-            animationOffset,
+            this.animationOffset,
             entity.skin
           )
         ),
@@ -244,10 +263,7 @@ export default class QuakeMap extends CanvasView {
       ));
     }
 
-    await Promise.all(gltfModelsViews);
-    await Promise.all(md2ModelsViews);
-
-    this.scene.add(this.children);
+    return Promise.all(md2ModelsViews);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
