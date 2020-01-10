@@ -10,13 +10,11 @@ export interface QuakeBrushGeometryBuilder {
 
   addConvexHullFace(QuakeBrush, Face, $ReadOnlyArray<Texture>): void;
 
-  addNormal(normal: Vector3): void;
+  addTextureIndex(vertex: Vector3, normal: Vector3, textureIndex: number): void;
 
-  addTextureIndex(vertex: Vector3, textureIndex: number): void;
+  addVertex(vertex: Vector3, normal: Vector3): void;
 
-  addVertex(vertex: Vector3): void;
-
-  addVertexUVs(vertex: Vector3, x: number, y: number): void;
+  addVertexUVs(vertex: Vector3, normal: Vector3, x: number, y: number): void;
 
   getConvexHull(QuakeBrush): ConvexHull;
 
@@ -33,4 +31,8 @@ export interface QuakeBrushGeometryBuilder {
   getUvs(): $ReadOnlyArray<number>;
 
   getVertices(): $ReadOnlyArray<number>;
+
+  indexVertex(vertex: Vector3, normal: Vector3): void;
+
+  isVertexIndexed(vertex: Vector3, normal: Vector3): boolean;
 }

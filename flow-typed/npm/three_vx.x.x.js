@@ -1384,6 +1384,29 @@ declare module "three" {
     constructor(Shape): void;
   }
 
+  declare export class Sphere {
+    center: Vector3;
+    radius: number;
+
+    constructor(center?: number, radius?: number): void;
+
+    clampPoint(point: Vector3, target: Vector3): Vector3;
+
+    clone(): Sphere;
+
+    copy(Sphere): Sphere;
+
+    containsPoint(point: Vector3): boolean;
+
+    distanceToPoint(point: Vector3): number;
+
+    empty(): boolean;
+
+    set(center: number, radius: number): Sphere;
+
+    setFromPoints(points: Vector3[], optionalCenter?: Vector3): Sphere;
+  }
+
   declare export class SphereBufferGeometry extends BufferGeometry {
     constructor(radius: number, widthSegments?: number, heightSegments?: number, phiStart?: number, phiLength?: number, thetaStart?: number, thetaLength?: number): void;
   }

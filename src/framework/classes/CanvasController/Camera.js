@@ -124,7 +124,7 @@ export default class CameraController extends CanvasController implements Camera
     this.camera.updateProjectionMatrix();
 
     const frustum = new THREE.Frustum();
-    frustum.setFromMatrix( new THREE.Matrix4().multiplyMatrices( this.camera.projectionMatrix, this.camera.matrixWorldInverse ) );
+    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
     console.log(frustum);
   }
 

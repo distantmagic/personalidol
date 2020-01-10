@@ -13,7 +13,22 @@ import type { BufferGeometry, Vector3 } from "three";
 import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
 
-const REGEXP_TEXTURE_NAME = /([0-9]+)x([0-9]+)$/;
+const TEXTURE_SIDE_WIDTH = 128;
+
+function getConvexHullFacePoints(face: ConvexHullFace): [Vector3, Vector3, Vector3] {
+  let edge = face.edge;
+  const points = [];
+
+  do {
+    const point = edge.head().point;
+
+    edge = edge.next;
+    points.push(point);
+  } while (edge !== face.edge);
+
+  // unwinded just fo typing
+  return [points[0], points[1], points[2]];
+}
 
 export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuilderInterface {
   +geometry: BufferGeometry;
@@ -22,9 +37,19 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
   +textureNames: string[];
   +textures: number[];
   +uvs: number[];
+  +verticesIndex: WeakMap<
+    Vector3,
+    {|
+      index: number,
+      normal: Vector3,
+    |}
+  >;
   +vertices: number[];
+  lastIndex: number = 0;
 
   constructor() {
+    this.verticesIndex = new WeakMap();
+
     this.normals = [];
     this.textureNames = [];
     this.textures = [];
@@ -42,90 +67,90 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
   }
 
   addConvexHullFace(quakeBrush: QuakeBrush, face: ConvexHullFace): void {
-    const points = [];
-    let edge = face.edge;
-
-    do {
-      const point = edge.head().point;
-
-      this.addVertex(point);
-      this.addNormal(face.normal);
-      edge = edge.next;
-      points.push(point);
-    } while (edge !== face.edge);
-
-    const [v1, v2, v3] = points;
-
-    const halfSpace = quakeBrush.getHalfSpaceByCoplanarPoints(...points.map(three2quake));
+    const [v1, v2, v3] = getConvexHullFacePoints(face);
+    const halfSpace = quakeBrush.getHalfSpaceByCoplanarPoints(three2quake(v1), three2quake(v2), three2quake(v3));
     const textureName = halfSpace.getTexture();
+
+    this.addVertex(v1, face.normal);
+    this.addVertex(v2, face.normal);
+    this.addVertex(v3, face.normal);
 
     if (!this.textureNames.includes(textureName)) {
       this.textureNames.push(textureName);
     }
 
     const textureIndex = this.textureNames.indexOf(textureName);
-    const textureSideHeight = 128;
-    const textureSideWidth = 128;
 
     // one per point
-    this.addTextureIndex(v1, textureIndex);
-    this.addTextureIndex(v2, textureIndex);
-    this.addTextureIndex(v3, textureIndex);
+    this.addTextureIndex(v1, face.normal, textureIndex);
+    this.addTextureIndex(v2, face.normal, textureIndex);
+    this.addTextureIndex(v3, face.normal, textureIndex);
 
-    // prettier-ignore
     switch (true) {
       case face.normal.x > face.normal.y && face.normal.x > face.normal.z:
-        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.y / textureSideWidth);
-        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.y / textureSideWidth);
-        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.y / textureSideWidth);
+        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIDE_WIDTH, v1.y / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIDE_WIDTH, v2.y / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIDE_WIDTH, v3.y / TEXTURE_SIDE_WIDTH);
         break;
       case face.normal.y > face.normal.x && face.normal.y > face.normal.z:
-        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.x / textureSideWidth);
-        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.x / textureSideWidth);
-        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.x / textureSideWidth);
+        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIDE_WIDTH, v1.x / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIDE_WIDTH, v2.x / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIDE_WIDTH, v3.x / TEXTURE_SIDE_WIDTH);
         break;
       case face.normal.z > face.normal.x && face.normal.z > face.normal.y:
-        this.addVertexUVs(v1, v1.x / textureSideHeight, v1.y / textureSideWidth);
-        this.addVertexUVs(v2, v2.x / textureSideHeight, v2.y / textureSideWidth);
-        this.addVertexUVs(v3, v3.x / textureSideHeight, v3.y / textureSideWidth);
+        this.addVertexUVs(v1, face.normal, v1.x / TEXTURE_SIDE_WIDTH, v1.y / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v2, face.normal, v2.x / TEXTURE_SIDE_WIDTH, v2.y / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v3, face.normal, v3.x / TEXTURE_SIDE_WIDTH, v3.y / TEXTURE_SIDE_WIDTH);
         break;
       case face.normal.x < face.normal.y && face.normal.x < face.normal.z:
-        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.y / textureSideWidth);
-        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.y / textureSideWidth);
-        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.y / textureSideWidth);
+        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIDE_WIDTH, v1.y / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIDE_WIDTH, v2.y / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIDE_WIDTH, v3.y / TEXTURE_SIDE_WIDTH);
         break;
       case face.normal.y < face.normal.x && face.normal.y < face.normal.z:
-        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.x / textureSideWidth);
-        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.x / textureSideWidth);
-        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.x / textureSideWidth);
+        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIDE_WIDTH, v1.x / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIDE_WIDTH, v2.x / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIDE_WIDTH, v3.x / TEXTURE_SIDE_WIDTH);
         break;
       case face.normal.z < face.normal.x && face.normal.z < face.normal.y:
-        this.addVertexUVs(v1, v1.x / textureSideHeight, v1.y / textureSideWidth);
-        this.addVertexUVs(v2, v2.x / textureSideHeight, v2.y / textureSideWidth);
-        this.addVertexUVs(v3, v3.x / textureSideHeight, v3.y / textureSideWidth);
+        this.addVertexUVs(v1, face.normal, v1.x / TEXTURE_SIDE_WIDTH, v1.y / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v2, face.normal, v2.x / TEXTURE_SIDE_WIDTH, v2.y / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v3, face.normal, v3.x / TEXTURE_SIDE_WIDTH, v3.y / TEXTURE_SIDE_WIDTH);
         break;
       default:
-        this.addVertexUVs(v1, v1.z / textureSideHeight, v1.x / textureSideWidth);
-        this.addVertexUVs(v2, v2.z / textureSideHeight, v2.x / textureSideWidth);
-        this.addVertexUVs(v3, v3.z / textureSideHeight, v3.x / textureSideWidth);
+        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIDE_WIDTH, v1.x / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIDE_WIDTH, v2.x / TEXTURE_SIDE_WIDTH);
+        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIDE_WIDTH, v3.x / TEXTURE_SIDE_WIDTH);
         break;
     }
+
+    this.indexVertex(v1, face.normal);
+    this.indexVertex(v2, face.normal);
+    this.indexVertex(v3, face.normal);
   }
 
-  addNormal(normal: Vector3): void {
-    this.normals.push(normal.x, normal.y, normal.z);
-  }
+  addTextureIndex(vertex: Vector3, normal: Vector3, textureIndex: number): void {
+    if (this.isVertexIndexed(vertex, normal)) {
+      return;
+    }
 
-  addTextureIndex(vertex: Vector3, textureIndex: number): void {
     this.textures.push(textureIndex);
   }
 
-  addVertex(vertex: Vector3): void {
-    this.indices.push(this.indices.length);
+  addVertex(vertex: Vector3, normal: Vector3): void {
+    if (this.isVertexIndexed(vertex, normal)) {
+      return;
+    }
+
+    this.normals.push(normal.x, normal.y, normal.z);
     this.vertices.push(vertex.x, vertex.y, vertex.z);
   }
 
-  addVertexUVs(vertex: Vector3, x: number, y: number): void {
+  addVertexUVs(vertex: Vector3, normal: Vector3, x: number, y: number): void {
+    if (this.isVertexIndexed(vertex, normal)) {
+      return;
+    }
+
     this.uvs.push(x, y);
   }
 
@@ -171,5 +196,33 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
 
   getVertices(): $ReadOnlyArray<number> {
     return this.vertices;
+  }
+
+  indexVertex(vertex: Vector3, normal: Vector3): void {
+    const indexed = this.verticesIndex.get(vertex);
+
+    if (this.isVertexIndexed(vertex, normal) && indexed) {
+      this.indices.push(indexed.index);
+
+      return;
+    }
+
+    this.indices.push(this.lastIndex);
+    this.verticesIndex.set(vertex, {
+      index: this.lastIndex,
+      normal: normal,
+    });
+
+    this.lastIndex += 1;
+  }
+
+  isVertexIndexed(vertex: Vector3, normal: Vector3): boolean {
+    const indexed = this.verticesIndex.get(vertex);
+
+    if (!indexed) {
+      return false;
+    }
+
+    return indexed.normal.equals(normal);
   }
 }

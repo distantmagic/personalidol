@@ -15,10 +15,10 @@ import type { QueryBus } from "../../interfaces/QueryBus";
 
 type WorkerQuakeBrush = {|
   +classname: "worldspawn",
-  +indices: ArrayBuffer,
+  +indices: Array<number>,
   +normals: ArrayBuffer,
   +texturesIndices: ArrayBuffer,
-  +texturesNames: $ReadOnlyArray<string>,
+  +texturesNames: Array<string>,
   +uvs: ArrayBuffer,
   +vertices: ArrayBuffer,
 |};
@@ -174,6 +174,7 @@ export default class QuakeBrush extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
+    const indices = this.entity.indices;
     const normals = new Float32Array(this.entity.normals);
     const texturesIndices = new Float32Array(this.entity.texturesIndices);
     const uvs = new Float32Array(this.entity.uvs);
@@ -185,6 +186,7 @@ export default class QuakeBrush extends CanvasView {
     geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
     geometry.setAttribute("texture_index", new THREE.BufferAttribute(texturesIndices, 1));
     geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+    geometry.setIndex(indices);
 
     for (let texture of this.entity.texturesNames) {
       if ("__TB_empty" === texture) {

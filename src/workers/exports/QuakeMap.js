@@ -40,6 +40,7 @@ async function createGeometryBuffers(cancelToken: CancelToken, className: string
   return new JSONRPCResponseData(
     {
       classname: className,
+      indices: quakeBrushGeometryBuilder.getIndices(),
       normals: normals.buffer,
       texturesIndices: textures.buffer,
       texturesNames: quakeBrushGeometryBuilder.getTexturesNames(),

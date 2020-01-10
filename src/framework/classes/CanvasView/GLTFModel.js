@@ -6,7 +6,7 @@ import CanvasView from "../CanvasView";
 import { default as GLTFModelQuery } from "../Query/GLTFModel";
 import { default as TextureQuery } from "../Query/Texture";
 
-import type { Group, LoadingManager as THREELoadingManager, Material, Mesh, Scene } from "three";
+import type { Group, LoadingManager as THREELoadingManager, Material, Mesh, Scene, Vector3 } from "three";
 
 import type { CancelToken } from "../../interfaces/CancelToken";
 import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -80,9 +80,11 @@ export default class GLTFModel extends CanvasView {
     });
 
     // important - clone geometry as it may be shared between views
-    const mesh = new THREE.InstancedMesh(baseMesh.geometry.clone(), material, this.entities.length);
+    const geometry = baseMesh.geometry.clone();
+    const origins: Vector3[] = [];
 
-    mesh.frustumCulled = false;
+    const mesh = new THREE.InstancedMesh(geometry, material, this.entities.length);
+
     mesh.matrixAutoUpdate = false;
 
     const dummy = new THREE.Object3D();
@@ -96,7 +98,13 @@ export default class GLTFModel extends CanvasView {
       dummy.updateMatrix();
 
       mesh.setMatrixAt(i, dummy.matrix);
+
+      origins.push(new THREE.Vector3().fromArray(entity.origin));
     }
+
+    // manually set bounding sphere, otherwise there will be problems with
+    // frustum culling
+    geometry.boundingSphere = new THREE.Sphere().setFromPoints(origins);
 
     mesh.castShadow = true;
     mesh.receiveShadow = true;
