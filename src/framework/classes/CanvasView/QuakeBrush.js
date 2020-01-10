@@ -55,8 +55,8 @@ const fragmentShader = `
     // replace 'map_fragment' with multi-texture sampling
     float textureWidth = 1.0 / u_texture_count;
     vec2 atlas_uv = vec2(
-      mod( vUv.x / 8.0, textureWidth ),
-      mod( vUv.y / 8.0, textureWidth ) + v_textureIndex * textureWidth
+      mod( vUv.x, textureWidth ),
+      mod( vUv.y, textureWidth ) + v_textureIndex * textureWidth
     );
 
     diffuseColor = texture2D( u_texture_atlas, atlas_uv );
@@ -97,7 +97,10 @@ const vertexShader = `
     // appropriate texture in fragment shader
     v_textureIndex = texture_index;
 
-    vUv = uv;
+    vUv = vec2(
+      uv.x / 8.0,
+      uv.y / 8.0
+    );
 
     ${THREE.ShaderChunk.beginnormal_vertex}
     ${THREE.ShaderChunk.defaultnormal_vertex}
