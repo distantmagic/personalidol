@@ -81,12 +81,13 @@ self.onmessage = bootstrapWorker(function(serverCancelToken: CancelToken, logger
           // geometries
           entitiesWithBrushes.push(["func_group", entity]);
           break;
-        case "light":
+        case "light_directional":
+        case "light_point":
           yield new JSONRPCResponseData({
             classname: entityClassName,
             color: entityProperties.getPropertyByKey("color").getValue(),
             decay: entityProperties.getPropertyByKey("decay").asNumber(),
-            light: entityProperties.getPropertyByKey("light").asNumber(),
+            intensity: entityProperties.getPropertyByKey("intensity").asNumber(),
             origin: getEntityOrigin(entity),
           });
           break;

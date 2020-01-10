@@ -75,5 +75,5 @@ test.backend: $(SOURCES_RUST)
 test.frontend: $(SOURCES_JS) frontend.dependencies
 	$(CMD_YARN) run test:once
 
-test.frontend.watch: frontend.dependenciesfrontend.dependencies
+test.frontend.watch: frontend.dependencies
 	$(CMD_YARN) run test

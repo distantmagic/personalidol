@@ -37,7 +37,7 @@ function createPart(scope: MD2CharacterInterface, geometry: BufferGeometry, skin
     wireframe: false,
     map: skinMap,
     morphTargets: true,
-    morphNormals: true
+    morphNormals: true,
   });
   const mesh = new MorphBlendMesh(geometry, materialTexture);
 

@@ -27,10 +27,10 @@ type BootstrapFrameworkCallback<T> = (
 ) => T;
 
 export default function bootstrapFramework<T>(bootstrapper: BootstrapFrameworkCallback<T>): T {
-  const debug = new Debugger();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker"]);
   const logger = new ConsoleLogger();
 
-  const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker"]);
+  const debug = new Debugger(loggerBreadcrumbs);
 
   const exceptionHandlerFilter = new UnexpectedExceptionHandlerFilter();
   const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);

@@ -8,11 +8,9 @@ import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 test("generates subsequent values", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const eventListenerSet = new EventListenerSet<[number]>();
+  const eventListenerSet = new EventListenerSet<[number]>(loggerBreadcrumbs);
   const eventListenerGenerator = new EventListenerGenerator(eventListenerSet);
-  const generator = eventListenerGenerator.generate(cancelToken);
-
-  expect(eventListenerSet.callbacks).toHaveLength(1);
+  const generator = await eventListenerGenerator.generate(cancelToken);
 
   eventListenerSet.notify([1]);
   eventListenerSet.notify([2]);

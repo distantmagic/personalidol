@@ -24,7 +24,7 @@ export default class LoadingManager implements LoadingManagerInterface {
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, exceptionHandler: ExceptionHandler) {
     this.backgroundItems = new Map<Promise<any>, string>();
     this.blockingItems = new Map<Promise<any>, string>();
-    this.callbacks = new EventListenerSet<[LoadingManagerStateInterface]>();
+    this.callbacks = new EventListenerSet<[LoadingManagerStateInterface]>(loggerBreadcrumbs.add("EventListenerSet"));
     this.exceptionHandler = exceptionHandler;
     this.failedItems = new Map<Promise<any>, string>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;

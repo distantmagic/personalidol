@@ -71,9 +71,9 @@
 }
 // entity 1
 {
-"classname" "light"
+"classname" "light_point"
 "origin" "16 48 40"
-"light" "1"
+"intensity" "1"
 "decay" "2"
 }
 // entity 2

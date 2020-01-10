@@ -1,9 +1,11 @@
 // @flow
 
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import Scheduler from "./Scheduler";
 
 test("notifies: begin", async function() {
-  const scheduler = new Scheduler();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve) {
     scheduler.onBegin(resolve);
@@ -15,7 +17,8 @@ test("notifies: begin", async function() {
 }, 300);
 
 test("disables callback: begin", async function() {
-  const scheduler = new Scheduler();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve, reject) {
     scheduler.onBegin(resolve);
@@ -29,7 +32,8 @@ test("disables callback: begin", async function() {
 }, 300);
 
 test("notifies: draw", async function() {
-  const scheduler = new Scheduler();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve) {
     scheduler.onDraw(resolve);
@@ -41,7 +45,8 @@ test("notifies: draw", async function() {
 }, 300);
 
 test("disables callback: draw", async function() {
-  const scheduler = new Scheduler();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve, reject) {
     scheduler.onDraw(resolve);
@@ -55,7 +60,8 @@ test("disables callback: draw", async function() {
 }, 300);
 
 test("notifies: end", async function() {
-  const scheduler = new Scheduler();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve) {
     scheduler.onEnd(function(fps, isPanicked) {
@@ -69,7 +75,8 @@ test("notifies: end", async function() {
 }, 300);
 
 test("disables callback: end", async function() {
-  const scheduler = new Scheduler();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve, reject) {
     scheduler.onEnd(resolve);
@@ -85,7 +92,8 @@ test("disables callback: end", async function() {
 }, 300);
 
 test("notifies: update", async function() {
-  const scheduler = new Scheduler();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve) {
     scheduler.onUpdate(resolve);
@@ -97,7 +105,8 @@ test("notifies: update", async function() {
 }, 300);
 
 test("disables callback: update", async function() {
-  const scheduler = new Scheduler();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   const promise = new Promise(function(resolve, reject) {
     scheduler.onUpdate(resolve);

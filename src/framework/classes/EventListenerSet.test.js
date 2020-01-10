@@ -1,10 +1,12 @@
 // @flow
 
 import EventListenerSet from "./EventListenerSet";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
 test("notifies callbacks set about specific event", function() {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const mockedCallback = jest.fn();
-  const eventListenerSet = new EventListenerSet<[number, number]>();
+  const eventListenerSet = new EventListenerSet<[number, number]>(loggerBreadcrumbs);
 
   eventListenerSet.add(mockedCallback);
   eventListenerSet.notify(Object.freeze([1, 2]));

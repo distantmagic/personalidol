@@ -4,7 +4,8 @@ import Debugger from "./Debugger";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
 test("can be turned on and off", function() {
-  const debug = new Debugger();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const debug = new Debugger(loggerBreadcrumbs);
 
   expect(debug.isEnabled()).toBe(false);
 
@@ -14,23 +15,23 @@ test("can be turned on and off", function() {
 });
 
 test("is mutable", function() {
-  const breadcrumbs = new LoggerBreadcrumbs();
-  const debug = new Debugger();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const debug = new Debugger(loggerBreadcrumbs);
 
-  debug.updateState(breadcrumbs, "test");
+  debug.updateState(loggerBreadcrumbs, "test");
 
-  expect(debug.getState().get(breadcrumbs)).toBe("test");
+  expect(debug.getState().get(loggerBreadcrumbs)).toBe("test");
 });
 
 test("removes state", function() {
-  const breadcrumbs = new LoggerBreadcrumbs();
-  const debug = new Debugger();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const debug = new Debugger(loggerBreadcrumbs);
 
-  debug.updateState(breadcrumbs, "test");
+  debug.updateState(loggerBreadcrumbs, "test");
 
-  expect(debug.getState().get(breadcrumbs)).toBe("test");
+  expect(debug.getState().get(loggerBreadcrumbs)).toBe("test");
 
-  debug.deleteState(breadcrumbs);
+  debug.deleteState(loggerBreadcrumbs);
 
-  expect(debug.getState().has(breadcrumbs)).toBe(false);
+  expect(debug.getState().has(loggerBreadcrumbs)).toBe(false);
 });

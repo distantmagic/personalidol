@@ -81,7 +81,7 @@ export default class SceneCanvas extends HTMLElement {
     this.isObserving = false;
 
     this.loggerBreadcrumbs = new LoggerBreadcrumbs(["SceneCanvas"]);
-    this.scheduler = new Scheduler();
+    this.scheduler = new Scheduler(this.loggerBreadcrumbs.add("Scheduler"));
     this.canvasViewBus = new CanvasViewBus(this.loggerBreadcrumbs, this.scheduler);
     this.canvasViewBag = new CanvasViewBag(this.canvasViewBus, this.loggerBreadcrumbs);
     this.keyboardState = new KeyboardState(this.loggerBreadcrumbs.add("KeyboardState"));

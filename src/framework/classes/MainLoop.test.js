@@ -1,6 +1,7 @@
 // @flow
 
 import MainLoop from "./MainLoop";
+import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import Scheduler from "./Scheduler";
 import SingletonException from "./Exception/Singleton";
 
@@ -22,8 +23,9 @@ test("is a singleton", function() {
 });
 
 test("attaches scheduler", async function() {
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const mainLoop = MainLoop.getInstance();
-  const scheduler = new Scheduler();
+  const scheduler = new Scheduler(loggerBreadcrumbs);
 
   mainLoop.attachScheduler(scheduler);
 

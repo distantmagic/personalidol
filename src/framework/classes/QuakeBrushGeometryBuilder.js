@@ -1,7 +1,6 @@
 // @flow
 
 import * as THREE from "three";
-import memoize from "lodash/memoize";
 
 import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
 
@@ -15,26 +14,6 @@ import type { QuakeBrush } from "../interfaces/QuakeBrush";
 import type { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
 
 const REGEXP_TEXTURE_NAME = /([0-9]+)x([0-9]+)$/;
-
-function getTextureDimensions(textureName: string): [number, number] {
-  const match = textureName.match(REGEXP_TEXTURE_NAME);
-
-  if (!match) {
-    return [1024, 1024];
-  }
-
-  return [Number(match[1]), Number(match[2])];
-}
-
-const getTextureDimensionsMemoized = memoize(getTextureDimensions);
-
-function getTextureHeight(textureName: string): number {
-  return getTextureDimensionsMemoized(textureName)[1];
-}
-
-function getTextureWidth(textureName: string): number {
-  return getTextureDimensionsMemoized(textureName)[0];
-}
 
 export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuilderInterface {
   +geometry: BufferGeometry;
@@ -85,8 +64,8 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     }
 
     const textureIndex = this.textureNames.indexOf(textureName);
-    const textureSideHeight = getTextureHeight(textureName) * halfSpace.getTextureXScale();
-    const textureSideWidth = getTextureWidth(textureName) * halfSpace.getTextureYScale();
+    const textureSideHeight = 128;
+    const textureSideWidth = 128;
 
     // one per point
     this.addTextureIndex(v1, textureIndex);

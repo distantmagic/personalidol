@@ -53,13 +53,13 @@ const fragmentShader = `
     vec3 totalEmissiveRadiance = emissive;
 
     // replace 'map_fragment' with multi-texture sampling
-    float texture_window_size = 1.0 / u_texture_count;
+    float textureWidth = 1.0 / u_texture_count;
     vec2 atlas_uv = vec2(
-      vUv.x,
-      vUv.y
+      mod( vUv.x / 8.0, textureWidth ),
+      mod( vUv.y / 8.0, textureWidth ) + v_textureIndex * textureWidth
     );
 
-    diffuseColor = mapTexelToLinear( texture2D( u_texture_atlas, atlas_uv ) );
+    diffuseColor = texture2D( u_texture_atlas, atlas_uv );
 
     ${THREE.ShaderChunk.specularmap_fragment}
     ${THREE.ShaderChunk.normal_fragment_begin}
@@ -87,15 +87,17 @@ const vertexShader = `
   ${THREE.ShaderChunk.uv_pars_vertex}
   ${THREE.ShaderChunk.shadowmap_pars_vertex}
 
+  // Custom variables
   attribute float texture_index;
+  uniform float u_texture_count;
   varying float v_textureIndex;
 
   void main() {
-    ${THREE.ShaderChunk.uv_vertex}
-
     // use custom 'texture_index' buffer geometry parameter to select
     // appropriate texture in fragment shader
-    v_textureIndex = texture_index + 0.5;
+    v_textureIndex = texture_index;
+
+    vUv = uv;
 
     ${THREE.ShaderChunk.beginnormal_vertex}
     ${THREE.ShaderChunk.defaultnormal_vertex}
@@ -120,6 +122,7 @@ function getMaterial(textureAtlas: Texture, textureCount: number): ShaderMateria
 
     defines: {
       PHONG: "",
+      USE_SHADOWMAP: "",
       USE_UV: "",
     },
 
@@ -173,6 +176,8 @@ export default class QuakeBrush extends CanvasView {
     const uvs = new Float32Array(this.entity.uvs);
     const vertices = new Float32Array(this.entity.vertices);
 
+    console.log(uvs);
+
     const geometry = new THREE.BufferGeometry();
 
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
@@ -202,7 +207,7 @@ export default class QuakeBrush extends CanvasView {
     }
 
     // make texture atlas size a power of two because of performance reasons
-    const textureAtlasSide = THREE.Math.ceilPowerOfTwo(textureAtlasHeight)
+    const textureAtlasSide = THREE.Math.ceilPowerOfTwo(textureAtlasHeight);
 
     // iOS/Safari: conversion fixes ArrayBuffer is not Uint8Array
     const textureData = Uint8Array.from(atlasCanvasContext.getImageData(0, 0, textureAtlasSide, textureAtlasSide).data);
@@ -212,6 +217,7 @@ export default class QuakeBrush extends CanvasView {
     textureAtlas.wrapS = textureAtlas.wrapT = THREE.RepeatWrapping;
 
     const material = getMaterial(textureAtlas, loadedTextures.length);
+    // const material = new THREE.MeshPhongMaterial({ map: loadedTextures[0] });
     const mesh = new THREE.Mesh(geometry, material);
 
     // TODO ios material behaves like if 'castShadow' if 'false'

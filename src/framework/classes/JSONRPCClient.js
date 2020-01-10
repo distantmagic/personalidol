@@ -143,7 +143,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
   async *requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams = []): AsyncGenerator<T, void, void> {
     const requestId = this.uuid();
     const request = new JSONRPCRequest(requestId, method, "generator", params);
-    const eventListenerSet = new EventListenerSet();
+    const eventListenerSet = new EventListenerSet(this.loggerBreadcrumbs.add("EventListenerSet"));
     const eventListenerGenerator = new EventListenerGenerator(eventListenerSet);
     const responseGenerator = eventListenerGenerator.generate(cancelToken);
 

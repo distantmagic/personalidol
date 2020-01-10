@@ -39,7 +39,7 @@ export default class CameraController extends CanvasController implements Camera
     this.renderer = renderer;
     this.scene = scene;
     this.width = 0;
-    this.zoomTarget = 1;
+    this.zoomTarget = 2.5;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
@@ -56,6 +56,7 @@ export default class CameraController extends CanvasController implements Camera
     super.dispose(cancelToken);
 
     this.renderer.domElement.removeEventListener("wheel", this.onWheel);
+    this.debug.deleteState(this.loggerBreadcrumbs.add("position"));
   }
 
   end(fps: number, isPanicked: boolean): void {

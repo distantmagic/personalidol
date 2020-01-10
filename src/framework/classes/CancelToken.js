@@ -22,7 +22,7 @@ export default class CancelToken implements CancelTokenInterface {
     this._isCanceled = false;
     this._isSettled = false;
     this.abortController = new AbortController();
-    this.callbacks = new EventListenerSet<[CanceledInterface]>();
+    this.callbacks = new EventListenerSet<[CanceledInterface]>(loggerBreadcrumbsCreate);
     this.loggerBreadcrumbsCancel = null;
     this.loggerBreadcrumbsCreate = loggerBreadcrumbsCreate;
   }

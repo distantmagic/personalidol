@@ -16,9 +16,9 @@ export default class Debugger implements DebuggerInterface {
   _isEnabled: boolean;
   state: DebuggerState;
 
-  constructor(state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
     this._isEnabled = false;
-    this.callbacks = new EventListenerSet<[DebuggerState]>();
+    this.callbacks = new EventListenerSet<[DebuggerState]>(loggerBreadcrumbs);
     this.state = state;
   }
 

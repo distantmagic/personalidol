@@ -8,6 +8,7 @@ import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "m
 
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { Scheduler as SchedulerInterface } from "../interfaces/Scheduler";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class Scheduler implements SchedulerInterface {
   +beginCallbacks: EventListenerSetInterface<[]>;
@@ -15,13 +16,13 @@ export default class Scheduler implements SchedulerInterface {
   +endCallbacks: EventListenerSetInterface<[number, boolean]>;
   +updateCallbacks: EventListenerSetInterface<[number]>;
 
-  constructor() {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
 
-    this.beginCallbacks = new EventListenerSet<[]>();
-    this.drawCallbacks = new EventListenerSet<[number]>();
-    this.endCallbacks = new EventListenerSet<[number, boolean]>();
-    this.updateCallbacks = new EventListenerSet<[number]>();
+    this.beginCallbacks = new EventListenerSet<[]>(loggerBreadcrumbs);
+    this.drawCallbacks = new EventListenerSet<[number]>(loggerBreadcrumbs);
+    this.endCallbacks = new EventListenerSet<[number, boolean]>(loggerBreadcrumbs);
+    this.updateCallbacks = new EventListenerSet<[number]>(loggerBreadcrumbs);
   }
 
   notifyBegin(): void {

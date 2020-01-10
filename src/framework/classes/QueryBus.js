@@ -26,7 +26,7 @@ export default class QueryBus implements QueryBusInterface {
     autoBind(this);
 
     this.collection = [];
-    this.enqueuedCallbacks = new EventListenerSet<[Query<any>]>();
+    this.enqueuedCallbacks = new EventListenerSet<[Query<any>]>(loggerBreadcrumbs.add("EventListenerSet"));
     this.exceptionHandler = exceptionHandler;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }

@@ -560,6 +560,8 @@ declare module "three" {
 
     fromArray(array: [number, number, number], number): void;
 
+    getHex(): number;
+
     getHSL(): HSL;
 
     getStyle(): string;
@@ -600,6 +602,15 @@ declare module "three" {
     +isDataTexture: true;
 
     constructor($TypedArray, width: number, height: number, ?TextureFormat, ?TextureType, ?TextureMappingMode, ?TextureWrappingMode, ?TextureWrappingMode): void;
+  }
+
+  declare export class DirectionalLight extends Light<PerspectiveCamera> {
+    +isDirectionalLight: true;
+    +position: Vector3;
+    decay: number;
+    target: Object3D;
+
+    constructor(color?: Color | number, intensity?: number, distance?: number, decay?: number): void;
   }
 
   declare export class EdgesGeometry extends BufferGeometry {
@@ -1377,13 +1388,15 @@ declare module "three" {
     constructor(radius: number, widthSegments?: number, heightSegments?: number, phiStart?: number, phiLength?: number, thetaStart?: number, thetaLength?: number): void;
   }
 
-  declare export class SpotLight<T: Camera> extends Light<T> {
+  declare export class SpotLight extends Light<PerspectiveCamera> {
     +isSpotLight: true;
     angle: number;
+    distance: number;
+    decay: number;
     penumbra: number;
     target: Object3D;
 
-    constructor(color?: number): void;
+    constructor(color?: number, intensity?: number, distance?: number, angle_radians?: number, penumbra?: number, decay?: number): void;
   }
 
   // prettier-ignore
@@ -1545,7 +1558,7 @@ declare module "three" {
 
     floor(): void;
 
-    fromArray(array: [number, number, number], offset: number): void;
+    fromArray(array: [number, number, number], offset?: number): Vector3;
 
     getCompoment(index: 0 | 1 | 2): number;
 

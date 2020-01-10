@@ -8,6 +8,7 @@ import CanvasView from "../CanvasView";
 import JSONRPCClient from "../JSONRPCClient";
 import { default as AmbientLightView } from "./AmbientLight";
 import { default as AmbientSoundView } from "./AmbientSound";
+import { default as SpotLightView } from "./SpotLight";
 import { default as GLTFModelView } from "./GLTFModel";
 import { default as HemisphereLightView } from "./HemisphereLight";
 import { default as MD2CharacterView } from "./MD2Character";
@@ -103,23 +104,6 @@ export default class QuakeMap extends CanvasView {
             "Loading entity brush"
           ));
           break;
-        case "light":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new PointLightView(
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
-                this.children,
-                new THREE.Vector3(...entity.origin),
-                new THREE.Color(parseInt(entity.color, 16)),
-                entity.light,
-                entity.decay,
-              )
-            ),
-            "Loading point light"
-          ));
-          break;
         case "light_ambient":
           // prettier-ignore
           entities.push(this.loadingManager.blocking(
@@ -134,6 +118,23 @@ export default class QuakeMap extends CanvasView {
             "Loading world ambient light"
           ));
           break;
+        case "light_spotlight":
+          // prettier-ignore
+          entities.push(this.loadingManager.blocking(
+            this.canvasViewBag.add(
+              cancelToken,
+              new SpotLightView(
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("SpotLight")),
+                this.children,
+                new THREE.Vector3().fromArray(entity.origin),
+                new THREE.Color(parseInt(entity.color, 16)),
+                entity.intensity,
+                entity.decay,
+              )
+            ),
+            "Loading spotlight"
+          ));
+          break;
         case "light_hemisphere":
           // prettier-ignore
           entities.push(this.loadingManager.blocking(
@@ -146,6 +147,23 @@ export default class QuakeMap extends CanvasView {
               )
             ),
             "Loading world hemisphere light"
+          ));
+          break;
+        case "light_point":
+          // prettier-ignore
+          entities.push(this.loadingManager.blocking(
+            this.canvasViewBag.add(
+              cancelToken,
+              new PointLightView(
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
+                this.children,
+                new THREE.Vector3().fromArray(entity.origin),
+                new THREE.Color(parseInt(entity.color, 16)),
+                entity.intensity,
+                entity.decay,
+              )
+            ),
+            "Loading point light"
           ));
           break;
         case "model_gltf":
@@ -190,15 +208,17 @@ export default class QuakeMap extends CanvasView {
     }
 
     await Promise.all(entities);
-    await Promise.all([
-      this.attachGLTFEntities(cancelToken, gltfModels),
-      this.attachMD2Entities(cancelToken, md2Models),
-    ]);
+    await Promise.all([this.attachGLTFEntities(cancelToken, gltfModels), this.attachMD2Entities(cancelToken, md2Models)]);
 
     this.scene.add(this.children);
   }
 
-  attachGLTFEntities(cancelToken: CancelToken, gltfModels: Array<any>): Promise<void> {
+  async attachGLTFEntities(
+    cancelToken: CancelToken,
+    gltfModels: Array<{
+      +model_name: string,
+    }>
+  ): Promise<void> {
     const gltfByModel = groupBy(gltfModels, "model_name");
     const gltfModelsViews = [];
 
@@ -228,15 +248,18 @@ export default class QuakeMap extends CanvasView {
       }
     }
 
-    return Promise.all(gltfModelsViews);
+    await Promise.all(gltfModelsViews);
   }
 
-  attachMD2Entities(cancelToken: CancelToken, md2Models: Array<{|
-    +angle: number,
-    +model_name: string,
-    +origin: [number, number, number],
-    +skin: number,
-  |}>): Promise<void> {
+  async attachMD2Entities(
+    cancelToken: CancelToken,
+    md2Models: Array<{
+      +angle: number,
+      +model_name: string,
+      +origin: [number, number, number],
+      +skin: number,
+    }>
+  ): Promise<void> {
     const md2ModelsViews = [];
 
     for (let entity of md2Models) {
@@ -249,7 +272,7 @@ export default class QuakeMap extends CanvasView {
           new MD2CharacterView(
             this.loggerBreadcrumbs.add("MD2Character"),
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
-            new THREE.Vector3(...entity.origin),
+            new THREE.Vector3().fromArray(entity.origin),
             this.queryBus,
             this.children,
             this.threeLoadingManager,
@@ -263,7 +286,7 @@ export default class QuakeMap extends CanvasView {
       ));
     }
 
-    return Promise.all(md2ModelsViews);
+    await Promise.all(md2ModelsViews);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {

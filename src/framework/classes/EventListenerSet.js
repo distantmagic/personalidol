@@ -1,13 +1,18 @@
 // @flow
 
+import Exception from "./Exception";
+
 import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
 import type { EventListenerSetCallback } from "../types/EventListenerSetCallback";
+import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements EventListenerSetInterface<Arguments> {
+  +loggerBreadcrumbs: LoggerBreadcrumbs;
   callbacks: EventListenerSetCallback<Arguments>[];
 
-  constructor(): void {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs): void {
     this.callbacks = [];
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
   add(callback: EventListenerSetCallback<Arguments>): void {
@@ -19,7 +24,13 @@ export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements
   }
 
   delete(callback: EventListenerSetCallback<Arguments>): void {
-    this.callbacks.splice(this.callbacks.indexOf(callback), 1);
+    const indexOf = this.callbacks.indexOf(callback);
+
+    if (indexOf === -1) {
+      throw new Exception(this.loggerBreadcrumbs.add("delete"), "Callback is not a part of event listener set but it was expected to be.");
+    }
+
+    this.callbacks.splice(indexOf, 1);
   }
 
   notify(args: Arguments): void {

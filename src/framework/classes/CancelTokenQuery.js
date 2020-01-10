@@ -22,7 +22,7 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, query: Query<T>) {
     this._isExecuted = false;
     this._isExecuting = false;
-    this.callbacks = new EventListenerSet<[T]>();
+    this.callbacks = new EventListenerSet<[T]>(loggerBreadcrumbs);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.cancelToken = cancelToken;
     this.query = query;
