@@ -179,8 +179,6 @@ export default class QuakeBrush extends CanvasView {
     const uvs = new Float32Array(this.entity.uvs);
     const vertices = new Float32Array(this.entity.vertices);
 
-    console.log(uvs);
-
     const geometry = new THREE.BufferGeometry();
 
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));

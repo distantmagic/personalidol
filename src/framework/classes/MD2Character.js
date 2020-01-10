@@ -229,7 +229,9 @@ export default class MD2Character implements MD2CharacterInterface {
       throw new Error("meshWeapon is not loaded yet.");
     }
 
-    for (let i = 0; i < this.weapons.length; i++) this.weapons[i].visible = false;
+    for (let i = 0; i < this.weapons.length; i++) {
+      this.weapons[i].visible = false;
+    }
 
     const activeWeapon = this.weapons[index];
 

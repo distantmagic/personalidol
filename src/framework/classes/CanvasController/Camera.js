@@ -46,8 +46,9 @@ export default class CameraController extends CanvasController implements Camera
     super.attach(cancelToken);
 
     this.camera.far = 4096;
-    this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
+    // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
     // this.lookAt(new THREE.Vector3(0, 0, 0));
+    this.lookAt(new THREE.Vector3(256, 0, 256 * 2));
 
     this.renderer.domElement.addEventListener("wheel", this.onWheel);
   }
@@ -122,9 +123,9 @@ export default class CameraController extends CanvasController implements Camera
     this.camera.bottom = -1 * (this.height / this.zoomTarget);
     this.camera.updateProjectionMatrix();
 
-    // const frustum = new THREE.Frustum();
-    // frustum.setFromMatrix( new THREE.Matrix4().multiplyMatrices( this.camera.projectionMatrix, this.camera.matrixWorldInverse ) );
-    // console.log(frustum);
+    const frustum = new THREE.Frustum();
+    frustum.setFromMatrix( new THREE.Matrix4().multiplyMatrices( this.camera.projectionMatrix, this.camera.matrixWorldInverse ) );
+    console.log(frustum);
   }
 
   useEnd(): boolean {

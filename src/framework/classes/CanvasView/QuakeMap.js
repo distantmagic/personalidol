@@ -118,23 +118,6 @@ export default class QuakeMap extends CanvasView {
             "Loading world ambient light"
           ));
           break;
-        case "light_spotlight":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new SpotLightView(
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("SpotLight")),
-                this.children,
-                new THREE.Vector3().fromArray(entity.origin),
-                new THREE.Color(parseInt(entity.color, 16)),
-                entity.intensity,
-                entity.decay,
-              )
-            ),
-            "Loading spotlight"
-          ));
-          break;
         case "light_hemisphere":
           // prettier-ignore
           entities.push(this.loadingManager.blocking(
@@ -164,6 +147,23 @@ export default class QuakeMap extends CanvasView {
               )
             ),
             "Loading point light"
+          ));
+          break;
+        case "light_spotlight":
+          // prettier-ignore
+          entities.push(this.loadingManager.blocking(
+            this.canvasViewBag.add(
+              cancelToken,
+              new SpotLightView(
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("SpotLight")),
+                this.children,
+                new THREE.Vector3().fromArray(entity.origin),
+                new THREE.Color(parseInt(entity.color, 16)),
+                entity.intensity,
+                entity.decay,
+              )
+            ),
+            "Loading spotlight"
           ));
           break;
         case "model_gltf":

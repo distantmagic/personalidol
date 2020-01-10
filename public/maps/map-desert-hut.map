@@ -3,7 +3,7 @@
 // entity 0
 {
 "classname" "worldspawn"
-"light" "0.3"
+"light" "0.5"
 "_tb_textures" "./textures"
 "scenery" "1"
 // brush 0
@@ -1908,8 +1908,8 @@
 }
 // entity 1
 {
-"classname" "light_point"
-"origin" "412 224 154"
+"classname" "light_spotlight"
+"origin" "424 272 218"
 "intensity" "3"
 "angle" "0"
 "decay" "2"
@@ -1950,8 +1950,8 @@
 }
 // entity 6
 {
-"classname" "light_point"
-"origin" "392 960 176"
+"classname" "light_spotlight"
+"origin" "424 960 208"
 "intensity" "3"
 "angle" "a"
 "decay" "2"
@@ -2180,8 +2180,8 @@
 }
 // entity 32
 {
-"classname" "light_point"
-"origin" "976 432 56"
+"classname" "light_spotlight"
+"origin" "976 432 136"
 "intensity" "0.6"
 "angle" "90"
 "decay" "2"

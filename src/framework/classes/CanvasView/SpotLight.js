@@ -21,18 +21,20 @@ export default class SpotLight extends CanvasView {
     this.color = color;
     this.group = group;
 
-    this.light = new THREE.SpotLight(this.color.getHex(), intensity, 512);
+    this.light = new THREE.SpotLight(this.color.getHex(), intensity);
     this.light.position.copy(origin);
+    this.light.target.position.set(origin.x, 0, origin.z);
 
+    this.light.angle = 1;
     this.light.decay = decay;
+    this.light.distance = 512;
+    this.light.penumbra = 1;
     this.light.castShadow = true;
     this.light.shadow.camera.far = 512;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
-
-    this.light.target.position.set(512, 0, 512);
 
     this.group.add(this.light);
     this.group.add(this.light.target);

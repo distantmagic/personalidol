@@ -81,8 +81,8 @@ self.onmessage = bootstrapWorker(function(serverCancelToken: CancelToken, logger
           // geometries
           entitiesWithBrushes.push(["func_group", entity]);
           break;
-        case "light_directional":
         case "light_point":
+        case "light_spotlight":
           yield new JSONRPCResponseData({
             classname: entityClassName,
             color: entityProperties.getPropertyByKey("color").getValue(),
