@@ -1,5 +1,3 @@
-// @flow strict
-
-import type { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
+import { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
 
 export type QueryBusQueueCollection<T> = CancelTokenQuery<T>[];

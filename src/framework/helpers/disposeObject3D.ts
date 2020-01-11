@@ -1,17 +1,16 @@
-// @flow strict
-
 import disposeMaterial from "./disposeMaterial";
 
-import type { Object3D } from "three";
+import { Mesh, Object3D } from "three";
 
 function doDispose(obj: Mesh | Object3D, disposeTextures: boolean): void {
-  // $FlowFixMe
+  // @ts-ignore
   const geometry = obj.geometry;
 
   if (geometry) {
     geometry.dispose();
   }
 
+  // @ts-ignore
   const material = obj.material;
 
   if (material) {

@@ -1,7 +1,5 @@
-// @flow strict
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { HasElementPosition } from "./HasElementPosition";
+import { HasElementSize } from "./HasElementSize";
 
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
-import type { HasElementPosition } from "./HasElementPosition";
-import type { HasElementSize } from "./HasElementSize";
-
-export interface GeometryRectangle<Unit: ElementPositionUnit> extends HasElementPosition<Unit>, HasElementSize<Unit> {}
+export interface GeometryRectangle<Unit extends ElementPositionUnit> extends HasElementPosition<Unit>, HasElementSize<Unit> {}

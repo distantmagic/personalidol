@@ -1,5 +1,3 @@
-// @flow strict
-
 import memoize from "./memoize";
 
 test("calls function only when required variables change", function() {

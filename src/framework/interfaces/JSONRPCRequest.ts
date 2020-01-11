@@ -1,8 +1,6 @@
-// @flow strict
-
-import type { JSONRPCMessage } from "./JSONRPCMessage";
-import type { JSONRPCParams } from "../types/JSONRPCParams";
-import type { JSONRPCRequestObjectified } from "../types/JSONRPCRequestObjectified";
+import { JSONRPCMessage } from "./JSONRPCMessage";
+import { JSONRPCParams } from "../types/JSONRPCParams";
+import { JSONRPCRequestObjectified } from "../types/JSONRPCRequestObjectified";
 
 export interface JSONRPCRequest extends JSONRPCMessage<JSONRPCRequestObjectified> {
   getParams(): JSONRPCParams;

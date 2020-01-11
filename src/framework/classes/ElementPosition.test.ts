@@ -1,5 +1,3 @@
-// @flow strict
-
 import ElementPosition from "./ElementPosition";
 
 test("calculates distance to other element position", function() {

@@ -1,10 +1,8 @@
-// @flow strict
-
-import type { CancelToken } from "./CancelToken";
-import type { CanvasView } from "./CanvasView";
+import { CancelToken } from "./CancelToken";
+import { CanvasView } from "./CanvasView";
 
 export interface CanvasViewBus {
-  add(CancelToken, CanvasView): Promise<void>;
+  add(cancelToken: CancelToken, canvasView: CanvasView): Promise<void>;
 
-  delete(CancelToken, CanvasView): Promise<void>;
+  delete(cancelToken: CancelToken, canvasView: CanvasView): Promise<void>;
 }

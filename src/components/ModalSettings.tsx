@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as React from "react";
 import { NavLink, Route, Switch } from "react-router-dom";
 

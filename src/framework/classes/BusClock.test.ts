@@ -1,5 +1,3 @@
-// @flow strict
-
 import BusClock from "./BusClock";
 import CancelToken from "./CancelToken";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";

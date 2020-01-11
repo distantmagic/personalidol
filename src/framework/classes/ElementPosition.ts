@@ -1,17 +1,15 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
-import type { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
 
-export default class ElementPosition<Unit: ElementPositionUnit> implements ElementPositionInterface<Unit> {
-  +vector: THREE.Vector3;
-  +x: number;
-  +y: number;
-  +z: number;
+export default class ElementPosition<Unit extends ElementPositionUnit> implements ElementPositionInterface<Unit> {
+  readonly vector: THREE.Vector3;
+  readonly x: number;
+  readonly y: number;
+  readonly z: number;
 
   constructor(x: number, y: number, z: number = 0) {
     this.vector = new THREE.Vector3(x, y, z);

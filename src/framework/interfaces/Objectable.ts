@@ -1,5 +1,3 @@
-// @flow strict
-
-export interface Objectable<T: {}> {
+export interface Objectable<T extends Object> {
   asObject(): T;
 }

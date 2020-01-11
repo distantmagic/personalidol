@@ -1,12 +1,11 @@
-// @flow strict
-
 import * as React from "react";
 
 import Character from "../framework/classes/Entity/Person/Character";
 
-type Props = {|
-  character: Character,
-|};
+type Props = {
+  character: Character;
+};
+
 export default function ModalCharacterBody(props: Props) {
   return (
     <div className="dd__modal__character__attributes">

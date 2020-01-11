@@ -1,8 +1,6 @@
-// @flow strict
-
-import type { Animatable } from "./Animatable";
-import type { CanvasPointerEventHandler } from "./CanvasPointerEventHandler";
-import type { Disposable } from "./Disposable";
+import { Animatable } from "./Animatable";
+import { CanvasPointerEventHandler } from "./CanvasPointerEventHandler";
+import { Disposable } from "./Disposable";
 
 export interface CanvasView extends Animatable, CanvasPointerEventHandler, Disposable {
   begin(): void;

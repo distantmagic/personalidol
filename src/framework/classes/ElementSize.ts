@@ -1,14 +1,12 @@
-// @flow strict
-
 import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
-import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
 
-export default class ElementSize<Unit: ElementPositionUnit> implements ElementSizeInterface<Unit> {
-  +height: number;
-  +depth: number;
-  +width: number;
+export default class ElementSize<Unit extends ElementPositionUnit> implements ElementSizeInterface<Unit> {
+  readonly height: number;
+  readonly depth: number;
+  readonly width: number;
 
   constructor(width: number, height: number, depth: number = 0) {
     this.height = height;

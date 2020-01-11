@@ -1,13 +1,11 @@
-// @flow strict
+import { JSONRPCMessageType } from "../types/JSONRPCMessageType";
+import { JSONRPCResponse as JSONRPCResponseInterface } from "../interfaces/JSONRPCResponse";
+import { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
 
-import type { JSONRPCMessageType } from "../types/JSONRPCMessageType";
-import type { JSONRPCResponse as JSONRPCResponseInterface } from "../interfaces/JSONRPCResponse";
-import type { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
-
-export default class JSONRPCResponse<T, U: {}> implements JSONRPCResponseInterface<T, U> {
-  +data: JSONRPCResponseData<T>;
-  +id: string;
-  +method: string;
+export default class JSONRPCResponse<T, U extends Object> implements JSONRPCResponseInterface<T, U> {
+  readonly data: JSONRPCResponseData<T>;
+  readonly id: string;
+  readonly method: string;
 
   constructor(id: string, method: string, data: JSONRPCResponseData<T>) {
     this.data = data;

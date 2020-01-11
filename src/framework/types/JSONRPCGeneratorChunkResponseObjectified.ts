@@ -1,14 +1,12 @@
-// @flow strict
+import { JSONRPCVersion } from "./JSONRPCVersion";
 
-import type { JSONRPCVersion } from "./JSONRPCVersion";
-
-export type JSONRPCGeneratorChunkResponseObjectified<T> = {|
-  +chunk: string,
-  +head: string,
-  +id: string,
-  +jsonrpc: JSONRPCVersion,
-  +method: string,
-  +next: ?string,
-  +result: T,
-  +type: "generator",
-|};
+export type JSONRPCGeneratorChunkResponseObjectified<T> = {
+  readonly chunk: string;
+  readonly head: string;
+  readonly id: string;
+  readonly jsonrpc: JSONRPCVersion;
+  readonly method: string;
+  readonly next: null | string;
+  readonly result: T;
+  readonly type: "generator";
+};

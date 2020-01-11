@@ -1,18 +1,10 @@
-// @flow strict
-
 import disposeTexture from "./disposeTexture";
 
-import type { Material } from "three";
+import { Material } from "three";
 
-export default function disposeMaterial<T: Material>(material: T | $ReadOnlyArray<T>, disposeTextures: boolean): void {
-  if (Array.isArray(material)) {
-    return void material.forEach(function(child) {
-      return disposeMaterial(child, disposeTextures);
-    });
-  }
-
+function doDisposeMaterial<T extends Material>(material: T, disposeTextures: boolean): void {
   if (disposeTextures) {
-    // $FlowFixMe
+    // @ts-ignore
     const texture = material.map;
 
     if (texture) {
@@ -21,4 +13,14 @@ export default function disposeMaterial<T: Material>(material: T | $ReadOnlyArra
   }
 
   material.dispose();
+}
+
+export default function disposeMaterial<T extends Material>(material: T | ReadonlyArray<T>, disposeTextures: boolean): void {
+  if (Array.isArray(material)) {
+    return void material.forEach(function(child) {
+      return doDisposeMaterial(child, disposeTextures);
+    });
+  }
+
+  doDisposeMaterial(material as Material, disposeTextures);
 }

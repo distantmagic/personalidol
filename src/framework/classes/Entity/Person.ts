@@ -1,5 +1,3 @@
-// @flow strict
-
 import Entity from "../Entity";
 // import ForgetMemorizable from "../Command/ForgetMemorizable";
 // import HearMessage from "../Command/HearMessage";
@@ -8,20 +6,20 @@ import Entity from "../Entity";
 // import TellMessage from "../Command/TellMessage";
 // import { default as AimCommand } from "../Command/Aim";
 
-import type { Aimable } from "../../interfaces/Memorizable/Aimable";
-import type { Aims } from "../../interfaces/Sentient/Aims";
-import type { Hears } from "../../interfaces/Sentient/Perceives/Hears";
-import type { Identifiable } from "../../interfaces/Identifiable";
-import type { Memorizable } from "../../interfaces/Memorizable";
-import type { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
-import type { Message } from "../../interfaces/Perceivable/Message";
-import type { Perceives } from "../../interfaces/Sentient/Perceives";
-import type { Sees } from "../../interfaces/Sentient/Perceives/Sees";
-import type { Speaks } from "../../interfaces/Sentient/Speaks";
-import type { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
+import { Aimable } from "../../interfaces/Memorizable/Aimable";
+import { Aims } from "../../interfaces/Sentient/Aims";
+import { Hears } from "../../interfaces/Sentient/Perceives/Hears";
+import { Identifiable } from "../../interfaces/Identifiable";
+import { Memorizable } from "../../interfaces/Memorizable";
+import { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
+import { Message } from "../../interfaces/Perceivable/Message";
+import { Perceives } from "../../interfaces/Sentient/Perceives";
+import { Sees } from "../../interfaces/Sentient/Perceives/Sees";
+import { Speaks } from "../../interfaces/Sentient/Speaks";
+import { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
 export default class Person extends Entity implements Aims, Hears, Identifiable, Memorizes, Sees, Speaks {
-  +_name: string;
+  readonly _name: string;
 
   constructor(name: string) {
     super();

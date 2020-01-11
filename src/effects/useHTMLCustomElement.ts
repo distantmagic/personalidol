@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as React from "react";
 
 export default function useHTMLCustomElement(name: string, ElementConstructor: any): boolean {

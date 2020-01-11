@@ -1,23 +1,21 @@
-// @flow strict
+import { Vector3 } from "three";
 
-import type { Vector3 } from "three";
-
-import type { Equatable } from "./Equatable";
-import type { QuakeBrushHalfSpace } from "./QuakeBrushHalfSpace";
-import type { QuakeBrushHalfSpaceTrio } from "./QuakeBrushHalfSpaceTrio";
+import { Equatable } from "./Equatable";
+import { QuakeBrushHalfSpace } from "./QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpaceTrio } from "./QuakeBrushHalfSpaceTrio";
 
 export interface QuakeBrush extends Equatable<QuakeBrush> {
   generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrio, void, void>;
 
   generateVertices(): Generator<Vector3, void, void>;
 
-  getVertices(): $ReadOnlyArray<Vector3>;
+  getVertices(): ReadonlyArray<Vector3>;
 
-  getHalfSpaceByCoplanarPoints(Vector3, Vector3, Vector3): QuakeBrushHalfSpace;
+  getHalfSpaceByCoplanarPoints(v1: Vector3, v2: Vector3, v3: Vector3): QuakeBrushHalfSpace;
 
-  getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace>;
+  getHalfSpaces(): ReadonlyArray<QuakeBrushHalfSpace>;
 
-  getTextures(): $ReadOnlyArray<string>;
+  getTextures(): ReadonlyArray<string>;
 
-  containsPoint(Vector3): boolean;
+  containsPoint(point: Vector3): boolean;
 }

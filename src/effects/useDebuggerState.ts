@@ -1,9 +1,7 @@
-// @flow strict
-
 import * as React from "react";
 
-import type { Debugger } from "../framework/interfaces/Debugger";
-import type { DebuggerState } from "../framework/types/DebuggerState";
+import { Debugger } from "../framework/interfaces/Debugger";
+import { DebuggerState } from "../framework/types/DebuggerState";
 
 export default function useDebuggerState(debug: Debugger): DebuggerState {
   const [debuggerState, setDebuggetState] = React.useState(debug.getState());

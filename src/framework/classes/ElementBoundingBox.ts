@@ -1,15 +1,13 @@
-// @flow strict
+import { ElementBoundingBox as ElementBoundingBoxInterface } from "../interfaces/ElementBoundingBox";
+import { ElementPosition } from "../interfaces/ElementPosition";
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { ElementSize } from "../interfaces/ElementSize";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
-import type { ElementBoundingBox as ElementBoundingBoxInterface } from "../interfaces/ElementBoundingBox";
-import type { ElementPosition } from "../interfaces/ElementPosition";
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
-import type { ElementSize } from "../interfaces/ElementSize";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-
-export default class ElementBoundingBox<Unit: ElementPositionUnit> implements ElementBoundingBoxInterface<Unit> {
-  +elementPosition: ElementPosition<Unit>;
-  +elementSize: ElementSize<Unit>;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+export default class ElementBoundingBox<Unit extends ElementPositionUnit> implements ElementBoundingBoxInterface<Unit> {
+  readonly elementPosition: ElementPosition<Unit>;
+  readonly elementSize: ElementSize<Unit>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, elementPosition: ElementPosition<Unit>, elementSize: ElementSize<Unit>) {
     this.elementPosition = elementPosition;

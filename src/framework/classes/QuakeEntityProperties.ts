@@ -1,17 +1,15 @@
-// @flow strict
-
 import Exception from "./Exception";
 import isArrayEqual from "../helpers/isArrayEqual";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
-import type { QuakeEntityProperties as QuakeEntityPropertiesInterface } from "../interfaces/QuakeEntityProperties";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
+import { QuakeEntityProperties as QuakeEntityPropertiesInterface } from "../interfaces/QuakeEntityProperties";
 
 export default class QuakeEntityProperties implements QuakeEntityPropertiesInterface {
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +propsMap: Map<string, QuakeEntityProperty>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly propsMap: Map<string, QuakeEntityProperty>;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, props: $ReadOnlyArray<QuakeEntityProperty>) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, props: ReadonlyArray<QuakeEntityProperty>) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.propsMap = new Map<string, QuakeEntityProperty>();
 
@@ -26,7 +24,7 @@ export default class QuakeEntityProperties implements QuakeEntityPropertiesInter
     }
   }
 
-  getProperties(): $ReadOnlyArray<QuakeEntityProperty> {
+  getProperties(): ReadonlyArray<QuakeEntityProperty> {
     return Array.from(this.propsMap.values());
   }
 

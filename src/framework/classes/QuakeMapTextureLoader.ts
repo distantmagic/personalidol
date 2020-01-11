@@ -1,28 +1,26 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import { default as QuakeMapException } from "./Exception/QuakeMap";
 import { default as TextureQuery } from "./Query/Texture";
 
-import type { LoadingManager, Texture, TextureLoader as THREETextureLoader } from "three";
+import { LoadingManager, Texture, TextureLoader as THREETextureLoader } from "three";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QueryBus } from "../interfaces/QueryBus";
-import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../interfaces/QuakeMapTextureLoader";
+import { CancelToken } from "../interfaces/CancelToken";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "../interfaces/QueryBus";
+import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../interfaces/QuakeMapTextureLoader";
 
 export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInterface {
-  +loadedTextures: Set<Texture>;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +queryBus: QueryBus;
-  +textureLoader: THREETextureLoader;
-  +texturesIndex: string[];
-  +texturesSources: Map<string, string>;
-  #lastId: number;
+  readonly loadedTextures: Set<Texture>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly queryBus: QueryBus;
+  readonly textureLoader: THREETextureLoader;
+  readonly texturesIndex: string[];
+  readonly texturesSources: Map<string, string>;
+  _lastId: number;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, loadingManager: LoadingManager, queryBus: QueryBus) {
-    this.#lastId = 0;
+    this._lastId = 0;
     this.loadedTextures = new Set<Texture>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
@@ -68,11 +66,11 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
     return texture;
   }
 
-  loadRegisteredTextures(cancelToken: CancelToken): Promise<$ReadOnlyArray<Texture>> {
+  loadRegisteredTextures(cancelToken: CancelToken): Promise<ReadonlyArray<Texture>> {
     return this.loadTextures(cancelToken, this.texturesIndex);
   }
 
-  loadTextures(cancelToken: CancelToken, textureNames: $ReadOnlyArray<string>): Promise<$ReadOnlyArray<Texture>> {
+  loadTextures(cancelToken: CancelToken, textureNames: ReadonlyArray<string>): Promise<ReadonlyArray<Texture>> {
     const loadedTextures = textureNames.map(this.loadTexture.bind(this, cancelToken));
 
     return Promise.all(loadedTextures);
@@ -90,6 +88,6 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
     this.texturesIndex.push(textureName);
     this.texturesSources.set(textureName, src);
 
-    this.#lastId += 1;
+    this._lastId += 1;
   }
 }

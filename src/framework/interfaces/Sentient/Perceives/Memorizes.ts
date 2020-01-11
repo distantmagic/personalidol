@@ -1,7 +1,5 @@
-// @flow strict
-
-import type { Memorizable } from "../../Memorizable";
-import type { Perceives } from "../Perceives";
+import { Memorizable } from "../../Memorizable";
+import { Perceives } from "../Perceives";
 
 export interface Memorizes extends Perceives {
   forget(memorizable: Memorizable): Promise<void>;

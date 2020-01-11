@@ -1,5 +1,3 @@
-// @flow strict
-
 import inRange from "lodash/inRange";
 
 export default function isEqualWithEpsilon(n1: number, n2: number, epsilon: number): boolean {

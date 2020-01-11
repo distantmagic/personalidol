@@ -1,17 +1,9 @@
-// @flow strict
+import { MD2CharacterAnimations } from "./MD2CharacterAnimations";
 
-export type MD2CharacterConfig = {|
-  +animations: {|
-    attack: string,
-    crouchAttack: string,
-    crouchIdle: string,
-    crouchMove: string,
-    idle: string,
-    jump: string,
-    move: string,
-  |},
-  +baseUrl: string,
-  +body: string,
-  +skins: $ReadOnlyArray<string>,
-  +weapons: [string, string],
-|};
+export type MD2CharacterConfig = {
+  readonly animations: MD2CharacterAnimations;
+  readonly baseUrl: string;
+  readonly body: string;
+  readonly skins: ReadonlyArray<string>;
+  readonly weapons: [string, string];
+};

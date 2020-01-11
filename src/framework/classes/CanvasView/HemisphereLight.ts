@@ -1,17 +1,15 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 
-import type { Group, Light, OrthographicCamera } from "three";
+import { Group, HemisphereLight } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class AmbientLight extends CanvasView {
-  +group: Group;
-  +light: Light<OrthographicCamera>;
+  readonly group: Group;
+  readonly light: HemisphereLight;
 
   constructor(canvasViewBag: CanvasViewBag, group: Group, brightness: number) {
     super(canvasViewBag);

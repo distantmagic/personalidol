@@ -1,11 +1,9 @@
-// @flow strict
-
-import type { Logger } from "./Logger";
-import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
+import { Logger } from "./Logger";
+import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
 
 export interface ExceptionHandler {
   /**
    * Should return 'true' when exception is processed successfully.
    */
-  captureException<T: Error>(LoggerBreadcrumbs, T): Promise<boolean>;
+  captureException<T extends Error>(loggerBreadcrumbs: LoggerBreadcrumbs, error: T): Promise<boolean>;
 }

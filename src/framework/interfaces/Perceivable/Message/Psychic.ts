@@ -1,5 +1,3 @@
-// @flow strict
-
-import type { Message } from "../Message";
+import { Message } from "../Message";
 
 export interface Psychic extends Message {}

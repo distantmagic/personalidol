@@ -1,5 +1,3 @@
-// @flow strict
-
 import autoBind from "auto-bind";
 import noop from "lodash/noop";
 import { default as VendorMainLoop } from "mainloop.js";
@@ -7,15 +5,21 @@ import { default as VendorMainLoop } from "mainloop.js";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import SingletonException from "./Exception/Singleton";
 
-import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
+import { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
+import { MainLoopBeginCallback } from "../types/MainLoopBeginCallback";
+import { MainLoopDrawCallback } from "../types/MainLoopDrawCallback";
+import { MainLoopEndCallback } from "../types/MainLoopEndCallback";
+import { MainLoopUpdateCallback } from "../types/MainLoopUpdateCallback";
+import { Scheduler } from "../interfaces/Scheduler";
 
-import type { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
-import type { Scheduler } from "../interfaces/Scheduler";
-
-let instance;
+let instance: null | MainLoopInterface = null;
 
 export default class MainLoop implements MainLoopInterface {
   static getInstance(): MainLoop {
+    if (!instance) {
+      throw new Error("Main loop is used before it's instanciated.");
+    }
+
     return instance;
   }
 
@@ -58,15 +62,15 @@ export default class MainLoop implements MainLoopInterface {
     VendorMainLoop.setUpdate(noop);
   }
 
-  setBegin(callback: BeginCallback): void {
+  setBegin(callback: MainLoopBeginCallback): void {
     VendorMainLoop.setBegin(callback);
   }
 
-  setDraw(callback: DrawCallback): void {
+  setDraw(callback: MainLoopDrawCallback): void {
     VendorMainLoop.setDraw(callback);
   }
 
-  setEnd(callback: EndCallback): void {
+  setEnd(callback: MainLoopEndCallback): void {
     VendorMainLoop.setEnd(callback);
   }
 
@@ -74,7 +78,7 @@ export default class MainLoop implements MainLoopInterface {
     VendorMainLoop.setMaxAllowedFPS(fps);
   }
 
-  setUpdate(callback: UpdateCallback): void {
+  setUpdate(callback: MainLoopUpdateCallback): void {
     VendorMainLoop.setUpdate(callback);
   }
 

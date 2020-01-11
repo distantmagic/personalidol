@@ -1,44 +1,42 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import disposeObject3D from "../helpers/disposeObject3D";
 
-import type { Group } from "three";
+import { Group } from "three";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { CanvasView as CanvasViewInterface } from "../interfaces/CanvasView";
-import type { CanvasViewBag } from "../interfaces/CanvasViewBag";
+import { CancelToken } from "../interfaces/CancelToken";
+import { CanvasView as CanvasViewInterface } from "../interfaces/CanvasView";
+import { CanvasViewBag } from "../interfaces/CanvasViewBag";
 
 export default class CanvasView implements CanvasViewInterface {
-  +canvasViewBag: CanvasViewBag;
-  +children: Group;
-  #isAttached: boolean;
-  #isDisposed: boolean;
+  readonly canvasViewBag: CanvasViewBag;
+  readonly children: Group;
+  _isAttached: boolean;
+  _isDisposed: boolean;
 
   static useBegin: boolean = true;
   static useEnd: boolean = true;
   static useUpdate: boolean = true;
 
-  constructor(canvasViewBag: CanvasViewBag): void {
+  constructor(canvasViewBag: CanvasViewBag) {
     this.canvasViewBag = canvasViewBag;
     this.children = new THREE.Group();
-    this.#isAttached = false;
-    this.#isDisposed = false;
+    this._isAttached = false;
+    this._isDisposed = false;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
-    this.#isAttached = true;
-    this.#isDisposed = false;
+    this._isAttached = true;
+    this._isDisposed = false;
   }
 
   begin(): void {}
 
   async dispose(cancelToken: CancelToken): Promise<void> {
-    this.#isAttached = false;
+    this._isAttached = false;
     await this.canvasViewBag.dispose(cancelToken);
     disposeObject3D(this.children, true);
-    this.#isDisposed = true;
+    this._isDisposed = true;
   }
 
   draw(interpolationPercentage: number): void {}
@@ -46,11 +44,11 @@ export default class CanvasView implements CanvasViewInterface {
   end(fps: number, isPanicked: boolean): void {}
 
   isAttached(): boolean {
-    return this.#isAttached;
+    return this._isAttached;
   }
 
   isDisposed(): boolean {
-    return this.#isDisposed;
+    return this._isDisposed;
   }
 
   onPointerAuxiliaryClick(): void {}

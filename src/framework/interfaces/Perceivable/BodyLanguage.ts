@@ -1,5 +1,3 @@
-// @flow strict
-
-import type { Perceivable } from "../Perceivable";
+import { Perceivable } from "../Perceivable";
 
 export interface BodyLanguage extends Perceivable {}

@@ -1,7 +1,5 @@
-// @flow strict
+import { CancelToken } from "../interfaces/CancelToken";
+import { JSONRPCRequest } from "../interfaces/JSONRPCRequest";
+import { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { JSONRPCRequest } from "../interfaces/JSONRPCRequest";
-import type { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
-
-export type JSONRPCServerPromiseCallback<T> = (CancelToken, JSONRPCRequest) => Promise<JSONRPCResponseData<T>>;
+export type JSONRPCServerPromiseCallback<T> = (cancelToken: CancelToken, request: JSONRPCRequest) => Promise<JSONRPCResponseData<T>>;

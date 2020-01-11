@@ -1,13 +1,11 @@
-// @flow strict
+import { JSONRPCMessageType } from "./JSONRPCMessageType";
+import { JSONRPCParams } from "./JSONRPCParams";
+import { JSONRPCVersion } from "./JSONRPCVersion";
 
-import type { JSONRPCMessageType } from "./JSONRPCMessageType";
-import type { JSONRPCParams } from "./JSONRPCParams";
-import type { JSONRPCVersion } from "./JSONRPCVersion";
-
-export type JSONRPCRequestObjectified = {|
-  +id: string,
-  +method: string,
-  +jsonrpc: JSONRPCVersion,
-  +params: JSONRPCParams,
-  +type: JSONRPCMessageType,
-|};
+export type JSONRPCRequestObjectified = {
+  readonly id: string;
+  readonly method: string;
+  readonly jsonrpc: JSONRPCVersion;
+  readonly params: JSONRPCParams;
+  readonly type: JSONRPCMessageType;
+};

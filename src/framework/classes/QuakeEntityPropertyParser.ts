@@ -1,22 +1,20 @@
-// @flow strict
-
 import QuakeEntityProperty from "./QuakeEntityProperty";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeEntityProperty as QuakeEntityPropertyInterface } from "../interfaces/QuakeEntityProperty";
-import type { QuakeEntityPropertyParser as QuakeEntityPropertyParserInterface } from "../interfaces/QuakeEntityPropertyParser";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QuakeEntityProperty as QuakeEntityPropertyInterface } from "../interfaces/QuakeEntityProperty";
+import { QuakeEntityPropertyParser as QuakeEntityPropertyParserInterface } from "../interfaces/QuakeEntityPropertyParser";
 
 export default class QuakeEntityPropertyParser implements QuakeEntityPropertyParserInterface {
-  +line: string;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly line: string;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, line: string) {
     this.line = line;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  entityPropertySplits(splits: $ReadOnlyArray<string>): QuakeEntityPropertyInterface {
+  entityPropertySplits(splits: ReadonlyArray<string>): QuakeEntityPropertyInterface {
     if (splits.length !== 5) {
       throw new QuakeMapParserException(this.loggerBreadcrumbs.add("entityPropertySplits"), "Unexpected number of brush splits.");
     }
@@ -36,7 +34,7 @@ export default class QuakeEntityPropertyParser implements QuakeEntityPropertyPar
     }
 
     // might contain backslashes to escape strings inside properties
-    const reduced = splits.reduceRight(function(acc, curr) {
+    const reduced = splits.reduceRight(function(acc: string[], curr: string) {
       if (curr.endsWith("\\")) {
         const last = acc.shift();
 

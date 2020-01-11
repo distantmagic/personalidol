@@ -1,11 +1,9 @@
-// @flow strict
-
-import type { CancelToken } from "./CancelToken";
-import type { CanvasViewBus } from "./CanvasViewBus";
-import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
+import { CancelToken } from "./CancelToken";
+import { CanvasViewBus } from "./CanvasViewBus";
+import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
 
 export interface CanvasViewBag extends CanvasViewBus {
-  dispose(CancelToken): Promise<void>;
+  dispose(cancelToken: CancelToken): Promise<void>;
 
-  fork(LoggerBreadcrumbs): CanvasViewBag;
+  fork(loggerBreadcrumbs: LoggerBreadcrumbs): CanvasViewBag;
 }

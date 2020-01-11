@@ -1,7 +1,5 @@
-// @flow strict
-
-import type { JSONRPCResponse } from "./JSONRPCResponse";
-import type { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
+import { JSONRPCResponse } from "./JSONRPCResponse";
+import { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
 
 export interface JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> {
   getChunk(): string;
@@ -16,5 +14,5 @@ export interface JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSO
 
   isHead(): boolean;
 
-  setNext(string): void;
+  setNext(next: string): void;
 }

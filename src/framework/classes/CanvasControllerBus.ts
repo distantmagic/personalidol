@@ -1,18 +1,16 @@
-// @flow strict
-
 import { default as CanvasControllerException } from "./Exception/CanvasController";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { CanvasController } from "../interfaces/CanvasController";
-import type { CanvasControllerBus as CanvasControllerBusInterface } from "../interfaces/CanvasControllerBus";
-import type { HTMLElementResizeObserver } from "../interfaces/HTMLElementResizeObserver";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { Scheduler } from "../interfaces/Scheduler";
+import { CancelToken } from "../interfaces/CancelToken";
+import { CanvasController } from "../interfaces/CanvasController";
+import { CanvasControllerBus as CanvasControllerBusInterface } from "../interfaces/CanvasControllerBus";
+import { HTMLElementResizeObserver } from "../interfaces/HTMLElementResizeObserver";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Scheduler } from "../interfaces/Scheduler";
 
 export default class CanvasControllerBus implements CanvasControllerBusInterface {
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +resizeObserver: HTMLElementResizeObserver;
-  +scheduler: Scheduler;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly resizeObserver: HTMLElementResizeObserver;
+  readonly scheduler: Scheduler;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, resizeObserver: HTMLElementResizeObserver, scheduler: Scheduler) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;

@@ -1,12 +1,10 @@
-// @flow strict
-
 import isArrayEqual from "./isArrayEqual";
 import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
 
-import type { Equatable } from "../interfaces/Equatable";
+import { Equatable } from "../interfaces/Equatable";
 
 class Foo implements Equatable<Foo> {
-  +value: number;
+  readonly value: number;
 
   constructor(value: number) {
     this.value = value;

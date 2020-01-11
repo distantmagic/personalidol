@@ -1,5 +1,3 @@
-// @flow strict
-
 import uniq from "lodash/uniq";
 
 import combineWithoutRepetitions from "../helpers/combineWithoutRepetitions";
@@ -8,18 +6,18 @@ import QuakeBrushHalfSpaceTrio from "./QuakeBrushHalfSpaceTrio";
 import serializeVector3 from "../helpers/serializeVector3";
 import { default as QuakeBrushException } from "./Exception/QuakeBrush";
 
-import type { Vector3 } from "three";
+import { Vector3 } from "three";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
-import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
-import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
+import { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
 
 export default class QuakeBrush implements QuakeBrushInterface {
-  +halfSpaces: $ReadOnlyArray<QuakeBrushHalfSpace>;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: $ReadOnlyArray<QuakeBrushHalfSpace>) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>) {
     if (halfSpaces.length < 4) {
       throw new QuakeBrushException(loggerBreadcrumbs.add("constructor"), "You need at least 4 half-spaces to have a chance of forming a polyhedron.");
     }
@@ -39,13 +37,17 @@ export default class QuakeBrush implements QuakeBrushInterface {
   }
 
   *generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrioInterface, void, void> {
-    for (let combo of combineWithoutRepetitions(this.halfSpaces, 3)) {
-      yield new QuakeBrushHalfSpaceTrio(this.loggerBreadcrumbs.add("QuakeBrushHalfSpaceTrio"), ...combo);
+    for (let combo of combineWithoutRepetitions<QuakeBrushHalfSpace>(this.halfSpaces, 3)) {
+      if (combo.length !== 3) {
+        throw new QuakeBrushException(this.loggerBreadcrumbs, "Invalid halfspace combinations.");
+      }
+
+      yield new QuakeBrushHalfSpaceTrio(this.loggerBreadcrumbs.add("QuakeBrushHalfSpaceTrio"), combo[0], combo[1], combo[2]);
     }
   }
 
   *generateVertices(): Generator<Vector3, void, void> {
-    const unique: { [string]: boolean } = {};
+    const unique: { [key: string]: boolean } = {};
 
     for (let trio of this.generateHalfSpaceTrios()) {
       if (trio.hasIntersectingPoint()) {
@@ -73,15 +75,15 @@ export default class QuakeBrush implements QuakeBrushInterface {
     throw new QuakeBrushException(this.loggerBreadcrumbs.add("getHalfSpaceByCoplanarPoints"), "Half space does not exist, but it was expected.");
   }
 
-  getHalfSpaces(): $ReadOnlyArray<QuakeBrushHalfSpace> {
+  getHalfSpaces(): ReadonlyArray<QuakeBrushHalfSpace> {
     return this.halfSpaces;
   }
 
-  getTextures(): $ReadOnlyArray<string> {
+  getTextures(): ReadonlyArray<string> {
     return uniq(this.getHalfSpaces().map(halfSpace => halfSpace.getTexture()));
   }
 
-  getVertices(): $ReadOnlyArray<Vector3> {
+  getVertices(): ReadonlyArray<Vector3> {
     return Array.from(this.generateVertices());
   }
 

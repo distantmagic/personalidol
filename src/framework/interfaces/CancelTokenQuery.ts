@@ -1,7 +1,5 @@
-// @flow strict
-
-import type { CancelToken } from "./CancelToken";
-import type { Query } from "./Query";
+import { CancelToken } from "./CancelToken";
+import { Query } from "./Query";
 
 export interface CancelTokenQuery<T> {
   // constructor(cancelToken: CancelToken, query: Query<T>): void;
@@ -12,9 +10,9 @@ export interface CancelTokenQuery<T> {
 
   getResult(): T;
 
-  infer(CancelTokenQuery<T>): T;
+  infer(cancelTokenQuery: CancelTokenQuery<T>): T;
 
-  isInferableFrom(CancelTokenQuery<any>): boolean;
+  isInferableFrom<T>(cancelTokenQuery: CancelTokenQuery<T>): boolean;
 
   isCanceled(): boolean;
 

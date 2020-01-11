@@ -1,13 +1,9 @@
-// @flow strict
+import { Camera, Raycaster, Scene, WebGLRenderer } from "three";
 
-import type { Camera, Raycaster, Scene, WebGLRenderer } from "three";
-
-import type { Animatable } from "./Animatable";
-import type { Observer } from "./Observer";
-import type { Resizeable } from "./Resizeable";
+import { Animatable } from "./Animatable";
+import { Observer } from "./Observer";
+import { Resizeable } from "./Resizeable";
 
 export interface THREEPointerInteraction extends Animatable, Observer, Resizeable<"px"> {
-  constructor(WebGLRenderer, Camera): void;
-
   getCameraRaycaster(): Raycaster;
 }

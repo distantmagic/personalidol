@@ -1,24 +1,22 @@
-// @flow strict
-
-import type { DebuggerState } from "../types/DebuggerState";
-import type { DebuggerStateChangeCallback } from "../types/DebuggerStateChangeCallback";
-import type { DebuggerStateValue } from "../types/DebuggerStateValue";
-import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
+import { DebuggerState } from "../types/DebuggerState";
+import { DebuggerStateChangeCallback } from "../types/DebuggerStateChangeCallback";
+import { DebuggerStateValue } from "../types/DebuggerStateValue";
+import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
 
 export interface Debugger {
-  deleteState(LoggerBreadcrumbs): void;
+  deleteState(loggerBreadcrumbs: LoggerBreadcrumbs): void;
 
   getState(): DebuggerState;
 
   isEnabled(): boolean;
 
-  offStateChange(DebuggerStateChangeCallback): void;
+  offStateChange(debuggerStateChangeCallback: DebuggerStateChangeCallback): void;
 
-  onStateChange(DebuggerStateChangeCallback): void;
+  onStateChange(debuggerStateChangeCallback: DebuggerStateChangeCallback): void;
 
-  setIsEnabled(boolean): void;
+  setIsEnabled(isEnabled: boolean): void;
 
-  setState(DebuggerState): void;
+  setState(debuggerState: DebuggerState): void;
 
-  updateState(LoggerBreadcrumbs, DebuggerStateValue): void;
+  updateState(loggerBreadcrumbs: LoggerBreadcrumbs, debuggerStateValue: DebuggerStateValue): void;
 }

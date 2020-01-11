@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import yn from "yn";
@@ -18,42 +16,42 @@ import SceneCanvasTemplate from "./SceneCanvas.template";
 import Scheduler from "../Scheduler";
 import { default as RootCanvasController } from "../CanvasController/Root";
 
-import type { LoadingManager as THREELoadingManager } from "three";
+import { LoadingManager as THREELoadingManager } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasControllerBus as CanvasControllerBusInterface } from "../../interfaces/CanvasControllerBus";
-import type { CanvasViewBag as CanvasViewBagInterface } from "../../interfaces/CanvasViewBag";
-import type { CanvasViewBus as CanvasViewBusInterface } from "../../interfaces/CanvasViewBus";
-import type { Debugger } from "../../interfaces/Debugger";
-import type { ExceptionHandler } from "../../interfaces/ExceptionHandler";
-import type { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../../interfaces/HTMLElementResizeObserver";
-import type { KeyboardState as KeyboardStateInterface } from "../../interfaces/KeyboardState";
-import type { LoadingManager } from "../../interfaces/LoadingManager";
-import type { Logger } from "../../interfaces/Logger";
-import type { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
-import type { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
-import type { QueryBus } from "../../interfaces/QueryBus";
-import type { Scheduler as SchedulerInterface } from "../../interfaces/Scheduler";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasControllerBus as CanvasControllerBusInterface } from "../../interfaces/CanvasControllerBus";
+import { CanvasViewBag as CanvasViewBagInterface } from "../../interfaces/CanvasViewBag";
+import { CanvasViewBus as CanvasViewBusInterface } from "../../interfaces/CanvasViewBus";
+import { Debugger } from "../../interfaces/Debugger";
+import { ExceptionHandler } from "../../interfaces/ExceptionHandler";
+import { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../../interfaces/HTMLElementResizeObserver";
+import { KeyboardState as KeyboardStateInterface } from "../../interfaces/KeyboardState";
+import { LoadingManager } from "../../interfaces/LoadingManager";
+import { Logger } from "../../interfaces/Logger";
+import { MainLoop as MainLoopInterface } from "../../interfaces/MainLoop";
+import { PointerState as PointerStateInterface } from "../../interfaces/PointerState";
+import { QueryBus } from "../../interfaces/QueryBus";
+import { Scheduler as SchedulerInterface } from "../../interfaces/Scheduler";
 
 const ATTR_DOCUMENT_HIDDEN = "documenthidden";
 
 export default class SceneCanvas extends HTMLElement {
-  +canvasControllerBus: CanvasControllerBusInterface;
-  +canvasElement: HTMLCanvasElement;
-  +canvasViewBag: CanvasViewBagInterface;
-  +canvasViewBus: CanvasViewBusInterface;
-  +canvasWrapperElement: HTMLDivElement;
-  +keyboardState: KeyboardStateInterface;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +mainLoop: MainLoopInterface;
-  +pointerState: PointerStateInterface;
-  +resizeObserver: HTMLElementResizeObserverInterface;
-  +scheduler: SchedulerInterface;
+  readonly canvasControllerBus: CanvasControllerBusInterface;
+  readonly canvasElement: HTMLCanvasElement;
+  readonly canvasViewBag: CanvasViewBagInterface;
+  readonly canvasViewBus: CanvasViewBusInterface;
+  readonly canvasWrapperElement: HTMLElement;
+  readonly keyboardState: KeyboardStateInterface;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly mainLoop: MainLoopInterface;
+  readonly pointerState: PointerStateInterface;
+  readonly resizeObserver: HTMLElementResizeObserverInterface;
+  readonly scheduler: SchedulerInterface;
   isHidden: boolean;
   isLooping: boolean;
   isObserving: boolean;
 
-  static get observedAttributes(): $ReadOnlyArray<string> {
+  static get observedAttributes(): ReadonlyArray<string> {
     return [ATTR_DOCUMENT_HIDDEN];
   }
 
@@ -67,12 +65,21 @@ export default class SceneCanvas extends HTMLElement {
 
     shadowRoot.innerHTML = SceneCanvasTemplate();
 
-    // flow assumes that shadow root does not contain `.getElementById`
-    // method
-    // $FlowFixMe
-    this.canvasElement = shadowRoot.getElementById("dm-canvas");
-    // $FlowFixMe
-    this.canvasWrapperElement = shadowRoot.getElementById("dm-canvas-wrapper");
+    const canvasElement = shadowRoot.getElementById("dm-canvas");
+
+    if (!canvasElement) {
+      throw new Error("Unable to get shadow canvas element");
+    }
+
+    this.canvasElement = canvasElement as HTMLCanvasElement;
+
+    const canvasWrapperElement = shadowRoot.getElementById("dm-canvas-wrapper");
+
+    if (!canvasWrapperElement) {
+      throw new Error("Unable to get shadow canvas wrapper element");
+    }
+
+    this.canvasWrapperElement = canvasWrapperElement;
 
     this.isHidden = yn(this.getAttribute(ATTR_DOCUMENT_HIDDEN), {
       default: true,

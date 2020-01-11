@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as React from "react";
 import { useParams } from "react-router-dom";
 
@@ -9,17 +7,17 @@ import ModalCharacter from "./ModalCharacter";
 import ModalLoader from "./ModalLoader";
 import useQuery from "../effects/useQuery";
 
-import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { QueryBus } from "../framework/interfaces/QueryBus";
+import { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
+import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "../framework/interfaces/QueryBus";
 
-type Props = {|
-  exceptionHandler: ExceptionHandler,
-  loggerBreadcrumbs: LoggerBreadcrumbs,
-  queryBus: QueryBus,
-|};
+type Props = {
+  exceptionHandler: ExceptionHandler;
+  loggerBreadcrumbs: LoggerBreadcrumbs;
+  queryBus: QueryBus;
+};
 
-function createCharacterQuery(characterId: ?string): ?CharacterQuery {
+function createCharacterQuery(characterId: undefined | string): null | CharacterQuery {
   if (!characterId) {
     return null;
   }
@@ -28,8 +26,17 @@ function createCharacterQuery(characterId: ?string): ?CharacterQuery {
 }
 
 export default function ModalCharacterLoader(props: Props) {
-  const params = useParams();
-  const character = useQuery(props.exceptionHandler, props.loggerBreadcrumbs.add("ModalCharacterLoader"), props.queryBus, memoize(createCharacterQuery, [params.characterId]));
+  const params = useParams<{
+    characterId?: string;
+  }>();
+
+  // prettier-ignore
+  const character = useQuery(
+    props.exceptionHandler,
+    props.loggerBreadcrumbs.add("ModalCharacterLoader"),
+    props.queryBus,
+    memoize<CharacterQuery, [undefined | string]>(createCharacterQuery, [params.characterId])
+  );
 
   if (!character || !character.isExecuted()) {
     return <ModalLoader comment="Loading character" />;

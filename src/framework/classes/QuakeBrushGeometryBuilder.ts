@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
@@ -7,11 +5,11 @@ import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
 import quake2three from "../helpers/quake2three";
 import three2quake from "../helpers/three2quake";
 
-import type { ConvexHull as ConvexHullInterface, Face as ConvexHullFace } from "three/examples/jsm/math/ConvexHull";
-import type { BufferGeometry, Vector3 } from "three";
+import { ConvexHull as ConvexHullInterface, Face as ConvexHullFace } from "three/examples/jsm/math/ConvexHull";
+import { BufferGeometry, Vector3 } from "three";
 
-import type { QuakeBrush } from "../interfaces/QuakeBrush";
-import type { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
+import { QuakeBrush } from "../interfaces/QuakeBrush";
+import { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
 
 const TEXTURE_SIZE = 128;
 
@@ -31,20 +29,19 @@ function getConvexHullFacePoints(face: ConvexHullFace): [Vector3, Vector3, Vecto
 }
 
 export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuilderInterface {
-  +geometry: BufferGeometry;
-  +indices: number[];
-  +normals: number[];
-  +textureNames: string[];
-  +textures: number[];
-  +uvs: number[];
-  +verticesIndex: WeakMap<
+  readonly indices: number[];
+  readonly normals: number[];
+  readonly textureNames: string[];
+  readonly textures: number[];
+  readonly uvs: number[];
+  readonly verticesIndex: WeakMap<
     Vector3,
-    {|
-      index: number,
-      normal: Vector3,
-    |}
+    {
+      index: number;
+      normal: Vector3;
+    }
   >;
-  +vertices: number[];
+  readonly vertices: number[];
   lastIndex: number = 0;
 
   constructor() {
@@ -174,27 +171,27 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     return geometry;
   }
 
-  getIndices(): $ReadOnlyArray<number> {
+  getIndices(): ReadonlyArray<number> {
     return this.indices;
   }
 
-  getNormals(): $ReadOnlyArray<number> {
+  getNormals(): ReadonlyArray<number> {
     return this.normals;
   }
 
-  getTexturesIndices(): $ReadOnlyArray<number> {
+  getTexturesIndices(): ReadonlyArray<number> {
     return this.textures;
   }
 
-  getTexturesNames(): $ReadOnlyArray<string> {
+  getTexturesNames(): ReadonlyArray<string> {
     return this.textureNames;
   }
 
-  getUvs(): $ReadOnlyArray<number> {
+  getUvs(): ReadonlyArray<number> {
     return this.uvs;
   }
 
-  getVertices(): $ReadOnlyArray<number> {
+  getVertices(): ReadonlyArray<number> {
     return this.vertices;
   }
 

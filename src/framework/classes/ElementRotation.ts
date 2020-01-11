@@ -1,14 +1,12 @@
-// @flow strict
-
 import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
-import type { ElementRotation as ElementRotationInterface } from "../interfaces/ElementRotation";
-import type { ElementRotationUnit } from "../types/ElementRotationUnit";
+import { ElementRotation as ElementRotationInterface } from "../interfaces/ElementRotation";
+import { ElementRotationUnit } from "../types/ElementRotationUnit";
 
-export default class ElementRotation<Unit: ElementRotationUnit> implements ElementRotationInterface<Unit> {
-  +x: number;
-  +y: number;
-  +z: number;
+export default class ElementRotation<Unit extends ElementRotationUnit> implements ElementRotationInterface<Unit> {
+  readonly x: number;
+  readonly y: number;
+  readonly z: number;
 
   constructor(x: number, y: number, z: number) {
     this.x = x;

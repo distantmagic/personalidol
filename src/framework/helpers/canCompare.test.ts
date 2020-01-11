@@ -1,11 +1,9 @@
-// @flow strict
-
 import canCompare from "./canCompare";
 
-import type { Equatable } from "../interfaces/Equatable";
+import { Equatable } from "../interfaces/Equatable";
 
 class Foo implements Equatable<Foo> {
-  +ref: number;
+  readonly ref: number;
 
   constructor(ref: number) {
     this.ref = ref;
@@ -17,7 +15,7 @@ class Foo implements Equatable<Foo> {
 }
 
 class Bar implements Equatable<Bar> {
-  +ref: number;
+  readonly ref: number;
 
   constructor(ref: number) {
     this.ref = ref;

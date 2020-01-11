@@ -1,20 +1,18 @@
-// @flow strict
-
 import * as THREE from "three";
 import filter from "lodash/filter";
 
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
-import type { Vector3 } from "three";
+import { Vector3 } from "three";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakePointParser as QuakePointParserInterface } from "../interfaces/QuakePointParser";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QuakePointParser as QuakePointParserInterface } from "../interfaces/QuakePointParser";
 
 const REGEXP_WHITESPACE = /\s+/;
 
 export default class QuakePointParser implements QuakePointParserInterface {
-  +content: string;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly content: string;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, content: string) {
     this.content = content;

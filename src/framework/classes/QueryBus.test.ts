@@ -1,5 +1,3 @@
-// @flow strict
-
 import CancelToken from "./CancelToken";
 import ExceptionHandler from "./ExceptionHandler";
 import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
@@ -7,17 +5,17 @@ import Logger from "./Logger";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBus from "./QueryBus";
 
-import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
-import type { Query } from "../interfaces/Query";
+import { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
+import { Query } from "../interfaces/Query";
 
 type Total = {
-  executed: number,
+  executed: number;
 };
 
 class Foo implements Query<number> {
-  +id: number;
-  +reference: number;
-  +total: Total;
+  readonly id: number;
+  readonly reference: number;
+  readonly total: Total;
 
   constructor(total: Total, reference: number, id: number) {
     this.id = id;

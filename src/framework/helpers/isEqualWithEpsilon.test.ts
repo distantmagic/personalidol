@@ -1,5 +1,3 @@
-// @flow strict
-
 import isEqualWithEpsilon from "./isEqualWithEpsilon";
 
 test.each([

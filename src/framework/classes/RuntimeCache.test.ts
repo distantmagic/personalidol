@@ -1,5 +1,3 @@
-// @flow strict
-
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import RuntimeCache from "./RuntimeCache";
 import { default as CacheException } from "./Exception/Cache";

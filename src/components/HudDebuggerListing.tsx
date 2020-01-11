@@ -1,15 +1,13 @@
-// @flow strict
-
 import * as React from "react";
 
 import HudDebuggerStateListingItem from "./HudDebuggerStateListingItem";
 import useDebuggerState from "../effects/useDebuggerState";
 
-import type { Debugger } from "../framework/interfaces/Debugger";
+import { Debugger } from "../framework/interfaces/Debugger";
 
-type Props = {|
-  debug: Debugger,
-|};
+type Props = {
+  debug: Debugger;
+};
 
 export default React.memo<Props>(function HudDebuggerListing(props: Props) {
   const debuggerState = useDebuggerState(props.debug);

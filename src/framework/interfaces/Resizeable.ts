@@ -1,8 +1,6 @@
-// @flow strict
+import { ElementSize } from "./ElementSize";
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
 
-import type { ElementSize } from "./ElementSize";
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
-
-export interface Resizeable<Unit: ElementPositionUnit> {
-  resize(ElementSize<Unit>): void;
+export interface Resizeable<Unit extends ElementPositionUnit> {
+  resize(elementSize: ElementSize<Unit>): void;
 }

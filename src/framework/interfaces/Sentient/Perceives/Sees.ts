@@ -1,5 +1,3 @@
-// @flow strict
-
-import type { Perceives } from "../Perceives";
+import { Perceives } from "../Perceives";
 
 export interface Sees extends Perceives {}

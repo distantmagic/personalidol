@@ -1,5 +1,3 @@
-// @flow strict
-
 import ElementSize from "./ElementSize";
 
 test("calculates base area", function() {

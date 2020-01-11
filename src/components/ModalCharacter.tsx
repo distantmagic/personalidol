@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as React from "react";
 import upperFirst from "lodash/upperFirst";
 import { NavLink, Route, Switch } from "react-router-dom";
@@ -15,9 +13,9 @@ import imagePortraitArlance from "../assets/portrait-arlance.jpg";
 import imagePortraitMoore from "../assets/portrait-moore.jpg";
 import imagePortraitCircassia from "../assets/portrait-circassia.jpg";
 
-type Props = {|
-  character: Character,
-|};
+type Props = {
+  character: Character;
+};
 
 function getPortraitSrc(id: string): string {
   switch (id) {
@@ -33,7 +31,11 @@ function getPortraitSrc(id: string): string {
 }
 
 export default React.memo<Props>(function ModalCharacter(props: Props) {
-  const [state, setState] = React.useState({
+  const [state, setState] = React.useState<{
+    id: null | string;
+    isLoading: boolean;
+    name: null | string;
+  }>({
     id: null,
     isLoading: true,
     name: null,
@@ -52,7 +54,7 @@ export default React.memo<Props>(function ModalCharacter(props: Props) {
     [props.character]
   );
 
-  if (state.isLoading) {
+  if (state.isLoading || !state.id) {
     return <ModalLoader comment="Loading character attributes" />;
   }
 

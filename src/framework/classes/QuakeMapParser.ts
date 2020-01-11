@@ -1,5 +1,3 @@
-// @flow strict
-
 import QuakeBrush from "./QuakeBrush";
 import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
 import QuakeEntity from "./QuakeEntity";
@@ -7,18 +5,18 @@ import QuakeEntityProperties from "./QuakeEntityProperties";
 import QuakeEntityPropertyParser from "./QuakeEntityPropertyParser";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
-import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
-import type { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
-import type { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
-import type { QuakeMapParser as QuakeMapParserInterface } from "../interfaces/QuakeMapParser";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
+import { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
+import { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
+import { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
+import { QuakeMapParser as QuakeMapParserInterface } from "../interfaces/QuakeMapParser";
 
 const REGEXP_NEWLINE = /\r?\n/;
 
 export default class QuakeMapParser implements QuakeMapParserInterface {
-  +content: string;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly content: string;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, content: string) {
     this.content = content;
@@ -35,12 +33,12 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
 
   *parse(): Generator<QuakeEntityInterface, void, void> {
     const loggerBreadcrumbs = this.loggerBreadcrumbs.add("parse");
-    const lines: $ReadOnlyArray<string> = this.splitLines(this.content);
-    let currentBrushSketch: ?(QuakeBrushHalfSpace[]) = null;
-    let currentEntitySketch: ?{|
-      brushes: QuakeBrushInterface[],
-      props: QuakeEntityProperty[],
-    |} = null;
+    const lines: ReadonlyArray<string> = this.splitLines(this.content);
+    let currentBrushSketch: null | QuakeBrushHalfSpace[] = null;
+    let currentEntitySketch: null | {
+      brushes: QuakeBrushInterface[];
+      props: QuakeEntityProperty[];
+    } = null;
 
     for (let lineno = 0; lineno < lines.length; lineno += 1) {
       const line = lines[lineno];
@@ -123,7 +121,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     return line.startsWith("{");
   }
 
-  splitLines(content: string): $ReadOnlyArray<string> {
+  splitLines(content: string): ReadonlyArray<string> {
     return content.split(REGEXP_NEWLINE).map(line => line.trim());
   }
 }

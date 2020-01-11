@@ -1,9 +1,7 @@
-// @flow strict
+import { Observer } from "./Observer";
 
-import type { Observer } from "./Observer";
-
-export interface InputDeviceState<Buttons: string> extends Observer {
-  isPressed(Buttons): boolean;
+export interface InputDeviceState<Buttons extends string> extends Observer {
+  isPressed(buttons: Buttons): boolean;
 
   reset(): void;
 }

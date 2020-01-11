@@ -1,5 +1,3 @@
-// @flow strict
-
 import EventListenerSet from "./EventListenerSet";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 

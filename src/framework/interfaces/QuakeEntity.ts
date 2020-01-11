@@ -1,13 +1,11 @@
-// @flow strict
+import { Vector3 } from "three";
 
-import type { Vector3 } from "three";
-
-import type { Equatable } from "./Equatable";
-import type { QuakeBrush } from "./QuakeBrush";
-import type { QuakeEntityProperties } from "./QuakeEntityProperties";
+import { Equatable } from "./Equatable";
+import { QuakeBrush } from "./QuakeBrush";
+import { QuakeEntityProperties } from "./QuakeEntityProperties";
 
 export interface QuakeEntity extends Equatable<QuakeEntity> {
-  getBrushes(): $ReadOnlyArray<QuakeBrush>;
+  getBrushes(): ReadonlyArray<QuakeBrush>;
 
   getClassName(): string;
 
@@ -17,5 +15,5 @@ export interface QuakeEntity extends Equatable<QuakeEntity> {
 
   hasOrigin(): boolean;
 
-  isOfClass(string): boolean;
+  isOfClass(className: string): boolean;
 }

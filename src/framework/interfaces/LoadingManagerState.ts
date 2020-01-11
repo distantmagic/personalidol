@@ -1,7 +1,5 @@
-// @flow strict
-
 export interface LoadingManagerState {
-  getComments(): $ReadOnlyArray<string>;
+  getComments(): ReadonlyArray<string>;
 
   getTotalFailed(): number;
 

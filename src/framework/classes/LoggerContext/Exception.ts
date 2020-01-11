@@ -1,5 +1,3 @@
-// @flow strict
-
 import LoggerContext from "../LoggerContext";
 
 export default class Exception extends LoggerContext {

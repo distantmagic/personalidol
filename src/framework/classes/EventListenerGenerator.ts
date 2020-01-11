@@ -1,18 +1,16 @@
-// @flow strict
+import { CancelToken } from "../interfaces/CancelToken";
+import { EventListenerGenerator as EventListenerGeneratorInterface } from "../interfaces/EventListenerGenerator";
+import { EventListenerSet } from "../interfaces/EventListenerSet";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { EventListenerGenerator as EventListenerGeneratorInterface } from "../interfaces/EventListenerGenerator";
-import type { EventListenerSet } from "../interfaces/EventListenerSet";
-
-type GeneratorBuffer<Arguments> = Array<{|
-  isUtilized: boolean,
-  promise: Promise<Arguments>,
-  resolve: Arguments => void,
-|}>;
+type GeneratorBuffer<Arguments> = Array<{
+  isUtilized: boolean;
+  promise: Promise<Arguments>;
+  resolve: (args: Arguments) => void;
+}>;
 
 function produceBuffered<Arguments>(buffer: GeneratorBuffer<Arguments>): Promise<void> {
   return new Promise(resolve => {
-    const bufferedPromise = new Promise(bufferedResolve => {
+    const bufferedPromise = new Promise<Arguments>(bufferedResolve => {
       requestAnimationFrame(function() {
         buffer.push({
           isUtilized: false,
@@ -25,8 +23,8 @@ function produceBuffered<Arguments>(buffer: GeneratorBuffer<Arguments>): Promise
   });
 }
 
-export default class EventListenerGenerator<Arguments: $ReadOnlyArray<any>> implements EventListenerGeneratorInterface<Arguments> {
-  +eventListenerSet: EventListenerSet<Arguments>;
+export default class EventListenerGenerator<Arguments extends ReadonlyArray<any>> implements EventListenerGeneratorInterface<Arguments> {
+  readonly eventListenerSet: EventListenerSet<Arguments>;
 
   constructor(eventListenerSet: EventListenerSet<Arguments>) {
     this.eventListenerSet = eventListenerSet;
@@ -34,6 +32,7 @@ export default class EventListenerGenerator<Arguments: $ReadOnlyArray<any>> impl
 
   generate(cancelToken: CancelToken): AsyncGenerator<Arguments, void, void> {
     const buffer: GeneratorBuffer<Arguments> = [];
+    const self = this;
 
     async function eventListener(...args: Arguments) {
       await produceBuffered(buffer);
@@ -59,10 +58,10 @@ export default class EventListenerGenerator<Arguments: $ReadOnlyArray<any>> impl
           buffer.shift();
         }
       } finally {
-        this.eventListenerSet.delete(eventListener);
+        self.eventListenerSet.delete(eventListener);
       }
     }
 
-    return generator.call(this);
+    return generator();
   }
 }

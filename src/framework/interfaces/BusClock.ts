@@ -1,8 +1,6 @@
-// @flow strict
-
-import type { BusClockCallback } from "../types/BusClockCallback";
-import type { CancelToken } from "../interfaces/CancelToken";
+import { BusClockCallback } from "../types/BusClockCallback";
+import { CancelToken } from "../interfaces/CancelToken";
 
 export interface BusClock {
-  interval(CancelToken, BusClockCallback): Promise<void>;
+  interval(cancelToken: CancelToken, busClockCallback: BusClockCallback): Promise<void>;
 }

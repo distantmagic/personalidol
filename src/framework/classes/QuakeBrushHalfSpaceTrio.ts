@@ -1,16 +1,14 @@
-// @flow strict
-
 import * as math from "mathjs";
 import * as THREE from "three";
 
 import Exception from "./Exception";
 import isEqualWithEpsilon from "../helpers/isEqualWithEpsilon";
 
-import type { Plane, Vector3 } from "three";
+import { Plane, Vector3 } from "three";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
-import type { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
 
 function checkIntersectingPointDeterminant(det: number): boolean {
   // normally it should be enough to check if determinant !== 0, but due to
@@ -21,16 +19,16 @@ function checkIntersectingPointDeterminant(det: number): boolean {
 function getIntersectionDeterminant(trio: QuakeBrushHalfSpaceTrioInterface, plane1: Plane, plane2: Plane, plane3: Plane): number {
   const matrix = new THREE.Matrix3();
 
-  matrix.set(...plane1.normal.toArray(), ...plane2.normal.toArray(), ...plane3.normal.toArray());
+  matrix.set(plane1.normal.x, plane1.normal.y, plane1.normal.z, plane2.normal.x, plane2.normal.y, plane2.normal.z, plane3.normal.x, plane3.normal.y, plane3.normal.z);
 
   return matrix.determinant();
 }
 
 export default class QuakeBrushHalfSpaceTrio implements QuakeBrushHalfSpaceTrioInterface {
-  +hs1: QuakeBrushHalfSpace;
-  +hs2: QuakeBrushHalfSpace;
-  +hs3: QuakeBrushHalfSpace;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly hs1: QuakeBrushHalfSpace;
+  readonly hs2: QuakeBrushHalfSpace;
+  readonly hs3: QuakeBrushHalfSpace;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, hs1: QuakeBrushHalfSpace, hs2: QuakeBrushHalfSpace, hs3: QuakeBrushHalfSpace) {
     this.hs1 = hs1;

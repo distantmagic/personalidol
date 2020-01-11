@@ -1,9 +1,10 @@
-// @flow strict
-
-import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
+import { MainLoopBeginCallback } from "../types/MainLoopBeginCallback";
+import { MainLoopDrawCallback } from "../types/MainLoopDrawCallback";
+import { MainLoopEndCallback } from "../types/MainLoopEndCallback";
+import { MainLoopUpdateCallback } from "../types/MainLoopUpdateCallback";
 
 export interface Scheduler {
-  notifyBegin(): void;
+  notifyBegin(timestamp: number, delta: number): void;
 
   notifyDraw(interpolationPercentage: number): void;
 
@@ -11,19 +12,19 @@ export interface Scheduler {
 
   notifyUpdate(delta: number): void;
 
-  offBegin(BeginCallback): void;
+  offBegin(callback: MainLoopBeginCallback): void;
 
-  offDraw(DrawCallback): void;
+  offDraw(callback: MainLoopDrawCallback): void;
 
-  offEnd(EndCallback): void;
+  offEnd(callback: MainLoopEndCallback): void;
 
-  offUpdate(UpdateCallback): void;
+  offUpdate(callback: MainLoopUpdateCallback): void;
 
-  onBegin(BeginCallback): void;
+  onBegin(callback: MainLoopBeginCallback): void;
 
-  onDraw(DrawCallback): void;
+  onDraw(callback: MainLoopDrawCallback): void;
 
-  onEnd(EndCallback): void;
+  onEnd(callback: MainLoopEndCallback): void;
 
-  onUpdate(UpdateCallback): void;
+  onUpdate(callback: MainLoopUpdateCallback): void;
 }

@@ -1,20 +1,20 @@
-// @flow strict
-
 import * as THREE from "three";
 import autoBind from "auto-bind";
+
+// @ts-ignore
 import Partykals from "partykals/partykals";
 
 import CanvasView from "../CanvasView";
 
-import type { Group, Vector3 } from "three";
+import { Group, Vector3 } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class Particles extends CanvasView {
-  +group: Group;
-  +origin: Vector3;
-  system: Object;
+  readonly group: Group;
+  readonly origin: Vector3;
+  private system: any;
 
   constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3) {
     super(canvasViewBag);

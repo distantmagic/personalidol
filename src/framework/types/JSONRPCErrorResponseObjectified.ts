@@ -1,12 +1,10 @@
-// @flow strict
+import { JSONRPCMessageType } from "./JSONRPCMessageType";
+import { JSONRPCVersion } from "./JSONRPCVersion";
 
-import type { JSONRPCMessageType } from "./JSONRPCMessageType";
-import type { JSONRPCVersion } from "./JSONRPCVersion";
-
-export type JSONRPCErrorResponseObjectified<T> = {|
-  +id: string,
-  +jsonrpc: JSONRPCVersion,
-  +method: string,
-  +result: T,
-  +type: "error",
-|};
+export type JSONRPCErrorResponseObjectified<T> = {
+  readonly id: string;
+  readonly jsonrpc: JSONRPCVersion;
+  readonly method: string;
+  readonly result: T;
+  readonly type: "error";
+};

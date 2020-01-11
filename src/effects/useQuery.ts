@@ -1,17 +1,20 @@
-// @flow strict
-
 import * as React from "react";
 
 import CancelToken from "../framework/classes/CancelToken";
 
-import type { CancelTokenQuery } from "../framework/interfaces/CancelTokenQuery";
-import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { Query } from "../framework/interfaces/Query";
-import type { QueryBus } from "../framework/interfaces/QueryBus";
+import { CancelTokenQuery } from "../framework/interfaces/CancelTokenQuery";
+import { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
+import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import { Query } from "../framework/interfaces/Query";
+import { QueryBus } from "../framework/interfaces/QueryBus";
 
-export default function useQuery<T>(exceptionHandler: ExceptionHandler, loggerBreadcrumbs: LoggerBreadcrumbs, queryBus: QueryBus, query: ?Query<T>): ?CancelTokenQuery<T> {
-  const [cancelTokenQuery, setCancelTokenQuery] = React.useState<?CancelTokenQuery<T>>(null);
+export default function useQuery<T>(
+  exceptionHandler: ExceptionHandler,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  queryBus: QueryBus,
+  query: null | Query<T>
+): null | CancelTokenQuery<T> {
+  const [cancelTokenQuery, setCancelTokenQuery] = React.useState<null | CancelTokenQuery<T>>(null);
   const setIsExecuted = React.useState<boolean>(false)[1];
 
   React.useEffect(

@@ -1,24 +1,18 @@
-// @flow strict
+import { JSONRPCMessageType } from "../types/JSONRPCMessageType";
+import { JSONRPCParams } from "../types/JSONRPCParams";
+import { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
+import { JSONRPCRequestObjectified } from "../types/JSONRPCRequestObjectified";
+import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
 
-import type { JSONRPCMessageType } from "../types/JSONRPCMessageType";
-import type { JSONRPCParams } from "../types/JSONRPCParams";
-import type { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
-import type { JSONRPCRequestObjectified } from "../types/JSONRPCRequestObjectified";
-import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
-import type { UnobjectifyCallback } from "../types/UnobjectifyCallback";
+export function unobjectify(loggerBreadcrumbs: LoggerBreadcrumbsInterface, objectified: JSONRPCRequestObjectified): JSONRPCRequestInterface {
+  return new JSONRPCRequest(objectified.id, objectified.method, objectified.type, objectified.params);
+}
 
 export default class JSONRPCRequest implements JSONRPCRequestInterface {
-  +id: string;
-  +method: string;
-  +params: JSONRPCParams;
-  +type: JSONRPCMessageType;
-
-  static unobjectify: UnobjectifyCallback<JSONRPCRequestObjectified, JSONRPCRequestInterface> = function(
-    loggerBreadcrumbs: LoggerBreadcrumbsInterface,
-    objectified: JSONRPCRequestObjectified
-  ): JSONRPCRequestInterface {
-    return new JSONRPCRequest(objectified.id, objectified.method, objectified.type, objectified.params);
-  };
+  readonly id: string;
+  readonly method: string;
+  readonly params: JSONRPCParams;
+  readonly type: JSONRPCMessageType;
 
   constructor(id: string, method: string, type: JSONRPCMessageType, params: JSONRPCParams) {
     this.id = id;

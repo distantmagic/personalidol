@@ -1,32 +1,32 @@
-// @flow strict
-
 import autoBind from "auto-bind";
 
 import EventListenerSet from "./EventListenerSet";
 
-import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
-
-import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import type { Scheduler as SchedulerInterface } from "../interfaces/Scheduler";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
+import { MainLoopBeginCallback } from "../types/MainLoopBeginCallback";
+import { MainLoopDrawCallback } from "../types/MainLoopDrawCallback";
+import { MainLoopEndCallback } from "../types/MainLoopEndCallback";
+import { MainLoopUpdateCallback } from "../types/MainLoopUpdateCallback";
+import { Scheduler as SchedulerInterface } from "../interfaces/Scheduler";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class Scheduler implements SchedulerInterface {
-  +beginCallbacks: EventListenerSetInterface<[]>;
-  +drawCallbacks: EventListenerSetInterface<[number]>;
-  +endCallbacks: EventListenerSetInterface<[number, boolean]>;
-  +updateCallbacks: EventListenerSetInterface<[number]>;
+  readonly beginCallbacks: EventListenerSetInterface<[number, number]>;
+  readonly drawCallbacks: EventListenerSetInterface<[number]>;
+  readonly endCallbacks: EventListenerSetInterface<[number, boolean]>;
+  readonly updateCallbacks: EventListenerSetInterface<[number]>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
 
-    this.beginCallbacks = new EventListenerSet<[]>(loggerBreadcrumbs);
+    this.beginCallbacks = new EventListenerSet<[number, number]>(loggerBreadcrumbs);
     this.drawCallbacks = new EventListenerSet<[number]>(loggerBreadcrumbs);
     this.endCallbacks = new EventListenerSet<[number, boolean]>(loggerBreadcrumbs);
     this.updateCallbacks = new EventListenerSet<[number]>(loggerBreadcrumbs);
   }
 
-  notifyBegin(): void {
-    this.beginCallbacks.notify([]);
+  notifyBegin(timestamp: number, delta: number): void {
+    this.beginCallbacks.notify([timestamp, delta]);
   }
 
   notifyDraw(interpolationPercentage: number): void {
@@ -41,35 +41,35 @@ export default class Scheduler implements SchedulerInterface {
     this.updateCallbacks.notify([delta]);
   }
 
-  offBegin(callback: BeginCallback): void {
+  offBegin(callback: MainLoopBeginCallback): void {
     this.beginCallbacks.delete(callback);
   }
 
-  offDraw(callback: DrawCallback): void {
+  offDraw(callback: MainLoopDrawCallback): void {
     this.drawCallbacks.delete(callback);
   }
 
-  offEnd(callback: EndCallback): void {
+  offEnd(callback: MainLoopEndCallback): void {
     this.endCallbacks.delete(callback);
   }
 
-  offUpdate(callback: UpdateCallback): void {
+  offUpdate(callback: MainLoopUpdateCallback): void {
     this.updateCallbacks.delete(callback);
   }
 
-  onBegin(callback: BeginCallback): void {
+  onBegin(callback: MainLoopBeginCallback): void {
     this.beginCallbacks.add(callback);
   }
 
-  onDraw(callback: DrawCallback): void {
+  onDraw(callback: MainLoopDrawCallback): void {
     this.drawCallbacks.add(callback);
   }
 
-  onEnd(callback: EndCallback): void {
+  onEnd(callback: MainLoopEndCallback): void {
     this.endCallbacks.add(callback);
   }
 
-  onUpdate(callback: UpdateCallback): void {
+  onUpdate(callback: MainLoopUpdateCallback): void {
     this.updateCallbacks.add(callback);
   }
 }

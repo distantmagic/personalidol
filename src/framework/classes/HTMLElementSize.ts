@@ -1,15 +1,13 @@
-// @flow strict
-
 import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
-import type { ElementSize } from "../interfaces/ElementSize";
-import type { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";
+import { ElementSize } from "../interfaces/ElementSize";
+import { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";
 
 export default class HTMLElementSize implements HTMLElementSizeInterface {
-  +htmlElement: HTMLElement;
-  +htmlElementHeight: number;
-  +htmlElementScrollHeight: number;
-  +htmlElementWidth: number;
+  readonly htmlElement: HTMLElement;
+  readonly htmlElementHeight: number;
+  readonly htmlElementScrollHeight: number;
+  readonly htmlElementWidth: number;
 
   constructor(htmlElement: HTMLElement) {
     this.htmlElement = htmlElement;

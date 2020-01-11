@@ -1,20 +1,18 @@
-// @flow strict
-
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-import type { LoadingManager, Scene } from "three";
+import { LoadingManager, Scene } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { Query } from "../../interfaces/Query";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { Query } from "../../interfaces/Query";
 
-type GLTFLoaderResponse = {|
-  scene: Scene,
-|};
+type GLTFLoaderResponse = {
+  scene: Scene;
+};
 
 export default class GLTFModel implements Query<GLTFLoaderResponse> {
-  +loadingManager: LoadingManager;
-  +resourcesPath: string;
-  +url: string;
+  readonly loadingManager: LoadingManager;
+  readonly resourcesPath: string;
+  readonly url: string;
 
   constructor(loadingManager: LoadingManager, resourcesPath: string, url: string) {
     this.loadingManager = loadingManager;
@@ -27,7 +25,7 @@ export default class GLTFModel implements Query<GLTFLoaderResponse> {
 
     return new Promise((resolve, reject) => {
       loader.setResourcePath(this.resourcesPath);
-      loader.load(this.url, resolve, null, reject);
+      loader.load(this.url, resolve, undefined, reject);
     });
   }
 

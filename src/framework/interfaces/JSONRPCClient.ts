@@ -1,28 +1,27 @@
-// @flow strict
+import { CancelToken } from "../interfaces/CancelToken";
+import { JSONRPCErrorResponse } from "../interfaces/JSONRPCErrorResponse";
+import { JSONRPCGeneratorChunkResponse } from "../interfaces/JSONRPCGeneratorChunkResponse";
+import { JSONRPCParams } from "../types/JSONRPCParams";
+import { JSONRPCRequest } from "./JSONRPCRequest";
+import { JSONRPCPromiseResponse } from "../interfaces/JSONRPCPromiseResponse";
+import { JSONRPCErrorResponseObjectified } from "../types/JSONRPCErrorResponseObjectified";
+import { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
+import { JSONRPCPromiseResponseObjectified } from "../types/JSONRPCPromiseResponseObjectified";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { JSONRPCErrorResponse } from "../interfaces/JSONRPCErrorResponse";
-import type { JSONRPCGeneratorChunkResponse } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import type { JSONRPCMessageHandler } from "../interfaces/JSONRPCMessageHandler";
-import type { JSONRPCParams } from "../types/JSONRPCParams";
-import type { JSONRPCRequest } from "./JSONRPCRequest";
-import type { JSONRPCPromiseResponse } from "../interfaces/JSONRPCPromiseResponse";
-import type { JSONRPCErrorResponseObjectified } from "../types/JSONRPCErrorResponseObjectified";
-import type { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
-import type { JSONRPCPromiseResponseObjectified } from "../types/JSONRPCPromiseResponseObjectified";
+export interface JSONRPCClient {
+  handleErrorResponse<T>(response: JSONRPCErrorResponse<T>): Promise<void>;
 
-export interface JSONRPCClient extends JSONRPCMessageHandler {
-  handleErrorResponse<T>(JSONRPCErrorResponse<T>): Promise<void>;
+  handleGeneratorChunkResponse<T>(response: JSONRPCGeneratorChunkResponse<T>): Promise<void>;
 
-  handleGeneratorChunkResponse<T>(JSONRPCGeneratorChunkResponse<T>): Promise<void>;
+  handlePromiseResponse<T>(response: JSONRPCPromiseResponse<T>): Promise<void>;
 
-  handlePromiseResponse<T>(JSONRPCPromiseResponse<T>): Promise<void>;
+  handleSerializedResponse(response: { readonly [key: string]: any }): Promise<void>;
 
-  handleSerializedResponse({ +[string]: any }): Promise<void>;
+  requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): AsyncGenerator<T, void, void>;
 
-  requestGenerator<T>(CancelToken, method: string, JSONRPCParams): AsyncGenerator<T, void, void>;
+  requestPromise<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): Promise<T>;
 
-  requestPromise<T>(CancelToken, method: string, JSONRPCParams): Promise<T>;
+  sendRequest(request: JSONRPCRequest): Promise<void>;
 
-  sendRequest(JSONRPCRequest): Promise<void>;
+  useMessageHandler(cancelToken: CancelToken): Worker["onmessage"];
 }

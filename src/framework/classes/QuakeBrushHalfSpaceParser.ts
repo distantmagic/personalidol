@@ -1,18 +1,16 @@
-// @flow strict
-
 import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
 import QuakePointParser from "./QuakePointParser";
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
-import type { QuakeBrushHalfSpaceParser as QuakeBrushHalfSpaceParserInterface } from "../interfaces/QuakeBrushHalfSpaceParser";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpaceParser as QuakeBrushHalfSpaceParserInterface } from "../interfaces/QuakeBrushHalfSpaceParser";
 
 const REGEXP_WHITESPACE = /\s+/;
 
 export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpaceParserInterface {
-  +line: string;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly line: string;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, line: string) {
     this.line = line;

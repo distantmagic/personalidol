@@ -1,9 +1,7 @@
-// @flow strict
-
-import type { JSONRPCGeneratorChunkResponse } from "./JSONRPCGeneratorChunkResponse";
+import { JSONRPCGeneratorChunkResponse } from "./JSONRPCGeneratorChunkResponse";
 
 export interface JSONRPCClientGeneratorBuffer<T> {
-  add(JSONRPCGeneratorChunkResponse<T>): void;
+  add(response: JSONRPCGeneratorChunkResponse<T>): void;
 
   flush(): Generator<JSONRPCGeneratorChunkResponse<T>, void, void>;
 

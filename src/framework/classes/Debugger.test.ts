@@ -1,5 +1,3 @@
-// @flow strict
-
 import Debugger from "./Debugger";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 

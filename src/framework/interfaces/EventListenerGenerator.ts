@@ -1,8 +1,6 @@
-// @flow strict
+import { CancelToken } from "./CancelToken";
+import { EventListenerSetCallback } from "../types/EventListenerSetCallback";
 
-import type { CancelToken } from "./CancelToken";
-import type { EventListenerSetCallback } from "../types/EventListenerSetCallback";
-
-export interface EventListenerGenerator<Arguments: $ReadOnlyArray<any>> {
-  generate(CancelToken): AsyncGenerator<Arguments, void, void>;
+export interface EventListenerGenerator<Arguments extends readonly any[]> {
+  generate(cancelToken: CancelToken): AsyncGenerator<Arguments, void, void>;
 }

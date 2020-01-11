@@ -1,12 +1,10 @@
-// @flow strict
-
-import type { Equatable } from "./Equatable";
-import type { QuakeEntityProperty } from "./QuakeEntityProperty";
+import { Equatable } from "./Equatable";
+import { QuakeEntityProperty } from "./QuakeEntityProperty";
 
 export interface QuakeEntityProperties extends Equatable<QuakeEntityProperties> {
-  getProperties(): $ReadOnlyArray<QuakeEntityProperty>;
+  getProperties(): ReadonlyArray<QuakeEntityProperty>;
 
-  getPropertyByKey(string): QuakeEntityProperty;
+  getPropertyByKey(key: string): QuakeEntityProperty;
 
-  hasPropertyKey(string): boolean;
+  hasPropertyKey(key: string): boolean;
 }

@@ -1,5 +1,3 @@
-// @flow strict
-
 export interface ExceptionHandlerFilter {
-  isCapturable(Error): boolean;
+  isCapturable(error: Error): boolean;
 }

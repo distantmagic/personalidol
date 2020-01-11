@@ -1,14 +1,12 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
 
-import type { Plane, Vector3 } from "three";
+import { Plane, Vector3 } from "three";
 
-import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 
 test("arguments are not changed", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

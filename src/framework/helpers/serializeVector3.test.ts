@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import serializeVector3 from "./serializeVector3";

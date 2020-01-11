@@ -1,3 +1,1 @@
-// @flow strict
-
-export type EventListenerSetCallback<Arguments> = (...args: Arguments) => any;
+export type EventListenerSetCallback<Arguments extends readonly any[]> = (...args: Arguments) => any;

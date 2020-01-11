@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as math from "mathjs";
 
 export default function isEqualWithPrecision(n1: number, n2: number, precision: number): boolean {

@@ -1,5 +1,3 @@
-// @flow strict
-
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 
 test("has root breadcrumb", function() {

@@ -1,25 +1,23 @@
-// @flow strict
-
 import ElementBoundingBox from "./ElementBoundingBox";
 import ElementPosition from "./ElementPosition";
 import ElementSize from "./ElementSize";
 
-import type { ElementBoundingBox as ElementBoundingBoxInterface } from "../interfaces/ElementBoundingBox";
-import type { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
-import type { ElementPositionCollection as ElementPositionCollectionInterface } from "../interfaces/ElementPositionCollection";
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { ElementBoundingBox as ElementBoundingBoxInterface } from "../interfaces/ElementBoundingBox";
+import { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
+import { ElementPositionCollection as ElementPositionCollectionInterface } from "../interfaces/ElementPositionCollection";
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
-export default class ElementPositionCollection<Unit: ElementPositionUnit> implements ElementPositionCollectionInterface<Unit> {
-  +elementPositions: $ReadOnlyArray<ElementPositionInterface<Unit>>;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+export default class ElementPositionCollection<Unit extends ElementPositionUnit> implements ElementPositionCollectionInterface<Unit> {
+  readonly elementPositions: ReadonlyArray<ElementPositionInterface<Unit>>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, elementPositions: $ReadOnlyArray<ElementPositionInterface<Unit>>) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, elementPositions: ReadonlyArray<ElementPositionInterface<Unit>>) {
     this.elementPositions = elementPositions;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  asArray(): $ReadOnlyArray<ElementPositionInterface<Unit>> {
+  asArray(): ReadonlyArray<ElementPositionInterface<Unit>> {
     return this.elementPositions;
   }
 

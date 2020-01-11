@@ -1,7 +1,5 @@
-// @flow strict
-
-import type { CancelTokenQuery } from "./CancelTokenQuery";
-import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
+import { CancelTokenQuery } from "./CancelTokenQuery";
+import { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
 export interface QueryBatch {
   getCollection<T>(): QueryBusQueueCollection<T>;
@@ -10,9 +8,9 @@ export interface QueryBatch {
 
   getUnique<T>(): QueryBusQueueCollection<T>;
 
-  getSimilar<T>(CancelTokenQuery<T>): QueryBusQueueCollection<T>;
+  getSimilar<T>(cancelTokenQuery: CancelTokenQuery<T>): QueryBusQueueCollection<T>;
 
-  infer<T>(CancelTokenQuery<T>): T;
+  infer<T>(cancelTokenQuery: CancelTokenQuery<T>): T;
 
   process(): Promise<void>;
 }

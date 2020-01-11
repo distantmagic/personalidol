@@ -1,16 +1,14 @@
-// @flow strict
-
-import type { Cancelable } from "./Cancelable";
-import type { Canceled } from "../interfaces/Exception/Canceled";
-import type { CancelTokenCallback } from "../types/CancelTokenCallback";
-import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
+import { Cancelable } from "./Cancelable";
+import { Canceled } from "../interfaces/Exception/Canceled";
+import { CancelTokenCallback } from "../types/CancelTokenCallback";
+import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
 
 export interface CancelToken extends Cancelable {
-  cancel(LoggerBreadcrumbs): void;
+  cancel(loggerBreadcrumbs: LoggerBreadcrumbs): void;
 
   getAbortSignal(): AbortSignal;
 
-  onCanceled(CancelTokenCallback): void;
+  onCanceled(cancelTokenCallback: CancelTokenCallback): void;
 
   settle(): void;
 

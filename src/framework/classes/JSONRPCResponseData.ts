@@ -1,13 +1,10 @@
-// @flow strict
-
-import type { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../interfaces/JSONRPCResponseData";
-import type { Transferables } from "../types/Transferables";
+import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../interfaces/JSONRPCResponseData";
 
 export default class JSONRPCResponseData<T> implements JSONRPCResponseDataInterface<T> {
-  +result: T;
-  +transferables: $ReadOnlyArray<Transferables>;
+  readonly result: T;
+  readonly transferables: Transferable[];
 
-  constructor(result: T, transferables: $ReadOnlyArray<Transferables> = []) {
+  constructor(result: T, transferables: Transferable[] = []) {
     this.result = result;
     this.transferables = transferables;
   }
@@ -16,7 +13,7 @@ export default class JSONRPCResponseData<T> implements JSONRPCResponseDataInterf
     return this.result;
   }
 
-  getTransferables(): $ReadOnlyArray<Transferables> {
+  getTransferables(): Transferable[] {
     return this.transferables;
   }
 }

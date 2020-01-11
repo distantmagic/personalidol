@@ -1,12 +1,10 @@
-// @flow strict
-
 import { default as CharacterModel } from "../Entity/Person/Character";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { Query } from "../../interfaces/Query";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { Query } from "../../interfaces/Query";
 
 export default class Character implements Query<CharacterModel> {
-  +ref: string;
+  readonly ref: string;
 
   constructor(ref: string) {
     this.ref = ref;

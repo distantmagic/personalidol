@@ -1,24 +1,18 @@
-// @flow strict
-
 import JSONRPCResponse from "../JSONRPCResponse";
 import JSONRPCResponseData from "../JSONRPCResponseData";
 import { default as JSONRPCException } from "../Exception/JSONRPC";
 
-import type { JSONRPCMessageType } from "../../types/JSONRPCMessageType";
-import type { JSONRPCPromiseResponse as JSONRPCPromiseResponseInterface } from "../../interfaces/JSONRPCPromiseResponse";
-import type { JSONRPCPromiseResponseObjectified } from "../../types/JSONRPCPromiseResponseObjectified";
-import type { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../../interfaces/JSONRPCResponseData";
-import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { UnobjectifyCallback } from "../../types/UnobjectifyCallback";
+import { JSONRPCMessageType } from "../../types/JSONRPCMessageType";
+import { JSONRPCPromiseResponse as JSONRPCPromiseResponseInterface } from "../../interfaces/JSONRPCPromiseResponse";
+import { JSONRPCPromiseResponseObjectified } from "../../types/JSONRPCPromiseResponseObjectified";
+import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../../interfaces/JSONRPCResponseData";
+import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+
+export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCPromiseResponseObjectified<T>): JSONRPCPromiseResponseInterface<T> {
+  return new JSONRPCPromiseResponse<T>(loggerBreadcrumbs, objectified.id, objectified.method, objectified.type, new JSONRPCResponseData(objectified.result));
+}
 
 export default class JSONRPCPromiseResponse<T> extends JSONRPCResponse<T, JSONRPCPromiseResponseObjectified<T>> implements JSONRPCPromiseResponseInterface<T> {
-  static unobjectify: UnobjectifyCallback<JSONRPCPromiseResponseObjectified<T>, JSONRPCPromiseResponseInterface<T>> = function(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    objectified: JSONRPCPromiseResponseObjectified<T>
-  ): JSONRPCPromiseResponseInterface<T> {
-    return new JSONRPCPromiseResponse<T>(loggerBreadcrumbs, objectified.id, objectified.method, objectified.type, new JSONRPCResponseData(objectified.result));
-  };
-
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, id: string, method: string, type: JSONRPCMessageType, data: JSONRPCResponseDataInterface<T>) {
     super(id, method, data);
 

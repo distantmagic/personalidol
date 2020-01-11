@@ -1,19 +1,17 @@
-// @flow strict
+type CacheMap = WeakMap<Function, [readonly any[], any]>;
+type MemoizeBuilder<T, U extends readonly any[]> = (...args: U) => null | T;
 
-type CacheMap = WeakMap<Function, [$ReadOnlyArray<any>, any]>;
-type MemoizeBuilder<T, U: $ReadOnlyArray<any>> = (...U) => ?T;
-
-let memoizeCacheInstance: ?CacheMap = null;
+let memoizeCacheInstance: null | CacheMap = null;
 
 function getMemoizeCache(): CacheMap {
   if (!memoizeCacheInstance) {
-    memoizeCacheInstance = new WeakMap<Function, [$ReadOnlyArray<any>, any]>();
+    memoizeCacheInstance = new WeakMap<Function, [ReadonlyArray<any>, any]>();
   }
 
   return memoizeCacheInstance;
 }
 
-function rebuildCache<T, U: $ReadOnlyArray<any>>(builder: MemoizeBuilder<T, U>, params: U): ?T {
+function rebuildCache<T, U extends readonly any[]>(builder: MemoizeBuilder<T, U>, params: U): null | T {
   const built = builder(...params);
 
   getMemoizeCache().set(builder, [params, built]);
@@ -21,7 +19,7 @@ function rebuildCache<T, U: $ReadOnlyArray<any>>(builder: MemoizeBuilder<T, U>, 
   return built;
 }
 
-export default function memoize<T, U: $ReadOnlyArray<any>>(builder: MemoizeBuilder<T, U>, params: U): ?T {
+export default function memoize<T, U extends readonly any[]>(builder: MemoizeBuilder<T, U>, params: U): null | T {
   const memoizedCache = getMemoizeCache();
   const cached = memoizedCache.get(builder);
 

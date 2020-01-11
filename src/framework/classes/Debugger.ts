@@ -1,18 +1,16 @@
-// @flow strict
-
 import { Map } from "immutable";
 
 import EventListenerSet from "./EventListenerSet";
 
-import type { Debugger as DebuggerInterface } from "../interfaces/Debugger";
-import type { DebuggerState } from "../types/DebuggerState";
-import type { DebuggerStateChangeCallback } from "../types/DebuggerStateChangeCallback";
-import type { DebuggerStateValue } from "../types/DebuggerStateValue";
-import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Debugger as DebuggerInterface } from "../interfaces/Debugger";
+import { DebuggerState } from "../types/DebuggerState";
+import { DebuggerStateChangeCallback } from "../types/DebuggerStateChangeCallback";
+import { DebuggerStateValue } from "../types/DebuggerStateValue";
+import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class Debugger implements DebuggerInterface {
-  +callbacks: EventListenerSetInterface<[DebuggerState]>;
+  readonly callbacks: EventListenerSetInterface<[DebuggerState]>;
   _isEnabled: boolean;
   state: DebuggerState;
 

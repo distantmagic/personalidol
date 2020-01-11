@@ -1,5 +1,3 @@
-// @flow strict
-
 export default function isLocalhost(): boolean {
   return Boolean(
     window.location.hostname === "localhost" ||

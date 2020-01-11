@@ -1,20 +1,18 @@
-// @flow strict
-
 import Canceled from "./Exception/CancelToken/Canceled";
 import EventListenerSet from "./EventListenerSet";
 import Exception from "./Exception";
 
-import type { Canceled as CanceledInterface } from "../interfaces/Exception/Canceled";
-import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
-import type { CancelTokenCallback } from "../types/CancelTokenCallback";
-import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Canceled as CanceledInterface } from "../interfaces/Exception/Canceled";
+import { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
+import { CancelTokenCallback } from "../types/CancelTokenCallback";
+import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class CancelToken implements CancelTokenInterface {
-  +abortController: AbortController;
-  +callbacks: EventListenerSetInterface<[CanceledInterface]>;
-  +loggerBreadcrumbsCreate: LoggerBreadcrumbs;
-  loggerBreadcrumbsCancel: ?LoggerBreadcrumbs;
+  readonly abortController: AbortController;
+  readonly callbacks: EventListenerSetInterface<[CanceledInterface]>;
+  readonly loggerBreadcrumbsCreate: LoggerBreadcrumbs;
+  loggerBreadcrumbsCancel: null | LoggerBreadcrumbs;
   _isCanceled: boolean;
   _isSettled: boolean;
 

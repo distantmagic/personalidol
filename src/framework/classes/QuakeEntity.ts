@@ -1,26 +1,26 @@
-// @flow strict
+import { Vector3 } from "three";
 
 import Exception from "./Exception";
 import isArrayEqual from "../helpers/isArrayEqual";
 import QuakePointParser from "./QuakePointParser";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QuakeBrush } from "../interfaces/QuakeBrush";
-import type { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
-import type { QuakeEntityProperties } from "../interfaces/QuakeEntityProperties";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QuakeBrush } from "../interfaces/QuakeBrush";
+import { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
+import { QuakeEntityProperties } from "../interfaces/QuakeEntityProperties";
 
 export default class QuakeEntity implements QuakeEntityInterface {
-  +brushes: $ReadOnlyArray<QuakeBrush>;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +props: QuakeEntityProperties;
+  readonly brushes: ReadonlyArray<QuakeBrush>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly props: QuakeEntityProperties;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, props: QuakeEntityProperties, brushes: $ReadOnlyArray<QuakeBrush> = []) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, props: QuakeEntityProperties, brushes: ReadonlyArray<QuakeBrush> = []) {
     this.brushes = brushes;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.props = props;
   }
 
-  getBrushes(): $ReadOnlyArray<QuakeBrush> {
+  getBrushes(): ReadonlyArray<QuakeBrush> {
     return this.brushes;
   }
 

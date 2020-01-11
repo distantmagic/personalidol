@@ -1,11 +1,9 @@
-// @flow strict
-
 import CancelToken from "./CancelToken";
 import JSONRPCClient from "./JSONRPCClient";
 import JSONRPCResponseData from "./JSONRPCResponseData";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import { default as JSONRPCGeneratorChunkResponse } from "./JSONRPCResponse/GeneratorChunk";
-import { default as JSONRPCPromiseResponse } from "./JSONRPCResponse/Promise";
+import { default as JSONRPCPromiseResponse, unobjectify as unobjectifyJSONRPCPromiseResponse } from "./JSONRPCResponse/Promise";
 
 test("processes incoming generator chunk response", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
@@ -61,7 +59,7 @@ test("processes incoming promise response", async function() {
 
   expect(postMessageMock.mock.calls).toHaveLength(1);
 
-  const sent = JSONRPCPromiseResponse.unobjectify(loggerBreadcrumbs, postMessageMock.mock.calls[0][0]);
+  const sent = unobjectifyJSONRPCPromiseResponse(loggerBreadcrumbs, postMessageMock.mock.calls[0][0]);
 
   expect(sent.getId()).toBe(response.getId());
   expect(sent.getMethod()).toBe(response.getMethod());

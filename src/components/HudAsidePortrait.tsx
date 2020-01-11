@@ -1,16 +1,14 @@
-// @flow strict
-
 import * as React from "react";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 
 import HudAsidePortraitIcon from "./HudAsidePortraitIcon";
 
-type Props = {|
-  isActive: boolean,
-  name: string,
-  src: string,
-|};
+type Props = {
+  isActive: boolean;
+  name: string;
+  src: string;
+};
 
 export default function HudAsidePortrait(props: Props) {
   return (

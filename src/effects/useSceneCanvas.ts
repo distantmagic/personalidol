@@ -1,17 +1,15 @@
-// @flow strict
-
 import * as React from "react";
 import * as THREE from "three";
 
 import CancelToken from "../framework/classes/CancelToken";
 import SceneCanvas from "../framework/classes/HTMLElement/SceneCanvas";
 
-import type { Debugger } from "../framework/interfaces/Debugger";
-import type { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import type { LoadingManager } from "../framework/interfaces/LoadingManager";
-import type { Logger } from "../framework/interfaces/Logger";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import type { QueryBus } from "../framework/interfaces/QueryBus";
+import { Debugger } from "../framework/interfaces/Debugger";
+import { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
+import { LoadingManager } from "../framework/interfaces/LoadingManager";
+import { Logger } from "../framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "../framework/interfaces/QueryBus";
 
 export default function useSceneCanvas(
   debug: Debugger,
@@ -20,7 +18,7 @@ export default function useSceneCanvas(
   logger: Logger,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
-  sceneCanvas: ?SceneCanvas
+  sceneCanvas: null | SceneCanvas
 ): void {
   React.useEffect(
     function() {

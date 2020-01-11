@@ -1,25 +1,23 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import isEqualWithEpsilon from "../helpers/isEqualWithEpsilon";
 import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
-import type { Plane, Vector3 } from "three";
+import { Plane, Vector3 } from "three";
 
-import type { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 
 export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface {
-  +texture: string;
-  +textureRotationAngle: number;
-  +textureXScale: number;
-  +textureYScale: number;
-  +v1: Vector3;
-  +v2: Vector3;
-  +v3: Vector3;
-  +xOffset: number;
-  +yOffset: number;
-  cachedPlane: ?Plane;
+  readonly texture: string;
+  readonly textureRotationAngle: number;
+  readonly textureXScale: number;
+  readonly textureYScale: number;
+  readonly v1: Vector3;
+  readonly v2: Vector3;
+  readonly v3: Vector3;
+  readonly xOffset: number;
+  readonly yOffset: number;
+  private cachedPlane: null | Plane = null;
 
   constructor(
     v1: Vector3,

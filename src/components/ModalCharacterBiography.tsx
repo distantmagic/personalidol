@@ -1,12 +1,10 @@
-// @flow strict
-
 import * as React from "react";
 
 import Character from "../framework/classes/Entity/Person/Character";
 
-type Props = {|
-  character: Character,
-|};
+type Props = {
+  character: Character;
+};
 
 export default function ModalCharacterBiography(props: Props) {
   return (

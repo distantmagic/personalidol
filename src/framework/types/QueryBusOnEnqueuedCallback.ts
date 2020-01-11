@@ -1,5 +1,3 @@
-// @flow strict
+import { Query } from "../interfaces/Query";
 
-import type { Query } from "../interfaces/Query";
-
-export type QueryBusOnEnqueuedCallback = (Query<any>) => void;
+export type QueryBusOnEnqueuedCallback<T> = (query: Query<T>) => void;

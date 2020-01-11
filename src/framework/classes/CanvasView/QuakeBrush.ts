@@ -1,27 +1,16 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 
-import type { BufferGeometry, Group, LoadingManager as THREELoadingManager, Mesh, ShaderMaterial, Texture } from "three";
+import { Group, LoadingManager as THREELoadingManager, Mesh, ShaderMaterial, Texture } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
-import type { QueryBus } from "../../interfaces/QueryBus";
-
-type WorkerQuakeBrush = {|
-  +classname: "worldspawn",
-  +indices: ArrayBuffer,
-  +normals: ArrayBuffer,
-  +texturesIndices: ArrayBuffer,
-  +texturesNames: Array<string>,
-  +uvs: ArrayBuffer,
-  +vertices: ArrayBuffer,
-|};
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
+import { QuakeWorkerBrush } from "../../types/QuakeWorkerBrush";
+import { QueryBus } from "../../interfaces/QueryBus";
 
 const TEXTURE_SIZE = 128;
 
@@ -145,19 +134,16 @@ function getMaterial(textureAtlas: Texture, textureCount: number): ShaderMateria
 }
 
 export default class QuakeBrush extends CanvasView {
-  +entity: WorkerQuakeBrush;
-  +group: Group;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +textureLoader: QuakeMapTextureLoaderInterface;
-  +threeLoadingManager: THREELoadingManager;
-  mesh: ?Mesh<BufferGeometry, ShaderMaterial>;
-
-  static shaderMaterial: ?ShaderMaterial;
+  readonly entity: QuakeWorkerBrush;
+  readonly group: Group;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly textureLoader: QuakeMapTextureLoaderInterface;
+  private mesh: null | Mesh = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
-    entity: WorkerQuakeBrush,
+    entity: QuakeWorkerBrush,
     group: Group,
     queryBus: QueryBus,
     threeLoadingManager: THREELoadingManager
@@ -205,15 +191,21 @@ export default class QuakeBrush extends CanvasView {
 
     const atlasCanvasContext = atlasCanvas.getContext("2d");
 
+    if (!atlasCanvasContext) {
+      throw new Error("Unable to create canvas 2D context.");
+    }
+
     for (let i = 0; i < loadedTextures.length; i += 1) {
+      // @ts-ignore
       atlasCanvasContext.drawImage(loadedTextures[i].image, 0, i * TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE);
     }
 
     // make texture atlas size a power of two because of performance reasons
     const textureAtlasSide = THREE.Math.ceilPowerOfTwo(textureAtlasHeight);
+    const imageData = atlasCanvasContext.getImageData(0, 0, textureAtlasSide, textureAtlasSide);
 
     // iOS/Safari: conversion fixes ArrayBuffer is not Uint8Array
-    const textureData = Uint8Array.from(atlasCanvasContext.getImageData(0, 0, textureAtlasSide, textureAtlasSide).data);
+    const textureData = Uint8Array.from(imageData.data);
 
     const textureAtlas = new THREE.DataTexture(textureData, textureAtlasSide, textureAtlasSide);
 

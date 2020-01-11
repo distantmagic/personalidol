@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import clamp from "lodash/clamp";
@@ -8,22 +6,21 @@ import yn from "yn";
 import CanvasController from "../CanvasController";
 import env from "../../helpers/env";
 
-import type { OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
+import { OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
 
-import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { Debugger } from "../../interfaces/Debugger";
-import type { ElementSize } from "../../interfaces/ElementSize";
-import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { Debugger } from "../../interfaces/Debugger";
+import { ElementSize } from "../../interfaces/ElementSize";
+import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
-  #lookAt: Vector3;
-  +camera: OrthographicCamera;
-  +debug: Debugger;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +renderer: WebGLRenderer;
-  +scene: Scene;
+  readonly camera: OrthographicCamera;
+  readonly debug: Debugger;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly renderer: WebGLRenderer;
+  readonly scene: Scene;
   height: number;
   width: number;
   zoomTarget: number;

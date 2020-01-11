@@ -1,10 +1,8 @@
-// @flow strict
-
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { Query } from "../../interfaces/Query";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { Query } from "../../interfaces/Query";
 
 export default class Fetch implements Query<Response> {
-  +ref: string;
+  readonly ref: string;
 
   constructor(ref: string) {
     this.ref = ref;

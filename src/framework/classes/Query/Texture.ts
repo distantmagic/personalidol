@@ -1,15 +1,13 @@
-// @flow strict
-
 import * as THREE from "three";
 
-import type { Texture as THREETexture, TextureLoader } from "three";
+import { Texture as THREETexture, TextureLoader } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { Query } from "../../interfaces/Query";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { Query } from "../../interfaces/Query";
 
 export default class Texture implements Query<THREETexture> {
-  +textureLoader: TextureLoader;
-  +textureSource: string;
+  readonly textureLoader: TextureLoader;
+  readonly textureSource: string;
 
   constructor(textureLoader: TextureLoader, textureSource: string) {
     this.textureLoader = textureLoader;
@@ -25,7 +23,7 @@ export default class Texture implements Query<THREETexture> {
 
           resolve(texture);
         },
-        null,
+        undefined,
         reject
       );
     });

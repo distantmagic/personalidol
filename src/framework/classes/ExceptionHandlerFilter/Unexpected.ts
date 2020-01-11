@@ -1,5 +1,3 @@
-// @flow strict
-
 import ExceptionHandlerFilter from "../ExceptionHandlerFilter";
 import { default as CanceledException } from "../Exception/CancelToken/Canceled";
 

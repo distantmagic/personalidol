@@ -1,5 +1,3 @@
-// @flow strict
-
 import combineWithoutRepetitions from "./combineWithoutRepetitions";
 
 test("generates combinations", function() {

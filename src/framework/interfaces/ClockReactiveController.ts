@@ -1,7 +1,5 @@
-// @flow strict
-
-import type { CancelToken } from "./CancelToken";
+import { CancelToken } from "./CancelToken";
 
 export interface ClockReactiveController {
-  interval(CancelToken): Promise<void>;
+  interval(cancelToken: CancelToken): Promise<void>;
 }

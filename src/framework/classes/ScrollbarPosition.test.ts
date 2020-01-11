@@ -1,5 +1,3 @@
-// @flow strict
-
 import ScrollbarPosition from "../classes/ScrollbarPosition";
 
 test("orients scroll position", function() {

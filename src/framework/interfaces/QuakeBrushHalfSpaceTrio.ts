@@ -1,8 +1,6 @@
-// @flow strict
+import { Vector3 } from "three";
 
-import type { Vector3 } from "three";
-
-import type { QuakeBrushHalfSpace } from "./QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpace } from "./QuakeBrushHalfSpace";
 
 export interface QuakeBrushHalfSpaceTrio {
   getIntersectingPoint(): Vector3;

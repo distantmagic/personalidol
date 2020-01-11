@@ -1,6 +1,4 @@
-// @flow strict
-
-import type { ElementSize } from "./ElementSize";
+import { ElementSize } from "./ElementSize";
 
 export interface HTMLElementSize extends ElementSize<"px"> {
   getHTMLElement(): HTMLElement;

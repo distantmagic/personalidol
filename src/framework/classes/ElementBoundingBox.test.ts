@@ -1,5 +1,3 @@
-// @flow strict
-
 import ElementBoundingBox from "./ElementBoundingBox";
 import ElementPosition from "./ElementPosition";
 import ElementSize from "./ElementSize";

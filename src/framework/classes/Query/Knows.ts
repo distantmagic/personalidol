@@ -1,8 +1,6 @@
-// @flow strict
-
-import type { Memorizable } from "../../interfaces/Memorizable";
-import type { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
-import type { Query } from "../../interfaces/Query";
+import { Memorizable } from "../../interfaces/Memorizable";
+import { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
+import { Query } from "../../interfaces/Query";
 
 export default class Knows implements Query<boolean> {
   memorizable: Memorizable;

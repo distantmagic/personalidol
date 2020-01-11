@@ -1,5 +1,3 @@
-// @flow strict
-
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import Scheduler from "./Scheduler";
 

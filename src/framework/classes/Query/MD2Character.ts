@@ -1,17 +1,15 @@
-// @flow strict
-
 import { default as THREEMD2Character } from "../MD2Character";
 
-import type { LoadingManager } from "three";
+import { LoadingManager } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
-import type { MD2CharacterConfig } from "../../types/MD2CharacterConfig";
-import type { Query } from "../../interfaces/Query";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
+import { MD2CharacterConfig } from "../../types/MD2CharacterConfig";
+import { Query } from "../../interfaces/Query";
 
 export default class MD2Character implements Query<THREEMD2CharacterInterface> {
-  +config: MD2CharacterConfig;
-  +loadingManager: LoadingManager;
+  readonly config: MD2CharacterConfig;
+  readonly loadingManager: LoadingManager;
 
   constructor(loadingManager: LoadingManager, config: MD2CharacterConfig) {
     this.config = config;

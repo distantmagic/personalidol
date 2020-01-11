@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as React from "react";
 
 import HudAsidePortrait from "./HudAsidePortrait";
@@ -8,7 +6,7 @@ import imagePortraitArlance from "../assets/portrait-arlance.jpg";
 import imagePortraitMoore from "../assets/portrait-moore.jpg";
 import imagePortraitCircassia from "../assets/portrait-circassia.jpg";
 
-type Props = {||};
+type Props = {};
 
 export default React.memo<Props>(function HudAside(props: Props) {
   return (

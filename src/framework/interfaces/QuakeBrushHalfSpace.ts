@@ -1,11 +1,9 @@
-// @flow strict
+import { Plane, Vector3 } from "three";
 
-import type { Plane, Vector3 } from "three";
-
-import type { Equatable } from "./Equatable";
+import { Equatable } from "./Equatable";
 
 export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
-  containsPoint(Vector3): boolean;
+  containsPoint(point: Vector3): boolean;
 
   getPlane(): Plane;
 
@@ -27,5 +25,5 @@ export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
 
   getYOffset(): number;
 
-  planeContainsPoint(Vector3): boolean;
+  planeContainsPoint(point: Vector3): boolean;
 }

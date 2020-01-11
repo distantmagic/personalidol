@@ -1,10 +1,8 @@
-// @flow strict
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { EquatableWithPrecision } from "./EquatableWithPrecision";
 
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
-import type { EquatableWithPrecision } from "./EquatableWithPrecision";
-
-export interface ElementPosition<Unit: ElementPositionUnit> extends EquatableWithPrecision<ElementPosition<Unit>> {
-  distanceTo(ElementPosition<Unit>): number;
+export interface ElementPosition<Unit extends ElementPositionUnit> extends EquatableWithPrecision<ElementPosition<Unit>> {
+  distanceTo(elementPosition: ElementPosition<Unit>): number;
 
   getX(): number;
 
@@ -12,7 +10,7 @@ export interface ElementPosition<Unit: ElementPositionUnit> extends EquatableWit
 
   getZ(): number;
 
-  isOnLineBetween(ElementPosition<Unit>, ElementPosition<Unit>): boolean;
+  isOnLineBetween(elementPosition1: ElementPosition<Unit>, elementPosition2: ElementPosition<Unit>): boolean;
 
-  offset(ElementPosition<Unit>): ElementPosition<Unit>;
+  offset(elementPosition: ElementPosition<Unit>): ElementPosition<Unit>;
 }

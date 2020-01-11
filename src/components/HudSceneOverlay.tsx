@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as React from "react";
 import groupBy from "lodash/groupBy";
 
@@ -7,11 +5,11 @@ import HudSceneOverlayComment from "./HudSceneOverlayComment";
 import HudSceneOverlayError from "./HudSceneOverlayError";
 import useLoadingManagerState from "../effects/useLoadingManagerState";
 
-import type { LoadingManager } from "../framework/interfaces/LoadingManager";
+import { LoadingManager } from "../framework/interfaces/LoadingManager";
 
-type Props = {|
-  loadingManager: LoadingManager,
-|};
+type Props = {
+  loadingManager: LoadingManager;
+};
 
 export default React.memo<Props>(function HudSceneOverlay(props: Props) {
   const loadingManagerState = useLoadingManagerState(props.loadingManager);
@@ -30,8 +28,7 @@ export default React.memo<Props>(function HudSceneOverlay(props: Props) {
     return <div className="dd__frame dd__loader dd__scene__loader">Loading...</div>;
   }
 
-  // $FlowFixMe
-  const groupedComments: $ReadOnlyArray<[string, $ReadOnlyArray<string>]> = Object.entries(groupBy(comments));
+  const groupedComments: ReadonlyArray<[string, ReadonlyArray<string>]> = Object.entries(groupBy(comments));
 
   return (
     <div className="dd__frame dd__loader dd__scene__loader">

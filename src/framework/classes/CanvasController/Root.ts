@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import yn from "yn";
@@ -13,43 +11,43 @@ import { default as CameraController } from "./Camera";
 import { default as QuakeMapView } from "../CanvasView/QuakeMap";
 // import { default as THREEHelpersView } from "../CanvasView/THREEHelpers";
 
-import type { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
-import type { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, OrthographicCamera, Scene, WebGLRenderer } from "three";
+import { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
+import { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, OrthographicCamera, Scene, WebGLRenderer } from "three";
 
-import type { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasControllerBus } from "../../interfaces/CanvasControllerBus";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { Debugger } from "../../interfaces/Debugger";
-import type { ElementSize } from "../../interfaces/ElementSize";
-import type { KeyboardState } from "../../interfaces/KeyboardState";
-import type { LoadingManager } from "../../interfaces/LoadingManager";
-import type { Logger } from "../../interfaces/Logger";
-import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { PointerState } from "../../interfaces/PointerState";
-import type { QueryBus } from "../../interfaces/QueryBus";
-import type { Scheduler } from "../../interfaces/Scheduler";
-import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../interfaces/THREEPointerInteraction";
+import { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasControllerBus } from "../../interfaces/CanvasControllerBus";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { Debugger } from "../../interfaces/Debugger";
+import { ElementSize } from "../../interfaces/ElementSize";
+import { KeyboardState } from "../../interfaces/KeyboardState";
+import { LoadingManager } from "../../interfaces/LoadingManager";
+import { Logger } from "../../interfaces/Logger";
+import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { PointerState } from "../../interfaces/PointerState";
+import { QueryBus } from "../../interfaces/QueryBus";
+import { Scheduler } from "../../interfaces/Scheduler";
+import { THREEPointerInteraction as THREEPointerInteractionInterface } from "../../interfaces/THREEPointerInteraction";
 
 export default class Root extends CanvasController {
-  +audioListener: AudioListener;
-  +audioLoader: AudioLoader;
-  +camera: OrthographicCamera;
-  +cameraController: CameraControllerInterface;
-  +canvasControllerBus: CanvasControllerBus;
-  +debug: Debugger;
-  +effectComposer: EffectComposerInterface;
-  +keyboardState: KeyboardState;
-  +loadingManager: LoadingManager;
-  +logger: Logger;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +pointerState: PointerState;
-  +queryBus: QueryBus;
-  +renderer: WebGLRenderer;
-  +scene: Scene;
-  +scheduler: Scheduler;
-  +threeLoadingManager: THREELoadingManager;
-  +threePointerInteraction: THREEPointerInteractionInterface;
+  readonly audioListener: AudioListener;
+  readonly audioLoader: AudioLoader;
+  readonly camera: OrthographicCamera;
+  readonly cameraController: CameraControllerInterface;
+  readonly canvasControllerBus: CanvasControllerBus;
+  readonly debug: Debugger;
+  readonly effectComposer: EffectComposerInterface;
+  readonly keyboardState: KeyboardState;
+  readonly loadingManager: LoadingManager;
+  readonly logger: Logger;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly pointerState: PointerState;
+  readonly queryBus: QueryBus;
+  readonly renderer: WebGLRenderer;
+  readonly scene: Scene;
+  readonly scheduler: Scheduler;
+  readonly threeLoadingManager: THREELoadingManager;
+  readonly threePointerInteraction: THREEPointerInteractionInterface;
 
   constructor(
     canvasControllerBus: CanvasControllerBus,
@@ -71,7 +69,7 @@ export default class Root extends CanvasController {
     this.audioListener = new THREE.AudioListener();
     this.audioLoader = new THREE.AudioLoader(threeLoadingManager);
 
-    this.camera = new THREE.OrthographicCamera();
+    this.camera = new THREE.OrthographicCamera(0, 0, 0, 0);
     // this.camera.add(this.audioListener);
 
     this.canvasControllerBus = canvasControllerBus;
@@ -178,24 +176,6 @@ export default class Root extends CanvasController {
 
     this.renderer.getSize(rendererSize);
     this.debug.updateState(this.loggerBreadcrumbs.add("renderer").add("size"), rendererSize);
-
-    // $FlowFixMe
-    const memory = performance.memory;
-
-    if (!memory) {
-      return;
-    }
-
-    // $FlowFixMe
-    const heapSize = `${Math.round(performance.memory.usedJSHeapSize / 1024 / 1024)} MB`;
-
-    this.debug.updateState(
-      this.loggerBreadcrumbs
-        .add("performance")
-        .add("memory")
-        .add("usedJSHeapSize"),
-      heapSize
-    );
   }
 
   resize(elementSize: ElementSize<"px">): void {

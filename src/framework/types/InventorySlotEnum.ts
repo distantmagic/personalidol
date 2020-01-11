@@ -1,5 +1,3 @@
-// @flow strict
-
 export type InventorySlotEnum =
   | "back"
   | "belt"

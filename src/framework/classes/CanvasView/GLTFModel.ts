@@ -1,27 +1,17 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 import { default as GLTFModelQuery } from "../Query/GLTFModel";
 import { default as TextureQuery } from "../Query/Texture";
 
-import type { Group, LoadingManager as THREELoadingManager, Material, Mesh, Scene, Vector3 } from "three";
+import { Group, LoadingManager as THREELoadingManager, Mesh, Scene, Vector3 } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { QueryBus } from "../../interfaces/QueryBus";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { QuakeWorkerGLTFModel } from "../../types/QuakeWorkerGLTFModel";
+import { QueryBus } from "../../interfaces/QueryBus";
 
-type WorkerGLTFModel = {|
-  +angle: number,
-  +classname: "model_gltf",
-  +model_name: string,
-  +model_texture: string,
-  +origin: [number, number, number],
-  +scale: number,
-|};
-
-function getMesh(scene: Scene): Mesh<BufferGeometry, Material> {
+function getMesh(scene: Scene): Mesh {
   for (let child of scene.children) {
     if (child instanceof THREE.Mesh) {
       return child;
@@ -32,13 +22,13 @@ function getMesh(scene: Scene): Mesh<BufferGeometry, Material> {
 }
 
 export default class GLTFModel extends CanvasView {
-  +animationOffset: number;
-  +baseUrl: string;
-  +entities: $ReadOnlyArray<WorkerGLTFModel>;
-  +group: Group;
-  +queryBus: QueryBus;
-  +texture: string;
-  +threeLoadingManager: THREELoadingManager;
+  readonly animationOffset: number;
+  readonly baseUrl: string;
+  readonly entities: ReadonlyArray<QuakeWorkerGLTFModel>;
+  readonly group: Group;
+  readonly queryBus: QueryBus;
+  readonly texture: string;
+  readonly threeLoadingManager: THREELoadingManager;
 
   constructor(
     canvasViewBag: CanvasViewBag,
@@ -48,7 +38,7 @@ export default class GLTFModel extends CanvasView {
     baseUrl: string,
     texture: string,
     animationOffset: number,
-    entities: $ReadOnlyArray<WorkerGLTFModel>
+    entities: ReadonlyArray<QuakeWorkerGLTFModel>
   ) {
     super(canvasViewBag);
 
@@ -73,6 +63,7 @@ export default class GLTFModel extends CanvasView {
     const baseMesh = getMesh(response.scene);
     const boundingBox = new THREE.Box3();
 
+    // @ts-ignore
     boundingBox.setFromBufferAttribute(baseMesh.geometry.attributes.position);
 
     const material = new THREE.MeshPhongMaterial({

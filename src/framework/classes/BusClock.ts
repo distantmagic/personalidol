@@ -1,11 +1,9 @@
-// @flow strict
-
-import type { BusClock as BusClockInterface } from "../interfaces/BusClock";
-import type { BusClockCallback } from "../types/BusClockCallback";
-import type { CancelToken } from "../interfaces/CancelToken";
+import { BusClock as BusClockInterface } from "../interfaces/BusClock";
+import { BusClockCallback } from "../types/BusClockCallback";
+import { CancelToken } from "../interfaces/CancelToken";
 
 export default class BusClock implements BusClockInterface {
-  delay: number;
+  private delay: number;
 
   static createForMainThread(): BusClockInterface {
     return new BusClock(400);
@@ -26,7 +24,8 @@ export default class BusClock implements BusClockInterface {
     }
 
     return new Promise((resolve, reject) => {
-      let timeoutId;
+      let timeoutId: null | ReturnType<typeof setTimeout> = null;
+
       const tick = () => {
         if (cancelToken.isCanceled()) {
           resolve();
@@ -40,7 +39,9 @@ export default class BusClock implements BusClockInterface {
       cancelToken
         .whenCanceled()
         .then(function() {
-          clearTimeout(timeoutId);
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+          }
           resolve();
         })
         .catch(reject);

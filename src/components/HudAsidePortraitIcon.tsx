@@ -1,13 +1,11 @@
-// @flow strict
-
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 
 import imageIconPrayer from "../assets/icon-prayer.png";
 
-type Props = {|
-  name: string,
-|};
+type Props = {
+  name: string;
+};
 
 export default function HudAsidePortraitIcon(props: Props) {
   return (

@@ -1,7 +1,5 @@
-// @flow strict
-
-import type { CanvasController } from "./CanvasController";
+import { CanvasController } from "./CanvasController";
 
 export interface CameraController extends CanvasController {
-  setZoom(number): void;
+  setZoom(zoom: number): void;
 }

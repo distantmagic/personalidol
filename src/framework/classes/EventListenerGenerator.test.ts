@@ -1,5 +1,3 @@
-// @flow strict
-
 import CancelToken from "./CancelToken";
 import EventListenerGenerator from "./EventListenerGenerator";
 import EventListenerSet from "./EventListenerSet";

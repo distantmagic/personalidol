@@ -1,9 +1,7 @@
-// @flow strict
-
-import type { BusClock } from "../interfaces/BusClock";
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { ClockReactive } from "../interfaces/ClockReactive";
-import type { ClockReactiveController as ClockReactiveControllerInterface } from "../interfaces/ClockReactiveController";
+import { BusClock } from "../interfaces/BusClock";
+import { CancelToken } from "../interfaces/CancelToken";
+import { ClockReactive } from "../interfaces/ClockReactive";
+import { ClockReactiveController as ClockReactiveControllerInterface } from "../interfaces/ClockReactiveController";
 
 export default class ClockReactiveController implements ClockReactiveControllerInterface {
   clock: BusClock;

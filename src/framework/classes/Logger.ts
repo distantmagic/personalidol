@@ -1,8 +1,6 @@
-// @flow strict
-
-import type { Logger as LoggerInterface } from "../interfaces/Logger";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { LogSeverityEnum } from "../types/LogSeverityEnum";
+import { Logger as LoggerInterface } from "../interfaces/Logger";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { LogSeverityEnum } from "../types/LogSeverityEnum";
 
 export default class Logger implements LoggerInterface {
   async emergency(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void> {}

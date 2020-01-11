@@ -1,7 +1,5 @@
-// @flow strict
+import { Query } from "./Query";
 
-import type { Query } from "./Query";
-
-export interface QueryBuilder<T: string, U: Query<any>> {
+export interface QueryBuilder<T extends string, U extends Query<any>> {
   build(ref: T): Promise<U>;
 }

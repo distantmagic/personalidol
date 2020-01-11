@@ -1,11 +1,9 @@
-// @flow strict
-
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 
-type Props = {|
-  label: ?string,
-|};
+type Props = {
+  label: null | string;
+};
 
 export default React.memo<Props>(function ModalToolbar(props: Props) {
   return (

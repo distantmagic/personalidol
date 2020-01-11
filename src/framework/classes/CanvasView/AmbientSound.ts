@@ -1,24 +1,22 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import Canceled from "../Exception/CancelToken/Canceled";
 import CanvasView from "../CanvasView";
 
-import type { Audio, AudioListener, AudioLoader } from "three";
+import { Audio, AudioListener, AudioLoader } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { LoadingManager } from "../../interfaces/LoadingManager";
-import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { LoadingManager } from "../../interfaces/LoadingManager";
+import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 export default class AmbientSound extends CanvasView {
-  +audioListener: AudioListener;
-  +audioLoader: AudioLoader;
-  +loadingManager: LoadingManager;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +source: string;
-  sound: ?Audio;
+  readonly audioListener: AudioListener;
+  readonly audioLoader: AudioLoader;
+  readonly loadingManager: LoadingManager;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly source: string;
+  private sound: null | Audio;
 
   constructor(
     audioListener: AudioListener,
@@ -61,7 +59,7 @@ export default class AmbientSound extends CanvasView {
 
             resolve();
           },
-          null,
+          undefined,
           reject
         );
       }),

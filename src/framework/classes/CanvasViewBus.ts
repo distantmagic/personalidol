@@ -1,16 +1,14 @@
-// @flow strict
-
 import { default as CanvasViewException } from "./Exception/CanvasView";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { CanvasView } from "../interfaces/CanvasView";
-import type { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { Scheduler } from "../interfaces/Scheduler";
+import { CancelToken } from "../interfaces/CancelToken";
+import { CanvasView } from "../interfaces/CanvasView";
+import { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Scheduler } from "../interfaces/Scheduler";
 
 export default class CanvasViewBus implements CanvasViewBusInterface {
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +scheduler: Scheduler;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly scheduler: Scheduler;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, scheduler: Scheduler) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;

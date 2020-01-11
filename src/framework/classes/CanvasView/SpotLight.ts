@@ -1,18 +1,16 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 
-import type { Color, Group, SpotLight as SpotLightInterface } from "three";
+import { Color, Group, SpotLight as SpotLightInterface, Vector3 } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class SpotLight extends CanvasView {
-  +color: Color;
-  +group: Group;
-  +light: SpotLightInterface;
+  readonly color: Color;
+  readonly group: Group;
+  readonly light: SpotLightInterface;
 
   constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3, color: Color, intensity: number, decay: number) {
     super(canvasViewBag);

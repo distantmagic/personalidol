@@ -1,8 +1,6 @@
-// @flow strict
+import { Texture } from "three";
 
-import type { Texture } from "three";
-
-import type { CancelToken } from "./CancelToken";
+import { CancelToken } from "./CancelToken";
 
 export interface QuakeMapTextureLoader {
   dispose(): void;
@@ -11,11 +9,11 @@ export interface QuakeMapTextureLoader {
 
   getTextureSource(textureName: string): string;
 
-  loadTexture(CancelToken, textureName: string): Promise<Texture>;
+  loadTexture(cancelToken: CancelToken, textureName: string): Promise<Texture>;
 
-  loadTextures(CancelToken, textureNames: $ReadOnlyArray<string>): Promise<$ReadOnlyArray<Texture>>;
+  loadTextures(cancelToken: CancelToken, textureNames: ReadonlyArray<string>): Promise<ReadonlyArray<Texture>>;
 
-  loadRegisteredTextures(CancelToken): Promise<$ReadOnlyArray<Texture>>;
+  loadRegisteredTextures(cancelToken: CancelToken): Promise<ReadonlyArray<Texture>>;
 
   registerTexture(textureName: string, src: string): void;
 }

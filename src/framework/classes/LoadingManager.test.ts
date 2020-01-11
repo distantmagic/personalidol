@@ -1,5 +1,3 @@
-// @flow strict
-
 import CancelToken from "./CancelToken";
 import ExceptionHandler from "./ExceptionHandler";
 import ExceptionHandlerFilter from "./ExceptionHandlerFilter";

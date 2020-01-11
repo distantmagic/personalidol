@@ -6,8 +6,6 @@ import { HashRouter } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import bootstrapFramework from "./framework/helpers/bootstrapFramework";
 import env from "./framework/helpers/env";
-import ExpressionBus from "./framework/classes/ExpressionBus";
-import ExpressionContext from "./framework/classes/ExpressionContext";
 import LoadingManager from "./framework/classes/LoadingManager";
 import Main from "./components/Main";
 
@@ -18,6 +16,18 @@ import { Logger } from "./framework/interfaces/Logger";
 import { LoggerBreadcrumbs } from "./framework/interfaces/LoggerBreadcrumbs";
 import { QueryBus } from "./framework/interfaces/QueryBus";
 
+declare global {
+  interface Window {
+    dd: {
+      isCapable: boolean;
+      rootElement: HTMLElement;
+      setup: {
+        setInternalError(label: string, message: string): void;
+      };
+    };
+  }
+}
+
 function init(rootElement: HTMLElement): void {
   return void bootstrapFramework(async function(
     clockReactiveController: ClockReactiveController,
@@ -27,8 +37,6 @@ function init(rootElement: HTMLElement): void {
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus
   ) {
-    const expressionBus = new ExpressionBus();
-    const expressionContext = new ExpressionContext(loggerBreadcrumbs.add("ExpressionContext"));
     const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"), exceptionHandler);
 
     try {
@@ -65,8 +73,6 @@ function init(rootElement: HTMLElement): void {
             clockReactiveController={clockReactiveController}
             debug={debug}
             exceptionHandler={exceptionHandler}
-            expressionBus={expressionBus}
-            expressionContext={expressionContext}
             loadingManager={loadingManager}
             logger={logger}
             loggerBreadcrumbs={loggerBreadcrumbs}
@@ -87,7 +93,6 @@ function onCapable() {
   } else {
     const message = "Game loader target has to be a valid HTML element.";
 
-    // $FlowFixMe
     window.dd.setup.setInternalError("Internal setup error", message);
   }
 }

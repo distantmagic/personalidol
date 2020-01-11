@@ -1,13 +1,11 @@
-// @flow strict
-
 import autoBind from "auto-bind";
 
-import type { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
-import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
-import type { QueryBatch as QueryBatchInterface } from "../interfaces/QueryBatch";
-import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
+import { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
+import { ExceptionHandler } from "../interfaces/ExceptionHandler";
+import { QueryBatch as QueryBatchInterface } from "../interfaces/QueryBatch";
+import { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
-function checkIsQueryInferable<T>(element: CancelTokenQuery<T>): (CancelTokenQuery<T>) => boolean {
+function checkIsQueryInferable<T>(element: CancelTokenQuery<T>): (cancelTokenQuery: CancelTokenQuery<T>) => boolean {
   return function(other: CancelTokenQuery<any>) {
     return element.isInferableFrom(other);
   };
@@ -18,13 +16,14 @@ function includesInferable(collection: QueryBusQueueCollection<any>, other: Canc
 }
 
 export default class QueryBatch implements QueryBatchInterface {
-  +collection: QueryBusQueueCollection<any>;
-  +exceptionHandler: ExceptionHandler;
+  readonly collection: QueryBusQueueCollection<any>;
+  readonly exceptionHandler: ExceptionHandler;
 
   constructor(exceptionHandler: ExceptionHandler, collection: QueryBusQueueCollection<any>) {
     autoBind(this);
 
     this.collection = collection;
+    this.exceptionHandler = exceptionHandler;
   }
 
   async executeQuery<T>(query: CancelTokenQuery<T>): Promise<T> {
@@ -34,7 +33,7 @@ export default class QueryBatch implements QueryBatchInterface {
   }
 
   getActive<T>(): QueryBusQueueCollection<T> {
-    return this.getCollection().filter(query => !query.isCanceled());
+    return this.getCollection<T>().filter(query => !query.isCanceled());
   }
 
   getCollection<T>(): QueryBusQueueCollection<T> {
@@ -42,13 +41,13 @@ export default class QueryBatch implements QueryBatchInterface {
   }
 
   getSimilar<T>(cancelTokenQuery: CancelTokenQuery<T>): QueryBusQueueCollection<T> {
-    return this.getActive().filter(checkIsQueryInferable(cancelTokenQuery));
+    return this.getActive<T>().filter(checkIsQueryInferable(cancelTokenQuery));
   }
 
   getUnique<T>(): QueryBusQueueCollection<T> {
     const unique: CancelTokenQuery<T>[] = [];
 
-    for (let cancelTokenQuery of this.getActive()) {
+    for (let cancelTokenQuery of this.getActive<T>()) {
       if (!includesInferable(unique, cancelTokenQuery)) {
         unique.push(cancelTokenQuery);
       }

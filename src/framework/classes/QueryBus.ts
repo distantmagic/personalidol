@@ -1,25 +1,23 @@
-// @flow strict
-
 import autoBind from "auto-bind";
 
 import CancelTokenQuery from "./CancelTokenQuery";
 import EventListenerSet from "./EventListenerSet";
 import QueryBatch from "./QueryBatch";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
-import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { Query } from "../interfaces/Query";
-import type { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
-import type { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCallback";
-import type { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
+import { CancelToken } from "../interfaces/CancelToken";
+import { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
+import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
+import { ExceptionHandler } from "../interfaces/ExceptionHandler";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Query } from "../interfaces/Query";
+import { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
+import { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCallback";
+import { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
 
 export default class QueryBus implements QueryBusInterface {
-  +enqueuedCallbacks: EventListenerSetInterface<[Query<any>]>;
-  +exceptionHandler: ExceptionHandler;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly enqueuedCallbacks: EventListenerSetInterface<[Query<any>]>;
+  readonly exceptionHandler: ExceptionHandler;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   collection: QueryBusQueueCollection<any>;
 
   constructor(exceptionHandler: ExceptionHandler, loggerBreadcrumbs: LoggerBreadcrumbs) {
@@ -49,11 +47,11 @@ export default class QueryBus implements QueryBusInterface {
     return queryBatch;
   }
 
-  offEnqueued(callback: QueryBusOnEnqueuedCallback): void {
+  offEnqueued<T>(callback: QueryBusOnEnqueuedCallback<T>): void {
     this.enqueuedCallbacks.delete(callback);
   }
 
-  onEnqueued(callback: QueryBusOnEnqueuedCallback): void {
+  onEnqueued<T>(callback: QueryBusOnEnqueuedCallback<T>): void {
     this.enqueuedCallbacks.add(callback);
   }
 

@@ -1,5 +1,3 @@
-// @flow strict
-
 import ElementPosition from "./ElementPosition";
 import ElementPositionCollection from "./ElementPositionCollection";
 import ElementSize from "./ElementSize";

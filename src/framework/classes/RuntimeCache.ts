@@ -1,14 +1,12 @@
-// @flow strict
-
 import { default as CacheException } from "./Exception/Cache";
 
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { RuntimeCache as RuntimeCacheInterface } from "../interfaces/RuntimeCache";
-import type { RuntimeCacheStoreCallback } from "../types/RuntimeCacheStoreCallback";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { RuntimeCache as RuntimeCacheInterface } from "../interfaces/RuntimeCache";
+import { RuntimeCacheStoreCallback } from "../types/RuntimeCacheStoreCallback";
 
 export default class RuntimeCache<T> implements RuntimeCacheInterface<T> {
-  +cacheMap: Map<string, T>;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly cacheMap: Map<string, T>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.cacheMap = new Map<string, T>();

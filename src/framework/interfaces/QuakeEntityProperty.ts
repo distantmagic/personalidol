@@ -1,6 +1,4 @@
-// @flow strict
-
-import type { Equatable } from "./Equatable";
+import { Equatable } from "./Equatable";
 
 export interface QuakeEntityProperty extends Equatable<QuakeEntityProperty> {
   asNumber(): number;

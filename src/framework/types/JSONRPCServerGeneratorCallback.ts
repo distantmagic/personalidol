@@ -1,7 +1,5 @@
-// @flow strict
+import { CancelToken } from "../interfaces/CancelToken";
+import { JSONRPCRequest } from "../interfaces/JSONRPCRequest";
+import { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { JSONRPCRequest } from "../interfaces/JSONRPCRequest";
-import type { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
-
-export type JSONRPCServerGeneratorCallback<T> = (CancelToken, JSONRPCRequest) => AsyncGenerator<JSONRPCResponseData<T>, void, void>;
+export type JSONRPCServerGeneratorCallback<T> = (canelToken: CancelToken, request: JSONRPCRequest) => AsyncGenerator<JSONRPCResponseData<T>, void, void>;

@@ -1,5 +1,3 @@
-// @flow strict
-
 import bootstrapFramework from "./bootstrapFramework";
 import BusClock from "../classes/BusClock";
 import CancelToken from "../classes/CancelToken";
@@ -7,24 +5,24 @@ import JSONRPCServer from "../classes/JSONRPCServer";
 import { default as ConsoleLogger } from "../classes/Logger/Console";
 import { default as UnexpectedExceptionHandlerFilter } from "../classes/ExceptionHandlerFilter/Unexpected";
 
-import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
-import type { ClockReactiveController } from "../interfaces/ClockReactiveController";
-import type { Debugger } from "../interfaces/Debugger";
-import type { ExceptionHandler } from "../interfaces/ExceptionHandler";
-import type { JSONRPCServer as JSONRPCServerInterface } from "../interfaces/JSONRPCServer";
-import type { Logger } from "../interfaces/Logger";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { QueryBus } from "../interfaces/QueryBus";
+import { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
+import { ClockReactiveController } from "../interfaces/ClockReactiveController";
+import { Debugger } from "../interfaces/Debugger";
+import { ExceptionHandler } from "../interfaces/ExceptionHandler";
+import { JSONRPCServer as JSONRPCServerInterface } from "../interfaces/JSONRPCServer";
+import { Logger } from "../interfaces/Logger";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "../interfaces/QueryBus";
 
 // prettier-ignore
 type BootstrapWorkerCallback = (
-  CancelTokenInterface,
-  LoggerBreadcrumbs,
-  JSONRPCServerInterface,
-  QueryBus
+  cancelTokenInterface: CancelTokenInterface,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  jsonRPCServerInterface: JSONRPCServerInterface,
+  queryBus: QueryBus,
 ) => void;
 
-export default function bootstrapWorker(bootstrapper: BootstrapWorkerCallback): $PropertyType<DedicatedWorkerGlobalScope, "onmessage"> {
+export default function bootstrapWorker(bootstrapper: BootstrapWorkerCallback): DedicatedWorkerGlobalScope["onmessage"] {
   return bootstrapFramework(function(
     clockReactiveController: ClockReactiveController,
     debug: Debugger,

@@ -1,10 +1,8 @@
-// @flow strict
-
-import type { Observer } from "./Observer";
-import type { Resizeable } from "./Resizeable";
+import { Observer } from "./Observer";
+import { Resizeable } from "./Resizeable";
 
 export interface HTMLElementResizeObserver extends Observer {
-  off(Resizeable<"px">): void;
+  off(resizeable: Resizeable<"px">): void;
 
-  notify(Resizeable<"px">): void;
+  notify(resizeable: Resizeable<"px">): void;
 }

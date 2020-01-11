@@ -1,17 +1,15 @@
-// @flow strict
-
 import autoBind from "auto-bind";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { CanvasView } from "../interfaces/CanvasView";
-import type { CanvasViewBag as CanvasViewBagInterface } from "../interfaces/CanvasViewBag";
-import type { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { CancelToken } from "../interfaces/CancelToken";
+import { CanvasView } from "../interfaces/CanvasView";
+import { CanvasViewBag as CanvasViewBagInterface } from "../interfaces/CanvasViewBag";
+import { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class CanvasViewBag implements CanvasViewBagInterface {
-  +canvasViewBus: CanvasViewBusInterface;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +canvasViews: CanvasView[];
+  readonly canvasViewBus: CanvasViewBusInterface;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly canvasViews: CanvasView[];
 
   constructor(canvasViewBus: CanvasViewBusInterface, loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);

@@ -1,21 +1,19 @@
-// @flow strict
-
-import type { LoadingManagerState as LoadingManagerStateInterface } from "../interfaces/LoadingManagerState";
+import { LoadingManagerState as LoadingManagerStateInterface } from "../interfaces/LoadingManagerState";
 
 export default class LoadingManagerState implements LoadingManagerStateInterface {
-  +comments: $ReadOnlyArray<string>;
-  +totalBackgroundLoading: number;
-  +totalBlockingLoading: number;
-  +totalFailed: number;
+  readonly comments: ReadonlyArray<string>;
+  readonly totalBackgroundLoading: number;
+  readonly totalBlockingLoading: number;
+  readonly totalFailed: number;
 
-  constructor(totalBackgroundLoading: number, totalBlockingLoading: number, totalFailed: number, comments: $ReadOnlyArray<string>) {
+  constructor(totalBackgroundLoading: number, totalBlockingLoading: number, totalFailed: number, comments: ReadonlyArray<string>) {
     this.comments = comments;
     this.totalBackgroundLoading = totalBackgroundLoading;
     this.totalBlockingLoading = totalBlockingLoading;
     this.totalFailed = totalFailed;
   }
 
-  getComments(): $ReadOnlyArray<string> {
+  getComments(): ReadonlyArray<string> {
     return this.comments;
   }
 

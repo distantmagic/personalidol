@@ -1,5 +1,3 @@
-// @flow strict
-
 import ElementRotation from "./ElementRotation";
 
 test("is comparable with other element rotations", function() {

@@ -1,6 +1,4 @@
-// @flow strict
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { GeometryRectangle } from "./GeometryRectangle";
 
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
-import type { GeometryRectangle } from "./GeometryRectangle";
-
-export interface ElementBoundingBox<Unit: ElementPositionUnit> extends GeometryRectangle<Unit> {}
+export interface ElementBoundingBox<Unit extends ElementPositionUnit> extends GeometryRectangle<Unit> {}

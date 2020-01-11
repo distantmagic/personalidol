@@ -1,19 +1,16 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 
-import type { Color, Group, PointLight as PointLightInterface } from "three";
+import { Color, Group, PointLight as PointLightInterface, Vector3 } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class PointLight extends CanvasView {
-  +cancelToken: CancelToken;
-  +color: Color;
-  +group: Group;
-  +light: PointLightInterface;
+  readonly color: Color;
+  readonly group: Group;
+  readonly light: PointLightInterface;
 
   constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3, color: Color, intensity: number, decay: number) {
     super(canvasViewBag);

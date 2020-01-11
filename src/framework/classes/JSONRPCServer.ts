@@ -1,30 +1,28 @@
-// @flow strict
-
 import autoBind from "auto-bind";
 
-import JSONRPCRequest from "./JSONRPCRequest";
 import JSONRPCResponseData from "./JSONRPCResponseData";
 import JSONRPCServerGeneratorBuffer from "./JSONRPCServerGeneratorBuffer";
 import { default as CanceledException } from "./Exception/CancelToken/Canceled";
 import { default as JSONRPCErrorResponse } from "./JSONRPCResponse/Error";
 import { default as JSONRPCPromiseResponse } from "./JSONRPCResponse/Promise";
+import { default as JSONRPCRequest, unobjectify as unobjectifyJSONRPCRequest } from "./JSONRPCRequest";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import type { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
-import type { JSONRPCResponse } from "../interfaces/JSONRPCResponse";
-import type { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../interfaces/JSONRPCResponseData";
-import type { JSONRPCServer as JSONRPCServerInterface } from "../interfaces/JSONRPCServer";
-import type { JSONRPCServerGeneratorCallback } from "../types/JSONRPCServerGeneratorCallback";
-import type { JSONRPCServerPromiseCallback } from "../types/JSONRPCServerPromiseCallback";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { CancelToken } from "../interfaces/CancelToken";
+import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
+import { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
+import { JSONRPCResponse } from "../interfaces/JSONRPCResponse";
+import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../interfaces/JSONRPCResponseData";
+import { JSONRPCServer as JSONRPCServerInterface } from "../interfaces/JSONRPCServer";
+import { JSONRPCServerGeneratorCallback } from "../types/JSONRPCServerGeneratorCallback";
+import { JSONRPCServerPromiseCallback } from "../types/JSONRPCServerPromiseCallback";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class JSONRPCServer implements JSONRPCServerInterface {
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +postMessage: $PropertyType<DedicatedWorkerGlobalScope, "postMessage">;
-  +requestHandlers: Map<string, (JSONRPCRequestInterface) => Promise<void>>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly postMessage: DedicatedWorkerGlobalScope["postMessage"];
+  readonly requestHandlers: Map<string, (request: JSONRPCRequestInterface) => Promise<void>>;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: $PropertyType<DedicatedWorkerGlobalScope, "postMessage">) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: DedicatedWorkerGlobalScope["postMessage"]) {
     autoBind(this);
 
     this.loggerBreadcrumbs = loggerBreadcrumbs;
@@ -56,7 +54,7 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
       const jsonRpcGeneratorResponseBuffer = new JSONRPCServerGeneratorBuffer(this.loggerBreadcrumbs.add("JSONRPCServerGeneratorBuffer"), this.sendResponse);
 
       try {
-        for await (let responseDataChunk: JSONRPCResponseDataInterface<T> of handle(cancelToken, request)) {
+        for await (let responseDataChunk of handle(cancelToken, request)) {
           jsonRpcGeneratorResponseBuffer.add(request, responseDataChunk);
         }
 
@@ -106,17 +104,18 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
     this.requestHandlers.delete(method);
   }
 
-  async sendResponse<T, U: {}>(response: JSONRPCResponse<T, U>): Promise<void> {
+  async sendResponse<T, U extends Object>(response: JSONRPCResponse<T, U>): Promise<void> {
     this.postMessage(response.asObject(), response.getData().getTransferables());
   }
 
-  useMessageHandler(cancelToken: CancelToken): $PropertyType<DedicatedWorkerGlobalScope, "onmessage"> {
+  useMessageHandler(cancelToken: CancelToken): DedicatedWorkerGlobalScope["onmessage"] {
     const breadcrumbs = this.loggerBreadcrumbs.add("useMessageHandler");
+    const self = this;
 
     function invalidRequest(): void {
       const data = new JSONRPCResponseData("Invalid request");
 
-      this.sendResponse(new JSONRPCErrorResponse(breadcrumbs, "", "", "error", data));
+      self.sendResponse(new JSONRPCErrorResponse(breadcrumbs, "", "", "error", data));
     }
 
     return (evt: MessageEvent) => {
@@ -127,7 +126,7 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
       const data = evt.data;
 
       if (!data || "object" !== typeof data) {
-        return invalidRequest.call(this);
+        return invalidRequest();
       }
 
       const { id, jsonrpc, method, params, type } = data;
@@ -139,11 +138,11 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
         || !Array.isArray(params)
         || ("error" !== type && "generator" !== type && "promise" !== type)
       ) {
-        return invalidRequest.call(this);
+        return invalidRequest();
       }
 
       this.handleRequest(
-        JSONRPCRequest.unobjectify(breadcrumbs, {
+        unobjectifyJSONRPCRequest(breadcrumbs, {
           id: id,
           jsonrpc: jsonrpc,
           method: method,

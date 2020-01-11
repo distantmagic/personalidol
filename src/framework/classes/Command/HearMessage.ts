@@ -1,9 +1,7 @@
-// @flow strict
-
 import Command from "../Command";
 
-import type { Message } from "../../interfaces/Perceivable/Message";
-import type { Perceives } from "../../interfaces/Sentient/Perceives";
+import { Message } from "../../interfaces/Perceivable/Message";
+import { Perceives } from "../../interfaces/Sentient/Perceives";
 
 export default class HearMessage extends Command {
   message: Message;

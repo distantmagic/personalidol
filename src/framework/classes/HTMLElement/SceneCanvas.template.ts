@@ -1,5 +1,3 @@
-// @flow strict
-
 export default function SceneCanvasTemplate(): string {
   return `
     <style>

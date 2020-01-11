@@ -1,18 +1,16 @@
-// @flow strict
-
-import type { CancelToken } from "./CancelToken";
-import type { CancelTokenQuery } from "./CancelTokenQuery";
-import type { ClockReactive } from "./ClockReactive";
-import type { Query } from "./Query";
-import type { QueryBatch } from "./QueryBatch";
-import type { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCallback";
+import { CancelToken } from "./CancelToken";
+import { CancelTokenQuery } from "./CancelTokenQuery";
+import { ClockReactive } from "./ClockReactive";
+import { Query } from "./Query";
+import { QueryBatch } from "./QueryBatch";
+import { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCallback";
 
 export interface QueryBus extends ClockReactive {
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): CancelTokenQuery<T>;
 
   flush(): QueryBatch;
 
-  onEnqueued(QueryBusOnEnqueuedCallback): void;
+  onEnqueued<T>(callback: QueryBusOnEnqueuedCallback<T>): void;
 
-  offEnqueued(QueryBusOnEnqueuedCallback): void;
+  offEnqueued<T>(callback: QueryBusOnEnqueuedCallback<T>): void;
 }

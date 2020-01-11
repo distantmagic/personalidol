@@ -1,10 +1,8 @@
-// @flow strict
-
 import * as React from "react";
 import * as THREE from "three";
 
-import type { DebuggerStateValue } from "../framework/types/DebuggerStateValue";
-import type { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import { DebuggerStateValue } from "../framework/types/DebuggerStateValue";
+import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
 
 function printValue(value: DebuggerStateValue): string {
   if (Array.isArray(value)) {
@@ -36,13 +34,13 @@ function printValue(value: DebuggerStateValue): string {
     return `vec2(${printValue(value.toArray())})`;
   }
 
-  return `vec3(${printValue(value.toArray())})`;
+  return `vec3(${printValue(value)})`;
 }
 
-type Props = {|
-  breadcrumbs: LoggerBreadcrumbs,
-  value: DebuggerStateValue,
-|};
+type Props = {
+  breadcrumbs: LoggerBreadcrumbs;
+  value: DebuggerStateValue;
+};
 
 export default function HudDebuggerStateListingItem(props: Props) {
   return (

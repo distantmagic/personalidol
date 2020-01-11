@@ -1,5 +1,3 @@
-// @flow strict
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
@@ -11,14 +9,14 @@ import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 import disposeObject3D from "../helpers/disposeObject3D";
 import disposeTexture from "../helpers/disposeTexture";
 
-import type { BufferGeometry, LoadingManager } from "three";
+import { BufferGeometry, Geometry, LoadingManager, Texture } from "three";
 
-import type { MD2Character as MD2CharacterInterface } from "../interfaces/MD2Character";
-import type { MD2CharacterConfig } from "../types/MD2CharacterConfig";
-import type { MD2CharacterControls } from "../types/MD2CharacterControls";
-import type { MD2CharacterMesh } from "../types/MD2CharacterMesh";
+import { MD2Character as MD2CharacterInterface } from "../interfaces/MD2Character";
+import { MD2CharacterAnimations } from "../types/MD2CharacterAnimations";
+import { MD2CharacterConfig } from "../types/MD2CharacterConfig";
+import { MD2CharacterControls } from "../types/MD2CharacterControls";
 
-function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: LoadingManager, textureUrls: $ReadOnlyArray<string>): Texture[] {
+function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: LoadingManager, textureUrls: ReadonlyArray<string>): Texture[] {
   const textureLoader = new THREE.TextureLoader(loadingManager);
   const textures = [];
 
@@ -31,7 +29,7 @@ function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingMana
   return textures;
 }
 
-function createPart(scope: MD2CharacterInterface, geometry: BufferGeometry, skinMap: Texture): MD2CharacterMesh {
+function createPart(scope: MD2CharacterInterface, geometry: BufferGeometry | Geometry, skinMap: Texture): MorphBlendMesh {
   const materialTexture = new THREE.MeshLambertMaterial({
     color: 0xffffff,
     wireframe: false,
@@ -42,7 +40,7 @@ function createPart(scope: MD2CharacterInterface, geometry: BufferGeometry, skin
   const mesh = new MorphBlendMesh(geometry, materialTexture);
 
   mesh.rotation.y = -Math.PI / 2;
-  mesh.materialTexture = materialTexture;
+  // mesh.materialTexture = materialTexture;
 
   mesh.autoCreateAnimations(scope.animationFPS);
 
@@ -55,7 +53,7 @@ function checkLoadingComplete(scope: MD2CharacterInterface): void {
 }
 
 export default class MD2Character implements MD2CharacterInterface {
-  +loadingManager: LoadingManager;
+  readonly loadingManager: LoadingManager;
 
   // animation parameters
 
@@ -66,19 +64,19 @@ export default class MD2Character implements MD2CharacterInterface {
 
   root = new THREE.Object3D();
 
-  meshBody: ?MD2CharacterMesh = null;
-  meshWeapon: ?MD2CharacterMesh = null;
+  meshBody: null | MorphBlendMesh = null;
+  meshWeapon: null | MorphBlendMesh = null;
 
-  controls = null;
+  controls: null | MD2CharacterControls = null;
 
   // skins
 
-  skinsBody = [];
-  skinsWeapon = [];
+  skinsBody: Texture[] = [];
+  skinsWeapon: Texture[] = [];
 
-  weapons = [];
+  weapons: MorphBlendMesh[] = [];
 
-  currentSkin = undefined;
+  currentSkin: number = 0;
 
   //
 
@@ -86,15 +84,15 @@ export default class MD2Character implements MD2CharacterInterface {
 
   // internals
 
-  meshes = [];
-  animations = {};
+  meshes: MorphBlendMesh[] = [];
+  animations: null | MD2CharacterAnimations = null;
 
   loadCounter = 0;
 
   // internal animation parameters
 
-  activeAnimation = null;
-  oldAnimation = null;
+  activeAnimation: null | string = null;
+  oldAnimation: null | string = null;
 
   blendCounter = 0;
 
@@ -178,6 +176,8 @@ export default class MD2Character implements MD2CharacterInterface {
 
     loader.load(config.baseUrl + config.body, function(geo) {
       const boundingBox = new THREE.Box3();
+
+      // @ts-ignore
       boundingBox.setFromBufferAttribute(geo.attributes.position);
 
       const mesh = createPart(scope, geo, scope.skinsBody[0]);
@@ -211,10 +211,26 @@ export default class MD2Character implements MD2CharacterInterface {
   }
 
   setSkin(index: number) {
-    if (this.meshBody && this.meshBody.material.wireframe === false) {
-      this.meshBody.material.map = this.skinsBody[index];
-      this.currentSkin = index;
+    const meshBody = this.meshBody;
+
+    if (!meshBody) {
+      throw new Error("Mesh body is not defined but it was expected.");
     }
+
+    const material = meshBody.material;
+
+    if (!material) {
+      throw new Error("Mesh body material is not defined.");
+    }
+
+    if (Array.isArray(material)) {
+      throw new Error("Unexpected multi-material mesh in MD2 character.");
+    }
+
+    // @ts-ignore
+    material.map = this.skinsBody[index];
+
+    this.currentSkin = index;
   }
 
   setWeapon(index: number) {
@@ -279,6 +295,13 @@ export default class MD2Character implements MD2CharacterInterface {
   }
 
   updateAnimations(delta: number) {
+    const activeAnimation = this.activeAnimation;
+    const oldAnimation = this.oldAnimation;
+
+    if (!activeAnimation || !oldAnimation) {
+      return;
+    }
+
     let mix = 1;
 
     if (this.blendCounter > 0) {
@@ -291,8 +314,8 @@ export default class MD2Character implements MD2CharacterInterface {
     if (meshBody) {
       meshBody.update(delta);
 
-      meshBody.setAnimationWeight(this.activeAnimation, mix);
-      meshBody.setAnimationWeight(this.oldAnimation, 1 - mix);
+      meshBody.setAnimationWeight(activeAnimation, mix);
+      meshBody.setAnimationWeight(oldAnimation, 1 - mix);
     }
 
     const meshWeapon = this.meshWeapon;
@@ -300,13 +323,24 @@ export default class MD2Character implements MD2CharacterInterface {
     if (meshWeapon) {
       meshWeapon.update(delta);
 
-      meshWeapon.setAnimationWeight(this.activeAnimation, mix);
-      meshWeapon.setAnimationWeight(this.oldAnimation, 1 - mix);
+      meshWeapon.setAnimationWeight(activeAnimation, mix);
+      meshWeapon.setAnimationWeight(oldAnimation, 1 - mix);
     }
   }
 
   updateBehaviors(controls: MD2CharacterControls) {
     const animations = this.animations;
+
+    if (!animations) {
+      throw new Error("Animations are not defined.");
+    }
+
+    const activeAnimation = this.activeAnimation;
+    const oldAnimation = this.oldAnimation;
+
+    if (!activeAnimation || !oldAnimation) {
+      return;
+    }
 
     let moveAnimation, idleAnimation;
 
@@ -363,25 +397,25 @@ export default class MD2Character implements MD2CharacterInterface {
 
     if (controls.moveForward) {
       if (meshBody) {
-        meshBody.setAnimationDirectionForward(this.activeAnimation);
-        meshBody.setAnimationDirectionForward(this.oldAnimation);
+        meshBody.setAnimationDirectionForward(activeAnimation);
+        meshBody.setAnimationDirectionForward(oldAnimation);
       }
 
       if (meshWeapon) {
-        meshWeapon.setAnimationDirectionForward(this.activeAnimation);
-        meshWeapon.setAnimationDirectionForward(this.oldAnimation);
+        meshWeapon.setAnimationDirectionForward(activeAnimation);
+        meshWeapon.setAnimationDirectionForward(oldAnimation);
       }
     }
 
     if (controls.moveBackward) {
       if (meshBody) {
-        meshBody.setAnimationDirectionBackward(this.activeAnimation);
-        meshBody.setAnimationDirectionBackward(this.oldAnimation);
+        meshBody.setAnimationDirectionBackward(activeAnimation);
+        meshBody.setAnimationDirectionBackward(oldAnimation);
       }
 
       if (meshWeapon) {
-        meshWeapon.setAnimationDirectionBackward(this.activeAnimation);
-        meshWeapon.setAnimationDirectionBackward(this.oldAnimation);
+        meshWeapon.setAnimationDirectionBackward(activeAnimation);
+        meshWeapon.setAnimationDirectionBackward(oldAnimation);
       }
     }
   }

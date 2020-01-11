@@ -1,27 +1,23 @@
-// @flow strict
-
 import CancelTokenException from "./Exception/CancelToken";
 import canCompare from "../helpers/canCompare";
 import EventListenerSet from "./EventListenerSet";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
-import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { Query } from "../interfaces/Query";
+import { CancelToken } from "../interfaces/CancelToken";
+import { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
+import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Query } from "../interfaces/Query";
 
 export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T> {
-  _isExecuted: boolean;
-  _isExecuting: boolean;
-  _result: ?T;
-  +cancelToken: CancelToken;
-  +callbacks: EventListenerSetInterface<[T]>;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +query: Query<T>;
+  private _isExecuted: boolean = false;
+  private _isExecuting: boolean = false;
+  private _result: null | T = null;
+  readonly callbacks: EventListenerSetInterface<[T]>;
+  readonly cancelToken: CancelToken;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly query: Query<T>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, query: Query<T>) {
-    this._isExecuted = false;
-    this._isExecuting = false;
     this.callbacks = new EventListenerSet<[T]>(loggerBreadcrumbs);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.cancelToken = cancelToken;

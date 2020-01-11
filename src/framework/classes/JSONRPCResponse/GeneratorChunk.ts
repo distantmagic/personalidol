@@ -1,44 +1,38 @@
-// @flow strict
-
 import JSONRPCResponse from "../JSONRPCResponse";
 import JSONRPCResponseData from "../JSONRPCResponseData";
 import { default as JSONRPCException } from "../Exception/JSONRPC";
 
-import type { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../../interfaces/JSONRPCGeneratorChunkResponse";
-import type { JSONRPCGeneratorChunkResponseObjectified } from "../../types/JSONRPCGeneratorChunkResponseObjectified";
-import type { JSONRPCMessageType } from "../../types/JSONRPCMessageType";
-import type { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../../interfaces/JSONRPCResponseData";
-import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { UnobjectifyCallback } from "../../types/UnobjectifyCallback";
+import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../../interfaces/JSONRPCGeneratorChunkResponse";
+import { JSONRPCGeneratorChunkResponseObjectified } from "../../types/JSONRPCGeneratorChunkResponseObjectified";
+import { JSONRPCMessageType } from "../../types/JSONRPCMessageType";
+import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../../interfaces/JSONRPCResponseData";
+import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+
+export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCGeneratorChunkResponseObjectified<T>): JSONRPCGeneratorChunkResponseInterface<T> {
+  return new JSONRPCGeneratorChunkResponse<T>(
+    loggerBreadcrumbs,
+    objectified.id,
+    objectified.head,
+    objectified.chunk,
+    objectified.next,
+    objectified.method,
+    objectified.type,
+    new JSONRPCResponseData<T>(objectified.result)
+  );
+}
 
 export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> implements JSONRPCGeneratorChunkResponseInterface<T> {
-  +chunk: string;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +head: string;
-  next: ?string;
-
-  static unobjectify: UnobjectifyCallback<JSONRPCGeneratorChunkResponseObjectified<T>, JSONRPCGeneratorChunkResponseInterface<T>> = function(
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    objectified: JSONRPCGeneratorChunkResponseObjectified<T>
-  ): JSONRPCGeneratorChunkResponseInterface<T> {
-    return new JSONRPCGeneratorChunkResponse<T>(
-      loggerBreadcrumbs,
-      objectified.id,
-      objectified.head,
-      objectified.chunk,
-      objectified.next,
-      objectified.method,
-      objectified.type,
-      new JSONRPCResponseData<T>(objectified.result)
-    );
-  };
+  readonly chunk: string;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly head: string;
+  next: null | string;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     id: string,
     head: string,
     chunk: string,
-    next: ?string,
+    next: null | string,
     method: string,
     type: JSONRPCMessageType,
     data: JSONRPCResponseDataInterface<T>

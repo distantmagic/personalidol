@@ -1,18 +1,17 @@
-// @flow strict
+import { Object3D, Texture } from "three";
+import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
-import type { Object3D, Texture } from "three";
-
-import type { MD2CharacterControls } from "../types/MD2CharacterControls";
-import type { MD2CharacterMesh } from "../types/MD2CharacterMesh";
+import { MD2CharacterAnimations } from "../types/MD2CharacterAnimations";
+import { MD2CharacterControls } from "../types/MD2CharacterControls";
 
 export interface MD2Character {
-  +weapons: $ReadOnlyArray<MD2CharacterMesh>;
-  +meshBody: ?MD2CharacterMesh;
-  +meshWeapon: ?MD2CharacterMesh;
-  +root: Object3D;
+  readonly weapons: ReadonlyArray<MorphBlendMesh>;
+  readonly meshBody: null | MorphBlendMesh;
+  readonly meshWeapon: null | MorphBlendMesh;
+  readonly root: Object3D;
   animationFPS: number;
-  animations: Object;
-  controls: ?MD2CharacterControls;
+  animations: null | MD2CharacterAnimations;
+  controls: null | MD2CharacterControls;
   loadCounter: number;
   onLoadComplete: () => void;
   skinsBody: Texture[];
@@ -20,13 +19,13 @@ export interface MD2Character {
 
   dispose(): void;
 
-  enableShadows(boolean): void;
+  enableShadows(enabled: boolean): void;
 
-  setSkin(number): void;
+  setSkin(skinId: number): void;
 
-  setWeapon(number): void;
+  setWeapon(weaponId: number): void;
 
-  shareParts(MD2Character): void;
+  shareParts(character: MD2Character): void;
 
-  update(number): void;
+  update(delta: number): void;
 }

@@ -1,5 +1,3 @@
-// @flow strict
-
 export interface Observer {
   disconnect(): void;
 

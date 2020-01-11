@@ -1,5 +1,3 @@
-// @flow strict
-
 import Exception from "./Exception";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QuakeEntityProperties from "./QuakeEntityProperties";

@@ -1,17 +1,15 @@
-// @flow strict
-
-import * as THREE from "three";
+// import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 
-import type { Group, Vector3 } from "three";
+import { Group, Vector3 } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class Player extends CanvasView {
-  +group: Group;
-  +origin: Vector3;
+  readonly group: Group;
+  readonly origin: Vector3;
 
   constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3) {
     super(canvasViewBag);

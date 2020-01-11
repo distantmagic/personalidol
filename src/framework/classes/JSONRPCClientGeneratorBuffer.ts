@@ -1,16 +1,14 @@
-// @flow strict
-
 import { default as JSONRPCException } from "./Exception/JSONRPC";
 
-import type { JSONRPCClientGeneratorBuffer as JSONRPCClientGeneratorBufferInterface } from "../interfaces/JSONRPCClientGeneratorBuffer";
-import type { JSONRPCGeneratorChunkResponse } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { JSONRPCClientGeneratorBuffer as JSONRPCClientGeneratorBufferInterface } from "../interfaces/JSONRPCClientGeneratorBuffer";
+import { JSONRPCGeneratorChunkResponse } from "../interfaces/JSONRPCGeneratorChunkResponse";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class JSONRPCClientGeneratorBuffer<T> implements JSONRPCClientGeneratorBufferInterface<T> {
-  +buffer: Map<string, JSONRPCGeneratorChunkResponse<T>>;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly buffer: Map<string, JSONRPCGeneratorChunkResponse<T>>;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   flushable: JSONRPCGeneratorChunkResponse<T>[];
-  lastSent: ?JSONRPCGeneratorChunkResponse<T> = null;
+  lastSent: null | JSONRPCGeneratorChunkResponse<T> = null;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.buffer = new Map();

@@ -1,12 +1,10 @@
-// @flow strict
+import { JSONRPCParams } from "./JSONRPCParams";
+import { JSONRPCVersion } from "./JSONRPCVersion";
 
-import type { JSONRPCParams } from "./JSONRPCParams";
-import type { JSONRPCVersion } from "./JSONRPCVersion";
-
-export type JSONRPCPromiseResponseObjectified<T> = {|
-  +id: string,
-  +jsonrpc: JSONRPCVersion,
-  +method: string,
-  +result: T,
-  +type: "promise",
-|};
+export type JSONRPCPromiseResponseObjectified<T> = {
+  readonly id: string;
+  readonly jsonrpc: JSONRPCVersion;
+  readonly method: string;
+  readonly result: T;
+  readonly type: "promise";
+};

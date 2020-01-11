@@ -1,5 +1,3 @@
-// @flow strict
-
-import type { Deed } from "../Deed";
+import { Deed } from "../Deed";
 
 export interface Hurt extends Deed {}

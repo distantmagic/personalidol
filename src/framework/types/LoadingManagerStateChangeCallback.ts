@@ -1,5 +1,3 @@
-// @flow strict
+import { LoadingManagerState } from "../interfaces/LoadingManagerState";
 
-import type { LoadingManagerState } from "../interfaces/LoadingManagerState";
-
-export type LoadingManagerStateChangeCallback = LoadingManagerState => void;
+export type LoadingManagerStateChangeCallback = (state: LoadingManagerState) => void;

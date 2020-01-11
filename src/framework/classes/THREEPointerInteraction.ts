@@ -1,18 +1,16 @@
-// @flow strict
-
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import type { Camera, Raycaster, Vector2, WebGLRenderer } from "three";
+import { Camera, Raycaster, Vector2, WebGLRenderer } from "three";
 
-import type { THREEPointerInteraction as THREEPointerInteractionInterface } from "../interfaces/THREEPointerInteraction";
-import type { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
+import { THREEPointerInteraction as THREEPointerInteractionInterface } from "../interfaces/THREEPointerInteraction";
+import { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 
 export default class THREEPointerInteraction implements THREEPointerInteractionInterface {
-  +camera: Camera;
-  +mouseVector: Vector2;
-  +raycaster: Raycaster;
-  +renderer: WebGLRenderer;
+  readonly camera: Camera;
+  readonly mouseVector: Vector2;
+  readonly raycaster: Raycaster;
+  readonly renderer: WebGLRenderer;
   canvasHeight: number;
   canvasOffsetLeft: number;
   canvasOffsetTop: number;

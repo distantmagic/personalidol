@@ -1,5 +1,3 @@
-// @flow strict
-
 import CancelToken from "./CancelToken";
 import CancelTokenQuery from "./CancelTokenQuery";
 import ExceptionHandler from "./ExceptionHandler";
@@ -8,15 +6,15 @@ import Logger from "./Logger";
 import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
 import QueryBatch from "./QueryBatch";
 
-import type { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
-import type { Query } from "../interfaces/Query";
+import { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
+import { Query } from "../interfaces/Query";
 
-type BarObject = {|
-  reference: number,
-|};
+type BarObject = {
+  reference: number;
+};
 
 class Foo implements Query<number> {
-  +fooReference: number;
+  readonly fooReference: number;
 
   constructor(fooReference: number) {
     this.fooReference = fooReference;
@@ -32,7 +30,7 @@ class Foo implements Query<number> {
 }
 
 class Bar implements Query<BarObject> {
-  +barReference: BarObject;
+  readonly barReference: BarObject;
 
   constructor(barReference: BarObject) {
     this.barReference = barReference;

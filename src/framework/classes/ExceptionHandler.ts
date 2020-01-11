@@ -1,15 +1,13 @@
-// @flow strict
-
 import autoBind from "auto-bind";
 
-import type { ExceptionHandler as ExceptionHandlerInterface } from "../interfaces/ExceptionHandler";
-import type { ExceptionHandlerFilter } from "../interfaces/ExceptionHandlerFilter";
-import type { Logger } from "../interfaces/Logger";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { ExceptionHandler as ExceptionHandlerInterface } from "../interfaces/ExceptionHandler";
+import { ExceptionHandlerFilter } from "../interfaces/ExceptionHandlerFilter";
+import { Logger } from "../interfaces/Logger";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class ExceptionHandler implements ExceptionHandlerInterface {
-  +exceptionHandlerFilter: ExceptionHandlerFilter;
-  +logger: Logger;
+  readonly exceptionHandlerFilter: ExceptionHandlerFilter;
+  readonly logger: Logger;
 
   static reportId: number = 0;
 

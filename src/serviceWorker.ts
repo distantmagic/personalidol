@@ -1,13 +1,11 @@
-// @flow strict
-
 import env from "./framework/helpers/env";
 import isLocalhost from "./framework/helpers/isLocalhost";
 import { default as MissingException } from "./framework/classes/Exception/ServiceWorker/Missing";
 import { default as SecurityException } from "./framework/classes/Exception/ServiceWorker/Security";
 import { default as UnsupportedException } from "./framework/classes/Exception/ServiceWorker/Unsupported";
 
-import type { Logger } from "./framework/interfaces/Logger";
-import type { LoggerBreadcrumbs } from "./framework/interfaces/LoggerBreadcrumbs";
+import { Logger } from "./framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "./framework/interfaces/LoggerBreadcrumbs";
 
 function getServiceWorkerAPI(loggerBreadcrumbs: LoggerBreadcrumbs): ServiceWorkerContainer {
   const serviceWorker = navigator.serviceWorker;

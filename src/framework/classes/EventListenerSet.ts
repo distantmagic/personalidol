@@ -1,16 +1,14 @@
-// @flow strict
-
 import Exception from "./Exception";
 
-import type { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import type { EventListenerSetCallback } from "../types/EventListenerSetCallback";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
+import { EventListenerSetCallback } from "../types/EventListenerSetCallback";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
-export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements EventListenerSetInterface<Arguments> {
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
+export default class EventListenerSet<Arguments extends readonly any[]> implements EventListenerSetInterface<Arguments> {
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   callbacks: EventListenerSetCallback<Arguments>[];
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs): void {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.callbacks = [];
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
@@ -39,43 +37,43 @@ export default class EventListenerSet<Arguments: $ReadOnlyArray<any>> implements
     switch (args.length) {
       case 0:
         for (let i = 0; i < this.callbacks.length; i += 1) {
-          // $FlowFixMe
+          // @ts-ignore
           this.callbacks[i].call(null);
         }
         break;
       case 1:
         for (let i = 0; i < this.callbacks.length; i += 1) {
-          // $FlowFixMe
+          // @ts-ignore
           this.callbacks[i].call(null, args[0]);
         }
         break;
       case 2:
         for (let i = 0; i < this.callbacks.length; i += 1) {
-          // $FlowFixMe
+          // @ts-ignore
           this.callbacks[i].call(null, args[0], args[1]);
         }
         break;
       case 3:
         for (let i = 0; i < this.callbacks.length; i += 1) {
-          // $FlowFixMe
+          // @ts-ignore
           this.callbacks[i].call(null, args[0], args[1], args[2]);
         }
         break;
       case 4:
         for (let i = 0; i < this.callbacks.length; i += 1) {
-          // $FlowFixMe
+          // @ts-ignore
           this.callbacks[i].call(null, args[0], args[1], args[2], args[3]);
         }
         break;
       case 5:
         for (let i = 0; i < this.callbacks.length; i += 1) {
-          // $FlowFixMe
+          // @ts-ignore
           this.callbacks[i].call(null, args[0], args[1], args[2], args[3], args[4]);
         }
         break;
       default:
         for (let i = 0; i < this.callbacks.length; i += 1) {
-          // $FlowFixMe
+          // @ts-ignore
           this.callbacks[i].call(null, ...args);
         }
         break;

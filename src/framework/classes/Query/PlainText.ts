@@ -1,12 +1,10 @@
-// @flow strict
-
 import Fetch from "./Fetch";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { Query } from "../../interfaces/Query";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { Query } from "../../interfaces/Query";
 
 export default class PlainText implements Query<string> {
-  +fetch: Fetch;
+  readonly fetch: Fetch;
 
   constructor(ref: string) {
     this.fetch = new Fetch(ref);

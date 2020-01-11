@@ -1,10 +1,8 @@
-// @flow strict
-
-import type { JSONRPCRequest } from "./JSONRPCRequest";
-import type { JSONRPCResponseData } from "./JSONRPCResponseData";
+import { JSONRPCRequest } from "./JSONRPCRequest";
+import { JSONRPCResponseData } from "./JSONRPCResponseData";
 
 export interface JSONRPCServerGeneratorBuffer<T> {
-  add(JSONRPCRequest, JSONRPCResponseData<T>): void;
+  add(request: JSONRPCRequest, responseData: JSONRPCResponseData<T>): void;
 
-  flushRemaining(JSONRPCRequest): void;
+  flushRemaining(request: JSONRPCRequest): void;
 }

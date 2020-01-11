@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as THREE from "three";
 import groupBy from "lodash/groupBy";
 import uniqBy from "lodash/uniqBy";
@@ -18,37 +16,36 @@ import { default as QuakeBrushView } from "./QuakeBrush";
 import { default as QuakeMapException } from "../Exception/QuakeMap";
 import { default as SpotLightView } from "./SpotLight";
 
+import { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, Scene } from "three";
+
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { JSONRPCClient as JSONRPCClientInterface } from "../../interfaces/JSONRPCClient";
+import { LoadingManager } from "../../interfaces/LoadingManager";
+import { Logger } from "../../interfaces/Logger";
+import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { QuakeWorkerAny } from "../../types/QuakeWorkerAny";
+import { QuakeWorkerGLTFModel } from "../../types/QuakeWorkerGLTFModel";
+import { QuakeWorkerMD2Model } from "../../types/QuakeWorkerMD2Model";
+import { QueryBus } from "../../interfaces/QueryBus";
+
 // those are a few hacks, but in the end it's possible to load web workers
 // with create-react-app without ejecting
-/* eslint-disable import/no-webpack-loader-syntax */
-// $FlowFixMe
-import { default as QuakeMapWorker } from "../../../workers/loader?name=QuakeMapWorker!../../../workers/exports/QuakeMap";
-/* eslint-enable import/no-webpack-loader-syntax */
-
-import type { AudioListener, AudioLoader, Group, LoadingManager as THREELoadingManager, Scene } from "three";
-
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { JSONRPCClient as JSONRPCClientInterface } from "../../interfaces/JSONRPCClient";
-import type { LoadingManager } from "../../interfaces/LoadingManager";
-import type { Logger } from "../../interfaces/Logger";
-import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { QueryBus } from "../../interfaces/QueryBus";
+// eslint-disable-next-line import/no-webpack-loader-syntax
+const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!../../../workers/exports/QuakeMap");
 
 export default class QuakeMap extends CanvasView {
-  +audioListener: AudioListener;
-  +audioLoader: AudioLoader;
-  +group: Group;
-  +loadingManager: LoadingManager;
-  +logger: Logger;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +queryBus: QueryBus;
-  +scene: Scene;
-  +source: string;
-  +threeLoadingManager: THREELoadingManager;
-  animationOffset: number;
-  md2LoaderWorker: ?Worker;
-  quakeMapWorker: ?Worker;
+  readonly audioListener: AudioListener;
+  readonly audioLoader: AudioLoader;
+  readonly loadingManager: LoadingManager;
+  readonly logger: Logger;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly queryBus: QueryBus;
+  readonly scene: Scene;
+  readonly source: string;
+  readonly threeLoadingManager: THREELoadingManager;
+  private animationOffset: number;
+  private quakeMapWorker: null | Worker = null;
 
   constructor(
     audioListener: AudioListener,
@@ -82,10 +79,16 @@ export default class QuakeMap extends CanvasView {
     const quakeMapRpcClient = this.getQuakeMapRpcClient(cancelToken);
 
     const entities: Promise<void>[] = [];
-    let gltfModels = [];
-    let md2Models = [];
+    let gltfModels: QuakeWorkerGLTFModel[] = [];
+    let md2Models: QuakeWorkerMD2Model[] = [];
 
-    for await (let entity of quakeMapRpcClient.requestGenerator(cancelToken, "/map", [this.source])) {
+    for await (let entity of quakeMapRpcClient.requestGenerator<QuakeWorkerAny>(cancelToken, "/map", [this.source])) {
+      const entityClassName = entity.classname;
+
+      if ("string" !== typeof entityClassName) {
+        throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Entity class name is not a string."`);
+      }
+
       switch (entity.classname) {
         case "func_group":
         case "worldspawn":
@@ -215,7 +218,7 @@ export default class QuakeMap extends CanvasView {
           ));
           break;
         default:
-          throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unsupported entity class name: "${entity.classname}"`);
+          throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unsupported entity class name: "${entityClassName}"`);
       }
     }
 
@@ -225,12 +228,7 @@ export default class QuakeMap extends CanvasView {
     this.scene.add(this.children);
   }
 
-  async attachGLTFEntities(
-    cancelToken: CancelToken,
-    gltfModels: Array<{
-      +model_name: string,
-    }>
-  ): Promise<void> {
+  async attachGLTFEntities(cancelToken: CancelToken, gltfModels: Array<QuakeWorkerGLTFModel>): Promise<void> {
     const gltfByModel = groupBy(gltfModels, "model_name");
     const gltfModelsViews = [];
 
@@ -263,15 +261,7 @@ export default class QuakeMap extends CanvasView {
     await Promise.all(gltfModelsViews);
   }
 
-  async attachMD2Entities(
-    cancelToken: CancelToken,
-    md2Models: Array<{
-      +angle: number,
-      +model_name: string,
-      +origin: [number, number, number],
-      +skin: number,
-    }>
-  ): Promise<void> {
+  async attachMD2Entities(cancelToken: CancelToken, md2Models: Array<QuakeWorkerMD2Model>): Promise<void> {
     const md2ModelsViews = [];
 
     for (let entity of md2Models) {
@@ -305,11 +295,6 @@ export default class QuakeMap extends CanvasView {
     await super.dispose(cancelToken);
 
     this.scene.remove(this.children);
-
-    const md2LoaderWorker = this.md2LoaderWorker;
-    if (md2LoaderWorker) {
-      md2LoaderWorker.terminate();
-    }
 
     const quakeMapWorker = this.quakeMapWorker;
     if (quakeMapWorker) {

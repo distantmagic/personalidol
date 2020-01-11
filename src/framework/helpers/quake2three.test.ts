@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as THREE from "three";
 
 import quake2three from "./quake2three";

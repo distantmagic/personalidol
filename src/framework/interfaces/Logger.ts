@@ -1,13 +1,11 @@
-// @flow strict
-
-import type { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
-import type { LogSeverityEnum } from "../types/LogSeverityEnum";
+import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
+import { LogSeverityEnum } from "../types/LogSeverityEnum";
 
 export interface Logger {
   /**
    * System is unusable.
    */
-  emergency(LoggerBreadcrumbs, string): Promise<void>;
+  emergency(loggerBreadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;
 
   /**
    * Action must be taken immediately.
@@ -15,20 +13,20 @@ export interface Logger {
    * Example: Entire website down, database unavailable, etc. This should
    * trigger the SMS alerts and wake you up.
    */
-  alert(LoggerBreadcrumbs, string): Promise<void>;
+  alert(loggerBreadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;
 
   /**
    * Critical conditions.
    *
    * Example: Application component unavailable, unexpected exception.
    */
-  critical(LoggerBreadcrumbs, string): Promise<void>;
+  critical(loggerBreadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;
 
   /**
    * Runtime errors that do not require immediate action but should typically
    * be logged and monitored.
    */
-  error(LoggerBreadcrumbs, string): Promise<void>;
+  error(loggerBreadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;
 
   /**
    * Exceptional occurrences that are not errors.
@@ -36,27 +34,27 @@ export interface Logger {
    * Example: Use of deprecated APIs, poor use of an API, undesirable things
    * that are not necessarily wrong.
    */
-  warning(LoggerBreadcrumbs, string): Promise<void>;
+  warning(loggerBreadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;
 
   /**
    * Normal but significant events.
    */
-  notice(LoggerBreadcrumbs, string): Promise<void>;
+  notice(loggerBreadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;
 
   /**
    * Interesting events.
    *
    * Example: User logs in, SQL logs.
    */
-  info(LoggerBreadcrumbs, string): Promise<void>;
+  info(loggerBreadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;
 
   /**
    * Detailed debug information.
    */
-  debug(LoggerBreadcrumbs, string): Promise<void>;
+  debug(loggerBreadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;
 
   /**
    * Logs with an arbitrary level.
    */
-  log(LoggerBreadcrumbs, LogSeverityEnum, string): Promise<void>;
+  log(loggerBreadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): Promise<void>;
 }

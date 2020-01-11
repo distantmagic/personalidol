@@ -1,18 +1,17 @@
-// @flow strict
+import { CancelToken } from "../interfaces/CancelToken";
+import { JSONRPCRequest } from "../interfaces/JSONRPCRequest";
+import { JSONRPCResponse } from "../interfaces/JSONRPCResponse";
+import { JSONRPCServerGeneratorCallback } from "../types/JSONRPCServerGeneratorCallback";
+import { JSONRPCServerPromiseCallback } from "../types/JSONRPCServerPromiseCallback";
 
-import type { CancelToken } from "../interfaces/CancelToken";
-import type { JSONRPCMessageHandler } from "../interfaces/JSONRPCMessageHandler";
-import type { JSONRPCRequest } from "../interfaces/JSONRPCRequest";
-import type { JSONRPCResponse } from "../interfaces/JSONRPCResponse";
-import type { JSONRPCServerGeneratorCallback } from "../types/JSONRPCServerGeneratorCallback";
-import type { JSONRPCServerPromiseCallback } from "../types/JSONRPCServerPromiseCallback";
+export interface JSONRPCServer {
+  handleRequest(request: JSONRPCRequest): Promise<void>;
 
-export interface JSONRPCServer extends JSONRPCMessageHandler {
-  handleRequest(JSONRPCRequest): Promise<void>;
+  returnGenerator<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T>): Promise<void>;
 
-  returnGenerator<T>(CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T>): Promise<void>;
+  returnPromise<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T>): Promise<void>;
 
-  returnPromise<T>(CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T>): Promise<void>;
+  sendResponse<T, U extends Object>(response: JSONRPCResponse<T, U>): Promise<void>;
 
-  sendResponse<T, U: {}>(JSONRPCResponse<T, U>): Promise<void>;
+  useMessageHandler(cancelToken: CancelToken): DedicatedWorkerGlobalScope["onmessage"];
 }

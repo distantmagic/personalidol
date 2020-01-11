@@ -1,11 +1,9 @@
-// @flow strict
-
 import * as React from "react";
 
-type Props = {|
-  comment: string,
-  quantity: number,
-|};
+type Props = {
+  comment: string;
+  quantity: number;
+};
 
 export default React.memo<Props>(function HudSceneOverlayComment(props: Props) {
   return (

@@ -1,14 +1,12 @@
-// @flow strict
+import { ConvexHull, Face } from "three/examples/jsm/math/ConvexHull";
+import { BufferGeometry, Texture, Vector3 } from "three";
 
-import type { ConvexHull, Face } from "three/examples/jsm/math/ConvexHull";
-import type { BufferGeometry, Texture, Vector3 } from "three";
-
-import type { QuakeBrush } from "./QuakeBrush";
+import { QuakeBrush } from "./QuakeBrush";
 
 export interface QuakeBrushGeometryBuilder {
-  addBrush(QuakeBrush, $ReadOnlyArray<Texture>): void;
+  addBrush(brush: QuakeBrush, textures: ReadonlyArray<Texture>): void;
 
-  addConvexHullFace(QuakeBrush, Face, $ReadOnlyArray<Texture>): void;
+  addConvexHullFace(brush: QuakeBrush, face: Face, textures: ReadonlyArray<Texture>): void;
 
   addTextureIndex(vertex: Vector3, normal: Vector3, textureIndex: number): void;
 
@@ -16,21 +14,21 @@ export interface QuakeBrushGeometryBuilder {
 
   addVertexUVs(vertex: Vector3, normal: Vector3, x: number, y: number): void;
 
-  getConvexHull(QuakeBrush): ConvexHull;
+  getConvexHull(brush: QuakeBrush): ConvexHull;
 
   getGeometry(): BufferGeometry;
 
-  getIndices(): $ReadOnlyArray<number>;
+  getIndices(): ReadonlyArray<number>;
 
-  getNormals(): $ReadOnlyArray<number>;
+  getNormals(): ReadonlyArray<number>;
 
-  getTexturesIndices(): $ReadOnlyArray<number>;
+  getTexturesIndices(): ReadonlyArray<number>;
 
-  getTexturesNames(): $ReadOnlyArray<string>;
+  getTexturesNames(): ReadonlyArray<string>;
 
-  getUvs(): $ReadOnlyArray<number>;
+  getUvs(): ReadonlyArray<number>;
 
-  getVertices(): $ReadOnlyArray<number>;
+  getVertices(): ReadonlyArray<number>;
 
   indexVertex(vertex: Vector3, normal: Vector3): void;
 

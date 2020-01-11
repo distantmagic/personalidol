@@ -1,20 +1,21 @@
-// @flow strict
-
 import * as React from "react";
-import screenfull from "screenfull";
+import screenfull, { Screenfull } from "screenfull";
 import { NavLink } from "react-router-dom";
 
-type Props = {||};
+type Props = {};
+
+// typing quirks
+const sf: Screenfull = screenfull as Screenfull;
 
 export default React.memo<Props>(function HudSettings(props: Props) {
-  function onToggleFullScreenClick(evt: SyntheticEvent<HTMLButtonElement>) {
+  function onToggleFullScreenClick(evt: React.SyntheticEvent<HTMLButtonElement>) {
     evt.preventDefault();
 
-    if (screenfull.isFullscreen) {
-      return void screenfull.exit();
+    if (sf.isFullscreen) {
+      return void sf.exit();
     }
 
-    screenfull.request(document.body);
+    sf.request(document.body);
   }
 
   return (
@@ -22,7 +23,7 @@ export default React.memo<Props>(function HudSettings(props: Props) {
       <NavLink activeClassName="dd__button--pressed" className="dd__button dd__button--cogs dd__button--icon" to="/settings">
         Settings
       </NavLink>
-      <button className="dd__button dd__button--icon dd__button--magnifying-glass" disabled={!screenfull.isEnabled} onClick={onToggleFullScreenClick}>
+      <button className="dd__button dd__button--icon dd__button--magnifying-glass" disabled={!sf.isEnabled} onClick={onToggleFullScreenClick}>
         Toggle Fullscreen
       </button>
     </div>

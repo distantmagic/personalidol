@@ -1,11 +1,12 @@
-// @flow strict
+import { MainLoopBeginCallback } from "../types/MainLoopBeginCallback";
+import { MainLoopDrawCallback } from "../types/MainLoopDrawCallback";
+import { MainLoopEndCallback } from "../types/MainLoopEndCallback";
+import { MainLoopUpdateCallback } from "../types/MainLoopUpdateCallback";
 
-import type { BeginCallback, DrawCallback, EndCallback, UpdateCallback } from "mainloop.js";
-
-import type { Scheduler } from "./Scheduler";
+import { Scheduler } from "./Scheduler";
 
 export interface MainLoop {
-  attachScheduler(Scheduler): void;
+  attachScheduler(scheduler: Scheduler): void;
 
   // unset all callbacks
   clear(): void;
@@ -18,15 +19,15 @@ export interface MainLoop {
 
   clearUpdate(): void;
 
-  setBegin(BeginCallback): void;
+  setBegin(callback: MainLoopBeginCallback): void;
 
-  setDraw(DrawCallback): void;
+  setDraw(callback: MainLoopDrawCallback): void;
 
-  setEnd(EndCallback): void;
+  setEnd(callback: MainLoopEndCallback): void;
 
-  setMaxAllowedFPS(number): void;
+  setMaxAllowedFPS(fps: number): void;
 
-  setUpdate(UpdateCallback): void;
+  setUpdate(callback: MainLoopUpdateCallback): void;
 
   start(): void;
 

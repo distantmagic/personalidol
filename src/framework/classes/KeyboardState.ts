@@ -1,38 +1,36 @@
-// @flow strict
-
 import autoBind from "auto-bind";
 
 import Idempotence from "../classes/Exception/Idempotence";
 
-import type { KeyboardButtonNames } from "../types/KeyboardButtonNames";
-import type { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import type { KeyboardState as KeyboardStateInterface } from "../interfaces/KeyboardState";
+import { KeyboardButtonNames } from "../types/KeyboardButtonNames";
+import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { KeyboardState as KeyboardStateInterface } from "../interfaces/KeyboardState";
 
 export default class KeyboardState implements KeyboardStateInterface {
-  #isObserving: boolean;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  keys: {
-    [string]: boolean,
-  };
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  private _isObserving: boolean;
+  private keys: {
+    [key: string]: boolean;
+  } = {};
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
 
-    this.#isObserving = false;
+    this._isObserving = false;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
 
     this.reset();
   }
 
   disconnect(): void {
-    if (!this.#isObserving) {
+    if (!this._isObserving) {
       throw new Idempotence(this.loggerBreadcrumbs.add("disconnect"), "KeyboardState is not idempotent.");
     }
 
     document.removeEventListener("keydown", this.onKeyDown);
     document.removeEventListener("keyup", this.onKeyUp);
 
-    this.#isObserving = false;
+    this._isObserving = false;
   }
 
   isArrowPressed(): boolean {
@@ -44,7 +42,7 @@ export default class KeyboardState implements KeyboardStateInterface {
   }
 
   observe(): void {
-    if (this.#isObserving) {
+    if (this._isObserving) {
       throw new Idempotence(this.loggerBreadcrumbs.add("observe"), "KeyboardState is not idempotent.");
     }
 
@@ -56,7 +54,7 @@ export default class KeyboardState implements KeyboardStateInterface {
     document.addEventListener("keydown", this.onKeyDown, config);
     document.addEventListener("keyup", this.onKeyUp, config);
 
-    this.#isObserving = true;
+    this._isObserving = true;
   }
 
   onKeyDown(evt: KeyboardEvent): void {

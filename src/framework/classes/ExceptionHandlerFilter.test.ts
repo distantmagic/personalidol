@@ -1,5 +1,3 @@
-// @flow strict
-
 import ExceptionHandler from "./ExceptionHandler";
 import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
 import Logger from "./Logger";

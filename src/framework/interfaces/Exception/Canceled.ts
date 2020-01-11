@@ -1,5 +1,3 @@
-// @flow strict
-
 export interface Canceled {
-  +message: string;
+  readonly message: string;
 }

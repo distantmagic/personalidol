@@ -1,8 +1,6 @@
-// @flow strict
+import { ElementPosition } from "./ElementPosition";
+import { ElementPositionUnit } from "../types/ElementPositionUnit";
 
-import type { ElementPosition } from "./ElementPosition";
-import type { ElementPositionUnit } from "../types/ElementPositionUnit";
-
-export interface HasElementPosition<T: ElementPositionUnit> {
+export interface HasElementPosition<T extends ElementPositionUnit> {
   getElementPosition(): ElementPosition<T>;
 }

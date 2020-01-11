@@ -1,5 +1,3 @@
-// @flow strict
+import { DebuggerState } from "../types/DebuggerState";
 
-import type { DebuggerState } from "../types/DebuggerState";
-
-export type DebuggerStateChangeCallback = DebuggerState => void;
+export type DebuggerStateChangeCallback = (state: DebuggerState) => void;

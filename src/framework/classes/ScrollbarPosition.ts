@@ -1,14 +1,12 @@
-// @flow strict
-
 import clamp from "lodash/clamp";
 
 export default class ScrollbarPosition {
-  +changed: boolean;
-  +scrollLength: number;
-  +offsetLength: number;
-  +scrollIndicatorHeight: number;
-  +scrollOffset: number;
-  +scrollPercentage: number;
+  readonly changed: boolean;
+  readonly scrollLength: number;
+  readonly offsetLength: number;
+  readonly scrollIndicatorHeight: number;
+  readonly scrollOffset: number;
+  readonly scrollPercentage: number;
 
   constructor(scrollLength: number, offsetLength: number, scrollIndicatorHeight: number, scrollOffset: number, changed: boolean = false) {
     this.changed = changed;

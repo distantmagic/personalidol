@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as fs from "fs-extra";
 import path from "path";
 import YAML from "yaml";

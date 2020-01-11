@@ -1,15 +1,13 @@
-// @flow strict
-
-import type { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
+import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
 
 const LOGGER_BREADCRUMB_SEPARATOR = "/";
 
 export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
-  +breadcrumbs: $ReadOnlyArray<string>;
-  +loggerBreadcrumbsLocalCache: Map<string, LoggerBreadcrumbsInterface>;
-  +loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface>;
+  readonly breadcrumbs: ReadonlyArray<string>;
+  readonly loggerBreadcrumbsLocalCache: Map<string, LoggerBreadcrumbsInterface>;
+  readonly loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface>;
 
-  constructor(breadcrumbs: $ReadOnlyArray<string> = ["root"], loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()) {
+  constructor(breadcrumbs: ReadonlyArray<string> = ["root"], loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()) {
     this.breadcrumbs = Object.freeze(breadcrumbs);
     this.loggerBreadcrumbsLocalCache = new Map<string, LoggerBreadcrumbsInterface>();
     this.loggerBreadcrumbsMemo = loggerBreadcrumbsMemo;
@@ -42,7 +40,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     return new LoggerBreadcrumbs(this.breadcrumbs.concat(`"${breadcrumb}"`));
   }
 
-  asArray(): $ReadOnlyArray<string> {
+  asArray(): ReadonlyArray<string> {
     return this.breadcrumbs;
   }
 
@@ -58,7 +56,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
       .join(LOGGER_BREADCRUMB_SEPARATOR);
   }
 
-  getBreadcrumbs(): $ReadOnlyArray<string> {
+  getBreadcrumbs(): ReadonlyArray<string> {
     return this.breadcrumbs;
   }
 

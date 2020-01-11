@@ -1,5 +1,3 @@
-// @flow strict
-
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
@@ -9,27 +7,27 @@ import { default as QuakeMapException } from "../Exception/QuakeMap";
 import { default as RemoteJSONQuery } from "../Query/RemoteJSON";
 import { default as THREEMD2Character } from "../MD2Character";
 
-import type { Group, LoadingManager, Vector3 } from "three";
+import { Group, LoadingManager, Vector3 } from "three";
 
-import type { CancelToken } from "../../interfaces/CancelToken";
-import type { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import type { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import type { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
-import type { MD2CharacterConfig } from "../../types/MD2CharacterConfig";
-import type { QueryBus } from "../../interfaces/QueryBus";
+import { CancelToken } from "../../interfaces/CancelToken";
+import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
+import { MD2CharacterConfig } from "../../types/MD2CharacterConfig";
+import { QueryBus } from "../../interfaces/QueryBus";
 
 export default class MD2Character extends CanvasView {
-  +angle: number;
-  +animationOffset: number;
-  +baseUrl: string;
-  +group: Group;
-  +loggerBreadcrumbs: LoggerBreadcrumbs;
-  +origin: Vector3;
-  +queryBus: QueryBus;
-  +skin: number;
-  +threeLoadingManager: LoadingManager;
-  baseCharacter: ?THREEMD2CharacterInterface;
-  character: ?THREEMD2CharacterInterface;
+  readonly angle: number;
+  readonly animationOffset: number;
+  readonly baseUrl: string;
+  readonly group: Group;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly origin: Vector3;
+  readonly queryBus: QueryBus;
+  readonly skin: number;
+  readonly threeLoadingManager: LoadingManager;
+  private baseCharacter: null | THREEMD2CharacterInterface = null;
+  private character: null | THREEMD2CharacterInterface = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
