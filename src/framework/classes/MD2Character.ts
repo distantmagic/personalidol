@@ -91,8 +91,8 @@ export default class MD2Character implements MD2CharacterInterface {
 
   // internal animation parameters
 
-  activeAnimation: null | string = null;
-  oldAnimation: null | string = null;
+  activeAnimation: string = "";
+  oldAnimation: string = "";
 
   blendCounter = 0;
 
@@ -228,6 +228,7 @@ export default class MD2Character implements MD2CharacterInterface {
     }
 
     // @ts-ignore
+    // meshBody.map = this.skinsBody[index];
     material.map = this.skinsBody[index];
 
     this.currentSkin = index;
@@ -295,13 +296,6 @@ export default class MD2Character implements MD2CharacterInterface {
   }
 
   updateAnimations(delta: number) {
-    const activeAnimation = this.activeAnimation;
-    const oldAnimation = this.oldAnimation;
-
-    if (!activeAnimation || !oldAnimation) {
-      return;
-    }
-
     let mix = 1;
 
     if (this.blendCounter > 0) {
@@ -314,8 +308,8 @@ export default class MD2Character implements MD2CharacterInterface {
     if (meshBody) {
       meshBody.update(delta);
 
-      meshBody.setAnimationWeight(activeAnimation, mix);
-      meshBody.setAnimationWeight(oldAnimation, 1 - mix);
+      meshBody.setAnimationWeight(this.activeAnimation, mix);
+      meshBody.setAnimationWeight(this.oldAnimation, 1 - mix);
     }
 
     const meshWeapon = this.meshWeapon;
@@ -323,8 +317,8 @@ export default class MD2Character implements MD2CharacterInterface {
     if (meshWeapon) {
       meshWeapon.update(delta);
 
-      meshWeapon.setAnimationWeight(activeAnimation, mix);
-      meshWeapon.setAnimationWeight(oldAnimation, 1 - mix);
+      meshWeapon.setAnimationWeight(this.activeAnimation, mix);
+      meshWeapon.setAnimationWeight(this.oldAnimation, 1 - mix);
     }
   }
 
@@ -333,13 +327,6 @@ export default class MD2Character implements MD2CharacterInterface {
 
     if (!animations) {
       throw new Error("Animations are not defined.");
-    }
-
-    const activeAnimation = this.activeAnimation;
-    const oldAnimation = this.oldAnimation;
-
-    if (!activeAnimation || !oldAnimation) {
-      return;
     }
 
     let moveAnimation, idleAnimation;
@@ -397,25 +384,25 @@ export default class MD2Character implements MD2CharacterInterface {
 
     if (controls.moveForward) {
       if (meshBody) {
-        meshBody.setAnimationDirectionForward(activeAnimation);
-        meshBody.setAnimationDirectionForward(oldAnimation);
+        meshBody.setAnimationDirectionForward(this.activeAnimation);
+        meshBody.setAnimationDirectionForward(this.oldAnimation);
       }
 
       if (meshWeapon) {
-        meshWeapon.setAnimationDirectionForward(activeAnimation);
-        meshWeapon.setAnimationDirectionForward(oldAnimation);
+        meshWeapon.setAnimationDirectionForward(this.activeAnimation);
+        meshWeapon.setAnimationDirectionForward(this.oldAnimation);
       }
     }
 
     if (controls.moveBackward) {
       if (meshBody) {
-        meshBody.setAnimationDirectionBackward(activeAnimation);
-        meshBody.setAnimationDirectionBackward(oldAnimation);
+        meshBody.setAnimationDirectionBackward(this.activeAnimation);
+        meshBody.setAnimationDirectionBackward(this.oldAnimation);
       }
 
       if (meshWeapon) {
-        meshWeapon.setAnimationDirectionBackward(activeAnimation);
-        meshWeapon.setAnimationDirectionBackward(oldAnimation);
+        meshWeapon.setAnimationDirectionBackward(this.activeAnimation);
+        meshWeapon.setAnimationDirectionBackward(this.oldAnimation);
       }
     }
   }
