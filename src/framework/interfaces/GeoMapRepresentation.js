@@ -1,3 +1,0 @@
-// @flow
-
-// graph, geodata, etc
