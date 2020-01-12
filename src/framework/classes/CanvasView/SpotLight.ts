@@ -11,15 +11,15 @@ export default class SpotLight extends CanvasView {
   readonly group: THREE.Group;
   readonly light: THREE.SpotLight;
 
-  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, origin: THREE.Vector3, entity: QuakeWorkerLightSpotlight) {
+  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerLightSpotlight) {
     super(canvasViewBag);
 
     this.color = new THREE.Color(parseInt(entity.color, 16));
     this.group = group;
 
     this.light = new THREE.SpotLight(this.color.getHex(), entity.intensity);
-    this.light.position.copy(origin);
-    this.light.target.position.set(origin.x, 0, origin.z);
+    this.light.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
+    this.light.target.position.set(entity.origin[0], 0, entity.origin[2]);
 
     this.light.angle = 1;
     this.light.decay = entity.decay;

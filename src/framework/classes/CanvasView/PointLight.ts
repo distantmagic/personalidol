@@ -11,14 +11,14 @@ export default class PointLight extends CanvasView {
   readonly group: THREE.Group;
   readonly light: THREE.PointLight;
 
-  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, origin: THREE.Vector3, entity: QuakeWorkerLightPoint) {
+  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerLightPoint) {
     super(canvasViewBag);
 
     this.color = new THREE.Color(parseInt(entity.color, 16));
     this.group = group;
 
     this.light = new THREE.PointLight(this.color, entity.intensity, 512);
-    this.light.position.copy(origin);
+    this.light.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
 
     // this.light.decay = 4;
     this.light.decay = entity.decay;

@@ -77,8 +77,8 @@ export default class QuakeMap extends CanvasView {
     const quakeMapRpcClient = this.getQuakeMapRpcClient(cancelToken);
 
     const entities: Promise<void>[] = [];
-    let gltfModels: QuakeWorkerGLTFModel[] = [];
-    let md2Models: QuakeWorkerMD2Model[] = [];
+    const gltfModels: QuakeWorkerGLTFModel[] = [];
+    const md2Models: QuakeWorkerMD2Model[] = [];
 
     for await (let entity of quakeMapRpcClient.requestGenerator<QuakeWorkerAny>(cancelToken, "/map", [this.source])) {
       const entityClassName = entity.classname;
@@ -142,7 +142,6 @@ export default class QuakeMap extends CanvasView {
               new PointLightView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
                 this.children,
-                new THREE.Vector3().fromArray(entity.origin),
                 entity
               )
             ),
@@ -157,7 +156,6 @@ export default class QuakeMap extends CanvasView {
               new SpotLightView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("SpotLight")),
                 this.children,
-                new THREE.Vector3().fromArray(entity.origin),
                 entity,
               )
             ),
@@ -178,7 +176,7 @@ export default class QuakeMap extends CanvasView {
               new PlayerView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Player")),
                 this.children,
-                new THREE.Vector3().fromArray(entity.origin),
+                entity
               )
             ),
             "Loading world ambient sound"
@@ -206,7 +204,11 @@ export default class QuakeMap extends CanvasView {
           entities.push(this.loadingManager.blocking(
             this.canvasViewBag.add(
               cancelToken,
-              new ParticlesView(this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")), this.children, new THREE.Vector3(...entity.origin))
+              new ParticlesView(
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")),
+                this.children,
+                entity
+               )
             ),
             "Loading particles"
           ));
@@ -274,7 +276,6 @@ export default class QuakeMap extends CanvasView {
           new MD2CharacterView(
             this.loggerBreadcrumbs.add("MD2Character"),
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
-            new THREE.Vector3().fromArray(entity.origin),
             this.queryBus,
             this.children,
             this.threeLoadingManager,
@@ -296,6 +297,7 @@ export default class QuakeMap extends CanvasView {
     this.scene.remove(this.children);
 
     const quakeMapWorker = this.quakeMapWorker;
+
     if (quakeMapWorker) {
       quakeMapWorker.terminate();
     }

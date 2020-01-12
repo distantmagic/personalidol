@@ -31,7 +31,6 @@ export default class MD2Character extends CanvasView {
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
-    origin: THREE.Vector3,
     queryBus: QueryBus,
     group: THREE.Group,
     threeLoadingManager: THREE.LoadingManager,
@@ -47,7 +46,7 @@ export default class MD2Character extends CanvasView {
     this.baseUrl = baseUrl;
     this.group = group;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.origin = origin;
+    this.origin = new THREE.Vector3(entity.origin[0], entity.origin[1], entity.origin[2]);
     this.queryBus = queryBus;
     this.skin = entity.skin;
     this.threeLoadingManager = threeLoadingManager;
