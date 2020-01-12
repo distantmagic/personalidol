@@ -1,12 +1,12 @@
 import * as THREE from "three";
 
-import ExceptionHandler from "./ExceptionHandler";
-import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
-import Logger from "./Logger";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QueryBus from "./QueryBus";
-import QuakeMapTextureLoader from "./QuakeMapTextureLoader";
-import { default as QuakeMapException } from "./Exception/QuakeMap";
+import ExceptionHandler from "src/framework/classes/ExceptionHandler";
+import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
+import Logger from "src/framework/classes/Logger";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QueryBus from "src/framework/classes/QueryBus";
+import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
+import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
 test("indexes textures and keeps consistent id registry", function() {
   const exceptionHandler = new ExceptionHandler(new Logger(), new ExceptionHandlerFilter());

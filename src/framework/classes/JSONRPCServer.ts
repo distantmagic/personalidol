@@ -2,22 +2,22 @@
 
 import autoBind from "auto-bind";
 
-import JSONRPCResponseData from "./JSONRPCResponseData";
-import JSONRPCServerGeneratorBuffer from "./JSONRPCServerGeneratorBuffer";
-import { default as CanceledException } from "./Exception/CancelToken/Canceled";
-import { default as JSONRPCErrorResponse } from "./JSONRPCResponse/Error";
-import { default as JSONRPCPromiseResponse } from "./JSONRPCResponse/Promise";
-import { default as JSONRPCRequest, unobjectify as unobjectifyJSONRPCRequest } from "./JSONRPCRequest";
+import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
+import JSONRPCServerGeneratorBuffer from "src/framework/classes/JSONRPCServerGeneratorBuffer";
+import { default as CanceledException } from "src/framework/classes/Exception/CancelToken/Canceled";
+import { default as JSONRPCErrorResponse } from "src/framework/classes/JSONRPCResponse/Error";
+import { default as JSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
+import { default as JSONRPCRequest, unobjectify as unobjectifyJSONRPCRequest } from "src/framework/classes/JSONRPCRequest";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
-import { JSONRPCResponse } from "../interfaces/JSONRPCResponse";
-import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../interfaces/JSONRPCResponseData";
-import { JSONRPCServer as JSONRPCServerInterface } from "../interfaces/JSONRPCServer";
-import { JSONRPCServerGeneratorCallback } from "../types/JSONRPCServerGeneratorCallback";
-import { JSONRPCServerPromiseCallback } from "../types/JSONRPCServerPromiseCallback";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { JSONRPCRequest as JSONRPCRequestInterface } from "src/framework/interfaces/JSONRPCRequest";
+import { JSONRPCResponse } from "src/framework/interfaces/JSONRPCResponse";
+import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "src/framework/interfaces/JSONRPCResponseData";
+import { JSONRPCServer as JSONRPCServerInterface } from "src/framework/interfaces/JSONRPCServer";
+import { JSONRPCServerGeneratorCallback } from "src/framework/types/JSONRPCServerGeneratorCallback";
+import { JSONRPCServerPromiseCallback } from "src/framework/types/JSONRPCServerPromiseCallback";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class JSONRPCServer implements JSONRPCServerInterface {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

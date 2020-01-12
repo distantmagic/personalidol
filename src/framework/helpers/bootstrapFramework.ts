@@ -1,18 +1,18 @@
-import BusClock from "../classes/BusClock";
-import ClockReactiveController from "../classes/ClockReactiveController";
-import Debugger from "../classes/Debugger";
-import ExceptionHandler from "../classes/ExceptionHandler";
-import LoggerBreadcrumbs from "../classes/LoggerBreadcrumbs";
-import QueryBus from "../classes/QueryBus";
-import { default as ConsoleLogger } from "../classes/Logger/Console";
-import { default as UnexpectedExceptionHandlerFilter } from "../classes/ExceptionHandlerFilter/Unexpected";
+import BusClock from "src/framework/classes/BusClock";
+import ClockReactiveController from "src/framework/classes/ClockReactiveController";
+import Debugger from "src/framework/classes/Debugger";
+import ExceptionHandler from "src/framework/classes/ExceptionHandler";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QueryBus from "src/framework/classes/QueryBus";
+import { default as ConsoleLogger } from "src/framework/classes/Logger/Console";
+import { default as UnexpectedExceptionHandlerFilter } from "src/framework/classes/ExceptionHandlerFilter/Unexpected";
 
-import { ClockReactiveController as ClockReactiveControllerInterface } from "../interfaces/ClockReactiveController";
-import { Debugger as DebuggerInterface } from "../interfaces/Debugger";
-import { ExceptionHandler as ExceptionHandlerInterface } from "../interfaces/ExceptionHandler";
-import { Logger } from "../interfaces/Logger";
-import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
-import { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
+import { ClockReactiveController as ClockReactiveControllerInterface } from "src/framework/interfaces/ClockReactiveController";
+import { Debugger as DebuggerInterface } from "src/framework/interfaces/Debugger";
+import { ExceptionHandler as ExceptionHandlerInterface } from "src/framework/interfaces/ExceptionHandler";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus as QueryBusInterface } from "src/framework/interfaces/QueryBus";
 
 // prettier-ignore
 type BootstrapFrameworkCallback<T> = (

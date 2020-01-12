@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QuakeBrush from "./QuakeBrush";
-import QuakeBrushGeometryBuilder from "./QuakeBrushGeometryBuilder";
-import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QuakeBrush from "src/framework/classes/QuakeBrush";
+import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";
+import QuakeBrushHalfSpaceParser from "src/framework/classes/QuakeBrushHalfSpaceParser";
 
 test("generates faces from quake brush", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

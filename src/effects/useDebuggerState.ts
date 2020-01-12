@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { Debugger } from "../framework/interfaces/Debugger";
-import { DebuggerState } from "../framework/types/DebuggerState";
+import { Debugger } from "src/framework/interfaces/Debugger";
+import { DebuggerState } from "src/framework/types/DebuggerState";
 
 export default function useDebuggerState(debug: Debugger): DebuggerState {
   const [debuggerState, setDebuggetState] = React.useState(debug.getState());

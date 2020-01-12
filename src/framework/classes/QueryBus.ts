@@ -1,18 +1,18 @@
 import autoBind from "auto-bind";
 
-import CancelTokenQuery from "./CancelTokenQuery";
-import EventListenerSet from "./EventListenerSet";
-import QueryBatch from "./QueryBatch";
+import CancelTokenQuery from "src/framework/classes/CancelTokenQuery";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
+import QueryBatch from "src/framework/classes/QueryBatch";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
-import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import { ExceptionHandler } from "../interfaces/ExceptionHandler";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { Query } from "../interfaces/Query";
-import { QueryBus as QueryBusInterface } from "../interfaces/QueryBus";
-import { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCallback";
-import { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CancelTokenQuery as CancelTokenQueryInterface } from "src/framework/interfaces/CancelTokenQuery";
+import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
+import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { Query } from "src/framework/interfaces/Query";
+import { QueryBus as QueryBusInterface } from "src/framework/interfaces/QueryBus";
+import { QueryBusOnEnqueuedCallback } from "src/framework/types/QueryBusOnEnqueuedCallback";
+import { QueryBusQueueCollection } from "src/framework/types/QueryBusQueueCollection";
 
 export default class QueryBus implements QueryBusInterface {
   readonly enqueuedCallbacks: EventListenerSetInterface<[Query<any>]>;

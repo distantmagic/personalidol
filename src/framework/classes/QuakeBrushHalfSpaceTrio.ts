@@ -1,12 +1,12 @@
 import * as math from "mathjs";
 import * as THREE from "three";
 
-import Exception from "./Exception";
-import isEqualWithEpsilon from "../helpers/isEqualWithEpsilon";
+import Exception from "src/framework/classes/Exception";
+import isEqualWithEpsilon from "src/framework/helpers/isEqualWithEpsilon";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
-import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
 function checkIntersectingPointDeterminant(det: number): boolean {
   // normally it should be enough to check if determinant !== 0, but due to

@@ -1,20 +1,20 @@
 /// <reference lib="webworker" />
 
-import bootstrapFramework from "./bootstrapFramework";
-import BusClock from "../classes/BusClock";
-import CancelToken from "../classes/CancelToken";
-import JSONRPCServer from "../classes/JSONRPCServer";
-import { default as ConsoleLogger } from "../classes/Logger/Console";
-import { default as UnexpectedExceptionHandlerFilter } from "../classes/ExceptionHandlerFilter/Unexpected";
+import bootstrapFramework from "src/framework/helpers/bootstrapFramework";
+import BusClock from "src/framework/classes/BusClock";
+import CancelToken from "src/framework/classes/CancelToken";
+import JSONRPCServer from "src/framework/classes/JSONRPCServer";
+import { default as ConsoleLogger } from "src/framework/classes/Logger/Console";
+import { default as UnexpectedExceptionHandlerFilter } from "src/framework/classes/ExceptionHandlerFilter/Unexpected";
 
-import { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
-import { ClockReactiveController } from "../interfaces/ClockReactiveController";
-import { Debugger } from "../interfaces/Debugger";
-import { ExceptionHandler } from "../interfaces/ExceptionHandler";
-import { JSONRPCServer as JSONRPCServerInterface } from "../interfaces/JSONRPCServer";
-import { Logger } from "../interfaces/Logger";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "../interfaces/QueryBus";
+import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
+import { ClockReactiveController } from "src/framework/interfaces/ClockReactiveController";
+import { Debugger } from "src/framework/interfaces/Debugger";
+import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { JSONRPCServer as JSONRPCServerInterface } from "src/framework/interfaces/JSONRPCServer";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 // prettier-ignore
 type BootstrapWorkerCallback = (

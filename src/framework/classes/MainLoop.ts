@@ -2,15 +2,15 @@ import autoBind from "auto-bind";
 import noop from "lodash/noop";
 import { default as VendorMainLoop } from "mainloop.js";
 
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import SingletonException from "./Exception/Singleton";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import SingletonException from "src/framework/classes/Exception/Singleton";
 
-import { MainLoop as MainLoopInterface } from "../interfaces/MainLoop";
-import { MainLoopBeginCallback } from "../types/MainLoopBeginCallback";
-import { MainLoopDrawCallback } from "../types/MainLoopDrawCallback";
-import { MainLoopEndCallback } from "../types/MainLoopEndCallback";
-import { MainLoopUpdateCallback } from "../types/MainLoopUpdateCallback";
-import { Scheduler } from "../interfaces/Scheduler";
+import { MainLoop as MainLoopInterface } from "src/framework/interfaces/MainLoop";
+import { MainLoopBeginCallback } from "src/framework/types/MainLoopBeginCallback";
+import { MainLoopDrawCallback } from "src/framework/types/MainLoopDrawCallback";
+import { MainLoopEndCallback } from "src/framework/types/MainLoopEndCallback";
+import { MainLoopUpdateCallback } from "src/framework/types/MainLoopUpdateCallback";
+import { Scheduler } from "src/framework/interfaces/Scheduler";
 
 let instance: null | MainLoopInterface = null;
 

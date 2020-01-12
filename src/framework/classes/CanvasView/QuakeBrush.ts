@@ -1,14 +1,14 @@
 import * as THREE from "three";
 
-import CanvasView from "../CanvasView";
-import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
+import CanvasView from "src/framework/classes/CanvasView";
+import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../../interfaces/QuakeMapTextureLoader";
-import { QuakeWorkerBrush } from "../../types/QuakeWorkerBrush";
-import { QueryBus } from "../../interfaces/QueryBus";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "src/framework/interfaces/QuakeMapTextureLoader";
+import { QuakeWorkerBrush } from "src/framework/types/QuakeWorkerBrush";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 const TEXTURE_SIZE = 128;
 

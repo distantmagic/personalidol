@@ -1,7 +1,7 @@
-import Fetch from "./Fetch";
+import Fetch from "src/framework/classes/Query/Fetch";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { Query } from "../../interfaces/Query";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { Query } from "src/framework/interfaces/Query";
 
 export default class RemoteJSON<T extends Object> implements Query<T> {
   readonly fetch: Fetch;

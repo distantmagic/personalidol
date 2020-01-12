@@ -1,6 +1,6 @@
-import { Animatable } from "./Animatable";
-import { CanvasPointerEventHandler } from "./CanvasPointerEventHandler";
-import { Disposable } from "./Disposable";
+import { Animatable } from "src/framework/interfaces/Animatable";
+import { CanvasPointerEventHandler } from "src/framework/interfaces/CanvasPointerEventHandler";
+import { Disposable } from "src/framework/interfaces/Disposable";
 
 export interface CanvasView extends Animatable, CanvasPointerEventHandler, Disposable {
   begin(): void;

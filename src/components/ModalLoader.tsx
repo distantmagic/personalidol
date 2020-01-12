@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import ModalToolbar from "./ModalToolbar";
+import ModalToolbar from "src/components/ModalToolbar";
 
 type Props = {
   comment: string;

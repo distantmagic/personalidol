@@ -1,4 +1,4 @@
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
 test("has root breadcrumb", function() {
   const breadcrumbs = new LoggerBreadcrumbs();

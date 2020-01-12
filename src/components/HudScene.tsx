@@ -1,16 +1,16 @@
 import * as React from "react";
 
-import HudSceneOverlay from "./HudSceneOverlay";
-import SceneCanvas from "../framework/classes/HTMLElement/SceneCanvas";
-import useHTMLCustomElement from "../effects/useHTMLCustomElement";
-import useSceneCanvas from "../effects/useSceneCanvas";
+import HudSceneOverlay from "src/components/HudSceneOverlay";
+import SceneCanvas from "src/framework/classes/HTMLElement/SceneCanvas";
+import useHTMLCustomElement from "src/effects/useHTMLCustomElement";
+import useSceneCanvas from "src/effects/useSceneCanvas";
 
-import { Debugger } from "../framework/interfaces/Debugger";
-import { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import { LoadingManager } from "../framework/interfaces/LoadingManager";
-import { Logger } from "../framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "../framework/interfaces/QueryBus";
+import { Debugger } from "src/framework/interfaces/Debugger";
+import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { LoadingManager } from "src/framework/interfaces/LoadingManager";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

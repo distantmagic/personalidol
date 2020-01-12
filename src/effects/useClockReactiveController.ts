@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import CancelToken from "../framework/classes/CancelToken";
+import CancelToken from "src/framework/classes/CancelToken";
 
-import { ClockReactiveController } from "../framework/interfaces/ClockReactiveController";
-import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import { ClockReactiveController } from "src/framework/interfaces/ClockReactiveController";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default function useClockReactiveController(clockReactiveController: ClockReactiveController, isDocumentHidden: boolean, loggerBreadcrumbs: LoggerBreadcrumbs): void {
   React.useEffect(

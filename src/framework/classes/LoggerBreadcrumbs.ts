@@ -1,4 +1,4 @@
-import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "../interfaces/LoggerBreadcrumbs";
+import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 const LOGGER_BREADCRUMB_SEPARATOR = "/";
 

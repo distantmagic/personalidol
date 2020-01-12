@@ -1,11 +1,11 @@
 import ResizeObserver from "resize-observer-polyfill";
 
-import ElementSize from "../classes/ElementSize";
-import Idempotence from "../classes/Exception/Idempotence";
+import ElementSize from "src/framework/classes/ElementSize";
+import Idempotence from "src/framework/classes/Exception/Idempotence";
 
-import { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "../interfaces/HTMLElementResizeObserver";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { Resizeable } from "../interfaces/Resizeable";
+import { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "src/framework/interfaces/HTMLElementResizeObserver";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { Resizeable } from "src/framework/interfaces/Resizeable";
 
 export default class HTMLElementResizeObserver implements HTMLElementResizeObserverInterface {
   readonly element: HTMLElement;

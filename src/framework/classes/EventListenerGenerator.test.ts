@@ -1,7 +1,7 @@
-import CancelToken from "./CancelToken";
-import EventListenerGenerator from "./EventListenerGenerator";
-import EventListenerSet from "./EventListenerSet";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import CancelToken from "src/framework/classes/CancelToken";
+import EventListenerGenerator from "src/framework/classes/EventListenerGenerator";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
 test("generates subsequent values", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

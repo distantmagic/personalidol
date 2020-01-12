@@ -3,15 +3,15 @@ import autoBind from "auto-bind";
 import clamp from "lodash/clamp";
 import yn from "yn";
 
-import CanvasController from "../CanvasController";
-import env from "../../helpers/env";
+import CanvasController from "src/framework/classes/CanvasController";
+import env from "src/framework/helpers/env";
 
-import { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import { Debugger } from "../../interfaces/Debugger";
-import { ElementSize } from "../../interfaces/ElementSize";
-import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { CameraController as CameraControllerInterface } from "src/framework/interfaces/CameraController";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { Debugger } from "src/framework/interfaces/Debugger";
+import { ElementSize } from "src/framework/interfaces/ElementSize";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
   readonly camera: THREE.OrthographicCamera;
@@ -23,7 +23,14 @@ export default class CameraController extends CanvasController implements Camera
   private width: number;
   private zoomTarget: number;
 
-  constructor(canvasViewBag: CanvasViewBag, camera: THREE.OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
+  constructor(
+    canvasViewBag: CanvasViewBag,
+    camera: THREE.OrthographicCamera,
+    debug: Debugger,
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene
+  ) {
     super(canvasViewBag);
     autoBind(this);
 

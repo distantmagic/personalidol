@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-import CanvasView from "../CanvasView";
+import CanvasView from "src/framework/classes/CanvasView";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import { QuakeWorkerLightSpotlight } from "../../types/QuakeWorkerLightSpotlight";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { QuakeWorkerLightSpotlight } from "src/framework/types/QuakeWorkerLightSpotlight";
 
 export default class SpotLight extends CanvasView {
   readonly color: THREE.Color;

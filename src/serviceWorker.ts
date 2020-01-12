@@ -1,11 +1,11 @@
-import env from "./framework/helpers/env";
-import isLocalhost from "./framework/helpers/isLocalhost";
-import { default as MissingException } from "./framework/classes/Exception/ServiceWorker/Missing";
-import { default as SecurityException } from "./framework/classes/Exception/ServiceWorker/Security";
-import { default as UnsupportedException } from "./framework/classes/Exception/ServiceWorker/Unsupported";
+import env from "src/framework/helpers/env";
+import isLocalhost from "src/framework/helpers/isLocalhost";
+import { default as MissingException } from "src/framework/classes/Exception/ServiceWorker/Missing";
+import { default as SecurityException } from "src/framework/classes/Exception/ServiceWorker/Security";
+import { default as UnsupportedException } from "src/framework/classes/Exception/ServiceWorker/Unsupported";
 
-import { Logger } from "./framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "./framework/interfaces/LoggerBreadcrumbs";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 function getServiceWorkerAPI(loggerBreadcrumbs: LoggerBreadcrumbs): ServiceWorkerContainer {
   const serviceWorker = navigator.serviceWorker;

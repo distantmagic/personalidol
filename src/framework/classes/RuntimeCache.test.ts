@@ -1,6 +1,6 @@
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import RuntimeCache from "./RuntimeCache";
-import { default as CacheException } from "./Exception/Cache";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import RuntimeCache from "src/framework/classes/RuntimeCache";
+import { default as CacheException } from "src/framework/classes/Exception/Cache";
 
 test("throws when requested key is not present in cache", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

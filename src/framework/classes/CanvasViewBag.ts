@@ -1,10 +1,10 @@
 import autoBind from "auto-bind";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { CanvasView } from "../interfaces/CanvasView";
-import { CanvasViewBag as CanvasViewBagInterface } from "../interfaces/CanvasViewBag";
-import { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasView } from "src/framework/interfaces/CanvasView";
+import { CanvasViewBag as CanvasViewBagInterface } from "src/framework/interfaces/CanvasViewBag";
+import { CanvasViewBus as CanvasViewBusInterface } from "src/framework/interfaces/CanvasViewBus";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class CanvasViewBag implements CanvasViewBagInterface {
   readonly canvasViewBus: CanvasViewBusInterface;

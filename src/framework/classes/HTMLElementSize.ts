@@ -1,7 +1,7 @@
-import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
+import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { ElementSize } from "../interfaces/ElementSize";
-import { HTMLElementSize as HTMLElementSizeInterface } from "../interfaces/HTMLElementSize";
+import { ElementSize } from "src/framework/interfaces/ElementSize";
+import { HTMLElementSize as HTMLElementSizeInterface } from "src/framework/interfaces/HTMLElementSize";
 
 export default class HTMLElementSize implements HTMLElementSizeInterface {
   readonly htmlElement: HTMLElement;

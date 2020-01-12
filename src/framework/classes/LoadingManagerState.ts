@@ -1,4 +1,4 @@
-import { LoadingManagerState as LoadingManagerStateInterface } from "../interfaces/LoadingManagerState";
+import { LoadingManagerState as LoadingManagerStateInterface } from "src/framework/interfaces/LoadingManagerState";
 
 export default class LoadingManagerState implements LoadingManagerStateInterface {
   readonly comments: ReadonlyArray<string>;

@@ -1,5 +1,5 @@
-import { JSONRPCParams } from "./JSONRPCParams";
-import { JSONRPCVersion } from "./JSONRPCVersion";
+import { JSONRPCParams } from "src/framework/types/JSONRPCParams";
+import { JSONRPCVersion } from "src/framework/types/JSONRPCVersion";
 
 export type JSONRPCPromiseResponseObjectified<T> = {
   readonly id: string;

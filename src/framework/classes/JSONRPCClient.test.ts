@@ -1,9 +1,9 @@
-import CancelToken from "./CancelToken";
-import JSONRPCClient from "./JSONRPCClient";
-import JSONRPCResponseData from "./JSONRPCResponseData";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import { default as JSONRPCGeneratorChunkResponse } from "./JSONRPCResponse/GeneratorChunk";
-import { default as JSONRPCPromiseResponse, unobjectify as unobjectifyJSONRPCPromiseResponse } from "./JSONRPCResponse/Promise";
+import CancelToken from "src/framework/classes/CancelToken";
+import JSONRPCClient from "src/framework/classes/JSONRPCClient";
+import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import { default as JSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
+import { default as JSONRPCPromiseResponse, unobjectify as unobjectifyJSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
 
 test("processes incoming generator chunk response", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

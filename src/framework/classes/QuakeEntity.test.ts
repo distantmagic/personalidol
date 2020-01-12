@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QuakeEntity from "./QuakeEntity";
-import QuakeEntityProperties from "./QuakeEntityProperties";
-import QuakeEntityProperty from "./QuakeEntityProperty";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QuakeEntity from "src/framework/classes/QuakeEntity";
+import QuakeEntityProperties from "src/framework/classes/QuakeEntityProperties";
+import QuakeEntityProperty from "src/framework/classes/QuakeEntityProperty";
 
 test("determines if Entity belongs to a quake class", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

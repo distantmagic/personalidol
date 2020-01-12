@@ -1,13 +1,13 @@
 import * as THREE from "three";
 
-import * as fixtures from "../../fixtures";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QuakeBrush from "./QuakeBrush";
-import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
-import QuakeEntity from "./QuakeEntity";
-import QuakeEntityProperties from "./QuakeEntityProperties";
-import QuakeEntityProperty from "./QuakeEntityProperty";
-import QuakeMapParser from "./QuakeMapParser";
+import * as fixtures from "src/framework/classes./../fixtures";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QuakeBrush from "src/framework/classes/QuakeBrush";
+import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";
+import QuakeEntity from "src/framework/classes/QuakeEntity";
+import QuakeEntityProperties from "src/framework/classes/QuakeEntityProperties";
+import QuakeEntityProperty from "src/framework/classes/QuakeEntityProperty";
+import QuakeMapParser from "src/framework/classes/QuakeMapParser";
 
 test("converts quake map format to something processable by controllers", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

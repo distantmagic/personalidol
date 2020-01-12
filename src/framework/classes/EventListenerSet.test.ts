@@ -1,5 +1,5 @@
-import EventListenerSet from "./EventListenerSet";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
 test("notifies callbacks set about specific event", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

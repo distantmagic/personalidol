@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
+import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";
 
-import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "src/framework/interfaces/QuakeBrushHalfSpace";
 
 test("arguments are not changed", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

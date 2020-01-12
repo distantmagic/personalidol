@@ -1,8 +1,8 @@
-import canCompare from "./canCompare";
-import Exception from "../classes/Exception";
+import canCompare from "src/framework/helpers/canCompare";
+import Exception from "src/framework/classes/Exception";
 
-import { Equatable } from "../interfaces/Equatable";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Equatable } from "src/framework/interfaces/Equatable";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 function hasEqual<T>(loggerBreadcrumbs: LoggerBreadcrumbs, a: ReadonlyArray<Equatable<T>>, item: Equatable<T>): boolean {
   return a.some((aItem: Equatable<T>) => {

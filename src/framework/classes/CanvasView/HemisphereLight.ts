@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-import CanvasView from "../CanvasView";
+import CanvasView from "src/framework/classes/CanvasView";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import { QuakeWorkerLightHemisphere } from "../../types/QuakeWorkerLightHemisphere";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { QuakeWorkerLightHemisphere } from "src/framework/types/QuakeWorkerLightHemisphere";
 
 export default class AmbientLight extends CanvasView {
   readonly group: THREE.Group;

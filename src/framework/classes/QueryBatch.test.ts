@@ -1,13 +1,13 @@
-import CancelToken from "./CancelToken";
-import CancelTokenQuery from "./CancelTokenQuery";
-import ExceptionHandler from "./ExceptionHandler";
-import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
-import Logger from "./Logger";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QueryBatch from "./QueryBatch";
+import CancelToken from "src/framework/classes/CancelToken";
+import CancelTokenQuery from "src/framework/classes/CancelTokenQuery";
+import ExceptionHandler from "src/framework/classes/ExceptionHandler";
+import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
+import Logger from "src/framework/classes/Logger";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QueryBatch from "src/framework/classes/QueryBatch";
 
-import { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
-import { Query } from "../interfaces/Query";
+import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
+import { Query } from "src/framework/interfaces/Query";
 
 type BarObject = {
   reference: number;

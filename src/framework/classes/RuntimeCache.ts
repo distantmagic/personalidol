@@ -1,8 +1,8 @@
-import { default as CacheException } from "./Exception/Cache";
+import { default as CacheException } from "src/framework/classes/Exception/Cache";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { RuntimeCache as RuntimeCacheInterface } from "../interfaces/RuntimeCache";
-import { RuntimeCacheStoreCallback } from "../types/RuntimeCacheStoreCallback";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { RuntimeCache as RuntimeCacheInterface } from "src/framework/interfaces/RuntimeCache";
+import { RuntimeCacheStoreCallback } from "src/framework/types/RuntimeCacheStoreCallback";
 
 export default class RuntimeCache<T> implements RuntimeCacheInterface<T> {
   readonly cacheMap: Map<string, T>;

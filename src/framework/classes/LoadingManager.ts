@@ -1,14 +1,14 @@
 import filter from "lodash/filter";
 
-import EventListenerSet from "./EventListenerSet";
-import LoadingManagerState from "./LoadingManagerState";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
+import LoadingManagerState from "src/framework/classes/LoadingManagerState";
 
-import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import { ExceptionHandler } from "../interfaces/ExceptionHandler";
-import { LoadingManager as LoadingManagerInterface } from "../interfaces/LoadingManager";
-import { LoadingManagerState as LoadingManagerStateInterface } from "../interfaces/LoadingManagerState";
-import { LoadingManagerStateChangeCallback } from "../types/LoadingManagerStateChangeCallback";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
+import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { LoadingManager as LoadingManagerInterface } from "src/framework/interfaces/LoadingManager";
+import { LoadingManagerState as LoadingManagerStateInterface } from "src/framework/interfaces/LoadingManagerState";
+import { LoadingManagerStateChangeCallback } from "src/framework/types/LoadingManagerStateChangeCallback";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class LoadingManager implements LoadingManagerInterface {
   readonly backgroundItems: Map<Promise<any>, string>;

@@ -1,6 +1,6 @@
-import { LoadingManagerState } from "./LoadingManagerState";
-import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
-import { LoadingManagerStateChangeCallback } from "../types/LoadingManagerStateChangeCallback";
+import { LoadingManagerState } from "src/framework/interfaces/LoadingManagerState";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { LoadingManagerStateChangeCallback } from "src/framework/types/LoadingManagerStateChangeCallback";
 
 export interface LoadingManager {
   background<T>(promise: Promise<T>, comment?: string): Promise<T>;

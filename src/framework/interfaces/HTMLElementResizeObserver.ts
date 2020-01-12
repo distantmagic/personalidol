@@ -1,5 +1,5 @@
-import { Observer } from "./Observer";
-import { Resizeable } from "./Resizeable";
+import { Observer } from "src/framework/interfaces/Observer";
+import { Resizeable } from "src/framework/interfaces/Resizeable";
 
 export interface HTMLElementResizeObserver extends Observer {
   off(resizeable: Resizeable<"px">): void;

@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { Equatable } from "./Equatable";
+import { Equatable } from "src/framework/interfaces/Equatable";
 
 export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
   containsPoint(point: THREE.Vector3): boolean;

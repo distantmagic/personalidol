@@ -1,5 +1,5 @@
-import { ElementSize } from "./ElementSize";
-import { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { ElementSize } from "src/framework/interfaces/ElementSize";
+import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
 
 export interface Resizeable<Unit extends ElementPositionUnit> {
   resize(elementSize: ElementSize<Unit>): void;

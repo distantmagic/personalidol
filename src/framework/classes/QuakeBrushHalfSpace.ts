@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
-import isEqualWithEpsilon from "../helpers/isEqualWithEpsilon";
-import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
+import isEqualWithEpsilon from "src/framework/helpers/isEqualWithEpsilon";
+import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "src/framework/interfaces/QuakeBrushHalfSpace";
 
 export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface {
   readonly texture: string;

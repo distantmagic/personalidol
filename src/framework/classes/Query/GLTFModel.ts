@@ -1,7 +1,7 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { Query } from "../../interfaces/Query";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { Query } from "src/framework/interfaces/Query";
 
 type GLTFLoaderResponse = {
   scene: THREE.Scene;

@@ -1,7 +1,7 @@
-import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
+import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
-import { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { ElementSize as ElementSizeInterface } from "src/framework/interfaces/ElementSize";
+import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
 
 export default class ElementSize<Unit extends ElementPositionUnit> implements ElementSizeInterface<Unit> {
   readonly height: number;

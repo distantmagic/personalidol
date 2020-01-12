@@ -1,6 +1,6 @@
-import { CancelToken } from "../interfaces/CancelToken";
-import { EventListenerGenerator as EventListenerGeneratorInterface } from "../interfaces/EventListenerGenerator";
-import { EventListenerSet } from "../interfaces/EventListenerSet";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { EventListenerGenerator as EventListenerGeneratorInterface } from "src/framework/interfaces/EventListenerGenerator";
+import { EventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
 type GeneratorBuffer<Arguments> = Array<{
   isUtilized: boolean;

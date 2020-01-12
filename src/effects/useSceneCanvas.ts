@@ -1,15 +1,15 @@
 import * as React from "react";
 import * as THREE from "three";
 
-import CancelToken from "../framework/classes/CancelToken";
-import SceneCanvas from "../framework/classes/HTMLElement/SceneCanvas";
+import CancelToken from "src/framework/classes/CancelToken";
+import SceneCanvas from "src/framework/classes/HTMLElement/SceneCanvas";
 
-import { Debugger } from "../framework/interfaces/Debugger";
-import { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import { LoadingManager } from "../framework/interfaces/LoadingManager";
-import { Logger } from "../framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "../framework/interfaces/QueryBus";
+import { Debugger } from "src/framework/interfaces/Debugger";
+import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { LoadingManager } from "src/framework/interfaces/LoadingManager";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 export default function useSceneCanvas(
   debug: Debugger,

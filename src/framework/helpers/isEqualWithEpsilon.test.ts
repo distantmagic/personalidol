@@ -1,4 +1,4 @@
-import isEqualWithEpsilon from "./isEqualWithEpsilon";
+import isEqualWithEpsilon from "src/framework/helpers/isEqualWithEpsilon";
 
 test.each([
   [1.04, 1.0, 0.02, false],

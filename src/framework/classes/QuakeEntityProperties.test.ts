@@ -1,7 +1,7 @@
-import Exception from "./Exception";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QuakeEntityProperties from "./QuakeEntityProperties";
-import QuakeEntityProperty from "./QuakeEntityProperty";
+import Exception from "src/framework/classes/Exception";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QuakeEntityProperties from "src/framework/classes/QuakeEntityProperties";
+import QuakeEntityProperty from "src/framework/classes/QuakeEntityProperty";
 
 test("does not accept the same key more than once", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

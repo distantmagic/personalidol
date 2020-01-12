@@ -1,13 +1,13 @@
 import * as THREE from "three";
 
-import Canceled from "../Exception/CancelToken/Canceled";
-import CanvasView from "../CanvasView";
+import Canceled from "src/framework/classes/Exception/CancelToken/Canceled";
+import CanvasView from "src/framework/classes/CanvasView";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import { LoadingManager } from "../../interfaces/LoadingManager";
-import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerSounds } from "../../types/QuakeWorkerSounds";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { LoadingManager } from "src/framework/interfaces/LoadingManager";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeWorkerSounds } from "src/framework/types/QuakeWorkerSounds";
 
 export default class AmbientSound extends CanvasView {
   readonly audioListener: THREE.AudioListener;

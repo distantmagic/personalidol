@@ -1,7 +1,7 @@
-import MainLoop from "./MainLoop";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import Scheduler from "./Scheduler";
-import SingletonException from "./Exception/Singleton";
+import MainLoop from "src/framework/classes/MainLoop";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import Scheduler from "src/framework/classes/Scheduler";
+import SingletonException from "src/framework/classes/Exception/Singleton";
 
 function onBeforeAfter() {
   const mainLoop = MainLoop.getInstance();

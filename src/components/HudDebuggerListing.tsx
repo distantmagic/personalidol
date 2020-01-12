@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import HudDebuggerStateListingItem from "./HudDebuggerStateListingItem";
-import useDebuggerState from "../effects/useDebuggerState";
+import HudDebuggerStateListingItem from "src/components/HudDebuggerStateListingItem";
+import useDebuggerState from "src/effects/useDebuggerState";
 
-import { Debugger } from "../framework/interfaces/Debugger";
+import { Debugger } from "src/framework/interfaces/Debugger";
 
 type Props = {
   debug: Debugger;

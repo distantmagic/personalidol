@@ -1,12 +1,12 @@
 import * as THREE from "three";
 
-import { default as QuakeMapException } from "./Exception/QuakeMap";
-import { default as TextureQuery } from "./Query/Texture";
+import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
+import { default as TextureQuery } from "src/framework/classes/Query/Texture";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "../interfaces/QueryBus";
-import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../interfaces/QuakeMapTextureLoader";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
+import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "src/framework/interfaces/QuakeMapTextureLoader";
 
 export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInterface {
   readonly loadedTextures: Set<THREE.Texture>;

@@ -1,7 +1,7 @@
-import Command from "../Command";
+import Command from "src/framework/classes/Command";
 
-import { Message } from "../../interfaces/Perceivable/Message";
-import { Perceives } from "../../interfaces/Sentient/Perceives";
+import { Message } from "src/framework/interfaces/Perceivable/Message";
+import { Perceives } from "src/framework/interfaces/Sentient/Perceives";
 
 export default class HearMessage extends Command {
   private message: Message;

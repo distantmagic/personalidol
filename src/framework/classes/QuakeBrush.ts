@@ -1,16 +1,16 @@
 import * as THREE from "three";
 import uniq from "lodash/uniq";
 
-import combineWithoutRepetitions from "../helpers/combineWithoutRepetitions";
-import isArrayEqual from "../helpers/isArrayEqual";
-import QuakeBrushHalfSpaceTrio from "./QuakeBrushHalfSpaceTrio";
-import serializeVector3 from "../helpers/serializeVector3";
-import { default as QuakeBrushException } from "./Exception/QuakeBrush";
+import combineWithoutRepetitions from "src/framework/helpers/combineWithoutRepetitions";
+import isArrayEqual from "src/framework/helpers/isArrayEqual";
+import QuakeBrushHalfSpaceTrio from "src/framework/classes/QuakeBrushHalfSpaceTrio";
+import serializeVector3 from "src/framework/helpers/serializeVector3";
+import { default as QuakeBrushException } from "src/framework/classes/Exception/QuakeBrush";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
-import { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
-import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeBrush as QuakeBrushInterface } from "src/framework/interfaces/QuakeBrush";
+import { QuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
 export default class QuakeBrush implements QuakeBrushInterface {
   readonly halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>;

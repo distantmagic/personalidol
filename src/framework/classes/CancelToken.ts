@@ -1,12 +1,12 @@
-import Canceled from "./Exception/CancelToken/Canceled";
-import EventListenerSet from "./EventListenerSet";
-import Exception from "./Exception";
+import Canceled from "src/framework/classes/Exception/CancelToken/Canceled";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
+import Exception from "src/framework/classes/Exception";
 
-import { Canceled as CanceledInterface } from "../interfaces/Exception/Canceled";
-import { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
-import { CancelTokenCallback } from "../types/CancelTokenCallback";
-import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Canceled as CanceledInterface } from "src/framework/interfaces/Exception/Canceled";
+import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
+import { CancelTokenCallback } from "src/framework/types/CancelTokenCallback";
+import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class CancelToken implements CancelTokenInterface {
   private _isCanceled: boolean;

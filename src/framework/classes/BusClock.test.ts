@@ -1,6 +1,6 @@
-import BusClock from "./BusClock";
-import CancelToken from "./CancelToken";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import BusClock from "src/framework/classes/BusClock";
+import CancelToken from "src/framework/classes/CancelToken";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
 test("ticks", async function() {
   let ticks = 0;

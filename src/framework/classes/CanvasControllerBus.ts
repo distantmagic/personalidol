@@ -1,11 +1,11 @@
-import { default as CanvasControllerException } from "./Exception/CanvasController";
+import { default as CanvasControllerException } from "src/framework/classes/Exception/CanvasController";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { CanvasController } from "../interfaces/CanvasController";
-import { CanvasControllerBus as CanvasControllerBusInterface } from "../interfaces/CanvasControllerBus";
-import { HTMLElementResizeObserver } from "../interfaces/HTMLElementResizeObserver";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { Scheduler } from "../interfaces/Scheduler";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasController } from "src/framework/interfaces/CanvasController";
+import { CanvasControllerBus as CanvasControllerBusInterface } from "src/framework/interfaces/CanvasControllerBus";
+import { HTMLElementResizeObserver } from "src/framework/interfaces/HTMLElementResizeObserver";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { Scheduler } from "src/framework/interfaces/Scheduler";
 
 export default class CanvasControllerBus implements CanvasControllerBusInterface {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

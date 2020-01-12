@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import HudAsidePortrait from "./HudAsidePortrait";
+import HudAsidePortrait from "src/components/HudAsidePortrait";
 
-import imagePortraitArlance from "../assets/portrait-arlance.jpg";
-import imagePortraitMoore from "../assets/portrait-moore.jpg";
-import imagePortraitCircassia from "../assets/portrait-circassia.jpg";
+import imagePortraitArlance from "src/assets/portrait-arlance.jpg";
+import imagePortraitMoore from "src/assets/portrait-moore.jpg";
+import imagePortraitCircassia from "src/assets/portrait-circassia.jpg";
 
 type Props = {};
 

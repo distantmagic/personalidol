@@ -1,11 +1,11 @@
-import Exception from "./Exception";
-import isArrayEqual from "../helpers/isArrayEqual";
-import QuakePointParser from "./QuakePointParser";
+import Exception from "src/framework/classes/Exception";
+import isArrayEqual from "src/framework/helpers/isArrayEqual";
+import QuakePointParser from "src/framework/classes/QuakePointParser";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakeBrush } from "../interfaces/QuakeBrush";
-import { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
-import { QuakeEntityProperties } from "../interfaces/QuakeEntityProperties";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeBrush } from "src/framework/interfaces/QuakeBrush";
+import { QuakeEntity as QuakeEntityInterface } from "src/framework/interfaces/QuakeEntity";
+import { QuakeEntityProperties } from "src/framework/interfaces/QuakeEntityProperties";
 
 export default class QuakeEntity implements QuakeEntityInterface {
   readonly brushes: ReadonlyArray<QuakeBrush>;

@@ -1,4 +1,4 @@
-import dev from "./translations/dev.json";
+import dev from "src/lang/translations/dev.json";
 
 export default {
   dev: dev,

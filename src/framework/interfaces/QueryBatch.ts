@@ -1,5 +1,5 @@
-import { CancelTokenQuery } from "./CancelTokenQuery";
-import { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
+import { CancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
+import { QueryBusQueueCollection } from "src/framework/types/QueryBusQueueCollection";
 
 export interface QueryBatch {
   getCollection<T>(): QueryBusQueueCollection<T>;

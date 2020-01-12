@@ -1,14 +1,14 @@
 import autoBind from "auto-bind";
 
-import EventListenerSet from "./EventListenerSet";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
 
-import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import { MainLoopBeginCallback } from "../types/MainLoopBeginCallback";
-import { MainLoopDrawCallback } from "../types/MainLoopDrawCallback";
-import { MainLoopEndCallback } from "../types/MainLoopEndCallback";
-import { MainLoopUpdateCallback } from "../types/MainLoopUpdateCallback";
-import { Scheduler as SchedulerInterface } from "../interfaces/Scheduler";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
+import { MainLoopBeginCallback } from "src/framework/types/MainLoopBeginCallback";
+import { MainLoopDrawCallback } from "src/framework/types/MainLoopDrawCallback";
+import { MainLoopEndCallback } from "src/framework/types/MainLoopEndCallback";
+import { MainLoopUpdateCallback } from "src/framework/types/MainLoopUpdateCallback";
+import { Scheduler as SchedulerInterface } from "src/framework/interfaces/Scheduler";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class Scheduler implements SchedulerInterface {
   readonly beginCallbacks: EventListenerSetInterface<[number, number]>;

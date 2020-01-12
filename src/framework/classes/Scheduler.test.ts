@@ -1,5 +1,5 @@
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import Scheduler from "./Scheduler";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import Scheduler from "src/framework/classes/Scheduler";
 
 test("notifies: begin", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

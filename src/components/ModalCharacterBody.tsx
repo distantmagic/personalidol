@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import Character from "../framework/classes/Entity/Person/Character";
+import Character from "src/framework/classes/Entity/Person/Character";
 
 type Props = {
   character: Character;

@@ -3,18 +3,18 @@ import ReactDOM from "react-dom";
 import yn from "yn";
 import { HashRouter } from "react-router-dom";
 
-import * as serviceWorker from "./serviceWorker";
-import bootstrapFramework from "./framework/helpers/bootstrapFramework";
-import env from "./framework/helpers/env";
-import LoadingManager from "./framework/classes/LoadingManager";
-import Main from "./components/Main";
+import * as serviceWorker from "src/serviceWorker";
+import bootstrapFramework from "src/framework/helpers/bootstrapFramework";
+import env from "src/framework/helpers/env";
+import LoadingManager from "src/framework/classes/LoadingManager";
+import Main from "src/components/Main";
 
-import { ClockReactiveController } from "./framework/interfaces/ClockReactiveController";
-import { Debugger } from "./framework/interfaces/Debugger";
-import { ExceptionHandler } from "./framework/interfaces/ExceptionHandler";
-import { Logger } from "./framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "./framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "./framework/interfaces/QueryBus";
+import { ClockReactiveController } from "src/framework/interfaces/ClockReactiveController";
+import { Debugger } from "src/framework/interfaces/Debugger";
+import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 declare global {
   interface Window {

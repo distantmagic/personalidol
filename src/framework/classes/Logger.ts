@@ -1,6 +1,6 @@
-import { Logger as LoggerInterface } from "../interfaces/Logger";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { LogSeverityEnum } from "../types/LogSeverityEnum";
+import { Logger as LoggerInterface } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { LogSeverityEnum } from "src/framework/types/LogSeverityEnum";
 
 export default abstract class Logger implements LoggerInterface {
   abstract emergency(breadcrumbs: LoggerBreadcrumbs, message: string): Promise<void>;

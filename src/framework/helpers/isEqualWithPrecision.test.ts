@@ -1,4 +1,4 @@
-import isEqualWithPrecision from "./isEqualWithPrecision";
+import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
 test.each([
   [1.004, 1.005, 3, false],

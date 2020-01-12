@@ -1,6 +1,6 @@
-import { JSONRPCMessageType } from "../types/JSONRPCMessageType";
-import { JSONRPCResponse as JSONRPCResponseInterface } from "../interfaces/JSONRPCResponse";
-import { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
+import { JSONRPCMessageType } from "src/framework/types/JSONRPCMessageType";
+import { JSONRPCResponse as JSONRPCResponseInterface } from "src/framework/interfaces/JSONRPCResponse";
+import { JSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
 export default abstract class JSONRPCResponse<T, U extends Object> implements JSONRPCResponseInterface<T, U> {
   readonly data: JSONRPCResponseData<T>;

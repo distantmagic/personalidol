@@ -1,5 +1,5 @@
-import { Logger } from "./Logger";
-import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export interface ExceptionHandler {
   /**

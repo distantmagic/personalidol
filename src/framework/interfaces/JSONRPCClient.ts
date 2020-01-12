@@ -1,12 +1,12 @@
-import { CancelToken } from "../interfaces/CancelToken";
-import { JSONRPCErrorResponse } from "../interfaces/JSONRPCErrorResponse";
-import { JSONRPCGeneratorChunkResponse } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCParams } from "../types/JSONRPCParams";
-import { JSONRPCRequest } from "./JSONRPCRequest";
-import { JSONRPCPromiseResponse } from "../interfaces/JSONRPCPromiseResponse";
-import { JSONRPCErrorResponseObjectified } from "../types/JSONRPCErrorResponseObjectified";
-import { JSONRPCGeneratorChunkResponseObjectified } from "../types/JSONRPCGeneratorChunkResponseObjectified";
-import { JSONRPCPromiseResponseObjectified } from "../types/JSONRPCPromiseResponseObjectified";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { JSONRPCErrorResponse } from "src/framework/interfaces/JSONRPCErrorResponse";
+import { JSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { JSONRPCParams } from "src/framework/types/JSONRPCParams";
+import { JSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
+import { JSONRPCPromiseResponse } from "src/framework/interfaces/JSONRPCPromiseResponse";
+import { JSONRPCErrorResponseObjectified } from "src/framework/types/JSONRPCErrorResponseObjectified";
+import { JSONRPCGeneratorChunkResponseObjectified } from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
+import { JSONRPCPromiseResponseObjectified } from "src/framework/types/JSONRPCPromiseResponseObjectified";
 
 export interface JSONRPCClient {
   handleErrorResponse<T>(response: JSONRPCErrorResponse<T>): Promise<void>;

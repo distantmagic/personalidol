@@ -1,12 +1,12 @@
 import * as THREE from "three";
 
-import { default as JSONRPCGeneratorChunkResponse } from "./JSONRPCResponse/GeneratorChunk";
+import { default as JSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 
-import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
-import { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
-import { JSONRPCServerGeneratorBuffer as JSONRPCServerGeneratorBufferInterface } from "../interfaces/JSONRPCServerGeneratorBuffer";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { JSONRPCRequest as JSONRPCRequestInterface } from "src/framework/interfaces/JSONRPCRequest";
+import { JSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
+import { JSONRPCServerGeneratorBuffer as JSONRPCServerGeneratorBufferInterface } from "src/framework/interfaces/JSONRPCServerGeneratorBuffer";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 type OnMessageReadyCallback<T> = (response: JSONRPCGeneratorChunkResponseInterface<T>) => any;
 

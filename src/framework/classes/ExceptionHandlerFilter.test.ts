@@ -1,7 +1,7 @@
-import ExceptionHandler from "./ExceptionHandler";
-import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
-import Logger from "./Logger";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import ExceptionHandler from "src/framework/classes/ExceptionHandler";
+import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
+import Logger from "src/framework/classes/Logger";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
 class FooExceptionHandlerFilter extends ExceptionHandlerFilter {
   isCapturable(error: Error): boolean {

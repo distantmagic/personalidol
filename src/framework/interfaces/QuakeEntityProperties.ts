@@ -1,5 +1,5 @@
-import { Equatable } from "./Equatable";
-import { QuakeEntityProperty } from "./QuakeEntityProperty";
+import { Equatable } from "src/framework/interfaces/Equatable";
+import { QuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
 
 export interface QuakeEntityProperties extends Equatable<QuakeEntityProperties> {
   getProperties(): ReadonlyArray<QuakeEntityProperty>;

@@ -1,7 +1,7 @@
-import { default as QuakeMapException } from "./Exception/QuakeMap";
+import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakeEntityProperty as QuakeEntityPropertyInterface } from "../interfaces/QuakeEntityProperty";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeEntityProperty as QuakeEntityPropertyInterface } from "src/framework/interfaces/QuakeEntityProperty";
 
 export default class QuakeEntityProperty implements QuakeEntityPropertyInterface {
   readonly key: string;

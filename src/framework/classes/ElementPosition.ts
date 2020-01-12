@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
-import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
+import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
-import { ElementPositionUnit } from "../types/ElementPositionUnit";
+import { ElementPosition as ElementPositionInterface } from "src/framework/interfaces/ElementPosition";
+import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
 
 export default class ElementPosition<Unit extends ElementPositionUnit> implements ElementPositionInterface<Unit> {
   readonly vector: THREE.Vector3;

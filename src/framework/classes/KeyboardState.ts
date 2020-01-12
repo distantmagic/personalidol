@@ -1,10 +1,10 @@
 import autoBind from "auto-bind";
 
-import Idempotence from "../classes/Exception/Idempotence";
+import Idempotence from "src/framework/classes/Exception/Idempotence";
 
-import { KeyboardButtonNames } from "../types/KeyboardButtonNames";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { KeyboardState as KeyboardStateInterface } from "../interfaces/KeyboardState";
+import { KeyboardButtonNames } from "src/framework/types/KeyboardButtonNames";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { KeyboardState as KeyboardStateInterface } from "src/framework/interfaces/KeyboardState";
 
 export default class KeyboardState implements KeyboardStateInterface {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

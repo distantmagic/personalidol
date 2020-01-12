@@ -1,9 +1,9 @@
-import CancelToken from "./CancelToken";
-import ExceptionHandler from "./ExceptionHandler";
-import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
-import LoadingManager from "./LoadingManager";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import { default as ConsoleLogger } from "./Logger/Console";
+import CancelToken from "src/framework/classes/CancelToken";
+import ExceptionHandler from "src/framework/classes/ExceptionHandler";
+import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
+import LoadingManager from "src/framework/classes/LoadingManager";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import { default as ConsoleLogger } from "src/framework/classes/Logger/Console";
 
 test("determines whether loading is blocking or not", async function() {
   const logger = new ConsoleLogger();

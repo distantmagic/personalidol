@@ -1,10 +1,10 @@
-import CancelToken from "./CancelToken";
-import JSONRPCRequest from "./JSONRPCRequest";
-import JSONRPCResponseData from "./JSONRPCResponseData";
-import JSONRPCServer from "./JSONRPCServer";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import { default as JSONRPCErrorResponse, unobjectify as unobjectifyJSONRPCErrorResponse } from "./JSONRPCResponse/Error";
-import { default as JSONRPCGeneratorChunkResponse, unobjectify as unobjectifyJSONRPCGeneratorChunkResponse } from "./JSONRPCResponse/GeneratorChunk";
+import CancelToken from "src/framework/classes/CancelToken";
+import JSONRPCRequest from "src/framework/classes/JSONRPCRequest";
+import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
+import JSONRPCServer from "src/framework/classes/JSONRPCServer";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import { default as JSONRPCErrorResponse, unobjectify as unobjectifyJSONRPCErrorResponse } from "src/framework/classes/JSONRPCResponse/Error";
+import { default as JSONRPCGeneratorChunkResponse, unobjectify as unobjectifyJSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 
 test("incoming requests are processed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

@@ -1,9 +1,9 @@
 import autoBind from "auto-bind";
 
-import { CancelTokenQuery } from "../interfaces/CancelTokenQuery";
-import { ExceptionHandler } from "../interfaces/ExceptionHandler";
-import { QueryBatch as QueryBatchInterface } from "../interfaces/QueryBatch";
-import { QueryBusQueueCollection } from "../types/QueryBusQueueCollection";
+import { CancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
+import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { QueryBatch as QueryBatchInterface } from "src/framework/interfaces/QueryBatch";
+import { QueryBusQueueCollection } from "src/framework/types/QueryBusQueueCollection";
 
 function checkIsQueryInferable<T>(element: CancelTokenQuery<T>): (cancelTokenQuery: CancelTokenQuery<T>) => boolean {
   return function(other: CancelTokenQuery<any>) {

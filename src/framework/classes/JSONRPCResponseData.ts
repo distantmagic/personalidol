@@ -1,4 +1,4 @@
-import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../interfaces/JSONRPCResponseData";
+import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "src/framework/interfaces/JSONRPCResponseData";
 
 export default class JSONRPCResponseData<T> implements JSONRPCResponseDataInterface<T> {
   readonly result: T;

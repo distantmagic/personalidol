@@ -1,9 +1,9 @@
-import Exception from "./Exception";
-import isArrayEqual from "../helpers/isArrayEqual";
+import Exception from "src/framework/classes/Exception";
+import isArrayEqual from "src/framework/helpers/isArrayEqual";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
-import { QuakeEntityProperties as QuakeEntityPropertiesInterface } from "../interfaces/QuakeEntityProperties";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
+import { QuakeEntityProperties as QuakeEntityPropertiesInterface } from "src/framework/interfaces/QuakeEntityProperties";
 
 export default class QuakeEntityProperties implements QuakeEntityPropertiesInterface {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

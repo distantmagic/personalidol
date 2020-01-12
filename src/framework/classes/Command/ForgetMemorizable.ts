@@ -1,7 +1,7 @@
-import Command from "../Command";
+import Command from "src/framework/classes/Command";
 
-import { Memorizable } from "../../interfaces/Memorizable";
-import { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
+import { Memorizable } from "src/framework/interfaces/Memorizable";
+import { Memorizes } from "src/framework/interfaces/Sentient/Perceives/Memorizes";
 
 export default class ForgetMemorizable extends Command {
   private memorizes: Memorizes;

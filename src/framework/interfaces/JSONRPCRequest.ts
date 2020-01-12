@@ -1,6 +1,6 @@
-import { JSONRPCMessage } from "./JSONRPCMessage";
-import { JSONRPCParams } from "../types/JSONRPCParams";
-import { JSONRPCRequestObjectified } from "../types/JSONRPCRequestObjectified";
+import { JSONRPCMessage } from "src/framework/interfaces/JSONRPCMessage";
+import { JSONRPCParams } from "src/framework/types/JSONRPCParams";
+import { JSONRPCRequestObjectified } from "src/framework/types/JSONRPCRequestObjectified";
 
 export interface JSONRPCRequest extends JSONRPCMessage<JSONRPCRequestObjectified> {
   getParams(): JSONRPCParams;

@@ -1,5 +1,5 @@
-import { BusClockCallback } from "../types/BusClockCallback";
-import { CancelToken } from "../interfaces/CancelToken";
+import { BusClockCallback } from "src/framework/types/BusClockCallback";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
 
 export interface BusClock {
   interval(cancelToken: CancelToken, busClockCallback: BusClockCallback): Promise<void>;

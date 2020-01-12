@@ -1,23 +1,23 @@
 import * as React from "react";
 import classnames from "classnames";
 
-import HudAside from "./HudAside";
-import HudDebuggerListing from "./HudDebuggerListing";
-import HudScene from "./HudScene";
-import HudSettings from "./HudSettings";
-import ModalRouter from "./ModalRouter";
-import useClockReactiveController from "../effects/useClockReactiveController";
-import useIsDocumentHidden from "../effects/useIsDocumentHidden";
+import HudAside from "src/components/HudAside";
+import HudDebuggerListing from "src/components/HudDebuggerListing";
+import HudScene from "src/components/HudScene";
+import HudSettings from "src/components/HudSettings";
+import ModalRouter from "src/components/ModalRouter";
+import useClockReactiveController from "src/effects/useClockReactiveController";
+import useIsDocumentHidden from "src/effects/useIsDocumentHidden";
 
-import "../scss/index.scss";
+import "src/scss/index.scss";
 
-import { ClockReactiveController } from "../framework/interfaces/ClockReactiveController";
-import { Debugger } from "../framework/interfaces/Debugger";
-import { ExceptionHandler } from "../framework/interfaces/ExceptionHandler";
-import { LoadingManager } from "../framework/interfaces/LoadingManager";
-import { Logger } from "../framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "../framework/interfaces/QueryBus";
+import { ClockReactiveController } from "src/framework/interfaces/ClockReactiveController";
+import { Debugger } from "src/framework/interfaces/Debugger";
+import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { LoadingManager } from "src/framework/interfaces/LoadingManager";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 type Props = {
   clockReactiveController: ClockReactiveController;

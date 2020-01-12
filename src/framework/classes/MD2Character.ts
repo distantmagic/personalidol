@@ -6,13 +6,13 @@ import * as THREE from "three";
 import { MD2Loader } from "three/examples/jsm/loaders/MD2Loader";
 import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
-import disposeObject3D from "../helpers/disposeObject3D";
-import disposeTexture from "../helpers/disposeTexture";
+import disposeObject3D from "src/framework/helpers/disposeObject3D";
+import disposeTexture from "src/framework/helpers/disposeTexture";
 
-import { MD2Character as MD2CharacterInterface } from "../interfaces/MD2Character";
-import { MD2CharacterAnimations } from "../types/MD2CharacterAnimations";
-import { MD2CharacterConfig } from "../types/MD2CharacterConfig";
-import { MD2CharacterControls } from "../types/MD2CharacterControls";
+import { MD2Character as MD2CharacterInterface } from "src/framework/interfaces/MD2Character";
+import { MD2CharacterAnimations } from "src/framework/types/MD2CharacterAnimations";
+import { MD2CharacterConfig } from "src/framework/types/MD2CharacterConfig";
+import { MD2CharacterControls } from "src/framework/types/MD2CharacterControls";
 
 function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: THREE.LoadingManager, textureUrls: ReadonlyArray<string>): THREE.Texture[] {
   const textureLoader = new THREE.TextureLoader(loadingManager);

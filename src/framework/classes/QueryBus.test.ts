@@ -1,12 +1,12 @@
-import CancelToken from "./CancelToken";
-import ExceptionHandler from "./ExceptionHandler";
-import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
-import Logger from "./Logger";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QueryBus from "./QueryBus";
+import CancelToken from "src/framework/classes/CancelToken";
+import ExceptionHandler from "src/framework/classes/ExceptionHandler";
+import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
+import Logger from "src/framework/classes/Logger";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QueryBus from "src/framework/classes/QueryBus";
 
-import { CancelToken as CancelTokenInterface } from "../interfaces/CancelToken";
-import { Query } from "../interfaces/Query";
+import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
+import { Query } from "src/framework/interfaces/Query";
 
 type Total = {
   executed: number;

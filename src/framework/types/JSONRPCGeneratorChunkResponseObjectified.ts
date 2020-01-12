@@ -1,4 +1,4 @@
-import { JSONRPCVersion } from "./JSONRPCVersion";
+import { JSONRPCVersion } from "src/framework/types/JSONRPCVersion";
 
 export type JSONRPCGeneratorChunkResponseObjectified<T> = {
   readonly chunk: string;

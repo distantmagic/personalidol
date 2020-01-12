@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-import disposeObject3D from "../helpers/disposeObject3D";
+import disposeObject3D from "src/framework/helpers/disposeObject3D";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { CanvasView as CanvasViewInterface } from "../interfaces/CanvasView";
-import { CanvasViewBag } from "../interfaces/CanvasViewBag";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasView as CanvasViewInterface } from "src/framework/interfaces/CanvasView";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 export default abstract class CanvasView implements CanvasViewInterface {
   readonly canvasViewBag: CanvasViewBag;

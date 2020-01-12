@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import filter from "lodash/filter";
 
-import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
+import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakePointParser as QuakePointParserInterface } from "../interfaces/QuakePointParser";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakePointParser as QuakePointParserInterface } from "src/framework/interfaces/QuakePointParser";
 
 const REGEXP_WHITESPACE = /\s+/;
 

@@ -1,19 +1,19 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import CanvasView from "../CanvasView";
-import { default as MD2CharacterQuery } from "../Query/MD2Character";
-import { default as QuakeMapException } from "../Exception/QuakeMap";
-import { default as RemoteJSONQuery } from "../Query/RemoteJSON";
-import { default as THREEMD2Character } from "../MD2Character";
+import CanvasView from "src/framework/classes/CanvasView";
+import { default as MD2CharacterQuery } from "src/framework/classes/Query/MD2Character";
+import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
+import { default as RemoteJSONQuery } from "src/framework/classes/Query/RemoteJSON";
+import { default as THREEMD2Character } from "src/framework/classes/MD2Character";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
-import { MD2CharacterConfig } from "../../types/MD2CharacterConfig";
-import { QuakeWorkerMD2Model } from "../../types/QuakeWorkerMD2Model";
-import { QueryBus } from "../../interfaces/QueryBus";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { MD2Character as THREEMD2CharacterInterface } from "src/framework/interfaces/MD2Character";
+import { MD2CharacterConfig } from "src/framework/types/MD2CharacterConfig";
+import { QuakeWorkerMD2Model } from "src/framework/types/QuakeWorkerMD2Model";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 export default class MD2Character extends CanvasView {
   readonly angle: number;
@@ -37,7 +37,7 @@ export default class MD2Character extends CanvasView {
     threeLoadingManager: THREE.LoadingManager,
     baseUrl: string,
     animationOffset: number,
-    entity: QuakeWorkerMD2Model,
+    entity: QuakeWorkerMD2Model
   ) {
     super(canvasViewBag);
     autoBind(this);

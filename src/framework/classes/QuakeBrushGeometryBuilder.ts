@@ -2,11 +2,11 @@ import * as THREE from "three";
 
 import { ConvexHull, Face } from "three/examples/jsm/math/ConvexHull";
 
-import quake2three from "../helpers/quake2three";
-import three2quake from "../helpers/three2quake";
+import quake2three from "src/framework/helpers/quake2three";
+import three2quake from "src/framework/helpers/three2quake";
 
-import { QuakeBrush } from "../interfaces/QuakeBrush";
-import { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
+import { QuakeBrush } from "src/framework/interfaces/QuakeBrush";
+import { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "src/framework/interfaces/QuakeBrushGeometryBuilder";
 
 const TEXTURE_SIZE = 128;
 

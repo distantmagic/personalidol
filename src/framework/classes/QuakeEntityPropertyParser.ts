@@ -1,9 +1,9 @@
-import QuakeEntityProperty from "./QuakeEntityProperty";
-import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
+import QuakeEntityProperty from "src/framework/classes/QuakeEntityProperty";
+import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakeEntityProperty as QuakeEntityPropertyInterface } from "../interfaces/QuakeEntityProperty";
-import { QuakeEntityPropertyParser as QuakeEntityPropertyParserInterface } from "../interfaces/QuakeEntityPropertyParser";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeEntityProperty as QuakeEntityPropertyInterface } from "src/framework/interfaces/QuakeEntityProperty";
+import { QuakeEntityPropertyParser as QuakeEntityPropertyParserInterface } from "src/framework/interfaces/QuakeEntityPropertyParser";
 
 export default class QuakeEntityPropertyParser implements QuakeEntityPropertyParserInterface {
   readonly line: string;

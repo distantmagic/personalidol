@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-import CanvasView from "../CanvasView";
-import disposeObject3D from "../../helpers/disposeObject3D";
+import CanvasView from "src/framework/classes/CanvasView";
+import disposeObject3D from "src/framework/helpers/disposeObject3D";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 export default class THREEHelpers extends CanvasView {
   readonly scene: THREE.Scene;

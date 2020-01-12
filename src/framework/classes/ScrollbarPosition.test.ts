@@ -1,4 +1,4 @@
-import ScrollbarPosition from "../classes/ScrollbarPosition";
+import ScrollbarPosition from "src/framework/classes/ScrollbarPosition";
 
 test("orients scroll position", function() {
   const scrollbar = new ScrollbarPosition(1000, 200, 75, 500);

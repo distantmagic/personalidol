@@ -1,11 +1,11 @@
-import BusClock from "./BusClock";
-import CancelToken from "./CancelToken";
-import ClockReactiveController from "./ClockReactiveController";
-import ExceptionHandler from "./ExceptionHandler";
-import ExceptionHandlerFilter from "./ExceptionHandlerFilter";
-import Logger from "./Logger";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QueryBus from "./QueryBus";
+import BusClock from "src/framework/classes/BusClock";
+import CancelToken from "src/framework/classes/CancelToken";
+import ClockReactiveController from "src/framework/classes/ClockReactiveController";
+import ExceptionHandler from "src/framework/classes/ExceptionHandler";
+import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
+import Logger from "src/framework/classes/Logger";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QueryBus from "src/framework/classes/QueryBus";
 
 test("supports cancel token", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

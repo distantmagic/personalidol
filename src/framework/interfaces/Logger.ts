@@ -1,5 +1,5 @@
-import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
-import { LogSeverityEnum } from "../types/LogSeverityEnum";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { LogSeverityEnum } from "src/framework/types/LogSeverityEnum";
 
 export interface Logger {
   /**

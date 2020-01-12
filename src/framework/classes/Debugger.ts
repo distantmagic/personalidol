@@ -1,13 +1,13 @@
 import { Map } from "immutable";
 
-import EventListenerSet from "./EventListenerSet";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
 
-import { Debugger as DebuggerInterface } from "../interfaces/Debugger";
-import { DebuggerState } from "../types/DebuggerState";
-import { DebuggerStateChangeCallback } from "../types/DebuggerStateChangeCallback";
-import { DebuggerStateValue } from "../types/DebuggerStateValue";
-import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { Debugger as DebuggerInterface } from "src/framework/interfaces/Debugger";
+import { DebuggerState } from "src/framework/types/DebuggerState";
+import { DebuggerStateChangeCallback } from "src/framework/types/DebuggerStateChangeCallback";
+import { DebuggerStateValue } from "src/framework/types/DebuggerStateValue";
+import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class Debugger implements DebuggerInterface {
   private _isEnabled: boolean;

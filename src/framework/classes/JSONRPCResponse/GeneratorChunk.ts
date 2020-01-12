@@ -1,12 +1,12 @@
-import JSONRPCResponse from "../JSONRPCResponse";
-import JSONRPCResponseData from "../JSONRPCResponseData";
-import { default as JSONRPCException } from "../Exception/JSONRPC";
+import JSONRPCResponse from "src/framework/classes/JSONRPCResponse";
+import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
+import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
-import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../../interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCGeneratorChunkResponseObjectified } from "../../types/JSONRPCGeneratorChunkResponseObjectified";
-import { JSONRPCMessageType } from "../../types/JSONRPCMessageType";
-import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "../../interfaces/JSONRPCResponseData";
-import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { JSONRPCGeneratorChunkResponseObjectified } from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
+import { JSONRPCMessageType } from "src/framework/types/JSONRPCMessageType";
+import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "src/framework/interfaces/JSONRPCResponseData";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCGeneratorChunkResponseObjectified<T>): JSONRPCGeneratorChunkResponseInterface<T> {
   return new JSONRPCGeneratorChunkResponse<T>(

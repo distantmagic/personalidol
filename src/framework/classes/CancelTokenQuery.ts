@@ -1,12 +1,12 @@
-import CancelTokenException from "./Exception/CancelToken";
-import canCompare from "../helpers/canCompare";
-import EventListenerSet from "./EventListenerSet";
+import CancelTokenException from "src/framework/classes/Exception/CancelToken";
+import canCompare from "src/framework/helpers/canCompare";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { CancelTokenQuery as CancelTokenQueryInterface } from "../interfaces/CancelTokenQuery";
-import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { Query } from "../interfaces/Query";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CancelTokenQuery as CancelTokenQueryInterface } from "src/framework/interfaces/CancelTokenQuery";
+import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { Query } from "src/framework/interfaces/Query";
 
 export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T> {
   private _isExecuted: boolean = false;

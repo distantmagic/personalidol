@@ -1,5 +1,5 @@
-import { CancelToken } from "./CancelToken";
-import { Query } from "./Query";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { Query } from "src/framework/interfaces/Query";
 
 export interface CancelTokenQuery<T> {
   // constructor(cancelToken: CancelToken, query: Query<T>): void;

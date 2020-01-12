@@ -12,7 +12,7 @@
     "mainloop.js": "^1.0.4",
     "mathjs": "^6.5.0",
     "modernizr": "^3.8.0",
-    "partykals": "github:RonenNess/partykals",
+    "partykals": "^1.0.1",
     "raf": "^3.4.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -63,7 +63,6 @@
   "scripts": {
     "build": "react-scripts build",
     "modernizr": "./node_modules/.bin/modernizr -c ./modernizr.json -d ./public/vendor -u",
-    "postinstall": "$npm_execpath run modernizr",
     "prettier": "./node_modules/.bin/prettier --write \"./{public,src}/**/*.{htm,html,js,scss,ts,tsx}\"",
     "start": "PORT=9023 react-scripts start",
     "test": "react-scripts test --env=jsdom",

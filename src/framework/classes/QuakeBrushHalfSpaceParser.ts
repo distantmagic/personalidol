@@ -1,10 +1,10 @@
-import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
-import QuakePointParser from "./QuakePointParser";
-import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
+import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";
+import QuakePointParser from "src/framework/classes/QuakePointParser";
+import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
-import { QuakeBrushHalfSpaceParser as QuakeBrushHalfSpaceParserInterface } from "../interfaces/QuakeBrushHalfSpaceParser";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpaceParser as QuakeBrushHalfSpaceParserInterface } from "src/framework/interfaces/QuakeBrushHalfSpaceParser";
 
 const REGEXP_WHITESPACE = /\s+/;
 

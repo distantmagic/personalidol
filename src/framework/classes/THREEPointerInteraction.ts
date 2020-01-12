@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import { THREEPointerInteraction as THREEPointerInteractionInterface } from "../interfaces/THREEPointerInteraction";
-import { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
+import { THREEPointerInteraction as THREEPointerInteractionInterface } from "src/framework/interfaces/THREEPointerInteraction";
+import { ElementSize as ElementSizeInterface } from "src/framework/interfaces/ElementSize";
 
 export default class THREEPointerInteraction implements THREEPointerInteractionInterface {
   readonly camera: THREE.Camera;

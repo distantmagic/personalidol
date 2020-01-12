@@ -1,4 +1,4 @@
-import ElementRotation from "./ElementRotation";
+import ElementRotation from "src/framework/classes/ElementRotation";
 
 test("is comparable with other element rotations", function() {
   const elementRotation1 = new ElementRotation(10, 10, 5);

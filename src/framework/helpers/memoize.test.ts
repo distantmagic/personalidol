@@ -1,4 +1,4 @@
-import memoize from "./memoize";
+import memoize from "src/framework/helpers/memoize";
 
 test("calls function only when required variables change", function() {
   const mockCallback = jest.fn();

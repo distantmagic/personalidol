@@ -1,9 +1,9 @@
 import autoBind from "auto-bind";
 
-import { ExceptionHandler as ExceptionHandlerInterface } from "../interfaces/ExceptionHandler";
-import { ExceptionHandlerFilter } from "../interfaces/ExceptionHandlerFilter";
-import { Logger } from "../interfaces/Logger";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { ExceptionHandler as ExceptionHandlerInterface } from "src/framework/interfaces/ExceptionHandler";
+import { ExceptionHandlerFilter } from "src/framework/interfaces/ExceptionHandlerFilter";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class ExceptionHandler implements ExceptionHandlerInterface {
   readonly exceptionHandlerFilter: ExceptionHandlerFilter;

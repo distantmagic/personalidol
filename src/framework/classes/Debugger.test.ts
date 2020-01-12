@@ -1,5 +1,5 @@
-import Debugger from "./Debugger";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import Debugger from "src/framework/classes/Debugger";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
 test("can be turned on and off", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

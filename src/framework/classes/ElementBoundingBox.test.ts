@@ -1,7 +1,7 @@
-import ElementBoundingBox from "./ElementBoundingBox";
-import ElementPosition from "./ElementPosition";
-import ElementSize from "./ElementSize";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import ElementBoundingBox from "src/framework/classes/ElementBoundingBox";
+import ElementPosition from "src/framework/classes/ElementPosition";
+import ElementSize from "src/framework/classes/ElementSize";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
 test("stores element coordinates", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

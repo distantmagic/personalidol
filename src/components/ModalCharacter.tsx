@@ -2,16 +2,16 @@ import * as React from "react";
 import upperFirst from "lodash/upperFirst";
 import { NavLink, Route, Switch } from "react-router-dom";
 
-import Character from "../framework/classes/Entity/Person/Character";
-import ModalCharacterBiography from "./ModalCharacterBiography";
-import ModalCharacterBody from "./ModalCharacterBody";
-import ModalCharacterSoul from "./ModalCharacterSoul";
-import ModalLoader from "./ModalLoader";
-import ModalToolbar from "./ModalToolbar";
+import Character from "src/framework/classes/Entity/Person/Character";
+import ModalCharacterBiography from "src/components/ModalCharacterBiography";
+import ModalCharacterBody from "src/components/ModalCharacterBody";
+import ModalCharacterSoul from "src/components/ModalCharacterSoul";
+import ModalLoader from "src/components/ModalLoader";
+import ModalToolbar from "src/components/ModalToolbar";
 
-import imagePortraitArlance from "../assets/portrait-arlance.jpg";
-import imagePortraitMoore from "../assets/portrait-moore.jpg";
-import imagePortraitCircassia from "../assets/portrait-circassia.jpg";
+import imagePortraitArlance from "src/assets/portrait-arlance.jpg";
+import imagePortraitMoore from "src/assets/portrait-moore.jpg";
+import imagePortraitCircassia from "src/assets/portrait-circassia.jpg";
 
 type Props = {
   character: Character;

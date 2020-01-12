@@ -1,7 +1,7 @@
-import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
+import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { ElementRotation as ElementRotationInterface } from "../interfaces/ElementRotation";
-import { ElementRotationUnit } from "../types/ElementRotationUnit";
+import { ElementRotation as ElementRotationInterface } from "src/framework/interfaces/ElementRotation";
+import { ElementRotationUnit } from "src/framework/types/ElementRotationUnit";
 
 export default class ElementRotation<Unit extends ElementRotationUnit> implements ElementRotationInterface<Unit> {
   readonly x: number;

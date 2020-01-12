@@ -2,7 +2,7 @@ import * as React from "react";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 
-import HudAsidePortraitIcon from "./HudAsidePortraitIcon";
+import HudAsidePortraitIcon from "src/components/HudAsidePortraitIcon";
 
 type Props = {
   isActive: boolean;

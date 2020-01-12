@@ -1,7 +1,7 @@
-import ElementPosition from "./ElementPosition";
-import ElementPositionCollection from "./ElementPositionCollection";
-import ElementSize from "./ElementSize";
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
+import ElementPosition from "src/framework/classes/ElementPosition";
+import ElementPositionCollection from "src/framework/classes/ElementPositionCollection";
+import ElementSize from "src/framework/classes/ElementSize";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
 test("finds bounding box", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

@@ -1,3 +1,3 @@
-import { Equatable } from "./Equatable";
+import { Equatable } from "src/framework/interfaces/Equatable";
 
 export interface Sentient {}

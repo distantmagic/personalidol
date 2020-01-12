@@ -1,6 +1,6 @@
-import { BusClock as BusClockInterface } from "../interfaces/BusClock";
-import { BusClockCallback } from "../types/BusClockCallback";
-import { CancelToken } from "../interfaces/CancelToken";
+import { BusClock as BusClockInterface } from "src/framework/interfaces/BusClock";
+import { BusClockCallback } from "src/framework/types/BusClockCallback";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
 
 export default class BusClock implements BusClockInterface {
   private delay: number;

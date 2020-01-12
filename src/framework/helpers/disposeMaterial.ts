@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import disposeTexture from "./disposeTexture";
+import disposeTexture from "src/framework/helpers/disposeTexture";
 
 function doDisposeMaterial<T extends THREE.Material>(material: T, disposeTextures: boolean): void {
   if (disposeTextures) {

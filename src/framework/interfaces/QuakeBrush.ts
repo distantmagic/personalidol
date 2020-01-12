@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
-import { Equatable } from "./Equatable";
-import { QuakeBrushHalfSpace } from "./QuakeBrushHalfSpace";
-import { QuakeBrushHalfSpaceTrio } from "./QuakeBrushHalfSpaceTrio";
+import { Equatable } from "src/framework/interfaces/Equatable";
+import { QuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { QuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
 export interface QuakeBrush extends Equatable<QuakeBrush> {
   generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrio, void, void>;

@@ -1,4 +1,4 @@
-import ElementPosition from "./ElementPosition";
+import ElementPosition from "src/framework/classes/ElementPosition";
 
 test("calculates distance to other element position", function() {
   const elementPosition1 = new ElementPosition(10, 10, 5);

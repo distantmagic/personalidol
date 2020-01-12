@@ -2,35 +2,35 @@ import * as THREE from "three";
 import groupBy from "lodash/groupBy";
 import uniqBy from "lodash/uniqBy";
 
-import CanvasView from "../CanvasView";
-import JSONRPCClient from "../JSONRPCClient";
-import { default as AmbientLightView } from "./AmbientLight";
-import { default as AmbientSoundView } from "./AmbientSound";
-import { default as GLTFModelView } from "./GLTFModel";
-import { default as HemisphereLightView } from "./HemisphereLight";
-import { default as MD2CharacterView } from "./MD2Character";
-import { default as ParticlesView } from "./Particles";
-import { default as PlayerView } from "./Player";
-import { default as PointLightView } from "./PointLight";
-import { default as QuakeBrushView } from "./QuakeBrush";
-import { default as QuakeMapException } from "../Exception/QuakeMap";
-import { default as SpotLightView } from "./SpotLight";
+import CanvasView from "src/framework/classes/CanvasView";
+import JSONRPCClient from "src/framework/classes/JSONRPCClient";
+import { default as AmbientLightView } from "src/framework/classes/CanvasView/AmbientLight";
+import { default as AmbientSoundView } from "src/framework/classes/CanvasView/AmbientSound";
+import { default as GLTFModelView } from "src/framework/classes/CanvasView/GLTFModel";
+import { default as HemisphereLightView } from "src/framework/classes/CanvasView/HemisphereLight";
+import { default as MD2CharacterView } from "src/framework/classes/CanvasView/MD2Character";
+import { default as ParticlesView } from "src/framework/classes/CanvasView/Particles";
+import { default as PlayerView } from "src/framework/classes/CanvasView/Player";
+import { default as PointLightView } from "src/framework/classes/CanvasView/PointLight";
+import { default as QuakeBrushView } from "src/framework/classes/CanvasView/QuakeBrush";
+import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
+import { default as SpotLightView } from "src/framework/classes/CanvasView/SpotLight";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import { JSONRPCClient as JSONRPCClientInterface } from "../../interfaces/JSONRPCClient";
-import { LoadingManager } from "../../interfaces/LoadingManager";
-import { Logger } from "../../interfaces/Logger";
-import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerAny } from "../../types/QuakeWorkerAny";
-import { QuakeWorkerGLTFModel } from "../../types/QuakeWorkerGLTFModel";
-import { QuakeWorkerMD2Model } from "../../types/QuakeWorkerMD2Model";
-import { QueryBus } from "../../interfaces/QueryBus";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { JSONRPCClient as JSONRPCClientInterface } from "src/framework/interfaces/JSONRPCClient";
+import { LoadingManager } from "src/framework/interfaces/LoadingManager";
+import { Logger } from "src/framework/interfaces/Logger";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeWorkerAny } from "src/framework/types/QuakeWorkerAny";
+import { QuakeWorkerGLTFModel } from "src/framework/types/QuakeWorkerGLTFModel";
+import { QuakeWorkerMD2Model } from "src/framework/types/QuakeWorkerMD2Model";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 // those are a few hacks, but in the end it's possible to load web workers
 // with create-react-app without ejecting
 // eslint-disable-next-line import/no-webpack-loader-syntax
-const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!../../../workers/exports/QuakeMap");
+const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!src/workers/modules/quakeMap");
 
 export default class QuakeMap extends CanvasView {
   readonly audioListener: THREE.AudioListener;

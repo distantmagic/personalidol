@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QuakeBrushHalfSpace from "./QuakeBrushHalfSpace";
-import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";
+import QuakeBrushHalfSpaceParser from "src/framework/classes/QuakeBrushHalfSpaceParser";
 
 test("converts quake map format to something processable by controllers", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

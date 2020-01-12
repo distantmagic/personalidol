@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QuakeBrush from "./QuakeBrush";
-import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QuakeBrush from "src/framework/classes/QuakeBrush";
+import QuakeBrushHalfSpaceParser from "src/framework/classes/QuakeBrushHalfSpaceParser";
 
 test("generates vertices from parsed halfspaces", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

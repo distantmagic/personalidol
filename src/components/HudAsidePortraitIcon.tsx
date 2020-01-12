@@ -1,7 +1,7 @@
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 
-import imageIconPrayer from "../assets/icon-prayer.png";
+import imageIconPrayer from "src/assets/icon-prayer.png";
 
 type Props = {
   name: string;

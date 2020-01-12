@@ -1,4 +1,4 @@
-import combineWithoutRepetitions from "./combineWithoutRepetitions";
+import combineWithoutRepetitions from "src/framework/helpers/combineWithoutRepetitions";
 
 test("generates combinations", function() {
   const combinations = Array.from(combineWithoutRepetitions([1, 2, 3], 2));

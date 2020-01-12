@@ -1,10 +1,10 @@
 import autoBind from "auto-bind";
 
-import Idempotence from "../classes/Exception/Idempotence";
+import Idempotence from "src/framework/classes/Exception/Idempotence";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { PointerButtonNames } from "../types/PointerButtonNames";
-import { PointerState as PointerStateInterface } from "../interfaces/PointerState";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { PointerButtonNames } from "src/framework/types/PointerButtonNames";
+import { PointerState as PointerStateInterface } from "src/framework/interfaces/PointerState";
 
 export default class PointerState implements PointerStateInterface {
   readonly element: HTMLElement;

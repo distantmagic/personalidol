@@ -1,4 +1,4 @@
-import ElementSize from "./ElementSize";
+import ElementSize from "src/framework/classes/ElementSize";
 
 test("calculates base area", function() {
   const elementSize = new ElementSize(8, 9);

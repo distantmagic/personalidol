@@ -1,7 +1,7 @@
-import { Cancelable } from "./Cancelable";
-import { Canceled } from "../interfaces/Exception/Canceled";
-import { CancelTokenCallback } from "../types/CancelTokenCallback";
-import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
+import { Cancelable } from "src/framework/interfaces/Cancelable";
+import { Canceled } from "src/framework/interfaces/Exception/Canceled";
+import { CancelTokenCallback } from "src/framework/types/CancelTokenCallback";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export interface CancelToken extends Cancelable {
   cancel(loggerBreadcrumbs: LoggerBreadcrumbs): void;

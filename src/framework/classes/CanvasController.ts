@@ -1,7 +1,7 @@
-import { CancelToken } from "../interfaces/CancelToken";
-import { CanvasController as CanvasControllerInterface } from "../interfaces/CanvasController";
-import { CanvasViewBag } from "../interfaces/CanvasViewBag";
-import { ElementSize } from "../interfaces/ElementSize";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasController as CanvasControllerInterface } from "src/framework/interfaces/CanvasController";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { ElementSize } from "src/framework/interfaces/ElementSize";
 
 export default abstract class CanvasController implements CanvasControllerInterface {
   readonly canvasViewBag: CanvasViewBag;

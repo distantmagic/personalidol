@@ -1,11 +1,11 @@
 import * as React from "react";
 import groupBy from "lodash/groupBy";
 
-import HudSceneOverlayComment from "./HudSceneOverlayComment";
-import HudSceneOverlayError from "./HudSceneOverlayError";
-import useLoadingManagerState from "../effects/useLoadingManagerState";
+import HudSceneOverlayComment from "src/components/HudSceneOverlayComment";
+import HudSceneOverlayError from "src/components/HudSceneOverlayError";
+import useLoadingManagerState from "src/effects/useLoadingManagerState";
 
-import { LoadingManager } from "../framework/interfaces/LoadingManager";
+import { LoadingManager } from "src/framework/interfaces/LoadingManager";
 
 type Props = {
   loadingManager: LoadingManager;

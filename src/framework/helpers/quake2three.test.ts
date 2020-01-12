@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import quake2three from "./quake2three";
+import quake2three from "src/framework/helpers/quake2three";
 
 test("converts Quake coordinates to THREE coordinates", function() {
   const v = new THREE.Vector3(1, 2, 3);

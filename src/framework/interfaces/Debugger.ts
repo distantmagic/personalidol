@@ -1,7 +1,7 @@
-import { DebuggerState } from "../types/DebuggerState";
-import { DebuggerStateChangeCallback } from "../types/DebuggerStateChangeCallback";
-import { DebuggerStateValue } from "../types/DebuggerStateValue";
-import { LoggerBreadcrumbs } from "./LoggerBreadcrumbs";
+import { DebuggerState } from "src/framework/types/DebuggerState";
+import { DebuggerStateChangeCallback } from "src/framework/types/DebuggerStateChangeCallback";
+import { DebuggerStateValue } from "src/framework/types/DebuggerStateValue";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export interface Debugger {
   deleteState(loggerBreadcrumbs: LoggerBreadcrumbs): void;

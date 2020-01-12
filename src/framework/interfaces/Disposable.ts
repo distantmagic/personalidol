@@ -1,4 +1,4 @@
-import { CancelToken } from "./CancelToken";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
 
 export interface Disposable {
   attach(cancelToken: CancelToken): Promise<void>;

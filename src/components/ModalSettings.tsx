@@ -1,8 +1,8 @@
 import * as React from "react";
 import { NavLink, Route, Switch } from "react-router-dom";
 
-import ModalSettingsGraphics from "./ModalSettingsGraphics";
-import ModalToolbar from "./ModalToolbar";
+import ModalSettingsGraphics from "src/components/ModalSettingsGraphics";
+import ModalToolbar from "src/components/ModalToolbar";
 
 export default function ModalSettings() {
   return (

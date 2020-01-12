@@ -1,6 +1,6 @@
-import { JSONRPCMessageType } from "./JSONRPCMessageType";
-import { JSONRPCParams } from "./JSONRPCParams";
-import { JSONRPCVersion } from "./JSONRPCVersion";
+import { JSONRPCMessageType } from "src/framework/types/JSONRPCMessageType";
+import { JSONRPCParams } from "src/framework/types/JSONRPCParams";
+import { JSONRPCVersion } from "src/framework/types/JSONRPCVersion";
 
 export type JSONRPCRequestObjectified = {
   readonly id: string;

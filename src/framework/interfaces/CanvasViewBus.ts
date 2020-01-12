@@ -1,5 +1,5 @@
-import { CancelToken } from "./CancelToken";
-import { CanvasView } from "./CanvasView";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasView } from "src/framework/interfaces/CanvasView";
 
 export interface CanvasViewBus {
   add(cancelToken: CancelToken, canvasView: CanvasView): Promise<void>;

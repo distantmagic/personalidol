@@ -1,9 +1,9 @@
-import { CancelToken } from "./CancelToken";
-import { CancelTokenQuery } from "./CancelTokenQuery";
-import { ClockReactive } from "./ClockReactive";
-import { Query } from "./Query";
-import { QueryBatch } from "./QueryBatch";
-import { QueryBusOnEnqueuedCallback } from "../types/QueryBusOnEnqueuedCallback";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
+import { ClockReactive } from "src/framework/interfaces/ClockReactive";
+import { Query } from "src/framework/interfaces/Query";
+import { QueryBatch } from "src/framework/interfaces/QueryBatch";
+import { QueryBusOnEnqueuedCallback } from "src/framework/types/QueryBusOnEnqueuedCallback";
 
 export interface QueryBus extends ClockReactive {
   enqueue<T>(cancelToken: CancelToken, query: Query<T>): CancelTokenQuery<T>;

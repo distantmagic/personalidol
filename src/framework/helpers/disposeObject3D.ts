@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import disposeMaterial from "./disposeMaterial";
+import disposeMaterial from "src/framework/helpers/disposeMaterial";
 
 function doDispose(obj: THREE.Mesh | THREE.Object3D, disposeTextures: boolean): void {
   // @ts-ignore

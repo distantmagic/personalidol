@@ -1,10 +1,10 @@
-import { default as CanvasViewException } from "./Exception/CanvasView";
+import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { CanvasView } from "../interfaces/CanvasView";
-import { CanvasViewBus as CanvasViewBusInterface } from "../interfaces/CanvasViewBus";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { Scheduler } from "../interfaces/Scheduler";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasView } from "src/framework/interfaces/CanvasView";
+import { CanvasViewBus as CanvasViewBusInterface } from "src/framework/interfaces/CanvasViewBus";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { Scheduler } from "src/framework/interfaces/Scheduler";
 
 export default class CanvasViewBus implements CanvasViewBusInterface {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

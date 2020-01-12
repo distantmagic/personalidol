@@ -1,7 +1,7 @@
-import { default as CharacterModel } from "../Entity/Person/Character";
+import { default as CharacterModel } from "src/framework/classes/Entity/Person/Character";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { Query } from "../../interfaces/Query";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { Query } from "src/framework/interfaces/Query";
 
 export default class Character implements Query<CharacterModel> {
   readonly ref: string;

@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
-import { Equatable } from "./Equatable";
-import { QuakeBrush } from "./QuakeBrush";
-import { QuakeEntityProperties } from "./QuakeEntityProperties";
+import { Equatable } from "src/framework/interfaces/Equatable";
+import { QuakeBrush } from "src/framework/interfaces/QuakeBrush";
+import { QuakeEntityProperties } from "src/framework/interfaces/QuakeEntityProperties";
 
 export interface QuakeEntity extends Equatable<QuakeEntity> {
   getBrushes(): ReadonlyArray<QuakeBrush>;

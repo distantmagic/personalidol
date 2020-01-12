@@ -1,24 +1,24 @@
 import * as THREE from "three";
 
-import EventListenerGenerator from "./EventListenerGenerator";
-import EventListenerSet from "./EventListenerSet";
-import JSONRPCClientGeneratorBuffer from "./JSONRPCClientGeneratorBuffer";
-import JSONRPCRequest from "./JSONRPCRequest";
-import { default as JSONRPCException } from "./Exception/JSONRPC";
-import { unobjectify as unobjectifyJSONRPCErrorResponse } from "./JSONRPCResponse/Error";
-import { unobjectify as unobjectifyJSONRPCGeneratorChunkResponse } from "./JSONRPCResponse/GeneratorChunk";
-import { unobjectify as unobjectifyJSONRPCPromiseResponse } from "./JSONRPCResponse/Promise";
+import EventListenerGenerator from "src/framework/classes/EventListenerGenerator";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
+import JSONRPCClientGeneratorBuffer from "src/framework/classes/JSONRPCClientGeneratorBuffer";
+import JSONRPCRequest from "src/framework/classes/JSONRPCRequest";
+import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
+import { unobjectify as unobjectifyJSONRPCErrorResponse } from "src/framework/classes/JSONRPCResponse/Error";
+import { unobjectify as unobjectifyJSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
+import { unobjectify as unobjectifyJSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
 
-import { CancelToken } from "../interfaces/CancelToken";
-import { EventListenerSet as EventListenerSetInterface } from "../interfaces/EventListenerSet";
-import { JSONRPCClient as JSONRPCClientInterface } from "../interfaces/JSONRPCClient";
-import { JSONRPCErrorResponse as JSONRPCErrorResponseInterface } from "../interfaces/JSONRPCErrorResponse";
-import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCParams } from "../types/JSONRPCParams";
-import { JSONRPCPromiseResponse as JSONRPCPromiseResponseInterface } from "../interfaces/JSONRPCPromiseResponse";
-import { JSONRPCRequest as JSONRPCRequestInterface } from "../interfaces/JSONRPCRequest";
-import { JSONRPCVersion } from "../types/JSONRPCVersion";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
+import { JSONRPCClient as JSONRPCClientInterface } from "src/framework/interfaces/JSONRPCClient";
+import { JSONRPCErrorResponse as JSONRPCErrorResponseInterface } from "src/framework/interfaces/JSONRPCErrorResponse";
+import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { JSONRPCParams } from "src/framework/types/JSONRPCParams";
+import { JSONRPCPromiseResponse as JSONRPCPromiseResponseInterface } from "src/framework/interfaces/JSONRPCPromiseResponse";
+import { JSONRPCRequest as JSONRPCRequestInterface } from "src/framework/interfaces/JSONRPCRequest";
+import { JSONRPCVersion } from "src/framework/types/JSONRPCVersion";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class JSONRPCClient implements JSONRPCClientInterface {
   readonly awaitingGeneratorRequests: Map<string, EventListenerSetInterface<[JSONRPCGeneratorChunkResponseInterface<any>]>>;

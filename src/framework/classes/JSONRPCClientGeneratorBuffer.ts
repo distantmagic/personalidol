@@ -1,8 +1,8 @@
-import { default as JSONRPCException } from "./Exception/JSONRPC";
+import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
-import { JSONRPCClientGeneratorBuffer as JSONRPCClientGeneratorBufferInterface } from "../interfaces/JSONRPCClientGeneratorBuffer";
-import { JSONRPCGeneratorChunkResponse } from "../interfaces/JSONRPCGeneratorChunkResponse";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { JSONRPCClientGeneratorBuffer as JSONRPCClientGeneratorBufferInterface } from "src/framework/interfaces/JSONRPCClientGeneratorBuffer";
+import { JSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class JSONRPCClientGeneratorBuffer<T> implements JSONRPCClientGeneratorBufferInterface<T> {
   readonly buffer: Map<string, JSONRPCGeneratorChunkResponse<T>>;

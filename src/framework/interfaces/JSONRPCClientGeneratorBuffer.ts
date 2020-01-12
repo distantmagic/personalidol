@@ -1,4 +1,4 @@
-import { JSONRPCGeneratorChunkResponse } from "./JSONRPCGeneratorChunkResponse";
+import { JSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
 
 export interface JSONRPCClientGeneratorBuffer<T> {
   add(response: JSONRPCGeneratorChunkResponse<T>): void;

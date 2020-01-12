@@ -1,16 +1,16 @@
-import QuakeBrush from "./QuakeBrush";
-import QuakeBrushHalfSpaceParser from "./QuakeBrushHalfSpaceParser";
-import QuakeEntity from "./QuakeEntity";
-import QuakeEntityProperties from "./QuakeEntityProperties";
-import QuakeEntityPropertyParser from "./QuakeEntityPropertyParser";
-import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
+import QuakeBrush from "src/framework/classes/QuakeBrush";
+import QuakeBrushHalfSpaceParser from "src/framework/classes/QuakeBrushHalfSpaceParser";
+import QuakeEntity from "src/framework/classes/QuakeEntity";
+import QuakeEntityProperties from "src/framework/classes/QuakeEntityProperties";
+import QuakeEntityPropertyParser from "src/framework/classes/QuakeEntityPropertyParser";
+import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
-import { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
-import { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
-import { QuakeEntity as QuakeEntityInterface } from "../interfaces/QuakeEntity";
-import { QuakeEntityProperty } from "../interfaces/QuakeEntityProperty";
-import { QuakeMapParser as QuakeMapParserInterface } from "../interfaces/QuakeMapParser";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { QuakeBrush as QuakeBrushInterface } from "src/framework/interfaces/QuakeBrush";
+import { QuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { QuakeEntity as QuakeEntityInterface } from "src/framework/interfaces/QuakeEntity";
+import { QuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
+import { QuakeMapParser as QuakeMapParserInterface } from "src/framework/interfaces/QuakeMapParser";
 
 const REGEXP_NEWLINE = /\r?\n/;
 

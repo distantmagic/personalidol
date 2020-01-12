@@ -1,13 +1,13 @@
 import * as THREE from "three";
 
-import CanvasView from "../CanvasView";
-import { default as GLTFModelQuery } from "../Query/GLTFModel";
-import { default as TextureQuery } from "../Query/Texture";
+import CanvasView from "src/framework/classes/CanvasView";
+import { default as GLTFModelQuery } from "src/framework/classes/Query/GLTFModel";
+import { default as TextureQuery } from "src/framework/classes/Query/Texture";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
-import { QuakeWorkerGLTFModel } from "../../types/QuakeWorkerGLTFModel";
-import { QueryBus } from "../../interfaces/QueryBus";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { QuakeWorkerGLTFModel } from "src/framework/types/QuakeWorkerGLTFModel";
+import { QueryBus } from "src/framework/interfaces/QueryBus";
 
 function getMesh(scene: THREE.Scene): THREE.Mesh {
   for (let child of scene.children) {

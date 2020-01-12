@@ -1,5 +1,5 @@
-import { JSONRPCMessage } from "./JSONRPCMessage";
-import { JSONRPCResponseData } from "./JSONRPCResponseData";
+import { JSONRPCMessage } from "src/framework/interfaces/JSONRPCMessage";
+import { JSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
 export interface JSONRPCResponse<T, U extends Object> extends JSONRPCMessage<U> {
   getData(): JSONRPCResponseData<T>;

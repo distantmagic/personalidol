@@ -1,12 +1,12 @@
-import ElementBoundingBox from "./ElementBoundingBox";
-import ElementPosition from "./ElementPosition";
-import ElementSize from "./ElementSize";
+import ElementBoundingBox from "src/framework/classes/ElementBoundingBox";
+import ElementPosition from "src/framework/classes/ElementPosition";
+import ElementSize from "src/framework/classes/ElementSize";
 
-import { ElementBoundingBox as ElementBoundingBoxInterface } from "../interfaces/ElementBoundingBox";
-import { ElementPosition as ElementPositionInterface } from "../interfaces/ElementPosition";
-import { ElementPositionCollection as ElementPositionCollectionInterface } from "../interfaces/ElementPositionCollection";
-import { ElementPositionUnit } from "../types/ElementPositionUnit";
-import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
+import { ElementBoundingBox as ElementBoundingBoxInterface } from "src/framework/interfaces/ElementBoundingBox";
+import { ElementPosition as ElementPositionInterface } from "src/framework/interfaces/ElementPosition";
+import { ElementPositionCollection as ElementPositionCollectionInterface } from "src/framework/interfaces/ElementPositionCollection";
+import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class ElementPositionCollection<Unit extends ElementPositionUnit> implements ElementPositionCollectionInterface<Unit> {
   readonly elementPositions: ReadonlyArray<ElementPositionInterface<Unit>>;

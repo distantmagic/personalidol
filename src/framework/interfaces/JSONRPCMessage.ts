@@ -1,5 +1,5 @@
-import { JSONRPCMessageType } from "../types/JSONRPCMessageType";
-import { Objectable } from "./Objectable";
+import { JSONRPCMessageType } from "src/framework/types/JSONRPCMessageType";
+import { Objectable } from "src/framework/interfaces/Objectable";
 
 export interface JSONRPCMessage<U extends Object> extends Objectable<U> {
   getId(): string;

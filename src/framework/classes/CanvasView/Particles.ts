@@ -4,10 +4,10 @@ import autoBind from "auto-bind";
 // @ts-ignore
 import Partykals from "partykals/partykals";
 
-import CanvasView from "../CanvasView";
+import CanvasView from "src/framework/classes/CanvasView";
 
-import { CancelToken } from "../../interfaces/CancelToken";
-import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 export default class Particles extends CanvasView {
   readonly group: THREE.Group;

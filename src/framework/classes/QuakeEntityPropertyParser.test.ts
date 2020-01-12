@@ -1,6 +1,6 @@
-import LoggerBreadcrumbs from "./LoggerBreadcrumbs";
-import QuakeEntityProperty from "./QuakeEntityProperty";
-import QuakeEntityPropertyParser from "./QuakeEntityPropertyParser";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import QuakeEntityProperty from "src/framework/classes/QuakeEntityProperty";
+import QuakeEntityPropertyParser from "src/framework/classes/QuakeEntityPropertyParser";
 
 test.each([
   ['    "foo" "bar\\"baz\\"booz"', "foo", 'bar"baz"booz'],

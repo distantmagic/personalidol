@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as THREE from "three";
 
-import { DebuggerStateValue } from "../framework/types/DebuggerStateValue";
-import { LoggerBreadcrumbs } from "../framework/interfaces/LoggerBreadcrumbs";
+import { DebuggerStateValue } from "src/framework/types/DebuggerStateValue";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 function printValue(value: DebuggerStateValue): string {
   if (Array.isArray(value)) {

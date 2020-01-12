@@ -1,4 +1,4 @@
-import { RuntimeCacheStoreCallback } from "../types/RuntimeCacheStoreCallback";
+import { RuntimeCacheStoreCallback } from "src/framework/types/RuntimeCacheStoreCallback";
 
 export interface RuntimeCache<T> {
   get(key: string): T;
