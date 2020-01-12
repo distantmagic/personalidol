@@ -2,9 +2,9 @@ import CancelToken from "src/framework/classes/CancelToken";
 import CancelTokenQuery from "src/framework/classes/CancelTokenQuery";
 import ExceptionHandler from "src/framework/classes/ExceptionHandler";
 import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
-import Logger from "src/framework/classes/Logger";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QueryBatch from "src/framework/classes/QueryBatch";
+import { default as SilentLogger } from "src/framework/classes/Logger/Silent";
 
 import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
 import { Query } from "src/framework/interfaces/Query";
@@ -46,7 +46,7 @@ class Bar implements Query<BarObject> {
 }
 
 test("it finds unique queries list", function() {
-  const exceptionHandler = new ExceptionHandler(new Logger(), new ExceptionHandlerFilter());
+  const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const queryBatch = new QueryBatch(exceptionHandler, [
@@ -62,7 +62,7 @@ test("it finds unique queries list", function() {
 });
 
 test("it processes unique queries only", function() {
-  const exceptionHandler = new ExceptionHandler(new Logger(), new ExceptionHandlerFilter());
+  const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const queryBatch = new QueryBatch(exceptionHandler, [

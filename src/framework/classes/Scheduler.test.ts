@@ -1,7 +1,7 @@
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 
-test("notifies: begin", async function() {
+test("notifies: begin", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -9,12 +9,12 @@ test("notifies: begin", async function() {
     scheduler.onBegin(resolve);
   });
 
-  scheduler.notifyBegin();
+  scheduler.notifyBegin(1, 2);
 
   return promise;
 }, 300);
 
-test("disables callback: begin", async function() {
+test("disables callback: begin", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -24,12 +24,12 @@ test("disables callback: begin", async function() {
     scheduler.onBegin(reject);
   });
 
-  scheduler.notifyBegin();
+  scheduler.notifyBegin(1, 2);
 
-  await expect(promise).rejects.toBe();
+  return expect(promise).rejects.toEqual(1);
 }, 300);
 
-test("notifies: draw", async function() {
+test("notifies: draw", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -39,10 +39,10 @@ test("notifies: draw", async function() {
 
   scheduler.notifyDraw(3);
 
-  await expect(promise).resolves.toBe(3);
+  return expect(promise).resolves.toBe(3);
 }, 300);
 
-test("disables callback: draw", async function() {
+test("disables callback: draw", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -54,10 +54,10 @@ test("disables callback: draw", async function() {
 
   scheduler.notifyDraw(3);
 
-  await expect(promise).rejects.toBe(3);
+  return expect(promise).rejects.toBe(3);
 }, 300);
 
-test("notifies: end", async function() {
+test("notifies: end", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -69,10 +69,10 @@ test("notifies: end", async function() {
 
   scheduler.notifyEnd(25, false);
 
-  await expect(promise).resolves.toEqual([25, false]);
+  return expect(promise).resolves.toEqual([25, false]);
 }, 300);
 
-test("disables callback: end", async function() {
+test("disables callback: end", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -86,10 +86,10 @@ test("disables callback: end", async function() {
 
   scheduler.notifyEnd(25, false);
 
-  await expect(promise).rejects.toEqual([25, false]);
+  return expect(promise).rejects.toEqual([25, false]);
 }, 300);
 
-test("notifies: update", async function() {
+test("notifies: update", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -99,10 +99,10 @@ test("notifies: update", async function() {
 
   scheduler.notifyUpdate(16);
 
-  await expect(promise).resolves.toBe(16);
+  return expect(promise).resolves.toBe(16);
 }, 300);
 
-test("disables callback: update", async function() {
+test("disables callback: update", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -114,5 +114,5 @@ test("disables callback: update", async function() {
 
   scheduler.notifyUpdate(16);
 
-  await expect(promise).rejects.toBe(16);
+  return expect(promise).rejects.toBe(16);
 }, 300);

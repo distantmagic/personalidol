@@ -14,6 +14,10 @@ export default class EventListenerSet<Arguments extends readonly any[]> implemen
   }
 
   add(callback: EventListenerSetCallback<Arguments>): void {
+    if (this.callbacks.includes(callback)) {
+      throw new Exception(this.loggerBreadcrumbs.add("add"), "Callback is already registered in EventListenerSet.");
+    }
+
     this.callbacks.push(callback);
   }
 
@@ -31,50 +35,44 @@ export default class EventListenerSet<Arguments extends readonly any[]> implemen
     this.callbacks.splice(indexOf, 1);
   }
 
+  getCallbacks(): ReadonlyArray<EventListenerSetCallback<Arguments>> {
+    return this.callbacks;
+  }
+
   notify(args: Arguments): void {
     // optimize unwinding function calls
-    // this method is called each animation frame, so every milisecond matters
+    // this method may be called each animation frame, so every milisecond
+    // matters
+    // see also: https://jsperf.com/function-calls-with-spread-vs-call-vs-apply
     switch (args.length) {
       case 0:
         for (let i = 0; i < this.callbacks.length; i += 1) {
           // @ts-ignore
-          this.callbacks[i].call(null);
+          this.callbacks[i]();
         }
         break;
       case 1:
         for (let i = 0; i < this.callbacks.length; i += 1) {
           // @ts-ignore
-          this.callbacks[i].call(null, args[0]);
+          this.callbacks[i](args[0]);
         }
         break;
       case 2:
         for (let i = 0; i < this.callbacks.length; i += 1) {
           // @ts-ignore
-          this.callbacks[i].call(null, args[0], args[1]);
+          this.callbacks[i](args[0], args[1]);
         }
         break;
       case 3:
         for (let i = 0; i < this.callbacks.length; i += 1) {
           // @ts-ignore
-          this.callbacks[i].call(null, args[0], args[1], args[2]);
-        }
-        break;
-      case 4:
-        for (let i = 0; i < this.callbacks.length; i += 1) {
-          // @ts-ignore
-          this.callbacks[i].call(null, args[0], args[1], args[2], args[3]);
-        }
-        break;
-      case 5:
-        for (let i = 0; i < this.callbacks.length; i += 1) {
-          // @ts-ignore
-          this.callbacks[i].call(null, args[0], args[1], args[2], args[3], args[4]);
+          this.callbacks[i](args[0], args[1], args[2]);
         }
         break;
       default:
         for (let i = 0; i < this.callbacks.length; i += 1) {
           // @ts-ignore
-          this.callbacks[i].call(null, ...args);
+          this.callbacks[i].apply(null, args);
         }
         break;
     }

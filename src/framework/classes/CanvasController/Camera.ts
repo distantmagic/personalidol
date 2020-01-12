@@ -68,6 +68,14 @@ export default class CameraController extends CanvasController implements Camera
     this.debug.updateState(this.loggerBreadcrumbs.add("position"), this.camera.position);
   }
 
+  getCameraFrustum(): THREE.Frustum {
+    const frustum = new THREE.Frustum();
+
+    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
+
+    return frustum;
+  }
+
   lookAt(position: THREE.Vector3): void {
     const baseDistance = 256 * 3;
 

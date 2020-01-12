@@ -56,8 +56,8 @@ export default React.memo<Props>(function HudScene(props: Props) {
 
   return (
     <div className="dd__scene dd__scene--canvas dd__scene--hud">
-      <HudSceneOverlay loadingManager={props.loadingManager} />
       {isSceneCanvasDefined && <x-dm-scene-canvas class="dd__scene__canvas" documenthidden={String(props.isDocumentHidden)} ref={setSceneCanvas} />}
+      <HudSceneOverlay loadingManager={props.loadingManager} />
     </div>
   );
 });

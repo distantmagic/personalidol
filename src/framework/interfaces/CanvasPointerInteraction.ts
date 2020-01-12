@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
-import { Animatable } from "src/framework/interfaces/Animatable";
+import { AnimatableUpdatable } from "src/framework/interfaces/AnimatableUpdatable";
 import { Observer } from "src/framework/interfaces/Observer";
 import { Resizeable } from "src/framework/interfaces/Resizeable";
 
-export interface THREEPointerInteraction extends Animatable, Observer, Resizeable<"px"> {
+export interface CanvasPointerInteraction extends AnimatableUpdatable, Observer, Resizeable<"px"> {
   getCameraRaycaster(): THREE.Raycaster;
 }

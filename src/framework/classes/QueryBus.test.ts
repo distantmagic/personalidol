@@ -1,9 +1,9 @@
 import CancelToken from "src/framework/classes/CancelToken";
 import ExceptionHandler from "src/framework/classes/ExceptionHandler";
 import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
-import Logger from "src/framework/classes/Logger";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QueryBus from "src/framework/classes/QueryBus";
+import { default as SilentLogger } from "src/framework/classes/Logger/Silent";
 
 import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
 import { Query } from "src/framework/interfaces/Query";
@@ -37,7 +37,7 @@ class Foo implements Query<number> {
 test("executes similar queries only once", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const exceptionHandler = new ExceptionHandler(new Logger(), new ExceptionHandlerFilter());
+  const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs);
   const total: Total = {
     executed: 0,

@@ -1,12 +1,15 @@
 import Fetch from "src/framework/classes/Query/Fetch";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { Query } from "src/framework/interfaces/Query";
+import Query from "src/framework/classes/Query";
 
-export default class RemoteJSON<T extends Object> implements Query<T> {
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+
+export default class RemoteJSON<T extends Object> extends Query<T> {
   readonly fetch: Fetch;
 
   constructor(ref: string) {
+    super();
+
     this.fetch = new Fetch(ref);
   }
 

@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import { THREEPointerInteraction as THREEPointerInteractionInterface } from "src/framework/interfaces/THREEPointerInteraction";
+import { CanvasPointerInteraction as CanvasPointerInteractionInterface } from "src/framework/interfaces/CanvasPointerInteraction";
 import { ElementSize as ElementSizeInterface } from "src/framework/interfaces/ElementSize";
 
-export default class THREEPointerInteraction implements THREEPointerInteractionInterface {
+export default class CanvasPointerInteraction implements CanvasPointerInteractionInterface {
   readonly camera: THREE.Camera;
   readonly mouseVector: THREE.Vector2;
   readonly raycaster: THREE.Raycaster;
@@ -66,5 +66,9 @@ export default class THREEPointerInteraction implements THREEPointerInteractionI
 
   update(delta: number): void {
     // this.raycaster.setFromCamera(this.mouseVector, this.camera);
+  }
+
+  useUpdate(): boolean {
+    return true;
   }
 }

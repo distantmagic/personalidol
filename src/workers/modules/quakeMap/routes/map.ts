@@ -63,7 +63,13 @@ function getEntityOrigin(entity: QuakeEntity): [number, number, number] {
   return [converted.x, converted.y, converted.z];
 }
 
-export default async function* map(cancelToken: CancelToken, request: JSONRPCRequest, loggerBreadcrumbs: LoggerBreadcrumbs, queryBus: QueryBus, threeLoadingManager: THREE.LoadingManager): AsyncGenerator<JSONRPCResponseDataInterface<QuakeWorkerAny>> {
+export default async function* map(
+  cancelToken: CancelToken,
+  request: JSONRPCRequest,
+  loggerBreadcrumbs: LoggerBreadcrumbs,
+  queryBus: QueryBus,
+  threeLoadingManager: THREE.LoadingManager
+): AsyncGenerator<JSONRPCResponseDataInterface<QuakeWorkerAny>> {
   const breadcrumbs = loggerBreadcrumbs.add("/map");
   const [source] = request.getParams();
   const quakeMapQuery = new PlainTextQuery(source);
@@ -146,8 +152,8 @@ export default async function* map(cancelToken: CancelToken, request: JSONRPCReq
                 light: entityProperties.getPropertyByKey("light").asNumber(),
               });
               break;
-              default:
-                throw new QuakeMapException(breadcrumbs, `Unknown map scenery type: "${sceneryType}".`);
+            default:
+              throw new QuakeMapException(breadcrumbs, `Unknown map scenery type: "${sceneryType}".`);
           }
         }
         if (entityProperties.hasPropertyKey("sounds")) {

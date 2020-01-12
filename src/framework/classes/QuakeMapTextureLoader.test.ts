@@ -2,14 +2,14 @@ import * as THREE from "three";
 
 import ExceptionHandler from "src/framework/classes/ExceptionHandler";
 import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
-import Logger from "src/framework/classes/Logger";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
-import QueryBus from "src/framework/classes/QueryBus";
 import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
+import QueryBus from "src/framework/classes/QueryBus";
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
+import { default as SilentLogger } from "src/framework/classes/Logger/Silent";
 
 test("indexes textures and keeps consistent id registry", function() {
-  const exceptionHandler = new ExceptionHandler(new Logger(), new ExceptionHandlerFilter());
+  const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs);
   const textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs, new THREE.LoadingManager(), queryBus);
@@ -29,7 +29,7 @@ test("indexes textures and keeps consistent id registry", function() {
 });
 
 test("fails when texture definitions are inconsistent", function() {
-  const exceptionHandler = new ExceptionHandler(new Logger(), new ExceptionHandlerFilter());
+  const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs);
   const textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs, new THREE.LoadingManager(), queryBus);
@@ -45,7 +45,7 @@ test("fails when texture definitions are inconsistent", function() {
 });
 
 test("fails when texture does not exist", function() {
-  const exceptionHandler = new ExceptionHandler(new Logger(), new ExceptionHandlerFilter());
+  const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs);
   const textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs, new THREE.LoadingManager(), queryBus);

@@ -24,6 +24,6 @@ test("generates subsequent values", async function() {
     }
   }
 
-  expect(eventListenerSet.callbacks).toHaveLength(0);
+  expect(eventListenerSet.getCallbacks()).toHaveLength(0);
   expect(generated).toEqual([[1], [2], [3]]);
 }, 100);

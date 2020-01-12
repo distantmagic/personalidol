@@ -1,13 +1,16 @@
 import * as THREE from "three";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { Query } from "src/framework/interfaces/Query";
+import Query from "src/framework/classes/Query";
 
-export default class Texture implements Query<THREE.Texture> {
+import { CancelToken } from "src/framework/interfaces/CancelToken";
+
+export default class Texture extends Query<THREE.Texture> {
   readonly textureLoader: THREE.TextureLoader;
   readonly textureSource: string;
 
   constructor(textureLoader: THREE.TextureLoader, textureSource: string) {
+    super();
+
     this.textureLoader = textureLoader;
     this.textureSource = textureSource;
   }

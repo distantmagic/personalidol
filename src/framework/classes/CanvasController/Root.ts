@@ -5,8 +5,8 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 
 import CanvasController from "src/framework/classes/CanvasController";
+import CanvasPointerInteraction from "src/framework/classes/CanvasPointerInteraction";
 import env from "src/framework/helpers/env";
-import THREEPointerInteraction from "src/framework/classes/THREEPointerInteraction";
 import { default as CameraController } from "src/framework/classes/CanvasController/Camera";
 import { default as QuakeMapView } from "src/framework/classes/CanvasView/QuakeMap";
 // import { default as THREEHelpersView } from "src/framework/classes/CanvasView/THREEHelpers";
@@ -24,7 +24,7 @@ import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 import { PointerState } from "src/framework/interfaces/PointerState";
 import { QueryBus } from "src/framework/interfaces/QueryBus";
 import { Scheduler } from "src/framework/interfaces/Scheduler";
-import { THREEPointerInteraction as THREEPointerInteractionInterface } from "src/framework/interfaces/THREEPointerInteraction";
+import { CanvasPointerInteraction as THREEPointerInteractionInterface } from "src/framework/interfaces/CanvasPointerInteraction";
 
 export default class Root extends CanvasController {
   readonly audioListener: THREE.AudioListener;
@@ -86,7 +86,7 @@ export default class Root extends CanvasController {
     this.scheduler = scheduler;
     this.cameraController = new CameraController(canvasViewBag, this.camera, this.debug, loggerBreadcrumbs.add("CameraController"), renderer, this.scene);
     this.threeLoadingManager = threeLoadingManager;
-    this.threePointerInteraction = new THREEPointerInteraction(renderer, this.camera);
+    this.threePointerInteraction = new CanvasPointerInteraction(renderer, this.camera);
 
     const renderPass = new RenderPass(this.scene, this.camera);
 
@@ -128,7 +128,10 @@ export default class Root extends CanvasController {
     //   "Loading map helpers"
     // );
 
-    this.scheduler.onUpdate(this.threePointerInteraction.update);
+    if (this.threePointerInteraction.useUpdate()) {
+      this.scheduler.onUpdate(this.threePointerInteraction.update);
+    }
+
     this.threePointerInteraction.observe();
   }
 
@@ -137,7 +140,9 @@ export default class Root extends CanvasController {
 
     await this.canvasControllerBus.delete(cancelToken, this.cameraController);
 
-    this.scheduler.offUpdate(this.threePointerInteraction.update);
+    if (this.threePointerInteraction.useUpdate()) {
+      this.scheduler.offUpdate(this.threePointerInteraction.update);
+    }
 
     this.threePointerInteraction.disconnect();
     this.scene.dispose();

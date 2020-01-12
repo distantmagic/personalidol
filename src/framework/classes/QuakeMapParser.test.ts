@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import * as fixtures from "src/framework/classes./../fixtures";
+import * as fixtures from "src/fixtures";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeBrush from "src/framework/classes/QuakeBrush";
 import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";

@@ -56,6 +56,9 @@
     "extends": "react-app"
   },
   "jest": {
+    "coverageReporters": [
+      "html"
+    ],
     "transformIgnorePatterns": [
       "/node_modules/(?!three).+\\.js$"
     ]
@@ -66,6 +69,8 @@
     "prettier": "./node_modules/.bin/prettier --write \"./{public,src}/**/*.{htm,html,js,scss,ts,tsx}\"",
     "start": "PORT=9023 react-scripts start",
     "test": "react-scripts test --env=jsdom",
-    "test:once": "$npm_execpath run test --watchAll=false"
+    "test:once": "$npm_execpath run test --watchAll=false",
+    "test:once:coverage": "$npm_execpath run test:once --coverage",
+    "typescript:watch": "./node_modules/.bin/tsc --watch --noEmit"
   }
 }

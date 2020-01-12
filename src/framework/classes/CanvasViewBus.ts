@@ -22,6 +22,10 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
 
     await canvasView.attach(cancelToken);
 
+    if (!canvasView.isAttached()) {
+      throw new CanvasViewException(this.loggerBreadcrumbs.add("add"), "Canvas view is not properly attached. Did you forget to call parent 'super.attach' method?");
+    }
+
     if (canvasView.useBegin()) {
       this.scheduler.onBegin(canvasView.begin);
     }
@@ -37,6 +41,10 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
   }
 
   async delete(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
+    if (canvasView.isDisposed()) {
+      throw new CanvasViewException(this.loggerBreadcrumbs.add("delete"), "Canvas view cannot is already disposed and cannot be disposed again.");
+    }
+
     if (canvasView.useBegin()) {
       this.scheduler.offBegin(canvasView.begin);
     }
@@ -48,10 +56,6 @@ export default class CanvasViewBus implements CanvasViewBusInterface {
     }
     if (canvasView.useUpdate()) {
       this.scheduler.offUpdate(canvasView.update);
-    }
-
-    if (canvasView.isDisposed()) {
-      throw new CanvasViewException(this.loggerBreadcrumbs.add("delete"), "Canvas view cannot is already disposed and cannot be disposed again.");
     }
 
     await canvasView.dispose(cancelToken);

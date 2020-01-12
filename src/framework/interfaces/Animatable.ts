@@ -1,3 +1,15 @@
-export interface Animatable {
-  update(delta: number): void;
+import { AnimatableUpdatable } from "src/framework/interfaces/AnimatableUpdatable";
+
+export interface Animatable extends AnimatableUpdatable {
+  begin(): void;
+
+  draw(interpolationPercentage: number): void;
+
+  end(fps: number, isPanicked: boolean): void;
+
+  useBegin(): boolean;
+
+  useDraw(): boolean;
+
+  useEnd(): boolean;
 }

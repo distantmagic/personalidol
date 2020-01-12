@@ -17,7 +17,7 @@ declare var self: DedicatedWorkerGlobalScope;
 self.onmessage = bootstrapWorker(function(serverCancelToken: CancelToken, loggerBreadcrumbs: LoggerBreadcrumbs, jsonRpcServer: JSONRPCServer, queryBus: QueryBus) {
   const threeLoadingManager = new THREE.LoadingManager();
 
-  jsonRpcServer.returnGenerator<QuakeWorkerAny>(serverCancelToken, "/map", function (cancelToken: CancelToken, request: JSONRPCRequest) {
+  jsonRpcServer.returnGenerator<QuakeWorkerAny>(serverCancelToken, "/map", function(cancelToken: CancelToken, request: JSONRPCRequest) {
     return routeMap(cancelToken, request, loggerBreadcrumbs, queryBus, threeLoadingManager);
   });
 });

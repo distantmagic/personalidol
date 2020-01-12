@@ -1,10 +1,11 @@
-import MainLoop from "src/framework/classes/MainLoop";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import MainLoop from "src/framework/classes/MainLoop";
 import Scheduler from "src/framework/classes/Scheduler";
-import SingletonException from "src/framework/classes/Exception/Singleton";
+import { default as MainLoopException } from "src/framework/classes/Exception/MainLoop";
 
 function onBeforeAfter() {
-  const mainLoop = MainLoop.getInstance();
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const mainLoop = MainLoop.getInstance(loggerBreadcrumbs);
 
   mainLoop.stop();
   mainLoop.clear();
@@ -17,18 +18,18 @@ afterEach(onBeforeAfter);
 test("is a singleton", function() {
   expect(function() {
     new MainLoop();
-  }).toThrow(SingletonException);
+  }).toThrow(MainLoopException);
 });
 
 test("attaches scheduler", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const mainLoop = MainLoop.getInstance();
+  const mainLoop = MainLoop.getInstance(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
   mainLoop.attachScheduler(scheduler);
 
   const promise = new Promise(function(resolve) {
-    function endCallback(fps) {
+    function endCallback(fps: number) {
       scheduler.offEnd(endCallback);
       resolve(fps);
     }

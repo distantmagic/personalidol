@@ -7,5 +7,7 @@ export interface EventListenerSet<Arguments extends readonly any[]> {
 
   delete(eventListenerSetCallback: EventListenerSetCallback<Arguments>): void;
 
+  getCallbacks(): ReadonlyArray<EventListenerSetCallback<Arguments>>;
+
   notify(args: Arguments): void;
 }

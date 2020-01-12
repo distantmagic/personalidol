@@ -33,7 +33,7 @@ export default abstract class CanvasView implements CanvasViewInterface {
   async dispose(cancelToken: CancelToken): Promise<void> {
     this._isAttached = false;
     await this.canvasViewBag.dispose(cancelToken);
-    disposeObject3D(this.children, true);
+    disposeObject3D(this.getChildren(), true);
     this._isDisposed = true;
   }
 
@@ -41,12 +41,20 @@ export default abstract class CanvasView implements CanvasViewInterface {
 
   end(fps: number, isPanicked: boolean): void {}
 
+  getChildren(): THREE.Group {
+    return this.children;
+  }
+
   isAttached(): boolean {
     return this._isAttached;
   }
 
   isDisposed(): boolean {
     return this._isDisposed;
+  }
+
+  isInFrustum(frustum: THREE.Frustum): boolean {
+    return false;
   }
 
   onPointerAuxiliaryClick(): void {}

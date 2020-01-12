@@ -75,5 +75,11 @@ test.backend: $(SOURCES_RUST)
 test.frontend: $(SOURCES_JS) frontend.dependencies
 	$(CMD_YARN) run test:once
 
+test.frontend.coverage: $(SOURCES_JS) frontend.dependencies
+	$(CMD_YARN) run test:once:coverage
+
 test.frontend.watch: frontend.dependencies
 	$(CMD_YARN) run test
+
+typescript.watch: frontend.dependencies
+	$(CMD_YARN) run typescript:watch

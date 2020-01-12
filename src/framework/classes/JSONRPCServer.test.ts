@@ -17,7 +17,7 @@ test("incoming requests are processed", async function() {
   jsonRpcServer.returnPromise(cancelToken, "test-promise", async function() {
     cancelToken.cancel(loggerBreadcrumbs.add("promise-request"));
 
-    return new JSONRPCResponseData();
+    return new JSONRPCResponseData(null);
   });
 
   await jsonRpcServer.handleRequest(jsonRpcRequest);

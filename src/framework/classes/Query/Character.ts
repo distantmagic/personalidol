@@ -1,12 +1,14 @@
+import Query from "src/framework/classes/Query";
 import { default as CharacterModel } from "src/framework/classes/Entity/Person/Character";
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { Query } from "src/framework/interfaces/Query";
 
-export default class Character implements Query<CharacterModel> {
+export default class Character extends Query<CharacterModel> {
   readonly ref: string;
 
   constructor(ref: string) {
+    super();
+
     this.ref = ref;
   }
 

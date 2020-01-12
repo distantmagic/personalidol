@@ -21,7 +21,7 @@ function getConvexHullFacePoints(face: Face): [THREE.Vector3, THREE.Vector3, THR
     points.push(point);
   } while (edge !== face.edge);
 
-  // unwinded just fo typing
+  // unwinded just for typing
   return [points[0], points[1], points[2]];
 }
 

@@ -5,7 +5,7 @@ import QuakeBrush from "src/framework/classes/QuakeBrush";
 import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";
 import QuakeBrushHalfSpaceParser from "src/framework/classes/QuakeBrushHalfSpaceParser";
 
-test("generates faces from quake brush", function() {
+test("generates geometry from quake brush", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush = new QuakeBrush(loggerBreadcrumbs, [
     new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0 1 1").parse(),
@@ -16,11 +16,21 @@ test("generates faces from quake brush", function() {
     new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( 64 64 16 ) ( 64 64 17 ) ( 64 65 16 ) __TB_empty 0 0 0 1 1").parse(),
   ]);
 
-  // const quakeBrushGeometry = new QuakeBrushGeometryBuilder(quakeBrush);
-  // const imageMock = document.createElement("img");
-  // const texture = new THREE.Texture(imageMock);
+  const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
-  // texture.name = "__TB_empty";
+  quakeBrushGeometryBuilder.addBrush(quakeBrush);
 
-  // const geometry = quakeBrushGeometry.getGeometry([texture]);
+  expect(quakeBrushGeometryBuilder.getIndices()).toHaveLength(36);
+  expect(quakeBrushGeometryBuilder.getNormals()).toHaveLength(96);
+  expect(quakeBrushGeometryBuilder.getTexturesIndices()).toHaveLength(32);
+  expect(quakeBrushGeometryBuilder.getTexturesNames()).toEqual(["__TB_empty"]);
+  expect(quakeBrushGeometryBuilder.getUvs()).toHaveLength(64);
+  expect(quakeBrushGeometryBuilder.getVertices()).toHaveLength(96);
+
+  const geometry = quakeBrushGeometryBuilder.getGeometry();
+
+  expect(geometry.getAttribute("normal").count).toBe(32);
+  expect(geometry.getAttribute("position").count).toBe(32);
+  expect(geometry.getAttribute("texture_index").count).toBe(32);
+  expect(geometry.getAttribute("uv").count).toBe(32);
 });
