@@ -3,8 +3,8 @@ import { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
 import { Query } from "../../interfaces/Query";
 
 export default class Knows implements Query<boolean> {
-  memorizable: Memorizable;
-  memorizes: Memorizes;
+  readonly memorizable: Memorizable;
+  readonly memorizes: Memorizes;
 
   constructor(memorizes: Memorizes, memorizable: Memorizable) {
     this.memorizable = memorizable;

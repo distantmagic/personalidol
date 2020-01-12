@@ -12,7 +12,7 @@ export default class HTMLElementResizeObserver implements HTMLElementResizeObser
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly nativeResizeObserver: ResizeObserver;
   readonly notifiable: Set<Resizeable<"px">>;
-  _isObserving: boolean;
+  private _isObserving: boolean;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
     const notifiable = new Set<Resizeable<"px">>();

@@ -21,9 +21,9 @@ export default class CameraController extends CanvasController implements Camera
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly renderer: WebGLRenderer;
   readonly scene: Scene;
-  height: number;
-  width: number;
-  zoomTarget: number;
+  private height: number;
+  private width: number;
+  private zoomTarget: number;
 
   constructor(canvasViewBag: CanvasViewBag, camera: OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
     super(canvasViewBag);

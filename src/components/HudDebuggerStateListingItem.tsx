@@ -34,7 +34,11 @@ function printValue(value: DebuggerStateValue): string {
     return `vec2(${printValue(value.toArray())})`;
   }
 
-  return `vec3(${printValue(value)})`;
+  if (value instanceof THREE.Vector3) {
+    return `vec3(${printValue(value.toArray())})`;
+  }
+
+  return `unknown(${value})`;
 }
 
 type Props = {

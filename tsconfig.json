@@ -5,7 +5,6 @@
       "dom",
       "dom.iterable",
       "esnext",
-      "webworker"
     ],
     "allowJs": false,
     "skipLibCheck": false,
@@ -22,6 +21,6 @@
     "jsx": "react"
   },
   "include": [
-    "src"
+    "src/**/*"
   ]
 }

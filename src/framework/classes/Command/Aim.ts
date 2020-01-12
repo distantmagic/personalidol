@@ -4,8 +4,8 @@ import { Aimable } from "../../interfaces/Memorizable/Aimable";
 import { Aims } from "../../interfaces/Sentient/Aims";
 
 export default class Aim extends Command {
-  aims: Aims;
-  aimable: Aimable;
+  private aims: Aims;
+  private aimable: Aimable;
 
   constructor(aims: Aims, aimable: Aimable) {
     super();

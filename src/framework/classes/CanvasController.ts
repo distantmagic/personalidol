@@ -3,10 +3,10 @@ import { CanvasController as CanvasControllerInterface } from "../interfaces/Can
 import { CanvasViewBag } from "../interfaces/CanvasViewBag";
 import { ElementSize } from "../interfaces/ElementSize";
 
-export default class CanvasController implements CanvasControllerInterface {
+export default abstract class CanvasController implements CanvasControllerInterface {
   readonly canvasViewBag: CanvasViewBag;
-  _isAttached: boolean;
-  _isDisposed: boolean;
+  private _isAttached: boolean;
+  private _isDisposed: boolean;
 
   constructor(canvasViewBag: CanvasViewBag) {
     this.canvasViewBag = canvasViewBag;

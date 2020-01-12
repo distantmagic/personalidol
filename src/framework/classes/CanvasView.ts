@@ -8,11 +8,11 @@ import { CancelToken } from "../interfaces/CancelToken";
 import { CanvasView as CanvasViewInterface } from "../interfaces/CanvasView";
 import { CanvasViewBag } from "../interfaces/CanvasViewBag";
 
-export default class CanvasView implements CanvasViewInterface {
+export default abstract class CanvasView implements CanvasViewInterface {
   readonly canvasViewBag: CanvasViewBag;
   readonly children: Group;
-  _isAttached: boolean;
-  _isDisposed: boolean;
+  private _isAttached: boolean;
+  private _isDisposed: boolean;
 
   static useBegin: boolean = true;
   static useEnd: boolean = true;

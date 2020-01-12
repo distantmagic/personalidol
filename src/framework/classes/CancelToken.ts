@@ -9,12 +9,12 @@ import { EventListenerSet as EventListenerSetInterface } from "../interfaces/Eve
 import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class CancelToken implements CancelTokenInterface {
+  private _isCanceled: boolean;
+  private _isSettled: boolean;
+  private loggerBreadcrumbsCancel: null | LoggerBreadcrumbs;
   readonly abortController: AbortController;
   readonly callbacks: EventListenerSetInterface<[CanceledInterface]>;
   readonly loggerBreadcrumbsCreate: LoggerBreadcrumbs;
-  loggerBreadcrumbsCancel: null | LoggerBreadcrumbs;
-  _isCanceled: boolean;
-  _isSettled: boolean;
 
   constructor(loggerBreadcrumbsCreate: LoggerBreadcrumbs) {
     this._isCanceled = false;

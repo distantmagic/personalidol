@@ -42,7 +42,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     }
   >;
   readonly vertices: number[];
-  lastIndex: number = 0;
+  private lastIndex: number = 0;
 
   constructor() {
     this.verticesIndex = new WeakMap();

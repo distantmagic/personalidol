@@ -17,7 +17,7 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
   readonly textureLoader: THREETextureLoader;
   readonly texturesIndex: string[];
   readonly texturesSources: Map<string, string>;
-  _lastId: number;
+  private _lastId: number;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, loadingManager: LoadingManager, queryBus: QueryBus) {
     this._lastId = 0;

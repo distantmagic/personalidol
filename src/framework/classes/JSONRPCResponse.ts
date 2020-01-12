@@ -2,19 +2,19 @@ import { JSONRPCMessageType } from "../types/JSONRPCMessageType";
 import { JSONRPCResponse as JSONRPCResponseInterface } from "../interfaces/JSONRPCResponse";
 import { JSONRPCResponseData } from "../interfaces/JSONRPCResponseData";
 
-export default class JSONRPCResponse<T, U extends Object> implements JSONRPCResponseInterface<T, U> {
+export default abstract class JSONRPCResponse<T, U extends Object> implements JSONRPCResponseInterface<T, U> {
   readonly data: JSONRPCResponseData<T>;
   readonly id: string;
   readonly method: string;
+
+  abstract asObject(): U;
+
+  abstract getType(): JSONRPCMessageType;
 
   constructor(id: string, method: string, data: JSONRPCResponseData<T>) {
     this.data = data;
     this.id = id;
     this.method = method;
-  }
-
-  asObject(): U {
-    throw new Error("Not yet implemented.");
   }
 
   getData(): JSONRPCResponseData<T> {
@@ -27,10 +27,6 @@ export default class JSONRPCResponse<T, U extends Object> implements JSONRPCResp
 
   getMethod(): string {
     return this.method;
-  }
-
-  getType(): JSONRPCMessageType {
-    throw new Error("Not yet implemented.");
   }
 
   isRequest(): false {

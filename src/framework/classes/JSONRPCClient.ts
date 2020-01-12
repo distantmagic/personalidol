@@ -25,7 +25,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
   readonly awaitingPromiseRequests: Map<string, (arg: any) => void>;
   readonly uuid: () => string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly postMessage: DedicatedWorkerGlobalScope["postMessage"];
+  readonly postMessage: Worker["postMessage"];
 
   static attachTo(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, worker: Worker): JSONRPCClientInterface {
     const jsonRpcClient = new JSONRPCClient(loggerBreadcrumbs, worker.postMessage.bind(worker));
@@ -35,7 +35,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
     return jsonRpcClient;
   }
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: DedicatedWorkerGlobalScope["postMessage"], uuid: () => string = THREE.Math.generateUUID) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: Worker["postMessage"], uuid: () => string = THREE.Math.generateUUID) {
     this.awaitingGeneratorRequests = new Map();
     this.awaitingPromiseRequests = new Map();
     this.loggerBreadcrumbs = loggerBreadcrumbs;

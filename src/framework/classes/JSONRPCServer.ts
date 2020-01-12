@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import autoBind from "auto-bind";
 
 import JSONRPCResponseData from "./JSONRPCResponseData";

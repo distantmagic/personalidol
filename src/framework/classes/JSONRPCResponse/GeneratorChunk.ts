@@ -25,7 +25,7 @@ export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T,
   readonly chunk: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly head: string;
-  next: null | string;
+  private next: null | string;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,

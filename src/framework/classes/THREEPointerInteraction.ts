@@ -11,10 +11,10 @@ export default class THREEPointerInteraction implements THREEPointerInteractionI
   readonly mouseVector: Vector2;
   readonly raycaster: Raycaster;
   readonly renderer: WebGLRenderer;
-  canvasHeight: number;
-  canvasOffsetLeft: number;
-  canvasOffsetTop: number;
-  canvasWidth: number;
+  private canvasHeight: number;
+  private canvasOffsetLeft: number;
+  private canvasOffsetTop: number;
+  private canvasWidth: number;
 
   constructor(renderer: WebGLRenderer, camera: Camera) {
     autoBind(this);

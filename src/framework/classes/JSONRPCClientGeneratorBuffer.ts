@@ -7,8 +7,8 @@ import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 export default class JSONRPCClientGeneratorBuffer<T> implements JSONRPCClientGeneratorBufferInterface<T> {
   readonly buffer: Map<string, JSONRPCGeneratorChunkResponse<T>>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  flushable: JSONRPCGeneratorChunkResponse<T>[];
-  lastSent: null | JSONRPCGeneratorChunkResponse<T> = null;
+  private flushable: JSONRPCGeneratorChunkResponse<T>[];
+  private lastSent: null | JSONRPCGeneratorChunkResponse<T> = null;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.buffer = new Map();

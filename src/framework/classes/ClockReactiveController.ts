@@ -4,8 +4,8 @@ import { ClockReactive } from "../interfaces/ClockReactive";
 import { ClockReactiveController as ClockReactiveControllerInterface } from "../interfaces/ClockReactiveController";
 
 export default class ClockReactiveController implements ClockReactiveControllerInterface {
-  clock: BusClock;
-  clockReactive: ClockReactive;
+  readonly clock: BusClock;
+  readonly clockReactive: ClockReactive;
 
   constructor(clock: BusClock, clockReactive: ClockReactive) {
     this.clock = clock;

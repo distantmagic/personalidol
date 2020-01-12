@@ -6,7 +6,7 @@ import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class EventListenerSet<Arguments extends readonly any[]> implements EventListenerSetInterface<Arguments> {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  callbacks: EventListenerSetCallback<Arguments>[];
+  private callbacks: EventListenerSetCallback<Arguments>[];
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.callbacks = [];

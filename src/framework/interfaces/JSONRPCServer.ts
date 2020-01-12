@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import { CancelToken } from "../interfaces/CancelToken";
 import { JSONRPCRequest } from "../interfaces/JSONRPCRequest";
 import { JSONRPCResponse } from "../interfaces/JSONRPCResponse";

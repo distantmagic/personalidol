@@ -19,7 +19,7 @@ import { Speaks } from "../../interfaces/Sentient/Speaks";
 import { Vocal } from "../../interfaces/Perceivable/Message/Vocal";
 
 export default class Person extends Entity implements Aims, Hears, Identifiable, Memorizes, Sees, Speaks {
-  readonly _name: string;
+  private readonly _name: string;
 
   constructor(name: string) {
     super();

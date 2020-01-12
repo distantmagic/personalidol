@@ -13,10 +13,10 @@ type OnMessageReadyCallback<T> = (response: JSONRPCGeneratorChunkResponseInterfa
 export default class JSONRPCServerGeneratorBuffer<T> implements JSONRPCServerGeneratorBufferInterface<T> {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onMessageReady: OnMessageReadyCallback<T>;
-  headChunkId: null | string = null;
+  private headChunkId: null | string = null;
   // buffer one response to produce chain of messages
   // order of message is not guaranteed sometimes
-  previous: null | JSONRPCGeneratorChunkResponseInterface<T> = null;
+  private previous: null | JSONRPCGeneratorChunkResponseInterface<T> = null;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, onMessageReady: OnMessageReadyCallback<T>) {
     this.headChunkId = null;

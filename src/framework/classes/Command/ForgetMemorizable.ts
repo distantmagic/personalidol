@@ -4,8 +4,8 @@ import { Memorizable } from "../../interfaces/Memorizable";
 import { Memorizes } from "../../interfaces/Sentient/Perceives/Memorizes";
 
 export default class ForgetMemorizable extends Command {
-  memorizes: Memorizes;
-  memorizable: Memorizable;
+  private memorizes: Memorizes;
+  private memorizable: Memorizable;
 
   constructor(memorizes: Memorizes, memorizable: Memorizable) {
     super();

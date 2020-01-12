@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import bootstrapFramework from "./bootstrapFramework";
 import BusClock from "../classes/BusClock";
 import CancelToken from "../classes/CancelToken";

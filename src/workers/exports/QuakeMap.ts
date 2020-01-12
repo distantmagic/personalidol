@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import * as THREE from "three";
 
 import bootstrapWorker from "../../framework/helpers/bootstrapWorker";

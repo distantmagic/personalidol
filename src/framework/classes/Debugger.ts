@@ -10,9 +10,9 @@ import { EventListenerSet as EventListenerSetInterface } from "../interfaces/Eve
 import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 
 export default class Debugger implements DebuggerInterface {
+  private _isEnabled: boolean;
+  private state: DebuggerState;
   readonly callbacks: EventListenerSetInterface<[DebuggerState]>;
-  _isEnabled: boolean;
-  state: DebuggerState;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
     this._isEnabled = false;

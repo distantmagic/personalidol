@@ -47,9 +47,9 @@ export default class SceneCanvas extends HTMLElement {
   readonly pointerState: PointerStateInterface;
   readonly resizeObserver: HTMLElementResizeObserverInterface;
   readonly scheduler: SchedulerInterface;
-  isHidden: boolean;
-  isLooping: boolean;
-  isObserving: boolean;
+  private isHidden: boolean;
+  private isLooping: boolean;
+  private isObserving: boolean;
 
   static get observedAttributes(): ReadonlyArray<string> {
     return [ATTR_DOCUMENT_HIDDEN];

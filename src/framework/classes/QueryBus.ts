@@ -18,7 +18,7 @@ export default class QueryBus implements QueryBusInterface {
   readonly enqueuedCallbacks: EventListenerSetInterface<[Query<any>]>;
   readonly exceptionHandler: ExceptionHandler;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  collection: QueryBusQueueCollection<any>;
+  private collection: QueryBusQueueCollection<any>;
 
   constructor(exceptionHandler: ExceptionHandler, loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
