@@ -31,7 +31,7 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     return new QuakeEntityPropertyParser(breadcrumbs.add("entityProperty"), line).parse();
   }
 
-  *parse(): Generator<QuakeEntityInterface, void, void> {
+  *parse(): Generator<QuakeEntityInterface> {
     const loggerBreadcrumbs = this.loggerBreadcrumbs.add("parse");
     const lines: ReadonlyArray<string> = this.splitLines(this.content);
     let currentBrushSketch: null | QuakeBrushHalfSpace[] = null;

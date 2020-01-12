@@ -8,7 +8,9 @@ import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
 import disposeObject3D from "src/framework/helpers/disposeObject3D";
 import disposeTexture from "src/framework/helpers/disposeTexture";
+import { default as LoaderException } from "src/framework/classes/Exception/Loader";
 
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 import { MD2Character as MD2CharacterInterface } from "src/framework/interfaces/MD2Character";
 import { MD2CharacterAnimations } from "src/framework/types/MD2CharacterAnimations";
 import { MD2CharacterConfig } from "src/framework/types/MD2CharacterConfig";
@@ -52,6 +54,7 @@ function checkLoadingComplete(scope: MD2CharacterInterface): void {
 
 export default class MD2Character implements MD2CharacterInterface {
   readonly loadingManager: THREE.LoadingManager;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   // animation parameters
 
@@ -94,8 +97,9 @@ export default class MD2Character implements MD2CharacterInterface {
 
   blendCounter = 0;
 
-  constructor(loadingManager: THREE.LoadingManager) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, loadingManager: THREE.LoadingManager) {
     this.loadingManager = loadingManager;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
   // API
@@ -118,7 +122,7 @@ export default class MD2Character implements MD2CharacterInterface {
     const originalMeshBody = original.meshBody;
 
     if (!originalMeshBody) {
-      throw new Error("originalMeshBody is not set but it was expected.");
+      throw new LoaderException(this.loggerBreadcrumbs.add("shareParts"), "originalMeshBody is not set but it was expected.");
     }
 
     this.animations = original.animations;
@@ -212,17 +216,17 @@ export default class MD2Character implements MD2CharacterInterface {
     const meshBody = this.meshBody;
 
     if (!meshBody) {
-      throw new Error("Mesh body is not defined but it was expected.");
+      throw new LoaderException(this.loggerBreadcrumbs.add("setSkin"), "Mesh body is not defined but it was expected.");
     }
 
     const material = meshBody.material;
 
     if (!material) {
-      throw new Error("Mesh body material is not defined.");
+      throw new LoaderException(this.loggerBreadcrumbs.add("setSkin"), "Mesh body material is not defined.");
     }
 
     if (Array.isArray(material)) {
-      throw new Error("Unexpected multi-material mesh in MD2 character.");
+      throw new LoaderException(this.loggerBreadcrumbs.add("setSkin"), "Unexpected multi-material mesh in MD2 character.");
     }
 
     // @ts-ignore
@@ -237,11 +241,11 @@ export default class MD2Character implements MD2CharacterInterface {
     const meshWeapon = this.meshWeapon;
 
     if (!meshBody) {
-      throw new Error("meshBody is not loaded yet.");
+      throw new LoaderException(this.loggerBreadcrumbs.add("setWeapon"), "meshBody is not loaded yet.");
     }
 
     if (!meshWeapon) {
-      throw new Error("meshWeapon is not loaded yet.");
+      throw new LoaderException(this.loggerBreadcrumbs.add("setWeapon"), "meshWeapon is not loaded yet.");
     }
 
     for (let i = 0; i < this.weapons.length; i++) {
@@ -324,7 +328,7 @@ export default class MD2Character implements MD2CharacterInterface {
     const animations = this.animations;
 
     if (!animations) {
-      throw new Error("Animations are not defined.");
+      throw new LoaderException(this.loggerBreadcrumbs.add("updateBehaviors"), "Animations are not defined.");
     }
 
     let moveAnimation, idleAnimation;

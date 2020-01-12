@@ -63,9 +63,9 @@ export default class MD2Character extends CanvasView {
       baseUrl: this.baseUrl,
     };
 
-    const characterQuery = new MD2CharacterQuery(this.threeLoadingManager, configMerged);
+    const characterQuery = new MD2CharacterQuery(this.loggerBreadcrumbs.add("attach"), this.threeLoadingManager, configMerged);
     const baseCharacter: THREEMD2CharacterInterface = await this.queryBus.enqueue(cancelToken, characterQuery).whenExecuted();
-    const character: THREEMD2CharacterInterface = new THREEMD2Character(this.threeLoadingManager);
+    const character: THREEMD2CharacterInterface = new THREEMD2Character(this.loggerBreadcrumbs.add("attach"), this.threeLoadingManager);
 
     character.controls = {
       attack: false,

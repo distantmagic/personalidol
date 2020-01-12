@@ -217,7 +217,12 @@ export default class QuakeMap extends CanvasView {
     }
 
     await Promise.all(entities);
-    await Promise.all([this.attachGLTFEntities(cancelToken, gltfModels), this.attachMD2Entities(cancelToken, md2Models)]);
+
+    // prettier-ignore
+    await Promise.all([
+      this.attachGLTFEntities(cancelToken, gltfModels),
+      this.attachMD2Entities(cancelToken, md2Models)
+    ]);
 
     this.scene.add(this.children);
   }
@@ -237,6 +242,7 @@ export default class QuakeMap extends CanvasView {
           this.canvasViewBag.add(
             cancelToken,
             new GLTFModelView(
+              this.loggerBreadcrumbs.add("GLTFModel"),
               this.canvasViewBag.fork(this.loggerBreadcrumbs.add("GLTFModel")),
               this.queryBus,
               this.children,

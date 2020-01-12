@@ -17,7 +17,7 @@ export interface JSONRPCClient {
 
   handleSerializedResponse(response: { readonly [key: string]: any }): Promise<void>;
 
-  requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): AsyncGenerator<T, void, void>;
+  requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): AsyncGenerator<T>;
 
   requestPromise<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): Promise<T>;
 

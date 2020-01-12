@@ -5,9 +5,9 @@ import { QuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpac
 import { QuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
 export interface QuakeBrush extends Equatable<QuakeBrush> {
-  generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrio, void, void>;
+  generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrio>;
 
-  generateVertices(): Generator<THREE.Vector3, void, void>;
+  generateVertices(): Generator<THREE.Vector3>;
 
   getVertices(): ReadonlyArray<THREE.Vector3>;
 

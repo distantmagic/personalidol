@@ -1,4 +1,4 @@
-export default function* combineWithoutRepetitions<T>(comboOptions: ReadonlyArray<T>, comboLength: number): Generator<readonly T[], void, void> {
+export default function* combineWithoutRepetitions<T>(comboOptions: ReadonlyArray<T>, comboLength: number): Generator<readonly T[]> {
   if (comboLength === 1) {
     for (let currentOption of comboOptions) {
       yield [currentOption];

@@ -30,7 +30,7 @@ export default class EventListenerGenerator<Arguments extends ReadonlyArray<any>
     this.eventListenerSet = eventListenerSet;
   }
 
-  generate(cancelToken: CancelToken): AsyncGenerator<Arguments, void, void> {
+  generate(cancelToken: CancelToken): AsyncGenerator<Arguments> {
     const buffer: GeneratorBuffer<Arguments> = [];
     const self = this;
 

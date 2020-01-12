@@ -35,7 +35,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     return true;
   }
 
-  *generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrioInterface, void, void> {
+  *generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrioInterface> {
     for (let combo of combineWithoutRepetitions<QuakeBrushHalfSpace>(this.halfSpaces, 3)) {
       if (combo.length !== 3) {
         throw new QuakeBrushException(this.loggerBreadcrumbs, "Invalid halfspace combinations.");

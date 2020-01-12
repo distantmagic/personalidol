@@ -15,6 +15,7 @@ import PointerState from "src/framework/classes/PointerState";
 import SceneCanvasTemplate from "src/framework/classes/HTMLElement/SceneCanvas.template";
 import Scheduler from "src/framework/classes/Scheduler";
 import { default as RootCanvasController } from "src/framework/classes/CanvasController/Root";
+import { default as SceneCanvasException } from "src/framework/classes/Exception/SceneCanvas";
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasControllerBus as CanvasControllerBusInterface } from "src/framework/interfaces/CanvasControllerBus";
@@ -57,6 +58,8 @@ export default class SceneCanvas extends HTMLElement {
     super();
     autoBind(this);
 
+    this.loggerBreadcrumbs = new LoggerBreadcrumbs(["SceneCanvas"]);
+
     const shadowRoot = this.attachShadow({
       mode: "closed",
     });
@@ -66,7 +69,7 @@ export default class SceneCanvas extends HTMLElement {
     const canvasElement = shadowRoot.getElementById("dm-canvas");
 
     if (!canvasElement) {
-      throw new Error("Unable to get shadow canvas element");
+      throw new SceneCanvasException(this.loggerBreadcrumbs, "Unable to get shadow canvas element");
     }
 
     this.canvasElement = canvasElement as HTMLCanvasElement;
@@ -74,7 +77,7 @@ export default class SceneCanvas extends HTMLElement {
     const canvasWrapperElement = shadowRoot.getElementById("dm-canvas-wrapper");
 
     if (!canvasWrapperElement) {
-      throw new Error("Unable to get shadow canvas wrapper element");
+      throw new SceneCanvasException(this.loggerBreadcrumbs, "Unable to get shadow canvas wrapper element");
     }
 
     this.canvasWrapperElement = canvasWrapperElement;
@@ -85,12 +88,11 @@ export default class SceneCanvas extends HTMLElement {
     this.isLooping = false;
     this.isObserving = false;
 
-    this.loggerBreadcrumbs = new LoggerBreadcrumbs(["SceneCanvas"]);
     this.scheduler = new Scheduler(this.loggerBreadcrumbs.add("Scheduler"));
     this.canvasViewBus = new CanvasViewBus(this.loggerBreadcrumbs, this.scheduler);
     this.canvasViewBag = new CanvasViewBag(this.canvasViewBus, this.loggerBreadcrumbs);
     this.keyboardState = new KeyboardState(this.loggerBreadcrumbs.add("KeyboardState"));
-    this.mainLoop = MainLoop.getInstance();
+    this.mainLoop = MainLoop.getInstance(this.loggerBreadcrumbs.add("MainLoop"));
     this.pointerState = new PointerState(this.loggerBreadcrumbs.add("PointerState"), this.canvasElement);
     this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this.canvasWrapperElement);
     this.canvasControllerBus = new CanvasControllerBus(this.loggerBreadcrumbs, this.resizeObserver, this.scheduler);

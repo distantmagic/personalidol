@@ -2,21 +2,23 @@ import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
 import { default as GLTFModelQuery } from "src/framework/classes/Query/GLTFModel";
+import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 import { default as TextureQuery } from "src/framework/classes/Query/Texture";
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 import { QuakeWorkerGLTFModel } from "src/framework/types/QuakeWorkerGLTFModel";
 import { QueryBus } from "src/framework/interfaces/QueryBus";
 
-function getMesh(scene: THREE.Scene): THREE.Mesh {
+function getMesh(loggerBreadcrumbs: LoggerBreadcrumbs, scene: THREE.Scene): THREE.Mesh {
   for (let child of scene.children) {
     if (child instanceof THREE.Mesh) {
       return child;
     }
   }
 
-  throw new Error("Could not find mesh.");
+  throw new QuakeMapException(loggerBreadcrumbs, "Could not find mesh.");
 }
 
 export default class GLTFModel extends CanvasView {
@@ -24,11 +26,13 @@ export default class GLTFModel extends CanvasView {
   readonly baseUrl: string;
   readonly entities: ReadonlyArray<QuakeWorkerGLTFModel>;
   readonly group: THREE.Group;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
   readonly texture: string;
   readonly threeLoadingManager: THREE.LoadingManager;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
     queryBus: QueryBus,
     group: THREE.Group,
@@ -44,6 +48,7 @@ export default class GLTFModel extends CanvasView {
     this.baseUrl = baseUrl;
     this.entities = entities;
     this.group = group;
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.texture = texture;
     this.threeLoadingManager = threeLoadingManager;
@@ -58,7 +63,7 @@ export default class GLTFModel extends CanvasView {
     const textureQuery = new TextureQuery(new THREE.TextureLoader(this.threeLoadingManager), `${this.baseUrl}${this.texture}`);
     const texture = await this.queryBus.enqueue(cancelToken, textureQuery).whenExecuted();
 
-    const baseMesh = getMesh(response.scene);
+    const baseMesh = getMesh(this.loggerBreadcrumbs.add("attach"), response.scene);
     const boundingBox = new THREE.Box3();
 
     // @ts-ignore

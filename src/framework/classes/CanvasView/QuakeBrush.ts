@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
 import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
+import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
@@ -190,7 +191,7 @@ export default class QuakeBrush extends CanvasView {
     const atlasCanvasContext = atlasCanvas.getContext("2d");
 
     if (!atlasCanvasContext) {
-      throw new Error("Unable to create canvas 2D context.");
+      throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), "Unable to create canvas 2D context.");
     }
 
     for (let i = 0; i < loadedTextures.length; i += 1) {

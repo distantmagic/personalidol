@@ -28,7 +28,7 @@ export default class JSONRPCClientGeneratorBuffer<T> implements JSONRPCClientGen
     }
   }
 
-  *flush(): Generator<JSONRPCGeneratorChunkResponse<T>, void, void> {
+  *flush(): Generator<JSONRPCGeneratorChunkResponse<T>> {
     for (let flushable of this.flushable) {
       yield flushable;
       this.lastSent = flushable;

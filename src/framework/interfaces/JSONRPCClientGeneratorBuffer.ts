@@ -3,7 +3,7 @@ import { JSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCG
 export interface JSONRPCClientGeneratorBuffer<T> {
   add(response: JSONRPCGeneratorChunkResponse<T>): void;
 
-  flush(): Generator<JSONRPCGeneratorChunkResponse<T>, void, void>;
+  flush(): Generator<JSONRPCGeneratorChunkResponse<T>>;
 
   getLastSent(): JSONRPCGeneratorChunkResponse<T>;
 

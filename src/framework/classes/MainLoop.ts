@@ -3,8 +3,9 @@ import noop from "lodash/noop";
 import { default as VendorMainLoop } from "mainloop.js";
 
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
-import SingletonException from "src/framework/classes/Exception/Singleton";
+import { default as MainLoopException } from "src/framework/classes/Exception/MainLoop";
 
+import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "src/framework/interfaces/LoggerBreadcrumbs";
 import { MainLoop as MainLoopInterface } from "src/framework/interfaces/MainLoop";
 import { MainLoopBeginCallback } from "src/framework/types/MainLoopBeginCallback";
 import { MainLoopDrawCallback } from "src/framework/types/MainLoopDrawCallback";
@@ -15,9 +16,9 @@ import { Scheduler } from "src/framework/interfaces/Scheduler";
 let instance: null | MainLoopInterface = null;
 
 export default class MainLoop implements MainLoopInterface {
-  static getInstance(): MainLoop {
+  static getInstance(loggerBreadcrumbs: LoggerBreadcrumbsInterface): MainLoop {
     if (!instance) {
-      throw new Error("Main loop is used before it's instanciated.");
+      throw new MainLoopException(loggerBreadcrumbs, "Main loop is used before it's instanciated.");
     }
 
     return instance;
@@ -25,7 +26,7 @@ export default class MainLoop implements MainLoopInterface {
 
   constructor() {
     if (instance) {
-      throw new SingletonException(new LoggerBreadcrumbs(["root", "MainLoop"]), "MainLoop is a singleton. Use `getInstance()` instead.");
+      throw new MainLoopException(new LoggerBreadcrumbs(["root", "MainLoop"]), "MainLoop is a singleton. Use `getInstance()` instead.");
     }
 
     autoBind(this);
