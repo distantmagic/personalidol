@@ -9,14 +9,12 @@ import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 import disposeObject3D from "../helpers/disposeObject3D";
 import disposeTexture from "../helpers/disposeTexture";
 
-import { BufferGeometry, Geometry, LoadingManager, Texture } from "three";
-
 import { MD2Character as MD2CharacterInterface } from "../interfaces/MD2Character";
 import { MD2CharacterAnimations } from "../types/MD2CharacterAnimations";
 import { MD2CharacterConfig } from "../types/MD2CharacterConfig";
 import { MD2CharacterControls } from "../types/MD2CharacterControls";
 
-function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: LoadingManager, textureUrls: ReadonlyArray<string>): Texture[] {
+function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: THREE.LoadingManager, textureUrls: ReadonlyArray<string>): THREE.Texture[] {
   const textureLoader = new THREE.TextureLoader(loadingManager);
   const textures = [];
 
@@ -29,7 +27,7 @@ function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingMana
   return textures;
 }
 
-function createPart(scope: MD2CharacterInterface, geometry: BufferGeometry | Geometry, skinMap: Texture): MorphBlendMesh {
+function createPart(scope: MD2CharacterInterface, geometry: THREE.BufferGeometry | THREE.Geometry, skinMap: THREE.Texture): MorphBlendMesh {
   const materialTexture = new THREE.MeshLambertMaterial({
     color: 0xffffff,
     wireframe: false,
@@ -53,7 +51,7 @@ function checkLoadingComplete(scope: MD2CharacterInterface): void {
 }
 
 export default class MD2Character implements MD2CharacterInterface {
-  readonly loadingManager: LoadingManager;
+  readonly loadingManager: THREE.LoadingManager;
 
   // animation parameters
 
@@ -71,8 +69,8 @@ export default class MD2Character implements MD2CharacterInterface {
 
   // skins
 
-  skinsBody: Texture[] = [];
-  skinsWeapon: Texture[] = [];
+  skinsBody: THREE.Texture[] = [];
+  skinsWeapon: THREE.Texture[] = [];
 
   weapons: MorphBlendMesh[] = [];
 
@@ -96,7 +94,7 @@ export default class MD2Character implements MD2CharacterInterface {
 
   blendCounter = 0;
 
-  constructor(loadingManager: LoadingManager) {
+  constructor(loadingManager: THREE.LoadingManager) {
     this.loadingManager = loadingManager;
   }
 

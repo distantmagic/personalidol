@@ -4,8 +4,6 @@ import * as THREE from "three";
 import Exception from "./Exception";
 import isEqualWithEpsilon from "../helpers/isEqualWithEpsilon";
 
-import { Plane, Vector3 } from "three";
-
 import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import { QuakeBrushHalfSpace } from "../interfaces/QuakeBrushHalfSpace";
 import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "../interfaces/QuakeBrushHalfSpaceTrio";
@@ -16,7 +14,7 @@ function checkIntersectingPointDeterminant(det: number): boolean {
   return !isEqualWithEpsilon(det, 0, 0.1);
 }
 
-function getIntersectionDeterminant(trio: QuakeBrushHalfSpaceTrioInterface, plane1: Plane, plane2: Plane, plane3: Plane): number {
+function getIntersectionDeterminant(trio: QuakeBrushHalfSpaceTrioInterface, plane1: THREE.Plane, plane2: THREE.Plane, plane3: THREE.Plane): number {
   const matrix = new THREE.Matrix3();
 
   matrix.set(plane1.normal.x, plane1.normal.y, plane1.normal.z, plane2.normal.x, plane2.normal.y, plane2.normal.z, plane3.normal.x, plane3.normal.y, plane3.normal.z);
@@ -37,7 +35,7 @@ export default class QuakeBrushHalfSpaceTrio implements QuakeBrushHalfSpaceTrioI
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  getIntersectingPoint(): Vector3 {
+  getIntersectingPoint(): THREE.Vector3 {
     const plane1 = this.getQuakeBrushHalfSpace1().getPlane();
     const plane2 = this.getQuakeBrushHalfSpace2().getPlane();
     const plane3 = this.getQuakeBrushHalfSpace3().getPlane();

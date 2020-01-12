@@ -3,25 +3,23 @@ import * as THREE from "three";
 import { default as QuakeMapException } from "./Exception/QuakeMap";
 import { default as TextureQuery } from "./Query/Texture";
 
-import { LoadingManager, Texture, TextureLoader as THREETextureLoader } from "three";
-
 import { CancelToken } from "../interfaces/CancelToken";
 import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import { QueryBus } from "../interfaces/QueryBus";
 import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "../interfaces/QuakeMapTextureLoader";
 
 export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInterface {
-  readonly loadedTextures: Set<Texture>;
+  readonly loadedTextures: Set<THREE.Texture>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
-  readonly textureLoader: THREETextureLoader;
+  readonly textureLoader: THREE.TextureLoader;
   readonly texturesIndex: string[];
   readonly texturesSources: Map<string, string>;
   private _lastId: number;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, loadingManager: LoadingManager, queryBus: QueryBus) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, loadingManager: THREE.LoadingManager, queryBus: QueryBus) {
     this._lastId = 0;
-    this.loadedTextures = new Set<Texture>();
+    this.loadedTextures = new Set<THREE.Texture>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.textureLoader = new THREE.TextureLoader(loadingManager);
@@ -55,7 +53,7 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
     return textureSource;
   }
 
-  async loadTexture(cancelToken: CancelToken, textureName: string): Promise<Texture> {
+  async loadTexture(cancelToken: CancelToken, textureName: string): Promise<THREE.Texture> {
     const src = this.getTextureSource(textureName);
 
     const texture = await this.queryBus.enqueue(cancelToken, new TextureQuery(this.textureLoader, src)).whenExecuted();
@@ -66,11 +64,11 @@ export default class QuakeMapTextureLoader implements QuakeMapTextureLoaderInter
     return texture;
   }
 
-  loadRegisteredTextures(cancelToken: CancelToken): Promise<ReadonlyArray<Texture>> {
+  loadRegisteredTextures(cancelToken: CancelToken): Promise<ReadonlyArray<THREE.Texture>> {
     return this.loadTextures(cancelToken, this.texturesIndex);
   }
 
-  loadTextures(cancelToken: CancelToken, textureNames: ReadonlyArray<string>): Promise<ReadonlyArray<Texture>> {
+  loadTextures(cancelToken: CancelToken, textureNames: ReadonlyArray<string>): Promise<ReadonlyArray<THREE.Texture>> {
     const loadedTextures = textureNames.map(this.loadTexture.bind(this, cancelToken));
 
     return Promise.all(loadedTextures);

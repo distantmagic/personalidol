@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import * as THREE from "three";
 
 import { Equatable } from "./Equatable";
 import { QuakeBrush } from "./QuakeBrush";
@@ -9,7 +9,7 @@ export interface QuakeEntity extends Equatable<QuakeEntity> {
 
   getClassName(): string;
 
-  getOrigin(): Vector3;
+  getOrigin(): THREE.Vector3;
 
   getProperties(): QuakeEntityProperties;
 

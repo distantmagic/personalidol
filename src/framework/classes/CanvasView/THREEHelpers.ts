@@ -3,15 +3,13 @@ import * as THREE from "three";
 import CanvasView from "../CanvasView";
 import disposeObject3D from "../../helpers/disposeObject3D";
 
-import { AxesHelper, GridHelper, Scene } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class THREEHelpers extends CanvasView {
-  readonly scene: Scene;
+  readonly scene: THREE.Scene;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, scene: THREE.Scene) {
     super(canvasViewBag);
 
     this.scene = scene;

@@ -2,16 +2,14 @@
 
 import CanvasView from "../CanvasView";
 
-import { Group, Vector3 } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 
 export default class Player extends CanvasView {
-  readonly group: Group;
-  readonly origin: Vector3;
+  readonly group: THREE.Group;
+  readonly origin: THREE.Vector3;
 
-  constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3) {
+  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, origin: THREE.Vector3) {
     super(canvasViewBag);
 
     this.group = group;

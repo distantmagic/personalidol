@@ -1,5 +1,5 @@
-import { Vector3 } from "three";
+import * as THREE from "three";
 
 import { Parser } from "./Parser";
 
-export interface QuakePointParser extends Parser<Vector3> {}
+export interface QuakePointParser extends Parser<THREE.Vector3> {}

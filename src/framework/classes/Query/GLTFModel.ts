@@ -1,20 +1,18 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-import { LoadingManager, Scene } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { Query } from "../../interfaces/Query";
 
 type GLTFLoaderResponse = {
-  scene: Scene;
+  scene: THREE.Scene;
 };
 
 export default class GLTFModel implements Query<GLTFLoaderResponse> {
-  readonly loadingManager: LoadingManager;
+  readonly loadingManager: THREE.LoadingManager;
   readonly resourcesPath: string;
   readonly url: string;
 
-  constructor(loadingManager: LoadingManager, resourcesPath: string, url: string) {
+  constructor(loadingManager: THREE.LoadingManager, resourcesPath: string, url: string) {
     this.loadingManager = loadingManager;
     this.resourcesPath = resourcesPath;
     this.url = url;

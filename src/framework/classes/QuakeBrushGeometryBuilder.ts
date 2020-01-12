@@ -1,19 +1,16 @@
 import * as THREE from "three";
 
-import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
+import { ConvexHull, Face } from "three/examples/jsm/math/ConvexHull";
 
 import quake2three from "../helpers/quake2three";
 import three2quake from "../helpers/three2quake";
-
-import { ConvexHull as ConvexHullInterface, Face as ConvexHullFace } from "three/examples/jsm/math/ConvexHull";
-import { BufferGeometry, Vector3 } from "three";
 
 import { QuakeBrush } from "../interfaces/QuakeBrush";
 import { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "../interfaces/QuakeBrushGeometryBuilder";
 
 const TEXTURE_SIZE = 128;
 
-function getConvexHullFacePoints(face: ConvexHullFace): [Vector3, Vector3, Vector3] {
+function getConvexHullFacePoints(face: Face): [THREE.Vector3, THREE.Vector3, THREE.Vector3] {
   let edge = face.edge;
   const points = [];
 
@@ -35,10 +32,10 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
   readonly textures: number[];
   readonly uvs: number[];
   readonly verticesIndex: WeakMap<
-    Vector3,
+    THREE.Vector3,
     {
       index: number;
-      normal: Vector3;
+      normal: THREE.Vector3;
     }
   >;
   readonly vertices: number[];
@@ -63,7 +60,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     }
   }
 
-  addConvexHullFace(quakeBrush: QuakeBrush, face: ConvexHullFace): void {
+  addConvexHullFace(quakeBrush: QuakeBrush, face: Face): void {
     const [v1, v2, v3] = getConvexHullFacePoints(face);
     const halfSpace = quakeBrush.getHalfSpaceByCoplanarPoints(three2quake(v1), three2quake(v2), three2quake(v3));
     const textureName = halfSpace.getTexture();
@@ -126,7 +123,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     this.indexVertex(v3, face.normal);
   }
 
-  addTextureIndex(vertex: Vector3, normal: Vector3, textureIndex: number): void {
+  addTextureIndex(vertex: THREE.Vector3, normal: THREE.Vector3, textureIndex: number): void {
     if (this.isVertexIndexed(vertex, normal)) {
       return;
     }
@@ -134,7 +131,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     this.textures.push(textureIndex);
   }
 
-  addVertex(vertex: Vector3, normal: Vector3): void {
+  addVertex(vertex: THREE.Vector3, normal: THREE.Vector3): void {
     if (this.isVertexIndexed(vertex, normal)) {
       return;
     }
@@ -143,7 +140,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     this.vertices.push(vertex.x, vertex.y, vertex.z);
   }
 
-  addVertexUVs(vertex: Vector3, normal: Vector3, x: number, y: number): void {
+  addVertexUVs(vertex: THREE.Vector3, normal: THREE.Vector3, x: number, y: number): void {
     if (this.isVertexIndexed(vertex, normal)) {
       return;
     }
@@ -151,7 +148,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     this.uvs.push(x, y);
   }
 
-  getConvexHull(quakeBrush: QuakeBrush): ConvexHullInterface {
+  getConvexHull(quakeBrush: QuakeBrush): ConvexHull {
     const convexHull = new ConvexHull();
     const vertices = quakeBrush.getVertices().map(quake2three);
 
@@ -160,7 +157,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     return convexHull;
   }
 
-  getGeometry(): BufferGeometry {
+  getGeometry(): THREE.BufferGeometry {
     const geometry = new THREE.BufferGeometry();
 
     geometry.setAttribute("normal", new THREE.Float32BufferAttribute(this.getNormals(), 3));
@@ -195,7 +192,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     return this.vertices;
   }
 
-  indexVertex(vertex: Vector3, normal: Vector3): void {
+  indexVertex(vertex: THREE.Vector3, normal: THREE.Vector3): void {
     const indexed = this.verticesIndex.get(vertex);
 
     if (this.isVertexIndexed(vertex, normal) && indexed) {
@@ -213,7 +210,7 @@ export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuil
     this.lastIndex += 1;
   }
 
-  isVertexIndexed(vertex: Vector3, normal: Vector3): boolean {
+  isVertexIndexed(vertex: THREE.Vector3, normal: THREE.Vector3): boolean {
     const indexed = this.verticesIndex.get(vertex);
 
     if (!indexed) {

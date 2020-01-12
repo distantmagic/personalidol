@@ -1,20 +1,18 @@
 import * as THREE from "three";
 
-import { Texture as THREETexture, TextureLoader } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { Query } from "../../interfaces/Query";
 
-export default class Texture implements Query<THREETexture> {
-  readonly textureLoader: TextureLoader;
+export default class Texture implements Query<THREE.Texture> {
+  readonly textureLoader: THREE.TextureLoader;
   readonly textureSource: string;
 
-  constructor(textureLoader: TextureLoader, textureSource: string) {
+  constructor(textureLoader: THREE.TextureLoader, textureSource: string) {
     this.textureLoader = textureLoader;
     this.textureSource = textureSource;
   }
 
-  async execute(cancelToken: CancelToken): Promise<THREETexture> {
+  async execute(cancelToken: CancelToken): Promise<THREE.Texture> {
     return new Promise((resolve, reject) => {
       this.textureLoader.load(
         this.textureSource,

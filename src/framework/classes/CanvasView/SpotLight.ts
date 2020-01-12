@@ -2,28 +2,27 @@ import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 
-import { Color, Group, SpotLight as SpotLightInterface, Vector3 } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { QuakeWorkerLightSpotlight } from "../../types/QuakeWorkerLightSpotlight";
 
 export default class SpotLight extends CanvasView {
-  readonly color: Color;
-  readonly group: Group;
-  readonly light: SpotLightInterface;
+  readonly color: THREE.Color;
+  readonly group: THREE.Group;
+  readonly light: THREE.SpotLight;
 
-  constructor(canvasViewBag: CanvasViewBag, group: Group, origin: Vector3, color: Color, intensity: number, decay: number) {
+  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, origin: THREE.Vector3, entity: QuakeWorkerLightSpotlight) {
     super(canvasViewBag);
 
-    this.color = color;
+    this.color = new THREE.Color(parseInt(entity.color, 16));
     this.group = group;
 
-    this.light = new THREE.SpotLight(this.color.getHex(), intensity);
+    this.light = new THREE.SpotLight(this.color.getHex(), entity.intensity);
     this.light.position.copy(origin);
     this.light.target.position.set(origin.x, 0, origin.z);
 
     this.light.angle = 1;
-    this.light.decay = decay;
+    this.light.decay = entity.decay;
     this.light.distance = 512;
     this.light.penumbra = 1;
     this.light.castShadow = true;

@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import uniq from "lodash/uniq";
 
 import combineWithoutRepetitions from "../helpers/combineWithoutRepetitions";
@@ -5,8 +6,6 @@ import isArrayEqual from "../helpers/isArrayEqual";
 import QuakeBrushHalfSpaceTrio from "./QuakeBrushHalfSpaceTrio";
 import serializeVector3 from "../helpers/serializeVector3";
 import { default as QuakeBrushException } from "./Exception/QuakeBrush";
-
-import { Vector3 } from "three";
 
 import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import { QuakeBrush as QuakeBrushInterface } from "../interfaces/QuakeBrush";
@@ -26,7 +25,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  containsPoint(point: Vector3): boolean {
+  containsPoint(point: THREE.Vector3): boolean {
     for (let halfSpace of this.getHalfSpaces()) {
       if (!halfSpace.containsPoint(point)) {
         return false;
@@ -46,7 +45,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     }
   }
 
-  *generateVertices(): Generator<Vector3, void, void> {
+  *generateVertices(): Generator<THREE.Vector3, void, void> {
     const unique: { [key: string]: boolean } = {};
 
     for (let trio of this.generateHalfSpaceTrios()) {
@@ -65,7 +64,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     }
   }
 
-  getHalfSpaceByCoplanarPoints(v1: Vector3, v2: Vector3, v3: Vector3): QuakeBrushHalfSpace {
+  getHalfSpaceByCoplanarPoints(v1: THREE.Vector3, v2: THREE.Vector3, v3: THREE.Vector3): QuakeBrushHalfSpace {
     for (let halfSpace of this.getHalfSpaces()) {
       if (halfSpace.planeContainsPoint(v1) && halfSpace.planeContainsPoint(v2) && halfSpace.planeContainsPoint(v3)) {
         return halfSpace;
@@ -83,7 +82,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     return uniq(this.getHalfSpaces().map(halfSpace => halfSpace.getTexture()));
   }
 
-  getVertices(): ReadonlyArray<Vector3> {
+  getVertices(): ReadonlyArray<THREE.Vector3> {
     return Array.from(this.generateVertices());
   }
 

@@ -1,8 +1,8 @@
+import * as THREE from "three";
+
 import disposeMaterial from "./disposeMaterial";
 
-import { Mesh, Object3D } from "three";
-
-function doDispose(obj: Mesh | Object3D, disposeTextures: boolean): void {
+function doDispose(obj: THREE.Mesh | THREE.Object3D, disposeTextures: boolean): void {
   // @ts-ignore
   const geometry = obj.geometry;
 
@@ -21,7 +21,7 @@ function doDispose(obj: Mesh | Object3D, disposeTextures: boolean): void {
 /**
  * See: https://github.com/Marco-Sulla/my3
  */
-export default function disposeObject3D(obj: Object3D, disposeTextures: boolean): void {
+export default function disposeObject3D(obj: THREE.Object3D, disposeTextures: boolean): void {
   return void obj.traverse(function(child) {
     return doDispose(child, disposeTextures);
   });

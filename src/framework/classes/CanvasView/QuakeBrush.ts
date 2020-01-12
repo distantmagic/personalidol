@@ -3,8 +3,6 @@ import * as THREE from "three";
 import CanvasView from "../CanvasView";
 import QuakeMapTextureLoader from "../QuakeMapTextureLoader";
 
-import { Group, LoadingManager as THREELoadingManager, Mesh, ShaderMaterial, Texture } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
@@ -108,7 +106,7 @@ const vertexShader = `
   }
 `;
 
-function getMaterial(textureAtlas: Texture, textureCount: number): ShaderMaterial {
+function getMaterial(textureAtlas: THREE.Texture, textureCount: number): THREE.ShaderMaterial {
   return new THREE.ShaderMaterial({
     lights: true,
 
@@ -135,18 +133,18 @@ function getMaterial(textureAtlas: Texture, textureCount: number): ShaderMateria
 
 export default class QuakeBrush extends CanvasView {
   readonly entity: QuakeWorkerBrush;
-  readonly group: Group;
+  readonly group: THREE.Group;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly textureLoader: QuakeMapTextureLoaderInterface;
-  private mesh: null | Mesh = null;
+  private mesh: null | THREE.Mesh = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
     entity: QuakeWorkerBrush,
-    group: Group,
+    group: THREE.Group,
     queryBus: QueryBus,
-    threeLoadingManager: THREELoadingManager
+    threeLoadingManager: THREE.LoadingManager
   ) {
     super(canvasViewBag);
 

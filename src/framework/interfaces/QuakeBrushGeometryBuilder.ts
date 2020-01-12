@@ -1,22 +1,22 @@
+import * as THREE from "three";
 import { ConvexHull, Face } from "three/examples/jsm/math/ConvexHull";
-import { BufferGeometry, Texture, Vector3 } from "three";
 
 import { QuakeBrush } from "./QuakeBrush";
 
 export interface QuakeBrushGeometryBuilder {
-  addBrush(brush: QuakeBrush, textures: ReadonlyArray<Texture>): void;
+  addBrush(brush: QuakeBrush, textures: ReadonlyArray<THREE.Texture>): void;
 
-  addConvexHullFace(brush: QuakeBrush, face: Face, textures: ReadonlyArray<Texture>): void;
+  addConvexHullFace(brush: QuakeBrush, face: Face, textures: ReadonlyArray<THREE.Texture>): void;
 
-  addTextureIndex(vertex: Vector3, normal: Vector3, textureIndex: number): void;
+  addTextureIndex(vertex: THREE.Vector3, normal: THREE.Vector3, textureIndex: number): void;
 
-  addVertex(vertex: Vector3, normal: Vector3): void;
+  addVertex(vertex: THREE.Vector3, normal: THREE.Vector3): void;
 
-  addVertexUVs(vertex: Vector3, normal: Vector3, x: number, y: number): void;
+  addVertexUVs(vertex: THREE.Vector3, normal: THREE.Vector3, x: number, y: number): void;
 
   getConvexHull(brush: QuakeBrush): ConvexHull;
 
-  getGeometry(): BufferGeometry;
+  getGeometry(): THREE.BufferGeometry;
 
   getIndices(): ReadonlyArray<number>;
 
@@ -30,7 +30,7 @@ export interface QuakeBrushGeometryBuilder {
 
   getVertices(): ReadonlyArray<number>;
 
-  indexVertex(vertex: Vector3, normal: Vector3): void;
+  indexVertex(vertex: THREE.Vector3, normal: THREE.Vector3): void;
 
-  isVertexIndexed(vertex: Vector3, normal: Vector3): boolean;
+  isVertexIndexed(vertex: THREE.Vector3, normal: THREE.Vector3): boolean;
 }

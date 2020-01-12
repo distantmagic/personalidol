@@ -1,4 +1,4 @@
-import { Object3D, Texture } from "three";
+import * as THREE from "three";
 import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
 import { MD2CharacterAnimations } from "../types/MD2CharacterAnimations";
@@ -8,14 +8,14 @@ export interface MD2Character {
   readonly weapons: ReadonlyArray<MorphBlendMesh>;
   readonly meshBody: null | MorphBlendMesh;
   readonly meshWeapon: null | MorphBlendMesh;
-  readonly root: Object3D;
+  readonly root: THREE.Object3D;
   animationFPS: number;
   animations: null | MD2CharacterAnimations;
   controls: null | MD2CharacterControls;
   loadCounter: number;
   onLoadComplete: () => void;
-  skinsBody: Texture[];
-  skinsWeapon: Texture[];
+  skinsBody: THREE.Texture[];
+  skinsWeapon: THREE.Texture[];
 
   dispose(): void;
 

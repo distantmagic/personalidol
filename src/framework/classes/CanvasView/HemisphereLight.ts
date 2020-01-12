@@ -2,20 +2,19 @@ import * as THREE from "three";
 
 import CanvasView from "../CanvasView";
 
-import { Group, HemisphereLight } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
+import { QuakeWorkerLightHemisphere } from "../../types/QuakeWorkerLightHemisphere";
 
 export default class AmbientLight extends CanvasView {
-  readonly group: Group;
-  readonly light: HemisphereLight;
+  readonly group: THREE.Group;
+  readonly light: THREE.HemisphereLight;
 
-  constructor(canvasViewBag: CanvasViewBag, group: Group, brightness: number) {
+  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerLightHemisphere) {
     super(canvasViewBag);
 
     this.group = group;
-    this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, brightness);
+    this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, entity.light);
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {

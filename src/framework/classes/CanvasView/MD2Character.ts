@@ -7,51 +7,49 @@ import { default as QuakeMapException } from "../Exception/QuakeMap";
 import { default as RemoteJSONQuery } from "../Query/RemoteJSON";
 import { default as THREEMD2Character } from "../MD2Character";
 
-import { Group, LoadingManager, Vector3 } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 import { MD2Character as THREEMD2CharacterInterface } from "../../interfaces/MD2Character";
 import { MD2CharacterConfig } from "../../types/MD2CharacterConfig";
+import { QuakeWorkerMD2Model } from "../../types/QuakeWorkerMD2Model";
 import { QueryBus } from "../../interfaces/QueryBus";
 
 export default class MD2Character extends CanvasView {
   readonly angle: number;
   readonly animationOffset: number;
   readonly baseUrl: string;
-  readonly group: Group;
+  readonly group: THREE.Group;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly origin: Vector3;
+  readonly origin: THREE.Vector3;
   readonly queryBus: QueryBus;
   readonly skin: number;
-  readonly threeLoadingManager: LoadingManager;
+  readonly threeLoadingManager: THREE.LoadingManager;
   private baseCharacter: null | THREEMD2CharacterInterface = null;
   private character: null | THREEMD2CharacterInterface = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
-    origin: Vector3,
+    origin: THREE.Vector3,
     queryBus: QueryBus,
-    group: Group,
-    threeLoadingManager: LoadingManager,
+    group: THREE.Group,
+    threeLoadingManager: THREE.LoadingManager,
     baseUrl: string,
-    angle: number,
     animationOffset: number,
-    skin: number
+    entity: QuakeWorkerMD2Model,
   ) {
     super(canvasViewBag);
     autoBind(this);
 
-    this.angle = angle;
+    this.angle = entity.angle;
     this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
     this.group = group;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.origin = origin;
     this.queryBus = queryBus;
-    this.skin = skin;
+    this.skin = entity.skin;
     this.threeLoadingManager = threeLoadingManager;
   }
 

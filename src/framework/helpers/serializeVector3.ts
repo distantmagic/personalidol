@@ -1,5 +1,5 @@
-import { Vector3 } from "three";
+import * as THREE from "three";
 
-export default function serializeVector3(vector: Vector3): string {
+export default function serializeVector3(vector: THREE.Vector3): string {
   return JSON.stringify(vector.toArray());
 }

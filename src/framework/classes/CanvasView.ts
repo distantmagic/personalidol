@@ -2,15 +2,13 @@ import * as THREE from "three";
 
 import disposeObject3D from "../helpers/disposeObject3D";
 
-import { Group } from "three";
-
 import { CancelToken } from "../interfaces/CancelToken";
 import { CanvasView as CanvasViewInterface } from "../interfaces/CanvasView";
 import { CanvasViewBag } from "../interfaces/CanvasViewBag";
 
 export default abstract class CanvasView implements CanvasViewInterface {
   readonly canvasViewBag: CanvasViewBag;
-  readonly children: Group;
+  readonly children: THREE.Group;
   private _isAttached: boolean;
   private _isDisposed: boolean;
 

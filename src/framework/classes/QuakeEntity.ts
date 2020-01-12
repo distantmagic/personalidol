@@ -1,5 +1,3 @@
-import { Vector3 } from "three";
-
 import Exception from "./Exception";
 import isArrayEqual from "../helpers/isArrayEqual";
 import QuakePointParser from "./QuakePointParser";
@@ -28,7 +26,7 @@ export default class QuakeEntity implements QuakeEntityInterface {
     return this.props.getPropertyByKey("classname").getValue();
   }
 
-  getOrigin(): Vector3 {
+  getOrigin(): THREE.Vector3 {
     const breadcrumbs = this.loggerBreadcrumbs.add("getOrigin");
     const origin = this.props.getPropertyByKey("origin");
 

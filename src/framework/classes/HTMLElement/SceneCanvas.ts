@@ -16,8 +16,6 @@ import SceneCanvasTemplate from "./SceneCanvas.template";
 import Scheduler from "../Scheduler";
 import { default as RootCanvasController } from "../CanvasController/Root";
 
-import { LoadingManager as THREELoadingManager } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasControllerBus as CanvasControllerBusInterface } from "../../interfaces/CanvasControllerBus";
 import { CanvasViewBag as CanvasViewBagInterface } from "../../interfaces/CanvasViewBag";
@@ -160,7 +158,7 @@ export default class SceneCanvas extends HTMLElement {
     loadingManager: LoadingManager,
     logger: Logger,
     queryBus: QueryBus,
-    threeLoadingManager: THREELoadingManager
+    threeLoadingManager: THREE.LoadingManager
   ): Promise<void> {
     const breadcrumbs = this.loggerBreadcrumbs.add("attachRenderer");
 

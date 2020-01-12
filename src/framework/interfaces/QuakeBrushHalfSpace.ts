@@ -1,17 +1,17 @@
-import { Plane, Vector3 } from "three";
+import * as THREE from "three";
 
 import { Equatable } from "./Equatable";
 
 export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
-  containsPoint(point: Vector3): boolean;
+  containsPoint(point: THREE.Vector3): boolean;
 
-  getPlane(): Plane;
+  getPlane(): THREE.Plane;
 
-  getPlaneDefiningPoint1(): Vector3;
+  getPlaneDefiningPoint1(): THREE.Vector3;
 
-  getPlaneDefiningPoint2(): Vector3;
+  getPlaneDefiningPoint2(): THREE.Vector3;
 
-  getPlaneDefiningPoint3(): Vector3;
+  getPlaneDefiningPoint3(): THREE.Vector3;
 
   getTexture(): string;
 
@@ -25,5 +25,5 @@ export interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
 
   getYOffset(): number;
 
-  planeContainsPoint(point: Vector3): boolean;
+  planeContainsPoint(point: THREE.Vector3): boolean;
 }

@@ -3,8 +3,6 @@ import filter from "lodash/filter";
 
 import { default as QuakeMapParserException } from "./Exception/QuakeMap/Parser";
 
-import { Vector3 } from "three";
-
 import { LoggerBreadcrumbs } from "../interfaces/LoggerBreadcrumbs";
 import { QuakePointParser as QuakePointParserInterface } from "../interfaces/QuakePointParser";
 
@@ -19,7 +17,7 @@ export default class QuakePointParser implements QuakePointParserInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  parse(): Vector3 {
+  parse(): THREE.Vector3 {
     const parts = filter(this.content.split(REGEXP_WHITESPACE));
 
     if (parts.length !== 3) {

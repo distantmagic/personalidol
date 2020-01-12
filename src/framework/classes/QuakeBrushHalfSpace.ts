@@ -3,8 +3,6 @@ import * as THREE from "three";
 import isEqualWithEpsilon from "../helpers/isEqualWithEpsilon";
 import isEqualWithPrecision from "../helpers/isEqualWithPrecision";
 
-import { Plane, Vector3 } from "three";
-
 import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "../interfaces/QuakeBrushHalfSpace";
 
 export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface {
@@ -12,17 +10,17 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
   readonly textureRotationAngle: number;
   readonly textureXScale: number;
   readonly textureYScale: number;
-  readonly v1: Vector3;
-  readonly v2: Vector3;
-  readonly v3: Vector3;
+  readonly v1: THREE.Vector3;
+  readonly v2: THREE.Vector3;
+  readonly v3: THREE.Vector3;
   readonly xOffset: number;
   readonly yOffset: number;
-  private cachedPlane: null | Plane = null;
+  private cachedPlane: null | THREE.Plane = null;
 
   constructor(
-    v1: Vector3,
-    v2: Vector3,
-    v3: Vector3,
+    v1: THREE.Vector3,
+    v2: THREE.Vector3,
+    v3: THREE.Vector3,
     // texture
     texture: string,
     // Texture x-offset (must be multiple of 16)
@@ -47,7 +45,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     this.textureYScale = textureYScale;
   }
 
-  containsPoint(point: Vector3): boolean {
+  containsPoint(point: THREE.Vector3): boolean {
     const distanceToPoint = this.getPlane().distanceToPoint(point);
 
     if (this.planeContainsPoint(point, distanceToPoint)) {
@@ -58,7 +56,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     return distanceToPoint >= 0;
   }
 
-  getPlane(): Plane {
+  getPlane(): THREE.Plane {
     const cachedPlane = this.cachedPlane;
 
     if (cachedPlane) {
@@ -80,15 +78,15 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     return plane;
   }
 
-  getPlaneDefiningPoint1(): Vector3 {
+  getPlaneDefiningPoint1(): THREE.Vector3 {
     return this.v1;
   }
 
-  getPlaneDefiningPoint2(): Vector3 {
+  getPlaneDefiningPoint2(): THREE.Vector3 {
     return this.v2;
   }
 
-  getPlaneDefiningPoint3(): Vector3 {
+  getPlaneDefiningPoint3(): THREE.Vector3 {
     return this.v3;
   }
 
@@ -130,7 +128,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     );
   }
 
-  planeContainsPoint(point: Vector3, distanceToPoint?: number): boolean {
+  planeContainsPoint(point: THREE.Vector3, distanceToPoint?: number): boolean {
     const distance = "number" === typeof distanceToPoint ? distanceToPoint : this.getPlane().distanceToPoint(point);
     // floating point imperfections
     return isEqualWithEpsilon(distance, 0, 0.0001);

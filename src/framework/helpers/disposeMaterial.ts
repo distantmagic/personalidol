@@ -1,8 +1,8 @@
+import * as THREE from "three";
+
 import disposeTexture from "./disposeTexture";
 
-import { Material } from "three";
-
-function doDisposeMaterial<T extends Material>(material: T, disposeTextures: boolean): void {
+function doDisposeMaterial<T extends THREE.Material>(material: T, disposeTextures: boolean): void {
   if (disposeTextures) {
     // @ts-ignore
     const texture = material.map;
@@ -15,12 +15,12 @@ function doDisposeMaterial<T extends Material>(material: T, disposeTextures: boo
   material.dispose();
 }
 
-export default function disposeMaterial<T extends Material>(material: T | ReadonlyArray<T>, disposeTextures: boolean): void {
+export default function disposeMaterial<T extends THREE.Material>(material: T | ReadonlyArray<T>, disposeTextures: boolean): void {
   if (Array.isArray(material)) {
     return void material.forEach(function(child) {
       return doDisposeMaterial(child, disposeTextures);
     });
   }
 
-  doDisposeMaterial(material as Material, disposeTextures);
+  doDisposeMaterial(material as THREE.Material, disposeTextures);
 }

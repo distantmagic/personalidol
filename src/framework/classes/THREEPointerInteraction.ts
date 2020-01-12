@@ -1,22 +1,20 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import { Camera, Raycaster, Vector2, WebGLRenderer } from "three";
-
 import { THREEPointerInteraction as THREEPointerInteractionInterface } from "../interfaces/THREEPointerInteraction";
 import { ElementSize as ElementSizeInterface } from "../interfaces/ElementSize";
 
 export default class THREEPointerInteraction implements THREEPointerInteractionInterface {
-  readonly camera: Camera;
-  readonly mouseVector: Vector2;
-  readonly raycaster: Raycaster;
-  readonly renderer: WebGLRenderer;
+  readonly camera: THREE.Camera;
+  readonly mouseVector: THREE.Vector2;
+  readonly raycaster: THREE.Raycaster;
+  readonly renderer: THREE.WebGLRenderer;
   private canvasHeight: number;
   private canvasOffsetLeft: number;
   private canvasOffsetTop: number;
   private canvasWidth: number;
 
-  constructor(renderer: WebGLRenderer, camera: Camera) {
+  constructor(renderer: THREE.WebGLRenderer, camera: THREE.Camera) {
     autoBind(this);
 
     this.camera = camera;
@@ -34,7 +32,7 @@ export default class THREEPointerInteraction implements THREEPointerInteractionI
     this.renderer.domElement.removeEventListener("mousemove", this.onMouseChange);
   }
 
-  getCameraRaycaster(): Raycaster {
+  getCameraRaycaster(): THREE.Raycaster {
     return this.raycaster;
   }
 

@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import * as THREE from "three";
 
 import { Equatable } from "./Equatable";
 import { QuakeBrushHalfSpace } from "./QuakeBrushHalfSpace";
@@ -7,15 +7,15 @@ import { QuakeBrushHalfSpaceTrio } from "./QuakeBrushHalfSpaceTrio";
 export interface QuakeBrush extends Equatable<QuakeBrush> {
   generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrio, void, void>;
 
-  generateVertices(): Generator<Vector3, void, void>;
+  generateVertices(): Generator<THREE.Vector3, void, void>;
 
-  getVertices(): ReadonlyArray<Vector3>;
+  getVertices(): ReadonlyArray<THREE.Vector3>;
 
-  getHalfSpaceByCoplanarPoints(v1: Vector3, v2: Vector3, v3: Vector3): QuakeBrushHalfSpace;
+  getHalfSpaceByCoplanarPoints(v1: THREE.Vector3, v2: THREE.Vector3, v3: THREE.Vector3): QuakeBrushHalfSpace;
 
   getHalfSpaces(): ReadonlyArray<QuakeBrushHalfSpace>;
 
   getTextures(): ReadonlyArray<string>;
 
-  containsPoint(point: Vector3): boolean;
+  containsPoint(point: THREE.Vector3): boolean;
 }

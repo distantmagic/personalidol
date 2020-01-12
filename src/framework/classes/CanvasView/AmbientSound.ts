@@ -3,28 +3,27 @@ import * as THREE from "three";
 import Canceled from "../Exception/CancelToken/Canceled";
 import CanvasView from "../CanvasView";
 
-import { Audio, AudioListener, AudioLoader } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import { LoadingManager } from "../../interfaces/LoadingManager";
 import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
+import { QuakeWorkerSounds } from "../../types/QuakeWorkerSounds";
 
 export default class AmbientSound extends CanvasView {
-  readonly audioListener: AudioListener;
-  readonly audioLoader: AudioLoader;
+  readonly audioListener: THREE.AudioListener;
+  readonly audioLoader: THREE.AudioLoader;
   readonly loadingManager: LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly source: string;
-  private sound: null | Audio;
+  private sound: null | THREE.Audio;
 
   constructor(
-    audioListener: AudioListener,
-    audioLoader: AudioLoader,
+    audioListener: THREE.AudioListener,
+    audioLoader: THREE.AudioLoader,
     canvasViewBag: CanvasViewBag,
     loadingManager: LoadingManager,
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    source: string
+    entity: QuakeWorkerSounds
   ) {
     super(canvasViewBag);
 
@@ -33,7 +32,7 @@ export default class AmbientSound extends CanvasView {
     this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.sound = null;
-    this.source = source;
+    this.source = entity.sounds;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {

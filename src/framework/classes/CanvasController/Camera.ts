@@ -6,8 +6,6 @@ import yn from "yn";
 import CanvasController from "../CanvasController";
 import env from "../../helpers/env";
 
-import { OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
-
 import { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
@@ -16,16 +14,16 @@ import { ElementSize } from "../../interfaces/ElementSize";
 import { LoggerBreadcrumbs } from "../../interfaces/LoggerBreadcrumbs";
 
 export default class CameraController extends CanvasController implements CameraControllerInterface {
-  readonly camera: OrthographicCamera;
+  readonly camera: THREE.OrthographicCamera;
   readonly debug: Debugger;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly renderer: WebGLRenderer;
-  readonly scene: Scene;
+  readonly renderer: THREE.WebGLRenderer;
+  readonly scene: THREE.Scene;
   private height: number;
   private width: number;
   private zoomTarget: number;
 
-  constructor(canvasViewBag: CanvasViewBag, camera: OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: WebGLRenderer, scene: Scene) {
+  constructor(canvasViewBag: CanvasViewBag, camera: THREE.OrthographicCamera, debug: Debugger, loggerBreadcrumbs: LoggerBreadcrumbs, renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     super(canvasViewBag);
     autoBind(this);
 
@@ -63,7 +61,7 @@ export default class CameraController extends CanvasController implements Camera
     this.debug.updateState(this.loggerBreadcrumbs.add("position"), this.camera.position);
   }
 
-  lookAt(position: Vector3): void {
+  lookAt(position: THREE.Vector3): void {
     const baseDistance = 256 * 3;
 
     // prettier-ignore

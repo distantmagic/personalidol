@@ -1,3 +1,3 @@
-import { Vector2, Vector3 } from "three";
+import * as THREE from "three";
 
-export type DebuggerStateValue = ReadonlyArray<number | string> | Vector2 | Vector3 | number | string;
+export type DebuggerStateValue = ReadonlyArray<number | string> | THREE.Vector2 | THREE.Vector3 | number | string;

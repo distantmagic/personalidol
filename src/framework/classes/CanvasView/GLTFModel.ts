@@ -4,14 +4,12 @@ import CanvasView from "../CanvasView";
 import { default as GLTFModelQuery } from "../Query/GLTFModel";
 import { default as TextureQuery } from "../Query/Texture";
 
-import { Group, LoadingManager as THREELoadingManager, Mesh, Scene, Vector3 } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import { QuakeWorkerGLTFModel } from "../../types/QuakeWorkerGLTFModel";
 import { QueryBus } from "../../interfaces/QueryBus";
 
-function getMesh(scene: Scene): Mesh {
+function getMesh(scene: THREE.Scene): THREE.Mesh {
   for (let child of scene.children) {
     if (child instanceof THREE.Mesh) {
       return child;
@@ -25,16 +23,16 @@ export default class GLTFModel extends CanvasView {
   readonly animationOffset: number;
   readonly baseUrl: string;
   readonly entities: ReadonlyArray<QuakeWorkerGLTFModel>;
-  readonly group: Group;
+  readonly group: THREE.Group;
   readonly queryBus: QueryBus;
   readonly texture: string;
-  readonly threeLoadingManager: THREELoadingManager;
+  readonly threeLoadingManager: THREE.LoadingManager;
 
   constructor(
     canvasViewBag: CanvasViewBag,
     queryBus: QueryBus,
-    group: Group,
-    threeLoadingManager: THREELoadingManager,
+    group: THREE.Group,
+    threeLoadingManager: THREE.LoadingManager,
     baseUrl: string,
     texture: string,
     animationOffset: number,
@@ -72,7 +70,7 @@ export default class GLTFModel extends CanvasView {
 
     // important - clone geometry as it may be shared between views
     const geometry = baseMesh.geometry.clone();
-    const origins: Vector3[] = [];
+    const origins: THREE.Vector3[] = [];
 
     const mesh = new THREE.InstancedMesh(geometry, material, this.entities.length);
 

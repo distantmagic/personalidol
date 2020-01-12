@@ -16,8 +16,6 @@ import { default as QuakeBrushView } from "./QuakeBrush";
 import { default as QuakeMapException } from "../Exception/QuakeMap";
 import { default as SpotLightView } from "./SpotLight";
 
-import { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, Scene } from "three";
-
 import { CancelToken } from "../../interfaces/CancelToken";
 import { CanvasViewBag } from "../../interfaces/CanvasViewBag";
 import { JSONRPCClient as JSONRPCClientInterface } from "../../interfaces/JSONRPCClient";
@@ -35,28 +33,28 @@ import { QueryBus } from "../../interfaces/QueryBus";
 const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!../../../workers/exports/QuakeMap");
 
 export default class QuakeMap extends CanvasView {
-  readonly audioListener: AudioListener;
-  readonly audioLoader: AudioLoader;
+  readonly audioListener: THREE.AudioListener;
+  readonly audioLoader: THREE.AudioLoader;
   readonly loadingManager: LoadingManager;
   readonly logger: Logger;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
-  readonly scene: Scene;
+  readonly scene: THREE.Scene;
   readonly source: string;
-  readonly threeLoadingManager: THREELoadingManager;
+  readonly threeLoadingManager: THREE.LoadingManager;
   private animationOffset: number;
   private quakeMapWorker: null | Worker = null;
 
   constructor(
-    audioListener: AudioListener,
-    audioLoader: AudioLoader,
+    audioListener: THREE.AudioListener,
+    audioLoader: THREE.AudioLoader,
     canvasViewBag: CanvasViewBag,
     loadingManager: LoadingManager,
     logger: Logger,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
-    scene: Scene,
-    threeLoadingManager: THREELoadingManager,
+    scene: THREE.Scene,
+    threeLoadingManager: THREE.LoadingManager,
     source: string
   ) {
     super(canvasViewBag);
@@ -116,7 +114,7 @@ export default class QuakeMap extends CanvasView {
               new AmbientLightView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
                 this.children,
-                entity.light
+                entity
               )
             ),
             "Loading world ambient light"
@@ -130,7 +128,7 @@ export default class QuakeMap extends CanvasView {
               new HemisphereLightView(
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("HemisphereLight")),
                 this.children,
-                entity.light
+                entity
               )
             ),
             "Loading world hemisphere light"
@@ -145,9 +143,7 @@ export default class QuakeMap extends CanvasView {
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
                 this.children,
                 new THREE.Vector3().fromArray(entity.origin),
-                new THREE.Color(parseInt(entity.color, 16)),
-                entity.intensity,
-                entity.decay,
+                entity
               )
             ),
             "Loading point light"
@@ -162,9 +158,7 @@ export default class QuakeMap extends CanvasView {
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("SpotLight")),
                 this.children,
                 new THREE.Vector3().fromArray(entity.origin),
-                new THREE.Color(parseInt(entity.color, 16)),
-                entity.intensity,
-                entity.decay,
+                entity,
               )
             ),
             "Loading spotlight"
@@ -201,7 +195,7 @@ export default class QuakeMap extends CanvasView {
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
                 this.loadingManager,
                 this.loggerBreadcrumbs.add("AmbientSound"),
-                entity.sounds
+                entity
               )
             ),
             "Loading world ambient sound"
@@ -279,9 +273,8 @@ export default class QuakeMap extends CanvasView {
             this.children,
             this.threeLoadingManager,
             `/models/model-md2-${entity.model_name}/`,
-            entity.angle,
             this.animationOffset,
-            entity.skin
+            entity,
           )
         ),
         "Loading MD2 model"

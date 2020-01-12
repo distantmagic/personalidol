@@ -11,7 +11,6 @@ import { default as CameraController } from "./Camera";
 import { default as QuakeMapView } from "../CanvasView/QuakeMap";
 // import { default as THREEHelpersView } from "../CanvasView/THREEHelpers";
 
-import { EffectComposer as EffectComposerInterface } from "three/examples/jsm/postprocessing/EffectComposer";
 import { AudioListener, AudioLoader, LoadingManager as THREELoadingManager, OrthographicCamera, Scene, WebGLRenderer } from "three";
 
 import { CameraController as CameraControllerInterface } from "../../interfaces/CameraController";
@@ -36,7 +35,7 @@ export default class Root extends CanvasController {
   readonly cameraController: CameraControllerInterface;
   readonly canvasControllerBus: CanvasControllerBus;
   readonly debug: Debugger;
-  readonly effectComposer: EffectComposerInterface;
+  readonly effectComposer: EffectComposer;
   readonly keyboardState: KeyboardState;
   readonly loadingManager: LoadingManager;
   readonly logger: Logger;
