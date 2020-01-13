@@ -7,35 +7,32 @@ import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 export default class THREEHelpers extends CanvasView {
-  readonly scene: THREE.Scene;
+  readonly axesHelper = THREE.AxesHelper;
+  readonly gridHelper = THREE.GridHelper;
 
-  constructor(canvasViewBag: CanvasViewBag, scene: THREE.Scene) {
-    super(canvasViewBag);
+  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group) {
+    super(canvasViewBag, group);
 
-    this.scene = scene;
+    const gridTileSize = 32;
+    const gridSideLength = 32 + 1;
+
+    this.axesHelper = new THREE.AxesHelper(256);
+    this.gridHelper = new THREE.GridHelper(gridSideLength * gridTileSize, gridSideLength);
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const gridTileSize = 32;
-    const gridSideLength = 32 + 1;
+    this.axesHelper.position.y = 64;
 
-    const axesHelper = new THREE.AxesHelper(256);
-
-    axesHelper.position.y = 64;
-
-    const gridHelper = new THREE.GridHelper(gridSideLength * gridTileSize, gridSideLength);
-
-    this.children.add(axesHelper);
-    this.children.add(gridHelper);
-
-    this.scene.add(this.children);
+    this.children.add(this.axesHelper);
+    this.children.add(this.gridHelper);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.scene.remove(this.children);
+    this.children.remove(this.axesHelper);
+    this.children.remove(this.gridHelper);
   }
 }

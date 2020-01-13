@@ -11,16 +11,14 @@ import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 import { QuakeWorkerSparkParticles } from "src/framework/types/QuakeWorkerSparkParticles";
 
 export default class Particles extends CanvasView {
-  readonly group: THREE.Group;
   readonly origin: THREE.Vector3;
   private system: any;
 
   constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerSparkParticles) {
-    super(canvasViewBag);
+    super(canvasViewBag, group);
     autoBind(this);
 
     this.origin = new THREE.Vector3(entity.origin[0], entity.origin[1], entity.origin[2]);
-    this.group = group;
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
@@ -58,13 +56,14 @@ export default class Particles extends CanvasView {
       },
     });
 
-    this.group.add(container);
+    this.children.add(container);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
     this.system.dispose();
+    this.children.remove(this.system.container);
   }
 
   update(delta: number): void {

@@ -8,6 +8,4 @@ export interface CanvasView extends Animatable, CanvasPointerEventHandler, Dispo
   getChildren(): THREE.Group;
 
   isInFrustum(frustum: THREE.Frustum): boolean;
-
-  useSettings(): boolean;
 }

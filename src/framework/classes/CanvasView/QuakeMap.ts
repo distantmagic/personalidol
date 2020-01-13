@@ -39,7 +39,6 @@ export default class QuakeMap extends CanvasView {
   readonly logger: Logger;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
-  readonly scene: THREE.Scene;
   readonly source: string;
   readonly threeLoadingManager: THREE.LoadingManager;
   private animationOffset: number;
@@ -53,11 +52,11 @@ export default class QuakeMap extends CanvasView {
     logger: Logger,
     loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
-    scene: THREE.Scene,
+    group: THREE.Group,
     threeLoadingManager: THREE.LoadingManager,
     source: string
   ) {
-    super(canvasViewBag);
+    super(canvasViewBag, group);
 
     this.animationOffset = 0;
     this.audioListener = audioListener;
@@ -66,7 +65,6 @@ export default class QuakeMap extends CanvasView {
     this.logger = logger;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
-    this.scene = scene;
     this.source = source;
     this.threeLoadingManager = threeLoadingManager;
   }
@@ -193,6 +191,7 @@ export default class QuakeMap extends CanvasView {
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
                 this.loadingManager,
                 this.loggerBreadcrumbs.add("AmbientSound"),
+                this.children,
                 entity
               )
             ),
@@ -225,8 +224,6 @@ export default class QuakeMap extends CanvasView {
       this.attachGLTFEntities(cancelToken, gltfModels),
       this.attachMD2Entities(cancelToken, md2Models)
     ]);
-
-    this.scene.add(this.children);
   }
 
   async attachGLTFEntities(cancelToken: CancelToken, gltfModels: Array<QuakeWorkerGLTFModel>): Promise<void> {
@@ -293,8 +290,6 @@ export default class QuakeMap extends CanvasView {
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
-
-    this.scene.remove(this.children);
 
     const quakeMapWorker = this.quakeMapWorker;
 

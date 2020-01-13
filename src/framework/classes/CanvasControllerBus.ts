@@ -25,6 +25,13 @@ export default class CanvasControllerBus implements CanvasControllerBusInterface
 
     await canvasController.attach(cancelToken);
 
+    if (!canvasController.isAttached()) {
+      throw new CanvasControllerException(
+        this.loggerBreadcrumbs.add("add"),
+        "Canvas controller wasn't properly attached. Did you forget to call parent 'super.attach' method?"
+      );
+    }
+
     this.resizeObserver.notify(canvasController);
 
     if (canvasController.useBegin()) {
@@ -42,6 +49,10 @@ export default class CanvasControllerBus implements CanvasControllerBusInterface
   }
 
   async delete(cancelToken: CancelToken, canvasController: CanvasController): Promise<void> {
+    if (canvasController.isDisposed()) {
+      throw new CanvasControllerException(this.loggerBreadcrumbs.add("delete"), "Canvas controller cannot is already disposed and cannot be disposed again.");
+    }
+
     if (canvasController.useBegin()) {
       this.scheduler.offBegin(canvasController.begin);
     }
@@ -56,10 +67,6 @@ export default class CanvasControllerBus implements CanvasControllerBusInterface
     }
 
     this.resizeObserver.off(canvasController);
-
-    if (canvasController.isDisposed()) {
-      throw new CanvasControllerException(this.loggerBreadcrumbs.add("delete"), "Canvas controller cannot is already disposed and cannot be disposed again.");
-    }
 
     await canvasController.dispose(cancelToken);
 

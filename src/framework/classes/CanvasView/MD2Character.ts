@@ -19,7 +19,6 @@ export default class MD2Character extends CanvasView {
   readonly angle: number;
   readonly animationOffset: number;
   readonly baseUrl: string;
-  readonly group: THREE.Group;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly origin: THREE.Vector3;
   readonly queryBus: QueryBus;
@@ -38,13 +37,12 @@ export default class MD2Character extends CanvasView {
     animationOffset: number,
     entity: QuakeWorkerMD2Model
   ) {
-    super(canvasViewBag);
+    super(canvasViewBag, group);
     autoBind(this);
 
     this.angle = entity.angle;
     this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
-    this.group = group;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.origin = new THREE.Vector3(entity.origin[0], entity.origin[1], entity.origin[2]);
     this.queryBus = queryBus;
@@ -87,7 +85,6 @@ export default class MD2Character extends CanvasView {
     character.root.rotation.y = THREE.Math.degToRad(this.angle);
 
     this.children.add(character.root);
-    this.group.add(this.children);
 
     this.character = character;
   }
@@ -95,11 +92,10 @@ export default class MD2Character extends CanvasView {
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.group.remove(this.children);
-
     const character = this.character;
 
     if (character) {
+      this.children.remove(character.root);
       character.dispose();
     }
 

@@ -8,14 +8,12 @@ import { QuakeWorkerLightPoint } from "src/framework/types/QuakeWorkerLightPoint
 
 export default class PointLight extends CanvasView {
   readonly color: THREE.Color;
-  readonly group: THREE.Group;
   readonly light: THREE.PointLight;
 
   constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerLightPoint) {
-    super(canvasViewBag);
+    super(canvasViewBag, group);
 
     this.color = new THREE.Color(parseInt(entity.color, 16));
-    this.group = group;
 
     this.light = new THREE.PointLight(this.color, entity.intensity, 512);
     this.light.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
@@ -29,12 +27,12 @@ export default class PointLight extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    this.group.add(this.light);
+    this.children.add(this.light);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.group.remove(this.light);
+    this.children.remove(this.light);
   }
 }

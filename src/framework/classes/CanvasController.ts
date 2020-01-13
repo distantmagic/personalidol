@@ -39,28 +39,6 @@ export default abstract class CanvasController implements CanvasControllerInterf
     return this._isDisposed;
   }
 
-  onPointerAuxiliaryClick(): void {}
-
-  onPointerAuxiliaryDepressed(): void {}
-
-  onPointerAuxiliaryPressed(): void {}
-
-  onPointerOut(): void {}
-
-  onPointerOver(): void {}
-
-  onPointerPrimaryClick(): void {}
-
-  onPointerPrimaryDepressed(): void {}
-
-  onPointerPrimaryPressed(): void {}
-
-  onPointerSecondaryClick(): void {}
-
-  onPointerSecondaryDepressed(): void {}
-
-  onPointerSecondaryPressed(): void {}
-
   resize(elementSize: ElementSize<"px">): void {}
 
   update(delta: number): void {}
@@ -74,10 +52,6 @@ export default abstract class CanvasController implements CanvasControllerInterf
   }
 
   useEnd(): boolean {
-    return false;
-  }
-
-  useSettings(): boolean {
     return false;
   }
 

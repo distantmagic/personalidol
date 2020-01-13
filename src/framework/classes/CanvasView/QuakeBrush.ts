@@ -134,7 +134,6 @@ function getMaterial(textureAtlas: THREE.Texture, textureCount: number): THREE.S
 
 export default class QuakeBrush extends CanvasView {
   readonly entity: QuakeWorkerBrush;
-  readonly group: THREE.Group;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly textureLoader: QuakeMapTextureLoaderInterface;
   private mesh: null | THREE.Mesh = null;
@@ -147,12 +146,10 @@ export default class QuakeBrush extends CanvasView {
     queryBus: QueryBus,
     threeLoadingManager: THREE.LoadingManager
   ) {
-    super(canvasViewBag);
+    super(canvasViewBag, group);
 
     this.entity = entity;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.group = group;
-
     this.textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs.add("QuakeMapTextureLoader"), threeLoadingManager, queryBus);
   }
 
@@ -218,13 +215,11 @@ export default class QuakeBrush extends CanvasView {
     mesh.receiveShadow = true;
 
     this.children.add(mesh);
-    this.group.add(this.children);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.group.remove(this.children);
     this.textureLoader.dispose();
   }
 }

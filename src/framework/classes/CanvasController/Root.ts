@@ -32,6 +32,7 @@ export default class Root extends CanvasController {
   readonly camera: THREE.OrthographicCamera;
   readonly cameraController: CameraControllerInterface;
   readonly canvasControllerBus: CanvasControllerBus;
+  readonly canvasRootGroup: THREE.Group;
   readonly debug: Debugger;
   readonly effectComposer: EffectComposer;
   readonly keyboardState: KeyboardState;
@@ -83,6 +84,9 @@ export default class Root extends CanvasController {
     this.scene.matrixAutoUpdate = false;
     // this.scene.fog = new THREE.Fog(0x000000, 256, 1024);
 
+    this.canvasRootGroup = new THREE.Group();
+    this.scene.add(this.canvasRootGroup);
+
     this.scheduler = scheduler;
     this.cameraController = new CameraController(canvasViewBag, this.camera, this.debug, loggerBreadcrumbs.add("CameraController"), renderer, this.scene);
     this.threeLoadingManager = threeLoadingManager;
@@ -109,7 +113,7 @@ export default class Root extends CanvasController {
           this.logger,
           this.loggerBreadcrumbs.add("QuakeMap"),
           this.queryBus,
-          this.scene,
+          this.canvasRootGroup,
           this.threeLoadingManager,
           env(this.loggerBreadcrumbs.add("env"), "REACT_APP_PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-desert-hut.map")
           // env(this.loggerBreadcrumbs.add("env"), "REACT_APP_PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-cube-chipped.map")

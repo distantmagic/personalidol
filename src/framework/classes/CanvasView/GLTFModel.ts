@@ -25,7 +25,6 @@ export default class GLTFModel extends CanvasView {
   readonly animationOffset: number;
   readonly baseUrl: string;
   readonly entities: ReadonlyArray<QuakeWorkerGLTFModel>;
-  readonly group: THREE.Group;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
   readonly texture: string;
@@ -42,12 +41,11 @@ export default class GLTFModel extends CanvasView {
     animationOffset: number,
     entities: ReadonlyArray<QuakeWorkerGLTFModel>
   ) {
-    super(canvasViewBag);
+    super(canvasViewBag, group);
 
     this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
     this.entities = entities;
-    this.group = group;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.texture = texture;
@@ -111,6 +109,5 @@ export default class GLTFModel extends CanvasView {
     mesh.updateMatrix();
 
     this.children.add(mesh);
-    this.group.add(this.children);
   }
 }

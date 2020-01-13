@@ -9,6 +9,7 @@ import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 export default abstract class CanvasView implements CanvasViewInterface {
   readonly canvasViewBag: CanvasViewBag;
   readonly children: THREE.Group;
+  readonly parentGroup: THREE.Group;
   private _isAttached: boolean;
   private _isDisposed: boolean;
 
@@ -16,9 +17,10 @@ export default abstract class CanvasView implements CanvasViewInterface {
   static useEnd: boolean = true;
   static useUpdate: boolean = true;
 
-  constructor(canvasViewBag: CanvasViewBag) {
+  constructor(canvasViewBag: CanvasViewBag, parentGroup: THREE.Group) {
     this.canvasViewBag = canvasViewBag;
     this.children = new THREE.Group();
+    this.parentGroup = parentGroup;
     this._isAttached = false;
     this._isDisposed = false;
   }
@@ -26,15 +28,20 @@ export default abstract class CanvasView implements CanvasViewInterface {
   async attach(cancelToken: CancelToken): Promise<void> {
     this._isAttached = true;
     this._isDisposed = false;
+
+    this.parentGroup.add(this.children);
   }
 
   begin(): void {}
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     this._isAttached = false;
-    await this.canvasViewBag.dispose(cancelToken);
-    disposeObject3D(this.getChildren(), true);
     this._isDisposed = true;
+
+    await this.canvasViewBag.dispose(cancelToken);
+
+    disposeObject3D(this.children, true);
+    this.parentGroup.remove(this.children);
   }
 
   draw(interpolationPercentage: number): void {}
@@ -90,10 +97,6 @@ export default abstract class CanvasView implements CanvasViewInterface {
   }
 
   useEnd(): boolean {
-    return false;
-  }
-
-  useSettings(): boolean {
     return false;
   }
 

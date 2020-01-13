@@ -8,14 +8,12 @@ import { QuakeWorkerLightSpotlight } from "src/framework/types/QuakeWorkerLightS
 
 export default class SpotLight extends CanvasView {
   readonly color: THREE.Color;
-  readonly group: THREE.Group;
   readonly light: THREE.SpotLight;
 
   constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerLightSpotlight) {
-    super(canvasViewBag);
+    super(canvasViewBag, group);
 
     this.color = new THREE.Color(parseInt(entity.color, 16));
-    this.group = group;
 
     this.light = new THREE.SpotLight(this.color.getHex(), entity.intensity);
     this.light.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
@@ -32,14 +30,14 @@ export default class SpotLight extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    this.group.add(this.light);
-    this.group.add(this.light.target);
+    this.children.add(this.light);
+    this.children.add(this.light.target);
   }
 
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.group.remove(this.light);
-    this.group.remove(this.light.target);
+    this.children.remove(this.light);
+    this.children.remove(this.light.target);
   }
 }

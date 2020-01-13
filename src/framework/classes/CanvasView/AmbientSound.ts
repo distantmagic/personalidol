@@ -23,9 +23,10 @@ export default class AmbientSound extends CanvasView {
     canvasViewBag: CanvasViewBag,
     loadingManager: LoadingManager,
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    group: THREE.Group,
     entity: QuakeWorkerSounds
   ) {
-    super(canvasViewBag);
+    super(canvasViewBag, group);
 
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;

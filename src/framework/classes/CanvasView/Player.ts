@@ -7,12 +7,8 @@ import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 import { QuakeWorkerPlayer } from "src/framework/types/QuakeWorkerPlayer";
 
 export default class Player extends CanvasView {
-  readonly group: THREE.Group;
-
   constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerPlayer) {
-    super(canvasViewBag);
-
-    this.group = group;
+    super(canvasViewBag, group);
   }
 
   async attach(cancelToken: CancelToken): Promise<void> {
