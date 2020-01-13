@@ -26,10 +26,7 @@ export default class CanvasControllerBus implements CanvasControllerBusInterface
     await canvasController.attach(cancelToken);
 
     if (!canvasController.isAttached()) {
-      throw new CanvasControllerException(
-        this.loggerBreadcrumbs.add("add"),
-        "Canvas controller wasn't properly attached. Did you forget to call parent 'super.attach' method?"
-      );
+      throw new CanvasControllerException(this.loggerBreadcrumbs.add("add"), "Canvas controller wasn't properly attached. Did you forget to call parent 'super.attach' method?");
     }
 
     this.resizeObserver.notify(canvasController);

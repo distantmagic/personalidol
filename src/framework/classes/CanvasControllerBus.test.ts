@@ -44,7 +44,7 @@ class ImproperDisposeCanvasController extends CanvasController {
   async dispose(cancelToken: CancelToken): Promise<void> {}
 }
 
-test("cannot attach the same controller more than once", async function () {
+test("cannot attach the same controller more than once", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -61,7 +61,7 @@ test("cannot attach the same controller more than once", async function () {
   return expect(canvasControllerBus.add(cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
-test("cannot detach the same controller more than once", async function () {
+test("cannot detach the same controller more than once", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);

@@ -25,28 +25,28 @@ export default class GLTFModel extends CanvasView {
   readonly animationOffset: number;
   readonly baseUrl: string;
   readonly entities: ReadonlyArray<QuakeWorkerGLTFModel>;
-  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
   readonly texture: string;
   readonly threeLoadingManager: THREE.LoadingManager;
+  private baseMesh: null | THREE.Mesh = null;
+  private mesh: null | THREE.Mesh = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
-    queryBus: QueryBus,
     group: THREE.Group,
+    queryBus: QueryBus,
     threeLoadingManager: THREE.LoadingManager,
     baseUrl: string,
     texture: string,
     animationOffset: number,
     entities: ReadonlyArray<QuakeWorkerGLTFModel>
   ) {
-    super(canvasViewBag, group);
+    super(loggerBreadcrumbs, canvasViewBag, group);
 
     this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
     this.entities = entities;
-    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.texture = texture;
     this.threeLoadingManager = threeLoadingManager;
@@ -62,6 +62,9 @@ export default class GLTFModel extends CanvasView {
     const texture = await this.queryBus.enqueue(cancelToken, textureQuery).whenExecuted();
 
     const baseMesh = getMesh(this.loggerBreadcrumbs.add("attach"), response.scene);
+
+    this.baseMesh = baseMesh;
+
     const boundingBox = new THREE.Box3();
 
     // @ts-ignore
@@ -109,5 +112,11 @@ export default class GLTFModel extends CanvasView {
     mesh.updateMatrix();
 
     this.children.add(mesh);
+
+    this.mesh = mesh;
+  }
+
+  getName(): "GLTFModel" {
+    return "GLTFModel";
   }
 }

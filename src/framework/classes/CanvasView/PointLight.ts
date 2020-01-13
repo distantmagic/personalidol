@@ -4,14 +4,15 @@ import CanvasView from "src/framework/classes/CanvasView";
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 import { QuakeWorkerLightPoint } from "src/framework/types/QuakeWorkerLightPoint";
 
 export default class PointLight extends CanvasView {
   readonly color: THREE.Color;
   readonly light: THREE.PointLight;
 
-  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerLightPoint) {
-    super(canvasViewBag, group);
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerLightPoint) {
+    super(loggerBreadcrumbs, canvasViewBag, group);
 
     this.color = new THREE.Color(parseInt(entity.color, 16));
 
@@ -30,9 +31,7 @@ export default class PointLight extends CanvasView {
     this.children.add(this.light);
   }
 
-  async dispose(cancelToken: CancelToken): Promise<void> {
-    await super.dispose(cancelToken);
-
-    this.children.remove(this.light);
+  getName(): "PointLight" {
+    return "PointLight";
   }
 }

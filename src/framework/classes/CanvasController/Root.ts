@@ -106,14 +106,14 @@ export default class Root extends CanvasController {
       this.canvasViewBag.add(
         cancelToken,
         new QuakeMapView(
+          this.loggerBreadcrumbs.add("QuakeMap"),
+          this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
+          this.canvasRootGroup,
           this.audioListener,
           this.audioLoader,
-          this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
           this.loadingManager,
           this.logger,
-          this.loggerBreadcrumbs.add("QuakeMap"),
           this.queryBus,
-          this.canvasRootGroup,
           this.threeLoadingManager,
           env(this.loggerBreadcrumbs.add("env"), "REACT_APP_PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-desert-hut.map")
           // env(this.loggerBreadcrumbs.add("env"), "REACT_APP_PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-cube-chipped.map")

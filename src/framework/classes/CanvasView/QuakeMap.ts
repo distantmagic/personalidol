@@ -37,7 +37,6 @@ export default class QuakeMap extends CanvasView {
   readonly audioLoader: THREE.AudioLoader;
   readonly loadingManager: LoadingManager;
   readonly logger: Logger;
-  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
   readonly source: string;
   readonly threeLoadingManager: THREE.LoadingManager;
@@ -45,25 +44,24 @@ export default class QuakeMap extends CanvasView {
   private quakeMapWorker: null | Worker = null;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    canvasViewBag: CanvasViewBag,
+    group: THREE.Group,
     audioListener: THREE.AudioListener,
     audioLoader: THREE.AudioLoader,
-    canvasViewBag: CanvasViewBag,
     loadingManager: LoadingManager,
     logger: Logger,
-    loggerBreadcrumbs: LoggerBreadcrumbs,
     queryBus: QueryBus,
-    group: THREE.Group,
     threeLoadingManager: THREE.LoadingManager,
     source: string
   ) {
-    super(canvasViewBag, group);
+    super(loggerBreadcrumbs, canvasViewBag, group);
 
     this.animationOffset = 0;
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
     this.loadingManager = loadingManager;
     this.logger = logger;
-    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.source = source;
     this.threeLoadingManager = threeLoadingManager;
@@ -95,8 +93,8 @@ export default class QuakeMap extends CanvasView {
               new QuakeBrushView(
                 this.loggerBreadcrumbs.add("QuakeBrush"),
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
-                entity,
                 this.children,
+                entity,
                 this.queryBus,
                 this.threeLoadingManager
               )
@@ -110,6 +108,7 @@ export default class QuakeMap extends CanvasView {
             this.canvasViewBag.add(
               cancelToken,
               new AmbientLightView(
+                this.loggerBreadcrumbs.add("AmbientLight"),
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
                 this.children,
                 entity
@@ -124,6 +123,7 @@ export default class QuakeMap extends CanvasView {
             this.canvasViewBag.add(
               cancelToken,
               new HemisphereLightView(
+                this.loggerBreadcrumbs.add("HemisphereLight"),
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("HemisphereLight")),
                 this.children,
                 entity
@@ -138,6 +138,7 @@ export default class QuakeMap extends CanvasView {
             this.canvasViewBag.add(
               cancelToken,
               new PointLightView(
+                this.loggerBreadcrumbs.add("PointLight"),
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
                 this.children,
                 entity
@@ -152,6 +153,7 @@ export default class QuakeMap extends CanvasView {
             this.canvasViewBag.add(
               cancelToken,
               new SpotLightView(
+                this.loggerBreadcrumbs.add("SpotLight"),
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("SpotLight")),
                 this.children,
                 entity,
@@ -172,6 +174,7 @@ export default class QuakeMap extends CanvasView {
             this.canvasViewBag.add(
               cancelToken,
               new PlayerView(
+                this.loggerBreadcrumbs.add("Player"),
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Player")),
                 this.children,
                 entity
@@ -186,12 +189,12 @@ export default class QuakeMap extends CanvasView {
             this.canvasViewBag.add(
               cancelToken,
               new AmbientSoundView(
+                this.loggerBreadcrumbs.add("AmbientSound"),
+                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
+                this.children,
                 this.audioListener,
                 this.audioLoader,
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
                 this.loadingManager,
-                this.loggerBreadcrumbs.add("AmbientSound"),
-                this.children,
                 entity
               )
             ),
@@ -204,6 +207,7 @@ export default class QuakeMap extends CanvasView {
             this.canvasViewBag.add(
               cancelToken,
               new ParticlesView(
+                this.loggerBreadcrumbs.add("Particles"),
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")),
                 this.children,
                 entity
@@ -243,8 +247,8 @@ export default class QuakeMap extends CanvasView {
             new GLTFModelView(
               this.loggerBreadcrumbs.add("GLTFModel"),
               this.canvasViewBag.fork(this.loggerBreadcrumbs.add("GLTFModel")),
-              this.queryBus,
               this.children,
+              this.queryBus,
               this.threeLoadingManager,
               `/models/model-glb-${entity.model_name}/`,
               textureName,
@@ -273,8 +277,8 @@ export default class QuakeMap extends CanvasView {
           new MD2CharacterView(
             this.loggerBreadcrumbs.add("MD2Character"),
             this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
-            this.queryBus,
             this.children,
+            this.queryBus,
             this.threeLoadingManager,
             `/models/model-md2-${entity.model_name}/`,
             this.animationOffset,
@@ -296,6 +300,10 @@ export default class QuakeMap extends CanvasView {
     if (quakeMapWorker) {
       quakeMapWorker.terminate();
     }
+  }
+
+  getName(): "QuakeMap" {
+    return "QuakeMap";
   }
 
   getQuakeMapRpcClient(cancelToken: CancelToken): JSONRPCClientInterface {

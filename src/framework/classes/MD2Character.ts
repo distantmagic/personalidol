@@ -6,8 +6,6 @@ import * as THREE from "three";
 import { MD2Loader } from "three/examples/jsm/loaders/MD2Loader";
 import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
-import disposeObject3D from "src/framework/helpers/disposeObject3D";
-import disposeTexture from "src/framework/helpers/disposeTexture";
 import { default as LoaderException } from "src/framework/classes/Exception/Loader";
 
 import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -16,17 +14,9 @@ import { MD2CharacterAnimations } from "src/framework/types/MD2CharacterAnimatio
 import { MD2CharacterConfig } from "src/framework/types/MD2CharacterConfig";
 import { MD2CharacterControls } from "src/framework/types/MD2CharacterControls";
 
-function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: THREE.LoadingManager, textureUrls: ReadonlyArray<string>): THREE.Texture[] {
-  const textureLoader = new THREE.TextureLoader(loadingManager);
-  const textures = [];
-
-  for (let i = 0; i < textureUrls.length; i++) {
-    textures[i] = textureLoader.load(baseUrl + textureUrls[i], checkLoadingComplete.bind(null, scope));
-    textures[i].mapping = THREE.UVMapping;
-    textures[i].name = textureUrls[i];
-  }
-
-  return textures;
+function checkLoadingComplete(scope: MD2CharacterInterface): void {
+  scope.loadCounter -= 1;
+  if (scope.loadCounter === 0) scope.onLoadComplete();
 }
 
 function createPart(scope: MD2CharacterInterface, geometry: THREE.BufferGeometry | THREE.Geometry, skinMap: THREE.Texture): MorphBlendMesh {
@@ -47,9 +37,36 @@ function createPart(scope: MD2CharacterInterface, geometry: THREE.BufferGeometry
   return mesh;
 }
 
-function checkLoadingComplete(scope: MD2CharacterInterface): void {
-  scope.loadCounter -= 1;
-  if (scope.loadCounter === 0) scope.onLoadComplete();
+function disposeMorphBlendMesh(child: MorphBlendMesh): void {
+  child.geometry.dispose();
+
+  const material: THREE.MeshLambertMaterial = child.material as THREE.MeshLambertMaterial;
+  const map = material.map;
+
+  if (map) {
+    if (Array.isArray(map)) {
+      map.forEach(disposeTexture);
+    } else {
+      disposeTexture(map);
+    }
+  }
+}
+
+function disposeTexture(texture: THREE.Texture): void {
+  texture.dispose();
+}
+
+function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: THREE.LoadingManager, textureUrls: ReadonlyArray<string>): THREE.Texture[] {
+  const textureLoader = new THREE.TextureLoader(loadingManager);
+  const textures = [];
+
+  for (let i = 0; i < textureUrls.length; i++) {
+    textures[i] = textureLoader.load(baseUrl + textureUrls[i], checkLoadingComplete.bind(null, scope));
+    textures[i].mapping = THREE.UVMapping;
+    textures[i].name = textureUrls[i];
+  }
+
+  return textures;
 }
 
 export default class MD2Character implements MD2CharacterInterface {
@@ -230,7 +247,6 @@ export default class MD2Character implements MD2CharacterInterface {
     }
 
     // @ts-ignore
-    // meshBody.map = this.skinsBody[index];
     material.map = this.skinsBody[index];
 
     this.currentSkin = index;
@@ -412,22 +428,25 @@ export default class MD2Character implements MD2CharacterInterface {
   dispose(): void {
     this.skinsBody.forEach(disposeTexture);
     this.skinsWeapon.forEach(disposeTexture);
-    this.weapons.forEach(function(child) {
-      disposeObject3D(child, true);
-    });
+
+    this.weapons.forEach(disposeMorphBlendMesh);
 
     const meshBody = this.meshBody;
 
     if (meshBody) {
-      disposeObject3D(meshBody, true);
+      disposeMorphBlendMesh(meshBody);
     }
 
     const meshWeapon = this.meshWeapon;
 
     if (meshWeapon) {
-      disposeObject3D(meshWeapon, true);
+      disposeMorphBlendMesh(meshWeapon);
     }
 
-    disposeObject3D(this.root, true);
+    this.root.traverse(function(child: THREE.Object3D) {
+      if (child instanceof MorphBlendMesh) {
+        disposeMorphBlendMesh(child);
+      }
+    });
   }
 }

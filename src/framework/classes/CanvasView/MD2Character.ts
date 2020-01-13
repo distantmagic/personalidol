@@ -30,14 +30,14 @@ export default class MD2Character extends CanvasView {
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
-    queryBus: QueryBus,
     group: THREE.Group,
+    queryBus: QueryBus,
     threeLoadingManager: THREE.LoadingManager,
     baseUrl: string,
     animationOffset: number,
     entity: QuakeWorkerMD2Model
   ) {
-    super(canvasViewBag, group);
+    super(loggerBreadcrumbs, canvasViewBag, group);
     autoBind(this);
 
     this.angle = entity.angle;
@@ -92,13 +92,6 @@ export default class MD2Character extends CanvasView {
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    const character = this.character;
-
-    if (character) {
-      this.children.remove(character.root);
-      character.dispose();
-    }
-
     const baseCharacter = this.baseCharacter;
 
     if (baseCharacter) {
@@ -114,6 +107,10 @@ export default class MD2Character extends CanvasView {
     }
 
     return character;
+  }
+
+  getName(): "MD2Character" {
+    return "MD2Character";
   }
 
   update(delta: number): void {

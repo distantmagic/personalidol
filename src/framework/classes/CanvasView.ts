@@ -1,25 +1,31 @@
 import * as THREE from "three";
+import isEmpty from "lodash/isEmpty";
 
-import disposeObject3D from "src/framework/helpers/disposeObject3D";
+import dispose from "src/framework/helpers/dispose";
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasView as CanvasViewInterface } from "src/framework/interfaces/CanvasView";
 import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default abstract class CanvasView implements CanvasViewInterface {
-  readonly canvasViewBag: CanvasViewBag;
-  readonly children: THREE.Group;
-  readonly parentGroup: THREE.Group;
   private _isAttached: boolean;
   private _isDisposed: boolean;
+  readonly canvasViewBag: CanvasViewBag;
+  readonly children: THREE.Group;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly parentGroup: THREE.Group;
 
   static useBegin: boolean = true;
   static useEnd: boolean = true;
   static useUpdate: boolean = true;
 
-  constructor(canvasViewBag: CanvasViewBag, parentGroup: THREE.Group) {
+  abstract getName(): string;
+
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, parentGroup: THREE.Group) {
     this.canvasViewBag = canvasViewBag;
     this.children = new THREE.Group();
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.parentGroup = parentGroup;
     this._isAttached = false;
     this._isDisposed = false;
@@ -40,7 +46,12 @@ export default abstract class CanvasView implements CanvasViewInterface {
 
     await this.canvasViewBag.dispose(cancelToken);
 
-    disposeObject3D(this.children, true);
+    dispose(this.loggerBreadcrumbs.add("dispose"), this.children);
+
+    while (!isEmpty(this.children.children)) {
+      this.children.remove(this.children.children[0]);
+    }
+
     this.parentGroup.remove(this.children);
   }
 

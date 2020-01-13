@@ -7,7 +7,7 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 import THREEHelpers from "src/framework/classes/CanvasView/THREEHelpers";
 
-test("is cleanly attached and disposed", async function () {
+test("is cleanly attached and disposed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -15,7 +15,7 @@ test("is cleanly attached and disposed", async function () {
   const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
   const group = new THREE.Group();
 
-  const helpers = new THREEHelpers(canvasViewBag, group);
+  const helpers = new THREEHelpers(loggerBreadcrumbs, canvasViewBag, group);
 
   expect(helpers.getChildren().children).toHaveLength(0);
 

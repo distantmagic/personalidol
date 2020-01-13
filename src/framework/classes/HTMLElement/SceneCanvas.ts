@@ -19,8 +19,6 @@ import { default as SceneCanvasException } from "src/framework/classes/Exception
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasControllerBus as CanvasControllerBusInterface } from "src/framework/interfaces/CanvasControllerBus";
-import { CanvasViewBag as CanvasViewBagInterface } from "src/framework/interfaces/CanvasViewBag";
-import { CanvasViewBus as CanvasViewBusInterface } from "src/framework/interfaces/CanvasViewBus";
 import { Debugger } from "src/framework/interfaces/Debugger";
 import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
 import { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "src/framework/interfaces/HTMLElementResizeObserver";
@@ -37,8 +35,6 @@ const ATTR_DOCUMENT_HIDDEN = "documenthidden";
 export default class SceneCanvas extends HTMLElement {
   readonly canvasControllerBus: CanvasControllerBusInterface;
   readonly canvasElement: HTMLCanvasElement;
-  readonly canvasViewBag: CanvasViewBagInterface;
-  readonly canvasViewBus: CanvasViewBusInterface;
   readonly canvasWrapperElement: HTMLElement;
   readonly keyboardState: KeyboardStateInterface;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -89,8 +85,6 @@ export default class SceneCanvas extends HTMLElement {
     this.isObserving = false;
 
     this.scheduler = new Scheduler(this.loggerBreadcrumbs.add("Scheduler"));
-    this.canvasViewBus = new CanvasViewBus(this.loggerBreadcrumbs, this.scheduler);
-    this.canvasViewBag = new CanvasViewBag(this.canvasViewBus, this.loggerBreadcrumbs);
     this.keyboardState = new KeyboardState(this.loggerBreadcrumbs.add("KeyboardState"));
     this.mainLoop = MainLoop.getInstance(this.loggerBreadcrumbs.add("MainLoop"));
     this.pointerState = new PointerState(this.loggerBreadcrumbs.add("PointerState"), this.canvasElement);
@@ -181,9 +175,12 @@ export default class SceneCanvas extends HTMLElement {
 
     renderer.setPixelRatio(window.devicePixelRatio);
 
+    const canvasViewBus = new CanvasViewBus(this.loggerBreadcrumbs, this.scheduler);
+    const canvasViewBag = new CanvasViewBag(canvasViewBus, this.loggerBreadcrumbs);
+
     const canvasController = new RootCanvasController(
       this.canvasControllerBus,
-      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("RootCanvasControllert")),
+      canvasViewBag.fork(this.loggerBreadcrumbs.add("RootCanvasControllert")),
       debug,
       this.keyboardState,
       loadingManager,
@@ -214,8 +211,11 @@ export default class SceneCanvas extends HTMLElement {
     renderer.forceContextLoss();
     this.canvasElement.remove();
 
-    await loadingManager.blocking(this.canvasViewBag.dispose(cancelToken), "Disposing root canvas controller");
+    await loadingManager.blocking(canvasViewBag.dispose(cancelToken), "Disposing root canvas controller");
     await loadingManager.blocking(this.canvasControllerBus.delete(cancelToken, canvasController), "Disposing game resources");
+
+    console.log("GEOMETRIES", renderer.info.memory.geometries);
+    console.log("TEXTURES", renderer.info.memory.textures);
 
     this.isLooping = false;
     this.onComponentStateChange();

@@ -1,17 +1,17 @@
 import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
-import disposeObject3D from "src/framework/helpers/disposeObject3D";
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class THREEHelpers extends CanvasView {
-  readonly axesHelper = THREE.AxesHelper;
-  readonly gridHelper = THREE.GridHelper;
+  readonly axesHelper: THREE.AxesHelper;
+  readonly gridHelper: THREE.GridHelper;
 
-  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group) {
-    super(canvasViewBag, group);
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, group: THREE.Group) {
+    super(loggerBreadcrumbs, canvasViewBag, group);
 
     const gridTileSize = 32;
     const gridSideLength = 32 + 1;
@@ -29,10 +29,7 @@ export default class THREEHelpers extends CanvasView {
     this.children.add(this.gridHelper);
   }
 
-  async dispose(cancelToken: CancelToken): Promise<void> {
-    await super.dispose(cancelToken);
-
-    this.children.remove(this.axesHelper);
-    this.children.remove(this.gridHelper);
+  getName(): "THREEHelpers" {
+    return "THREEHelpers";
   }
 }

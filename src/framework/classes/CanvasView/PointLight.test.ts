@@ -9,7 +9,7 @@ import Scheduler from "src/framework/classes/Scheduler";
 
 import { QuakeWorkerLightPoint } from "src/framework/types/QuakeWorkerLightPoint";
 
-test("is cleanly attached and disposed", async function () {
+test("is cleanly attached and disposed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -18,13 +18,13 @@ test("is cleanly attached and disposed", async function () {
   const group = new THREE.Group();
   const entity: QuakeWorkerLightPoint = {
     classname: "light_point",
-    color: 'white',
+    color: "white",
     decay: 1.0,
     intensity: 0.3,
     origin: [0, 0, 0],
   };
 
-  const ambientLight = new PointLight(canvasViewBag, group, entity);
+  const ambientLight = new PointLight(loggerBreadcrumbs, canvasViewBag, group, entity);
 
   expect(ambientLight.getChildren().children).toHaveLength(0);
 

@@ -7,5 +7,7 @@ import { Disposable } from "src/framework/interfaces/Disposable";
 export interface CanvasView extends Animatable, CanvasPointerEventHandler, Disposable {
   getChildren(): THREE.Group;
 
+  getName(): string;
+
   isInFrustum(frustum: THREE.Frustum): boolean;
 }

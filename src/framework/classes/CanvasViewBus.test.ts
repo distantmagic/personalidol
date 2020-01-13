@@ -14,10 +14,14 @@ import { CanvasViewBag as CanvasViewBagInterface } from "src/framework/interface
 class FooCanvasView extends CanvasView {
   readonly useCallbacks: boolean;
 
-  constructor(canvasViewBag: CanvasViewBagInterface, group: THREE.Group, useCallbacks: boolean) {
-    super(canvasViewBag, group);
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBagInterface, group: THREE.Group, useCallbacks: boolean) {
+    super(loggerBreadcrumbs, canvasViewBag, group);
 
     this.useCallbacks = useCallbacks;
+  }
+
+  getName(): "Foo" {
+    return "Foo";
   }
 
   useBegin() {
@@ -39,10 +43,18 @@ class FooCanvasView extends CanvasView {
 
 class ImproperAttachFooCanvasView extends CanvasView {
   async attach(cancelToken: CancelTokenInterface) {}
+
+  getName(): "ImproperAttach" {
+    return "ImproperAttach";
+  }
 }
 
 class ImproperDisposeFooCanvasView extends CanvasView {
   async dispose(cancelToken: CancelTokenInterface) {}
+
+  getName(): "ImproperDispose" {
+    return "ImproperDispose";
+  }
 }
 
 test("cannot attach the same view more than once", async function() {
@@ -53,7 +65,7 @@ test("cannot attach the same view more than once", async function() {
   const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
   const group = new THREE.Group();
 
-  const canvasView = new FooCanvasView(canvasViewBag, group, true);
+  const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, true);
 
   await canvasViewBus.add(cancelToken, canvasView);
 
@@ -68,7 +80,7 @@ test("cannot detach the same view more than once", async function() {
   const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
   const group = new THREE.Group();
 
-  const canvasView = new FooCanvasView(canvasViewBag, group, true);
+  const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, true);
 
   await canvasViewBus.add(cancelToken, canvasView);
   await canvasViewBus.delete(cancelToken, canvasView);
@@ -84,7 +96,7 @@ test("fails when view attach is improperly implemented", async function() {
   const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
   const group = new THREE.Group();
 
-  const canvasView = new ImproperAttachFooCanvasView(canvasViewBag, group);
+  const canvasView = new ImproperAttachFooCanvasView(loggerBreadcrumbs, canvasViewBag, group);
 
   return expect(canvasViewBus.add(cancelToken, canvasView)).rejects.toThrow(CanvasViewException);
 });
@@ -97,7 +109,7 @@ test("fails when view dispose is improperly implemented", async function() {
   const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
   const group = new THREE.Group();
 
-  const canvasView = new ImproperDisposeFooCanvasView(canvasViewBag, group);
+  const canvasView = new ImproperDisposeFooCanvasView(loggerBreadcrumbs, canvasViewBag, group);
 
   await canvasViewBus.add(cancelToken, canvasView);
 
@@ -113,7 +125,7 @@ test("properly attaches and detaches canvas views", async function() {
   const group = new THREE.Group();
 
   // use callbacks
-  const canvasViewCallbacks = new FooCanvasView(canvasViewBag, group, true);
+  const canvasViewCallbacks = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, true);
 
   expect(canvasViewCallbacks.isAttached()).toBe(false);
   expect(canvasViewCallbacks.isDisposed()).toBe(false);
@@ -138,7 +150,7 @@ test("properly attaches and detaches canvas views without callbacks", async func
   const group = new THREE.Group();
 
   // do not use callbacks
-  const canvasViewNoCallbacks = new FooCanvasView(canvasViewBag, group, false);
+  const canvasViewNoCallbacks = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, false);
 
   expect(canvasViewNoCallbacks.isAttached()).toBe(false);
   expect(canvasViewNoCallbacks.isDisposed()).toBe(false);

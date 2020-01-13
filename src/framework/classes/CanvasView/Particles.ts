@@ -8,14 +8,16 @@ import CanvasView from "src/framework/classes/CanvasView";
 
 import { CancelToken } from "src/framework/interfaces/CancelToken";
 import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 import { QuakeWorkerSparkParticles } from "src/framework/types/QuakeWorkerSparkParticles";
 
 export default class Particles extends CanvasView {
   readonly origin: THREE.Vector3;
+  private container: null | THREE.Object3D = null;
   private system: any;
 
-  constructor(canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerSparkParticles) {
-    super(canvasViewBag, group);
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerSparkParticles) {
+    super(loggerBreadcrumbs, canvasViewBag, group);
     autoBind(this);
 
     this.origin = new THREE.Vector3(entity.origin[0], entity.origin[1], entity.origin[2]);
@@ -25,6 +27,8 @@ export default class Particles extends CanvasView {
     await super.attach(cancelToken);
 
     const container = new THREE.Object3D();
+
+    this.container = container;
 
     container.position.copy(this.origin);
 
@@ -63,7 +67,10 @@ export default class Particles extends CanvasView {
     await super.dispose(cancelToken);
 
     this.system.dispose();
-    this.children.remove(this.system.container);
+  }
+
+  getName(): "Particles" {
+    return "Particles";
   }
 
   update(delta: number): void {

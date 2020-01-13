@@ -133,20 +133,21 @@ function getMaterial(textureAtlas: THREE.Texture, textureCount: number): THREE.S
 }
 
 export default class QuakeBrush extends CanvasView {
+  private mesh: null | THREE.Mesh = null;
+  private textureAtlas: null | THREE.DataTexture = null;
   readonly entity: QuakeWorkerBrush;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly textureLoader: QuakeMapTextureLoaderInterface;
-  private mesh: null | THREE.Mesh = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasViewBag: CanvasViewBag,
-    entity: QuakeWorkerBrush,
     group: THREE.Group,
+    entity: QuakeWorkerBrush,
     queryBus: QueryBus,
     threeLoadingManager: THREE.LoadingManager
   ) {
-    super(canvasViewBag, group);
+    super(loggerBreadcrumbs, canvasViewBag, group);
 
     this.entity = entity;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
@@ -161,7 +162,6 @@ export default class QuakeBrush extends CanvasView {
     const texturesIndices = new Float32Array(this.entity.texturesIndices);
     const uvs = new Float32Array(this.entity.uvs);
     const vertices = new Float32Array(this.entity.vertices);
-
     const geometry = new THREE.BufferGeometry();
 
     geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
@@ -192,8 +192,8 @@ export default class QuakeBrush extends CanvasView {
     }
 
     for (let i = 0; i < loadedTextures.length; i += 1) {
-      // @ts-ignore
       atlasCanvasContext.drawImage(loadedTextures[i].image, 0, i * TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE);
+      loadedTextures[i].dispose();
     }
 
     // make texture atlas size a power of two because of performance reasons
@@ -205,10 +205,14 @@ export default class QuakeBrush extends CanvasView {
 
     const textureAtlas = new THREE.DataTexture(textureData, textureAtlasSide, textureAtlasSide);
 
+    this.textureAtlas = textureAtlas;
+
     textureAtlas.wrapS = textureAtlas.wrapT = THREE.RepeatWrapping;
 
     const material = getMaterial(textureAtlas, loadedTextures.length);
     const mesh = new THREE.Mesh(geometry, material);
+
+    this.mesh = mesh;
 
     // TODO ios material behaves like if 'castShadow' if 'false'
     mesh.castShadow = true;
@@ -221,5 +225,15 @@ export default class QuakeBrush extends CanvasView {
     await super.dispose(cancelToken);
 
     this.textureLoader.dispose();
+
+    const textureAtlas = this.textureAtlas;
+
+    if (textureAtlas) {
+      textureAtlas.dispose();
+    }
+  }
+
+  getName(): "QuakeBrush" {
+    return "QuakeBrush";
   }
 }

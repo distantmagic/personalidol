@@ -18,15 +18,15 @@ export default class AmbientSound extends CanvasView {
   private sound: null | THREE.Audio;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
+    canvasViewBag: CanvasViewBag,
+    group: THREE.Group,
     audioListener: THREE.AudioListener,
     audioLoader: THREE.AudioLoader,
-    canvasViewBag: CanvasViewBag,
     loadingManager: LoadingManager,
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    group: THREE.Group,
     entity: QuakeWorkerSounds
   ) {
-    super(canvasViewBag, group);
+    super(loggerBreadcrumbs, canvasViewBag, group);
 
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
@@ -77,5 +77,9 @@ export default class AmbientSound extends CanvasView {
     }
 
     sound.stop();
+  }
+
+  getName(): "AmbientSound" {
+    return "AmbientSound";
   }
 }

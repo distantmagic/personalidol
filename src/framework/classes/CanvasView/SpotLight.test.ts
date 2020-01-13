@@ -9,7 +9,7 @@ import SpotLight from "src/framework/classes/CanvasView/SpotLight";
 
 import { QuakeWorkerLightSpotlight } from "src/framework/types/QuakeWorkerLightSpotlight";
 
-test("is cleanly attached and disposed", async function () {
+test("is cleanly attached and disposed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -18,13 +18,13 @@ test("is cleanly attached and disposed", async function () {
   const group = new THREE.Group();
   const entity: QuakeWorkerLightSpotlight = {
     classname: "light_spotlight",
-    color: 'white',
+    color: "white",
     decay: 1.0,
     intensity: 0.3,
     origin: [0, 0, 0],
   };
 
-  const spotLight = new SpotLight(canvasViewBag, group, entity);
+  const spotLight = new SpotLight(loggerBreadcrumbs, canvasViewBag, group, entity);
 
   expect(spotLight.getChildren().children).toHaveLength(0);
 

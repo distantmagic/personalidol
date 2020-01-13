@@ -9,7 +9,7 @@ import Scheduler from "src/framework/classes/Scheduler";
 
 import { QuakeWorkerLightHemisphere } from "src/framework/types/QuakeWorkerLightHemisphere";
 
-test("is cleanly attached and disposed", async function () {
+test("is cleanly attached and disposed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -21,7 +21,7 @@ test("is cleanly attached and disposed", async function () {
     light: 1.0,
   };
 
-  const ambientLight = new HemisphereLight(canvasViewBag, group, entity);
+  const ambientLight = new HemisphereLight(loggerBreadcrumbs, canvasViewBag, group, entity);
 
   expect(ambientLight.getChildren().children).toHaveLength(0);
 
