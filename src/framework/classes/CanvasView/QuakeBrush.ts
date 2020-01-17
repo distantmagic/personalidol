@@ -44,7 +44,7 @@ const fragmentShader = `
     // replace 'map_fragment' with multi-texture sampling
     float textureWidth = 1.0 / u_texture_count;
     vec2 atlas_uv = vec2(
-      mod( vUv.x, textureWidth ),
+      mod( vUv.x, 0.1 ),
       mod( vUv.y, textureWidth ) + v_textureIndex * textureWidth
     );
 
@@ -126,6 +126,7 @@ function getMaterial(textureAtlas: THREE.Texture, textureCount: number): THREE.S
         shininess: new THREE.Uniform(1),
         u_texture_atlas: new THREE.Uniform(textureAtlas),
         u_texture_count: new THREE.Uniform(textureCount),
+        u_texture_size: new THREE.Uniform(textureCount),
       },
     ]),
 
@@ -180,11 +181,11 @@ export default class QuakeBrush extends CanvasView {
     }
 
     const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
-    const textureAtlasHeight = loadedTextures.length * TEXTURE_SIZE;
+    const textureAtlasHeight = THREE.Math.ceilPowerOfTwo(loadedTextures.length * TEXTURE_SIZE);
     const atlasCanvas: HTMLCanvasElement = document.createElement("canvas");
 
     atlasCanvas.height = textureAtlasHeight;
-    atlasCanvas.width = TEXTURE_SIZE;
+    atlasCanvas.width = textureAtlasHeight;
 
     const atlasCanvasContext = atlasCanvas.getContext("2d");
 
@@ -198,19 +199,18 @@ export default class QuakeBrush extends CanvasView {
     }
 
     // make texture atlas size a power of two because of performance reasons
-    const textureAtlasSide = THREE.Math.ceilPowerOfTwo(textureAtlasHeight);
-    const imageData = atlasCanvasContext.getImageData(0, 0, textureAtlasSide, textureAtlasSide);
+    const imageData = atlasCanvasContext.getImageData(0, 0, textureAtlasHeight, textureAtlasHeight);
 
     // iOS/Safari: conversion fixes ArrayBuffer is not Uint8Array
     const textureData = Uint8Array.from(imageData.data);
 
-    const textureAtlas = new THREE.DataTexture(textureData, textureAtlasSide, textureAtlasSide);
+    const textureAtlas = new THREE.DataTexture(textureData, textureAtlasHeight, textureAtlasHeight);
 
     this.textureAtlas = textureAtlas;
 
     textureAtlas.wrapS = textureAtlas.wrapT = THREE.RepeatWrapping;
 
-    const material = getMaterial(textureAtlas, loadedTextures.length);
+    const material = getMaterial(textureAtlas, textureAtlasHeight / TEXTURE_SIZE);
     const mesh = new THREE.Mesh(geometry, material);
 
     this.mesh = mesh;

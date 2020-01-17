@@ -48,6 +48,7 @@ export default class CameraController extends CanvasController implements ICamer
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
+    this.camera.near = -512;
     this.camera.far = 4096;
     // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
     // this.lookAt(new THREE.Vector3(0, 0, 0));
