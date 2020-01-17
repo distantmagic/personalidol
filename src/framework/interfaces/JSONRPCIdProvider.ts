@@ -1,3 +1,3 @@
-export interface JSONRPCIdProvider {
+export default interface JSONRPCIdProvider {
   getNextId(): string;
 }

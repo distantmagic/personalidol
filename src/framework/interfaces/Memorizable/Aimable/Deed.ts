@@ -1,3 +1,3 @@
-import { Aimable } from "src/framework/interfaces/Memorizable/Aimable";
+import Aimable from "src/framework/interfaces/Memorizable/Aimable";
 
-export interface Deed extends Aimable {}
+export default interface Deed extends Aimable {}

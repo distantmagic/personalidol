@@ -1,8 +1,7 @@
 import Fetch from "src/framework/classes/Query/Fetch";
-
 import Query from "src/framework/classes/Query";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
+import CancelToken from "src/framework/interfaces/CancelToken";
 
 export default class PlainText extends Query<string> {
   readonly fetch: Fetch;

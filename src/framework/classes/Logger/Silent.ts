@@ -1,9 +1,10 @@
 import Logger from "src/framework/classes/Logger";
 
-import { Logger as LoggerInterface } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { LogSeverityEnum } from "src/framework/types/LogSeverityEnum";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as ILogger } from "src/framework/interfaces/Logger";
 
-export default class Silent extends Logger implements LoggerInterface {
+import LogSeverityEnum from "src/framework/types/LogSeverityEnum";
+
+export default class Silent extends Logger implements ILogger {
   async log(breadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): Promise<void> {}
 }

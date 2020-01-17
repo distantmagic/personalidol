@@ -1,5 +1,5 @@
-import { CancelToken } from "src/framework/interfaces/CancelToken";
+import CancelToken from "src/framework/interfaces/CancelToken";
 
-export interface GeneratorParser<T> {
+export default interface GeneratorParser<T> {
   parse(cancelToken: CancelToken): Generator<T>;
 }

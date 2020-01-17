@@ -1,9 +1,9 @@
-import { MainLoopBeginCallback } from "src/framework/types/MainLoopBeginCallback";
-import { MainLoopDrawCallback } from "src/framework/types/MainLoopDrawCallback";
-import { MainLoopEndCallback } from "src/framework/types/MainLoopEndCallback";
-import { MainLoopUpdateCallback } from "src/framework/types/MainLoopUpdateCallback";
+import MainLoopBeginCallback from "src/framework/types/MainLoopBeginCallback";
+import MainLoopDrawCallback from "src/framework/types/MainLoopDrawCallback";
+import MainLoopEndCallback from "src/framework/types/MainLoopEndCallback";
+import MainLoopUpdateCallback from "src/framework/types/MainLoopUpdateCallback";
 
-export interface Scheduler {
+export default interface Scheduler {
   notifyBegin(timestamp: number, delta: number): void;
 
   notifyDraw(interpolationPercentage: number): void;

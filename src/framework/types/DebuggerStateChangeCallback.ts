@@ -1,3 +1,5 @@
-import { DebuggerState } from "src/framework/types/DebuggerState";
+import DebuggerState from "src/framework/types/DebuggerState";
 
-export type DebuggerStateChangeCallback = (state: DebuggerState) => void;
+type DebuggerStateChangeCallback = (state: DebuggerState) => void;
+
+export default DebuggerStateChangeCallback;

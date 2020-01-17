@@ -4,12 +4,12 @@ import * as THREE from "three";
 import CancelToken from "src/framework/classes/CancelToken";
 import SceneCanvas from "src/framework/classes/HTMLElement/SceneCanvas";
 
-import { Debugger } from "src/framework/interfaces/Debugger";
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { LoadingManager } from "src/framework/interfaces/LoadingManager";
-import { Logger } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import Debugger from "src/framework/interfaces/Debugger";
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import LoadingManager from "src/framework/interfaces/LoadingManager";
+import Logger from "src/framework/interfaces/Logger";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
 
 export default function useSceneCanvas(
   debug: Debugger,

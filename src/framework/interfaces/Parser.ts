@@ -1,3 +1,3 @@
-export interface Parser<T> {
+export default interface Parser<T> {
   parse(): T;
 }

@@ -1,3 +1,3 @@
-import { State } from "src/framework/interfaces/Memorizable/Aimable/State";
+import State from "src/framework/interfaces/Memorizable/Aimable/State";
 
-export interface Death extends State {}
+export default interface Death extends State {}

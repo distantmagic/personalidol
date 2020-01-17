@@ -1,1 +1,1 @@
-export interface Perceivable {}
+export default interface Perceivable {}

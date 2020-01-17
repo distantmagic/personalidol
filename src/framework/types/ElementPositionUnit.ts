@@ -1,1 +1,3 @@
-export type ElementPositionUnit = "px" | "tile";
+type ElementPositionUnit = "px" | "tile";
+
+export default ElementPositionUnit;

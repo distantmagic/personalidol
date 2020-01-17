@@ -1,3 +1,3 @@
-import { Equatable } from "src/framework/interfaces/Equatable";
+import Equatable from "src/framework/interfaces/Equatable";
 
-export interface Memorizable extends Equatable<Memorizable> {}
+export default interface Memorizable extends Equatable<Memorizable> {}

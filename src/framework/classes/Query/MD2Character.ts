@@ -1,13 +1,13 @@
+import Query from "src/framework/classes/Query";
 import { default as THREEMD2Character } from "src/framework/classes/MD2Character";
 
-import Query from "src/framework/classes/Query";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IMD2Character } from "src/framework/interfaces/MD2Character";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { MD2Character as THREEMD2CharacterInterface } from "src/framework/interfaces/MD2Character";
-import { MD2CharacterConfig } from "src/framework/types/MD2CharacterConfig";
+import MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
 
-export default class MD2Character extends Query<THREEMD2CharacterInterface> {
+export default class MD2Character extends Query<IMD2Character> {
   readonly config: MD2CharacterConfig;
   readonly loadingManager: THREE.LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -20,7 +20,7 @@ export default class MD2Character extends Query<THREEMD2CharacterInterface> {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  execute(cancelToken: CancelToken): Promise<THREEMD2CharacterInterface> {
+  execute(cancelToken: CancelToken): Promise<IMD2Character> {
     const character = new THREEMD2Character(this.loggerBreadcrumbs.add("execute"), this.loadingManager);
 
     return new Promise(resolve => {

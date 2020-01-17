@@ -6,20 +6,23 @@ import * as THREE from "three";
 import { MD2Loader } from "three/examples/jsm/loaders/MD2Loader";
 import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
+import dispose from "src/framework/helpers/dispose";
+
 import { default as LoaderException } from "src/framework/classes/Exception/Loader";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { MD2Character as MD2CharacterInterface } from "src/framework/interfaces/MD2Character";
-import { MD2CharacterAnimations } from "src/framework/types/MD2CharacterAnimations";
-import { MD2CharacterConfig } from "src/framework/types/MD2CharacterConfig";
-import { MD2CharacterControls } from "src/framework/types/MD2CharacterControls";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IMD2Character } from "src/framework/interfaces/MD2Character";
 
-function checkLoadingComplete(scope: MD2CharacterInterface): void {
+import MD2CharacterAnimations from "src/framework/types/MD2CharacterAnimations";
+import MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
+import MD2CharacterControls from "src/framework/types/MD2CharacterControls";
+
+function checkLoadingComplete(scope: IMD2Character): void {
   scope.loadCounter -= 1;
   if (scope.loadCounter === 0) scope.onLoadComplete();
 }
 
-function createPart(scope: MD2CharacterInterface, geometry: THREE.BufferGeometry | THREE.Geometry, skinMap: THREE.Texture): MorphBlendMesh {
+function createPart(scope: IMD2Character, geometry: THREE.BufferGeometry | THREE.Geometry, skinMap: THREE.Texture): MorphBlendMesh {
   const materialTexture = new THREE.MeshLambertMaterial({
     color: 0xffffff,
     wireframe: false,
@@ -37,26 +40,7 @@ function createPart(scope: MD2CharacterInterface, geometry: THREE.BufferGeometry
   return mesh;
 }
 
-function disposeMorphBlendMesh(child: MorphBlendMesh): void {
-  child.geometry.dispose();
-
-  const material: THREE.MeshLambertMaterial = child.material as THREE.MeshLambertMaterial;
-  const map = material.map;
-
-  if (map) {
-    if (Array.isArray(map)) {
-      map.forEach(disposeTexture);
-    } else {
-      disposeTexture(map);
-    }
-  }
-}
-
-function disposeTexture(texture: THREE.Texture): void {
-  texture.dispose();
-}
-
-function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingManager: THREE.LoadingManager, textureUrls: ReadonlyArray<string>): THREE.Texture[] {
+function loadTextures(scope: IMD2Character, baseUrl: string, loadingManager: THREE.LoadingManager, textureUrls: ReadonlyArray<string>): THREE.Texture[] {
   const textureLoader = new THREE.TextureLoader(loadingManager);
   const textures = [];
 
@@ -69,7 +53,7 @@ function loadTextures(scope: MD2CharacterInterface, baseUrl: string, loadingMana
   return textures;
 }
 
-export default class MD2Character implements MD2CharacterInterface {
+export default class MD2Character implements IMD2Character {
   readonly loadingManager: THREE.LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
@@ -135,7 +119,7 @@ export default class MD2Character implements MD2CharacterInterface {
     }
   }
 
-  shareParts(original: MD2CharacterInterface) {
+  shareParts(original: IMD2Character) {
     const originalMeshBody = original.meshBody;
 
     if (!originalMeshBody) {
@@ -426,27 +410,25 @@ export default class MD2Character implements MD2CharacterInterface {
   }
 
   dispose(): void {
-    this.skinsBody.forEach(disposeTexture);
-    this.skinsWeapon.forEach(disposeTexture);
+    const disposeBound = dispose.bind(null, this.loggerBreadcrumbs.add("dispose"));
 
-    this.weapons.forEach(disposeMorphBlendMesh);
+    this.skinsBody.forEach(disposeBound);
+    this.skinsWeapon.forEach(disposeBound);
+    this.weapons.forEach(disposeBound);
 
     const meshBody = this.meshBody;
 
     if (meshBody) {
-      disposeMorphBlendMesh(meshBody);
+      disposeBound(meshBody);
     }
 
     const meshWeapon = this.meshWeapon;
 
     if (meshWeapon) {
-      disposeMorphBlendMesh(meshWeapon);
+      disposeBound(meshWeapon);
     }
 
-    this.root.traverse(function(child: THREE.Object3D) {
-      if (child instanceof MorphBlendMesh) {
-        disposeMorphBlendMesh(child);
-      }
-    });
+    this.meshes.forEach(disposeBound);
+    disposeBound(this.root);
   }
 }

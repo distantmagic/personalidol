@@ -2,10 +2,11 @@ import * as THREE from "three";
 
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { ElementPosition as ElementPositionInterface } from "src/framework/interfaces/ElementPosition";
-import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
+import { default as IElementPosition } from "src/framework/interfaces/ElementPosition";
 
-export default class ElementPosition<Unit extends ElementPositionUnit> implements ElementPositionInterface<Unit> {
+import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+
+export default class ElementPosition<Unit extends ElementPositionUnit> implements IElementPosition<Unit> {
   readonly vector: THREE.Vector3;
   readonly x: number;
   readonly y: number;
@@ -18,11 +19,11 @@ export default class ElementPosition<Unit extends ElementPositionUnit> implement
     this.z = z;
   }
 
-  clone(): ElementPositionInterface<Unit> {
+  clone(): IElementPosition<Unit> {
     return new ElementPosition<Unit>(this.getX(), this.getY(), this.getZ());
   }
 
-  distanceTo(other: ElementPositionInterface<Unit>): number {
+  distanceTo(other: IElementPosition<Unit>): number {
     const otherVector = new THREE.Vector3(other.getX(), other.getY(), other.getZ());
 
     return this.vector.distanceTo(otherVector);
@@ -40,15 +41,15 @@ export default class ElementPosition<Unit extends ElementPositionUnit> implement
     return this.z;
   }
 
-  isOnLineBetween(start: ElementPositionInterface<Unit>, end: ElementPositionInterface<Unit>): boolean {
+  isOnLineBetween(start: IElementPosition<Unit>, end: IElementPosition<Unit>): boolean {
     return this.distanceTo(start) + this.distanceTo(end) === start.distanceTo(end);
   }
 
-  isEqual(other: ElementPositionInterface<Unit>): boolean {
+  isEqual(other: IElementPosition<Unit>): boolean {
     return this.getX() === other.getX() && this.getY() === other.getY() && this.getZ() === other.getZ();
   }
 
-  isEqualWithPrecision(other: ElementPositionInterface<Unit>, precision: number): boolean {
+  isEqualWithPrecision(other: IElementPosition<Unit>, precision: number): boolean {
     return (
       isEqualWithPrecision(this.getX(), other.getX(), precision) &&
       isEqualWithPrecision(this.getY(), other.getY(), precision) &&
@@ -56,7 +57,7 @@ export default class ElementPosition<Unit extends ElementPositionUnit> implement
     );
   }
 
-  offset(other: ElementPositionInterface<Unit>): ElementPositionInterface<Unit> {
+  offset(other: IElementPosition<Unit>): IElementPosition<Unit> {
     return new ElementPosition<Unit>(this.getX() + other.getX(), this.getY() + other.getY(), this.getZ() + other.getZ());
   }
 }

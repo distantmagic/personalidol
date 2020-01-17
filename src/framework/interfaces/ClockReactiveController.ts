@@ -1,5 +1,5 @@
-import { CancelToken } from "src/framework/interfaces/CancelToken";
+import CancelToken from "src/framework/interfaces/CancelToken";
 
-export interface ClockReactiveController {
+export default interface ClockReactiveController {
   interval(cancelToken: CancelToken): Promise<void>;
 }

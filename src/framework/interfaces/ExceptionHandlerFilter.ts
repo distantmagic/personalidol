@@ -1,3 +1,3 @@
-export interface ExceptionHandlerFilter {
+export default interface ExceptionHandlerFilter {
   isCapturable(error: Error): boolean;
 }

@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { LoadingManager } from "src/framework/interfaces/LoadingManager";
-import { LoadingManagerState } from "src/framework/interfaces/LoadingManagerState";
+import LoadingManager from "src/framework/interfaces/LoadingManager";
+import LoadingManagerState from "src/framework/interfaces/LoadingManagerState";
 
 export default function useLoadingManagerState(loadingManager: LoadingManager): LoadingManagerState {
   const [loadingManagerState, setLoadingManagerState] = React.useState<LoadingManagerState>(loadingManager.getState());

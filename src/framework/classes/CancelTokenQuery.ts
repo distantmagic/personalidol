@@ -1,18 +1,19 @@
-import CancelTokenException from "src/framework/classes/Exception/CancelToken";
 import canCompare from "src/framework/helpers/canCompare";
+
+import CancelTokenException from "src/framework/classes/Exception/CancelToken";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CancelTokenQuery as CancelTokenQueryInterface } from "src/framework/interfaces/CancelTokenQuery";
-import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { Query } from "src/framework/interfaces/Query";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import Query from "src/framework/interfaces/Query";
+import { default as ICancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
-export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T> {
+export default class CancelTokenQuery<T> implements ICancelTokenQuery<T> {
   private _isExecuted: boolean = false;
   private _isExecuting: boolean = false;
   private _result: null | T = null;
-  readonly callbacks: EventListenerSetInterface<[T]>;
+  readonly callbacks: IEventListenerSet<[T]>;
   readonly cancelToken: CancelToken;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly query: Query<T>;
@@ -56,7 +57,7 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     return this._result;
   }
 
-  infer(other: CancelTokenQueryInterface<T>): T {
+  infer(other: ICancelTokenQuery<T>): T {
     const result = other.getResult();
 
     this.setExecuted(result);
@@ -68,7 +69,7 @@ export default class CancelTokenQuery<T> implements CancelTokenQueryInterface<T>
     return this.cancelToken.isCanceled();
   }
 
-  isInferableFrom(other: CancelTokenQueryInterface<any>): boolean {
+  isInferableFrom(other: ICancelTokenQuery<any>): boolean {
     if (this === other) {
       return false;
     }

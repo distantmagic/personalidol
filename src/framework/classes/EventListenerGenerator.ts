@@ -1,6 +1,6 @@
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { EventListenerGenerator as EventListenerGeneratorInterface } from "src/framework/interfaces/EventListenerGenerator";
-import { EventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import EventListenerSet from "src/framework/interfaces/EventListenerSet";
+import { default as IEventListenerGenerator } from "src/framework/interfaces/EventListenerGenerator";
 
 type GeneratorBuffer<Arguments> = Array<{
   isUtilized: boolean;
@@ -23,7 +23,7 @@ function produceBuffered<Arguments>(buffer: GeneratorBuffer<Arguments>): Promise
   });
 }
 
-export default class EventListenerGenerator<Arguments extends ReadonlyArray<any>> implements EventListenerGeneratorInterface<Arguments> {
+export default class EventListenerGenerator<Arguments extends ReadonlyArray<any>> implements IEventListenerGenerator<Arguments> {
   readonly eventListenerSet: EventListenerSet<Arguments>;
 
   constructor(eventListenerSet: EventListenerSet<Arguments>) {

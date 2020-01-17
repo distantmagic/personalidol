@@ -1,15 +1,16 @@
-import { BusClock as BusClockInterface } from "src/framework/interfaces/BusClock";
-import { BusClockCallback } from "src/framework/types/BusClockCallback";
-import { CancelToken } from "src/framework/interfaces/CancelToken";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import { default as IBusClock } from "src/framework/interfaces/BusClock";
 
-export default class BusClock implements BusClockInterface {
+import BusClockCallback from "src/framework/types/BusClockCallback";
+
+export default class BusClock implements IBusClock {
   private delay: number;
 
-  static createForMainThread(): BusClockInterface {
+  static createForMainThread(): IBusClock {
     return new BusClock(400);
   }
 
-  static createForWorkerThread(): BusClockInterface {
+  static createForWorkerThread(): IBusClock {
     return new BusClock(200);
   }
 

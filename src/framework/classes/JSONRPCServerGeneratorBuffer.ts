@@ -2,21 +2,21 @@ import * as THREE from "three";
 
 import { default as JSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 
-import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCRequest as JSONRPCRequestInterface } from "src/framework/interfaces/JSONRPCRequest";
-import { JSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
-import { JSONRPCServerGeneratorBuffer as JSONRPCServerGeneratorBufferInterface } from "src/framework/interfaces/JSONRPCServerGeneratorBuffer";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import JSONRPCResponseData from "src/framework/interfaces/JSONRPCResponseData";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { default as IJSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
+import { default as IJSONRPCServerGeneratorBuffer } from "src/framework/interfaces/JSONRPCServerGeneratorBuffer";
 
-type OnMessageReadyCallback<T> = (response: JSONRPCGeneratorChunkResponseInterface<T>) => any;
+type OnMessageReadyCallback<T> = (response: IJSONRPCGeneratorChunkResponse<T>) => any;
 
-export default class JSONRPCServerGeneratorBuffer<T> implements JSONRPCServerGeneratorBufferInterface<T> {
+export default class JSONRPCServerGeneratorBuffer<T> implements IJSONRPCServerGeneratorBuffer<T> {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onMessageReady: OnMessageReadyCallback<T>;
   private headChunkId: null | string = null;
   // buffer one response to produce chain of messages
   // order of message is not guaranteed sometimes
-  private previous: null | JSONRPCGeneratorChunkResponseInterface<T> = null;
+  private previous: null | IJSONRPCGeneratorChunkResponse<T> = null;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, onMessageReady: OnMessageReadyCallback<T>) {
     this.headChunkId = null;
@@ -24,7 +24,7 @@ export default class JSONRPCServerGeneratorBuffer<T> implements JSONRPCServerGen
     this.onMessageReady = onMessageReady;
   }
 
-  add(request: JSONRPCRequestInterface, responseDataChunk: JSONRPCResponseData<T>): void {
+  add(request: IJSONRPCRequest, responseDataChunk: JSONRPCResponseData<T>): void {
     const currentChunkId = THREE.Math.generateUUID();
     const headChunkId = this.headChunkId || currentChunkId;
     const previous = this.previous;
@@ -53,7 +53,7 @@ export default class JSONRPCServerGeneratorBuffer<T> implements JSONRPCServerGen
     this.previous = currentChunk;
   }
 
-  flushRemaining(request: JSONRPCRequestInterface): void {
+  flushRemaining(request: IJSONRPCRequest): void {
     const previous = this.previous;
 
     if (previous) {

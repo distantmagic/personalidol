@@ -1,6 +1,6 @@
-import { ExceptionHandlerFilter as ExceptionHandlerFilterInterface } from "src/framework/interfaces/ExceptionHandlerFilter";
+import { default as IExceptionHandlerFilter } from "src/framework/interfaces/ExceptionHandlerFilter";
 
-export default class ExceptionHandlerFilter implements ExceptionHandlerFilterInterface {
+export default class ExceptionHandlerFilter implements IExceptionHandlerFilter {
   isCapturable(error: Error): boolean {
     return true;
   }

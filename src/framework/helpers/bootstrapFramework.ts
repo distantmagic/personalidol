@@ -7,21 +7,21 @@ import QueryBus from "src/framework/classes/QueryBus";
 import { default as ConsoleLogger } from "src/framework/classes/Logger/Console";
 import { default as UnexpectedExceptionHandlerFilter } from "src/framework/classes/ExceptionHandlerFilter/Unexpected";
 
-import { ClockReactiveController as ClockReactiveControllerInterface } from "src/framework/interfaces/ClockReactiveController";
-import { Debugger as DebuggerInterface } from "src/framework/interfaces/Debugger";
-import { ExceptionHandler as ExceptionHandlerInterface } from "src/framework/interfaces/ExceptionHandler";
-import { Logger } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus as QueryBusInterface } from "src/framework/interfaces/QueryBus";
+import Logger from "src/framework/interfaces/Logger";
+import { default as IClockReactiveController } from "src/framework/interfaces/ClockReactiveController";
+import { default as IDebugger } from "src/framework/interfaces/Debugger";
+import { default as IExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
+import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IQueryBus } from "src/framework/interfaces/QueryBus";
 
 // prettier-ignore
 type BootstrapFrameworkCallback<T> = (
-  clockReactiveController: ClockReactiveControllerInterface,
-  debug: DebuggerInterface,
-  exceptionHandler: ExceptionHandlerInterface,
+  clockReactiveController: IClockReactiveController,
+  debug: IDebugger,
+  exceptionHandler: IExceptionHandler,
   logger: Logger,
-  loggerBreadcrumbs: LoggerBreadcrumbsInterface,
-  queryBus: QueryBusInterface,
+  loggerBreadcrumbs: ILoggerBreadcrumbs,
+  queryBus: IQueryBus,
 ) => T;
 
 export default function bootstrapFramework<T>(bootstrapper: BootstrapFrameworkCallback<T>): T {

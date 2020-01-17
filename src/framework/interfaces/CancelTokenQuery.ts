@@ -1,7 +1,7 @@
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { Query } from "src/framework/interfaces/Query";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import Query from "src/framework/interfaces/Query";
 
-export interface CancelTokenQuery<T> {
+export default interface CancelTokenQuery<T> {
   // constructor(cancelToken: CancelToken, query: Query<T>): void;
 
   execute(): Promise<T>;

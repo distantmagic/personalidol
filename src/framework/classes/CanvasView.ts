@@ -3,12 +3,12 @@ import isEmpty from "lodash/isEmpty";
 
 import dispose from "src/framework/helpers/dispose";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasView as CanvasViewInterface } from "src/framework/interfaces/CanvasView";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as ICanvasView } from "src/framework/interfaces/CanvasView";
 
-export default abstract class CanvasView implements CanvasViewInterface {
+export default abstract class CanvasView implements ICanvasView {
   private _isAttached: boolean;
   private _isDisposed: boolean;
   readonly canvasViewBag: CanvasViewBag;

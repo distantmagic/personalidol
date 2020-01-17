@@ -3,17 +3,18 @@ import autoBind from "auto-bind";
 import clamp from "lodash/clamp";
 import yn from "yn";
 
-import CanvasController from "src/framework/classes/CanvasController";
 import env from "src/framework/helpers/env";
 
-import { CameraController as CameraControllerInterface } from "src/framework/interfaces/CameraController";
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { Debugger } from "src/framework/interfaces/Debugger";
-import { ElementSize } from "src/framework/interfaces/ElementSize";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import CanvasController from "src/framework/classes/CanvasController";
 
-export default class CameraController extends CanvasController implements CameraControllerInterface {
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import Debugger from "src/framework/interfaces/Debugger";
+import ElementSize from "src/framework/interfaces/ElementSize";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as ICameraController } from "src/framework/interfaces/CameraController";
+
+export default class CameraController extends CanvasController implements ICameraController {
   readonly camera: THREE.OrthographicCamera;
   readonly debug: Debugger;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

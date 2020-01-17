@@ -5,8 +5,8 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QueryBus from "src/framework/classes/QueryBus";
 import { default as SilentLogger } from "src/framework/classes/Logger/Silent";
 
-import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
-import { Query } from "src/framework/interfaces/Query";
+import Query from "src/framework/interfaces/Query";
+import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
 
 type Total = {
   executed: number;
@@ -23,7 +23,7 @@ class Foo implements Query<number> {
     this.total = total;
   }
 
-  async execute(cancelToken: CancelTokenInterface): Promise<number> {
+  async execute(cancelToken: ICancelToken): Promise<number> {
     this.total.executed += 1;
 
     return this.reference;

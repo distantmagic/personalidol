@@ -1,1 +1,3 @@
-export type ElementRotationUnit = "degrees180" | "degrees360" | "radians";
+type ElementRotationUnit = "degrees180" | "degrees360" | "radians";
+
+export default ElementRotationUnit;

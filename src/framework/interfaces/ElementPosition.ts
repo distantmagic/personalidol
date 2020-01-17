@@ -1,7 +1,8 @@
-import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
-import { EquatableWithPrecision } from "src/framework/interfaces/EquatableWithPrecision";
+import EquatableWithPrecision from "src/framework/interfaces/EquatableWithPrecision";
 
-export interface ElementPosition<Unit extends ElementPositionUnit> extends EquatableWithPrecision<ElementPosition<Unit>> {
+import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+
+export default interface ElementPosition<Unit extends ElementPositionUnit> extends EquatableWithPrecision<ElementPosition<Unit>> {
   distanceTo(elementPosition: ElementPosition<Unit>): number;
 
   getX(): number;

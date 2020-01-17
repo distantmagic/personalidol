@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
-import { CanvasPointerInteraction as CanvasPointerInteractionInterface } from "src/framework/interfaces/CanvasPointerInteraction";
-import { ElementSize as ElementSizeInterface } from "src/framework/interfaces/ElementSize";
+import { default as ICanvasPointerInteraction } from "src/framework/interfaces/CanvasPointerInteraction";
+import { default as IElementSize } from "src/framework/interfaces/ElementSize";
 
-export default class CanvasPointerInteraction implements CanvasPointerInteractionInterface {
+export default class CanvasPointerInteraction implements ICanvasPointerInteraction {
   readonly camera: THREE.Camera;
   readonly mouseVector: THREE.Vector2;
   readonly raycaster: THREE.Raycaster;
@@ -55,7 +55,7 @@ export default class CanvasPointerInteraction implements CanvasPointerInteractio
     this.mouseVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
   }
 
-  resize(elementSize: ElementSizeInterface<"px">): void {
+  resize(elementSize: IElementSize<"px">): void {
     const boundingRect = this.renderer.domElement.getBoundingClientRect();
 
     this.canvasHeight = elementSize.getHeight();

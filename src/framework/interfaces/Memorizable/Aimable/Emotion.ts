@@ -1,3 +1,3 @@
-import { Aimable } from "src/framework/interfaces/Memorizable/Aimable";
+import Aimable from "src/framework/interfaces/Memorizable/Aimable";
 
-export interface Emotion extends Aimable {}
+export default interface Emotion extends Aimable {}

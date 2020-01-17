@@ -1,6 +1,7 @@
-import { ElementRotation } from "src/framework/interfaces/ElementRotation";
-import { ElementRotationUnit } from "src/framework/types/ElementRotationUnit";
+import ElementRotation from "src/framework/interfaces/ElementRotation";
 
-export interface HasElementRotation<T extends ElementRotationUnit> {
+import ElementRotationUnit from "src/framework/types/ElementRotationUnit";
+
+export default interface HasElementRotation<T extends ElementRotationUnit> {
   getElementRotation(): ElementRotation<T>;
 }

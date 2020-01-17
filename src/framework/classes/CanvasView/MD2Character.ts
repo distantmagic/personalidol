@@ -7,13 +7,14 @@ import { default as QuakeMapException } from "src/framework/classes/Exception/Qu
 import { default as RemoteJSONQuery } from "src/framework/classes/Query/RemoteJSON";
 import { default as THREEMD2Character } from "src/framework/classes/MD2Character";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { MD2Character as THREEMD2CharacterInterface } from "src/framework/interfaces/MD2Character";
-import { MD2CharacterConfig } from "src/framework/types/MD2CharacterConfig";
-import { QuakeWorkerMD2Model } from "src/framework/types/QuakeWorkerMD2Model";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
+import { default as IMD2Character } from "src/framework/interfaces/MD2Character";
+
+import MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
+import QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 
 export default class MD2Character extends CanvasView {
   readonly angle: number;
@@ -24,8 +25,8 @@ export default class MD2Character extends CanvasView {
   readonly queryBus: QueryBus;
   readonly skin: number;
   readonly threeLoadingManager: THREE.LoadingManager;
-  private baseCharacter: null | THREEMD2CharacterInterface = null;
-  private character: null | THREEMD2CharacterInterface = null;
+  private baseCharacter: null | IMD2Character = null;
+  private character: null | IMD2Character = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -61,8 +62,8 @@ export default class MD2Character extends CanvasView {
     };
 
     const characterQuery = new MD2CharacterQuery(this.loggerBreadcrumbs.add("attach"), this.threeLoadingManager, configMerged);
-    const baseCharacter: THREEMD2CharacterInterface = await this.queryBus.enqueue(cancelToken, characterQuery).whenExecuted();
-    const character: THREEMD2CharacterInterface = new THREEMD2Character(this.loggerBreadcrumbs.add("attach"), this.threeLoadingManager);
+    const baseCharacter: IMD2Character = await this.queryBus.enqueue(cancelToken, characterQuery).whenExecuted();
+    const character: IMD2Character = new THREEMD2Character(this.loggerBreadcrumbs.add("attach"), this.threeLoadingManager);
 
     character.controls = {
       attack: false,
@@ -99,7 +100,7 @@ export default class MD2Character extends CanvasView {
     }
   }
 
-  getCharacter(): THREEMD2CharacterInterface {
+  getCharacter(): IMD2Character {
     const character = this.character;
 
     if (!character) {

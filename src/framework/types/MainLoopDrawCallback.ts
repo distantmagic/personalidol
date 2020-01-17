@@ -1,1 +1,3 @@
-export type MainLoopDrawCallback = (interpolationPercentage: number) => void;
+type MainLoopDrawCallback = (interpolationPercentage: number) => void;
+
+export default MainLoopDrawCallback;

@@ -1,8 +1,9 @@
-import { JSONRPCMessageType } from "src/framework/types/JSONRPCMessageType";
-import { JSONRPCResponse as JSONRPCResponseInterface } from "src/framework/interfaces/JSONRPCResponse";
-import { JSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
+import JSONRPCResponseData from "src/framework/interfaces/JSONRPCResponseData";
+import { default as IJSONRPCResponse } from "src/framework/interfaces/JSONRPCResponse";
 
-export default abstract class JSONRPCResponse<T, U extends Object> implements JSONRPCResponseInterface<T, U> {
+import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
+
+export default abstract class JSONRPCResponse<T, U extends Object> implements IJSONRPCResponse<T, U> {
   readonly data: JSONRPCResponseData<T>;
   readonly id: string;
   readonly method: string;

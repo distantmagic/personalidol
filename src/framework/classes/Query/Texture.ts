@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import Query from "src/framework/classes/Query";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
+import CancelToken from "src/framework/interfaces/CancelToken";
 
 export default class Texture extends Query<THREE.Texture> {
   readonly textureLoader: THREE.TextureLoader;

@@ -1,6 +1,6 @@
-import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "src/framework/interfaces/JSONRPCResponseData";
+import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
-export default class JSONRPCResponseData<T> implements JSONRPCResponseDataInterface<T> {
+export default class JSONRPCResponseData<T> implements IJSONRPCResponseData<T> {
   readonly result: T;
   readonly transferables: Transferable[];
 

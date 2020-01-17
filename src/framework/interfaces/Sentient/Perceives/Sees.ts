@@ -1,3 +1,3 @@
-import { Perceives } from "src/framework/interfaces/Sentient/Perceives";
+import Perceives from "src/framework/interfaces/Sentient/Perceives";
 
-export interface Sees extends Perceives {}
+export default interface Sees extends Perceives {}

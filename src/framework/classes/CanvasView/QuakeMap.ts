@@ -16,16 +16,17 @@ import { default as QuakeBrushView } from "src/framework/classes/CanvasView/Quak
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 import { default as SpotLightView } from "src/framework/classes/CanvasView/SpotLight";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { JSONRPCClient as JSONRPCClientInterface } from "src/framework/interfaces/JSONRPCClient";
-import { LoadingManager } from "src/framework/interfaces/LoadingManager";
-import { Logger } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerAny } from "src/framework/types/QuakeWorkerAny";
-import { QuakeWorkerGLTFModel } from "src/framework/types/QuakeWorkerGLTFModel";
-import { QuakeWorkerMD2Model } from "src/framework/types/QuakeWorkerMD2Model";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoadingManager from "src/framework/interfaces/LoadingManager";
+import Logger from "src/framework/interfaces/Logger";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
+import { default as IJSONRPCClient } from "src/framework/interfaces/JSONRPCClient";
+
+import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
+import QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
+import QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 
 // those are a few hacks, but in the end it's possible to load web workers
 // with create-react-app without ejecting
@@ -306,7 +307,7 @@ export default class QuakeMap extends CanvasView {
     return "QuakeMap";
   }
 
-  getQuakeMapRpcClient(cancelToken: CancelToken): JSONRPCClientInterface {
+  getQuakeMapRpcClient(cancelToken: CancelToken): IJSONRPCClient {
     const quakeMapWorker: Worker = new QuakeMapWorker();
     const quakeMapRpcClient = JSONRPCClient.attachTo(this.loggerBreadcrumbs.add("JSONRPCClient"), cancelToken, quakeMapWorker);
 

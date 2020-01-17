@@ -1,7 +1,7 @@
 import Command from "src/framework/classes/Command";
 
-import { Message } from "src/framework/interfaces/Perceivable/Message";
-import { Memorizes } from "src/framework/interfaces/Sentient/Perceives/Memorizes";
+import Memorizes from "src/framework/interfaces/Sentient/Perceives/Memorizes";
+import Message from "src/framework/interfaces/Perceivable/Message";
 
 export default class LearnMemorizable extends Command {
   private message: Message;

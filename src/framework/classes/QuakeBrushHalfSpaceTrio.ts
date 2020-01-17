@@ -1,12 +1,13 @@
 import * as math from "mathjs";
 import * as THREE from "three";
 
-import Exception from "src/framework/classes/Exception";
 import isEqualWithEpsilon from "src/framework/helpers/isEqualWithEpsilon";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
-import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
+import Exception from "src/framework/classes/Exception";
+
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
 function checkIntersectingPointDeterminant(det: number): boolean {
   // normally it should be enough to check if determinant !== 0, but due to
@@ -14,7 +15,7 @@ function checkIntersectingPointDeterminant(det: number): boolean {
   return !isEqualWithEpsilon(det, 0, 0.1);
 }
 
-function getIntersectionDeterminant(trio: QuakeBrushHalfSpaceTrioInterface, plane1: THREE.Plane, plane2: THREE.Plane, plane3: THREE.Plane): number {
+function getIntersectionDeterminant(trio: IQuakeBrushHalfSpaceTrio, plane1: THREE.Plane, plane2: THREE.Plane, plane3: THREE.Plane): number {
   const matrix = new THREE.Matrix3();
 
   matrix.set(plane1.normal.x, plane1.normal.y, plane1.normal.z, plane2.normal.x, plane2.normal.y, plane2.normal.z, plane3.normal.x, plane3.normal.y, plane3.normal.z);
@@ -22,7 +23,7 @@ function getIntersectionDeterminant(trio: QuakeBrushHalfSpaceTrioInterface, plan
   return matrix.determinant();
 }
 
-export default class QuakeBrushHalfSpaceTrio implements QuakeBrushHalfSpaceTrioInterface {
+export default class QuakeBrushHalfSpaceTrio implements IQuakeBrushHalfSpaceTrio {
   readonly hs1: QuakeBrushHalfSpace;
   readonly hs2: QuakeBrushHalfSpace;
   readonly hs3: QuakeBrushHalfSpace;

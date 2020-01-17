@@ -1,12 +1,11 @@
 import * as THREE from "three";
-
 import { ConvexHull, Face } from "three/examples/jsm/math/ConvexHull";
 
 import quake2three from "src/framework/helpers/quake2three";
 import three2quake from "src/framework/helpers/three2quake";
 
-import { QuakeBrush } from "src/framework/interfaces/QuakeBrush";
-import { QuakeBrushGeometryBuilder as QuakeBrushGeometryBuilderInterface } from "src/framework/interfaces/QuakeBrushGeometryBuilder";
+import QuakeBrush from "src/framework/interfaces/QuakeBrush";
+import { default as IQuakeBrushGeometryBuilder } from "src/framework/interfaces/QuakeBrushGeometryBuilder";
 
 const TEXTURE_SIZE = 128;
 
@@ -25,7 +24,7 @@ function getConvexHullFacePoints(face: Face): [THREE.Vector3, THREE.Vector3, THR
   return [points[0], points[1], points[2]];
 }
 
-export default class QuakeBrushGeometryBuilder implements QuakeBrushGeometryBuilderInterface {
+export default class QuakeBrushGeometryBuilder implements IQuakeBrushGeometryBuilder {
   readonly indices: number[];
   readonly normals: number[];
   readonly textureNames: string[];

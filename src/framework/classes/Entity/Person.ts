@@ -1,22 +1,16 @@
 import Entity from "src/framework/classes/Entity";
-// import ForgetMemorizable from "src/framework/classes/Command/ForgetMemorizable";
-// import HearMessage from "src/framework/classes/Command/HearMessage";
-// import Knows from "src/framework/classes./Query/Knows";
-// import LearnMemorizable from "src/framework/classes/Command/LearnMemorizable";
-// import TellMessage from "src/framework/classes/Command/TellMessage";
-// import { default as AimCommand } from "src/framework/classes/Command/Aim";
 
-import { Aimable } from "src/framework/interfaces/Memorizable/Aimable";
-import { Aims } from "src/framework/interfaces/Sentient/Aims";
-import { Hears } from "src/framework/interfaces/Sentient/Perceives/Hears";
-import { Identifiable } from "src/framework/interfaces/Identifiable";
-import { Memorizable } from "src/framework/interfaces/Memorizable";
-import { Memorizes } from "src/framework/interfaces/Sentient/Perceives/Memorizes";
-import { Message } from "src/framework/interfaces/Perceivable/Message";
-import { Perceives } from "src/framework/interfaces/Sentient/Perceives";
-import { Sees } from "src/framework/interfaces/Sentient/Perceives/Sees";
-import { Speaks } from "src/framework/interfaces/Sentient/Speaks";
-import { Vocal } from "src/framework/interfaces/Perceivable/Message/Vocal";
+import Aimable from "src/framework/interfaces/Memorizable/Aimable";
+import Aims from "src/framework/interfaces/Sentient/Aims";
+import Hears from "src/framework/interfaces/Sentient/Perceives/Hears";
+import Identifiable from "src/framework/interfaces/Identifiable";
+import Memorizable from "src/framework/interfaces/Memorizable";
+import Memorizes from "src/framework/interfaces/Sentient/Perceives/Memorizes";
+import Message from "src/framework/interfaces/Perceivable/Message";
+import Perceives from "src/framework/interfaces/Sentient/Perceives";
+import Sees from "src/framework/interfaces/Sentient/Perceives/Sees";
+import Speaks from "src/framework/interfaces/Sentient/Speaks";
+import Vocal from "src/framework/interfaces/Perceivable/Message/Vocal";
 
 export default class Person extends Entity implements Aims, Hears, Identifiable, Memorizes, Sees, Speaks {
   private readonly _name: string;

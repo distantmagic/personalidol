@@ -6,8 +6,8 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QueryBatch from "src/framework/classes/QueryBatch";
 import { default as SilentLogger } from "src/framework/classes/Logger/Silent";
 
-import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
-import { Query } from "src/framework/interfaces/Query";
+import Query from "src/framework/interfaces/Query";
+import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
 
 type BarObject = {
   reference: number;
@@ -20,7 +20,7 @@ class Foo implements Query<number> {
     this.fooReference = fooReference;
   }
 
-  async execute(cancelToken: CancelTokenInterface): Promise<number> {
+  async execute(cancelToken: ICancelToken): Promise<number> {
     return this.fooReference;
   }
 
@@ -36,7 +36,7 @@ class Bar implements Query<BarObject> {
     this.barReference = barReference;
   }
 
-  async execute(cancelToken: CancelTokenInterface): Promise<BarObject> {
+  async execute(cancelToken: ICancelToken): Promise<BarObject> {
     return this.barReference;
   }
 

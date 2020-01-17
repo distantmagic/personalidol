@@ -1,9 +1,10 @@
-import { DebuggerState } from "src/framework/types/DebuggerState";
-import { DebuggerStateChangeCallback } from "src/framework/types/DebuggerStateChangeCallback";
-import { DebuggerStateValue } from "src/framework/types/DebuggerStateValue";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
-export interface Debugger {
+import DebuggerState from "src/framework/types/DebuggerState";
+import DebuggerStateChangeCallback from "src/framework/types/DebuggerStateChangeCallback";
+import DebuggerStateValue from "src/framework/types/DebuggerStateValue";
+
+export default interface Debugger {
   deleteState(loggerBreadcrumbs: LoggerBreadcrumbs): void;
 
   getState(): DebuggerState;

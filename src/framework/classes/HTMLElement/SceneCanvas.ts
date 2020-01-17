@@ -17,31 +17,31 @@ import Scheduler from "src/framework/classes/Scheduler";
 import { default as RootCanvasController } from "src/framework/classes/CanvasController/Root";
 import { default as SceneCanvasException } from "src/framework/classes/Exception/SceneCanvas";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasControllerBus as CanvasControllerBusInterface } from "src/framework/interfaces/CanvasControllerBus";
-import { Debugger } from "src/framework/interfaces/Debugger";
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "src/framework/interfaces/HTMLElementResizeObserver";
-import { KeyboardState as KeyboardStateInterface } from "src/framework/interfaces/KeyboardState";
-import { LoadingManager } from "src/framework/interfaces/LoadingManager";
-import { Logger } from "src/framework/interfaces/Logger";
-import { MainLoop as MainLoopInterface } from "src/framework/interfaces/MainLoop";
-import { PointerState as PointerStateInterface } from "src/framework/interfaces/PointerState";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
-import { Scheduler as SchedulerInterface } from "src/framework/interfaces/Scheduler";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import Debugger from "src/framework/interfaces/Debugger";
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import LoadingManager from "src/framework/interfaces/LoadingManager";
+import Logger from "src/framework/interfaces/Logger";
+import QueryBus from "src/framework/interfaces/QueryBus";
+import { default as ICanvasControllerBus } from "src/framework/interfaces/CanvasControllerBus";
+import { default as IHTMLElementResizeObserver } from "src/framework/interfaces/HTMLElementResizeObserver";
+import { default as IKeyboardState } from "src/framework/interfaces/KeyboardState";
+import { default as IMainLoop } from "src/framework/interfaces/MainLoop";
+import { default as IPointerState } from "src/framework/interfaces/PointerState";
+import { default as IScheduler } from "src/framework/interfaces/Scheduler";
 
 const ATTR_DOCUMENT_HIDDEN = "documenthidden";
 
 export default class SceneCanvas extends HTMLElement {
-  readonly canvasControllerBus: CanvasControllerBusInterface;
+  readonly canvasControllerBus: ICanvasControllerBus;
   readonly canvasElement: HTMLCanvasElement;
   readonly canvasWrapperElement: HTMLElement;
-  readonly keyboardState: KeyboardStateInterface;
+  readonly keyboardState: IKeyboardState;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly mainLoop: MainLoopInterface;
-  readonly pointerState: PointerStateInterface;
-  readonly resizeObserver: HTMLElementResizeObserverInterface;
-  readonly scheduler: SchedulerInterface;
+  readonly mainLoop: IMainLoop;
+  readonly pointerState: IPointerState;
+  readonly resizeObserver: IHTMLElementResizeObserver;
+  readonly scheduler: IScheduler;
   private isHidden: boolean;
   private isLooping: boolean;
   private isObserving: boolean;
@@ -213,9 +213,6 @@ export default class SceneCanvas extends HTMLElement {
 
     await loadingManager.blocking(canvasViewBag.dispose(cancelToken), "Disposing root canvas controller");
     await loadingManager.blocking(this.canvasControllerBus.delete(cancelToken, canvasController), "Disposing game resources");
-
-    console.log("GEOMETRIES", renderer.info.memory.geometries);
-    console.log("TEXTURES", renderer.info.memory.textures);
 
     this.isLooping = false;
     this.onComponentStateChange();

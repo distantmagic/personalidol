@@ -3,11 +3,11 @@ import ResizeObserver from "resize-observer-polyfill";
 import ElementSize from "src/framework/classes/ElementSize";
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 
-import { HTMLElementResizeObserver as HTMLElementResizeObserverInterface } from "src/framework/interfaces/HTMLElementResizeObserver";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { Resizeable } from "src/framework/interfaces/Resizeable";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import Resizeable from "src/framework/interfaces/Resizeable";
+import { default as IHTMLElementResizeObserver } from "src/framework/interfaces/HTMLElementResizeObserver";
 
-export default class HTMLElementResizeObserver implements HTMLElementResizeObserverInterface {
+export default class HTMLElementResizeObserver implements IHTMLElementResizeObserver {
   readonly element: HTMLElement;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly nativeResizeObserver: ResizeObserver;

@@ -1,7 +1,8 @@
-import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
-import { EquatableWithPrecision } from "src/framework/interfaces/EquatableWithPrecision";
+import EquatableWithPrecision from "src/framework/interfaces/EquatableWithPrecision";
 
-export interface ElementSize<Unit extends ElementPositionUnit> extends EquatableWithPrecision<ElementSize<Unit>> {
+import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+
+export default interface ElementSize<Unit extends ElementPositionUnit> extends EquatableWithPrecision<ElementSize<Unit>> {
   getBaseArea(): number;
 
   getAspect(): number;

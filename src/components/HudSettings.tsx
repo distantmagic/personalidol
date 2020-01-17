@@ -1,6 +1,6 @@
 import * as React from "react";
-import screenfull, { Screenfull } from "screenfull";
 import { NavLink } from "react-router-dom";
+import screenfull, { Screenfull } from "screenfull";
 
 type Props = {};
 

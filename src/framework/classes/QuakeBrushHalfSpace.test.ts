@@ -1,10 +1,11 @@
 import * as THREE from "three";
 
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
+
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";
 
-import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { default as IQuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
 
 test("arguments are not changed", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
@@ -37,7 +38,7 @@ test.each([
       147.802
     ),
   ],
-])("determines halfspace plane", function(halfSpace: QuakeBrushHalfSpaceInterface, plane: THREE.Plane) {
+])("determines halfspace plane", function(halfSpace: IQuakeBrushHalfSpace, plane: THREE.Plane) {
   expect(halfSpace.getPlane().normal.equals(plane.normal)).toBe(true);
   expect(isEqualWithPrecision(halfSpace.getPlane().constant, plane.constant, 3)).toBe(true);
 });

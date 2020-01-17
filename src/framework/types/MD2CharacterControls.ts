@@ -1,4 +1,4 @@
-export type MD2CharacterControls = {
+type MD2CharacterControls = {
   attack: boolean;
   crouch: boolean;
   jump: boolean;
@@ -7,3 +7,5 @@ export type MD2CharacterControls = {
   moveLeft: boolean;
   moveRight: boolean;
 };
+
+export default MD2CharacterControls;

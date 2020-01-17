@@ -1,3 +1,3 @@
-export interface Objectable<T extends Object> {
+export default interface Objectable<T extends Object> {
   asObject(): T;
 }

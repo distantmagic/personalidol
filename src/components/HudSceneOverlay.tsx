@@ -3,9 +3,10 @@ import groupBy from "lodash/groupBy";
 
 import HudSceneOverlayComment from "src/components/HudSceneOverlayComment";
 import HudSceneOverlayError from "src/components/HudSceneOverlayError";
+
 import useLoadingManagerState from "src/effects/useLoadingManagerState";
 
-import { LoadingManager } from "src/framework/interfaces/LoadingManager";
+import LoadingManager from "src/framework/interfaces/LoadingManager";
 
 type Props = {
   loadingManager: LoadingManager;

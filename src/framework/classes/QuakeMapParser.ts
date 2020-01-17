@@ -5,16 +5,16 @@ import QuakeEntityProperties from "src/framework/classes/QuakeEntityProperties";
 import QuakeEntityPropertyParser from "src/framework/classes/QuakeEntityPropertyParser";
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeBrush as QuakeBrushInterface } from "src/framework/interfaces/QuakeBrush";
-import { QuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
-import { QuakeEntity as QuakeEntityInterface } from "src/framework/interfaces/QuakeEntity";
-import { QuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
-import { QuakeMapParser as QuakeMapParserInterface } from "src/framework/interfaces/QuakeMapParser";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
+import QuakeEntityProperty from "src/framework/interfaces/QuakeEntityProperty";
+import { default as IQuakeBrush } from "src/framework/interfaces/QuakeBrush";
+import { default as IQuakeEntity } from "src/framework/interfaces/QuakeEntity";
+import { default as IQuakeMapParser } from "src/framework/interfaces/QuakeMapParser";
 
 const REGEXP_NEWLINE = /\r?\n/;
 
-export default class QuakeMapParser implements QuakeMapParserInterface {
+export default class QuakeMapParser implements IQuakeMapParser {
   readonly content: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
@@ -31,12 +31,12 @@ export default class QuakeMapParser implements QuakeMapParserInterface {
     return new QuakeEntityPropertyParser(breadcrumbs.add("entityProperty"), line).parse();
   }
 
-  *parse(): Generator<QuakeEntityInterface> {
+  *parse(): Generator<IQuakeEntity> {
     const loggerBreadcrumbs = this.loggerBreadcrumbs.add("parse");
     const lines: ReadonlyArray<string> = this.splitLines(this.content);
     let currentBrushSketch: null | QuakeBrushHalfSpace[] = null;
     let currentEntitySketch: null | {
-      brushes: QuakeBrushInterface[];
+      brushes: IQuakeBrush[];
       props: QuakeEntityProperty[];
     } = null;
 

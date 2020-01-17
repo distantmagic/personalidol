@@ -1,3 +1,3 @@
-export interface Cancelable {
+export default interface Cancelable {
   isCanceled(): boolean;
 }

@@ -5,9 +5,9 @@ import ModalCharacterLoader from "src/components/ModalCharacterLoader";
 import ModalRouterNotFound from "src/components/ModalRouterNotFound";
 import ModalSettings from "src/components/ModalSettings";
 
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
 
 type Props = {
   exceptionHandler: ExceptionHandler;

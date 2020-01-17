@@ -1,3 +1,5 @@
-import { Query } from "src/framework/interfaces/Query";
+import Query from "src/framework/interfaces/Query";
 
-export type QueryBusOnEnqueuedCallback<T> = (query: Query<T>) => void;
+type QueryBusOnEnqueuedCallback<T> = (query: Query<T>) => void;
+
+export default QueryBusOnEnqueuedCallback;

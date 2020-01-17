@@ -3,16 +3,17 @@ import uniq from "lodash/uniq";
 
 import combineWithoutRepetitions from "src/framework/helpers/combineWithoutRepetitions";
 import isArrayEqual from "src/framework/helpers/isArrayEqual";
-import QuakeBrushHalfSpaceTrio from "src/framework/classes/QuakeBrushHalfSpaceTrio";
 import serializeVector3 from "src/framework/helpers/serializeVector3";
+
+import QuakeBrushHalfSpaceTrio from "src/framework/classes/QuakeBrushHalfSpaceTrio";
 import { default as QuakeBrushException } from "src/framework/classes/Exception/QuakeBrush";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeBrush as QuakeBrushInterface } from "src/framework/interfaces/QuakeBrush";
-import { QuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
-import { QuakeBrushHalfSpaceTrio as QuakeBrushHalfSpaceTrioInterface } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { default as IQuakeBrush } from "src/framework/interfaces/QuakeBrush";
+import { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
-export default class QuakeBrush implements QuakeBrushInterface {
+export default class QuakeBrush implements IQuakeBrush {
   readonly halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
@@ -35,7 +36,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     return true;
   }
 
-  *generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrioInterface> {
+  *generateHalfSpaceTrios(): Generator<IQuakeBrushHalfSpaceTrio> {
     for (let combo of combineWithoutRepetitions<QuakeBrushHalfSpace>(this.halfSpaces, 3)) {
       if (combo.length !== 3) {
         throw new QuakeBrushException(this.loggerBreadcrumbs, "Invalid halfspace combinations.");
@@ -86,7 +87,7 @@ export default class QuakeBrush implements QuakeBrushInterface {
     return Array.from(this.generateVertices());
   }
 
-  isEqual(other: QuakeBrushInterface): boolean {
+  isEqual(other: IQuakeBrush): boolean {
     const thisHalfSpaces = this.getHalfSpaces();
     const otherHalfSpaces = other.getHalfSpaces();
 

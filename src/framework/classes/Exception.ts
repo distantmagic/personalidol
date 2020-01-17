@@ -1,4 +1,4 @@
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class Exception extends Error {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

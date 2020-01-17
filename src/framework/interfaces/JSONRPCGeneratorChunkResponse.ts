@@ -1,7 +1,8 @@
-import { JSONRPCResponse } from "src/framework/interfaces/JSONRPCResponse";
-import { JSONRPCGeneratorChunkResponseObjectified } from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
+import JSONRPCResponse from "src/framework/interfaces/JSONRPCResponse";
 
-export interface JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> {
+import JSONRPCGeneratorChunkResponseObjectified from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
+
+export default interface JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> {
   getChunk(): string;
 
   getHead(): string;

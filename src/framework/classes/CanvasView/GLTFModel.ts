@@ -5,11 +5,12 @@ import { default as GLTFModelQuery } from "src/framework/classes/Query/GLTFModel
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 import { default as TextureQuery } from "src/framework/classes/Query/Texture";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerGLTFModel } from "src/framework/types/QuakeWorkerGLTFModel";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
+
+import QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
 
 function getMesh(loggerBreadcrumbs: LoggerBreadcrumbs, scene: THREE.Scene): THREE.Mesh {
   for (let child of scene.children) {

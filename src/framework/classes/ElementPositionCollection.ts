@@ -2,26 +2,27 @@ import ElementBoundingBox from "src/framework/classes/ElementBoundingBox";
 import ElementPosition from "src/framework/classes/ElementPosition";
 import ElementSize from "src/framework/classes/ElementSize";
 
-import { ElementBoundingBox as ElementBoundingBoxInterface } from "src/framework/interfaces/ElementBoundingBox";
-import { ElementPosition as ElementPositionInterface } from "src/framework/interfaces/ElementPosition";
-import { ElementPositionCollection as ElementPositionCollectionInterface } from "src/framework/interfaces/ElementPositionCollection";
-import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IElementBoundingBox } from "src/framework/interfaces/ElementBoundingBox";
+import { default as IElementPosition } from "src/framework/interfaces/ElementPosition";
+import { default as IElementPositionCollection } from "src/framework/interfaces/ElementPositionCollection";
 
-export default class ElementPositionCollection<Unit extends ElementPositionUnit> implements ElementPositionCollectionInterface<Unit> {
-  readonly elementPositions: ReadonlyArray<ElementPositionInterface<Unit>>;
+import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+
+export default class ElementPositionCollection<Unit extends ElementPositionUnit> implements IElementPositionCollection<Unit> {
+  readonly elementPositions: ReadonlyArray<IElementPosition<Unit>>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, elementPositions: ReadonlyArray<ElementPositionInterface<Unit>>) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, elementPositions: ReadonlyArray<IElementPosition<Unit>>) {
     this.elementPositions = elementPositions;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  asArray(): ReadonlyArray<ElementPositionInterface<Unit>> {
+  asArray(): ReadonlyArray<IElementPosition<Unit>> {
     return this.elementPositions;
   }
 
-  getElementBoundingBox(): ElementBoundingBoxInterface<Unit> {
+  getElementBoundingBox(): IElementBoundingBox<Unit> {
     let maxX = Number.MIN_VALUE;
     let maxY = Number.MIN_VALUE;
     let maxZ = Number.MIN_VALUE;
@@ -64,7 +65,7 @@ export default class ElementPositionCollection<Unit extends ElementPositionUnit>
     );
   }
 
-  offsetCollection(other: ElementPositionInterface<Unit>): ElementPositionCollectionInterface<Unit> {
+  offsetCollection(other: IElementPosition<Unit>): IElementPositionCollection<Unit> {
     return new ElementPositionCollection(
       this.loggerBreadcrumbs.add("offsetCollection").add("ElementPositionCollection"),
       this.asArray().map(elementPosition => elementPosition.offset(other))

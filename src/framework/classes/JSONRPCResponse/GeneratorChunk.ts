@@ -2,13 +2,14 @@ import JSONRPCResponse from "src/framework/classes/JSONRPCResponse";
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
-import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCGeneratorChunkResponseObjectified } from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
-import { JSONRPCMessageType } from "src/framework/types/JSONRPCMessageType";
-import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "src/framework/interfaces/JSONRPCResponseData";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
-export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCGeneratorChunkResponseObjectified<T>): JSONRPCGeneratorChunkResponseInterface<T> {
+import JSONRPCGeneratorChunkResponseObjectified from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
+import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
+
+export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCGeneratorChunkResponseObjectified<T>): IJSONRPCGeneratorChunkResponse<T> {
   return new JSONRPCGeneratorChunkResponse<T>(
     loggerBreadcrumbs,
     objectified.id,
@@ -21,7 +22,7 @@ export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified
   );
 }
 
-export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> implements JSONRPCGeneratorChunkResponseInterface<T> {
+export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> implements IJSONRPCGeneratorChunkResponse<T> {
   readonly chunk: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly head: string;
@@ -35,7 +36,7 @@ export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T,
     next: null | string,
     method: string,
     type: JSONRPCMessageType,
-    data: JSONRPCResponseDataInterface<T>
+    data: IJSONRPCResponseData<T>
   ) {
     super(id, method, data);
 

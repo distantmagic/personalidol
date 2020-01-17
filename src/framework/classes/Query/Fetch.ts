@@ -1,6 +1,6 @@
 import Query from "src/framework/classes/Query";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
+import CancelToken from "src/framework/interfaces/CancelToken";
 
 export default class Fetch extends Query<Response> {
   readonly ref: string;

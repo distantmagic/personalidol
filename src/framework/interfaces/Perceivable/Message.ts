@@ -1,3 +1,3 @@
-import { Perceivable } from "src/framework/interfaces/Perceivable";
+import Perceivable from "src/framework/interfaces/Perceivable";
 
-export interface Message extends Perceivable {}
+export default interface Message extends Perceivable {}

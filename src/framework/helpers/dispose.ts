@@ -4,9 +4,14 @@ import * as THREE from "three";
 
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 function material(loggerBreadcrumbs: LoggerBreadcrumbs, material: THREE.Material): void {
+  if (material instanceof THREE.LineBasicMaterial) {
+    // material does not hold map
+    return;
+  }
+
   // prettier-ignore
   if ( material instanceof THREE.MeshBasicMaterial
     || material instanceof THREE.MeshDepthMaterial
@@ -48,7 +53,11 @@ function texture(loggerBreadcrumbs: LoggerBreadcrumbs, texture: THREE.Texture): 
   texture.dispose();
 }
 
-export default function dispose(loggerBreadcrumbs: LoggerBreadcrumbs, object: THREE.Object3D): void {
+export default function dispose(loggerBreadcrumbs: LoggerBreadcrumbs, object: THREE.Object3D | THREE.Texture): void {
+  if (object instanceof THREE.Texture) {
+    return void texture(loggerBreadcrumbs.add("texture"), object);
+  }
+
   object.traverse(function(child: THREE.Object3D) {
     // materials
     if (child instanceof THREE.Material) {

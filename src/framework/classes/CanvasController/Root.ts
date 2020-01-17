@@ -4,33 +4,35 @@ import yn from "yn";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 
+import env from "src/framework/helpers/env";
+
 import CanvasController from "src/framework/classes/CanvasController";
 import CanvasPointerInteraction from "src/framework/classes/CanvasPointerInteraction";
-import env from "src/framework/helpers/env";
 import { default as CameraController } from "src/framework/classes/CanvasController/Camera";
 import { default as QuakeMapView } from "src/framework/classes/CanvasView/QuakeMap";
-// import { default as THREEHelpersView } from "src/framework/classes/CanvasView/THREEHelpers";
 
-import { CameraController as CameraControllerInterface } from "src/framework/interfaces/CameraController";
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasControllerBus } from "src/framework/interfaces/CanvasControllerBus";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { Debugger } from "src/framework/interfaces/Debugger";
-import { ElementSize } from "src/framework/interfaces/ElementSize";
-import { KeyboardState } from "src/framework/interfaces/KeyboardState";
-import { LoadingManager } from "src/framework/interfaces/LoadingManager";
-import { Logger } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { PointerState } from "src/framework/interfaces/PointerState";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
-import { Scheduler } from "src/framework/interfaces/Scheduler";
-import { CanvasPointerInteraction as THREEPointerInteractionInterface } from "src/framework/interfaces/CanvasPointerInteraction";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import Debugger from "src/framework/interfaces/Debugger";
+import ElementSize from "src/framework/interfaces/ElementSize";
+import KeyboardState from "src/framework/interfaces/KeyboardState";
+import LoadingManager from "src/framework/interfaces/LoadingManager";
+import Logger from "src/framework/interfaces/Logger";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import PointerState from "src/framework/interfaces/PointerState";
+import QueryBus from "src/framework/interfaces/QueryBus";
+import Scheduler from "src/framework/interfaces/Scheduler";
+import { default as ICameraController } from "src/framework/interfaces/CameraController";
+import { default as ICanvasPointerInteraction } from "src/framework/interfaces/CanvasPointerInteraction";
+
+// import { default as THREEHelpersView } from "src/framework/classes/CanvasView/THREEHelpers";
 
 export default class Root extends CanvasController {
   readonly audioListener: THREE.AudioListener;
   readonly audioLoader: THREE.AudioLoader;
   readonly camera: THREE.OrthographicCamera;
-  readonly cameraController: CameraControllerInterface;
+  readonly cameraController: ICameraController;
   readonly canvasControllerBus: CanvasControllerBus;
   readonly canvasRootGroup: THREE.Group;
   readonly debug: Debugger;
@@ -45,7 +47,7 @@ export default class Root extends CanvasController {
   readonly scene: THREE.Scene;
   readonly scheduler: Scheduler;
   readonly threeLoadingManager: THREE.LoadingManager;
-  readonly threePointerInteraction: THREEPointerInteractionInterface;
+  readonly threePointerInteraction: ICanvasPointerInteraction;
 
   constructor(
     canvasControllerBus: CanvasControllerBus,

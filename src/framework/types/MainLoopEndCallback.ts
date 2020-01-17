@@ -1,1 +1,3 @@
-export type MainLoopEndCallback = (fps: number, panic: boolean) => void;
+type MainLoopEndCallback = (fps: number, panic: boolean) => void;
+
+export default MainLoopEndCallback;

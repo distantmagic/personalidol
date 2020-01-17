@@ -1,1 +1,3 @@
-export type BusClockCallback = () => void;
+type BusClockCallback = () => void;
+
+export default BusClockCallback;

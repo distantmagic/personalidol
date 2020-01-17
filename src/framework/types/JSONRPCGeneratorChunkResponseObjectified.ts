@@ -1,6 +1,6 @@
-import { JSONRPCVersion } from "src/framework/types/JSONRPCVersion";
+import JSONRPCVersion from "src/framework/types/JSONRPCVersion";
 
-export type JSONRPCGeneratorChunkResponseObjectified<T> = {
+type JSONRPCGeneratorChunkResponseObjectified<T> = {
   readonly chunk: string;
   readonly head: string;
   readonly id: string;
@@ -10,3 +10,5 @@ export type JSONRPCGeneratorChunkResponseObjectified<T> = {
   readonly result: T;
   readonly type: "generator";
 };
+
+export default JSONRPCGeneratorChunkResponseObjectified;

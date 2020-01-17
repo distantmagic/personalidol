@@ -2,10 +2,11 @@ import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerLightHemisphere } from "src/framework/types/QuakeWorkerLightHemisphere";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+
+import QuakeWorkerLightHemisphere from "src/framework/types/QuakeWorkerLightHemisphere";
 
 export default class HemisphereLight extends CanvasView {
   readonly light: THREE.HemisphereLight;

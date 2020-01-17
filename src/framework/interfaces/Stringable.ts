@@ -1,3 +1,3 @@
-export interface Stringable {
+export default interface Stringable {
   asString(): string;
 }

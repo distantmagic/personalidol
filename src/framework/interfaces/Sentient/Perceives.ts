@@ -1,3 +1,3 @@
-import { Sentient } from "src/framework/interfaces/Sentient";
+import Sentient from "src/framework/interfaces/Sentient";
 
-export interface Perceives extends Sentient {}
+export default interface Perceives extends Sentient {}

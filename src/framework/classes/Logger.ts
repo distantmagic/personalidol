@@ -1,10 +1,11 @@
 import autoBind from "auto-bind";
 
-import { Logger as LoggerInterface } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { LogSeverityEnum } from "src/framework/types/LogSeverityEnum";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as ILogger } from "src/framework/interfaces/Logger";
 
-export default abstract class Logger implements LoggerInterface {
+import LogSeverityEnum from "src/framework/types/LogSeverityEnum";
+
+export default abstract class Logger implements ILogger {
   abstract log(breadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): Promise<void>;
 
   constructor() {

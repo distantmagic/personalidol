@@ -1,6 +1,6 @@
-import { AnimatableUpdatable } from "src/framework/interfaces/AnimatableUpdatable";
+import AnimatableUpdatable from "src/framework/interfaces/AnimatableUpdatable";
 
-export interface Animatable extends AnimatableUpdatable {
+export default interface Animatable extends AnimatableUpdatable {
   begin(): void;
 
   draw(interpolationPercentage: number): void;

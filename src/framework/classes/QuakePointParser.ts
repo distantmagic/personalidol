@@ -3,12 +3,12 @@ import filter from "lodash/filter";
 
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakePointParser as QuakePointParserInterface } from "src/framework/interfaces/QuakePointParser";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IQuakePointParser } from "src/framework/interfaces/QuakePointParser";
 
 const REGEXP_WHITESPACE = /\s+/;
 
-export default class QuakePointParser implements QuakePointParserInterface {
+export default class QuakePointParser implements IQuakePointParser {
   readonly content: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 

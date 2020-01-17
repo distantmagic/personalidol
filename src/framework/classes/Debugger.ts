@@ -2,17 +2,18 @@ import { Map } from "immutable";
 
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
-import { Debugger as DebuggerInterface } from "src/framework/interfaces/Debugger";
-import { DebuggerState } from "src/framework/types/DebuggerState";
-import { DebuggerStateChangeCallback } from "src/framework/types/DebuggerStateChangeCallback";
-import { DebuggerStateValue } from "src/framework/types/DebuggerStateValue";
-import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IDebugger } from "src/framework/interfaces/Debugger";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
-export default class Debugger implements DebuggerInterface {
+import DebuggerState from "src/framework/types/DebuggerState";
+import DebuggerStateChangeCallback from "src/framework/types/DebuggerStateChangeCallback";
+import DebuggerStateValue from "src/framework/types/DebuggerStateValue";
+
+export default class Debugger implements IDebugger {
   private _isEnabled: boolean;
   private state: DebuggerState;
-  readonly callbacks: EventListenerSetInterface<[DebuggerState]>;
+  readonly callbacks: IEventListenerSet<[DebuggerState]>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
     this._isEnabled = false;

@@ -1,4 +1,4 @@
-export type QuakeWorkerFuncGroup = {
+type QuakeWorkerFuncGroup = {
   readonly classname: "func_group";
   readonly indices: ArrayBuffer;
   readonly normals: ArrayBuffer;
@@ -7,3 +7,5 @@ export type QuakeWorkerFuncGroup = {
   readonly uvs: ArrayBuffer;
   readonly vertices: ArrayBuffer;
 };
+
+export default QuakeWorkerFuncGroup;

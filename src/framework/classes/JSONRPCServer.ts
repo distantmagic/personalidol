@@ -9,20 +9,21 @@ import { default as JSONRPCErrorResponse } from "src/framework/classes/JSONRPCRe
 import { default as JSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
 import { default as JSONRPCRequest, unobjectify as unobjectifyJSONRPCRequest } from "src/framework/classes/JSONRPCRequest";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCRequest as JSONRPCRequestInterface } from "src/framework/interfaces/JSONRPCRequest";
-import { JSONRPCResponse } from "src/framework/interfaces/JSONRPCResponse";
-import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "src/framework/interfaces/JSONRPCResponseData";
-import { JSONRPCServer as JSONRPCServerInterface } from "src/framework/interfaces/JSONRPCServer";
-import { JSONRPCServerGeneratorCallback } from "src/framework/types/JSONRPCServerGeneratorCallback";
-import { JSONRPCServerPromiseCallback } from "src/framework/types/JSONRPCServerPromiseCallback";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import JSONRPCResponse from "src/framework/interfaces/JSONRPCResponse";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { default as IJSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
+import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
+import { default as IJSONRPCServer } from "src/framework/interfaces/JSONRPCServer";
 
-export default class JSONRPCServer implements JSONRPCServerInterface {
+import JSONRPCServerGeneratorCallback from "src/framework/types/JSONRPCServerGeneratorCallback";
+import JSONRPCServerPromiseCallback from "src/framework/types/JSONRPCServerPromiseCallback";
+
+export default class JSONRPCServer implements IJSONRPCServer {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly postMessage: DedicatedWorkerGlobalScope["postMessage"];
-  readonly requestHandlers: Map<string, (request: JSONRPCRequestInterface) => Promise<void>>;
+  readonly requestHandlers: Map<string, (request: IJSONRPCRequest) => Promise<void>>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: DedicatedWorkerGlobalScope["postMessage"]) {
     autoBind(this);
@@ -32,7 +33,7 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
     this.requestHandlers = new Map();
   }
 
-  handleRequest(jsonRpcRequest: JSONRPCRequestInterface): Promise<void> {
+  handleRequest(jsonRpcRequest: IJSONRPCRequest): Promise<void> {
     const method = jsonRpcRequest.getMethod();
     const requestHandler = this.requestHandlers.get(method);
 
@@ -48,7 +49,7 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
   }
 
   async returnGenerator<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T>): Promise<void> {
-    this.requestHandlers.set(method, async (request: JSONRPCRequestInterface) => {
+    this.requestHandlers.set(method, async (request: IJSONRPCRequest) => {
       if (cancelToken.isCanceled()) {
         return;
       }
@@ -73,7 +74,7 @@ export default class JSONRPCServer implements JSONRPCServerInterface {
   }
 
   async returnPromise<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T>): Promise<void> {
-    this.requestHandlers.set(method, async (request: JSONRPCRequestInterface) => {
+    this.requestHandlers.set(method, async (request: IJSONRPCRequest) => {
       if (cancelToken.isCanceled()) {
         return;
       }

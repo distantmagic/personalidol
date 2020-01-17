@@ -7,7 +7,7 @@ import CanvasViewBus from "src/framework/classes/CanvasViewBus";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 
-import { QuakeWorkerLightAmbient } from "src/framework/types/QuakeWorkerLightAmbient";
+import QuakeWorkerLightAmbient from "src/framework/types/QuakeWorkerLightAmbient";
 
 test("is cleanly attached and disposed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

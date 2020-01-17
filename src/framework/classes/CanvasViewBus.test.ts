@@ -8,13 +8,13 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
-import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag as CanvasViewBagInterface } from "src/framework/interfaces/CanvasViewBag";
+import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
+import { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 class FooCanvasView extends CanvasView {
   readonly useCallbacks: boolean;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBagInterface, group: THREE.Group, useCallbacks: boolean) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: ICanvasViewBag, group: THREE.Group, useCallbacks: boolean) {
     super(loggerBreadcrumbs, canvasViewBag, group);
 
     this.useCallbacks = useCallbacks;
@@ -42,7 +42,7 @@ class FooCanvasView extends CanvasView {
 }
 
 class ImproperAttachFooCanvasView extends CanvasView {
-  async attach(cancelToken: CancelTokenInterface) {}
+  async attach(cancelToken: ICancelToken) {}
 
   getName(): "ImproperAttach" {
     return "ImproperAttach";
@@ -50,7 +50,7 @@ class ImproperAttachFooCanvasView extends CanvasView {
 }
 
 class ImproperDisposeFooCanvasView extends CanvasView {
-  async dispose(cancelToken: CancelTokenInterface) {}
+  async dispose(cancelToken: ICancelToken) {}
 
   getName(): "ImproperDispose" {
     return "ImproperDispose";

@@ -1,11 +1,12 @@
-import Exception from "src/framework/classes/Exception";
 import isArrayEqual from "src/framework/helpers/isArrayEqual";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
-import { QuakeEntityProperties as QuakeEntityPropertiesInterface } from "src/framework/interfaces/QuakeEntityProperties";
+import Exception from "src/framework/classes/Exception";
 
-export default class QuakeEntityProperties implements QuakeEntityPropertiesInterface {
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QuakeEntityProperty from "src/framework/interfaces/QuakeEntityProperty";
+import { default as IQuakeEntityProperties } from "src/framework/interfaces/QuakeEntityProperties";
+
+export default class QuakeEntityProperties implements IQuakeEntityProperties {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly propsMap: Map<string, QuakeEntityProperty>;
 
@@ -42,7 +43,7 @@ export default class QuakeEntityProperties implements QuakeEntityPropertiesInter
     return this.propsMap.has(key);
   }
 
-  isEqual(other: QuakeEntityPropertiesInterface): boolean {
+  isEqual(other: IQuakeEntityProperties): boolean {
     const thisProps = this.getProperties();
     const otherProps = other.getProperties();
 

@@ -1,3 +1,5 @@
-import { LoadingManagerState } from "src/framework/interfaces/LoadingManagerState";
+import LoadingManagerState from "src/framework/interfaces/LoadingManagerState";
 
-export type LoadingManagerStateChangeCallback = (state: LoadingManagerState) => void;
+type LoadingManagerStateChangeCallback = (state: LoadingManagerState) => void;
+
+export default LoadingManagerStateChangeCallback;

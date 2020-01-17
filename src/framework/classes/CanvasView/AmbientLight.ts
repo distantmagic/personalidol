@@ -2,10 +2,11 @@ import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerLightAmbient } from "src/framework/types/QuakeWorkerLightAmbient";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+
+import QuakeWorkerLightAmbient from "src/framework/types/QuakeWorkerLightAmbient";
 
 export default class AmbientLight extends CanvasView {
   readonly light: THREE.AmbientLight;

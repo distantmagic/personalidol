@@ -3,17 +3,18 @@ import filter from "lodash/filter";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import LoadingManagerState from "src/framework/classes/LoadingManagerState";
 
-import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { LoadingManager as LoadingManagerInterface } from "src/framework/interfaces/LoadingManager";
-import { LoadingManagerState as LoadingManagerStateInterface } from "src/framework/interfaces/LoadingManagerState";
-import { LoadingManagerStateChangeCallback } from "src/framework/types/LoadingManagerStateChangeCallback";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import { default as ILoadingManager } from "src/framework/interfaces/LoadingManager";
+import { default as ILoadingManagerState } from "src/framework/interfaces/LoadingManagerState";
 
-export default class LoadingManager implements LoadingManagerInterface {
+import LoadingManagerStateChangeCallback from "src/framework/types/LoadingManagerStateChangeCallback";
+
+export default class LoadingManager implements ILoadingManager {
   readonly backgroundItems: Map<Promise<any>, string>;
   readonly blockingItems: Map<Promise<any>, string>;
-  readonly callbacks: EventListenerSetInterface<[LoadingManagerStateInterface]>;
+  readonly callbacks: IEventListenerSet<[ILoadingManagerState]>;
   readonly exceptionHandler: ExceptionHandler;
   readonly failedItems: Map<Promise<any>, string>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -21,7 +22,7 @@ export default class LoadingManager implements LoadingManagerInterface {
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, exceptionHandler: ExceptionHandler) {
     this.backgroundItems = new Map<Promise<any>, string>();
     this.blockingItems = new Map<Promise<any>, string>();
-    this.callbacks = new EventListenerSet<[LoadingManagerStateInterface]>(loggerBreadcrumbs.add("EventListenerSet"));
+    this.callbacks = new EventListenerSet<[ILoadingManagerState]>(loggerBreadcrumbs.add("EventListenerSet"));
     this.exceptionHandler = exceptionHandler;
     this.failedItems = new Map<Promise<any>, string>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
@@ -59,7 +60,7 @@ export default class LoadingManager implements LoadingManagerInterface {
     }
   }
 
-  getState(): LoadingManagerStateInterface {
+  getState(): ILoadingManagerState {
     return new LoadingManagerState(
       this.backgroundItems.size,
       this.blockingItems.size,

@@ -1,22 +1,23 @@
 import * as THREE from "three";
 
-import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import quake2three from "src/framework/helpers/quake2three";
+
+import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";
 import QuakeMapParser from "src/framework/classes/QuakeMapParser";
 import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
 import { default as PlainTextQuery } from "src/framework/classes/Query/PlainText";
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { JSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
-import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "src/framework/interfaces/JSONRPCResponseData";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeEntity } from "src/framework/interfaces/QuakeEntity";
-import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "src/framework/interfaces/QuakeMapTextureLoader";
-import { QuakeWorkerAny } from "src/framework/types/QuakeWorkerAny";
-import { QuakeWorkerBrush } from "src/framework/types/QuakeWorkerBrush";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import JSONRPCRequest from "src/framework/interfaces/JSONRPCRequest";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QuakeEntity from "src/framework/interfaces/QuakeEntity";
+import QueryBus from "src/framework/interfaces/QueryBus";
+import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
+
+import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
+import QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
 
 type QuakeBrushClassNames = "func_group" | "worldspawn";
 
@@ -69,7 +70,7 @@ export default async function* map(
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
   threeLoadingManager: THREE.LoadingManager
-): AsyncGenerator<JSONRPCResponseDataInterface<QuakeWorkerAny>> {
+): AsyncGenerator<IJSONRPCResponseData<QuakeWorkerAny>> {
   const breadcrumbs = loggerBreadcrumbs.add("/map");
   const [source] = request.getParams();
   const quakeMapQuery = new PlainTextQuery(source);

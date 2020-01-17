@@ -1,14 +1,15 @@
-import { JSONRPCMessageType } from "src/framework/types/JSONRPCMessageType";
-import { JSONRPCParams } from "src/framework/types/JSONRPCParams";
-import { JSONRPCRequest as JSONRPCRequestInterface } from "src/framework/interfaces/JSONRPCRequest";
-import { JSONRPCRequestObjectified } from "src/framework/types/JSONRPCRequestObjectified";
-import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IJSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
+import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
-export function unobjectify(loggerBreadcrumbs: LoggerBreadcrumbsInterface, objectified: JSONRPCRequestObjectified): JSONRPCRequestInterface {
+import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
+import JSONRPCParams from "src/framework/types/JSONRPCParams";
+import JSONRPCRequestObjectified from "src/framework/types/JSONRPCRequestObjectified";
+
+export function unobjectify(loggerBreadcrumbs: ILoggerBreadcrumbs, objectified: JSONRPCRequestObjectified): IJSONRPCRequest {
   return new JSONRPCRequest(objectified.id, objectified.method, objectified.type, objectified.params);
 }
 
-export default class JSONRPCRequest implements JSONRPCRequestInterface {
+export default class JSONRPCRequest implements IJSONRPCRequest {
   readonly id: string;
   readonly method: string;
   readonly params: JSONRPCParams;

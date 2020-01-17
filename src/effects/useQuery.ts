@@ -2,11 +2,11 @@ import * as React from "react";
 
 import CancelToken from "src/framework/classes/CancelToken";
 
-import { CancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { Query } from "src/framework/interfaces/Query";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import CancelTokenQuery from "src/framework/interfaces/CancelTokenQuery";
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import Query from "src/framework/interfaces/Query";
+import QueryBus from "src/framework/interfaces/QueryBus";
 
 export default function useQuery<T>(
   exceptionHandler: ExceptionHandler,

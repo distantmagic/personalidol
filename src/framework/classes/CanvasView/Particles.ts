@@ -1,15 +1,14 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
-
-// @ts-ignore
 import Partykals from "partykals/partykals";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerSparkParticles } from "src/framework/types/QuakeWorkerSparkParticles";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+
+import QuakeWorkerSparkParticles from "src/framework/types/QuakeWorkerSparkParticles";
 
 export default class Particles extends CanvasView {
   readonly origin: THREE.Vector3;

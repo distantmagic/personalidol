@@ -1,9 +1,10 @@
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { ElementSize as ElementSizeInterface } from "src/framework/interfaces/ElementSize";
-import { ElementPositionUnit } from "src/framework/types/ElementPositionUnit";
+import { default as IElementSize } from "src/framework/interfaces/ElementSize";
 
-export default class ElementSize<Unit extends ElementPositionUnit> implements ElementSizeInterface<Unit> {
+import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+
+export default class ElementSize<Unit extends ElementPositionUnit> implements IElementSize<Unit> {
   readonly height: number;
   readonly depth: number;
   readonly width: number;
@@ -34,11 +35,11 @@ export default class ElementSize<Unit extends ElementPositionUnit> implements El
     return this.width;
   }
 
-  isEqual(other: ElementSizeInterface<Unit>): boolean {
+  isEqual(other: IElementSize<Unit>): boolean {
     return this.getDepth() === other.getDepth() && this.getHeight() === other.getHeight() && this.getWidth() === other.getWidth();
   }
 
-  isEqualWithPrecision(other: ElementSizeInterface<Unit>, precision: number): boolean {
+  isEqualWithPrecision(other: IElementSize<Unit>, precision: number): boolean {
     return (
       isEqualWithPrecision(this.getDepth(), other.getDepth(), precision) &&
       isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) &&

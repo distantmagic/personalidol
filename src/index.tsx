@@ -3,18 +3,20 @@ import ReactDOM from "react-dom";
 import yn from "yn";
 import { HashRouter } from "react-router-dom";
 
-import * as serviceWorker from "src/serviceWorker";
-import bootstrapFramework from "src/framework/helpers/bootstrapFramework";
-import env from "src/framework/helpers/env";
-import LoadingManager from "src/framework/classes/LoadingManager";
 import Main from "src/components/Main";
 
-import { ClockReactiveController } from "src/framework/interfaces/ClockReactiveController";
-import { Debugger } from "src/framework/interfaces/Debugger";
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { Logger } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+// import * as serviceWorker from "src/serviceWorker";
+import bootstrapFramework from "src/framework/helpers/bootstrapFramework";
+import env from "src/framework/helpers/env";
+
+import LoadingManager from "src/framework/classes/LoadingManager";
+
+import ClockReactiveController from "src/framework/interfaces/ClockReactiveController";
+import Debugger from "src/framework/interfaces/Debugger";
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import Logger from "src/framework/interfaces/Logger";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
 
 declare global {
   interface Window {
@@ -39,12 +41,12 @@ function init(rootElement: HTMLElement): void {
   ) {
     const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"), exceptionHandler);
 
-    try {
-      // await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
-      await serviceWorker.unregister(loggerBreadcrumbs.add("serviceWorker").add("unregister"));
-    } catch (exception) {
-      await exceptionHandler.captureException(loggerBreadcrumbs, exception);
-    }
+    // try {
+    // await serviceWorker.register(loggerBreadcrumbs.add("serviceWorker").add("register"), logger);
+    //   await serviceWorker.unregister(loggerBreadcrumbs.add("serviceWorker").add("unregister"));
+    // } catch (exception) {
+    //   await exceptionHandler.captureException(loggerBreadcrumbs, exception);
+    // }
 
     function onWindowResize() {
       const root = document.documentElement;

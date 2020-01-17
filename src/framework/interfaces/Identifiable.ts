@@ -1,3 +1,3 @@
-export interface Identifiable {
+export default interface Identifiable {
   name(): Promise<string>;
 }

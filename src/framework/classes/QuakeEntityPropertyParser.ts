@@ -1,11 +1,11 @@
 import QuakeEntityProperty from "src/framework/classes/QuakeEntityProperty";
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeEntityProperty as QuakeEntityPropertyInterface } from "src/framework/interfaces/QuakeEntityProperty";
-import { QuakeEntityPropertyParser as QuakeEntityPropertyParserInterface } from "src/framework/interfaces/QuakeEntityPropertyParser";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IQuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
+import { default as IQuakeEntityPropertyParser } from "src/framework/interfaces/QuakeEntityPropertyParser";
 
-export default class QuakeEntityPropertyParser implements QuakeEntityPropertyParserInterface {
+export default class QuakeEntityPropertyParser implements IQuakeEntityPropertyParser {
   readonly line: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
@@ -14,7 +14,7 @@ export default class QuakeEntityPropertyParser implements QuakeEntityPropertyPar
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  entityPropertySplits(splits: ReadonlyArray<string>): QuakeEntityPropertyInterface {
+  entityPropertySplits(splits: ReadonlyArray<string>): IQuakeEntityProperty {
     if (splits.length !== 5) {
       throw new QuakeMapParserException(this.loggerBreadcrumbs.add("entityPropertySplits"), "Unexpected number of brush splits.");
     }
@@ -22,7 +22,7 @@ export default class QuakeEntityPropertyParser implements QuakeEntityPropertyPar
     return new QuakeEntityProperty(this.loggerBreadcrumbs.add("entityPropertySplits"), splits[1], splits[3]);
   }
 
-  parse(): QuakeEntityPropertyInterface {
+  parse(): IQuakeEntityProperty {
     const splits = this.line.split('"');
 
     if (splits.length < 5) {

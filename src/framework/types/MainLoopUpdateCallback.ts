@@ -1,1 +1,3 @@
-export type MainLoopUpdateCallback = (delta: number) => void;
+type MainLoopUpdateCallback = (delta: number) => void;
+
+export default MainLoopUpdateCallback;

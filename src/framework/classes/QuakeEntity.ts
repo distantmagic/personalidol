@@ -1,13 +1,14 @@
-import Exception from "src/framework/classes/Exception";
 import isArrayEqual from "src/framework/helpers/isArrayEqual";
+
+import Exception from "src/framework/classes/Exception";
 import QuakePointParser from "src/framework/classes/QuakePointParser";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeBrush } from "src/framework/interfaces/QuakeBrush";
-import { QuakeEntity as QuakeEntityInterface } from "src/framework/interfaces/QuakeEntity";
-import { QuakeEntityProperties } from "src/framework/interfaces/QuakeEntityProperties";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QuakeBrush from "src/framework/interfaces/QuakeBrush";
+import QuakeEntityProperties from "src/framework/interfaces/QuakeEntityProperties";
+import { default as IQuakeEntity } from "src/framework/interfaces/QuakeEntity";
 
-export default class QuakeEntity implements QuakeEntityInterface {
+export default class QuakeEntity implements IQuakeEntity {
   readonly brushes: ReadonlyArray<QuakeBrush>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly props: QuakeEntityProperties;
@@ -51,7 +52,7 @@ export default class QuakeEntity implements QuakeEntityInterface {
     return this.getClassName() === className;
   }
 
-  isEqual(other: QuakeEntityInterface): boolean {
+  isEqual(other: IQuakeEntity): boolean {
     if (!this.getProperties().isEqual(other.getProperties())) {
       return false;
     }

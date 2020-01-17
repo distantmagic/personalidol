@@ -1,3 +1,3 @@
-export interface Canceled {
+export default interface Canceled {
   readonly message: string;
 }

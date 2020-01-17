@@ -1,19 +1,19 @@
-import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 const LOGGER_BREADCRUMB_SEPARATOR = "/";
 
-export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
+export default class LoggerBreadcrumbs implements ILoggerBreadcrumbs {
   readonly breadcrumbs: ReadonlyArray<string>;
-  readonly loggerBreadcrumbsLocalCache: Map<string, LoggerBreadcrumbsInterface>;
-  readonly loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface>;
+  readonly loggerBreadcrumbsLocalCache: Map<string, ILoggerBreadcrumbs>;
+  readonly loggerBreadcrumbsMemo: Map<string, ILoggerBreadcrumbs>;
 
-  constructor(breadcrumbs: ReadonlyArray<string> = ["root"], loggerBreadcrumbsMemo: Map<string, LoggerBreadcrumbsInterface> = new Map()) {
+  constructor(breadcrumbs: ReadonlyArray<string> = ["root"], loggerBreadcrumbsMemo: Map<string, ILoggerBreadcrumbs> = new Map()) {
     this.breadcrumbs = Object.freeze(breadcrumbs);
-    this.loggerBreadcrumbsLocalCache = new Map<string, LoggerBreadcrumbsInterface>();
+    this.loggerBreadcrumbsLocalCache = new Map<string, ILoggerBreadcrumbs>();
     this.loggerBreadcrumbsMemo = loggerBreadcrumbsMemo;
   }
 
-  add(breadcrumb: string): LoggerBreadcrumbsInterface {
+  add(breadcrumb: string): ILoggerBreadcrumbs {
     const localCached = this.loggerBreadcrumbsLocalCache.get(breadcrumb);
 
     if (localCached) {
@@ -35,7 +35,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     return added;
   }
 
-  addVariable(breadcrumb: string): LoggerBreadcrumbsInterface {
+  addVariable(breadcrumb: string): ILoggerBreadcrumbs {
     // do not memoize this one, variable content may lead to memory leaks
     return new LoggerBreadcrumbs(this.breadcrumbs.concat(`"${breadcrumb}"`));
   }
@@ -60,7 +60,7 @@ export default class LoggerBreadcrumbs implements LoggerBreadcrumbsInterface {
     return this.breadcrumbs;
   }
 
-  isEqual(other: LoggerBreadcrumbsInterface): boolean {
+  isEqual(other: ILoggerBreadcrumbs): boolean {
     return this.asString() === other.asString();
   }
 }

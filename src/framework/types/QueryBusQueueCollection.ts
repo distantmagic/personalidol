@@ -1,3 +1,5 @@
-import { CancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
+import CancelTokenQuery from "src/framework/interfaces/CancelTokenQuery";
 
-export type QueryBusQueueCollection<T> = CancelTokenQuery<T>[];
+type QueryBusQueueCollection<T> = CancelTokenQuery<T>[];
+
+export default QueryBusQueueCollection;

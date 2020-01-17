@@ -4,12 +4,13 @@ import CanvasView from "src/framework/classes/CanvasView";
 import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeMapTextureLoader as QuakeMapTextureLoaderInterface } from "src/framework/interfaces/QuakeMapTextureLoader";
-import { QuakeWorkerBrush } from "src/framework/types/QuakeWorkerBrush";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
+import { default as IQuakeMapTextureLoader } from "src/framework/interfaces/QuakeMapTextureLoader";
+
+import QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
 
 const TEXTURE_SIZE = 128;
 
@@ -137,7 +138,7 @@ export default class QuakeBrush extends CanvasView {
   private textureAtlas: null | THREE.DataTexture = null;
   readonly entity: QuakeWorkerBrush;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly textureLoader: QuakeMapTextureLoaderInterface;
+  readonly textureLoader: IQuakeMapTextureLoader;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,

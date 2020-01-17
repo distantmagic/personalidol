@@ -2,10 +2,11 @@ import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerLightPoint } from "src/framework/types/QuakeWorkerLightPoint";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+
+import QuakeWorkerLightPoint from "src/framework/types/QuakeWorkerLightPoint";
 
 export default class PointLight extends CanvasView {
   readonly color: THREE.Color;

@@ -1,10 +1,11 @@
 import Exception from "src/framework/classes/Exception";
 
-import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
-import { EventListenerSetCallback } from "src/framework/types/EventListenerSetCallback";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
-export default class EventListenerSet<Arguments extends readonly any[]> implements EventListenerSetInterface<Arguments> {
+import EventListenerSetCallback from "src/framework/types/EventListenerSetCallback";
+
+export default class EventListenerSet<Arguments extends readonly any[]> implements IEventListenerSet<Arguments> {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   private callbacks: EventListenerSetCallback<Arguments>[];
 

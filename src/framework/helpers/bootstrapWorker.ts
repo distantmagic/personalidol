@@ -1,26 +1,27 @@
 /// <reference lib="webworker" />
 
 import bootstrapFramework from "src/framework/helpers/bootstrapFramework";
+
 import BusClock from "src/framework/classes/BusClock";
 import CancelToken from "src/framework/classes/CancelToken";
 import JSONRPCServer from "src/framework/classes/JSONRPCServer";
 import { default as ConsoleLogger } from "src/framework/classes/Logger/Console";
 import { default as UnexpectedExceptionHandlerFilter } from "src/framework/classes/ExceptionHandlerFilter/Unexpected";
 
-import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
-import { ClockReactiveController } from "src/framework/interfaces/ClockReactiveController";
-import { Debugger } from "src/framework/interfaces/Debugger";
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { JSONRPCServer as JSONRPCServerInterface } from "src/framework/interfaces/JSONRPCServer";
-import { Logger } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import ClockReactiveController from "src/framework/interfaces/ClockReactiveController";
+import Debugger from "src/framework/interfaces/Debugger";
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import Logger from "src/framework/interfaces/Logger";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
+import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
+import { default as IJSONRPCServer } from "src/framework/interfaces/JSONRPCServer";
 
 // prettier-ignore
 type BootstrapWorkerCallback = (
-  cancelTokenInterface: CancelTokenInterface,
+  IcancelToken: ICancelToken,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  jsonRPCServerInterface: JSONRPCServerInterface,
+  IjsonRPCServer: IJSONRPCServer,
   queryBus: QueryBus,
 ) => void;
 

@@ -1,4 +1,4 @@
-export type InventorySlotEnum =
+type InventorySlotEnum =
   | "back"
   | "belt"
   | "feet"
@@ -19,3 +19,5 @@ export type InventorySlotEnum =
   | "utility4"
   | "utility5"
   | "weapon";
+
+export default InventorySlotEnum;

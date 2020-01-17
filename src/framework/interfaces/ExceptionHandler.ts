@@ -1,7 +1,7 @@
-import { Logger } from "src/framework/interfaces/Logger";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import Logger from "src/framework/interfaces/Logger";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
-export interface ExceptionHandler {
+export default interface ExceptionHandler {
   /**
    * Should return 'true' when exception is processed successfully.
    */

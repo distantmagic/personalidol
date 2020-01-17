@@ -4,18 +4,19 @@ import CancelTokenQuery from "src/framework/classes/CancelTokenQuery";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import QueryBatch from "src/framework/classes/QueryBatch";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CancelTokenQuery as CancelTokenQueryInterface } from "src/framework/interfaces/CancelTokenQuery";
-import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { Query } from "src/framework/interfaces/Query";
-import { QueryBus as QueryBusInterface } from "src/framework/interfaces/QueryBus";
-import { QueryBusOnEnqueuedCallback } from "src/framework/types/QueryBusOnEnqueuedCallback";
-import { QueryBusQueueCollection } from "src/framework/types/QueryBusQueueCollection";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import Query from "src/framework/interfaces/Query";
+import { default as ICancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import { default as IQueryBus } from "src/framework/interfaces/QueryBus";
 
-export default class QueryBus implements QueryBusInterface {
-  readonly enqueuedCallbacks: EventListenerSetInterface<[Query<any>]>;
+import QueryBusOnEnqueuedCallback from "src/framework/types/QueryBusOnEnqueuedCallback";
+import QueryBusQueueCollection from "src/framework/types/QueryBusQueueCollection";
+
+export default class QueryBus implements IQueryBus {
+  readonly enqueuedCallbacks: IEventListenerSet<[Query<any>]>;
   readonly exceptionHandler: ExceptionHandler;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   private collection: QueryBusQueueCollection<any>;
@@ -29,7 +30,7 @@ export default class QueryBus implements QueryBusInterface {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  enqueue<T>(cancelToken: CancelToken, query: Query<T>): CancelTokenQueryInterface<T> {
+  enqueue<T>(cancelToken: CancelToken, query: Query<T>): ICancelTokenQuery<T> {
     const cancelTokenQuery = new CancelTokenQuery(this.loggerBreadcrumbs.add("enqueue"), cancelToken, query);
 
     this.collection.push(cancelTokenQuery);

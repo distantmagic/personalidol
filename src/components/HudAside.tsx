@@ -3,8 +3,8 @@ import * as React from "react";
 import HudAsidePortrait from "src/components/HudAsidePortrait";
 
 import imagePortraitArlance from "src/assets/portrait-arlance.jpg";
-import imagePortraitMoore from "src/assets/portrait-moore.jpg";
 import imagePortraitCircassia from "src/assets/portrait-circassia.jpg";
+import imagePortraitMoore from "src/assets/portrait-moore.jpg";
 
 type Props = {};
 

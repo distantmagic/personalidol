@@ -1,4 +1,4 @@
-export interface JSONRPCResponseData<T> {
+export default interface JSONRPCResponseData<T> {
   getResult(): T;
 
   getTransferables(): Transferable[];

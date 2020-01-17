@@ -1,4 +1,4 @@
-export interface Observer {
+export default interface Observer {
   disconnect(): void;
 
   observe(): void;

@@ -3,11 +3,11 @@ import * as THREE from "three";
 import CancelToken from "src/framework/classes/CancelToken";
 import CanvasViewBag from "src/framework/classes/CanvasViewBag";
 import CanvasViewBus from "src/framework/classes/CanvasViewBus";
-import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import HemisphereLight from "src/framework/classes/CanvasView/HemisphereLight";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 
-import { QuakeWorkerLightHemisphere } from "src/framework/types/QuakeWorkerLightHemisphere";
+import QuakeWorkerLightHemisphere from "src/framework/types/QuakeWorkerLightHemisphere";
 
 test("is cleanly attached and disposed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

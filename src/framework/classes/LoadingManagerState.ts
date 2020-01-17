@@ -1,6 +1,6 @@
-import { LoadingManagerState as LoadingManagerStateInterface } from "src/framework/interfaces/LoadingManagerState";
+import { default as ILoadingManagerState } from "src/framework/interfaces/LoadingManagerState";
 
-export default class LoadingManagerState implements LoadingManagerStateInterface {
+export default class LoadingManagerState implements ILoadingManagerState {
   readonly comments: ReadonlyArray<string>;
   readonly totalBackgroundLoading: number;
   readonly totalBlockingLoading: number;

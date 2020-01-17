@@ -1,3 +1,3 @@
-import { Message } from "src/framework/interfaces/Perceivable/Message";
+import Message from "src/framework/interfaces/Perceivable/Message";
 
-export interface Vocal extends Message {}
+export default interface Vocal extends Message {}

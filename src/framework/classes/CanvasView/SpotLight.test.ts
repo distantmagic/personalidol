@@ -7,7 +7,7 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 import SpotLight from "src/framework/classes/CanvasView/SpotLight";
 
-import { QuakeWorkerLightSpotlight } from "src/framework/types/QuakeWorkerLightSpotlight";
+import QuakeWorkerLightSpotlight from "src/framework/types/QuakeWorkerLightSpotlight";
 
 test("is cleanly attached and disposed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();

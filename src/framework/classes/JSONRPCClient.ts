@@ -9,25 +9,26 @@ import { unobjectify as unobjectifyJSONRPCErrorResponse } from "src/framework/cl
 import { unobjectify as unobjectifyJSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 import { unobjectify as unobjectifyJSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
-import { JSONRPCClient as JSONRPCClientInterface } from "src/framework/interfaces/JSONRPCClient";
-import { JSONRPCErrorResponse as JSONRPCErrorResponseInterface } from "src/framework/interfaces/JSONRPCErrorResponse";
-import { JSONRPCGeneratorChunkResponse as JSONRPCGeneratorChunkResponseInterface } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
-import { JSONRPCParams } from "src/framework/types/JSONRPCParams";
-import { JSONRPCPromiseResponse as JSONRPCPromiseResponseInterface } from "src/framework/interfaces/JSONRPCPromiseResponse";
-import { JSONRPCRequest as JSONRPCRequestInterface } from "src/framework/interfaces/JSONRPCRequest";
-import { JSONRPCVersion } from "src/framework/types/JSONRPCVersion";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import { default as IJSONRPCClient } from "src/framework/interfaces/JSONRPCClient";
+import { default as IJSONRPCErrorResponse } from "src/framework/interfaces/JSONRPCErrorResponse";
+import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import { default as IJSONRPCPromiseResponse } from "src/framework/interfaces/JSONRPCPromiseResponse";
+import { default as IJSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
 
-export default class JSONRPCClient implements JSONRPCClientInterface {
-  readonly awaitingGeneratorRequests: Map<string, EventListenerSetInterface<[JSONRPCGeneratorChunkResponseInterface<any>]>>;
+import JSONRPCParams from "src/framework/types/JSONRPCParams";
+import JSONRPCVersion from "src/framework/types/JSONRPCVersion";
+
+export default class JSONRPCClient implements IJSONRPCClient {
+  readonly awaitingGeneratorRequests: Map<string, IEventListenerSet<[IJSONRPCGeneratorChunkResponse<any>]>>;
   readonly awaitingPromiseRequests: Map<string, (arg: any) => void>;
   readonly uuid: () => string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly postMessage: Worker["postMessage"];
 
-  static attachTo(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, worker: Worker): JSONRPCClientInterface {
+  static attachTo(loggerBreadcrumbs: LoggerBreadcrumbs, cancelToken: CancelToken, worker: Worker): IJSONRPCClient {
     const jsonRpcClient = new JSONRPCClient(loggerBreadcrumbs, worker.postMessage.bind(worker));
 
     worker.onmessage = jsonRpcClient.useMessageHandler(cancelToken);
@@ -43,13 +44,13 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
     this.uuid = uuid;
   }
 
-  async handleErrorResponse<T>(response: JSONRPCErrorResponseInterface<T>): Promise<void> {
+  async handleErrorResponse<T>(response: IJSONRPCErrorResponse<T>): Promise<void> {
     const message = JSON.stringify(response.getData().getResult()) || "";
 
     throw new JSONRPCException(this.loggerBreadcrumbs.add("handleErrorResponse"), `RPCServer error response: ${message}`);
   }
 
-  async handleGeneratorChunkResponse<T>(response: JSONRPCGeneratorChunkResponseInterface<T>): Promise<void> {
+  async handleGeneratorChunkResponse<T>(response: IJSONRPCGeneratorChunkResponse<T>): Promise<void> {
     const breadcrumbs = this.loggerBreadcrumbs.add("handleGeneratorChunkResponse");
     const responseId = response.getId();
     const generatorHandler = this.awaitingGeneratorRequests.get(responseId);
@@ -60,7 +61,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
     return generatorHandler.notify([response]);
   }
 
-  async handlePromiseResponse<T>(response: JSONRPCPromiseResponseInterface<T>): Promise<void> {
+  async handlePromiseResponse<T>(response: IJSONRPCPromiseResponse<T>): Promise<void> {
     const breadcrumbs = this.loggerBreadcrumbs.add("handlePromiseResponse");
     const responseId = response.getId();
     const promiseHandler = this.awaitingPromiseRequests.get(responseId);
@@ -182,7 +183,7 @@ export default class JSONRPCClient implements JSONRPCClientInterface {
     });
   }
 
-  async sendRequest(request: JSONRPCRequestInterface): Promise<void> {
+  async sendRequest(request: IJSONRPCRequest): Promise<void> {
     this.postMessage(request.asObject());
   }
 

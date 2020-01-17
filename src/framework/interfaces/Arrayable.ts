@@ -1,3 +1,3 @@
-export interface Arrayable<T> {
+export default interface Arrayable<T> {
   asArray(): ReadonlyArray<T>;
 }

@@ -1,6 +1,6 @@
-import { Equatable } from "src/framework/interfaces/Equatable";
+import Equatable from "src/framework/interfaces/Equatable";
 
-export interface QuakeEntityProperty extends Equatable<QuakeEntityProperty> {
+export default interface QuakeEntityProperty extends Equatable<QuakeEntityProperty> {
   asNumber(): number;
 
   getKey(): string;

@@ -1,3 +1,3 @@
-import { Memorizable } from "src/framework/interfaces/Memorizable";
+import Memorizable from "src/framework/interfaces/Memorizable";
 
-export interface Fact extends Memorizable {}
+export default interface Fact extends Memorizable {}

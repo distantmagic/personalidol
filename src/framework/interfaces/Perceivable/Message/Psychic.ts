@@ -1,3 +1,3 @@
-import { Message } from "src/framework/interfaces/Perceivable/Message";
+import Message from "src/framework/interfaces/Perceivable/Message";
 
-export interface Psychic extends Message {}
+export default interface Psychic extends Message {}

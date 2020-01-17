@@ -1,17 +1,17 @@
 import autoBind from "auto-bind";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasView } from "src/framework/interfaces/CanvasView";
-import { CanvasViewBag as CanvasViewBagInterface } from "src/framework/interfaces/CanvasViewBag";
-import { CanvasViewBus as CanvasViewBusInterface } from "src/framework/interfaces/CanvasViewBus";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasView from "src/framework/interfaces/CanvasView";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
 
-export default class CanvasViewBag implements CanvasViewBagInterface {
-  readonly canvasViewBus: CanvasViewBusInterface;
+export default class CanvasViewBag implements ICanvasViewBag {
+  readonly canvasViewBus: ICanvasViewBus;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly canvasViews: CanvasView[];
 
-  constructor(canvasViewBus: CanvasViewBusInterface, loggerBreadcrumbs: LoggerBreadcrumbs) {
+  constructor(canvasViewBus: ICanvasViewBus, loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
 
     this.canvasViewBus = canvasViewBus;
@@ -42,7 +42,7 @@ export default class CanvasViewBag implements CanvasViewBagInterface {
     }
   }
 
-  fork(loggerBreadcrumbs: LoggerBreadcrumbs): CanvasViewBagInterface {
+  fork(loggerBreadcrumbs: LoggerBreadcrumbs): ICanvasViewBag {
     return new CanvasViewBag(this.canvasViewBus, loggerBreadcrumbs);
   }
 }

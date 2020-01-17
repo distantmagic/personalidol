@@ -2,18 +2,19 @@ import JSONRPCResponse from "src/framework/classes/JSONRPCResponse";
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
-import { JSONRPCMessageType } from "src/framework/types/JSONRPCMessageType";
-import { JSONRPCPromiseResponse as JSONRPCPromiseResponseInterface } from "src/framework/interfaces/JSONRPCPromiseResponse";
-import { JSONRPCPromiseResponseObjectified } from "src/framework/types/JSONRPCPromiseResponseObjectified";
-import { JSONRPCResponseData as JSONRPCResponseDataInterface } from "src/framework/interfaces/JSONRPCResponseData";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IJSONRPCPromiseResponse } from "src/framework/interfaces/JSONRPCPromiseResponse";
+import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
-export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCPromiseResponseObjectified<T>): JSONRPCPromiseResponseInterface<T> {
+import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
+import JSONRPCPromiseResponseObjectified from "src/framework/types/JSONRPCPromiseResponseObjectified";
+
+export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCPromiseResponseObjectified<T>): IJSONRPCPromiseResponse<T> {
   return new JSONRPCPromiseResponse<T>(loggerBreadcrumbs, objectified.id, objectified.method, objectified.type, new JSONRPCResponseData(objectified.result));
 }
 
-export default class JSONRPCPromiseResponse<T> extends JSONRPCResponse<T, JSONRPCPromiseResponseObjectified<T>> implements JSONRPCPromiseResponseInterface<T> {
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, id: string, method: string, type: JSONRPCMessageType, data: JSONRPCResponseDataInterface<T>) {
+export default class JSONRPCPromiseResponse<T> extends JSONRPCResponse<T, JSONRPCPromiseResponseObjectified<T>> implements IJSONRPCPromiseResponse<T> {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, id: string, method: string, type: JSONRPCMessageType, data: IJSONRPCResponseData<T>) {
     super(id, method, data);
 
     if ("promise" !== type) {

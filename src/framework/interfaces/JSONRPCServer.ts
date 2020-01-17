@@ -1,12 +1,13 @@
 /// <reference lib="webworker" />
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { JSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
-import { JSONRPCResponse } from "src/framework/interfaces/JSONRPCResponse";
-import { JSONRPCServerGeneratorCallback } from "src/framework/types/JSONRPCServerGeneratorCallback";
-import { JSONRPCServerPromiseCallback } from "src/framework/types/JSONRPCServerPromiseCallback";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import JSONRPCRequest from "src/framework/interfaces/JSONRPCRequest";
+import JSONRPCResponse from "src/framework/interfaces/JSONRPCResponse";
 
-export interface JSONRPCServer {
+import JSONRPCServerGeneratorCallback from "src/framework/types/JSONRPCServerGeneratorCallback";
+import JSONRPCServerPromiseCallback from "src/framework/types/JSONRPCServerPromiseCallback";
+
+export default interface JSONRPCServer {
   handleRequest(request: JSONRPCRequest): Promise<void>;
 
   returnGenerator<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T>): Promise<void>;

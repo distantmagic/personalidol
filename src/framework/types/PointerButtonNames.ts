@@ -1,1 +1,3 @@
-export type PointerButtonNames = "Primary" | "Secondary" | "Auxiliary" | "BrowserBack" | "BrowserForward";
+type PointerButtonNames = "Primary" | "Secondary" | "Auxiliary" | "BrowserBack" | "BrowserForward";
+
+export default PointerButtonNames;

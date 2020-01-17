@@ -3,14 +3,16 @@
 import * as THREE from "three";
 
 import bootstrapWorker from "src/framework/helpers/bootstrapWorker";
-import { default as routeMap } from "src/workers/modules/quakeMap/routes/map";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { JSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
-import { JSONRPCServer } from "src/framework/interfaces/JSONRPCServer";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeWorkerAny } from "src/framework/types/QuakeWorkerAny";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import JSONRPCRequest from "src/framework/interfaces/JSONRPCRequest";
+import JSONRPCServer from "src/framework/interfaces/JSONRPCServer";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
+
+import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
+
+import { default as routeMap } from "src/workers/modules/quakeMap/routes/map";
 
 declare var self: DedicatedWorkerGlobalScope;
 

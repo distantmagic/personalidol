@@ -3,9 +3,9 @@ import * as THREE from "three";
 import isEqualWithEpsilon from "src/framework/helpers/isEqualWithEpsilon";
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { default as IQuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
 
-export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface {
+export default class QuakeBrushHalfSpace implements IQuakeBrushHalfSpace {
   readonly texture: string;
   readonly textureRotationAngle: number;
   readonly textureXScale: number;
@@ -114,7 +114,7 @@ export default class QuakeBrushHalfSpace implements QuakeBrushHalfSpaceInterface
     return this.yOffset;
   }
 
-  isEqual(other: QuakeBrushHalfSpaceInterface): boolean {
+  isEqual(other: IQuakeBrushHalfSpace): boolean {
     return (
       this.getPlaneDefiningPoint1().equals(other.getPlaneDefiningPoint1()) &&
       this.getPlaneDefiningPoint2().equals(other.getPlaneDefiningPoint2()) &&

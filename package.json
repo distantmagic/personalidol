@@ -4,6 +4,7 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
+    "ammo.js": "^0.0.10",
     "auto-bind": "^4.0.0",
     "classnames": "^2.2.6",
     "immutable": "^4.0.0-rc.12",
@@ -43,6 +44,7 @@
     "fs-extra": "^8.1.0",
     "node-sass": "^4.13.0",
     "prettier": "1.19.1",
+    "prettier-plugin-import-sort": "^0.0.3",
     "typescript": "^3.7.4",
     "websocket": "^1.0.31"
   },
@@ -54,6 +56,11 @@
   ],
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "importSort": {
+    ".js, .ts, .tsx": {
+      "style": "personalidol"
+    }
   },
   "jest": {
     "coverageReporters": [
@@ -67,7 +74,7 @@
     "build": "react-scripts build",
     "modernizr": "./node_modules/.bin/modernizr -c ./modernizr.json -d ./public/vendor -u",
     "prettier": "./node_modules/.bin/prettier --write \"./{public,src}/**/*.{htm,html,js,scss,ts,tsx}\"",
-    "start": "PORT=9023 react-scripts start",
+    "start": "PORT=9023 PUBLIC_URL=$REACT_APP_PUBLIC_URL react-scripts start",
     "test": "react-scripts test --env=jsdom",
     "test:once": "$npm_execpath run test --watchAll=false",
     "test:once:coverage": "$npm_execpath run test:once --coverage",

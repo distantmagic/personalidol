@@ -8,12 +8,12 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 import { default as CanvasControllerException } from "src/framework/classes/Exception/CanvasController";
 
-import { CanvasViewBag as CanvasViewBagInterface } from "src/framework/interfaces/CanvasViewBag";
+import { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 class FooCanvasController extends CanvasController {
   readonly useCallbacks: boolean;
 
-  constructor(canvasViewBag: CanvasViewBagInterface, useCallbacks: boolean) {
+  constructor(canvasViewBag: ICanvasViewBag, useCallbacks: boolean) {
     super(canvasViewBag);
 
     this.useCallbacks = useCallbacks;

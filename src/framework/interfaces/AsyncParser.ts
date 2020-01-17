@@ -1,5 +1,5 @@
-import { CancelToken } from "src/framework/interfaces/CancelToken";
+import CancelToken from "src/framework/interfaces/CancelToken";
 
-export interface AsyncParser<T> {
+export default interface AsyncParser<T> {
   parse(cancelToken: CancelToken): Promise<T>;
 }

@@ -1,1 +1,3 @@
-export type JSONRPCParams = ReadonlyArray<any>;
+type JSONRPCParams = ReadonlyArray<any>;
+
+export default JSONRPCParams;

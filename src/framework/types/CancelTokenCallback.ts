@@ -1,3 +1,5 @@
-import { Canceled } from "src/framework/interfaces/Exception/Canceled";
+import Canceled from "src/framework/interfaces/Exception/Canceled";
 
-export type CancelTokenCallback = (error: Canceled) => void;
+type CancelTokenCallback = (error: Canceled) => void;
+
+export default CancelTokenCallback;

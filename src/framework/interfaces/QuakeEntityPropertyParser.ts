@@ -1,4 +1,4 @@
-import { Parser } from "src/framework/interfaces/Parser";
-import { QuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
+import Parser from "src/framework/interfaces/Parser";
+import QuakeEntityProperty from "src/framework/interfaces/QuakeEntityProperty";
 
-export interface QuakeEntityPropertyParser extends Parser<QuakeEntityProperty> {}
+export default interface QuakeEntityPropertyParser extends Parser<QuakeEntityProperty> {}

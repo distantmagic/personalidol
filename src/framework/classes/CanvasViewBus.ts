@@ -2,13 +2,13 @@ import isEmpty from "lodash/isEmpty";
 
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { CanvasView } from "src/framework/interfaces/CanvasView";
-import { CanvasViewBus as CanvasViewBusInterface } from "src/framework/interfaces/CanvasViewBus";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { Scheduler } from "src/framework/interfaces/Scheduler";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasView from "src/framework/interfaces/CanvasView";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import Scheduler from "src/framework/interfaces/Scheduler";
+import { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
 
-export default class CanvasViewBus implements CanvasViewBusInterface {
+export default class CanvasViewBus implements ICanvasViewBus {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly scheduler: Scheduler;
 

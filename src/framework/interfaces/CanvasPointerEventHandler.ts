@@ -1,4 +1,4 @@
-export interface CanvasPointerEventHandler {
+export default interface CanvasPointerEventHandler {
   onPointerAuxiliaryClick(): void;
 
   onPointerAuxiliaryDepressed(): void;

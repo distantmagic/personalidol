@@ -1,4 +1,4 @@
-export type QuakeWorkerWorldspawn = {
+type QuakeWorkerWorldspawn = {
   readonly classname: "worldspawn";
   readonly indices: ArrayBuffer;
   readonly normals: ArrayBuffer;
@@ -7,3 +7,5 @@ export type QuakeWorkerWorldspawn = {
   readonly uvs: ArrayBuffer;
   readonly vertices: ArrayBuffer;
 };
+
+export default QuakeWorkerWorldspawn;

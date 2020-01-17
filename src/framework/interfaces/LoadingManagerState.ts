@@ -1,4 +1,4 @@
-export interface LoadingManagerState {
+export default interface LoadingManagerState {
   getComments(): ReadonlyArray<string>;
 
   getTotalFailed(): number;

@@ -1,10 +1,10 @@
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
-import { JSONRPCClientGeneratorBuffer as JSONRPCClientGeneratorBufferInterface } from "src/framework/interfaces/JSONRPCClientGeneratorBuffer";
-import { JSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import JSONRPCGeneratorChunkResponse from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IJSONRPCClientGeneratorBuffer } from "src/framework/interfaces/JSONRPCClientGeneratorBuffer";
 
-export default class JSONRPCClientGeneratorBuffer<T> implements JSONRPCClientGeneratorBufferInterface<T> {
+export default class JSONRPCClientGeneratorBuffer<T> implements IJSONRPCClientGeneratorBuffer<T> {
   readonly buffer: Map<string, JSONRPCGeneratorChunkResponse<T>>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   private flushable: JSONRPCGeneratorChunkResponse<T>[];

@@ -1,7 +1,8 @@
 import isArrayEqual from "src/framework/helpers/isArrayEqual";
+
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
-import { Equatable } from "src/framework/interfaces/Equatable";
+import Equatable from "src/framework/interfaces/Equatable";
 
 class Foo implements Equatable<Foo> {
   readonly value: number;

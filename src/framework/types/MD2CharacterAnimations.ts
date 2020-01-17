@@ -1,4 +1,4 @@
-export type MD2CharacterAnimations = {
+type MD2CharacterAnimations = {
   readonly attack: string;
   readonly crouchAttack: string;
   readonly crouchIdle: string;
@@ -7,3 +7,5 @@ export type MD2CharacterAnimations = {
   readonly jump: string;
   readonly move: string;
 };
+
+export default MD2CharacterAnimations;

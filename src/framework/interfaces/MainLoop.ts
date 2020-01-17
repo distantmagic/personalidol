@@ -1,11 +1,11 @@
-import { MainLoopBeginCallback } from "src/framework/types/MainLoopBeginCallback";
-import { MainLoopDrawCallback } from "src/framework/types/MainLoopDrawCallback";
-import { MainLoopEndCallback } from "src/framework/types/MainLoopEndCallback";
-import { MainLoopUpdateCallback } from "src/framework/types/MainLoopUpdateCallback";
+import Scheduler from "src/framework/interfaces/Scheduler";
 
-import { Scheduler } from "src/framework/interfaces/Scheduler";
+import MainLoopBeginCallback from "src/framework/types/MainLoopBeginCallback";
+import MainLoopDrawCallback from "src/framework/types/MainLoopDrawCallback";
+import MainLoopEndCallback from "src/framework/types/MainLoopEndCallback";
+import MainLoopUpdateCallback from "src/framework/types/MainLoopUpdateCallback";
 
-export interface MainLoop {
+export default interface MainLoop {
   attachScheduler(scheduler: Scheduler): void;
 
   // unset all callbacks

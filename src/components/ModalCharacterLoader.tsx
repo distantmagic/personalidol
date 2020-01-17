@@ -1,15 +1,18 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 
-import CharacterQuery from "src/framework/classes/Query/Character";
-import memoize from "src/framework/helpers/memoize";
 import ModalCharacter from "src/components/ModalCharacter";
 import ModalLoader from "src/components/ModalLoader";
+
 import useQuery from "src/effects/useQuery";
 
-import { ExceptionHandler } from "src/framework/interfaces/ExceptionHandler";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QueryBus } from "src/framework/interfaces/QueryBus";
+import memoize from "src/framework/helpers/memoize";
+
+import CharacterQuery from "src/framework/classes/Query/Character";
+
+import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QueryBus from "src/framework/interfaces/QueryBus";
 
 type Props = {
   exceptionHandler: ExceptionHandler;

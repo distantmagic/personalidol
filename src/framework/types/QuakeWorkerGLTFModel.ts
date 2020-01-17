@@ -1,4 +1,4 @@
-export type QuakeWorkerGLTFModel = {
+type QuakeWorkerGLTFModel = {
   readonly angle: number;
   readonly classname: "model_gltf";
   readonly model_name: string;
@@ -6,3 +6,5 @@ export type QuakeWorkerGLTFModel = {
   readonly origin: [number, number, number];
   readonly scale: number;
 };
+
+export default QuakeWorkerGLTFModel;

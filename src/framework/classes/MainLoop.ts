@@ -5,18 +5,19 @@ import { default as VendorMainLoop } from "mainloop.js";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import { default as MainLoopException } from "src/framework/classes/Exception/MainLoop";
 
-import { LoggerBreadcrumbs as LoggerBreadcrumbsInterface } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { MainLoop as MainLoopInterface } from "src/framework/interfaces/MainLoop";
-import { MainLoopBeginCallback } from "src/framework/types/MainLoopBeginCallback";
-import { MainLoopDrawCallback } from "src/framework/types/MainLoopDrawCallback";
-import { MainLoopEndCallback } from "src/framework/types/MainLoopEndCallback";
-import { MainLoopUpdateCallback } from "src/framework/types/MainLoopUpdateCallback";
-import { Scheduler } from "src/framework/interfaces/Scheduler";
+import Scheduler from "src/framework/interfaces/Scheduler";
+import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IMainLoop } from "src/framework/interfaces/MainLoop";
 
-let instance: null | MainLoopInterface = null;
+import MainLoopBeginCallback from "src/framework/types/MainLoopBeginCallback";
+import MainLoopDrawCallback from "src/framework/types/MainLoopDrawCallback";
+import MainLoopEndCallback from "src/framework/types/MainLoopEndCallback";
+import MainLoopUpdateCallback from "src/framework/types/MainLoopUpdateCallback";
 
-export default class MainLoop implements MainLoopInterface {
-  static getInstance(loggerBreadcrumbs: LoggerBreadcrumbsInterface): MainLoop {
+let instance: null | IMainLoop = null;
+
+export default class MainLoop implements IMainLoop {
+  static getInstance(loggerBreadcrumbs: ILoggerBreadcrumbs): MainLoop {
     if (!instance) {
       throw new MainLoopException(loggerBreadcrumbs, "Main loop is used before it's instanciated.");
     }

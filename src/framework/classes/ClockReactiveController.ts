@@ -1,9 +1,9 @@
-import { BusClock } from "src/framework/interfaces/BusClock";
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { ClockReactive } from "src/framework/interfaces/ClockReactive";
-import { ClockReactiveController as ClockReactiveControllerInterface } from "src/framework/interfaces/ClockReactiveController";
+import BusClock from "src/framework/interfaces/BusClock";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import ClockReactive from "src/framework/interfaces/ClockReactive";
+import { default as IClockReactiveController } from "src/framework/interfaces/ClockReactiveController";
 
-export default class ClockReactiveController implements ClockReactiveControllerInterface {
+export default class ClockReactiveController implements IClockReactiveController {
   readonly clock: BusClock;
   readonly clockReactive: ClockReactive;
 

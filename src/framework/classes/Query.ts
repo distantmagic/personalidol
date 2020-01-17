@@ -1,8 +1,8 @@
-import { CancelToken } from "src/framework/interfaces/CancelToken";
-import { Query as QueryInterface } from "src/framework/interfaces/Query";
+import CancelToken from "src/framework/interfaces/CancelToken";
+import { default as IQuery } from "src/framework/interfaces/Query";
 
-export default abstract class Query<T> implements QueryInterface<T> {
+export default abstract class Query<T> implements IQuery<T> {
   abstract execute(cancelToken: CancelToken): Promise<T>;
 
-  abstract isEqual(other: QueryInterface<T>): boolean;
+  abstract isEqual(other: IQuery<T>): boolean;
 }

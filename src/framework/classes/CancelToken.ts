@@ -2,25 +2,26 @@ import Canceled from "src/framework/classes/Exception/CancelToken/Canceled";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import Exception from "src/framework/classes/Exception";
 
-import { Canceled as CanceledInterface } from "src/framework/interfaces/Exception/Canceled";
-import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
-import { CancelTokenCallback } from "src/framework/types/CancelTokenCallback";
-import { EventListenerSet as EventListenerSetInterface } from "src/framework/interfaces/EventListenerSet";
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as ICanceled } from "src/framework/interfaces/Exception/Canceled";
+import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
-export default class CancelToken implements CancelTokenInterface {
+import CancelTokenCallback from "src/framework/types/CancelTokenCallback";
+
+export default class CancelToken implements ICancelToken {
   private _isCanceled: boolean;
   private _isSettled: boolean;
   private loggerBreadcrumbsCancel: null | LoggerBreadcrumbs;
   readonly abortController: AbortController;
-  readonly callbacks: EventListenerSetInterface<[CanceledInterface]>;
+  readonly callbacks: IEventListenerSet<[ICanceled]>;
   readonly loggerBreadcrumbsCreate: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbsCreate: LoggerBreadcrumbs) {
     this._isCanceled = false;
     this._isSettled = false;
     this.abortController = new AbortController();
-    this.callbacks = new EventListenerSet<[CanceledInterface]>(loggerBreadcrumbsCreate);
+    this.callbacks = new EventListenerSet<[ICanceled]>(loggerBreadcrumbsCreate);
     this.loggerBreadcrumbsCancel = null;
     this.loggerBreadcrumbsCreate = loggerBreadcrumbsCreate;
   }
@@ -68,7 +69,7 @@ export default class CancelToken implements CancelTokenInterface {
     this.callbacks.clear();
   }
 
-  whenCanceled(): Promise<CanceledInterface> {
+  whenCanceled(): Promise<ICanceled> {
     return new Promise(resolve => this.onCanceled(resolve));
   }
 }

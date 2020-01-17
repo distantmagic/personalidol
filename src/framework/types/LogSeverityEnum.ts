@@ -1,1 +1,3 @@
-export type LogSeverityEnum = "alert" | "critical" | "debug" | "emergency" | "error" | "info" | "notice" | "warning";
+type LogSeverityEnum = "alert" | "critical" | "debug" | "emergency" | "error" | "info" | "notice" | "warning";
+
+export default LogSeverityEnum;

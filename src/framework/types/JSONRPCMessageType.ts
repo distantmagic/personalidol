@@ -1,1 +1,3 @@
-export type JSONRPCMessageType = "error" | "generator" | "promise";
+type JSONRPCMessageType = "error" | "generator" | "promise";
+
+export default JSONRPCMessageType;

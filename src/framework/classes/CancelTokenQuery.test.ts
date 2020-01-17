@@ -4,10 +4,10 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Query from "src/framework/classes/Query";
 import { default as CancelTokenException } from "src/framework/classes/Exception/CancelToken";
 
-import { CancelToken as CancelTokenInterface } from "src/framework/interfaces/CancelToken";
+import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
 
 class FooQuery extends Query<number> {
-  execute(cancelToken: CancelTokenInterface): Promise<number> {
+  execute(cancelToken: ICancelToken): Promise<number> {
     return new Promise(function(resolve) {
       setTimeout(function() {
         resolve(4);

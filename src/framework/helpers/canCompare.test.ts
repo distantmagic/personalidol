@@ -1,6 +1,6 @@
 import canCompare from "src/framework/helpers/canCompare";
 
-import { Equatable } from "src/framework/interfaces/Equatable";
+import Equatable from "src/framework/interfaces/Equatable";
 
 class Foo implements Equatable<Foo> {
   readonly ref: number;

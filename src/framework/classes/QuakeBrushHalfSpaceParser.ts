@@ -2,13 +2,13 @@ import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";
 import QuakePointParser from "src/framework/classes/QuakePointParser";
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import { LoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-import { QuakeBrushHalfSpace as QuakeBrushHalfSpaceInterface } from "src/framework/interfaces/QuakeBrushHalfSpace";
-import { QuakeBrushHalfSpaceParser as QuakeBrushHalfSpaceParserInterface } from "src/framework/interfaces/QuakeBrushHalfSpaceParser";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import { default as IQuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import { default as IQuakeBrushHalfSpaceParser } from "src/framework/interfaces/QuakeBrushHalfSpaceParser";
 
 const REGEXP_WHITESPACE = /\s+/;
 
-export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpaceParserInterface {
+export default class QuakeBrushHalfSpaceParser implements IQuakeBrushHalfSpaceParser {
   readonly line: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
@@ -17,7 +17,7 @@ export default class QuakeBrushHalfSpaceParser implements QuakeBrushHalfSpacePar
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  parse(): QuakeBrushHalfSpaceInterface {
+  parse(): IQuakeBrushHalfSpace {
     const parts = this.line.trim().split(REGEXP_WHITESPACE);
 
     if (parts.length !== 21) {

@@ -1,3 +1,3 @@
-import { Perceivable } from "src/framework/interfaces/Perceivable";
+import Perceivable from "src/framework/interfaces/Perceivable";
 
-export interface BodyLanguage extends Perceivable {}
+export default interface BodyLanguage extends Perceivable {}
