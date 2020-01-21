@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import uniq from "lodash/uniq";
+import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
 
 import combineWithoutRepetitions from "src/framework/helpers/combineWithoutRepetitions";
 import isArrayEqual from "src/framework/helpers/isArrayEqual";
@@ -63,6 +64,15 @@ export default class QuakeBrush implements IQuakeBrush {
         }
       }
     }
+  }
+
+  getConvexHull(): ConvexHull {
+    const convexHull = new ConvexHull();
+    const vertices = this.getVertices().slice();
+
+    convexHull.setFromPoints(vertices);
+
+    return convexHull;
   }
 
   getHalfSpaceByCoplanarPoints(v1: THREE.Vector3, v2: THREE.Vector3, v3: THREE.Vector3): QuakeBrushHalfSpace {

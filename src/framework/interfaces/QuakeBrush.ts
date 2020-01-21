@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
 
 import Equatable from "src/framework/interfaces/Equatable";
 import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
@@ -8,6 +9,8 @@ export default interface QuakeBrush extends Equatable<QuakeBrush> {
   generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrio>;
 
   generateVertices(): Generator<THREE.Vector3>;
+
+  getConvexHull(): ConvexHull;
 
   getVertices(): ReadonlyArray<THREE.Vector3>;
 

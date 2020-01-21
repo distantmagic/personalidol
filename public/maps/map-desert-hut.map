@@ -37,7 +37,7 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Tent"
-"_tb_id" "9"
+"_tb_id" "25"
 // brush 0
 {
 ( 1112 75 1 ) ( 1024 249 1 ) ( 1016 241 105 ) textures/texture-cobblestone-128x128 55.593 -16.7627 -0 0.896575 1.01443
@@ -161,7 +161,7 @@
 "angle" "45"
 "scale" "10"
 "model_texture" "texture.png"
-"_tb_layer" "9"
+"_tb_layer" "25"
 }
 // entity 5
 {
@@ -171,14 +171,14 @@
 "angle" "-0"
 "scale" "1"
 "model_texture" "green.png"
-"_tb_layer" "9"
+"_tb_layer" "25"
 }
 // entity 6
 {
 "classname" "spark_particles"
 "origin" "976 304 8"
 "angle" ""
-"_tb_layer" "9"
+"_tb_layer" "25"
 }
 // entity 7
 {
@@ -188,14 +188,14 @@
 "angle" "90"
 "decay" "2"
 "color" "FFC000"
-"_tb_layer" "9"
+"_tb_layer" "25"
 }
 // entity 8
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Tower"
-"_tb_id" "10"
+"_tb_id" "26"
 // brush 0
 {
 ( 576 256 736 ) ( 576 240 736 ) ( 576 240 704 ) textures/texture-bricks-128x128 16 -0 -0 1 1
@@ -455,14 +455,14 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "10"
+"_tb_layer" "26"
 }
 // entity 10
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Parish"
-"_tb_id" "11"
+"_tb_id" "27"
 // brush 0
 {
 ( 56 1008 184 ) ( 56 976 184 ) ( 56 976 8 ) textures/texture-bricks-128x128 48 8 -0 1 1
@@ -680,7 +680,7 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "11"
+"_tb_layer" "27"
 }
 // entity 12
 {
@@ -691,7 +691,7 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "11"
+"_tb_layer" "27"
 }
 // entity 13
 {
@@ -702,14 +702,14 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "11"
+"_tb_layer" "27"
 }
 // entity 14
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Temple"
-"_tb_id" "12"
+"_tb_id" "28"
 // brush 0
 {
 ( 16 976 408 ) ( 16 944 408 ) ( 16 944 8 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
@@ -721,21 +721,21 @@
 }
 // brush 1
 {
-( 16 512 408 ) ( 16 480 408 ) ( 16 480 8 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
-( 752 480 408 ) ( 752 480 8 ) ( 16 480 8 ) textures/texture-bricks-128x128 -16 -8 180 1 -1
-( 16 480 8 ) ( 752 480 8 ) ( 752 512 8 ) textures/texture-bricks-128x128 -48 16 90 1 1
-( 752 512 408 ) ( 752 480 408 ) ( 16 480 408 ) textures/texture-bricks-128x128 -48 16 90 1 1
-( 752 512 8 ) ( 752 512 408 ) ( 16 512 408 ) textures/texture-bricks-128x128 -16 -8 180 1 -1
-( 752 512 8 ) ( 752 480 8 ) ( 752 480 408 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
+( 16 528 408 ) ( 16 496 408 ) ( 16 496 8 ) textures/texture-bricks-128x128 -64 -8 -0 1 1
+( 752 496 408 ) ( 752 496 8 ) ( 16 496 8 ) textures/texture-bricks-128x128 -16 -8 180 1 -1
+( 16 496 8 ) ( 752 496 8 ) ( 752 528 8 ) textures/texture-bricks-128x128 -64 16 90 1 1
+( 752 528 408 ) ( 752 496 408 ) ( 16 496 408 ) textures/texture-bricks-128x128 -64 16 90 1 1
+( 752 528 8 ) ( 752 528 408 ) ( 16 528 408 ) textures/texture-bricks-128x128 -16 -8 180 1 -1
+( 752 528 8 ) ( 752 496 8 ) ( 752 496 408 ) textures/texture-bricks-128x128 -64 -8 -0 1 1
 }
 // brush 2
 {
-( 16 976 424 ) ( 16 480 424 ) ( 16 480 408 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
-( 752 480 424 ) ( 752 480 408 ) ( 16 480 408 ) textures/texture-bricks-128x128 -16 -8 180 1 -1
-( 16 480 408 ) ( 752 480 408 ) ( 752 976 408 ) textures/texture-bricks-128x128 -48 16 90 1 1
-( 752 976 424 ) ( 752 480 424 ) ( 16 480 424 ) textures/texture-bricks-128x128 -48 16 90 1 1
+( 16 976 424 ) ( 16 496 424 ) ( 16 496 408 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
+( 752 496 424 ) ( 752 496 408 ) ( 16 496 408 ) textures/texture-bricks-128x128 -16 -8 180 1 -1
+( 16 496 408 ) ( 752 496 408 ) ( 752 976 408 ) textures/texture-bricks-128x128 -48 16 90 1 1
+( 752 976 424 ) ( 752 496 424 ) ( 16 496 424 ) textures/texture-bricks-128x128 -48 16 90 1 1
 ( 752 976 408 ) ( 752 976 424 ) ( 16 976 424 ) textures/texture-bricks-128x128 -16 -8 180 1 -1
-( 752 976 408 ) ( 752 480 408 ) ( 752 480 424 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
+( 752 976 408 ) ( 752 496 408 ) ( 752 496 424 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
 }
 // brush 3
 {
@@ -820,12 +820,12 @@
 }
 // brush 12
 {
-( 16 976 8 ) ( 16 480 8 ) ( 16 480 -0 ) textures/texture-concrete-128x128 -0 -16 -0 1 1
-( 752 480 8 ) ( 752 480 -0 ) ( 16 480 -0 ) textures/texture-concrete-128x128 -0 -16 -0 1 1
-( 16 480 -0 ) ( 752 480 -0 ) ( 752 976 -0 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
-( 752 976 8 ) ( 752 480 8 ) ( 16 480 8 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 16 976 8 ) ( 16 496 8 ) ( 16 496 -0 ) textures/texture-concrete-128x128 -0 -16 -0 1 1
+( 752 496 8 ) ( 752 496 -0 ) ( 16 496 -0 ) textures/texture-concrete-128x128 -0 -16 -0 1 1
+( 16 496 -0 ) ( 752 496 -0 ) ( 752 976 -0 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 752 976 8 ) ( 752 496 8 ) ( 16 496 8 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
 ( 752 976 -0 ) ( 752 976 8 ) ( 16 976 8 ) textures/texture-concrete-128x128 -0 -16 -0 1 1
-( 752 976 -0 ) ( 752 480 -0 ) ( 752 480 8 ) textures/texture-concrete-128x128 -0 -16 -0 1 1
+( 752 976 -0 ) ( 752 496 -0 ) ( 752 496 8 ) textures/texture-concrete-128x128 -0 -16 -0 1 1
 }
 // brush 13
 {
@@ -881,5 +881,5 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "12"
+"_tb_layer" "28"
 }

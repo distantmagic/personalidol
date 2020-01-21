@@ -7,5 +7,5 @@ test("parses a set of coordinates into THREE Vector", function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const parser = new QuakePointParser(loggerBreadcrumbs, "  16 -32       40   ");
 
-  expect(parser.parse().equals(new THREE.Vector3(16, -32, 40))).toBe(true);
+  expect(parser.parse().equals(new THREE.Vector3(-32, 40, 16))).toBe(true);
 });

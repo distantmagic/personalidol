@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import isEmpty from "lodash/isEmpty";
 
-import quake2three from "src/framework/helpers/quake2three";
-
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";
 import QuakeMapParser from "src/framework/classes/QuakeMapParser";
@@ -61,9 +59,9 @@ async function createGeometryBuffers(cancelToken: CancelToken, className: QuakeB
 }
 
 function getEntityOrigin(entity: QuakeEntity): [number, number, number] {
-  const converted = quake2three(entity.getOrigin());
+  const origin = entity.getOrigin();
 
-  return [converted.x, converted.y, converted.z];
+  return [origin.x, origin.y, origin.z];
 }
 
 export default async function* map(

@@ -1,9 +1,6 @@
 import * as THREE from "three";
 import { ConvexHull, Face } from "three/examples/jsm/math/ConvexHull";
 
-import quake2three from "src/framework/helpers/quake2three";
-import three2quake from "src/framework/helpers/three2quake";
-
 import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import { default as IQuakeBrushGeometryBuilder } from "src/framework/interfaces/QuakeBrushGeometryBuilder";
 
@@ -52,7 +49,7 @@ export default class QuakeBrushGeometryBuilder implements IQuakeBrushGeometryBui
   }
 
   addBrush(quakeBrush: QuakeBrush): void {
-    const convexHull = this.getConvexHull(quakeBrush);
+    const convexHull = quakeBrush.getConvexHull();
 
     for (let face of convexHull.faces) {
       this.addConvexHullFace(quakeBrush, face);
@@ -61,7 +58,7 @@ export default class QuakeBrushGeometryBuilder implements IQuakeBrushGeometryBui
 
   addConvexHullFace(quakeBrush: QuakeBrush, face: Face): void {
     const [v1, v2, v3] = getConvexHullFacePoints(face);
-    const halfSpace = quakeBrush.getHalfSpaceByCoplanarPoints(three2quake(v1), three2quake(v2), three2quake(v3));
+    const halfSpace = quakeBrush.getHalfSpaceByCoplanarPoints(v1, v2, v3);
     const textureName = halfSpace.getTexture();
 
     this.addVertex(v1, face.normal);
@@ -146,15 +143,6 @@ export default class QuakeBrushGeometryBuilder implements IQuakeBrushGeometryBui
     }
 
     this.uvs.push(x, y);
-  }
-
-  getConvexHull(quakeBrush: QuakeBrush): ConvexHull {
-    const convexHull = new ConvexHull();
-    const vertices = quakeBrush.getVertices().map(quake2three);
-
-    convexHull.setFromPoints(vertices);
-
-    return convexHull;
   }
 
   getGeometry(): THREE.BufferGeometry {

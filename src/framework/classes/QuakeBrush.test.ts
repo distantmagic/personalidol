@@ -17,14 +17,14 @@ test("generates vertices from parsed halfspaces", function() {
   const vertices = quakeBrush.getVertices();
 
   expect(vertices).toHaveLength(8);
-  expect(vertices[0].equals(new THREE.Vector3(-64, -64, -16))).toBe(true);
-  expect(vertices[1].equals(new THREE.Vector3(-64, -64, 16))).toBe(true);
-  expect(vertices[2].equals(new THREE.Vector3(-64, 64, -16))).toBe(true);
-  expect(vertices[3].equals(new THREE.Vector3(-64, 64, 16))).toBe(true);
-  expect(vertices[4].equals(new THREE.Vector3(64, -64, -16))).toBe(true);
-  expect(vertices[5].equals(new THREE.Vector3(64, -64, 16))).toBe(true);
-  expect(vertices[6].equals(new THREE.Vector3(64, 64, -16))).toBe(true);
-  expect(vertices[7].equals(new THREE.Vector3(64, 64, 16))).toBe(true);
+  expect(vertices[0].equals(new THREE.Vector3(-64, -16, -64))).toBe(true);
+  expect(vertices[1].equals(new THREE.Vector3(-64, 16, -64))).toBe(true);
+  expect(vertices[2].equals(new THREE.Vector3(64, -16, -64))).toBe(true);
+  expect(vertices[3].equals(new THREE.Vector3(64, 16, -64))).toBe(true);
+  expect(vertices[4].equals(new THREE.Vector3(-64, -16, 64))).toBe(true);
+  expect(vertices[5].equals(new THREE.Vector3(-64, 16, 64))).toBe(true);
+  expect(vertices[6].equals(new THREE.Vector3(64, -16, 64))).toBe(true);
+  expect(vertices[7].equals(new THREE.Vector3(64, 16, 64))).toBe(true);
 });
 
 test("finds halfspace by coplanar points", function() {
@@ -38,9 +38,9 @@ test("finds halfspace by coplanar points", function() {
     new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( 64 64 16 ) ( 64 64 17 ) ( 64 65 16 ) __TB_empty 0 0 0 1 1").parse(),
   ]);
 
-  const v1 = new THREE.Vector3(64, 64, 16);
-  const v2 = new THREE.Vector3(32, 64, 16);
-  const v3 = new THREE.Vector3(32, 32, 16);
+  const v1 = new THREE.Vector3(64, 16, 64);
+  const v2 = new THREE.Vector3(64, 16, 32);
+  const v3 = new THREE.Vector3(32, 16, 32);
 
   quakeBrush.getHalfSpaceByCoplanarPoints(v1, v2, v3);
 });

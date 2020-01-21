@@ -10,9 +10,9 @@ test("converts quake map format to something processable by controllers", functi
   const halfSpace = parser.parse();
   // prettier-ignore
   const correct = new QuakeBrushHalfSpace(
-    new THREE.Vector3(8, -216, 16),
-    new THREE.Vector3(-120, -216, 128),
-    new THREE.Vector3(8, -88, 128),
+    new THREE.Vector3(-216, 16, 8),
+    new THREE.Vector3(-216, 128, -120),
+    new THREE.Vector3(-88, 128, 8),
     "__TB_empty", -0, -0.522125, -0, 1, 1
   );
 

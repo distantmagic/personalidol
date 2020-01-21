@@ -14,8 +14,6 @@ export default interface QuakeBrushGeometryBuilder {
 
   addVertexUVs(vertex: THREE.Vector3, normal: THREE.Vector3, x: number, y: number): void;
 
-  getConvexHull(brush: QuakeBrush): ConvexHull;
-
   getGeometry(): THREE.BufferGeometry;
 
   getIndices(): ReadonlyArray<number>;
