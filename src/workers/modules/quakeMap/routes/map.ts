@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import isEmpty from "lodash/isEmpty";
 
 import quake2three from "src/framework/helpers/quake2three";
 
@@ -12,6 +13,7 @@ import { default as QuakeMapException } from "src/framework/classes/Exception/Qu
 import CancelToken from "src/framework/interfaces/CancelToken";
 import JSONRPCRequest from "src/framework/interfaces/JSONRPCRequest";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import QuakeEntity from "src/framework/interfaces/QuakeEntity";
 import QueryBus from "src/framework/interfaces/QueryBus";
 import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
@@ -24,10 +26,10 @@ type QuakeBrushClassNames = "func_group" | "worldspawn";
 const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
 
-async function createGeometryBuffers(cancelToken: CancelToken, className: QuakeBrushClassNames, entity: QuakeEntity) {
+async function createGeometryBuffers(cancelToken: CancelToken, className: QuakeBrushClassNames, brushes: ReadonlyArray<QuakeBrush>) {
   const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
-  for (let brush of entity.getBrushes()) {
+  for (let brush of brushes) {
     quakeBrushGeometryBuilder.addBrush(brush);
   }
 
@@ -76,7 +78,12 @@ export default async function* map(
   const quakeMapQuery = new PlainTextQuery(source);
   const quakeMapContent = await queryBus.enqueue(cancelToken, quakeMapQuery).whenExecuted();
   const quakeMapParser = new QuakeMapParser(breadcrumbs, quakeMapContent);
+
+  // standalone entities
   const entitiesWithBrushes: Array<[QuakeBrushClassNames, QuakeEntity]> = [];
+
+  // brushes to be merged in one bigger static geometry
+  const worldBrushes: Array<QuakeEntity> = [];
 
   for (let entity of quakeMapParser.parse()) {
     const entityClassName = entity.getClassName();
@@ -87,7 +94,19 @@ export default async function* map(
       case "func_group":
         // this func is primarily for a game logic, but it can also group
         // geometries
-        entitiesWithBrushes.push(["func_group", entity]);
+        switch (entity.getType()) {
+          // "_tb_layer" is the Trenchbroom editor utility to help mapmaker to
+          // group map objects, those can be merged with worldspawn geometry
+          case "_tb_layer":
+            worldBrushes.push(entity);
+            break;
+          // Grouped objects should be processed as standalone entities,
+          // because they can have their own controllers and be handled via
+          // triggers. Those can be doors or other animated objects.
+          default:
+            entitiesWithBrushes.push(["func_group", entity]);
+            break;
+        }
         break;
       case "light_point":
       case "light_spotlight":
@@ -135,7 +154,7 @@ export default async function* map(
         // leave worldspawn at the end for better performance
         // it takes a long time to parse a map file, in the meantime the main
         // thread can load models, etc
-        entitiesWithBrushes.push(["worldspawn", entity]);
+        worldBrushes.push(entity);
 
         if (entityProperties.hasPropertyKey("light")) {
           const sceneryType = entityProperties.getPropertyByKey("scenery").asNumber();
@@ -170,6 +189,17 @@ export default async function* map(
   }
 
   for (let [entityClassName, entity] of entitiesWithBrushes) {
-    yield await createGeometryBuffers(cancelToken, entityClassName, entity);
+    yield await createGeometryBuffers(cancelToken, entityClassName, entity.getBrushes());
+  }
+
+  // this is the static world geometry
+  const mergedBrushes: Array<QuakeBrush> = [];
+
+  for (let entity of worldBrushes) {
+    mergedBrushes.push(...entity.getBrushes());
+  }
+
+  if (!isEmpty(mergedBrushes)) {
+    yield await createGeometryBuffers(cancelToken, "worldspawn", mergedBrushes);
   }
 }

@@ -1,3 +1,10 @@
-type KeyboardButtonNames = "ArrowDown" | "ArrowLeft" | "ArrowRight" | "ArrowUp" | "Shift";
+// prettier-ignore
+type KeyboardButtonNames =
+  | "ArrowDown"
+  | "ArrowLeft"
+  | "ArrowRight"
+  | "ArrowUp"
+  | "Shift"
+;
 
 export default KeyboardButtonNames;

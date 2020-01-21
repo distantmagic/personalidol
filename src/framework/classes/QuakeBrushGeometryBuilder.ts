@@ -7,7 +7,7 @@ import three2quake from "src/framework/helpers/three2quake";
 import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import { default as IQuakeBrushGeometryBuilder } from "src/framework/interfaces/QuakeBrushGeometryBuilder";
 
-const TEXTURE_SIZE = 128;
+import config from "src/framework/config";
 
 function getConvexHullFacePoints(face: Face): [THREE.Vector3, THREE.Vector3, THREE.Vector3] {
   let edge = face.edge;
@@ -79,41 +79,42 @@ export default class QuakeBrushGeometryBuilder implements IQuakeBrushGeometryBui
     this.addTextureIndex(v2, face.normal, textureIndex);
     this.addTextureIndex(v3, face.normal, textureIndex);
 
+    // use world coordinates, UVs will wrap to 0-1 in the shader
     switch (true) {
       case face.normal.x > face.normal.y && face.normal.x > face.normal.z:
-        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIZE, v1.y / TEXTURE_SIZE);
-        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIZE, v2.y / TEXTURE_SIZE);
-        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIZE, v3.y / TEXTURE_SIZE);
+        this.addVertexUVs(v1, face.normal, v1.z / config.TEXTURE_SIZE, v1.y / config.TEXTURE_SIZE);
+        this.addVertexUVs(v2, face.normal, v2.z / config.TEXTURE_SIZE, v2.y / config.TEXTURE_SIZE);
+        this.addVertexUVs(v3, face.normal, v3.z / config.TEXTURE_SIZE, v3.y / config.TEXTURE_SIZE);
         break;
       case face.normal.y > face.normal.x && face.normal.y > face.normal.z:
-        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIZE, v1.x / TEXTURE_SIZE);
-        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIZE, v2.x / TEXTURE_SIZE);
-        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIZE, v3.x / TEXTURE_SIZE);
+        this.addVertexUVs(v1, face.normal, v1.z / config.TEXTURE_SIZE, v1.x / config.TEXTURE_SIZE);
+        this.addVertexUVs(v2, face.normal, v2.z / config.TEXTURE_SIZE, v2.x / config.TEXTURE_SIZE);
+        this.addVertexUVs(v3, face.normal, v3.z / config.TEXTURE_SIZE, v3.x / config.TEXTURE_SIZE);
         break;
       case face.normal.z > face.normal.x && face.normal.z > face.normal.y:
-        this.addVertexUVs(v1, face.normal, v1.x / TEXTURE_SIZE, v1.y / TEXTURE_SIZE);
-        this.addVertexUVs(v2, face.normal, v2.x / TEXTURE_SIZE, v2.y / TEXTURE_SIZE);
-        this.addVertexUVs(v3, face.normal, v3.x / TEXTURE_SIZE, v3.y / TEXTURE_SIZE);
+        this.addVertexUVs(v1, face.normal, v1.x / config.TEXTURE_SIZE, v1.y / config.TEXTURE_SIZE);
+        this.addVertexUVs(v2, face.normal, v2.x / config.TEXTURE_SIZE, v2.y / config.TEXTURE_SIZE);
+        this.addVertexUVs(v3, face.normal, v3.x / config.TEXTURE_SIZE, v3.y / config.TEXTURE_SIZE);
         break;
       case face.normal.x < face.normal.y && face.normal.x < face.normal.z:
-        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIZE, v1.y / TEXTURE_SIZE);
-        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIZE, v2.y / TEXTURE_SIZE);
-        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIZE, v3.y / TEXTURE_SIZE);
+        this.addVertexUVs(v1, face.normal, v1.z / config.TEXTURE_SIZE, v1.y / config.TEXTURE_SIZE);
+        this.addVertexUVs(v2, face.normal, v2.z / config.TEXTURE_SIZE, v2.y / config.TEXTURE_SIZE);
+        this.addVertexUVs(v3, face.normal, v3.z / config.TEXTURE_SIZE, v3.y / config.TEXTURE_SIZE);
         break;
       case face.normal.y < face.normal.x && face.normal.y < face.normal.z:
-        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIZE, v1.x / TEXTURE_SIZE);
-        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIZE, v2.x / TEXTURE_SIZE);
-        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIZE, v3.x / TEXTURE_SIZE);
+        this.addVertexUVs(v1, face.normal, v1.z / config.TEXTURE_SIZE, v1.x / config.TEXTURE_SIZE);
+        this.addVertexUVs(v2, face.normal, v2.z / config.TEXTURE_SIZE, v2.x / config.TEXTURE_SIZE);
+        this.addVertexUVs(v3, face.normal, v3.z / config.TEXTURE_SIZE, v3.x / config.TEXTURE_SIZE);
         break;
       case face.normal.z < face.normal.x && face.normal.z < face.normal.y:
-        this.addVertexUVs(v1, face.normal, v1.x / TEXTURE_SIZE, v1.y / TEXTURE_SIZE);
-        this.addVertexUVs(v2, face.normal, v2.x / TEXTURE_SIZE, v2.y / TEXTURE_SIZE);
-        this.addVertexUVs(v3, face.normal, v3.x / TEXTURE_SIZE, v3.y / TEXTURE_SIZE);
+        this.addVertexUVs(v1, face.normal, v1.x / config.TEXTURE_SIZE, v1.y / config.TEXTURE_SIZE);
+        this.addVertexUVs(v2, face.normal, v2.x / config.TEXTURE_SIZE, v2.y / config.TEXTURE_SIZE);
+        this.addVertexUVs(v3, face.normal, v3.x / config.TEXTURE_SIZE, v3.y / config.TEXTURE_SIZE);
         break;
       default:
-        this.addVertexUVs(v1, face.normal, v1.z / TEXTURE_SIZE, v1.x / TEXTURE_SIZE);
-        this.addVertexUVs(v2, face.normal, v2.z / TEXTURE_SIZE, v2.x / TEXTURE_SIZE);
-        this.addVertexUVs(v3, face.normal, v3.z / TEXTURE_SIZE, v3.x / TEXTURE_SIZE);
+        this.addVertexUVs(v1, face.normal, v1.z / config.TEXTURE_SIZE, v1.x / config.TEXTURE_SIZE);
+        this.addVertexUVs(v2, face.normal, v2.z / config.TEXTURE_SIZE, v2.x / config.TEXTURE_SIZE);
+        this.addVertexUVs(v3, face.normal, v3.z / config.TEXTURE_SIZE, v3.x / config.TEXTURE_SIZE);
         break;
     }
 

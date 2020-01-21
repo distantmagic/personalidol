@@ -10,6 +10,7 @@ import QuakeWorkerSounds from "src/framework/types/QuakeWorkerSounds";
 import QuakeWorkerSparkParticles from "src/framework/types/QuakeWorkerSparkParticles";
 import QuakeWorkerWorldspawn from "src/framework/types/QuakeWorkerWorldspawn";
 
+// prettier-ignore
 type QuakeWorkerAny =
   | QuakeWorkerFuncGroup
   | QuakeWorkerGLTFModel
@@ -21,6 +22,7 @@ type QuakeWorkerAny =
   | QuakeWorkerPlayer
   | QuakeWorkerSounds
   | QuakeWorkerSparkParticles
-  | QuakeWorkerWorldspawn;
+  | QuakeWorkerWorldspawn
+;
 
 export default QuakeWorkerAny;

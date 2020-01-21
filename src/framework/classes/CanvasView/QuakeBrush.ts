@@ -12,7 +12,7 @@ import { default as IQuakeMapTextureLoader } from "src/framework/interfaces/Quak
 
 import QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
 
-const TEXTURE_SIZE = 128;
+import config from "src/framework/config";
 
 const fragmentShader = `
   // THREE Uniforms
@@ -44,7 +44,7 @@ const fragmentShader = `
     // replace 'map_fragment' with multi-texture sampling
     float textureWidth = 1.0 / u_texture_count;
     vec2 atlas_uv = vec2(
-      mod( vUv.x, 0.1 ),
+      mod( vUv.x, textureWidth ),
       mod( vUv.y, textureWidth ) + v_textureIndex * textureWidth
     );
 
@@ -87,8 +87,8 @@ const vertexShader = `
     v_textureIndex = texture_index;
 
     vUv = vec2(
-      uv.x / 8.0,
-      uv.y / 8.0
+      uv.x / u_texture_count,
+      uv.y / u_texture_count
     );
 
     ${THREE.ShaderChunk.beginnormal_vertex}
@@ -181,8 +181,10 @@ export default class QuakeBrush extends CanvasView {
     }
 
     const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
-    const textureAtlasHeight = THREE.Math.ceilPowerOfTwo(loadedTextures.length * TEXTURE_SIZE);
+    const textureAtlasHeight = THREE.Math.ceilPowerOfTwo(loadedTextures.length * config.TEXTURE_SIZE);
     const atlasCanvas: HTMLCanvasElement = document.createElement("canvas");
+
+    document.body.appendChild(atlasCanvas);
 
     atlasCanvas.height = textureAtlasHeight;
     atlasCanvas.width = textureAtlasHeight;
@@ -194,7 +196,7 @@ export default class QuakeBrush extends CanvasView {
     }
 
     for (let i = 0; i < loadedTextures.length; i += 1) {
-      atlasCanvasContext.drawImage(loadedTextures[i].image, 0, i * TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_SIZE);
+      atlasCanvasContext.drawImage(loadedTextures[i].image, 0, i * config.TEXTURE_SIZE, config.TEXTURE_SIZE, config.TEXTURE_SIZE);
       loadedTextures[i].dispose();
     }
 
@@ -210,7 +212,7 @@ export default class QuakeBrush extends CanvasView {
 
     textureAtlas.wrapS = textureAtlas.wrapT = THREE.RepeatWrapping;
 
-    const material = getMaterial(textureAtlas, textureAtlasHeight / TEXTURE_SIZE);
+    const material = getMaterial(textureAtlas, textureAtlasHeight / config.TEXTURE_SIZE);
     const mesh = new THREE.Mesh(geometry, material);
 
     this.mesh = mesh;

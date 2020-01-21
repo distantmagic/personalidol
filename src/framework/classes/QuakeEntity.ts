@@ -8,6 +8,9 @@ import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import QuakeEntityProperties from "src/framework/interfaces/QuakeEntityProperties";
 import { default as IQuakeEntity } from "src/framework/interfaces/QuakeEntity";
 
+import QuakeEntityClassName from "src/framework/types/QuakeEntityClassName";
+import QuakeEntityType from "src/framework/types/QuakeEntityType";
+
 export default class QuakeEntity implements IQuakeEntity {
   readonly brushes: ReadonlyArray<QuakeBrush>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -23,8 +26,22 @@ export default class QuakeEntity implements IQuakeEntity {
     return this.brushes;
   }
 
-  getClassName(): string {
-    return this.props.getPropertyByKey("classname").getValue();
+  getClassName(): QuakeEntityClassName {
+    const className = this.props.getPropertyByKey("classname").getValue();
+
+    switch (className) {
+      case "func_group":
+      case "light_point":
+      case "light_spotlight":
+      case "model_gltf":
+      case "model_md2":
+      case "player":
+      case "spark_particles":
+      case "worldspawn":
+        return className;
+      default:
+        throw new Exception(this.loggerBreadcrumbs.add("getClassName"), `Unexpected entity class name: "${className}"`);
+    }
   }
 
   getOrigin(): THREE.Vector3 {
@@ -42,6 +59,22 @@ export default class QuakeEntity implements IQuakeEntity {
 
   getProperties(): QuakeEntityProperties {
     return this.props;
+  }
+
+  getType(): QuakeEntityType {
+    if (!this.props.hasPropertyKey("_tb_type")) {
+      return null;
+    }
+
+    const type = this.props.getPropertyByKey("_tb_type").getValue();
+
+    switch (type) {
+      case "_tb_group":
+      case "_tb_layer":
+        return type;
+      default:
+        throw new Exception(this.loggerBreadcrumbs.add("getType"), `Unexpected entity type: "${type}"`);
+    }
   }
 
   hasOrigin(): boolean {

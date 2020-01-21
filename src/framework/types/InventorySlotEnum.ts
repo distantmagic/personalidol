@@ -1,3 +1,4 @@
+// prettier-ignore
 type InventorySlotEnum =
   | "back"
   | "belt"
@@ -18,6 +19,7 @@ type InventorySlotEnum =
   | "utility3"
   | "utility4"
   | "utility5"
-  | "weapon";
+  | "weapon"
+;
 
 export default InventorySlotEnum;
