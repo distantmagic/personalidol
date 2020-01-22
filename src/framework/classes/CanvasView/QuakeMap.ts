@@ -16,6 +16,8 @@ import { default as QuakeBrushView } from "src/framework/classes/CanvasView/Quak
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 import { default as SpotLightView } from "src/framework/classes/CanvasView/SpotLight";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoadingManager from "src/framework/interfaces/LoadingManager";
@@ -68,6 +70,7 @@ export default class QuakeMap extends CanvasView {
     this.threeLoadingManager = threeLoadingManager;
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
@@ -231,6 +234,7 @@ export default class QuakeMap extends CanvasView {
     ]);
   }
 
+  @cancelable()
   async attachGLTFEntities(cancelToken: CancelToken, gltfModels: Array<QuakeWorkerGLTFModel>): Promise<void> {
     const gltfByModel = groupBy(gltfModels, "model_name");
     const gltfModelsViews = [];
@@ -265,6 +269,7 @@ export default class QuakeMap extends CanvasView {
     await Promise.all(gltfModelsViews);
   }
 
+  @cancelable()
   async attachMD2Entities(cancelToken: CancelToken, md2Models: Array<QuakeWorkerMD2Model>): Promise<void> {
     const md2ModelsViews = [];
 
@@ -293,6 +298,7 @@ export default class QuakeMap extends CanvasView {
     await Promise.all(md2ModelsViews);
   }
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 

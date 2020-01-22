@@ -3,12 +3,15 @@ import isEmpty from "lodash/isEmpty";
 
 import dispose from "src/framework/helpers/dispose";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as ICanvasView } from "src/framework/interfaces/CanvasView";
 
-export default abstract class CanvasView implements ICanvasView {
+export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanvasView {
   private _isAttached: boolean;
   private _isDisposed: boolean;
   readonly canvasViewBag: CanvasViewBag;
@@ -31,6 +34,7 @@ export default abstract class CanvasView implements ICanvasView {
     this._isDisposed = false;
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     this._isAttached = true;
     this._isDisposed = false;
@@ -40,6 +44,7 @@ export default abstract class CanvasView implements ICanvasView {
 
   begin(): void {}
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     this._isAttached = false;
     this._isDisposed = true;

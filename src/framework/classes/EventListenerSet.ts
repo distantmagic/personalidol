@@ -1,11 +1,12 @@
 import Exception from "src/framework/classes/Exception";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
 import EventListenerSetCallback from "src/framework/types/EventListenerSetCallback";
 
-export default class EventListenerSet<Arguments extends readonly any[]> implements IEventListenerSet<Arguments> {
+export default class EventListenerSet<Arguments extends readonly any[]> implements HasLoggerBreadcrumbs, IEventListenerSet<Arguments> {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   private callbacks: EventListenerSetCallback<Arguments>[];
 
@@ -38,6 +39,10 @@ export default class EventListenerSet<Arguments extends readonly any[]> implemen
 
   getCallbacks(): ReadonlyArray<EventListenerSetCallback<Arguments>> {
     return this.callbacks;
+  }
+
+  has(callback: EventListenerSetCallback<Arguments>): boolean {
+    return this.getCallbacks().includes(callback);
   }
 
   notify(args: Arguments): void {

@@ -14,7 +14,7 @@ test("is cleanly attached and disposed", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
-  const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
+  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
   const entity: QuakeWorkerLightPoint = {
     classname: "light_point",

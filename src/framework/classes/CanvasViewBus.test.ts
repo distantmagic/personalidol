@@ -62,7 +62,7 @@ test("cannot attach the same view more than once", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
-  const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
+  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
   const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, true);
@@ -77,7 +77,7 @@ test("cannot detach the same view more than once", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
-  const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
+  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
   const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, true);
@@ -93,7 +93,7 @@ test("fails when view attach is improperly implemented", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
-  const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
+  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
   const canvasView = new ImproperAttachFooCanvasView(loggerBreadcrumbs, canvasViewBag, group);
@@ -106,7 +106,7 @@ test("fails when view dispose is improperly implemented", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
-  const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
+  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
   const canvasView = new ImproperDisposeFooCanvasView(loggerBreadcrumbs, canvasViewBag, group);
@@ -121,7 +121,7 @@ test("properly attaches and detaches canvas views", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
-  const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
+  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
   // use callbacks
@@ -146,7 +146,7 @@ test("properly attaches and detaches canvas views without callbacks", async func
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
-  const canvasViewBag = new CanvasViewBag(canvasViewBus, loggerBreadcrumbs);
+  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
   // do not use callbacks

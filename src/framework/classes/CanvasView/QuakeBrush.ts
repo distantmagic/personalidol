@@ -4,6 +4,8 @@ import CanvasView from "src/framework/classes/CanvasView";
 import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -156,6 +158,7 @@ export default class QuakeBrush extends CanvasView {
     this.textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs.add("QuakeMapTextureLoader"), threeLoadingManager, queryBus);
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
@@ -195,7 +198,7 @@ export default class QuakeBrush extends CanvasView {
       throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), "Unable to create canvas 2D context.");
     }
 
-    for (let i = 0; i < loadedTextures.length; i += 1) {
+    for (let i = loadedTextures.length - 1; i >= 0; i -= 1) {
       atlasCanvasContext.drawImage(loadedTextures[i].image, 0, i * config.TEXTURE_SIZE, config.TEXTURE_SIZE, config.TEXTURE_SIZE);
       loadedTextures[i].dispose();
     }
@@ -224,6 +227,7 @@ export default class QuakeBrush extends CanvasView {
     this.children.add(mesh);
   }
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 

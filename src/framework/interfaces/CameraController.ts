@@ -1,9 +1,15 @@
 import * as THREE from "three";
 
 import CanvasController from "src/framework/interfaces/CanvasController";
+import ControllableDelegate from "src/framework/interfaces/ControllableDelegate";
+import ControlToken from "src/framework/interfaces/ControlToken";
 
-export default interface CameraController extends CanvasController {
+export default interface CameraController extends CanvasController, ControllableDelegate {
   getCameraFrustum(): THREE.Frustum;
 
-  setZoom(zoom: number): void;
+  decreaseZoom(controlToken: ControlToken): void;
+
+  increaseZoom(controlToken: ControlToken): void;
+
+  setZoom(controlToken: ControlToken, zoom: number): void;
 }

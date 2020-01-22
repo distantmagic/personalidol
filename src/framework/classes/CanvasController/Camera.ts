@@ -1,50 +1,44 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
 import clamp from "lodash/clamp";
-import yn from "yn";
-
-import env from "src/framework/helpers/env";
 
 import CanvasController from "src/framework/classes/CanvasController";
+import Controllable from "src/framework/classes/Controllable";
+import ControlToken from "src/framework/classes/ControlToken";
+
+import cancelable from "src/framework/decorators/cancelable";
+import controlled from "src/framework/decorators/controlled";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import Debugger from "src/framework/interfaces/Debugger";
 import ElementSize from "src/framework/interfaces/ElementSize";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as ICameraController } from "src/framework/interfaces/CameraController";
+import { default as IControllable } from "src/framework/interfaces/Controllable";
+import { default as IControlToken } from "src/framework/interfaces/ControlToken";
 
-export default class CameraController extends CanvasController implements ICameraController {
-  readonly camera: THREE.OrthographicCamera;
-  readonly debug: Debugger;
-  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly renderer: THREE.WebGLRenderer;
-  readonly scene: THREE.Scene;
+export default class CameraController extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
   private height: number;
+  private readonly controllable: IControllable;
   private width: number;
   private zoomTarget: number;
+  readonly camera: THREE.OrthographicCamera;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
-  constructor(
-    canvasViewBag: CanvasViewBag,
-    camera: THREE.OrthographicCamera,
-    debug: Debugger,
-    loggerBreadcrumbs: LoggerBreadcrumbs,
-    renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene
-  ) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, camera: THREE.OrthographicCamera) {
     super(canvasViewBag);
     autoBind(this);
 
     this.camera = camera;
-    this.debug = debug;
+    this.controllable = new Controllable(loggerBreadcrumbs.add("Controllable"));
     this.height = 0;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.renderer = renderer;
-    this.scene = scene;
     this.width = 0;
-    this.zoomTarget = 2.5;
+    this.zoomTarget = 2;
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
@@ -53,21 +47,17 @@ export default class CameraController extends CanvasController implements ICamer
     // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
     // this.lookAt(new THREE.Vector3(0, 0, 0));
     this.lookAt(new THREE.Vector3(256, 0, 256 * 2));
-
-    this.renderer.domElement.addEventListener("wheel", this.onWheel);
   }
 
+  cedeControlToken(controlToken: IControlToken): void {}
+
+  decreaseZoom(controlToken: IControlToken): void {
+    this.setZoom(controlToken, this.zoomTarget - 1);
+  }
+
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     super.dispose(cancelToken);
-
-    this.renderer.domElement.removeEventListener("wheel", this.onWheel);
-    this.debug.deleteState(this.loggerBreadcrumbs.add("position"));
-  }
-
-  end(fps: number, isPanicked: boolean): void {
-    super.end(fps, isPanicked);
-
-    this.debug.updateState(this.loggerBreadcrumbs.add("position"), this.camera.position);
   }
 
   getCameraFrustum(): THREE.Frustum {
@@ -76,6 +66,22 @@ export default class CameraController extends CanvasController implements ICamer
     frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
 
     return frustum;
+  }
+
+  getControllable(): IControllable {
+    return this.controllable;
+  }
+
+  increaseZoom(controlToken: IControlToken): void {
+    this.setZoom(controlToken, this.zoomTarget + 1);
+  }
+
+  isControlled(): boolean {
+    return false;
+  }
+
+  isControlledBy(controlToken: IControlToken): boolean {
+    return false;
   }
 
   lookAt(position: THREE.Vector3): void {
@@ -92,13 +98,8 @@ export default class CameraController extends CanvasController implements ICamer
     this.updateProjectionMatrix();
   }
 
-  onWheel(evt: WheelEvent): void {
-    evt.preventDefault();
-
-    const delta: number = evt.deltaY > 0 ? 1 : -1;
-    const adjustedZoom = this.zoomTarget - delta;
-
-    this.setZoom(adjustedZoom);
+  obtainControlToken(): IControlToken {
+    return new ControlToken();
   }
 
   resize(viewportSize: ElementSize<"px">): void {
@@ -117,8 +118,9 @@ export default class CameraController extends CanvasController implements ICamer
     this.updateProjectionMatrix();
   }
 
-  setZoom(zoom: number): void {
-    const clampedZoom = clamp(zoom, 1, 5.5);
+  @controlled(true)
+  setZoom(controlToken: IControlToken, zoom: number): void {
+    const clampedZoom = clamp(zoom, 1, 6);
 
     if (this.zoomTarget === clampedZoom) {
       return;
@@ -134,11 +136,5 @@ export default class CameraController extends CanvasController implements ICamer
     this.camera.top = this.height / this.zoomTarget;
     this.camera.bottom = -1 * (this.height / this.zoomTarget);
     this.camera.updateProjectionMatrix();
-  }
-
-  useEnd(): boolean {
-    return yn(env(this.loggerBreadcrumbs.add("useEnd"), "REACT_APP_FEATURE_DEBUGGER", ""), {
-      default: false,
-    });
   }
 }

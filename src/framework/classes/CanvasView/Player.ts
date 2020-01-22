@@ -2,6 +2,8 @@
 
 import CanvasView from "src/framework/classes/CanvasView";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -13,12 +15,14 @@ export default class Player extends CanvasView {
     super(loggerBreadcrumbs, canvasViewBag, group);
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
     console.log("ATTACH PLAYER");
   }
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
   }

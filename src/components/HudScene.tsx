@@ -37,23 +37,6 @@ export default React.memo<Props>(function HudScene(props: Props) {
   const [sceneCanvas, setSceneCanvas] = React.useState<null | SceneCanvas>(null);
   const isSceneCanvasDefined = useHTMLCustomElement("x-dm-scene-canvas", SceneCanvas);
 
-  React.useEffect(
-    function() {
-      if (!sceneCanvas) {
-        return;
-      }
-
-      function onContextMenu(evt: MouseEvent) {
-        evt.preventDefault();
-
-        return false;
-      }
-
-      sceneCanvas.addEventListener("contextmenu", onContextMenu);
-    },
-    [sceneCanvas]
-  );
-
   useSceneCanvas(props.debug, props.exceptionHandler, props.loadingManager, props.logger, props.loggerBreadcrumbs, props.queryBus, sceneCanvas);
 
   return (

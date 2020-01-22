@@ -4,6 +4,7 @@ import EventListenerSet from "src/framework/classes/EventListenerSet";
 import LoadingManagerState from "src/framework/classes/LoadingManagerState";
 
 import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 import { default as ILoadingManager } from "src/framework/interfaces/LoadingManager";
@@ -11,7 +12,7 @@ import { default as ILoadingManagerState } from "src/framework/interfaces/Loadin
 
 import LoadingManagerStateChangeCallback from "src/framework/types/LoadingManagerStateChangeCallback";
 
-export default class LoadingManager implements ILoadingManager {
+export default class LoadingManager implements HasLoggerBreadcrumbs, ILoadingManager {
   readonly backgroundItems: Map<Promise<any>, string>;
   readonly blockingItems: Map<Promise<any>, string>;
   readonly callbacks: IEventListenerSet<[ILoadingManagerState]>;

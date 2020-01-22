@@ -9,14 +9,16 @@ import serializeVector3 from "src/framework/helpers/serializeVector3";
 import QuakeBrushHalfSpaceTrio from "src/framework/classes/QuakeBrushHalfSpaceTrio";
 import { default as QuakeBrushException } from "src/framework/classes/Exception/QuakeBrush";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
 import { default as IQuakeBrush } from "src/framework/interfaces/QuakeBrush";
 import { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
-export default class QuakeBrush implements IQuakeBrush {
+export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   readonly halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly verticesCache: WeakMap<THREE.Vector3, QuakeBrushHalfSpace>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>) {
     if (halfSpaces.length < 4) {
@@ -25,6 +27,7 @@ export default class QuakeBrush implements IQuakeBrush {
 
     this.halfSpaces = Object.freeze(halfSpaces);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.verticesCache = new WeakMap();
   }
 
   containsPoint(point: THREE.Vector3): boolean {

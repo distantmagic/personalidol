@@ -17,9 +17,12 @@ import Scheduler from "src/framework/classes/Scheduler";
 import { default as RootCanvasController } from "src/framework/classes/CanvasController/Root";
 import { default as SceneCanvasException } from "src/framework/classes/Exception/SceneCanvas";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import Debugger from "src/framework/interfaces/Debugger";
 import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoadingManager from "src/framework/interfaces/LoadingManager";
 import Logger from "src/framework/interfaces/Logger";
 import QueryBus from "src/framework/interfaces/QueryBus";
@@ -32,7 +35,7 @@ import { default as IScheduler } from "src/framework/interfaces/Scheduler";
 
 const ATTR_DOCUMENT_HIDDEN = "documenthidden";
 
-export default class SceneCanvas extends HTMLElement {
+export default class SceneCanvas extends HTMLElement implements HasLoggerBreadcrumbs {
   readonly canvasControllerBus: ICanvasControllerBus;
   readonly canvasElement: HTMLCanvasElement;
   readonly canvasWrapperElement: HTMLElement;
@@ -147,6 +150,7 @@ export default class SceneCanvas extends HTMLElement {
     }
   }
 
+  @cancelable()
   async attachRenderer(
     cancelToken: CancelToken,
     debug: Debugger,
@@ -175,17 +179,17 @@ export default class SceneCanvas extends HTMLElement {
 
     renderer.setPixelRatio(window.devicePixelRatio);
 
-    const canvasViewBus = new CanvasViewBus(this.loggerBreadcrumbs, this.scheduler);
-    const canvasViewBag = new CanvasViewBag(canvasViewBus, this.loggerBreadcrumbs);
+    const canvasViewBus = new CanvasViewBus(breadcrumbs.add("CanvasViewBus"), this.scheduler);
+    const canvasViewBag = new CanvasViewBag(breadcrumbs.add("CanvasViewBag"), canvasViewBus);
 
     const canvasController = new RootCanvasController(
+      breadcrumbs.add("RootCanvasController"),
       this.canvasControllerBus,
-      canvasViewBag.fork(this.loggerBreadcrumbs.add("RootCanvasControllert")),
+      canvasViewBag.fork(breadcrumbs.add("RootCanvasControllert")),
       debug,
       this.keyboardState,
       loadingManager,
       logger,
-      this.loggerBreadcrumbs.add("RootCanvasController"),
       this.pointerState,
       queryBus,
       renderer,
@@ -198,10 +202,10 @@ export default class SceneCanvas extends HTMLElement {
     canvasController.resize(new HTMLElementSize(this.canvasWrapperElement));
     this.canvasWrapperElement.classList.add("dm-canvas-wrapper--loaded");
 
-    logger.debug(this.loggerBreadcrumbs.add("attachRenderer"), "Game is ready.");
+    logger.debug(breadcrumbs.add("attachRenderer"), "Game is ready.");
 
     // setTimeout(() => {
-    //   cancelToken.cancel(this.loggerBreadcrumbs);
+    //   cancelToken.cancel(breadcrumbs);
     // }, 100);
 
     await cancelToken.whenCanceled();
@@ -217,6 +221,6 @@ export default class SceneCanvas extends HTMLElement {
     this.isLooping = false;
     this.onComponentStateChange();
 
-    await logger.debug(this.loggerBreadcrumbs.add("attachRenderer"), "Game is completely disposed of.");
+    await logger.debug(breadcrumbs.add("attachRenderer"), "Game is completely disposed of.");
   }
 }

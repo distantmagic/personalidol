@@ -28,23 +28,35 @@ export default class CanvasPointerInteraction implements ICanvasPointerInteracti
   }
 
   disconnect(): void {
-    this.renderer.domElement.removeEventListener("mousedown", this.onMouseChange);
-    this.renderer.domElement.removeEventListener("mousemove", this.onMouseChange);
-  }
+    const domElement = this.renderer.domElement;
 
-  getCameraRaycaster(): THREE.Raycaster {
-    return this.raycaster;
+    domElement.removeEventListener("contextmenu", this.onContextMenu);
+    domElement.removeEventListener("mousedown", this.onMouseChange);
+    domElement.removeEventListener("mousedown", this.onMouseDown);
+    domElement.removeEventListener("mousemove", this.onMouseChange);
+    domElement.removeEventListener("mouseup", this.onMouseChange);
+    domElement.removeEventListener("mouseup", this.onMouseUp);
+    domElement.removeEventListener("wheel", this.onWheel);
   }
 
   observe(): void {
-    this.renderer.domElement.addEventListener("mousedown", this.onMouseChange, {
+    const domElement = this.renderer.domElement;
+    const optionsPassive = {
       capture: true,
       passive: true,
-    });
-    this.renderer.domElement.addEventListener("mousemove", this.onMouseChange, {
-      capture: true,
-      passive: true,
-    });
+    };
+
+    domElement.addEventListener("contextmenu", this.onContextMenu);
+    domElement.addEventListener("mousedown", this.onMouseChange, optionsPassive);
+    domElement.addEventListener("mousedown", this.onMouseDown);
+    domElement.addEventListener("mousemove", this.onMouseChange, optionsPassive);
+    domElement.addEventListener("mouseup", this.onMouseChange, optionsPassive);
+    domElement.addEventListener("mouseup", this.onMouseUp);
+    domElement.addEventListener("wheel", this.onWheel);
+  }
+
+  onContextMenu(evt: MouseEvent): void {
+    evt.preventDefault();
   }
 
   onMouseChange(evt: MouseEvent): void {
@@ -54,6 +66,14 @@ export default class CanvasPointerInteraction implements ICanvasPointerInteracti
     this.mouseVector.x = (relativeX / this.canvasWidth) * 2 - 1;
     this.mouseVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
   }
+
+  onMouseDown(evt: MouseEvent): void {}
+
+  onMouseMove(evt: MouseEvent): void {}
+
+  onMouseUp(evt: MouseEvent): void {}
+
+  onWheel(evt: MouseEvent): void {}
 
   resize(elementSize: IElementSize<"px">): void {
     const boundingRect = this.renderer.domElement.getBoundingClientRect();
@@ -65,7 +85,7 @@ export default class CanvasPointerInteraction implements ICanvasPointerInteracti
   }
 
   update(delta: number): void {
-    // this.raycaster.setFromCamera(this.mouseVector, this.camera);
+    this.raycaster.setFromCamera(this.mouseVector, this.camera);
   }
 
   useUpdate(): boolean {

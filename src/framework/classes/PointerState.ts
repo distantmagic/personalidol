@@ -2,12 +2,13 @@ import autoBind from "auto-bind";
 
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IPointerState } from "src/framework/interfaces/PointerState";
 
 import PointerButtonNames from "src/framework/types/PointerButtonNames";
 
-export default class PointerState implements IPointerState {
+export default class PointerState implements HasLoggerBreadcrumbs, IPointerState {
   readonly element: HTMLElement;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   private _isObserving: boolean;
@@ -43,7 +44,7 @@ export default class PointerState implements IPointerState {
   }
 
   isPressed(code: PointerButtonNames): boolean {
-    return !!this.keys[code];
+    return this.keys[code];
   }
 
   observe(): void {

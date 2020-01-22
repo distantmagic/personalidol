@@ -2,6 +2,8 @@ import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -29,6 +31,7 @@ export default class SpotLight extends CanvasView {
     this.light.shadow.camera.far = 512;
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 

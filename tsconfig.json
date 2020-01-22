@@ -8,6 +8,7 @@
       "esnext",
     ],
     "allowJs": false,
+    "experimentalDecorators": true,
     "skipLibCheck": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

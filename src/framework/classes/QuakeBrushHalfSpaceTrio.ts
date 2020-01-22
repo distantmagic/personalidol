@@ -5,6 +5,7 @@ import isEqualWithEpsilon from "src/framework/helpers/isEqualWithEpsilon";
 
 import Exception from "src/framework/classes/Exception";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
 import { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
@@ -23,7 +24,7 @@ function getIntersectionDeterminant(trio: IQuakeBrushHalfSpaceTrio, plane1: THRE
   return matrix.determinant();
 }
 
-export default class QuakeBrushHalfSpaceTrio implements IQuakeBrushHalfSpaceTrio {
+export default class QuakeBrushHalfSpaceTrio implements HasLoggerBreadcrumbs, IQuakeBrushHalfSpaceTrio {
   readonly hs1: QuakeBrushHalfSpace;
   readonly hs2: QuakeBrushHalfSpace;
   readonly hs3: QuakeBrushHalfSpace;

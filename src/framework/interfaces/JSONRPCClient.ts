@@ -22,7 +22,7 @@ export default interface JSONRPCClient {
 
   requestPromise<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): Promise<T>;
 
-  sendRequest(request: JSONRPCRequest): Promise<void>;
+  sendRequest(cancelToken: CancelToken, request: JSONRPCRequest): Promise<void>;
 
   useMessageHandler(cancelToken: CancelToken): Worker["onmessage"];
 }

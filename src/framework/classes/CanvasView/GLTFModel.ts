@@ -5,6 +5,8 @@ import { default as GLTFModelQuery } from "src/framework/classes/Query/GLTFModel
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 import { default as TextureQuery } from "src/framework/classes/Query/Texture";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -53,6 +55,7 @@ export default class GLTFModel extends CanvasView {
     this.threeLoadingManager = threeLoadingManager;
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
@@ -85,7 +88,7 @@ export default class GLTFModel extends CanvasView {
 
     const dummy = new THREE.Object3D();
 
-    for (let i = 0; i < this.entities.length; i += 1) {
+    for (let i = this.entities.length - 1; i >= 0; i -= 1) {
       const entity = this.entities[i];
 
       dummy.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);

@@ -1,3 +1,5 @@
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import ElementSize from "src/framework/interfaces/ElementSize";
@@ -14,6 +16,7 @@ export default abstract class CanvasController implements ICanvasController {
     this._isDisposed = false;
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     this._isAttached = true;
     this._isDisposed = false;
@@ -21,6 +24,7 @@ export default abstract class CanvasController implements ICanvasController {
 
   begin(): void {}
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     this._isAttached = false;
     await this.canvasViewBag.dispose(cancelToken);

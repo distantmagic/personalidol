@@ -9,7 +9,10 @@ import { default as JSONRPCErrorResponse } from "src/framework/classes/JSONRPCRe
 import { default as JSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
 import { default as JSONRPCRequest, unobjectify as unobjectifyJSONRPCRequest } from "src/framework/classes/JSONRPCRequest";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import JSONRPCResponse from "src/framework/interfaces/JSONRPCResponse";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
@@ -20,7 +23,7 @@ import { default as IJSONRPCServer } from "src/framework/interfaces/JSONRPCServe
 import JSONRPCServerGeneratorCallback from "src/framework/types/JSONRPCServerGeneratorCallback";
 import JSONRPCServerPromiseCallback from "src/framework/types/JSONRPCServerPromiseCallback";
 
-export default class JSONRPCServer implements IJSONRPCServer {
+export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServer {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly postMessage: DedicatedWorkerGlobalScope["postMessage"];
   readonly requestHandlers: Map<string, (request: IJSONRPCRequest) => Promise<void>>;
@@ -48,6 +51,7 @@ export default class JSONRPCServer implements IJSONRPCServer {
     return Promise.resolve();
   }
 
+  @cancelable()
   async returnGenerator<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T>): Promise<void> {
     this.requestHandlers.set(method, async (request: IJSONRPCRequest) => {
       if (cancelToken.isCanceled()) {
@@ -73,6 +77,7 @@ export default class JSONRPCServer implements IJSONRPCServer {
     this.requestHandlers.delete(method);
   }
 
+  @cancelable()
   async returnPromise<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T>): Promise<void> {
     this.requestHandlers.set(method, async (request: IJSONRPCRequest) => {
       if (cancelToken.isCanceled()) {

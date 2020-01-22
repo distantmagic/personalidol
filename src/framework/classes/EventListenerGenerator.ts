@@ -1,3 +1,5 @@
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import EventListenerSet from "src/framework/interfaces/EventListenerSet";
 import { default as IEventListenerGenerator } from "src/framework/interfaces/EventListenerGenerator";
@@ -30,6 +32,7 @@ export default class EventListenerGenerator<Arguments extends ReadonlyArray<any>
     this.eventListenerSet = eventListenerSet;
   }
 
+  @cancelable()
   generate(cancelToken: CancelToken): AsyncGenerator<Arguments> {
     const buffer: GeneratorBuffer<Arguments> = [];
     const self = this;

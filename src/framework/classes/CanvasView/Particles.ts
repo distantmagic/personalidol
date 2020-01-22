@@ -4,6 +4,8 @@ import Partykals from "partykals/partykals";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -22,6 +24,7 @@ export default class Particles extends CanvasView {
     this.origin = new THREE.Vector3(entity.origin[0], entity.origin[1], entity.origin[2]);
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
@@ -62,6 +65,7 @@ export default class Particles extends CanvasView {
     this.children.add(container);
   }
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 

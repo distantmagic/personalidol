@@ -3,6 +3,7 @@ import isArrayEqual from "src/framework/helpers/isArrayEqual";
 import Exception from "src/framework/classes/Exception";
 import QuakePointParser from "src/framework/classes/QuakePointParser";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import QuakeEntityProperties from "src/framework/interfaces/QuakeEntityProperties";
@@ -11,7 +12,7 @@ import { default as IQuakeEntity } from "src/framework/interfaces/QuakeEntity";
 import QuakeEntityClassName from "src/framework/types/QuakeEntityClassName";
 import QuakeEntityType from "src/framework/types/QuakeEntityType";
 
-export default class QuakeEntity implements IQuakeEntity {
+export default class QuakeEntity implements HasLoggerBreadcrumbs, IQuakeEntity {
   readonly brushes: ReadonlyArray<QuakeBrush>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly props: QuakeEntityProperties;

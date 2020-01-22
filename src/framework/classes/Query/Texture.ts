@@ -2,6 +2,8 @@ import * as THREE from "three";
 
 import Query from "src/framework/classes/Query";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 
 export default class Texture extends Query<THREE.Texture> {
@@ -15,6 +17,7 @@ export default class Texture extends Query<THREE.Texture> {
     this.textureSource = textureSource;
   }
 
+  @cancelable(true)
   async execute(cancelToken: CancelToken): Promise<THREE.Texture> {
     return new Promise((resolve, reject) => {
       this.textureLoader.load(

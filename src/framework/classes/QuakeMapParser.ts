@@ -5,6 +5,7 @@ import QuakeEntityProperties from "src/framework/classes/QuakeEntityProperties";
 import QuakeEntityPropertyParser from "src/framework/classes/QuakeEntityPropertyParser";
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
 import QuakeEntityProperty from "src/framework/interfaces/QuakeEntityProperty";
@@ -14,7 +15,7 @@ import { default as IQuakeMapParser } from "src/framework/interfaces/QuakeMapPar
 
 const REGEXP_NEWLINE = /\r?\n/;
 
-export default class QuakeMapParser implements IQuakeMapParser {
+export default class QuakeMapParser implements HasLoggerBreadcrumbs, IQuakeMapParser {
   readonly content: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 

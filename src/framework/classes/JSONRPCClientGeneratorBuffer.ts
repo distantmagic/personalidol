@@ -1,10 +1,11 @@
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import JSONRPCGeneratorChunkResponse from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IJSONRPCClientGeneratorBuffer } from "src/framework/interfaces/JSONRPCClientGeneratorBuffer";
 
-export default class JSONRPCClientGeneratorBuffer<T> implements IJSONRPCClientGeneratorBuffer<T> {
+export default class JSONRPCClientGeneratorBuffer<T> implements HasLoggerBreadcrumbs, IJSONRPCClientGeneratorBuffer<T> {
   readonly buffer: Map<string, JSONRPCGeneratorChunkResponse<T>>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   private flushable: JSONRPCGeneratorChunkResponse<T>[];
@@ -78,7 +79,7 @@ export default class JSONRPCClientGeneratorBuffer<T> implements IJSONRPCClientGe
   }
 
   hasLastSent(): boolean {
-    return !!this.lastSent;
+    return null !== this.lastSent;
   }
 
   isExpectingMore(): boolean {

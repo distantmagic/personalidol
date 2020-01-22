@@ -1,13 +1,16 @@
 import { default as CanvasControllerException } from "src/framework/classes/Exception/CanvasController";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasController from "src/framework/interfaces/CanvasController";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import HTMLElementResizeObserver from "src/framework/interfaces/HTMLElementResizeObserver";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import Scheduler from "src/framework/interfaces/Scheduler";
 import { default as ICanvasControllerBus } from "src/framework/interfaces/CanvasControllerBus";
 
-export default class CanvasControllerBus implements ICanvasControllerBus {
+export default class CanvasControllerBus implements ICanvasControllerBus, HasLoggerBreadcrumbs {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly resizeObserver: HTMLElementResizeObserver;
   readonly scheduler: Scheduler;
@@ -18,6 +21,7 @@ export default class CanvasControllerBus implements ICanvasControllerBus {
     this.scheduler = scheduler;
   }
 
+  @cancelable()
   async add(cancelToken: CancelToken, canvasController: CanvasController): Promise<void> {
     if (canvasController.isAttached()) {
       throw new CanvasControllerException(this.loggerBreadcrumbs.add("add"), "Canvas controller is already attached and cannot be attached again.");
@@ -45,6 +49,7 @@ export default class CanvasControllerBus implements ICanvasControllerBus {
     }
   }
 
+  @cancelable()
   async delete(cancelToken: CancelToken, canvasController: CanvasController): Promise<void> {
     if (canvasController.isDisposed()) {
       throw new CanvasControllerException(this.loggerBreadcrumbs.add("delete"), "Canvas controller cannot is already disposed and cannot be disposed again.");

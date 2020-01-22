@@ -2,6 +2,8 @@ import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -17,6 +19,7 @@ export default class HemisphereLight extends CanvasView {
     this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, entity.light);
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 

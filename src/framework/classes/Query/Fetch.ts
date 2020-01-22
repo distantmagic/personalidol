@@ -1,5 +1,7 @@
 import Query from "src/framework/classes/Query";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 
 export default class Fetch extends Query<Response> {
@@ -11,6 +13,7 @@ export default class Fetch extends Query<Response> {
     this.ref = ref;
   }
 
+  @cancelable(true)
   execute(cancelToken: CancelToken): Promise<Response> {
     return fetch(this.ref, {
       signal: cancelToken.getAbortSignal(),

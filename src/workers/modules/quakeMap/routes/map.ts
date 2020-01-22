@@ -84,6 +84,10 @@ export default async function* map(
   const worldBrushes: Array<QuakeEntity> = [];
 
   for (let entity of quakeMapParser.parse()) {
+    if (cancelToken.isCanceled()) {
+      return;
+    }
+
     const entityClassName = entity.getClassName();
     const entityProperties = entity.getProperties();
     let entityOrigin;
@@ -187,6 +191,10 @@ export default async function* map(
   }
 
   for (let [entityClassName, entity] of entitiesWithBrushes) {
+    if (cancelToken.isCanceled()) {
+      return;
+    }
+
     yield await createGeometryBuffers(cancelToken, entityClassName, entity.getBrushes());
   }
 
@@ -198,6 +206,10 @@ export default async function* map(
   }
 
   if (!isEmpty(mergedBrushes)) {
+    if (cancelToken.isCanceled()) {
+      return;
+    }
+
     yield await createGeometryBuffers(cancelToken, "worldspawn", mergedBrushes);
   }
 }

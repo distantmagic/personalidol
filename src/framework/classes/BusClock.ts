@@ -1,3 +1,5 @@
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import { default as IBusClock } from "src/framework/interfaces/BusClock";
 
@@ -18,12 +20,8 @@ export default class BusClock implements IBusClock {
     this.delay = delay;
   }
 
+  @cancelable()
   async interval(cancelToken: CancelToken, callback: BusClockCallback): Promise<void> {
-    if (cancelToken.isCanceled()) {
-      // nothing to do here
-      return;
-    }
-
     return new Promise((resolve, reject) => {
       let timeoutId: null | ReturnType<typeof setTimeout> = null;
 

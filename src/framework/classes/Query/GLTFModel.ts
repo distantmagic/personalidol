@@ -2,6 +2,8 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 import Query from "src/framework/classes/Query";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 
 type GLTFLoaderResponse = {
@@ -21,6 +23,7 @@ export default class GLTFModel extends Query<GLTFLoaderResponse> {
     this.url = url;
   }
 
+  @cancelable(true)
   execute(cancelToken: CancelToken): Promise<GLTFLoaderResponse> {
     const loader = new GLTFLoader(this.loadingManager);
 

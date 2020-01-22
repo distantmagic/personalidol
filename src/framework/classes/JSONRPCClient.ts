@@ -4,12 +4,16 @@ import EventListenerGenerator from "src/framework/classes/EventListenerGenerator
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import JSONRPCClientGeneratorBuffer from "src/framework/classes/JSONRPCClientGeneratorBuffer";
 import JSONRPCRequest from "src/framework/classes/JSONRPCRequest";
+import { default as CancelTokenException } from "src/framework/classes/Exception/CancelToken";
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 import { unobjectify as unobjectifyJSONRPCErrorResponse } from "src/framework/classes/JSONRPCResponse/Error";
 import { unobjectify as unobjectifyJSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 import { unobjectify as unobjectifyJSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 import { default as IJSONRPCClient } from "src/framework/interfaces/JSONRPCClient";
@@ -21,7 +25,7 @@ import { default as IJSONRPCRequest } from "src/framework/interfaces/JSONRPCRequ
 import JSONRPCParams from "src/framework/types/JSONRPCParams";
 import JSONRPCVersion from "src/framework/types/JSONRPCVersion";
 
-export default class JSONRPCClient implements IJSONRPCClient {
+export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClient {
   readonly awaitingGeneratorRequests: Map<string, IEventListenerSet<[IJSONRPCGeneratorChunkResponse<any>]>>;
   readonly awaitingPromiseRequests: Map<string, (arg: any) => void>;
   readonly uuid: () => string;
@@ -139,6 +143,7 @@ export default class JSONRPCClient implements IJSONRPCClient {
     }
   }
 
+  @cancelable()
   async *requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams = []): AsyncGenerator<T> {
     const requestId = this.uuid();
     const request = new JSONRPCRequest(requestId, method, "generator", params);
@@ -149,12 +154,20 @@ export default class JSONRPCClient implements IJSONRPCClient {
     // send message to the server
     this.awaitingGeneratorRequests.set(requestId, eventListenerSet);
 
-    await this.sendRequest(request);
+    await this.sendRequest(cancelToken, request);
+
+    if (cancelToken.isCanceled()) {
+      return;
+    }
 
     // await response
     const buffer = new JSONRPCClientGeneratorBuffer<T>(this.loggerBreadcrumbs.add("JSONRPCClientGeneratorBuffer"));
 
     for await (let [response] of responseGenerator) {
+      if (cancelToken.isCanceled()) {
+        return;
+      }
+
       buffer.add(response);
 
       for (let buffered of buffer.flush()) {
@@ -167,23 +180,32 @@ export default class JSONRPCClient implements IJSONRPCClient {
     }
   }
 
+  @cancelable(true)
   requestPromise<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams = []): Promise<T> {
     const requestId = this.uuid();
     const request = new JSONRPCRequest(requestId, method, "promise", params);
 
     // await response
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+      cancelToken.onCanceled(reject);
+
       this.awaitingPromiseRequests.set(requestId, (result: T) => {
-        resolve(result);
+        if (cancelToken.isCanceled()) {
+          reject(new CancelTokenException(this.loggerBreadcrumbs.add("requestPromise"), "Cancel token was canceled before processing RPC response."));
+        } else {
+          resolve(result);
+        }
+
         this.awaitingPromiseRequests.delete(requestId);
       });
 
       // send message to the server
-      this.sendRequest(request);
+      this.sendRequest(cancelToken, request);
     });
   }
 
-  async sendRequest(request: IJSONRPCRequest): Promise<void> {
+  @cancelable()
+  async sendRequest(cancelToken: CancelToken, request: IJSONRPCRequest): Promise<void> {
     this.postMessage(request.asObject());
   }
 

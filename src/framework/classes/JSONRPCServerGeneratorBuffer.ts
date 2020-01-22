@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 import { default as JSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import JSONRPCResponseData from "src/framework/interfaces/JSONRPCResponseData";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
@@ -10,7 +11,7 @@ import { default as IJSONRPCServerGeneratorBuffer } from "src/framework/interfac
 
 type OnMessageReadyCallback<T> = (response: IJSONRPCGeneratorChunkResponse<T>) => any;
 
-export default class JSONRPCServerGeneratorBuffer<T> implements IJSONRPCServerGeneratorBuffer<T> {
+export default class JSONRPCServerGeneratorBuffer<T> implements HasLoggerBreadcrumbs, IJSONRPCServerGeneratorBuffer<T> {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onMessageReady: OnMessageReadyCallback<T>;
   private headChunkId: null | string = null;

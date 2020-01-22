@@ -5,5 +5,5 @@ export default function isEqualWithEpsilon(n1: number, n2: number, epsilon: numb
     return true;
   }
 
-  return inRange(n2, n1 - epsilon, n1 + epsilon) || inRange(n1, n2 - epsilon, n2 + epsilon);
+  return (n1 >= n2 - epsilon && n1 <= n2 + epsilon) || (n2 >= n1 - epsilon && n2 <= n1 + epsilon);
 }

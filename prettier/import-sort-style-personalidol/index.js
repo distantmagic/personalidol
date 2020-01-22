@@ -6,6 +6,10 @@ function isLocalComponent(imported) {
   return imported.moduleName.startsWith("src/components");
 }
 
+function isLocalDecorator(imported) {
+  return imported.moduleName.startsWith("src/framework/decorators");
+}
+
 function isLocalEffect(imported) {
   return imported.moduleName.startsWith("src/effect");
 }
@@ -96,6 +100,13 @@ function format(styleApi) {
     },
     {
       match: isLocalClass,
+      sort: member(naturally),
+    },
+    { separator: true },
+
+    // import useFoo from "src/decorators/useFoo"
+    {
+      match: isLocalDecorator,
       sort: member(naturally),
     },
     { separator: true },

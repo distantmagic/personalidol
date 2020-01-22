@@ -3,13 +3,14 @@ import QuakePointParser from "src/framework/classes/QuakePointParser";
 import QuakePointPartsParser from "src/framework/classes/QuakePointPartsParser";
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IQuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
 import { default as IQuakeBrushHalfSpaceParser } from "src/framework/interfaces/QuakeBrushHalfSpaceParser";
 
 const REGEXP_WHITESPACE = /\s+/;
 
-export default class QuakeBrushHalfSpaceParser implements IQuakeBrushHalfSpaceParser {
+export default class QuakeBrushHalfSpaceParser implements HasLoggerBreadcrumbs, IQuakeBrushHalfSpaceParser {
   readonly line: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 

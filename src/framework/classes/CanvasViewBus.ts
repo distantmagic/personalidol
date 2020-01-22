@@ -2,13 +2,16 @@ import isEmpty from "lodash/isEmpty";
 
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasView from "src/framework/interfaces/CanvasView";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import Scheduler from "src/framework/interfaces/Scheduler";
 import { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
 
-export default class CanvasViewBus implements ICanvasViewBus {
+export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewBus {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly scheduler: Scheduler;
 
@@ -17,6 +20,7 @@ export default class CanvasViewBus implements ICanvasViewBus {
     this.scheduler = scheduler;
   }
 
+  @cancelable()
   async add(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
     const canvasViewName: string = canvasView.getName();
 
@@ -47,6 +51,7 @@ export default class CanvasViewBus implements ICanvasViewBus {
     }
   }
 
+  @cancelable()
   async delete(cancelToken: CancelToken, canvasView: CanvasView): Promise<void> {
     const canvasViewName: string = canvasView.getName();
 

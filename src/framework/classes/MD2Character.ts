@@ -10,6 +10,7 @@ import dispose from "src/framework/helpers/dispose";
 
 import { default as LoaderException } from "src/framework/classes/Exception/Loader";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IMD2Character } from "src/framework/interfaces/MD2Character";
 
@@ -53,7 +54,7 @@ function loadTextures(scope: IMD2Character, baseUrl: string, loadingManager: THR
   return textures;
 }
 
-export default class MD2Character implements IMD2Character {
+export default class MD2Character implements HasLoggerBreadcrumbs, IMD2Character {
   readonly loadingManager: THREE.LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 

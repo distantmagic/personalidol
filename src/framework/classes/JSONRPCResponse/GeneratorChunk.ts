@@ -2,6 +2,7 @@ import JSONRPCResponse from "src/framework/classes/JSONRPCResponse";
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
 import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
@@ -22,7 +23,8 @@ export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified
   );
 }
 
-export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>> implements IJSONRPCGeneratorChunkResponse<T> {
+export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T, JSONRPCGeneratorChunkResponseObjectified<T>>
+  implements HasLoggerBreadcrumbs, IJSONRPCGeneratorChunkResponse<T> {
   readonly chunk: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly head: string;

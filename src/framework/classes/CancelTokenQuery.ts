@@ -3,13 +3,15 @@ import canCompare from "src/framework/helpers/canCompare";
 import CancelTokenException from "src/framework/classes/Exception/CancelToken";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
+import Canceled from "src/framework/interfaces/Exception/Canceled";
 import CancelToken from "src/framework/interfaces/CancelToken";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import Query from "src/framework/interfaces/Query";
 import { default as ICancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
 import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
-export default class CancelTokenQuery<T> implements ICancelTokenQuery<T> {
+export default class CancelTokenQuery<T> implements ICancelTokenQuery<T>, HasLoggerBreadcrumbs {
   private _isExecuted: boolean = false;
   private _isExecuting: boolean = false;
   private _result: null | T = null;
@@ -97,6 +99,10 @@ export default class CancelTokenQuery<T> implements ICancelTokenQuery<T> {
       throw new CancelTokenException(this.loggerBreadcrumbs.add("setExecuted"), "Query is already executed.");
     }
 
+    if (this.cancelToken.isCanceled()) {
+      throw new CancelTokenException(this.loggerBreadcrumbs.add("setExecuted"), "Query is canceled and it can't be set as executed.");
+    }
+
     this._isExecuted = true;
     this._isExecuting = false;
     this._result = result;
@@ -107,8 +113,15 @@ export default class CancelTokenQuery<T> implements ICancelTokenQuery<T> {
 
   whenExecuted(): Promise<T> {
     return new Promise<T>((resolve, reject) => {
-      this.cancelToken.onCanceled(reject);
       this.callbacks.add(resolve);
+      this.cancelToken.onCanceled((canceled: Canceled) => {
+        // can be executed before query got canceled
+        if (this.callbacks.has(resolve)) {
+          this.callbacks.delete(resolve);
+        }
+
+        reject(canceled);
+      });
     });
   }
 }

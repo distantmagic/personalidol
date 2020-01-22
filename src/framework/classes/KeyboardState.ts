@@ -2,12 +2,13 @@ import autoBind from "auto-bind";
 
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IKeyboardState } from "src/framework/interfaces/KeyboardState";
 
 import KeyboardButtonNames from "src/framework/types/KeyboardButtonNames";
 
-export default class KeyboardState implements IKeyboardState {
+export default class KeyboardState implements HasLoggerBreadcrumbs, IKeyboardState {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   private _isObserving: boolean;
   private keys: {
@@ -39,7 +40,7 @@ export default class KeyboardState implements IKeyboardState {
   }
 
   isPressed(code: KeyboardButtonNames): boolean {
-    return !!this.keys[code];
+    return this.keys[code];
   }
 
   observe(): void {

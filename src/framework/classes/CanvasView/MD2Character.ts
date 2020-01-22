@@ -7,6 +7,8 @@ import { default as QuakeMapException } from "src/framework/classes/Exception/Qu
 import { default as RemoteJSONQuery } from "src/framework/classes/Query/RemoteJSON";
 import { default as THREEMD2Character } from "src/framework/classes/MD2Character";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -51,6 +53,7 @@ export default class MD2Character extends CanvasView {
     this.threeLoadingManager = threeLoadingManager;
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
@@ -90,6 +93,7 @@ export default class MD2Character extends CanvasView {
     this.character = character;
   }
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 

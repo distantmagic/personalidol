@@ -9,5 +9,7 @@ export default interface EventListenerSet<Arguments extends readonly any[]> {
 
   getCallbacks(): ReadonlyArray<EventListenerSetCallback<Arguments>>;
 
+  has(eventListenerSetCallback: EventListenerSetCallback<Arguments>): boolean;
+
   notify(args: Arguments): void;
 }

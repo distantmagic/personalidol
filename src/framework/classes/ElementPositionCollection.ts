@@ -2,6 +2,7 @@ import ElementBoundingBox from "src/framework/classes/ElementBoundingBox";
 import ElementPosition from "src/framework/classes/ElementPosition";
 import ElementSize from "src/framework/classes/ElementSize";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IElementBoundingBox } from "src/framework/interfaces/ElementBoundingBox";
 import { default as IElementPosition } from "src/framework/interfaces/ElementPosition";
@@ -9,7 +10,7 @@ import { default as IElementPositionCollection } from "src/framework/interfaces/
 
 import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
 
-export default class ElementPositionCollection<Unit extends ElementPositionUnit> implements IElementPositionCollection<Unit> {
+export default class ElementPositionCollection<Unit extends ElementPositionUnit> implements HasLoggerBreadcrumbs, IElementPositionCollection<Unit> {
   readonly elementPositions: ReadonlyArray<IElementPosition<Unit>>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 

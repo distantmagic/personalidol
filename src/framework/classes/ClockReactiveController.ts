@@ -1,3 +1,5 @@
+import cancelable from "src/framework/decorators/cancelable";
+
 import BusClock from "src/framework/interfaces/BusClock";
 import CancelToken from "src/framework/interfaces/CancelToken";
 import ClockReactive from "src/framework/interfaces/ClockReactive";
@@ -12,6 +14,7 @@ export default class ClockReactiveController implements IClockReactiveController
     this.clockReactive = clockReactive;
   }
 
+  @cancelable()
   interval(cancelToken: CancelToken): Promise<void> {
     return this.clock.interval(cancelToken, this.clockReactive.tick);
   }

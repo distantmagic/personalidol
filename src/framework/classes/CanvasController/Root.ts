@@ -11,11 +11,14 @@ import CanvasPointerInteraction from "src/framework/classes/CanvasPointerInterac
 import { default as CameraController } from "src/framework/classes/CanvasController/Camera";
 import { default as QuakeMapView } from "src/framework/classes/CanvasView/QuakeMap";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import Debugger from "src/framework/interfaces/Debugger";
 import ElementSize from "src/framework/interfaces/ElementSize";
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import KeyboardState from "src/framework/interfaces/KeyboardState";
 import LoadingManager from "src/framework/interfaces/LoadingManager";
 import Logger from "src/framework/interfaces/Logger";
@@ -28,12 +31,13 @@ import { default as ICanvasPointerInteraction } from "src/framework/interfaces/C
 
 // import { default as THREEHelpersView } from "src/framework/classes/CanvasView/THREEHelpers";
 
-export default class Root extends CanvasController {
+export default class Root extends CanvasController implements HasLoggerBreadcrumbs {
   readonly audioListener: THREE.AudioListener;
   readonly audioLoader: THREE.AudioLoader;
   readonly camera: THREE.OrthographicCamera;
   readonly cameraController: ICameraController;
   readonly canvasControllerBus: CanvasControllerBus;
+  readonly canvasPointerInteraction: ICanvasPointerInteraction;
   readonly canvasRootGroup: THREE.Group;
   readonly debug: Debugger;
   readonly effectComposer: EffectComposer;
@@ -47,16 +51,15 @@ export default class Root extends CanvasController {
   readonly scene: THREE.Scene;
   readonly scheduler: Scheduler;
   readonly threeLoadingManager: THREE.LoadingManager;
-  readonly threePointerInteraction: ICanvasPointerInteraction;
 
   constructor(
+    loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasControllerBus: CanvasControllerBus,
     canvasViewBag: CanvasViewBag,
     debug: Debugger,
     keyboardState: KeyboardState,
     loadingManager: LoadingManager,
     logger: Logger,
-    loggerBreadcrumbs: LoggerBreadcrumbs,
     pointerState: PointerState,
     queryBus: QueryBus,
     renderer: THREE.WebGLRenderer,
@@ -90,9 +93,9 @@ export default class Root extends CanvasController {
     this.scene.add(this.canvasRootGroup);
 
     this.scheduler = scheduler;
-    this.cameraController = new CameraController(canvasViewBag, this.camera, this.debug, loggerBreadcrumbs.add("CameraController"), renderer, this.scene);
+    this.cameraController = new CameraController(loggerBreadcrumbs.add("CameraController"), canvasViewBag, this.camera);
     this.threeLoadingManager = threeLoadingManager;
-    this.threePointerInteraction = new CanvasPointerInteraction(renderer, this.camera);
+    this.canvasPointerInteraction = new CanvasPointerInteraction(renderer, this.camera);
 
     const renderPass = new RenderPass(this.scene, this.camera);
 
@@ -100,6 +103,7 @@ export default class Root extends CanvasController {
     this.effectComposer.addPass(renderPass);
   }
 
+  @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
@@ -134,23 +138,24 @@ export default class Root extends CanvasController {
     //   "Loading map helpers"
     // );
 
-    if (this.threePointerInteraction.useUpdate()) {
-      this.scheduler.onUpdate(this.threePointerInteraction.update);
+    if (this.canvasPointerInteraction.useUpdate()) {
+      this.scheduler.onUpdate(this.canvasPointerInteraction.update);
     }
 
-    this.threePointerInteraction.observe();
+    this.canvasPointerInteraction.observe();
   }
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
     await this.canvasControllerBus.delete(cancelToken, this.cameraController);
 
-    if (this.threePointerInteraction.useUpdate()) {
-      this.scheduler.offUpdate(this.threePointerInteraction.update);
+    if (this.canvasPointerInteraction.useUpdate()) {
+      this.scheduler.offUpdate(this.canvasPointerInteraction.update);
     }
 
-    this.threePointerInteraction.disconnect();
+    this.canvasPointerInteraction.disconnect();
     this.scene.dispose();
 
     this.debug.deleteState(this.loggerBreadcrumbs.add("fps"));
@@ -195,7 +200,7 @@ export default class Root extends CanvasController {
     this.renderer.setSize(width, height);
 
     this.effectComposer.setSize(width, height);
-    this.threePointerInteraction.resize(elementSize);
+    this.canvasPointerInteraction.resize(elementSize);
   }
 
   useDraw(): boolean {

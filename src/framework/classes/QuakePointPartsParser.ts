@@ -3,6 +3,7 @@ import filter from "lodash/filter";
 
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
+import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IQuakePointParser } from "src/framework/interfaces/QuakePointParser";
 
@@ -13,7 +14,7 @@ const REGEXP_WHITESPACE = /\s+/;
  * first glance, in reality one place that eventually parses every occurrence
  * of map coordinates is really useful.
  */
-export default class QuakePointPartsParser implements IQuakePointParser {
+export default class QuakePointPartsParser implements HasLoggerBreadcrumbs, IQuakePointParser {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly x: string;
   readonly y: string;

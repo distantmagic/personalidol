@@ -3,6 +3,8 @@ import * as THREE from "three";
 import Canceled from "src/framework/classes/Exception/CancelToken/Canceled";
 import CanvasView from "src/framework/classes/CanvasView";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoadingManager from "src/framework/interfaces/LoadingManager";
@@ -37,6 +39,7 @@ export default class AmbientSound extends CanvasView {
     this.source = entity.sounds;
   }
 
+  @cancelable(true)
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
@@ -68,6 +71,7 @@ export default class AmbientSound extends CanvasView {
     );
   }
 
+  @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
