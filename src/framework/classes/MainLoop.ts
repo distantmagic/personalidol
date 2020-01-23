@@ -2,10 +2,15 @@ import autoBind from "auto-bind";
 import noop from "lodash/noop";
 import { default as VendorMainLoop } from "mainloop.js";
 
+import Controllable from "src/framework/classes/Controllable";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import { default as MainLoopException } from "src/framework/classes/Exception/MainLoop";
 
+import controlled from "src/framework/decorators/controlled";
+
 import Scheduler from "src/framework/interfaces/Scheduler";
+import { default as IControllable } from "src/framework/interfaces/Controllable";
+import { default as IControlToken } from "src/framework/interfaces/ControlToken";
 import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IMainLoop } from "src/framework/interfaces/MainLoop";
 
@@ -17,7 +22,9 @@ import MainLoopUpdateCallback from "src/framework/types/MainLoopUpdateCallback";
 let instance: null | IMainLoop = null;
 
 export default class MainLoop implements IMainLoop {
-  static getInstance(loggerBreadcrumbs: ILoggerBreadcrumbs): MainLoop {
+  private readonly controllable: IControllable;
+
+  static getInstance(loggerBreadcrumbs: ILoggerBreadcrumbs): IMainLoop {
     if (!instance) {
       throw new MainLoopException(loggerBreadcrumbs, "Main loop is used before it's instanciated.");
     }
@@ -26,11 +33,15 @@ export default class MainLoop implements IMainLoop {
   }
 
   constructor() {
+    const loggerBreadcrumbs = new LoggerBreadcrumbs(["root", "MainLoop"]);
+
     if (instance) {
-      throw new MainLoopException(new LoggerBreadcrumbs(["root", "MainLoop"]), "MainLoop is a singleton. Use `getInstance()` instead.");
+      throw new MainLoopException(loggerBreadcrumbs, "MainLoop is a singleton. Use `getInstance()` instead.");
     }
 
     autoBind(this);
+
+    this.controllable = new Controllable(loggerBreadcrumbs);
   }
 
   attachScheduler(scheduler: Scheduler): void {
@@ -64,6 +75,10 @@ export default class MainLoop implements IMainLoop {
     VendorMainLoop.setUpdate(noop);
   }
 
+  getControllable(): IControllable {
+    return this.controllable;
+  }
+
   setBegin(callback: MainLoopBeginCallback): void {
     VendorMainLoop.setBegin(callback);
   }
@@ -84,11 +99,13 @@ export default class MainLoop implements IMainLoop {
     VendorMainLoop.setUpdate(callback);
   }
 
-  start(): void {
+  @controlled(true)
+  start(controlToken: IControlToken): void {
     VendorMainLoop.start();
   }
 
-  stop(): void {
+  @controlled(true)
+  stop(controlToken: IControlToken): void {
     VendorMainLoop.stop();
   }
 }

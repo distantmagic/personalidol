@@ -19,8 +19,8 @@ import { default as IControllable } from "src/framework/interfaces/Controllable"
 import { default as IControlToken } from "src/framework/interfaces/ControlToken";
 
 export default class CameraController extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
-  private height: number;
   private readonly controllable: IControllable;
+  private height: number;
   private width: number;
   private zoomTarget: number;
   readonly camera: THREE.OrthographicCamera;

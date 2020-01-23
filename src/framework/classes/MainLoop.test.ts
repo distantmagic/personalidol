@@ -1,13 +1,17 @@
+import ControlToken from "src/framework/classes/ControlToken";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import MainLoop from "src/framework/classes/MainLoop";
 import Scheduler from "src/framework/classes/Scheduler";
 import { default as MainLoopException } from "src/framework/classes/Exception/MainLoop";
 
-function onBeforeAfter() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const mainLoop = MainLoop.getInstance(loggerBreadcrumbs);
+import { default as IControlToken } from "src/framework/interfaces/ControlToken";
 
-  mainLoop.stop();
+const loggerBreadcrumbs = new LoggerBreadcrumbs();
+const mainLoop = MainLoop.getInstance(loggerBreadcrumbs);
+const controlToken: IControlToken = mainLoop.getControllable().obtainControlToken();
+
+function onBeforeAfter() {
+  mainLoop.stop(controlToken);
   mainLoop.clear();
 }
 
@@ -22,7 +26,6 @@ test("is a singleton", function() {
 });
 
 test("attaches scheduler", async function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const mainLoop = MainLoop.getInstance(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
 
@@ -37,7 +40,7 @@ test("attaches scheduler", async function() {
     scheduler.onEnd(endCallback);
   });
 
-  mainLoop.start();
+  mainLoop.start(controlToken);
 
   await expect(promise).resolves.toBeDefined();
 }, 300);
