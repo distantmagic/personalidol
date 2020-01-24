@@ -11,5 +11,7 @@ export default interface CameraController extends CanvasController, Controllable
 
   increaseZoom(controlToken: ControlToken): void;
 
+  lookAt(controlToken: ControlToken, position: THREE.Vector3): void;
+
   setZoom(controlToken: ControlToken, zoom: number): void;
 }

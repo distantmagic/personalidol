@@ -30,20 +30,28 @@ class FooControllable extends Controllable {
 
 class FooControllableDelegate implements ControllableDelegate {
   private readonly controllable: IControllable;
+  private readonly internalControlToken: IControlToken;
   private initial: number;
 
   constructor(loggerBreadcrumbs: ILoggerBreadcrumbs, initial: number) {
-    this.controllable = new Controllable(loggerBreadcrumbs);
+    this.internalControlToken = new ControlToken(loggerBreadcrumbs);
+    this.controllable = new Controllable(loggerBreadcrumbs, this.internalControlToken);
     this.initial = initial;
   }
 
   @controlled(true)
   doSomething(controlToken: IControlToken, add: number): number {
-    return this.initial + add;
+    // normally you should use 'controlToken' here, it's just for testing
+    return this.getInitial(this.internalControlToken) + add;
   }
 
   getControllable(): IControllable {
     return this.controllable;
+  }
+
+  @controlled(true)
+  getInitial(controlToken: IControlToken): number {
+    return this.initial;
   }
 }
 
@@ -69,7 +77,7 @@ describe.each([
 
     expect(foo.doSomething(controlToken1, 5)).toBe(9);
 
-    controllable.cedeControlToken(controlToken1);
+    controllable.cedeExternalControlToken(controlToken1);
 
     const controlToken2 = controllable.obtainControlToken();
 
@@ -85,7 +93,7 @@ describe.each([
     const foo = new Constructor(loggerBreadcrumbs, 6);
     const controllable = findControllable(loggerBreadcrumbs, isDelegate, foo);
     const controlToken = controllable.obtainControlToken();
-    const invalidControlToken = new ControlToken();
+    const invalidControlToken = new ControlToken(loggerBreadcrumbs);
 
     expect(function() {
       foo.doSomething(invalidControlToken, 7);

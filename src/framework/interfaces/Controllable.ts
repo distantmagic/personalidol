@@ -1,11 +1,13 @@
 import ControlToken from "src/framework/interfaces/ControlToken";
 
 export default interface Controllable {
-  cedeControlToken(controlToken: ControlToken): void;
+  cedeExternalControlToken(controlToken: ControlToken): void;
 
-  isControlled(): boolean;
+  isControlledByAnyExternalToken(): boolean;
 
-  isControlledBy(controlToken: ControlToken): boolean;
+  isControlledByExternalToken(controlToken: ControlToken): boolean;
+
+  isControlledByInternalToken(controlToken: ControlToken): boolean;
 
   obtainControlToken(): ControlToken;
 }

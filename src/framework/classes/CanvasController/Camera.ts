@@ -20,6 +20,7 @@ import { default as IControlToken } from "src/framework/interfaces/ControlToken"
 
 export default class CameraController extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
   private readonly controllable: IControllable;
+  private readonly internalControlToken: IControlToken;
   private height: number;
   private width: number;
   private zoomTarget: number;
@@ -31,7 +32,8 @@ export default class CameraController extends CanvasController implements HasLog
     autoBind(this);
 
     this.camera = camera;
-    this.controllable = new Controllable(loggerBreadcrumbs.add("Controllable"));
+    this.internalControlToken = new ControlToken(loggerBreadcrumbs.add("ControlToken"));
+    this.controllable = new Controllable(loggerBreadcrumbs.add("Controllable"), this.internalControlToken);
     this.height = 0;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.width = 0;
@@ -46,10 +48,8 @@ export default class CameraController extends CanvasController implements HasLog
     this.camera.far = 4096;
     // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
     // this.lookAt(new THREE.Vector3(0, 0, 0));
-    this.lookAt(new THREE.Vector3(256, 0, 256 * 2));
+    this.lookAt(this.internalControlToken, new THREE.Vector3(256, 0, 256 * 2));
   }
-
-  cedeControlToken(controlToken: IControlToken): void {}
 
   decreaseZoom(controlToken: IControlToken): void {
     this.setZoom(controlToken, this.zoomTarget - 1);
@@ -76,15 +76,8 @@ export default class CameraController extends CanvasController implements HasLog
     this.setZoom(controlToken, this.zoomTarget + 1);
   }
 
-  isControlled(): boolean {
-    return false;
-  }
-
-  isControlledBy(controlToken: IControlToken): boolean {
-    return false;
-  }
-
-  lookAt(position: THREE.Vector3): void {
+  @controlled(true)
+  lookAt(controlToken: IControlToken, position: THREE.Vector3): void {
     const baseDistance = 256 * 3;
 
     // prettier-ignore
@@ -96,10 +89,6 @@ export default class CameraController extends CanvasController implements HasLog
 
     this.camera.lookAt(position.clone());
     this.updateProjectionMatrix();
-  }
-
-  obtainControlToken(): IControlToken {
-    return new ControlToken();
   }
 
   resize(viewportSize: ElementSize<"px">): void {
