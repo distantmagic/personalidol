@@ -33,7 +33,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   private canvasOffsetLeft: number = 0;
   private canvasOffsetTop: number = 0;
   private canvasWidth: number = 0;
-  private cursorPlane: THREE.Plane = new THREE.Plane();
+  private cursorPlane: THREE.Plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   private cursorPlaneIntersection: THREE.Vector3 = new THREE.Vector3();
 
   constructor(
@@ -78,16 +78,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     domElement.addEventListener("mouseup", this.onMouseUp);
     domElement.addEventListener("wheel", this.onWheel);
 
-    // this.debug.updateState(this.loggerBreadcrumbs.add("position"), this.mouseVector);
     await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.cursorView), "Loading cursor");
-
-    // const camera = this.cameraController.getCamera();
-    // const worldDirection = new THREE.Vector3();
-    const worldDirection = new THREE.Vector3(0, -1, 0);
-
-    // camera.getWorldDirection(worldDirection);
-
-    this.cursorPlane = new THREE.Plane(worldDirection, 0);
   }
 
   @cancelable()
@@ -103,8 +94,6 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     domElement.removeEventListener("mouseup", this.onMouseChange);
     domElement.removeEventListener("mouseup", this.onMouseUp);
     domElement.removeEventListener("wheel", this.onWheel);
-
-    this.debug.deleteState(this.loggerBreadcrumbs.add("position"));
   }
 
   onContextMenu(evt: MouseEvent): void {
@@ -119,11 +108,15 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     this.mouseVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
   }
 
-  onMouseDown(evt: MouseEvent): void {}
+  onMouseDown(evt: MouseEvent): void {
+    this.cursorView.setPointerDown();
+  }
 
   onMouseMove(evt: MouseEvent): void {}
 
-  onMouseUp(evt: MouseEvent): void {}
+  onMouseUp(evt: MouseEvent): void {
+    this.cursorView.setPointerUp();
+  }
 
   onWheel(evt: MouseEvent): void {}
 
@@ -152,7 +145,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     this.cursorView.setPosition(this.cursorPlaneIntersection);
   }
 
-  useUpdate(): boolean {
+  useUpdate(): true {
     return true;
   }
 }

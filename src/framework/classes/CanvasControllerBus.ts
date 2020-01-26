@@ -49,11 +49,12 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
 
     // catch up with last events
     const lastElementPosition = this.lastElementPosition;
-    const lastElementSize = this.lastElementSize;
 
     if (lastElementPosition) {
       canvasController.setPosition(lastElementPosition);
     }
+
+    const lastElementSize = this.lastElementSize;
 
     if (lastElementSize) {
       canvasController.resize(lastElementSize);

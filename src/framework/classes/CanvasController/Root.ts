@@ -204,7 +204,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     this.effectComposer.setSize(width, height);
   }
 
-  useDraw(): boolean {
+  useDraw(): true {
     return true;
   }
 

@@ -227,6 +227,7 @@ export default class QuakeBrush extends CanvasView {
 
     // TODO ios material behaves like if 'castShadow' if 'false'
     mesh.castShadow = true;
+    mesh.matrixAutoUpdate = false;
     mesh.receiveShadow = true;
 
     this.children.add(mesh);
