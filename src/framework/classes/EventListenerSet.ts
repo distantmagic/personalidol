@@ -8,10 +8,9 @@ import EventListenerSetCallback from "src/framework/types/EventListenerSetCallba
 
 export default class EventListenerSet<Arguments extends readonly any[]> implements HasLoggerBreadcrumbs, IEventListenerSet<Arguments> {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  private callbacks: EventListenerSetCallback<Arguments>[];
+  private callbacks: EventListenerSetCallback<Arguments>[] = [];
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
-    this.callbacks = [];
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 

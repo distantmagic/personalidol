@@ -22,31 +22,20 @@ function getConvexHullFacePoints(face: Face): [THREE.Vector3, THREE.Vector3, THR
 }
 
 export default class QuakeBrushGeometryBuilder implements IQuakeBrushGeometryBuilder {
-  readonly indices: number[];
-  readonly normals: number[];
-  readonly textureNames: string[];
-  readonly textures: number[];
-  readonly uvs: number[];
+  readonly indices: number[] = [];
+  readonly normals: number[] = [];
+  readonly textureNames: string[] = [];
+  readonly textures: number[] = [];
+  readonly uvs: number[] = [];
   readonly verticesIndex: WeakMap<
     THREE.Vector3,
     {
       index: number;
       normal: THREE.Vector3;
     }
-  >;
-  readonly vertices: number[];
+  > = new WeakMap();
+  readonly vertices: number[] = [];
   private lastIndex: number = 0;
-
-  constructor() {
-    this.verticesIndex = new WeakMap();
-
-    this.normals = [];
-    this.textureNames = [];
-    this.textures = [];
-    this.uvs = [];
-    this.vertices = [];
-    this.indices = [];
-  }
 
   addBrush(quakeBrush: QuakeBrush): void {
     const convexHull = quakeBrush.getConvexHull();

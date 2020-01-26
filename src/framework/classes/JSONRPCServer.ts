@@ -26,14 +26,13 @@ import JSONRPCServerPromiseCallback from "src/framework/types/JSONRPCServerPromi
 export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServer {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly postMessage: DedicatedWorkerGlobalScope["postMessage"];
-  readonly requestHandlers: Map<string, (request: IJSONRPCRequest) => Promise<void>>;
+  readonly requestHandlers: Map<string, (request: IJSONRPCRequest) => Promise<void>> = new Map();
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: DedicatedWorkerGlobalScope["postMessage"]) {
     autoBind(this);
 
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.postMessage = postMessage;
-    this.requestHandlers = new Map();
   }
 
   handleRequest(jsonRpcRequest: IJSONRPCRequest): Promise<void> {

@@ -12,10 +12,10 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as ICanvasView } from "src/framework/interfaces/CanvasView";
 
 export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanvasView {
-  private _isAttached: boolean;
-  private _isDisposed: boolean;
+  private _isAttached: boolean = false;
+  private _isDisposed: boolean = false;
   readonly canvasViewBag: CanvasViewBag;
-  readonly children: THREE.Group;
+  readonly children: THREE.Group = new THREE.Group();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly parentGroup: THREE.Group;
 
@@ -27,11 +27,8 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, parentGroup: THREE.Group) {
     this.canvasViewBag = canvasViewBag;
-    this.children = new THREE.Group();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.parentGroup = parentGroup;
-    this._isAttached = false;
-    this._isDisposed = false;
   }
 
   @cancelable()

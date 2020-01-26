@@ -22,12 +22,11 @@ export default class QueryBus implements HasLoggerBreadcrumbs, IQueryBus {
   readonly enqueuedCallbacks: IEventListenerSet<[Query<any>]>;
   readonly exceptionHandler: ExceptionHandler;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  private collection: QueryBusQueueCollection<any>;
+  private collection: QueryBusQueueCollection<any> = [];
 
   constructor(exceptionHandler: ExceptionHandler, loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
 
-    this.collection = [];
     this.enqueuedCallbacks = new EventListenerSet<[Query<any>]>(loggerBreadcrumbs.add("EventListenerSet"));
     this.exceptionHandler = exceptionHandler;
     this.loggerBreadcrumbs = loggerBreadcrumbs;

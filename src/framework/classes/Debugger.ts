@@ -11,12 +11,11 @@ import DebuggerStateChangeCallback from "src/framework/types/DebuggerStateChange
 import DebuggerStateValue from "src/framework/types/DebuggerStateValue";
 
 export default class Debugger implements IDebugger {
-  private _isEnabled: boolean;
-  private state: DebuggerState;
   readonly callbacks: IEventListenerSet<[DebuggerState]>;
+  private _isEnabled: boolean = false;
+  private state: DebuggerState;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
-    this._isEnabled = false;
     this.callbacks = new EventListenerSet<[DebuggerState]>(loggerBreadcrumbs);
     this.state = state;
   }

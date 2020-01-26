@@ -7,11 +7,13 @@ import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
 export default class ElementSize<Unit extends ElementPositionUnit> implements IElementSize<Unit> {
   readonly height: number;
   readonly depth: number;
+  readonly unit: Unit;
   readonly width: number;
 
-  constructor(width: number, height: number, depth: number = 0) {
+  constructor(unit: Unit, width: number, height: number, depth: number = 0) {
     this.height = height;
     this.depth = depth;
+    this.unit = unit;
     this.width = width;
   }
 

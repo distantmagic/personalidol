@@ -8,12 +8,12 @@
 "scenery" "1"
 // brush 0
 {
-( -0 2048 -0 ) ( -0 -0 -0 ) ( -0 -0 -16 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
-( 2048 -0 -0 ) ( 2048 -0 -16 ) ( -0 -0 -16 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
-( -0 -0 -16 ) ( 2048 -0 -16 ) ( 2048 2048 -16 ) textures/texture-cobblestone-128x128 -0 -0 -0 1 1
-( 2048 2048 -0 ) ( 2048 -0 -0 ) ( -0 -0 -0 ) textures/texture-cobblestone-128x128 -0 -0 -0 1 1
-( 2048 2048 -16 ) ( 2048 2048 -0 ) ( -0 2048 -0 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
-( 2048 2048 -16 ) ( 2048 -0 -16 ) ( 2048 -0 -0 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
+( -2048 2048 -0 ) ( -2048 -2048 -16 ) ( -2048 2048 -16 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
+( -2048 -2048 -16 ) ( 2048 -2048 -0 ) ( 2048 -2048 -16 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
+( -2048 2048 -16 ) ( 2048 -2048 -16 ) ( 2048 2048 -16 ) textures/texture-cobblestone-128x128 -0 -0 -0 1 1
+( -2048 2048 -0 ) ( 2048 -2048 -0 ) ( -2048 -2048 -0 ) textures/texture-cobblestone-128x128 -0 -0 -0 1 1
+( -2048 2048 -0 ) ( 2048 2048 -16 ) ( 2048 2048 -0 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
+( 2048 -2048 -16 ) ( 2048 2048 -0 ) ( 2048 2048 -16 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
 }
 }
 // entity 1
@@ -42,7 +42,7 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Tent"
-"_tb_id" "21"
+"_tb_id" "1"
 // brush 0
 {
 ( 1112 75 1 ) ( 1024 249 1 ) ( 1016 241 105 ) textures/texture-cobblestone-128x128 55.593 -16.7627 -0 0.896575 1.01443
@@ -166,7 +166,7 @@
 "angle" "45"
 "scale" "10"
 "model_texture" "texture.png"
-"_tb_layer" "21"
+"_tb_layer" "1"
 }
 // entity 6
 {
@@ -176,14 +176,14 @@
 "angle" "-0"
 "scale" "1"
 "model_texture" "green.png"
-"_tb_layer" "21"
+"_tb_layer" "1"
 }
 // entity 7
 {
 "classname" "spark_particles"
 "origin" "976 304 8"
 "angle" ""
-"_tb_layer" "21"
+"_tb_layer" "1"
 }
 // entity 8
 {
@@ -193,14 +193,14 @@
 "angle" "90"
 "decay" "2"
 "color" "FFC000"
-"_tb_layer" "21"
+"_tb_layer" "1"
 }
 // entity 9
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Tower"
-"_tb_id" "22"
+"_tb_id" "2"
 // brush 0
 {
 ( 576 256 736 ) ( 576 240 736 ) ( 576 240 704 ) textures/texture-bricks-128x128 16 -0 -0 1 1
@@ -460,14 +460,14 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "22"
+"_tb_layer" "2"
 }
 // entity 11
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Parish"
-"_tb_id" "23"
+"_tb_id" "3"
 // brush 0
 {
 ( 56 1008 184 ) ( 56 976 184 ) ( 56 976 8 ) textures/texture-bricks-128x128 48 8 -0 1 1
@@ -694,7 +694,7 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "23"
+"_tb_layer" "3"
 }
 // entity 13
 {
@@ -705,7 +705,7 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "23"
+"_tb_layer" "3"
 }
 // entity 14
 {
@@ -716,14 +716,14 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "23"
+"_tb_layer" "3"
 }
 // entity 15
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Temple"
-"_tb_id" "24"
+"_tb_id" "4"
 // brush 0
 {
 ( 16 976 408 ) ( 16 944 408 ) ( 16 944 8 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
@@ -886,5 +886,5 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "24"
+"_tb_layer" "4"
 }

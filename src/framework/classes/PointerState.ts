@@ -11,7 +11,7 @@ import PointerButtonNames from "src/framework/types/PointerButtonNames";
 export default class PointerState implements HasLoggerBreadcrumbs, IPointerState {
   readonly element: HTMLElement;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  private _isObserving: boolean;
+  private _isObserving: boolean = false;
   private keys: {
     [key in PointerButtonNames]: boolean;
   } = {
@@ -25,7 +25,6 @@ export default class PointerState implements HasLoggerBreadcrumbs, IPointerState
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
     autoBind(this);
 
-    this._isObserving = false;
     this.element = element;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
 

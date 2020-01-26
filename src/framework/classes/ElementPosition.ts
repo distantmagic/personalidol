@@ -7,12 +7,14 @@ import { default as IElementPosition } from "src/framework/interfaces/ElementPos
 import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
 
 export default class ElementPosition<Unit extends ElementPositionUnit> implements IElementPosition<Unit> {
+  readonly unit: Unit;
   readonly vector: THREE.Vector3;
   readonly x: number;
   readonly y: number;
   readonly z: number;
 
-  constructor(x: number, y: number, z: number = 0) {
+  constructor(unit: Unit, x: number, y: number, z: number = 0) {
+    this.unit = unit;
     this.vector = new THREE.Vector3(x, y, z);
     this.x = x;
     this.y = y;
@@ -20,7 +22,7 @@ export default class ElementPosition<Unit extends ElementPositionUnit> implement
   }
 
   clone(): IElementPosition<Unit> {
-    return new ElementPosition<Unit>(this.getX(), this.getY(), this.getZ());
+    return new ElementPosition<Unit>(this.unit, this.getX(), this.getY(), this.getZ());
   }
 
   distanceTo(other: IElementPosition<Unit>): number {
@@ -41,10 +43,6 @@ export default class ElementPosition<Unit extends ElementPositionUnit> implement
     return this.z;
   }
 
-  isOnLineBetween(start: IElementPosition<Unit>, end: IElementPosition<Unit>): boolean {
-    return this.distanceTo(start) + this.distanceTo(end) === start.distanceTo(end);
-  }
-
   isEqual(other: IElementPosition<Unit>): boolean {
     return this.getX() === other.getX() && this.getY() === other.getY() && this.getZ() === other.getZ();
   }
@@ -58,6 +56,6 @@ export default class ElementPosition<Unit extends ElementPositionUnit> implement
   }
 
   offset(other: IElementPosition<Unit>): IElementPosition<Unit> {
-    return new ElementPosition<Unit>(this.getX() + other.getX(), this.getY() + other.getY(), this.getZ() + other.getZ());
+    return new ElementPosition<Unit>(this.unit, this.getX() + other.getX(), this.getY() + other.getY(), this.getZ() + other.getZ());
   }
 }

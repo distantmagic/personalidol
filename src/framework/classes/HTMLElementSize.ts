@@ -8,6 +8,7 @@ export default class HTMLElementSize implements IHTMLElementSize {
   readonly htmlElementHeight: number;
   readonly htmlElementScrollHeight: number;
   readonly htmlElementWidth: number;
+  readonly unit: "px" = "px";
 
   constructor(htmlElement: HTMLElement) {
     this.htmlElement = htmlElement;

@@ -9,11 +9,10 @@ import { default as IQuakeEntityProperties } from "src/framework/interfaces/Quak
 
 export default class QuakeEntityProperties implements HasLoggerBreadcrumbs, IQuakeEntityProperties {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly propsMap: Map<string, QuakeEntityProperty>;
+  readonly propsMap: Map<string, QuakeEntityProperty> = new Map<string, QuakeEntityProperty>();
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, props: ReadonlyArray<QuakeEntityProperty>) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.propsMap = new Map<string, QuakeEntityProperty>();
 
     for (let prop of props) {
       const key = prop.getKey();

@@ -5,8 +5,9 @@ import yn from "yn";
 import CanvasControllerBus from "src/framework/classes/CanvasControllerBus";
 import CanvasViewBag from "src/framework/classes/CanvasViewBag";
 import CanvasViewBus from "src/framework/classes/CanvasViewBus";
-import HTMLElementResizeObserver from "src/framework/classes/HTMLElementResizeObserver";
+import HTMLElementPositionObserver from "src/framework/classes/HTMLElementPositionObserver";
 import HTMLElementSize from "src/framework/classes/HTMLElementSize";
+import HTMLElementSizeObserver from "src/framework/classes/HTMLElementSizeObserver";
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 import KeyboardState from "src/framework/classes/KeyboardState";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
@@ -28,7 +29,8 @@ import Logger from "src/framework/interfaces/Logger";
 import QueryBus from "src/framework/interfaces/QueryBus";
 import { default as ICanvasControllerBus } from "src/framework/interfaces/CanvasControllerBus";
 import { default as IControlToken } from "src/framework/interfaces/ControlToken";
-import { default as IHTMLElementResizeObserver } from "src/framework/interfaces/HTMLElementResizeObserver";
+import { default as IHTMLElementPositionObserver } from "src/framework/interfaces/HTMLElementPositionObserver";
+import { default as IHTMLElementSizeObserver } from "src/framework/interfaces/HTMLElementSizeObserver";
 import { default as IKeyboardState } from "src/framework/interfaces/KeyboardState";
 import { default as IMainLoop } from "src/framework/interfaces/MainLoop";
 import { default as IPointerState } from "src/framework/interfaces/PointerState";
@@ -41,11 +43,12 @@ export default class SceneCanvas extends HTMLElement implements HasLoggerBreadcr
   readonly canvasElement: HTMLCanvasElement;
   readonly canvasWrapperElement: HTMLElement;
   readonly keyboardState: IKeyboardState;
-  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs = new LoggerBreadcrumbs(["SceneCanvas"]);
   readonly mainLoop: IMainLoop;
   readonly mainLoopControlToken: IControlToken;
   readonly pointerState: IPointerState;
-  readonly resizeObserver: IHTMLElementResizeObserver;
+  readonly positionObserver: IHTMLElementPositionObserver;
+  readonly resizeObserver: IHTMLElementSizeObserver;
   readonly scheduler: IScheduler;
   private isHidden: boolean;
   private isLooping: boolean;
@@ -58,8 +61,6 @@ export default class SceneCanvas extends HTMLElement implements HasLoggerBreadcr
   constructor() {
     super();
     autoBind(this);
-
-    this.loggerBreadcrumbs = new LoggerBreadcrumbs(["SceneCanvas"]);
 
     const shadowRoot = this.attachShadow({
       mode: "closed",
@@ -94,8 +95,9 @@ export default class SceneCanvas extends HTMLElement implements HasLoggerBreadcr
     this.mainLoop = MainLoop.getInstance(this.loggerBreadcrumbs.add("MainLoop"));
     this.mainLoopControlToken = this.mainLoop.getControllable().obtainControlToken();
     this.pointerState = new PointerState(this.loggerBreadcrumbs.add("PointerState"), this.canvasElement);
-    this.resizeObserver = new HTMLElementResizeObserver(this.loggerBreadcrumbs.add("HTMLElementResizeObserver"), this.canvasWrapperElement);
-    this.canvasControllerBus = new CanvasControllerBus(this.loggerBreadcrumbs, this.resizeObserver, this.scheduler);
+    this.positionObserver = new HTMLElementPositionObserver(this.loggerBreadcrumbs.add("HTMLElementPositionObserver"), this.canvasWrapperElement);
+    this.resizeObserver = new HTMLElementSizeObserver(this.loggerBreadcrumbs.add("HTMLElementSizeObserver"), this.canvasWrapperElement);
+    this.canvasControllerBus = new CanvasControllerBus(this.loggerBreadcrumbs, this.positionObserver, this.resizeObserver, this.scheduler);
 
     this.mainLoop.setMaxAllowedFPS(80);
     this.mainLoop.attachScheduler(this.scheduler);
@@ -137,15 +139,19 @@ export default class SceneCanvas extends HTMLElement implements HasLoggerBreadcr
     }
 
     if (shouldObserve) {
+      this.canvasControllerBus.observe();
       this.keyboardState.observe();
       this.pointerState.observe();
+      this.positionObserver.observe();
       this.resizeObserver.observe();
 
       this.mainLoop.start(this.mainLoopControlToken);
       this.isObserving = true;
     } else {
+      this.canvasControllerBus.disconnect();
       this.keyboardState.disconnect();
       this.pointerState.disconnect();
+      this.positionObserver.disconnect();
       this.resizeObserver.disconnect();
 
       this.mainLoop.stop(this.mainLoopControlToken);

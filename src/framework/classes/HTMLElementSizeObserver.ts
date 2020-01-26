@@ -1,62 +1,53 @@
 import ResizeObserver from "resize-observer-polyfill";
 
 import ElementSize from "src/framework/classes/ElementSize";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import Resizeable from "src/framework/interfaces/Resizeable";
-import { default as IHTMLElementResizeObserver } from "src/framework/interfaces/HTMLElementResizeObserver";
+import { default as IElementSize } from "src/framework/interfaces/ElementSize";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import { default as IHTMLElementSizeObserver } from "src/framework/interfaces/HTMLElementSizeObserver";
 
-export default class HTMLElementResizeObserver implements HasLoggerBreadcrumbs, IHTMLElementResizeObserver {
+export default class HTMLElementSizeObserver implements HasLoggerBreadcrumbs, IHTMLElementSizeObserver {
   readonly element: HTMLElement;
+  readonly eventDispatcher: IEventListenerSet<[IElementSize<"px">]>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly nativeResizeObserver: ResizeObserver;
-  readonly notifiable: Set<Resizeable<"px">>;
-  private _isObserving: boolean;
+  private _isObserving: boolean = false;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
-    const notifiable = new Set<Resizeable<"px">>();
+    const eventDispatcher = new EventListenerSet(loggerBreadcrumbs.add("EventListenerSet"));
 
-    this._isObserving = false;
     this.element = element;
+    this.eventDispatcher = eventDispatcher;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.notifiable = notifiable;
     this.nativeResizeObserver = new ResizeObserver(function(mutationList) {
       for (let mutation of mutationList) {
         const contentRect = mutation.contentRect;
-        const elementSize = new ElementSize<"px">(contentRect.width, contentRect.height);
+        const elementSize = new ElementSize<"px">("px", contentRect.width, contentRect.height);
 
-        for (let callback of notifiable.values()) {
-          callback.resize(elementSize);
-        }
+        eventDispatcher.notify([elementSize]);
       }
     });
   }
 
   disconnect(): void {
     if (!this._isObserving) {
-      throw new Idempotence(this.loggerBreadcrumbs.add("disconnect"), "HTMLElementResizeObserver is not idempotent.");
+      throw new Idempotence(this.loggerBreadcrumbs.add("disconnect"), "HTMLElementSizeObserver is not idempotent.");
     }
 
     this.nativeResizeObserver.disconnect();
     this._isObserving = false;
   }
 
-  notify(resizeable: Resizeable<"px">): void {
-    this.notifiable.add(resizeable);
-  }
-
   observe(): void {
     if (this._isObserving) {
-      throw new Idempotence(this.loggerBreadcrumbs.add("observe"), "HTMLElementResizeObserver is not idempotent.");
+      throw new Idempotence(this.loggerBreadcrumbs.add("observe"), "HTMLElementSizeObserver is not idempotent.");
     }
 
     this.nativeResizeObserver.observe(this.element);
     this._isObserving = true;
-  }
-
-  off(resizeable: Resizeable<"px">): void {
-    this.notifiable.delete(resizeable);
   }
 }

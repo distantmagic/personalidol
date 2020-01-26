@@ -32,6 +32,7 @@ const fragmentShader = `
   ${THREE.ShaderChunk.common}
   ${THREE.ShaderChunk.packing}
   ${THREE.ShaderChunk.uv_pars_fragment}
+  ${THREE.ShaderChunk.fog_pars_fragment}
   ${THREE.ShaderChunk.bsdfs}
   ${THREE.ShaderChunk.lights_pars_begin}
   ${THREE.ShaderChunk.lights_phong_pars_fragment}
@@ -64,6 +65,7 @@ const fragmentShader = `
 
     ${THREE.ShaderChunk.tonemapping_fragment}
     ${THREE.ShaderChunk.encodings_fragment}
+    ${THREE.ShaderChunk.fog_fragment}
   }
 `;
 
@@ -76,6 +78,7 @@ const vertexShader = `
 
   ${THREE.ShaderChunk.common}
   ${THREE.ShaderChunk.uv_pars_vertex}
+  ${THREE.ShaderChunk.fog_pars_vertex}
   ${THREE.ShaderChunk.shadowmap_pars_vertex}
 
   // Custom variables
@@ -107,6 +110,7 @@ const vertexShader = `
 
     ${THREE.ShaderChunk.worldpos_vertex}
     ${THREE.ShaderChunk.shadowmap_vertex}
+    ${THREE.ShaderChunk.fog_vertex}
   }
 `;
 
@@ -120,6 +124,7 @@ function getMaterial(textureAtlas: THREE.Texture, textureCount: number): THREE.S
       USE_UV: "",
     },
 
+    fog: true,
     fragmentShader: fragmentShader,
 
     uniforms: THREE.UniformsUtils.merge([

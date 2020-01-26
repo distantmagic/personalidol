@@ -3,6 +3,8 @@ import EquatableWithPrecision from "src/framework/interfaces/EquatableWithPrecis
 import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
 
 export default interface ElementPosition<Unit extends ElementPositionUnit> extends EquatableWithPrecision<ElementPosition<Unit>> {
+  readonly unit: Unit;
+
   distanceTo(elementPosition: ElementPosition<Unit>): number;
 
   getX(): number;
@@ -10,8 +12,6 @@ export default interface ElementPosition<Unit extends ElementPositionUnit> exten
   getY(): number;
 
   getZ(): number;
-
-  isOnLineBetween(elementPosition1: ElementPosition<Unit>, elementPosition2: ElementPosition<Unit>): boolean;
 
   offset(elementPosition: ElementPosition<Unit>): ElementPosition<Unit>;
 }

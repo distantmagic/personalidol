@@ -4,12 +4,11 @@ const LOGGER_BREADCRUMB_SEPARATOR = "/";
 
 export default class LoggerBreadcrumbs implements ILoggerBreadcrumbs {
   readonly breadcrumbs: ReadonlyArray<string>;
-  readonly loggerBreadcrumbsLocalCache: Map<string, ILoggerBreadcrumbs>;
+  readonly loggerBreadcrumbsLocalCache: Map<string, ILoggerBreadcrumbs> = new Map<string, ILoggerBreadcrumbs>();
   readonly loggerBreadcrumbsMemo: Map<string, ILoggerBreadcrumbs>;
 
   constructor(breadcrumbs: ReadonlyArray<string> = ["root"], loggerBreadcrumbsMemo: Map<string, ILoggerBreadcrumbs> = new Map()) {
     this.breadcrumbs = Object.freeze(breadcrumbs);
-    this.loggerBreadcrumbsLocalCache = new Map<string, ILoggerBreadcrumbs>();
     this.loggerBreadcrumbsMemo = loggerBreadcrumbsMemo;
   }
 

@@ -12,13 +12,12 @@ import { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBu
 export default class CanvasViewBag implements HasLoggerBreadcrumbs, ICanvasViewBag {
   readonly canvasViewBus: ICanvasViewBus;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly canvasViews: CanvasView[];
+  readonly canvasViews: CanvasView[] = [];
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBus: ICanvasViewBus) {
     autoBind(this);
 
     this.canvasViewBus = canvasViewBus;
-    this.canvasViews = [];
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 

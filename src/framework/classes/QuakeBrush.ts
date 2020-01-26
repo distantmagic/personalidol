@@ -18,7 +18,7 @@ import { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/Qu
 export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   readonly halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly verticesCache: WeakMap<THREE.Vector3, QuakeBrushHalfSpace>;
+  readonly verticesCache: WeakMap<THREE.Vector3, QuakeBrushHalfSpace> = new WeakMap();
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>) {
     if (halfSpaces.length < 4) {
@@ -27,7 +27,6 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
 
     this.halfSpaces = Object.freeze(halfSpaces);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.verticesCache = new WeakMap();
   }
 
   containsPoint(point: THREE.Vector3): boolean {

@@ -10,7 +10,7 @@ import KeyboardButtonNames from "src/framework/types/KeyboardButtonNames";
 
 export default class KeyboardState implements HasLoggerBreadcrumbs, IKeyboardState {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  private _isObserving: boolean;
+  private _isObserving: boolean = false;
   private keys: {
     [key: string]: boolean;
   } = {};
@@ -18,9 +18,7 @@ export default class KeyboardState implements HasLoggerBreadcrumbs, IKeyboardSta
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
 
-    this._isObserving = false;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-
     this.reset();
   }
 

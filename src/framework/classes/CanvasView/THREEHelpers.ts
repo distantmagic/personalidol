@@ -9,16 +9,15 @@ import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class THREEHelpers extends CanvasView {
-  readonly axesHelper: THREE.AxesHelper;
+  readonly axesHelper: THREE.AxesHelper = new THREE.AxesHelper(256);
   readonly gridHelper: THREE.GridHelper;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, group: THREE.Group) {
     super(loggerBreadcrumbs, canvasViewBag, group);
 
     const gridTileSize = 32;
-    const gridSideLength = 32 + 1;
+    const gridSideLength = 128 + 1;
 
-    this.axesHelper = new THREE.AxesHelper(256);
     this.gridHelper = new THREE.GridHelper(gridSideLength * gridTileSize, gridSideLength);
   }
 

@@ -13,19 +13,16 @@ import { default as ILoadingManagerState } from "src/framework/interfaces/Loadin
 import LoadingManagerStateChangeCallback from "src/framework/types/LoadingManagerStateChangeCallback";
 
 export default class LoadingManager implements HasLoggerBreadcrumbs, ILoadingManager {
-  readonly backgroundItems: Map<Promise<any>, string>;
-  readonly blockingItems: Map<Promise<any>, string>;
+  readonly backgroundItems: Map<Promise<any>, string> = new Map<Promise<any>, string>();
+  readonly blockingItems: Map<Promise<any>, string> = new Map<Promise<any>, string>();
   readonly callbacks: IEventListenerSet<[ILoadingManagerState]>;
   readonly exceptionHandler: ExceptionHandler;
-  readonly failedItems: Map<Promise<any>, string>;
+  readonly failedItems: Map<Promise<any>, string> = new Map<Promise<any>, string>();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, exceptionHandler: ExceptionHandler) {
-    this.backgroundItems = new Map<Promise<any>, string>();
-    this.blockingItems = new Map<Promise<any>, string>();
     this.callbacks = new EventListenerSet<[ILoadingManagerState]>(loggerBreadcrumbs.add("EventListenerSet"));
     this.exceptionHandler = exceptionHandler;
-    this.failedItems = new Map<Promise<any>, string>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 

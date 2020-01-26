@@ -2,18 +2,17 @@ import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import ElementPosition from "src/framework/interfaces/ElementPosition";
 import ElementSize from "src/framework/interfaces/ElementSize";
 import { default as ICanvasController } from "src/framework/interfaces/CanvasController";
 
-export default abstract class CanvasController implements ICanvasController {
+export default class CanvasController implements ICanvasController {
   readonly canvasViewBag: CanvasViewBag;
-  private _isAttached: boolean;
-  private _isDisposed: boolean;
+  private _isAttached: boolean = false;
+  private _isDisposed: boolean = false;
 
   constructor(canvasViewBag: CanvasViewBag) {
     this.canvasViewBag = canvasViewBag;
-    this._isAttached = false;
-    this._isDisposed = false;
   }
 
   @cancelable()
@@ -44,6 +43,8 @@ export default abstract class CanvasController implements ICanvasController {
   }
 
   resize(elementSize: ElementSize<"px">): void {}
+
+  setPosition(elementPosition: ElementPosition<"px">): void {}
 
   update(delta: number): void {}
 

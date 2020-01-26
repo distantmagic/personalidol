@@ -4,7 +4,9 @@ import CanvasController from "src/framework/interfaces/CanvasController";
 import ControllableDelegate from "src/framework/interfaces/ControllableDelegate";
 import ControlToken from "src/framework/interfaces/ControlToken";
 
-export default interface CameraController extends CanvasController, ControllableDelegate {
+export default interface Camera extends CanvasController, ControllableDelegate {
+  getCamera(): THREE.OrthographicCamera;
+
   getCameraFrustum(): THREE.Frustum;
 
   decreaseZoom(controlToken: ControlToken): void;

@@ -10,19 +10,15 @@ import { default as IEventListenerSet } from "src/framework/interfaces/EventList
 import CancelTokenCallback from "src/framework/types/CancelTokenCallback";
 
 export default class CancelToken implements ICancelToken {
-  private _isCanceled: boolean;
-  private _isSettled: boolean;
-  private loggerBreadcrumbsCancel: null | LoggerBreadcrumbs;
-  readonly abortController: AbortController;
+  private _isCanceled: boolean = false;
+  private _isSettled: boolean = false;
+  private loggerBreadcrumbsCancel: null | LoggerBreadcrumbs = null;
+  readonly abortController: AbortController = new AbortController();
   readonly callbacks: IEventListenerSet<[ICanceled]>;
   readonly loggerBreadcrumbsCreate: LoggerBreadcrumbs;
 
   constructor(loggerBreadcrumbsCreate: LoggerBreadcrumbs) {
-    this._isCanceled = false;
-    this._isSettled = false;
-    this.abortController = new AbortController();
     this.callbacks = new EventListenerSet<[ICanceled]>(loggerBreadcrumbsCreate);
-    this.loggerBreadcrumbsCancel = null;
     this.loggerBreadcrumbsCreate = loggerBreadcrumbsCreate;
   }
 

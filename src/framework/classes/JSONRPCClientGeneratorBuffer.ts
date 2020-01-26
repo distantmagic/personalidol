@@ -6,14 +6,12 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IJSONRPCClientGeneratorBuffer } from "src/framework/interfaces/JSONRPCClientGeneratorBuffer";
 
 export default class JSONRPCClientGeneratorBuffer<T> implements HasLoggerBreadcrumbs, IJSONRPCClientGeneratorBuffer<T> {
-  readonly buffer: Map<string, JSONRPCGeneratorChunkResponse<T>>;
+  readonly buffer: Map<string, JSONRPCGeneratorChunkResponse<T>> = new Map();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  private flushable: JSONRPCGeneratorChunkResponse<T>[];
+  private flushable: JSONRPCGeneratorChunkResponse<T>[] = [];
   private lastSent: null | JSONRPCGeneratorChunkResponse<T> = null;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
-    this.buffer = new Map();
-    this.flushable = [];
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 

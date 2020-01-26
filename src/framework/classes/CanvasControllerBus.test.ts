@@ -3,7 +3,8 @@ import CanvasController from "src/framework/classes/CanvasController";
 import CanvasControllerBus from "src/framework/classes/CanvasControllerBus";
 import CanvasViewBag from "src/framework/classes/CanvasViewBag";
 import CanvasViewBus from "src/framework/classes/CanvasViewBus";
-import HTMLElementResizeObserver from "src/framework/classes/HTMLElementResizeObserver";
+import HTMLElementPositionObserver from "src/framework/classes/HTMLElementPositionObserver";
+import HTMLElementSizeObserver from "src/framework/classes/HTMLElementSizeObserver";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 import { default as CanvasControllerException } from "src/framework/classes/Exception/CanvasController";
@@ -49,8 +50,9 @@ test("cannot attach the same controller more than once", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementResizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
+  const htmlElementPositionObserver = new HTMLElementPositionObserver(loggerBreadcrumbs, htmlElement);
+  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
+  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementPositionObserver, htmlElementResizeObserver, scheduler);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
@@ -66,8 +68,9 @@ test("cannot detach the same controller more than once", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementResizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
+  const htmlElementPositionObserver = new HTMLElementPositionObserver(loggerBreadcrumbs, htmlElement);
+  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
+  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementPositionObserver, htmlElementResizeObserver, scheduler);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
@@ -84,8 +87,9 @@ test("fails when controller attach is improperly implemented", async function() 
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementResizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
+  const htmlElementPositionObserver = new HTMLElementPositionObserver(loggerBreadcrumbs, htmlElement);
+  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
+  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementPositionObserver, htmlElementResizeObserver, scheduler);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
@@ -99,8 +103,9 @@ test("fails when controller dispose is improperly implemented", async function()
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementResizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
+  const htmlElementPositionObserver = new HTMLElementPositionObserver(loggerBreadcrumbs, htmlElement);
+  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
+  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementPositionObserver, htmlElementResizeObserver, scheduler);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
@@ -116,8 +121,9 @@ test("properly attaches and detaches canvas controllers", async function() {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementResizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
+  const htmlElementPositionObserver = new HTMLElementPositionObserver(loggerBreadcrumbs, htmlElement);
+  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
+  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementPositionObserver, htmlElementResizeObserver, scheduler);
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 

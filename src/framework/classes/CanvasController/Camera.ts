@@ -14,18 +14,18 @@ import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import ElementSize from "src/framework/interfaces/ElementSize";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ICameraController } from "src/framework/interfaces/CameraController";
+import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as IControllable } from "src/framework/interfaces/Controllable";
 import { default as IControlToken } from "src/framework/interfaces/ControlToken";
 
 export default class CameraController extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
-  private readonly controllable: IControllable;
-  private readonly internalControlToken: IControlToken;
-  private height: number;
-  private width: number;
-  private zoomTarget: number;
   readonly camera: THREE.OrthographicCamera;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  private readonly controllable: IControllable;
+  private readonly internalControlToken: IControlToken;
+  private height: number = 0;
+  private width: number = 0;
+  private zoomTarget: number = 2;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, camera: THREE.OrthographicCamera) {
     super(canvasViewBag);
@@ -34,10 +34,7 @@ export default class CameraController extends CanvasController implements HasLog
     this.camera = camera;
     this.internalControlToken = new ControlToken(loggerBreadcrumbs.add("ControlToken"));
     this.controllable = new Controllable(loggerBreadcrumbs.add("Controllable"), this.internalControlToken);
-    this.height = 0;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.width = 0;
-    this.zoomTarget = 2;
   }
 
   @cancelable()
@@ -58,6 +55,10 @@ export default class CameraController extends CanvasController implements HasLog
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     super.dispose(cancelToken);
+  }
+
+  getCamera(): THREE.OrthographicCamera {
+    return this.camera;
   }
 
   getCameraFrustum(): THREE.Frustum {

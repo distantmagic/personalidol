@@ -13,10 +13,12 @@ import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
 export default class ElementPositionCollection<Unit extends ElementPositionUnit> implements HasLoggerBreadcrumbs, IElementPositionCollection<Unit> {
   readonly elementPositions: ReadonlyArray<IElementPosition<Unit>>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly unit: Unit;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, elementPositions: ReadonlyArray<IElementPosition<Unit>>) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, unit: Unit, elementPositions: ReadonlyArray<IElementPosition<Unit>>) {
     this.elementPositions = elementPositions;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.unit = unit;
   }
 
   asArray(): ReadonlyArray<IElementPosition<Unit>> {
@@ -61,14 +63,15 @@ export default class ElementPositionCollection<Unit extends ElementPositionUnit>
 
     return new ElementBoundingBox(
       this.loggerBreadcrumbs.add("ElementBoundingBox"),
-      new ElementPosition<Unit>(minX, minY, minZ),
-      new ElementSize<Unit>(maxX - minX, maxY - minY, maxZ - minZ)
+      new ElementPosition<Unit>(this.unit, minX, minY, minZ),
+      new ElementSize<Unit>(this.unit, maxX - minX, maxY - minY, maxZ - minZ)
     );
   }
 
   offsetCollection(other: IElementPosition<Unit>): IElementPositionCollection<Unit> {
     return new ElementPositionCollection(
       this.loggerBreadcrumbs.add("offsetCollection").add("ElementPositionCollection"),
+      this.unit,
       this.asArray().map(elementPosition => elementPosition.offset(other))
     );
   }

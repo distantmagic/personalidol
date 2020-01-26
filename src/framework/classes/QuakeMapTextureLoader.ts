@@ -12,22 +12,18 @@ import QueryBus from "src/framework/interfaces/QueryBus";
 import { default as IQuakeMapTextureLoader } from "src/framework/interfaces/QuakeMapTextureLoader";
 
 export default class QuakeMapTextureLoader implements HasLoggerBreadcrumbs, IQuakeMapTextureLoader {
-  readonly loadedTextures: Set<THREE.Texture>;
+  readonly loadedTextures: Set<THREE.Texture> = new Set<THREE.Texture>();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
   readonly textureLoader: THREE.TextureLoader;
-  readonly texturesIndex: string[];
-  readonly texturesSources: Map<string, string>;
-  private _lastId: number;
+  readonly texturesIndex: string[] = [];
+  readonly texturesSources: Map<string, string> = new Map<string, string>();
+  private _lastId: number = 0;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, loadingManager: THREE.LoadingManager, queryBus: QueryBus) {
-    this._lastId = 0;
-    this.loadedTextures = new Set<THREE.Texture>();
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.queryBus = queryBus;
     this.textureLoader = new THREE.TextureLoader(loadingManager);
-    this.texturesIndex = [];
-    this.texturesSources = new Map<string, string>();
   }
 
   dispose(): void {
