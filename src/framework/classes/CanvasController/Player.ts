@@ -76,8 +76,17 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.playerView), "Loading player view");
   }
 
-  begin(): void {
-    super.begin();
+  @cancelable()
+  async dispose(cancelToken: CancelToken): Promise<void> {
+    await super.dispose(cancelToken);
+  }
+
+  useUpdate(): true {
+    return true;
+  }
+
+  update(delta: number): void {
+    super.update(delta);
 
     const character = this.playerView.getCharacter();
 
@@ -102,14 +111,5 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     character.setVelocity(direction);
 
     this.cameraController.lookAt(character.getPosition());
-  }
-
-  @cancelable()
-  async dispose(cancelToken: CancelToken): Promise<void> {
-    await super.dispose(cancelToken);
-  }
-
-  useBegin(): true {
-    return true;
   }
 }

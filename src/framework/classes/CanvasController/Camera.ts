@@ -22,7 +22,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   private height: number = 0;
   private needsUpdate: boolean = true;
   private width: number = 0;
-  private zoom: number = 1;
+  private zoom: number = 5;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, camera: THREE.OrthographicCamera) {
     super(canvasViewBag);
@@ -115,7 +115,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   }
 
   setZoom(zoom: number): void {
-    const clampedZoom = clamp(zoom, 1, 6);
+    const clampedZoom = clamp(zoom, 1, 5);
 
     if (this.zoom === clampedZoom) {
       return;
