@@ -42,6 +42,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
     // this.lookAt(new THREE.Vector3(0, 0, 0));
     this.lookAt(new THREE.Vector3(256, 0, 256 * 2));
+    this.needsUpdate = true;
   }
 
   begin(): void {
@@ -95,7 +96,6 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     );
 
     this.camera.lookAt(position.clone());
-    this.needsUpdate = true;
   }
 
   resize(viewportSize: ElementSize<"px">): void {
