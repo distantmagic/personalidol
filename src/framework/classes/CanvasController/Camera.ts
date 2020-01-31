@@ -3,11 +3,9 @@ import autoBind from "auto-bind";
 import clamp from "lodash/clamp";
 
 import CanvasController from "src/framework/classes/CanvasController";
-import Controllable from "src/framework/classes/Controllable";
-import ControlToken from "src/framework/classes/ControlToken";
+import EventListenerSet from "src/framework/classes/EventListenerSet";
 
 import cancelable from "src/framework/decorators/cancelable";
-import controlled from "src/framework/decorators/controlled";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
@@ -15,26 +13,24 @@ import ElementSize from "src/framework/interfaces/ElementSize";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
-import { default as IControllable } from "src/framework/interfaces/Controllable";
-import { default as IControlToken } from "src/framework/interfaces/ControlToken";
+import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
-export default class CameraController extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
+export default class Camera extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
   readonly camera: THREE.OrthographicCamera;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  private readonly controllable: IControllable;
-  private readonly internalControlToken: IControlToken;
+  readonly onZoomChange: IEventListenerSet<[number]>;
   private height: number = 0;
+  private needsUpdate: boolean = true;
   private width: number = 0;
-  private zoomTarget: number = 2;
+  private zoom: number = 1;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, camera: THREE.OrthographicCamera) {
     super(canvasViewBag);
     autoBind(this);
 
     this.camera = camera;
-    this.internalControlToken = new ControlToken(loggerBreadcrumbs.add("ControlToken"));
-    this.controllable = new Controllable(loggerBreadcrumbs.add("Controllable"), this.internalControlToken);
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.onZoomChange = new EventListenerSet<[number]>(loggerBreadcrumbs.add("EventListenerSet"));
   }
 
   @cancelable()
@@ -45,11 +41,22 @@ export default class CameraController extends CanvasController implements HasLog
     this.camera.far = 4096;
     // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
     // this.lookAt(new THREE.Vector3(0, 0, 0));
-    this.lookAt(this.internalControlToken, new THREE.Vector3(256, 0, 256 * 2));
+    this.lookAt(new THREE.Vector3(256, 0, 256 * 2));
   }
 
-  decreaseZoom(controlToken: IControlToken): void {
-    this.setZoom(controlToken, this.zoomTarget - 1);
+  begin(): void {
+    super.begin();
+
+    if (!this.needsUpdate) {
+      return;
+    }
+
+    this.needsUpdate = false;
+    this.updateProjectionMatrix();
+  }
+
+  decreaseZoom(): void {
+    this.setZoom(this.zoom - 1);
   }
 
   @cancelable()
@@ -69,16 +76,15 @@ export default class CameraController extends CanvasController implements HasLog
     return frustum;
   }
 
-  getControllable(): IControllable {
-    return this.controllable;
+  getZoom(): number {
+    return this.zoom;
   }
 
-  increaseZoom(controlToken: IControlToken): void {
-    this.setZoom(controlToken, this.zoomTarget + 1);
+  increaseZoom(): void {
+    this.setZoom(this.zoom + 1);
   }
 
-  @controlled(true)
-  lookAt(controlToken: IControlToken, position: THREE.Vector3): void {
+  lookAt(position: THREE.Vector3): void {
     const baseDistance = 256 * 3;
 
     // prettier-ignore
@@ -89,7 +95,7 @@ export default class CameraController extends CanvasController implements HasLog
     );
 
     this.camera.lookAt(position.clone());
-    this.updateProjectionMatrix();
+    this.needsUpdate = true;
   }
 
   resize(viewportSize: ElementSize<"px">): void {
@@ -105,26 +111,31 @@ export default class CameraController extends CanvasController implements HasLog
     this.height = height;
     this.width = width;
 
-    this.updateProjectionMatrix();
+    this.needsUpdate = true;
   }
 
-  @controlled(true)
-  setZoom(controlToken: IControlToken, zoom: number): void {
+  setZoom(zoom: number): void {
     const clampedZoom = clamp(zoom, 1, 6);
 
-    if (this.zoomTarget === clampedZoom) {
+    if (this.zoom === clampedZoom) {
       return;
     }
 
-    this.zoomTarget = clampedZoom;
-    this.updateProjectionMatrix();
+    this.zoom = clampedZoom;
+    this.needsUpdate = true;
+
+    this.onZoomChange.notify([clampedZoom]);
   }
 
   updateProjectionMatrix() {
-    this.camera.left = -1 * (this.width / this.zoomTarget);
-    this.camera.right = this.width / this.zoomTarget;
-    this.camera.top = this.height / this.zoomTarget;
-    this.camera.bottom = -1 * (this.height / this.zoomTarget);
+    this.camera.left = -1 * (this.width / this.zoom);
+    this.camera.right = this.width / this.zoom;
+    this.camera.top = this.height / this.zoom;
+    this.camera.bottom = -1 * (this.height / this.zoom);
     this.camera.updateProjectionMatrix();
+  }
+
+  useBegin(): true {
+    return true;
   }
 }

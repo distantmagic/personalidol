@@ -179,6 +179,7 @@ export default class SceneCanvas extends HTMLElement implements HasLoggerBreadcr
     this.onComponentStateChange();
 
     const renderer = new THREE.WebGLRenderer({
+      alpha: true,
       antialias: false,
       canvas: this.canvasElement,
     });

@@ -1,19 +1,22 @@
 import * as THREE from "three";
 
 import CanvasController from "src/framework/interfaces/CanvasController";
-import ControllableDelegate from "src/framework/interfaces/ControllableDelegate";
-import ControlToken from "src/framework/interfaces/ControlToken";
+import EventListenerSet from "src/framework/interfaces/EventListenerSet";
 
-export default interface Camera extends CanvasController, ControllableDelegate {
+export default interface Camera extends CanvasController {
+  readonly onZoomChange: EventListenerSet<[number]>;
+
   getCamera(): THREE.OrthographicCamera;
 
   getCameraFrustum(): THREE.Frustum;
 
-  decreaseZoom(controlToken: ControlToken): void;
+  getZoom(): number;
 
-  increaseZoom(controlToken: ControlToken): void;
+  decreaseZoom(): void;
 
-  lookAt(controlToken: ControlToken, position: THREE.Vector3): void;
+  increaseZoom(): void;
 
-  setZoom(controlToken: ControlToken, zoom: number): void;
+  lookAt(position: THREE.Vector3): void;
+
+  setZoom(zoom: number): void;
 }

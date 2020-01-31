@@ -1,0 +1,23 @@
+{
+  "animations": {
+    "attack": "attack",
+    "crouchAttack": "crattack",
+    "crouchIdle": "cstand",
+    "crouchMove": "cwalk",
+    "idle": "stand",
+    "jump": "jump",
+    "move": "run"
+  },
+  "body": "necron99.md2",
+  "skins": [
+    "ctf_b.png",
+    "ctf_r.png",
+    "necron.png",
+    "tekctf_b.png",
+    "tekctf_r.png",
+    "tekron9x.png"
+  ],
+  "weapons": [
+    ["weapon.md2", "weapon.png"]
+  ]
+}

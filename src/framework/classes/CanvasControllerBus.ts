@@ -44,8 +44,8 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       throw new CanvasControllerException(this.loggerBreadcrumbs.add("add"), "Canvas controller wasn't properly attached. Did you forget to call parent 'super.attach' method?");
     }
 
-    this.positionObserver.eventDispatcher.add(canvasController.setPosition);
-    this.resizeObserver.eventDispatcher.add(canvasController.resize);
+    this.positionObserver.onPositionChange.add(canvasController.setPosition);
+    this.resizeObserver.onResize.add(canvasController.resize);
 
     // catch up with last events
     const lastElementPosition = this.lastElementPosition;
@@ -93,8 +93,8 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       this.scheduler.offUpdate(canvasController.update);
     }
 
-    this.positionObserver.eventDispatcher.delete(canvasController.setPosition);
-    this.resizeObserver.eventDispatcher.delete(canvasController.resize);
+    this.positionObserver.onPositionChange.delete(canvasController.setPosition);
+    this.resizeObserver.onResize.delete(canvasController.resize);
 
     await canvasController.dispose(cancelToken);
 
@@ -107,13 +107,13 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
   }
 
   disconnect(): void {
-    this.positionObserver.eventDispatcher.delete(this.setPosition);
-    this.resizeObserver.eventDispatcher.delete(this.resize);
+    this.positionObserver.onPositionChange.delete(this.setPosition);
+    this.resizeObserver.onResize.delete(this.resize);
   }
 
   observe(): void {
-    this.positionObserver.eventDispatcher.add(this.setPosition);
-    this.resizeObserver.eventDispatcher.add(this.resize);
+    this.positionObserver.onPositionChange.add(this.setPosition);
+    this.resizeObserver.onResize.add(this.resize);
   }
 
   setPosition(elementPosition: IElementPosition<"px">): void {

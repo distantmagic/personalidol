@@ -14,11 +14,12 @@ import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import QueryBus from "src/framework/interfaces/QueryBus";
 import { default as IMD2Character } from "src/framework/interfaces/MD2Character";
+import { default as IMD2CharacterView } from "src/framework/interfaces/CanvasView/MD2Character";
 
 import MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
 import QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 
-export default class MD2Character extends CanvasView {
+export default class MD2Character extends CanvasView implements IMD2CharacterView {
   readonly angle: number;
   readonly animationOffset: number;
   readonly baseUrl: string;
@@ -86,11 +87,11 @@ export default class MD2Character extends CanvasView {
     character.update(this.animationOffset);
 
     character.root.position.copy(this.origin);
-    character.root.rotation.y = THREE.Math.degToRad(this.angle);
-
     this.children.add(character.root);
 
     this.character = character;
+
+    this.setRotationY(THREE.Math.degToRad(this.angle));
   }
 
   @cancelable()
@@ -116,6 +117,34 @@ export default class MD2Character extends CanvasView {
 
   getName(): "MD2Character" {
     return "MD2Character";
+  }
+
+  getPosition(): THREE.Vector3 {
+    return this.getCharacter().root.position;
+  }
+
+  setAnimationIdle(): void {
+    const controls = this.getCharacter().controls;
+
+    if (controls) {
+      controls.moveForward = false;
+    }
+  }
+
+  setAnimationWalking(): void {
+    const controls = this.getCharacter().controls;
+
+    if (controls) {
+      controls.moveForward = true;
+    }
+  }
+
+  setRotationY(rotationRadians: number): void {
+    this.getCharacter().root.rotation.y = rotationRadians;
+  }
+
+  setVelocity(velocity: THREE.Vector3): void {
+    this.getCharacter().root.position.add(velocity);
   }
 
   update(delta: number): void {

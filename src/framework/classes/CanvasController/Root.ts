@@ -89,7 +89,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     const sceneBackgroundColor = 0x000000;
 
     this.scene.background = new THREE.Color(sceneBackgroundColor);
-    this.scene.fog = new THREE.Fog(sceneBackgroundColor, 512, 1024 + 1024);
+    // this.scene.fog = new THREE.Fog(sceneBackgroundColor, 512, 1024 + 1024);
 
     this.scene.add(this.canvasRootGroup);
 
@@ -100,9 +100,12 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
       canvasViewBag,
       this.cameraController,
       debug,
+      renderer.domElement,
       loadingManager,
-      renderer,
-      scheduler
+      pointerState,
+      this.queryBus,
+      scheduler,
+      threeLoadingManager
     );
 
     this.threeLoadingManager = threeLoadingManager;
@@ -125,12 +128,16 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
         cancelToken,
         new QuakeMapView(
           this.loggerBreadcrumbs.add("QuakeMap"),
+          this.cameraController,
+          this.canvasControllerBus,
           this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
           this.canvasRootGroup,
           this.audioListener,
           this.audioLoader,
           this.loadingManager,
           this.logger,
+          this.pointerController,
+          this.pointerState,
           this.queryBus,
           this.threeLoadingManager,
           env(this.loggerBreadcrumbs.add("env"), "REACT_APP_PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-desert-hut.map")

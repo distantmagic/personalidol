@@ -4,5 +4,5 @@ import Observer from "src/framework/interfaces/Observer";
 import Resizeable from "src/framework/interfaces/Resizeable";
 
 export default interface HTMLElementSizeObserver extends Observer {
-  readonly eventDispatcher: EventListenerSet<[ElementSize<"px">]>;
+  readonly onResize: EventListenerSet<[ElementSize<"px">]>;
 }

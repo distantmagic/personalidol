@@ -377,7 +377,7 @@ export default class MD2Character implements HasLoggerBreadcrumbs, IMD2Character
     //     this.setAnimation(idleAnimation);
     //   }
     // }
-    if (!controls.moveLeft || !controls.moveRight || !controls.moveForward || !controls.moveBackward) {
+    if (!controls.moveLeft && !controls.moveRight && !controls.moveForward && !controls.moveBackward) {
       if (this.activeAnimation !== idleAnimation) {
         this.setAnimation(idleAnimation);
       }

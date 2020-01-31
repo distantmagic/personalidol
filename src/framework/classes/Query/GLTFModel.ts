@@ -1,4 +1,4 @@
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 import Query from "src/framework/classes/Query";
 
@@ -6,11 +6,7 @@ import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
 
-type GLTFLoaderResponse = {
-  scene: THREE.Scene;
-};
-
-export default class GLTFModel extends Query<GLTFLoaderResponse> {
+export default class GLTFModel extends Query<GLTF> {
   readonly loadingManager: THREE.LoadingManager;
   readonly resourcesPath: string;
   readonly url: string;
@@ -24,7 +20,7 @@ export default class GLTFModel extends Query<GLTFLoaderResponse> {
   }
 
   @cancelable(true)
-  execute(cancelToken: CancelToken): Promise<GLTFLoaderResponse> {
+  execute(cancelToken: CancelToken): Promise<GLTF> {
     const loader = new GLTFLoader(this.loadingManager);
 
     return new Promise((resolve, reject) => {

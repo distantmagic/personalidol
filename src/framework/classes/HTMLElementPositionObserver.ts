@@ -10,15 +10,15 @@ import { default as IHTMLElementPositionObserver } from "src/framework/interface
 
 export default class HTMLElementPositionObserver implements HasLoggerBreadcrumbs, IHTMLElementPositionObserver {
   readonly element: HTMLElement;
-  readonly eventDispatcher: IEventListenerSet<[IElementPosition<"px">]>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly onPositionChange: IEventListenerSet<[IElementPosition<"px">]>;
   private _isObserving: boolean = false;
   private elementPosition: IElementPosition<"px"> = new ElementPosition<"px">("px", 0, 0, 0);
   private timeoutId: null | number = null;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
     this.element = element;
-    this.eventDispatcher = new EventListenerSet(loggerBreadcrumbs.add("EventListenerSet"));
+    this.onPositionChange = new EventListenerSet(loggerBreadcrumbs.add("EventListenerSet"));
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
@@ -31,7 +31,7 @@ export default class HTMLElementPositionObserver implements HasLoggerBreadcrumbs
     }
 
     this.elementPosition = updatedElementPosition;
-    this.eventDispatcher.notify([updatedElementPosition]);
+    this.onPositionChange.notify([updatedElementPosition]);
   }
 
   disconnect(): void {

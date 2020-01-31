@@ -14,6 +14,8 @@ import ElementSize from "src/framework/interfaces/ElementSize";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoadingManager from "src/framework/interfaces/LoadingManager";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import PointerState from "src/framework/interfaces/PointerState";
+import QueryBus from "src/framework/interfaces/QueryBus";
 import Scheduler from "src/framework/interfaces/Scheduler";
 import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as ICursorCanvasView } from "src/framework/interfaces/CanvasView/Cursor";
@@ -23,11 +25,11 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   readonly canvasRootGroup: THREE.Group;
   readonly cursorView: ICursorCanvasView;
   readonly debug: Debugger;
+  readonly domElement: HTMLElement;
   readonly loadingManager: LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly mouseVector: THREE.Vector2 = new THREE.Vector2(0.5, 0.5);
+  readonly pointerVector: THREE.Vector2 = new THREE.Vector2(0.5, 0.5);
   readonly raycaster: THREE.Raycaster = new THREE.Raycaster();
-  readonly renderer: THREE.WebGLRenderer;
   readonly scheduler: Scheduler;
   private canvasHeight: number = 0;
   private canvasOffsetLeft: number = 0;
@@ -42,9 +44,12 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     canvasViewBag: CanvasViewBag,
     cameraController: ICameraController,
     debug: Debugger,
+    domElement: HTMLElement,
     loadingManager: LoadingManager,
-    renderer: THREE.WebGLRenderer,
-    scheduler: Scheduler
+    pointerState: PointerState,
+    queryBus: QueryBus,
+    scheduler: Scheduler,
+    threeLoadingManager: THREE.LoadingManager
   ) {
     super(canvasViewBag);
     autoBind(this);
@@ -52,19 +57,27 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     this.cameraController = cameraController;
     this.canvasRootGroup = canvasRootGroup;
     this.debug = debug;
+    this.domElement = domElement;
     this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.renderer = renderer;
     this.scheduler = scheduler;
 
-    this.cursorView = new CursorView(this.loggerBreadcrumbs.add("Cursor"), this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Cursor")), this.canvasRootGroup);
+    this.cursorView = new CursorView(
+      this.loggerBreadcrumbs.add("Cursor"),
+      cameraController,
+      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Cursor")),
+      this.canvasRootGroup,
+      pointerState,
+      queryBus,
+      threeLoadingManager
+    );
   }
 
   @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const domElement = this.renderer.domElement;
+    const domElement = this.domElement;
     const optionsPassive = {
       capture: true,
       passive: true,
@@ -72,10 +85,9 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
 
     domElement.addEventListener("contextmenu", this.onContextMenu);
     domElement.addEventListener("mousedown", this.onMouseChange, optionsPassive);
-    domElement.addEventListener("mousedown", this.onMouseDown);
+    domElement.addEventListener("mouseleave", this.onMouseLeave);
     domElement.addEventListener("mousemove", this.onMouseChange, optionsPassive);
     domElement.addEventListener("mouseup", this.onMouseChange, optionsPassive);
-    domElement.addEventListener("mouseup", this.onMouseUp);
     domElement.addEventListener("wheel", this.onWheel);
 
     await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.cursorView), "Loading cursor");
@@ -85,15 +97,22 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    const domElement = this.renderer.domElement;
+    const domElement = this.domElement;
 
     domElement.removeEventListener("contextmenu", this.onContextMenu);
     domElement.removeEventListener("mousedown", this.onMouseChange);
-    domElement.removeEventListener("mousedown", this.onMouseDown);
+    domElement.removeEventListener("mouseleave", this.onMouseLeave);
     domElement.removeEventListener("mousemove", this.onMouseChange);
     domElement.removeEventListener("mouseup", this.onMouseChange);
-    domElement.removeEventListener("mouseup", this.onMouseUp);
     domElement.removeEventListener("wheel", this.onWheel);
+  }
+
+  getPointerVector(): THREE.Vector2 {
+    const ret = new THREE.Vector2(0, 0);
+
+    ret.copy(this.pointerVector);
+
+    return ret;
   }
 
   onContextMenu(evt: MouseEvent): void {
@@ -104,21 +123,25 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     const relativeX = evt.clientX - this.canvasOffsetLeft;
     const relativeY = evt.clientY - this.canvasOffsetTop;
 
-    this.mouseVector.x = (relativeX / this.canvasWidth) * 2 - 1;
-    this.mouseVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
+    this.pointerVector.x = (relativeX / this.canvasWidth) * 2 - 1;
+    this.pointerVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
+
+    this.cursorView.setVisible(true);
   }
 
-  onMouseDown(evt: MouseEvent): void {
-    this.cursorView.setPointerDown();
+  onMouseLeave(evt: MouseEvent): void {
+    this.cursorView.setVisible(false);
   }
 
   onMouseMove(evt: MouseEvent): void {}
 
-  onMouseUp(evt: MouseEvent): void {
-    this.cursorView.setPointerUp();
+  onWheel(evt: WheelEvent): void {
+    if (evt.deltaY < 0) {
+      this.cameraController.increaseZoom();
+    } else {
+      this.cameraController.decreaseZoom();
+    }
   }
-
-  onWheel(evt: MouseEvent): void {}
 
   resize(elementSize: ElementSize<"px">): void {
     super.resize(elementSize);
@@ -135,7 +158,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   }
 
   update(delta: number): void {
-    this.raycaster.setFromCamera(this.mouseVector, this.cameraController.getCamera());
+    this.raycaster.setFromCamera(this.pointerVector, this.cameraController.getCamera());
 
     if (!this.cursorView.isAttached()) {
       return;

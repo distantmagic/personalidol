@@ -12,23 +12,23 @@ import { default as IHTMLElementSizeObserver } from "src/framework/interfaces/HT
 
 export default class HTMLElementSizeObserver implements HasLoggerBreadcrumbs, IHTMLElementSizeObserver {
   readonly element: HTMLElement;
-  readonly eventDispatcher: IEventListenerSet<[IElementSize<"px">]>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly nativeResizeObserver: ResizeObserver;
+  readonly onResize: IEventListenerSet<[IElementSize<"px">]>;
   private _isObserving: boolean = false;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
-    const eventDispatcher = new EventListenerSet(loggerBreadcrumbs.add("EventListenerSet"));
+    const onResize = new EventListenerSet(loggerBreadcrumbs.add("EventListenerSet"));
 
     this.element = element;
-    this.eventDispatcher = eventDispatcher;
+    this.onResize = onResize;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.nativeResizeObserver = new ResizeObserver(function(mutationList) {
       for (let mutation of mutationList) {
         const contentRect = mutation.contentRect;
         const elementSize = new ElementSize<"px">("px", contentRect.width, contentRect.height);
 
-        eventDispatcher.notify([elementSize]);
+        onResize.notify([elementSize]);
       }
     });
   }

@@ -10,7 +10,7 @@ import { default as GLTFModelView } from "src/framework/classes/CanvasView/GLTFM
 import { default as HemisphereLightView } from "src/framework/classes/CanvasView/HemisphereLight";
 import { default as MD2CharacterView } from "src/framework/classes/CanvasView/MD2Character";
 import { default as ParticlesView } from "src/framework/classes/CanvasView/Particles";
-import { default as PlayerView } from "src/framework/classes/CanvasView/Player";
+import { default as PlayerController } from "src/framework/classes/CanvasController/Player";
 import { default as PointLightView } from "src/framework/classes/CanvasView/PointLight";
 import { default as QuakeBrushView } from "src/framework/classes/CanvasView/QuakeBrush";
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
@@ -19,12 +19,16 @@ import { default as SpotLightView } from "src/framework/classes/CanvasView/SpotL
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
+import CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import LoadingManager from "src/framework/interfaces/LoadingManager";
 import Logger from "src/framework/interfaces/Logger";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
+import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as IJSONRPCClient } from "src/framework/interfaces/JSONRPCClient";
+import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
 import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
 import QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
@@ -38,8 +42,12 @@ const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!src/
 export default class QuakeMap extends CanvasView {
   readonly audioListener: THREE.AudioListener;
   readonly audioLoader: THREE.AudioLoader;
+  readonly cameraController: ICameraController;
+  readonly canvasControllerBus: CanvasControllerBus;
   readonly loadingManager: LoadingManager;
   readonly logger: Logger;
+  readonly pointerController: IPointerController;
+  readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
   readonly source: string;
   readonly threeLoadingManager: THREE.LoadingManager;
@@ -48,12 +56,16 @@ export default class QuakeMap extends CanvasView {
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    cameraController: ICameraController,
+    canvasControllerBus: CanvasControllerBus,
     canvasViewBag: CanvasViewBag,
     group: THREE.Group,
     audioListener: THREE.AudioListener,
     audioLoader: THREE.AudioLoader,
     loadingManager: LoadingManager,
     logger: Logger,
+    pointerController: IPointerController,
+    pointerState: PointerState,
     queryBus: QueryBus,
     threeLoadingManager: THREE.LoadingManager,
     source: string
@@ -63,8 +75,12 @@ export default class QuakeMap extends CanvasView {
     this.animationOffset = 0;
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
+    this.cameraController = cameraController;
+    this.canvasControllerBus = canvasControllerBus;
     this.loadingManager = loadingManager;
     this.logger = logger;
+    this.pointerController = pointerController;
+    this.pointerState = pointerState;
     this.queryBus = queryBus;
     this.source = source;
     this.threeLoadingManager = threeLoadingManager;
@@ -175,13 +191,19 @@ export default class QuakeMap extends CanvasView {
         case "player":
           // prettier-ignore
           entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
+            this.canvasControllerBus.add(
               cancelToken,
-              new PlayerView(
+              new PlayerController(
                 this.loggerBreadcrumbs.add("Player"),
+                this.cameraController,
                 this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Player")),
                 this.children,
-                entity
+                entity,
+                this.loadingManager,
+                this.pointerController,
+                this.pointerState,
+                this.queryBus,
+                this.threeLoadingManager
               )
             ),
             "Loading world ambient sound"
