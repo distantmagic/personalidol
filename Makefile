@@ -28,7 +28,7 @@ frontend: frontend.dependencies build/index.html
 frontend.dependencies: node_modules public/vendor/modernizr.js
 
 node_modules: yarn.lock
-	$(CMD_YARN) install --network-timeout 0
+	$(CMD_YARN) install
 
 optimize: optimize.png optimize.jpg
 

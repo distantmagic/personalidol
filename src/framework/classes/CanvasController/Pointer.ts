@@ -22,7 +22,6 @@ import { default as ICursorCanvasView } from "src/framework/interfaces/CanvasVie
 
 export default class Pointer extends CanvasController implements HasLoggerBreadcrumbs {
   readonly cameraController: ICameraController;
-  readonly canvasRootGroup: THREE.Group;
   readonly cursorView: ICursorCanvasView;
   readonly debug: Debugger;
   readonly domElement: HTMLElement;
@@ -55,7 +54,6 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     autoBind(this);
 
     this.cameraController = cameraController;
-    this.canvasRootGroup = canvasRootGroup;
     this.debug = debug;
     this.domElement = domElement;
     this.loadingManager = loadingManager;
@@ -66,7 +64,8 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
       this.loggerBreadcrumbs.add("Cursor"),
       cameraController,
       this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Cursor")),
-      this.canvasRootGroup,
+      loadingManager,
+      canvasRootGroup,
       pointerState,
       queryBus,
       threeLoadingManager

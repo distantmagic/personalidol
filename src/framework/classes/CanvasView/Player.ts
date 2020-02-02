@@ -59,7 +59,11 @@ export default class Player extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.md2CharacterView), "Loading MD2 model");
+    // prettier-ignore
+    await this.loadingManager.blocking(
+      this.canvasViewBag.add(cancelToken, this.md2CharacterView),
+      "Loading MD2 model"
+    );
   }
 
   @cancelable()

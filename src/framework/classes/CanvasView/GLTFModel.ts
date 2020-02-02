@@ -84,6 +84,7 @@ export default class GLTFModel extends CanvasView {
 
     const mesh = new THREE.InstancedMesh(geometry, material, this.entities.length);
 
+    mesh.frustumCulled = true;
     mesh.matrixAutoUpdate = false;
 
     const dummy = new THREE.Object3D();
@@ -92,7 +93,7 @@ export default class GLTFModel extends CanvasView {
       const entity = this.entities[i];
 
       dummy.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
-      dummy.rotation.set(0, THREE.Math.degToRad(-1 * entity.angle), 0);
+      dummy.rotation.set(0, THREE.MathUtils.degToRad(-1 * entity.angle), 0);
       dummy.scale.set(entity.scale, entity.scale, entity.scale);
       dummy.updateMatrix();
 

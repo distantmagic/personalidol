@@ -14,7 +14,6 @@ import QuakeWorkerSparkParticles from "src/framework/types/QuakeWorkerSparkParti
 
 export default class Particles extends CanvasView {
   readonly origin: THREE.Vector3;
-  private container: null | THREE.Object3D = null;
   private system: any;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerSparkParticles) {
@@ -28,14 +27,10 @@ export default class Particles extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const container = new THREE.Object3D();
-
-    this.container = container;
-
-    container.position.copy(this.origin);
+    this.children.position.copy(this.origin);
 
     this.system = new Partykals.ParticlesSystem({
-      container: container,
+      container: this.children,
       particles: {
         startAlpha: 1,
         endAlpha: 0,
@@ -61,8 +56,6 @@ export default class Particles extends CanvasView {
         speed: 0.001,
       },
     });
-
-    this.children.add(container);
   }
 
   @cancelable()

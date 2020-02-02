@@ -26,7 +26,7 @@ export default class JSONRPCServerGeneratorBuffer<T> implements HasLoggerBreadcr
   }
 
   add(request: IJSONRPCRequest, responseDataChunk: JSONRPCResponseData<T>): void {
-    const currentChunkId = THREE.Math.generateUUID();
+    const currentChunkId = THREE.MathUtils.generateUUID();
     const headChunkId = this.headChunkId || currentChunkId;
     const previous = this.previous;
 

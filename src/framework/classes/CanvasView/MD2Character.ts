@@ -86,12 +86,12 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     character.setSkin(this.skin);
     character.update(this.animationOffset);
 
-    character.root.position.copy(this.origin);
+    this.children.position.copy(this.origin);
     this.children.add(character.root);
 
     this.character = character;
 
-    this.setRotationY(THREE.Math.degToRad(this.angle));
+    this.setRotationY(THREE.MathUtils.degToRad(this.angle));
   }
 
   @cancelable()
@@ -120,7 +120,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   }
 
   getPosition(): THREE.Vector3 {
-    return this.getCharacter().root.position;
+    return this.children.position;
   }
 
   setAnimationIdle(): void {
@@ -140,11 +140,11 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   }
 
   setRotationY(rotationRadians: number): void {
-    this.getCharacter().root.rotation.y = rotationRadians;
+    this.children.rotation.y = rotationRadians;
   }
 
   setVelocity(velocity: THREE.Vector3): void {
-    this.getCharacter().root.position.add(velocity);
+    this.children.position.add(velocity);
   }
 
   update(delta: number): void {

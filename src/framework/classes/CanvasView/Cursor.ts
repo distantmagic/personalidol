@@ -8,6 +8,7 @@ import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import LoadingManager from "src/framework/interfaces/LoadingManager";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
@@ -16,18 +17,21 @@ import { default as ICursorCanvasView } from "src/framework/interfaces/CanvasVie
 
 export default class Cursor extends CanvasView implements ICursorCanvasView {
   readonly cameraController: ICameraController;
+  readonly loadingManager: LoadingManager;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
-  private cursorMaterial: null | THREE.MeshLambertMaterial = null;
+  private cursorScene: null | THREE.Scene = null;
   private isPointerDown: boolean = false;
   private position: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
   private scale: number = 1;
+  private spotLight: null | THREE.SpotLight = null;
   private threeLoadingManager: THREE.LoadingManager;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
     cameraController: ICameraController,
     canvasViewBag: CanvasViewBag,
+    loadingManager: LoadingManager,
     parentGroup: THREE.Group,
     pointerState: PointerState,
     queryBus: QueryBus,
@@ -37,6 +41,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     autoBind(this);
 
     this.cameraController = cameraController;
+    this.loadingManager = loadingManager;
     this.pointerState = pointerState;
     this.queryBus = queryBus;
     this.threeLoadingManager = threeLoadingManager;
@@ -55,9 +60,9 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
 
         if (material instanceof THREE.MeshStandardMaterial) {
           child.castShadow = true;
-          child.renderOrder = 1000;
+          child.renderOrder = 1;
 
-          material.emissive = new THREE.Color(0xffffff);
+          material.emissive = new THREE.Color("white");
           material.emissiveIntensity = 0.1;
           material.fog = false;
           material.depthTest = false;
@@ -66,8 +71,23 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     }
 
     this.children.add(response.scene);
-
     this.cameraController.onZoomChange.add(this.onZoomChange);
+
+    this.cursorScene = response.scene;
+
+    const light = new THREE.SpotLight();
+
+    light.angle = Math.PI / 2;
+    light.intensity = 0.2;
+    light.position.set(8, 48, -8);
+    light.penumbra = 1;
+    light.target = new THREE.Object3D();
+    light.target.position.set(8, 0, -8);
+
+    this.children.add(light);
+    this.children.add(light.target);
+
+    this.spotLight = light;
 
     this.onZoomChange(this.cameraController.getZoom());
     this.setVisible(false);
@@ -80,18 +100,28 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     this.cameraController.onZoomChange.delete(this.onZoomChange);
   }
 
-  getCursorMaterial(): THREE.MeshLambertMaterial {
-    const material = this.cursorMaterial;
+  getCursorScene(): THREE.Scene {
+    const scene = this.cursorScene;
 
-    if (!material) {
-      throw new Error("Cursor material is not created but it was expected.");
+    if (!scene) {
+      throw new Error("Cursor scene is not created but it was expected.");
     }
 
-    return material;
+    return scene;
   }
 
   getName(): "Cursor" {
     return "Cursor";
+  }
+
+  getSpotLight(): THREE.SpotLight {
+    const spotLight = this.spotLight;
+
+    if (!spotLight) {
+      throw new Error("Cursor spotlight is not created but it was expected.");
+    }
+
+    return spotLight;
   }
 
   onZoomChange(zoom: number): void {
@@ -107,7 +137,11 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   }
 
   setVisible(isVisible: boolean): void {
-    this.children.visible = isVisible;
+    this.getCursorScene().visible = isVisible;
+
+    // do not unset light via .visible to not recompile shaders
+    // there might be a small lag while cursor is leaving the game area
+    this.getSpotLight().intensity = isVisible ? 0.2 : 0;
   }
 
   update(delta: number): void {
@@ -116,7 +150,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     this.children.rotation.x += 0.1;
   }
 
-  useUpdate(): true {
-    return true;
+  useUpdate(): false {
+    return false;
   }
 }

@@ -189,7 +189,7 @@ export default class QuakeBrush extends CanvasView {
     }
 
     const loadedTextures = await this.textureLoader.loadRegisteredTextures(cancelToken);
-    const textureAtlasHeight = THREE.Math.ceilPowerOfTwo(loadedTextures.length * config.TEXTURE_SIZE);
+    const textureAtlasHeight = THREE.MathUtils.ceilPowerOfTwo(loadedTextures.length * config.TEXTURE_SIZE);
     const atlasCanvas: HTMLCanvasElement = document.createElement("canvas");
 
     document.body.appendChild(atlasCanvas);

@@ -40,7 +40,7 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
     return jsonRpcClient;
   }
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: Worker["postMessage"], uuid: () => string = THREE.Math.generateUUID) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: Worker["postMessage"], uuid: () => string = THREE.MathUtils.generateUUID) {
     this.awaitingGeneratorRequests = new Map();
     this.awaitingPromiseRequests = new Map();
     this.loggerBreadcrumbs = loggerBreadcrumbs;

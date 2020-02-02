@@ -72,7 +72,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   getCameraFrustum(): THREE.Frustum {
     const frustum = new THREE.Frustum();
 
-    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
+    frustum.setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
 
     return frustum;
   }

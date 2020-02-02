@@ -3,7 +3,7 @@
 // entity 0
 {
 "classname" "worldspawn"
-"light" "0.4"
+"light" "0.6"
 "_tb_textures" "./textures"
 "scenery" "1"
 // brush 0
@@ -42,7 +42,7 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Tent"
-"_tb_id" "61"
+"_tb_id" "65"
 }
 // entity 5
 {
@@ -52,7 +52,7 @@
 "angle" "45"
 "scale" "10"
 "model_texture" "texture.png"
-"_tb_layer" "61"
+"_tb_layer" "65"
 }
 // entity 6
 {
@@ -62,14 +62,14 @@
 "angle" "-0"
 "scale" "1"
 "model_texture" "green.png"
-"_tb_layer" "61"
+"_tb_layer" "65"
 }
 // entity 7
 {
 "classname" "spark_particles"
 "origin" "976 304 8"
 "angle" ""
-"_tb_layer" "61"
+"_tb_layer" "65"
 }
 // entity 8
 {
@@ -79,14 +79,14 @@
 "angle" "90"
 "decay" "2"
 "color" "FFC000"
-"_tb_layer" "61"
+"_tb_layer" "65"
 }
 // entity 9
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Tower"
-"_tb_id" "62"
+"_tb_id" "66"
 // brush 0
 {
 ( 576 256 736 ) ( 576 240 736 ) ( 576 240 704 ) textures/texture-bricks-128x128 16 -0 -0 1 1
@@ -346,14 +346,14 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "62"
+"_tb_layer" "66"
 }
 // entity 11
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Parish"
-"_tb_id" "63"
+"_tb_id" "67"
 // brush 0
 {
 ( 56 1008 184 ) ( 56 976 184 ) ( 56 976 8 ) textures/texture-bricks-128x128 48 8 -0 1 1
@@ -580,7 +580,7 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "63"
+"_tb_layer" "67"
 }
 // entity 13
 {
@@ -591,7 +591,7 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "63"
+"_tb_layer" "67"
 }
 // entity 14
 {
@@ -602,14 +602,14 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "63"
+"_tb_layer" "67"
 }
 // entity 15
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Temple"
-"_tb_id" "64"
+"_tb_id" "68"
 // brush 0
 {
 ( 16 976 408 ) ( 16 944 408 ) ( 16 944 8 ) textures/texture-bricks-128x128 -48 -8 -0 1 1
@@ -763,5 +763,5 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "64"
+"_tb_layer" "68"
 }
