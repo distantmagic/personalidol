@@ -6,7 +6,7 @@ import EventListenerSet from "src/framework/interfaces/EventListenerSet";
 export default interface Camera extends CanvasController {
   readonly onZoomChange: EventListenerSet<[number]>;
 
-  getCamera(): THREE.OrthographicCamera;
+  getCamera(): THREE.Camera;
 
   getCameraFrustum(): THREE.Frustum;
 

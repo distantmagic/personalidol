@@ -112,7 +112,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
       case directionLength > 5:
         direction.normalize().multiplyScalar(5);
         break;
-      case directionLength < 2:
+      case directionLength < 1:
         return void this.setIdle();
     }
 

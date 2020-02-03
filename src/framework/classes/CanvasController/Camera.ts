@@ -16,15 +16,15 @@ import { default as ICameraController } from "src/framework/interfaces/CanvasCon
 import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
 export default class Camera extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
-  readonly camera: THREE.OrthographicCamera;
+  readonly camera: THREE.PerspectiveCamera;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onZoomChange: IEventListenerSet<[number]>;
   private height: number = 0;
   private needsUpdate: boolean = true;
   private width: number = 0;
-  private zoom: number = 5;
+  private zoom: number = 3;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, camera: THREE.OrthographicCamera) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, camera: THREE.PerspectiveCamera) {
     super(canvasViewBag);
     autoBind(this);
 
@@ -37,7 +37,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   async attach(cancelToken: CancelToken): Promise<void> {
     super.attach(cancelToken);
 
-    this.camera.near = -512;
+    // this.camera.near = -512;
     this.camera.far = 4096;
     // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
     // this.lookAt(new THREE.Vector3(0, 0, 0));
@@ -65,7 +65,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     super.dispose(cancelToken);
   }
 
-  getCamera(): THREE.OrthographicCamera {
+  getCamera(): THREE.PerspectiveCamera {
     return this.camera;
   }
 
@@ -115,7 +115,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   }
 
   setZoom(zoom: number): void {
-    const clampedZoom = clamp(zoom, 1, 5);
+    const clampedZoom = clamp(zoom, 1, 4);
 
     if (this.zoom === clampedZoom) {
       return;
@@ -128,10 +128,8 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   }
 
   updateProjectionMatrix() {
-    this.camera.left = -1 * (this.width / this.zoom);
-    this.camera.right = this.width / this.zoom;
-    this.camera.top = this.height / this.zoom;
-    this.camera.bottom = -1 * (this.height / this.zoom);
+    this.camera.aspect = this.width / this.height;
+    this.camera.zoom = this.zoom;
     this.camera.updateProjectionMatrix();
   }
 

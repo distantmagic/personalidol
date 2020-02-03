@@ -125,7 +125,8 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   }
 
   onZoomChange(zoom: number): void {
-    const scale = 1 / zoom;
+    // const scale = 1 / zoom;
+    const scale = 1 / 4;
 
     this.children.scale.set(scale, scale, scale);
     this.scale = scale;
