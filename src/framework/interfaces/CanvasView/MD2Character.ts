@@ -7,7 +7,7 @@ export default interface MD2Character extends CanvasView {
 
   setAnimationIdle(): void;
 
-  setAnimationWalking(): void;
+  setAnimationRunning(): void;
 
   setVelocity(direction: THREE.Vector3): void;
 

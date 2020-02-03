@@ -147,10 +147,10 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   update(delta: number): void {
     super.update(delta);
 
-    this.children.rotation.x += 0.1;
+    this.getCursorScene().rotation.x += 0.1;
   }
 
-  useUpdate(): false {
-    return false;
+  useUpdate(): true {
+    return true;
   }
 }

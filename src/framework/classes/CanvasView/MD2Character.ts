@@ -131,7 +131,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     }
   }
 
-  setAnimationWalking(): void {
+  setAnimationRunning(): void {
     const controls = this.getCharacter().controls;
 
     if (controls) {

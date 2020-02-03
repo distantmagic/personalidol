@@ -81,6 +81,13 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     await super.dispose(cancelToken);
   }
 
+  setIdle(): void {
+    const character = this.playerView.getCharacter();
+
+    character.setAnimationIdle();
+    character.setVelocity(new THREE.Vector3(0, 0, 0));
+  }
+
   useUpdate(): true {
     return true;
   }
@@ -91,23 +98,26 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     const character = this.playerView.getCharacter();
 
     if (!this.pointerState.isPressed("Primary")) {
-      character.setAnimationIdle();
-      character.setVelocity(new THREE.Vector3(0, 0, 0));
-
-      return;
+      return void this.setIdle();
     }
 
     const pointerVector = this.pointerController.getPointerVector();
 
     pointerVector.rotateAround(new THREE.Vector2(0, 0), (3 * Math.PI) / 4);
 
+    const direction = new THREE.Vector3(pointerVector.y, 0, pointerVector.x).multiplyScalar(30);
+    const directionLength = direction.length();
+
+    switch (true) {
+      case directionLength > 5:
+        direction.normalize().multiplyScalar(5);
+        break;
+      case directionLength < 2:
+        return void this.setIdle();
+    }
+
+    character.setAnimationRunning();
     character.setRotationY(pointerVector.angle());
-
-    const direction = new THREE.Vector3(pointerVector.y, 0, pointerVector.x);
-
-    direction.normalize().multiplyScalar(5);
-
-    character.setAnimationWalking();
     character.setVelocity(direction);
 
     this.cameraController.lookAt(character.getPosition());

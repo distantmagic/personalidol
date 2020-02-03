@@ -37,6 +37,7 @@ export default class PointerState implements HasLoggerBreadcrumbs, IPointerState
     }
 
     this.element.removeEventListener("mousedown", this.onMouseChange);
+    this.element.removeEventListener("mouseleave", this.reset);
     this.element.removeEventListener("mouseup", this.onMouseChange);
 
     this._isObserving = false;
@@ -57,6 +58,7 @@ export default class PointerState implements HasLoggerBreadcrumbs, IPointerState
     };
 
     this.element.addEventListener("mousedown", this.onMouseChange, config);
+    this.element.addEventListener("mouseleave", this.reset);
     this.element.addEventListener("mouseup", this.onMouseChange, config);
 
     this._isObserving = true;
