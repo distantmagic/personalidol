@@ -1,5 +1,7 @@
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+
 import ElementSize from "src/framework/interfaces/ElementSize";
 import { default as IHTMLElementSize } from "src/framework/interfaces/HTMLElementSize";
 
@@ -8,7 +10,7 @@ export default class HTMLElementSize implements IHTMLElementSize {
   readonly htmlElementHeight: number;
   readonly htmlElementScrollHeight: number;
   readonly htmlElementWidth: number;
-  readonly unit: "px" = "px";
+  readonly unit: ElementPositionUnit.Px = ElementPositionUnit.Px;
 
   constructor(htmlElement: HTMLElement) {
     this.htmlElement = htmlElement;
@@ -45,11 +47,11 @@ export default class HTMLElementSize implements IHTMLElementSize {
     return this.htmlElementWidth;
   }
 
-  isEqual(other: ElementSize<"px">): boolean {
+  isEqual(other: ElementSize<ElementPositionUnit.Px>): boolean {
     return this.getHeight() === other.getHeight() && this.getWidth() === other.getWidth();
   }
 
-  isEqualWithPrecision(other: ElementSize<"px">, precision: number): boolean {
+  isEqualWithPrecision(other: ElementSize<ElementPositionUnit.Px>, precision: number): boolean {
     return isEqualWithPrecision(this.getHeight(), other.getHeight(), precision) && isEqualWithPrecision(this.getWidth(), other.getWidth(), precision);
   }
 }

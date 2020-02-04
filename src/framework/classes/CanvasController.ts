@@ -1,3 +1,5 @@
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -42,9 +44,9 @@ export default class CanvasController implements ICanvasController {
     return this._isDisposed;
   }
 
-  resize(elementSize: ElementSize<"px">): void {}
+  resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {}
 
-  setPosition(elementPosition: ElementPosition<"px">): void {}
+  setPosition(elementPosition: ElementPosition<ElementPositionUnit.Px>): void {}
 
   update(delta: number): void {}
 

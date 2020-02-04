@@ -1,6 +1,6 @@
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import LogSeverity from "src/framework/enums/LogSeverity";
 
-import LogSeverityEnum from "src/framework/types/LogSeverityEnum";
+import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default interface Logger {
   /**
@@ -57,5 +57,5 @@ export default interface Logger {
   /**
    * Logs with an arbitrary level.
    */
-  log(loggerBreadcrumbs: LoggerBreadcrumbs, severity: LogSeverityEnum, message: string): Promise<void>;
+  log(loggerBreadcrumbs: LoggerBreadcrumbs, severity: LogSeverity, message: string): Promise<void>;
 }

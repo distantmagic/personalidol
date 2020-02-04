@@ -5,6 +5,8 @@ import clamp from "lodash/clamp";
 import CanvasController from "src/framework/classes/CanvasController";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -98,7 +100,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     this.camera.lookAt(position.clone());
   }
 
-  resize(viewportSize: ElementSize<"px">): void {
+  resize(viewportSize: ElementSize<ElementPositionUnit.Px>): void {
     super.resize(viewportSize);
 
     const height = viewportSize.getHeight();

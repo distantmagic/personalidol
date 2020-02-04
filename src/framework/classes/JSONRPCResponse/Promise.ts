@@ -2,11 +2,12 @@ import JSONRPCResponse from "src/framework/classes/JSONRPCResponse";
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IJSONRPCPromiseResponse } from "src/framework/interfaces/JSONRPCPromiseResponse";
 import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
-import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
 import JSONRPCPromiseResponseObjectified from "src/framework/types/JSONRPCPromiseResponseObjectified";
 
 export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCPromiseResponseObjectified<T>): IJSONRPCPromiseResponse<T> {
@@ -17,7 +18,7 @@ export default class JSONRPCPromiseResponse<T> extends JSONRPCResponse<T, JSONRP
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, id: string, method: string, type: JSONRPCMessageType, data: IJSONRPCResponseData<T>) {
     super(id, method, data);
 
-    if ("promise" !== type) {
+    if (JSONRPCMessageType.Promise !== type) {
       throw new JSONRPCException(loggerBreadcrumbs, "Expected 'promise' type. Got something else");
     }
   }
@@ -32,7 +33,7 @@ export default class JSONRPCPromiseResponse<T> extends JSONRPCResponse<T, JSONRP
     };
   }
 
-  getType(): "promise" {
-    return "promise";
+  getType(): JSONRPCMessageType.Promise {
+    return JSONRPCMessageType.Promise;
   }
 }

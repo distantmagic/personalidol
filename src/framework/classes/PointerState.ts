@@ -2,11 +2,11 @@ import autoBind from "auto-bind";
 
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 
+import PointerButtonNames from "src/framework/enums/PointerButtonNames";
+
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IPointerState } from "src/framework/interfaces/PointerState";
-
-import PointerButtonNames from "src/framework/types/PointerButtonNames";
 
 export default class PointerState implements HasLoggerBreadcrumbs, IPointerState {
   readonly element: HTMLElement;

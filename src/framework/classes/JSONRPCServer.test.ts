@@ -6,10 +6,12 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import { default as JSONRPCErrorResponse, unobjectify as unobjectifyJSONRPCErrorResponse } from "src/framework/classes/JSONRPCResponse/Error";
 import { default as JSONRPCGeneratorChunkResponse, unobjectify as unobjectifyJSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 test("incoming requests are processed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const postMessageMock = jest.fn();
-  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-promise", "promise", new JSONRPCResponseData(null));
+  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-promise", JSONRPCMessageType.Promise, new JSONRPCResponseData(null));
   const jsonRpcServer = new JSONRPCServer(loggerBreadcrumbs, postMessageMock);
 
   const cancelToken = new CancelToken(loggerBreadcrumbs);
@@ -28,7 +30,7 @@ test("incoming requests are processed", async function() {
 test("produces a generator", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const postMessageMock = jest.fn();
-  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-generator", "generator", new JSONRPCResponseData(null));
+  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-generator", JSONRPCMessageType.Generator, new JSONRPCResponseData(null));
   const jsonRpcServer = new JSONRPCServer(loggerBreadcrumbs, postMessageMock);
 
   const cancelToken = new CancelToken(loggerBreadcrumbs);
@@ -74,7 +76,7 @@ test("produces a generator", async function() {
 test("fails when method does not exist", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const postMessageMock = jest.fn();
-  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-promise", "promise", new JSONRPCResponseData(null));
+  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-promise", JSONRPCMessageType.Promise, new JSONRPCResponseData(null));
   const jsonRpcServer = new JSONRPCServer(loggerBreadcrumbs, postMessageMock);
 
   await jsonRpcServer.handleRequest(jsonRpcRequest);

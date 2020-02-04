@@ -1,6 +1,6 @@
-import ElementPosition from "src/framework/interfaces/ElementPosition";
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
 
-import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+import ElementPosition from "src/framework/interfaces/ElementPosition";
 
 export default interface Positionable<Unit extends ElementPositionUnit> {
   setPosition(elementPosition: ElementPosition<Unit>): void;

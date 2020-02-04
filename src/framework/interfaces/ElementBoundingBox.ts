@@ -1,5 +1,5 @@
-import GeometryRectangle from "src/framework/interfaces/GeometryRectangle";
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
 
-import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+import GeometryRectangle from "src/framework/interfaces/GeometryRectangle";
 
 export default interface ElementBoundingBox<Unit extends ElementPositionUnit> extends GeometryRectangle<Unit> {}

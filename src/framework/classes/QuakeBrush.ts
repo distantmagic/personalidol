@@ -68,6 +68,16 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
     }
   }
 
+  getBoundingBox(): THREE.Box3 {
+    const boundingBox = new THREE.Box3();
+
+    for (let vertex of this.generateVertices()) {
+      boundingBox.expandByPoint(vertex);
+    }
+
+    return boundingBox;
+  }
+
   getConvexHull(): ConvexHull {
     const convexHull = new ConvexHull();
     const vertices = this.getVertices().slice();

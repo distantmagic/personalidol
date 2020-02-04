@@ -1,10 +1,11 @@
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import { default as IJSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
 import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
-import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
 import JSONRPCRequestObjectified from "src/framework/types/JSONRPCRequestObjectified";
 
 export function unobjectify<T>(loggerBreadcrumbs: ILoggerBreadcrumbs, objectified: JSONRPCRequestObjectified<T>): IJSONRPCRequest<T> {

@@ -4,7 +4,6 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
-    "ammo.js": "^0.0.10",
     "auto-bind": "^4.0.0",
     "classnames": "^2.2.6",
     "immutable": "^4.0.0-rc.12",

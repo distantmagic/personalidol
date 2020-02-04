@@ -93,15 +93,18 @@ export default class QuakeMap extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    // const messageChannel = new MessageChannel();
+    const messageChannel = new MessageChannel();
 
     const physicsWorker: Worker = new PhysicsWorker();
-    const physicsRpcClient = JSONRPCClient.attachTo(this.loggerBreadcrumbs.add("JSONRPCClient"), cancelToken, physicsWorker);
+
+    physicsWorker.postMessage(messageChannel.port1, [messageChannel.port1]);
 
     this.physicsWorker = physicsWorker;
 
     const quakeMapWorker: Worker = new QuakeMapWorker();
     const quakeMapRpcClient = JSONRPCClient.attachTo(this.loggerBreadcrumbs.add("JSONRPCClient"), cancelToken, quakeMapWorker);
+
+    await quakeMapRpcClient.requestPromise<MessagePort, boolean>(cancelToken, "/message_channel", new JSONRPCResponseData(messageChannel.port2, [messageChannel.port2]));
 
     this.quakeMapWorker = quakeMapWorker;
 

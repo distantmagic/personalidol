@@ -1,3 +1,5 @@
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import JSONRPCResponse from "src/framework/interfaces/JSONRPCResponse";
 
 import JSONRPCGeneratorChunkResponseObjectified from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
@@ -9,7 +11,7 @@ export default interface JSONRPCGeneratorChunkResponse<T> extends JSONRPCRespons
 
   getNext(): string;
 
-  getType(): "generator";
+  getType(): JSONRPCMessageType.Generator;
 
   hasNext(): boolean;
 

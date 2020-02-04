@@ -2,6 +2,8 @@ import ElementPosition from "src/framework/classes/ElementPosition";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IElementPosition } from "src/framework/interfaces/ElementPosition";
@@ -11,9 +13,9 @@ import { default as IHTMLElementPositionObserver } from "src/framework/interface
 export default class HTMLElementPositionObserver implements HasLoggerBreadcrumbs, IHTMLElementPositionObserver {
   readonly element: HTMLElement;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly onPositionChange: IEventListenerSet<[IElementPosition<"px">]>;
+  readonly onPositionChange: IEventListenerSet<[IElementPosition<ElementPositionUnit.Px>]>;
   private _isObserving: boolean = false;
-  private elementPosition: IElementPosition<"px"> = new ElementPosition<"px">("px", 0, 0, 0);
+  private elementPosition: IElementPosition<ElementPositionUnit.Px> = new ElementPosition<ElementPositionUnit.Px>(ElementPositionUnit.Px, 0, 0, 0);
   private timeoutId: null | number = null;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
@@ -24,7 +26,7 @@ export default class HTMLElementPositionObserver implements HasLoggerBreadcrumbs
 
   checkElementPosition(): void {
     const boundingRect = this.getBoundingRect();
-    const updatedElementPosition = new ElementPosition<"px">("px", boundingRect.left, boundingRect.top, 0);
+    const updatedElementPosition = new ElementPosition<ElementPositionUnit.Px>(ElementPositionUnit.Px, boundingRect.left, boundingRect.top, 0);
 
     if (updatedElementPosition.isEqual(this.elementPosition)) {
       return;

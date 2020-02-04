@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import isEmpty from "lodash/isEmpty";
 
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
@@ -24,10 +23,17 @@ type QuakeBrushClassNames = "func_group" | "worldspawn";
 const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
 
-async function createGeometryBuffers(cancelToken: CancelToken, className: QuakeBrushClassNames, brushes: ReadonlyArray<QuakeBrush>) {
+async function createGeometryBuffers(cancelToken: CancelToken, className: QuakeBrushClassNames, brushes: ReadonlyArray<QuakeBrush>, physicsMessagePort: MessagePort) {
   const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
   for (let brush of brushes) {
+    const boundingBox = brush.getBoundingBox();
+
+    physicsMessagePort.postMessage({
+      max: boundingBox.max.toArray(),
+      min: boundingBox.min.toArray(),
+    });
+
     quakeBrushGeometryBuilder.addBrush(brush);
   }
 
@@ -68,8 +74,8 @@ export default async function* map(
   cancelToken: CancelToken,
   request: JSONRPCRequest<string>,
   loggerBreadcrumbs: LoggerBreadcrumbs,
-  queryBus: QueryBus,
-  threeLoadingManager: THREE.LoadingManager
+  physicsMessagePort: MessagePort,
+  queryBus: QueryBus
 ): AsyncGenerator<IJSONRPCResponseData<QuakeWorkerAny>> {
   const breadcrumbs = loggerBreadcrumbs.add("/map");
   const source = request.getParams().getResult();
@@ -195,7 +201,7 @@ export default async function* map(
       return;
     }
 
-    yield await createGeometryBuffers(cancelToken, entityClassName, entity.getBrushes());
+    yield await createGeometryBuffers(cancelToken, entityClassName, entity.getBrushes(), physicsMessagePort);
   }
 
   // this is the static world geometry
@@ -210,6 +216,6 @@ export default async function* map(
       return;
     }
 
-    yield await createGeometryBuffers(cancelToken, "worldspawn", mergedBrushes);
+    yield await createGeometryBuffers(cancelToken, "worldspawn", mergedBrushes, physicsMessagePort);
   }
 }

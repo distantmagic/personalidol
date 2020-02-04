@@ -1,6 +1,6 @@
-import EquatableWithPrecision from "src/framework/interfaces/EquatableWithPrecision";
+import ElementRotationUnit from "src/framework/enums/ElementRotationUnit";
 
-import ElementRotationUnit from "src/framework/types/ElementRotationUnit";
+import EquatableWithPrecision from "src/framework/interfaces/EquatableWithPrecision";
 
 export default interface ElementRotation<Unit extends ElementRotationUnit> extends EquatableWithPrecision<ElementRotation<Unit>> {
   getRotationX(): number;

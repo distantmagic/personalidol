@@ -1,10 +1,11 @@
 import * as THREE from "three";
 
+import QuakeEntityClassName from "src/framework/enums/QuakeEntityClassName";
+
 import Equatable from "src/framework/interfaces/Equatable";
 import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import QuakeEntityProperties from "src/framework/interfaces/QuakeEntityProperties";
 
-import QuakeEntityClassName from "src/framework/types/QuakeEntityClassName";
 import QuakeEntityType from "src/framework/types/QuakeEntityType";
 
 export default interface QuakeEntity extends Equatable<QuakeEntity> {

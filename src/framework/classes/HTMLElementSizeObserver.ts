@@ -4,6 +4,8 @@ import ElementSize from "src/framework/classes/ElementSize";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IElementSize } from "src/framework/interfaces/ElementSize";
@@ -14,7 +16,7 @@ export default class HTMLElementSizeObserver implements HasLoggerBreadcrumbs, IH
   readonly element: HTMLElement;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly nativeResizeObserver: ResizeObserver;
-  readonly onResize: IEventListenerSet<[IElementSize<"px">]>;
+  readonly onResize: IEventListenerSet<[IElementSize<ElementPositionUnit.Px>]>;
   private _isObserving: boolean = false;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, element: HTMLElement) {
@@ -26,7 +28,7 @@ export default class HTMLElementSizeObserver implements HasLoggerBreadcrumbs, IH
     this.nativeResizeObserver = new ResizeObserver(function(mutationList) {
       for (let mutation of mutationList) {
         const contentRect = mutation.contentRect;
-        const elementSize = new ElementSize<"px">("px", contentRect.width, contentRect.height);
+        const elementSize = new ElementSize<ElementPositionUnit.Px>(ElementPositionUnit.Px, contentRect.width, contentRect.height);
 
         onResize.notify([elementSize]);
       }

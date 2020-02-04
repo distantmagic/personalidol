@@ -2,6 +2,8 @@ import autoBind from "auto-bind";
 
 import { default as CanvasControllerException } from "src/framework/classes/Exception/CanvasController";
 
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -20,8 +22,8 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
   readonly positionObserver: HTMLElementPositionObserver;
   readonly resizeObserver: HTMLElementSizeObserver;
   readonly scheduler: Scheduler;
-  private lastElementPosition: null | IElementPosition<"px"> = null;
-  private lastElementSize: null | IElementSize<"px"> = null;
+  private lastElementPosition: null | IElementPosition<ElementPositionUnit.Px> = null;
+  private lastElementSize: null | IElementSize<ElementPositionUnit.Px> = null;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, positionObserver: HTMLElementPositionObserver, resizeObserver: HTMLElementSizeObserver, scheduler: Scheduler) {
     autoBind(this);
@@ -116,11 +118,11 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
     this.resizeObserver.onResize.add(this.resize);
   }
 
-  setPosition(elementPosition: IElementPosition<"px">): void {
+  setPosition(elementPosition: IElementPosition<ElementPositionUnit.Px>): void {
     this.lastElementPosition = elementPosition;
   }
 
-  resize(elementSize: IElementSize<"px">): void {
+  resize(elementSize: IElementSize<ElementPositionUnit.Px>): void {
     this.lastElementSize = elementSize;
   }
 }

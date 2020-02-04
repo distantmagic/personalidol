@@ -2,12 +2,13 @@ import JSONRPCResponse from "src/framework/classes/JSONRPCResponse";
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IJSONRPCErrorResponse } from "src/framework/interfaces/JSONRPCErrorResponse";
 import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
 import JSONRPCErrorResponseObjectified from "src/framework/types/JSONRPCErrorResponseObjectified";
-import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
 
 export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCErrorResponseObjectified<T>): IJSONRPCErrorResponse<T> {
   return new JSONRPCErrorResponse<T>(loggerBreadcrumbs, objectified.id, objectified.method, objectified.type, new JSONRPCResponseData(objectified.result));
@@ -32,7 +33,7 @@ export default class JSONRPCErrorResponse<T> extends JSONRPCResponse<T, JSONRPCE
     };
   }
 
-  getType(): "error" {
-    return "error";
+  getType(): JSONRPCMessageType.Error {
+    return JSONRPCMessageType.Error;
   }
 }

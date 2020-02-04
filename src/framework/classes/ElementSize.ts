@@ -1,8 +1,8 @@
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { default as IElementSize } from "src/framework/interfaces/ElementSize";
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
 
-import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+import { default as IElementSize } from "src/framework/interfaces/ElementSize";
 
 export default class ElementSize<Unit extends ElementPositionUnit> implements IElementSize<Unit> {
   readonly height: number;

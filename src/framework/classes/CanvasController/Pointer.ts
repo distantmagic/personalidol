@@ -4,6 +4,8 @@ import autoBind from "auto-bind";
 import CanvasController from "src/framework/classes/CanvasController";
 import { default as CursorView } from "src/framework/classes/CanvasView/Cursor";
 
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -142,14 +144,14 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     }
   }
 
-  resize(elementSize: ElementSize<"px">): void {
+  resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {
     super.resize(elementSize);
 
     this.canvasHeight = elementSize.getHeight();
     this.canvasWidth = elementSize.getWidth();
   }
 
-  setPosition(elementPosition: ElementPosition<"px">): void {
+  setPosition(elementPosition: ElementPosition<ElementPositionUnit.Px>): void {
     super.setPosition(elementPosition);
 
     this.canvasOffsetLeft = elementPosition.getX();

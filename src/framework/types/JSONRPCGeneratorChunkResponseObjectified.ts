@@ -1,3 +1,5 @@
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import JSONRPCVersion from "src/framework/types/JSONRPCVersion";
 
 type JSONRPCGeneratorChunkResponseObjectified<T> = {
@@ -8,7 +10,7 @@ type JSONRPCGeneratorChunkResponseObjectified<T> = {
   readonly method: string;
   readonly next: null | string;
   readonly result: T;
-  readonly type: "generator";
+  readonly type: JSONRPCMessageType.Generator;
 };
 
 export default JSONRPCGeneratorChunkResponseObjectified;

@@ -11,6 +11,8 @@ import { default as CameraController } from "src/framework/classes/CanvasControl
 import { default as PointerController } from "src/framework/classes/CanvasController/Pointer";
 import { default as QuakeMapView } from "src/framework/classes/CanvasView/QuakeMap";
 
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -200,7 +202,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     this.debug.updateState(this.loggerBreadcrumbs.add("renderer").add("size"), rendererSize);
   }
 
-  resize(elementSize: ElementSize<"px">): void {
+  resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {
     super.resize(elementSize);
 
     const height = elementSize.getHeight();

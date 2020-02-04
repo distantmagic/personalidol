@@ -3,13 +3,14 @@ import isArrayEqual from "src/framework/helpers/isArrayEqual";
 import Exception from "src/framework/classes/Exception";
 import QuakePointParser from "src/framework/classes/QuakePointParser";
 
+import QuakeEntityClassName from "src/framework/enums/QuakeEntityClassName";
+
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import QuakeEntityProperties from "src/framework/interfaces/QuakeEntityProperties";
 import { default as IQuakeEntity } from "src/framework/interfaces/QuakeEntity";
 
-import QuakeEntityClassName from "src/framework/types/QuakeEntityClassName";
 import QuakeEntityType from "src/framework/types/QuakeEntityType";
 
 export default class QuakeEntity implements HasLoggerBreadcrumbs, IQuakeEntity {
@@ -31,14 +32,14 @@ export default class QuakeEntity implements HasLoggerBreadcrumbs, IQuakeEntity {
     const className = this.props.getPropertyByKey("classname").getValue();
 
     switch (className) {
-      case "func_group":
-      case "light_point":
-      case "light_spotlight":
-      case "model_gltf":
-      case "model_md2":
-      case "player":
-      case "spark_particles":
-      case "worldspawn":
+      case QuakeEntityClassName.FuncGroup:
+      case QuakeEntityClassName.LightPoint:
+      case QuakeEntityClassName.LightSpotLight:
+      case QuakeEntityClassName.ModelGLTF:
+      case QuakeEntityClassName.ModelMD2:
+      case QuakeEntityClassName.Player:
+      case QuakeEntityClassName.SparkParticles:
+      case QuakeEntityClassName.WorldSpawn:
         return className;
       default:
         throw new Exception(this.loggerBreadcrumbs.add("getClassName"), `Unexpected entity class name: "${className}"`);

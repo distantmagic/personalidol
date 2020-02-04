@@ -1,6 +1,6 @@
-import EquatableWithPrecision from "src/framework/interfaces/EquatableWithPrecision";
+import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
 
-import ElementPositionUnit from "src/framework/types/ElementPositionUnit";
+import EquatableWithPrecision from "src/framework/interfaces/EquatableWithPrecision";
 
 export default interface ElementSize<Unit extends ElementPositionUnit> extends EquatableWithPrecision<ElementSize<Unit>> {
   readonly unit: Unit;

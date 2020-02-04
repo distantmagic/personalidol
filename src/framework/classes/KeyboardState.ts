@@ -2,11 +2,11 @@ import autoBind from "auto-bind";
 
 import Idempotence from "src/framework/classes/Exception/Idempotence";
 
+import KeyboardButtonNames from "src/framework/enums/KeyboardButtonNames";
+
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IKeyboardState } from "src/framework/interfaces/KeyboardState";
-
-import KeyboardButtonNames from "src/framework/types/KeyboardButtonNames";
 
 export default class KeyboardState implements HasLoggerBreadcrumbs, IKeyboardState {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -34,7 +34,12 @@ export default class KeyboardState implements HasLoggerBreadcrumbs, IKeyboardSta
   }
 
   isArrowPressed(): boolean {
-    return this.isPressed("ArrowDown") || this.isPressed("ArrowLeft") || this.isPressed("ArrowRight") || this.isPressed("ArrowUp");
+    return (
+      this.isPressed(KeyboardButtonNames.ArrowDown) ||
+      this.isPressed(KeyboardButtonNames.ArrowLeft) ||
+      this.isPressed(KeyboardButtonNames.ArrowRight) ||
+      this.isPressed(KeyboardButtonNames.ArrowUp)
+    );
   }
 
   isPressed(code: KeyboardButtonNames): boolean {

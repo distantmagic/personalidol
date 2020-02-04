@@ -14,6 +14,10 @@ function isLocalEffect(imported) {
   return imported.moduleName.startsWith("src/effect");
 }
 
+function isLocalEnum(imported) {
+  return imported.moduleName.startsWith("src/framework/enums");
+}
+
 function isLocalHelper(imported) {
   return imported.moduleName.startsWith("src/framework/helpers");
 }
@@ -100,6 +104,13 @@ function format(styleApi) {
     },
     {
       match: isLocalClass,
+      sort: member(naturally),
+    },
+    { separator: true },
+
+    // import useFoo from "src/enums/useFoo"
+    {
+      match: isLocalEnum,
       sort: member(naturally),
     },
     { separator: true },

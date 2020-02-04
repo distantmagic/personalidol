@@ -1,4 +1,5 @@
-import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import JSONRPCVersion from "src/framework/types/JSONRPCVersion";
 
 type JSONRPCRequestObjectified<T> = {

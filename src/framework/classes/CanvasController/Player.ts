@@ -4,6 +4,8 @@ import autoBind from "auto-bind";
 import CanvasController from "src/framework/classes/CanvasController";
 import { default as PlayerView } from "src/framework/classes/CanvasView/Player";
 
+import PointerButtonNames from "src/framework/enums/PointerButtonNames";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -97,7 +99,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
     const character = this.playerView.getCharacter();
 
-    if (!this.pointerState.isPressed("Primary")) {
+    if (!this.pointerState.isPressed(PointerButtonNames.Primary)) {
       return void this.setIdle();
     }
 

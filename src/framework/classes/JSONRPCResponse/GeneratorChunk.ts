@@ -2,13 +2,14 @@ import JSONRPCResponse from "src/framework/classes/JSONRPCResponse";
 import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import { default as JSONRPCException } from "src/framework/classes/Exception/JSONRPC";
 
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
 import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
 import JSONRPCGeneratorChunkResponseObjectified from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
-import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
 
 export function unobjectify<T>(loggerBreadcrumbs: LoggerBreadcrumbs, objectified: JSONRPCGeneratorChunkResponseObjectified<T>): IJSONRPCGeneratorChunkResponse<T> {
   return new JSONRPCGeneratorChunkResponse<T>(
@@ -83,8 +84,8 @@ export default class JSONRPCGeneratorChunkResponse<T> extends JSONRPCResponse<T,
     return next;
   }
 
-  getType(): "generator" {
-    return "generator";
+  getType(): JSONRPCMessageType.Generator {
+    return JSONRPCMessageType.Generator;
   }
 
   hasNext(): boolean {

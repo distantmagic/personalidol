@@ -10,6 +10,8 @@ import { unobjectify as unobjectifyJSONRPCErrorResponse } from "src/framework/cl
 import { unobjectify as unobjectifyJSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 import { unobjectify as unobjectifyJSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
 
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -104,14 +106,14 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
     };
 
     switch (type) {
-      case "error":
+      case JSONRPCMessageType.Error:
         return this.handleErrorResponse(
           unobjectifyJSONRPCErrorResponse(breadcrumbs, {
             ...validated,
-            type: "error",
+            type: JSONRPCMessageType.Error,
           })
         );
-      case "generator":
+      case JSONRPCMessageType.Generator:
         const { chunk, head, next } = response;
 
         // prettier-ignore
@@ -128,14 +130,14 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
             chunk: chunk,
             head: head,
             next: next,
-            type: "generator",
+            type: JSONRPCMessageType.Generator,
           })
         );
-      case "promise":
+      case JSONRPCMessageType.Promise:
         return this.handlePromiseResponse(
           unobjectifyJSONRPCPromiseResponse(breadcrumbs, {
             ...validated,
-            type: "promise",
+            type: JSONRPCMessageType.Promise,
           })
         );
       default:
@@ -146,7 +148,7 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
   @cancelable()
   async *requestGenerator<T, U>(cancelToken: CancelToken, method: string, params: IJSONRPCResponseData<T>): AsyncGenerator<U> {
     const requestId = this.uuid();
-    const request = new JSONRPCRequest(requestId, method, "generator", params);
+    const request = new JSONRPCRequest(requestId, method, JSONRPCMessageType.Generator, params);
     const eventListenerSet = new EventListenerSet(this.loggerBreadcrumbs.add("EventListenerSet"));
     const eventListenerGenerator = new EventListenerGenerator(eventListenerSet);
     const responseGenerator = eventListenerGenerator.generate(cancelToken);
@@ -183,7 +185,7 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
   @cancelable(true)
   requestPromise<T, U>(cancelToken: CancelToken, method: string, params: IJSONRPCResponseData<T>): Promise<U> {
     const requestId = this.uuid();
-    const request = new JSONRPCRequest(requestId, method, "promise", params);
+    const request = new JSONRPCRequest(requestId, method, JSONRPCMessageType.Promise, params);
 
     // await response
     return new Promise((resolve, reject) => {

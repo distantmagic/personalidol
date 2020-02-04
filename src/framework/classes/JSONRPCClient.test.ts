@@ -5,6 +5,8 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import { default as JSONRPCGeneratorChunkResponse } from "src/framework/classes/JSONRPCResponse/GeneratorChunk";
 import { default as JSONRPCPromiseResponse, unobjectify as unobjectifyJSONRPCPromiseResponse } from "src/framework/classes/JSONRPCResponse/Promise";
 
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 test("processes incoming generator chunk response", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const postMessageMock = jest.fn();
@@ -23,10 +25,10 @@ test("processes incoming generator chunk response", async function() {
   })();
 
   const chunks = [
-    new JSONRPCGeneratorChunkResponse<number>(loggerBreadcrumbs, "1", "1", "1", "2", "test-generator", "generator", new JSONRPCResponseData(0)),
-    new JSONRPCGeneratorChunkResponse<number>(loggerBreadcrumbs, "1", "1", "3", "4", "test-generator", "generator", new JSONRPCResponseData(2)),
-    new JSONRPCGeneratorChunkResponse<number>(loggerBreadcrumbs, "1", "1", "2", "3", "test-generator", "generator", new JSONRPCResponseData(1)),
-    new JSONRPCGeneratorChunkResponse<number>(loggerBreadcrumbs, "1", "1", "4", null, "test-generator", "generator", new JSONRPCResponseData(3)),
+    new JSONRPCGeneratorChunkResponse<number>(loggerBreadcrumbs, "1", "1", "1", "2", "test-generator", JSONRPCMessageType.Generator, new JSONRPCResponseData(0)),
+    new JSONRPCGeneratorChunkResponse<number>(loggerBreadcrumbs, "1", "1", "3", "4", "test-generator", JSONRPCMessageType.Generator, new JSONRPCResponseData(2)),
+    new JSONRPCGeneratorChunkResponse<number>(loggerBreadcrumbs, "1", "1", "2", "3", "test-generator", JSONRPCMessageType.Generator, new JSONRPCResponseData(1)),
+    new JSONRPCGeneratorChunkResponse<number>(loggerBreadcrumbs, "1", "1", "4", null, "test-generator", JSONRPCMessageType.Generator, new JSONRPCResponseData(3)),
   ];
 
   for (let chunk of chunks) {
@@ -45,7 +47,7 @@ test("processes incoming promise response", async function() {
     return "1";
   });
   const data = new JSONRPCResponseData(4);
-  const response = new JSONRPCPromiseResponse<number>(loggerBreadcrumbs, "1", "test-promise", "promise", data);
+  const response = new JSONRPCPromiseResponse<number>(loggerBreadcrumbs, "1", "test-promise", JSONRPCMessageType.Promise, data);
 
   const promise = (async function() {
     const cancelToken = new CancelToken(loggerBreadcrumbs);

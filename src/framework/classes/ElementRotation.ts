@@ -1,8 +1,8 @@
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { default as IElementRotation } from "src/framework/interfaces/ElementRotation";
+import ElementRotationUnit from "src/framework/enums/ElementRotationUnit";
 
-import ElementRotationUnit from "src/framework/types/ElementRotationUnit";
+import { default as IElementRotation } from "src/framework/interfaces/ElementRotation";
 
 export default class ElementRotation<Unit extends ElementRotationUnit> implements IElementRotation<Unit> {
   readonly x: number;

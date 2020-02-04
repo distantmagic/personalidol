@@ -1,4 +1,5 @@
-import JSONRPCMessageType from "src/framework/types/JSONRPCMessageType";
+import JSONRPCMessageType from "src/framework/enums/JSONRPCMessageType";
+
 import JSONRPCVersion from "src/framework/types/JSONRPCVersion";
 
 type JSONRPCErrorResponseObjectified<T> = {
@@ -6,7 +7,7 @@ type JSONRPCErrorResponseObjectified<T> = {
   readonly jsonrpc: JSONRPCVersion;
   readonly method: string;
   readonly result: T;
-  readonly type: "error";
+  readonly type: JSONRPCMessageType.Error;
 };
 
 export default JSONRPCErrorResponseObjectified;
