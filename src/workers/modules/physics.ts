@@ -49,7 +49,7 @@ function onMessagePortMessage(evt: MessageEvent) {
     collidesWith: 0xffffffff,
   });
 
-  console.log(body);
+  // console.log(body);
 }
 
 function onWorkerMessage(evt: MessageEvent) {

@@ -1,6 +1,6 @@
 import isEmpty from "lodash/isEmpty";
 
-import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";
 import QuakeMapParser from "src/framework/classes/QuakeMapParser";
 import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
@@ -8,22 +8,24 @@ import { default as PlainTextQuery } from "src/framework/classes/Query/PlainText
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
-import JSONRPCRequest from "src/framework/interfaces/JSONRPCRequest";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import QuakeEntity from "src/framework/interfaces/QuakeEntity";
 import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
+import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
 import QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
+
+declare var self: DedicatedWorkerGlobalScope;
 
 type QuakeBrushClassNames = "func_group" | "worldspawn";
 
 const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
 
-async function createGeometryBuffers(cancelToken: CancelToken, className: QuakeBrushClassNames, brushes: ReadonlyArray<QuakeBrush>, physicsMessagePort: MessagePort) {
+const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker", "map"]);
+
+async function createGeometryBuffers(className: QuakeBrushClassNames, brushes: ReadonlyArray<QuakeBrush>, physicsMessagePort: MessagePort) {
   const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
   for (let brush of brushes) {
@@ -44,7 +46,7 @@ async function createGeometryBuffers(cancelToken: CancelToken, className: QuakeB
   const vertices = Float32Array.from(quakeBrushGeometryBuilder.getVertices());
 
   // prettier-ignore
-  return new JSONRPCResponseData<QuakeWorkerBrush>(
+  self.postMessage(
     {
       classname: className,
       indices: indices.buffer,
@@ -70,18 +72,8 @@ function getEntityOrigin(entity: QuakeEntity): [number, number, number] {
   return [origin.x, origin.y, origin.z];
 }
 
-export default async function* map(
-  cancelToken: CancelToken,
-  request: JSONRPCRequest<string>,
-  loggerBreadcrumbs: LoggerBreadcrumbs,
-  physicsMessagePort: MessagePort,
-  queryBus: QueryBus
-): AsyncGenerator<IJSONRPCResponseData<QuakeWorkerAny>> {
-  const breadcrumbs = loggerBreadcrumbs.add("/map");
-  const source = request.getParams().getResult();
-  const quakeMapQuery = new PlainTextQuery(source);
-  const quakeMapContent = await queryBus.enqueue(cancelToken, quakeMapQuery).whenExecuted();
-  const quakeMapParser = new QuakeMapParser(breadcrumbs, quakeMapContent);
+function loadMap(loggerBreadcrumbs: ILoggerBreadcrumbs, quakeMapContent: string, physicsMessagePort: MessagePort): void {
+  const quakeMapParser = new QuakeMapParser(loggerBreadcrumbs, quakeMapContent);
 
   // standalone entities
   const entitiesWithBrushes: Array<[QuakeBrushClassNames, QuakeEntity]> = [];
@@ -90,10 +82,6 @@ export default async function* map(
   const worldBrushes: Array<QuakeEntity> = [];
 
   for (let entity of quakeMapParser.parse()) {
-    if (cancelToken.isCanceled()) {
-      return;
-    }
-
     const entityClassName = entity.getClassName();
     const entityProperties = entity.getProperties();
     let entityOrigin;
@@ -118,7 +106,7 @@ export default async function* map(
         break;
       case "light_point":
       case "light_spotlight":
-        yield new JSONRPCResponseData({
+        self.postMessage({
           classname: entityClassName,
           color: entityProperties.getPropertyByKey("color").getValue(),
           decay: entityProperties.getPropertyByKey("decay").asNumber(),
@@ -127,7 +115,7 @@ export default async function* map(
         });
         break;
       case "model_gltf":
-        yield new JSONRPCResponseData({
+        self.postMessage({
           angle: entityProperties.getPropertyByKey("angle").asNumber(),
           classname: entityClassName,
           model_name: entityProperties.getPropertyByKey("model_name").getValue(),
@@ -138,7 +126,7 @@ export default async function* map(
 
         break;
       case "model_md2":
-        yield new JSONRPCResponseData({
+        self.postMessage({
           angle: entityProperties.getPropertyByKey("angle").asNumber(),
           classname: entityClassName,
           model_name: entityProperties.getPropertyByKey("model_name").getValue(),
@@ -147,13 +135,13 @@ export default async function* map(
         });
         break;
       case "player":
-        yield new JSONRPCResponseData({
+        self.postMessage({
           classname: entityClassName,
           origin: getEntityOrigin(entity),
         });
         break;
       case "spark_particles":
-        yield new JSONRPCResponseData({
+        self.postMessage({
           classname: entityClassName,
           origin: getEntityOrigin(entity),
         });
@@ -169,39 +157,35 @@ export default async function* map(
 
           switch (sceneryType) {
             case SCENERY_INDOORS:
-              yield new JSONRPCResponseData({
+              self.postMessage({
                 classname: "light_ambient",
                 light: entityProperties.getPropertyByKey("light").asNumber(),
               });
               break;
             case SCENERY_OUTDOORS:
-              yield new JSONRPCResponseData({
+              self.postMessage({
                 classname: "light_hemisphere",
                 light: entityProperties.getPropertyByKey("light").asNumber(),
               });
               break;
             default:
-              throw new QuakeMapException(breadcrumbs, `Unknown map scenery type: "${sceneryType}".`);
+              throw new QuakeMapException(loggerBreadcrumbs, `Unknown map scenery type: "${sceneryType}".`);
           }
         }
         if (entityProperties.hasPropertyKey("sounds")) {
-          yield new JSONRPCResponseData({
+          self.postMessage({
             classname: "sounds",
             sounds: entityProperties.getPropertyByKey("sounds").getValue(),
           });
         }
         break;
       default:
-        throw new QuakeMapException(breadcrumbs, `Unsupported entity class name: "${entityClassName}"`);
+        throw new QuakeMapException(loggerBreadcrumbs, `Unsupported entity class name: "${entityClassName}"`);
     }
   }
 
   for (let [entityClassName, entity] of entitiesWithBrushes) {
-    if (cancelToken.isCanceled()) {
-      return;
-    }
-
-    yield await createGeometryBuffers(cancelToken, entityClassName, entity.getBrushes(), physicsMessagePort);
+    createGeometryBuffers(entityClassName, entity.getBrushes(), physicsMessagePort);
   }
 
   // this is the static world geometry
@@ -212,10 +196,13 @@ export default async function* map(
   }
 
   if (!isEmpty(mergedBrushes)) {
-    if (cancelToken.isCanceled()) {
-      return;
-    }
-
-    yield await createGeometryBuffers(cancelToken, "worldspawn", mergedBrushes, physicsMessagePort);
+    createGeometryBuffers("worldspawn", mergedBrushes, physicsMessagePort);
   }
 }
+
+self.onmessage = function(evt) {
+  fetch(evt.data.source)
+    .then(response => response.text())
+    .then(quakeMapContent => loadMap(loggerBreadcrumbs.add("loadMap"), quakeMapContent, evt.data.physicsMessagePort))
+    .then(() => self.postMessage(null));
+};

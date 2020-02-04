@@ -3,8 +3,6 @@ import groupBy from "lodash/groupBy";
 import uniqBy from "lodash/uniqBy";
 
 import CanvasView from "src/framework/classes/CanvasView";
-import JSONRPCClient from "src/framework/classes/JSONRPCClient";
-import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import { default as AmbientLightView } from "src/framework/classes/CanvasView/AmbientLight";
 import { default as AmbientSoundView } from "src/framework/classes/CanvasView/AmbientSound";
 import { default as GLTFModelView } from "src/framework/classes/CanvasView/GLTFModel";
@@ -37,7 +35,7 @@ import QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 // those are a few hacks, but in the end it's possible to load web workers
 // with create-react-app without ejecting
 /* eslint-disable import/no-webpack-loader-syntax */
-const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!src/workers/modules/quakeMap");
+const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!src/workers/modules/map");
 const PhysicsWorker = require("../../../workers/loader?name=PhysicsWorker!src/workers/modules/physics");
 /* eslint-enable import/no-webpack-loader-syntax */
 
@@ -102,9 +100,6 @@ export default class QuakeMap extends CanvasView {
     this.physicsWorker = physicsWorker;
 
     const quakeMapWorker: Worker = new QuakeMapWorker();
-    const quakeMapRpcClient = JSONRPCClient.attachTo(this.loggerBreadcrumbs.add("JSONRPCClient"), cancelToken, quakeMapWorker);
-
-    await quakeMapRpcClient.requestPromise<MessagePort, boolean>(cancelToken, "/message_channel", new JSONRPCResponseData(messageChannel.port2, [messageChannel.port2]));
 
     this.quakeMapWorker = quakeMapWorker;
 
@@ -112,156 +107,173 @@ export default class QuakeMap extends CanvasView {
     const gltfModels: QuakeWorkerGLTFModel[] = [];
     const md2Models: QuakeWorkerMD2Model[] = [];
 
-    for await (let entity of quakeMapRpcClient.requestGenerator<string, QuakeWorkerAny>(cancelToken, "/map", new JSONRPCResponseData(this.source))) {
-      const entityClassName = entity.classname;
+    await new Promise(resolve => {
+      quakeMapWorker.onmessage = (evt: MessageEvent) => {
+        const entity: null | QuakeWorkerAny = evt.data;
 
-      if ("string" !== typeof entityClassName) {
-        throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Entity class name is not a string."`);
-      }
+        if (!entity) {
+          // means it's done
+          return void resolve();
+        }
 
-      switch (entity.classname) {
-        case "func_group":
-        case "worldspawn":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new QuakeBrushView(
-                this.loggerBreadcrumbs.add("QuakeBrush"),
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
-                this.children,
-                entity,
-                this.queryBus,
-                this.threeLoadingManager
-              )
-            ),
-            "Loading entity brush"
-          ));
-          break;
-        case "light_ambient":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new AmbientLightView(
-                this.loggerBreadcrumbs.add("AmbientLight"),
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
-                this.children,
-                entity
-              )
-            ),
-            "Loading world ambient light"
-          ));
-          break;
-        case "light_hemisphere":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new HemisphereLightView(
-                this.loggerBreadcrumbs.add("HemisphereLight"),
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("HemisphereLight")),
-                this.children,
-                entity
-              )
-            ),
-            "Loading world hemisphere light"
-          ));
-          break;
-        case "light_point":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new PointLightView(
-                this.loggerBreadcrumbs.add("PointLight"),
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
-                this.children,
-                entity
-              )
-            ),
-            "Loading point light"
-          ));
-          break;
-        case "light_spotlight":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new SpotLightView(
-                this.loggerBreadcrumbs.add("SpotLight"),
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("SpotLight")),
-                this.children,
-                entity,
-              )
-            ),
-            "Loading spotlight"
-          ));
-          break;
-        case "model_gltf":
-          gltfModels.push(entity);
-          break;
-        case "model_md2":
-          md2Models.push(entity);
-          break;
-        case "player":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasControllerBus.add(
-              cancelToken,
-              new PlayerController(
-                this.loggerBreadcrumbs.add("Player"),
-                this.cameraController,
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Player")),
-                this.children,
-                entity,
-                this.loadingManager,
-                this.pointerController,
-                this.pointerState,
-                this.queryBus,
-                this.threeLoadingManager
-              )
-            ),
-            "Loading world ambient sound"
-          ));
-          break;
-        case "sounds":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new AmbientSoundView(
-                this.loggerBreadcrumbs.add("AmbientSound"),
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
-                this.children,
-                this.audioListener,
-                this.audioLoader,
-                this.loadingManager,
-                entity
-              )
-            ),
-            "Loading world ambient sound"
-          ));
-          break;
-        case "spark_particles":
-          // prettier-ignore
-          entities.push(this.loadingManager.blocking(
-            this.canvasViewBag.add(
-              cancelToken,
-              new ParticlesView(
-                this.loggerBreadcrumbs.add("Particles"),
-                this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")),
-                this.children,
-                entity
-               )
-            ),
-            "Loading particles"
-          ));
-          break;
-        default:
-          throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unsupported entity class name: "${entityClassName}"`);
-      }
-    }
+        const entityClassName = entity.classname;
+
+        if ("string" !== typeof entityClassName) {
+          throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Entity class name is not a string."`);
+        }
+
+        switch (entity.classname) {
+          case "func_group":
+          case "worldspawn":
+            // prettier-ignore
+            entities.push(this.loadingManager.blocking(
+              this.canvasViewBag.add(
+                cancelToken,
+                new QuakeBrushView(
+                  this.loggerBreadcrumbs.add("QuakeBrush"),
+                  this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeBrush")),
+                  this.children,
+                  entity,
+                  this.queryBus,
+                  this.threeLoadingManager
+                )
+              ),
+              "Loading entity brush"
+            ));
+            break;
+          case "light_ambient":
+            // prettier-ignore
+            entities.push(this.loadingManager.blocking(
+              this.canvasViewBag.add(
+                cancelToken,
+                new AmbientLightView(
+                  this.loggerBreadcrumbs.add("AmbientLight"),
+                  this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientLight")),
+                  this.children,
+                  entity
+                )
+              ),
+              "Loading world ambient light"
+            ));
+            break;
+          case "light_hemisphere":
+            // prettier-ignore
+            entities.push(this.loadingManager.blocking(
+              this.canvasViewBag.add(
+                cancelToken,
+                new HemisphereLightView(
+                  this.loggerBreadcrumbs.add("HemisphereLight"),
+                  this.canvasViewBag.fork(this.loggerBreadcrumbs.add("HemisphereLight")),
+                  this.children,
+                  entity
+                )
+              ),
+              "Loading world hemisphere light"
+            ));
+            break;
+          case "light_point":
+            // prettier-ignore
+            entities.push(this.loadingManager.blocking(
+              this.canvasViewBag.add(
+                cancelToken,
+                new PointLightView(
+                  this.loggerBreadcrumbs.add("PointLight"),
+                  this.canvasViewBag.fork(this.loggerBreadcrumbs.add("PointLight")),
+                  this.children,
+                  entity
+                )
+              ),
+              "Loading point light"
+            ));
+            break;
+          case "light_spotlight":
+            // prettier-ignore
+            entities.push(this.loadingManager.blocking(
+              this.canvasViewBag.add(
+                cancelToken,
+                new SpotLightView(
+                  this.loggerBreadcrumbs.add("SpotLight"),
+                  this.canvasViewBag.fork(this.loggerBreadcrumbs.add("SpotLight")),
+                  this.children,
+                  entity,
+                )
+              ),
+              "Loading spotlight"
+            ));
+            break;
+          case "model_gltf":
+            gltfModels.push(entity);
+            break;
+          case "model_md2":
+            md2Models.push(entity);
+            break;
+          case "player":
+            // prettier-ignore
+            entities.push(this.loadingManager.blocking(
+              this.canvasControllerBus.add(
+                cancelToken,
+                new PlayerController(
+                  this.loggerBreadcrumbs.add("Player"),
+                  this.cameraController,
+                  this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Player")),
+                  this.children,
+                  entity,
+                  this.loadingManager,
+                  this.pointerController,
+                  this.pointerState,
+                  this.queryBus,
+                  this.threeLoadingManager
+                )
+              ),
+              "Loading world ambient sound"
+            ));
+            break;
+          case "sounds":
+            // prettier-ignore
+            entities.push(this.loadingManager.blocking(
+              this.canvasViewBag.add(
+                cancelToken,
+                new AmbientSoundView(
+                  this.loggerBreadcrumbs.add("AmbientSound"),
+                  this.canvasViewBag.fork(this.loggerBreadcrumbs.add("AmbientSound")),
+                  this.children,
+                  this.audioListener,
+                  this.audioLoader,
+                  this.loadingManager,
+                  entity
+                )
+              ),
+              "Loading world ambient sound"
+            ));
+            break;
+          case "spark_particles":
+            // prettier-ignore
+            entities.push(this.loadingManager.blocking(
+              this.canvasViewBag.add(
+                cancelToken,
+                new ParticlesView(
+                  this.loggerBreadcrumbs.add("Particles"),
+                  this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Particles")),
+                  this.children,
+                  entity
+                 )
+              ),
+              "Loading particles"
+            ));
+            break;
+          default:
+            throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unsupported entity class name: "${entityClassName}"`);
+        }
+      };
+
+      quakeMapWorker.postMessage(
+        {
+          physicsMessagePort: messageChannel.port2,
+          source: this.source,
+        },
+        [messageChannel.port2]
+      );
+    });
 
     await Promise.all(entities);
 
