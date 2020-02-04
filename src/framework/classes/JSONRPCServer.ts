@@ -26,7 +26,7 @@ import JSONRPCServerPromiseCallback from "src/framework/types/JSONRPCServerPromi
 export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServer {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly postMessage: DedicatedWorkerGlobalScope["postMessage"];
-  readonly requestHandlers: Map<string, (request: IJSONRPCRequest) => Promise<void>> = new Map();
+  readonly requestHandlers: Map<string, (request: IJSONRPCRequest<any>) => Promise<void>> = new Map();
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, postMessage: DedicatedWorkerGlobalScope["postMessage"]) {
     autoBind(this);
@@ -35,7 +35,7 @@ export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServ
     this.postMessage = postMessage;
   }
 
-  handleRequest(jsonRpcRequest: IJSONRPCRequest): Promise<void> {
+  handleRequest<T>(jsonRpcRequest: IJSONRPCRequest<T>): Promise<void> {
     const method = jsonRpcRequest.getMethod();
     const requestHandler = this.requestHandlers.get(method);
 
@@ -51,8 +51,8 @@ export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServ
   }
 
   @cancelable()
-  async returnGenerator<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T>): Promise<void> {
-    this.requestHandlers.set(method, async (request: IJSONRPCRequest) => {
+  async returnGenerator<T, U>(cancelToken: CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T, U>): Promise<void> {
+    this.requestHandlers.set(method, async (request: IJSONRPCRequest<T>) => {
       if (cancelToken.isCanceled()) {
         return;
       }
@@ -77,8 +77,8 @@ export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServ
   }
 
   @cancelable()
-  async returnPromise<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T>): Promise<void> {
-    this.requestHandlers.set(method, async (request: IJSONRPCRequest) => {
+  async returnPromise<T, U>(cancelToken: CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T, U>): Promise<void> {
+    this.requestHandlers.set(method, async (request: IJSONRPCRequest<T>) => {
       if (cancelToken.isCanceled()) {
         return;
       }
@@ -88,7 +88,7 @@ export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServ
       try {
         result = await handle(cancelToken, request);
       } catch (err) {
-        const data = new JSONRPCResponseData(err.message);
+        const data = new JSONRPCResponseData<U>(err.message);
 
         return this.sendResponse(new JSONRPCErrorResponse(this.loggerBreadcrumbs.add("returnPromise"), "", "", "error", data));
       }
@@ -98,7 +98,7 @@ export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServ
       }
 
       // prettier-ignore
-      this.sendResponse(new JSONRPCPromiseResponse<T>(
+      this.sendResponse(new JSONRPCPromiseResponse<U>(
         this.loggerBreadcrumbs.add("returnPromise"),
         request.getId(),
         request.getMethod(),
@@ -142,7 +142,6 @@ export default class JSONRPCServer implements HasLoggerBreadcrumbs, IJSONRPCServ
       if ( "string" !== typeof id
         || "2.0-x-personalidol" !== jsonrpc
         || "string" !== typeof method
-        || !Array.isArray(params)
         || ("error" !== type && "generator" !== type && "promise" !== type)
       ) {
         return invalidRequest();

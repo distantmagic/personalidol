@@ -4,6 +4,7 @@ import uniqBy from "lodash/uniqBy";
 
 import CanvasView from "src/framework/classes/CanvasView";
 import JSONRPCClient from "src/framework/classes/JSONRPCClient";
+import JSONRPCResponseData from "src/framework/classes/JSONRPCResponseData";
 import { default as AmbientLightView } from "src/framework/classes/CanvasView/AmbientLight";
 import { default as AmbientSoundView } from "src/framework/classes/CanvasView/AmbientSound";
 import { default as GLTFModelView } from "src/framework/classes/CanvasView/GLTFModel";
@@ -27,7 +28,6 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
 import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
-import { default as IJSONRPCClient } from "src/framework/interfaces/JSONRPCClient";
 import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
 import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
@@ -36,8 +36,10 @@ import QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 
 // those are a few hacks, but in the end it's possible to load web workers
 // with create-react-app without ejecting
-// eslint-disable-next-line import/no-webpack-loader-syntax
+/* eslint-disable import/no-webpack-loader-syntax */
 const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!src/workers/modules/quakeMap");
+const PhysicsWorker = require("../../../workers/loader?name=PhysicsWorker!src/workers/modules/physics");
+/* eslint-enable import/no-webpack-loader-syntax */
 
 export default class QuakeMap extends CanvasView {
   readonly audioListener: THREE.AudioListener;
@@ -52,6 +54,7 @@ export default class QuakeMap extends CanvasView {
   readonly source: string;
   readonly threeLoadingManager: THREE.LoadingManager;
   private animationOffset: number;
+  private physicsWorker: null | Worker = null;
   private quakeMapWorker: null | Worker = null;
 
   constructor(
@@ -90,13 +93,23 @@ export default class QuakeMap extends CanvasView {
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const quakeMapRpcClient = this.getQuakeMapRpcClient(cancelToken);
+    // const messageChannel = new MessageChannel();
+
+    const physicsWorker: Worker = new PhysicsWorker();
+    const physicsRpcClient = JSONRPCClient.attachTo(this.loggerBreadcrumbs.add("JSONRPCClient"), cancelToken, physicsWorker);
+
+    this.physicsWorker = physicsWorker;
+
+    const quakeMapWorker: Worker = new QuakeMapWorker();
+    const quakeMapRpcClient = JSONRPCClient.attachTo(this.loggerBreadcrumbs.add("JSONRPCClient"), cancelToken, quakeMapWorker);
+
+    this.quakeMapWorker = quakeMapWorker;
 
     const entities: Promise<void>[] = [];
     const gltfModels: QuakeWorkerGLTFModel[] = [];
     const md2Models: QuakeWorkerMD2Model[] = [];
 
-    for await (let entity of quakeMapRpcClient.requestGenerator<QuakeWorkerAny>(cancelToken, "/map", [this.source])) {
+    for await (let entity of quakeMapRpcClient.requestGenerator<string, QuakeWorkerAny>(cancelToken, "/map", new JSONRPCResponseData(this.source))) {
       const entityClassName = entity.classname;
 
       if ("string" !== typeof entityClassName) {
@@ -324,6 +337,12 @@ export default class QuakeMap extends CanvasView {
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
+    const physicsWorker = this.physicsWorker;
+
+    if (physicsWorker) {
+      physicsWorker.terminate();
+    }
+
     const quakeMapWorker = this.quakeMapWorker;
 
     if (quakeMapWorker) {
@@ -333,14 +352,5 @@ export default class QuakeMap extends CanvasView {
 
   getName(): "QuakeMap" {
     return "QuakeMap";
-  }
-
-  getQuakeMapRpcClient(cancelToken: CancelToken): IJSONRPCClient {
-    const quakeMapWorker: Worker = new QuakeMapWorker();
-    const quakeMapRpcClient = JSONRPCClient.attachTo(this.loggerBreadcrumbs.add("JSONRPCClient"), cancelToken, quakeMapWorker);
-
-    this.quakeMapWorker = quakeMapWorker;
-
-    return quakeMapRpcClient;
   }
 }

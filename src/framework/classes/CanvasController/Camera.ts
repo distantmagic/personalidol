@@ -115,7 +115,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   }
 
   setZoom(zoom: number): void {
-    const clampedZoom = clamp(zoom, 1, 4);
+    const clampedZoom = clamp(zoom, 1, 5);
 
     if (this.zoom === clampedZoom) {
       return;
@@ -128,8 +128,10 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   }
 
   updateProjectionMatrix() {
+    // this.camera.fov = 60;
     this.camera.aspect = this.width / this.height;
     this.camera.zoom = this.zoom;
+
     this.camera.updateProjectionMatrix();
   }
 

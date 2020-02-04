@@ -1,10 +1,10 @@
 import JSONRPCMessage from "src/framework/interfaces/JSONRPCMessage";
+import JSONRPCResponseData from "src/framework/interfaces/JSONRPCResponseData";
 
-import JSONRPCParams from "src/framework/types/JSONRPCParams";
 import JSONRPCRequestObjectified from "src/framework/types/JSONRPCRequestObjectified";
 
-export default interface JSONRPCRequest extends JSONRPCMessage<JSONRPCRequestObjectified> {
-  getParams(): JSONRPCParams;
+export default interface JSONRPCRequest<T> extends JSONRPCMessage<JSONRPCRequestObjectified<T>> {
+  getParams(): JSONRPCResponseData<T>;
 
   isRequest(): true;
 

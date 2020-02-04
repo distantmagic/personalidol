@@ -3,10 +3,10 @@ import JSONRPCErrorResponse from "src/framework/interfaces/JSONRPCErrorResponse"
 import JSONRPCGeneratorChunkResponse from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
 import JSONRPCPromiseResponse from "src/framework/interfaces/JSONRPCPromiseResponse";
 import JSONRPCRequest from "src/framework/interfaces/JSONRPCRequest";
+import JSONRPCResponseData from "src/framework/interfaces/JSONRPCResponseData";
 
 import JSONRPCErrorResponseObjectified from "src/framework/types/JSONRPCErrorResponseObjectified";
 import JSONRPCGeneratorChunkResponseObjectified from "src/framework/types/JSONRPCGeneratorChunkResponseObjectified";
-import JSONRPCParams from "src/framework/types/JSONRPCParams";
 import JSONRPCPromiseResponseObjectified from "src/framework/types/JSONRPCPromiseResponseObjectified";
 
 export default interface JSONRPCClient {
@@ -18,11 +18,11 @@ export default interface JSONRPCClient {
 
   handleSerializedResponse(response: { readonly [key: string]: any }): Promise<void>;
 
-  requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): AsyncGenerator<T>;
+  requestGenerator<T, U>(cancelToken: CancelToken, method: string, params: JSONRPCResponseData<T>): AsyncGenerator<U>;
 
-  requestPromise<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams): Promise<T>;
+  requestPromise<T, U>(cancelToken: CancelToken, method: string, params: JSONRPCResponseData<T>): Promise<U>;
 
-  sendRequest(cancelToken: CancelToken, request: JSONRPCRequest): Promise<void>;
+  sendRequest<T>(cancelToken: CancelToken, request: JSONRPCRequest<T>): Promise<void>;
 
   useMessageHandler(cancelToken: CancelToken): Worker["onmessage"];
 }

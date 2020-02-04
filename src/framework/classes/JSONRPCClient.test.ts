@@ -15,7 +15,7 @@ test("processes incoming generator chunk response", async function() {
     const cancelToken = new CancelToken(loggerBreadcrumbs);
     const responseChunks = [];
 
-    for await (let responseChunk of jsonRpcClient.requestGenerator(cancelToken, "test-promise", [])) {
+    for await (let responseChunk of jsonRpcClient.requestGenerator(cancelToken, "test-promise", new JSONRPCResponseData(null))) {
       responseChunks.push(responseChunk);
     }
 
@@ -49,7 +49,7 @@ test("processes incoming promise response", async function() {
 
   const promise = (async function() {
     const cancelToken = new CancelToken(loggerBreadcrumbs);
-    const serverResponse = await jsonRpcClient.requestPromise(cancelToken, "test-promise", []);
+    const serverResponse = await jsonRpcClient.requestPromise(cancelToken, "test-promise", new JSONRPCResponseData(null));
 
     expect(serverResponse).toBe(4);
   })();

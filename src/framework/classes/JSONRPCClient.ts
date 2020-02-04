@@ -21,8 +21,8 @@ import { default as IJSONRPCErrorResponse } from "src/framework/interfaces/JSONR
 import { default as IJSONRPCGeneratorChunkResponse } from "src/framework/interfaces/JSONRPCGeneratorChunkResponse";
 import { default as IJSONRPCPromiseResponse } from "src/framework/interfaces/JSONRPCPromiseResponse";
 import { default as IJSONRPCRequest } from "src/framework/interfaces/JSONRPCRequest";
+import { default as IJSONRPCResponseData } from "src/framework/interfaces/JSONRPCResponseData";
 
-import JSONRPCParams from "src/framework/types/JSONRPCParams";
 import JSONRPCVersion from "src/framework/types/JSONRPCVersion";
 
 export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClient {
@@ -144,7 +144,7 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
   }
 
   @cancelable()
-  async *requestGenerator<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams = []): AsyncGenerator<T> {
+  async *requestGenerator<T, U>(cancelToken: CancelToken, method: string, params: IJSONRPCResponseData<T>): AsyncGenerator<U> {
     const requestId = this.uuid();
     const request = new JSONRPCRequest(requestId, method, "generator", params);
     const eventListenerSet = new EventListenerSet(this.loggerBreadcrumbs.add("EventListenerSet"));
@@ -161,7 +161,7 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
     }
 
     // await response
-    const buffer = new JSONRPCClientGeneratorBuffer<T>(this.loggerBreadcrumbs.add("JSONRPCClientGeneratorBuffer"));
+    const buffer = new JSONRPCClientGeneratorBuffer<U>(this.loggerBreadcrumbs.add("JSONRPCClientGeneratorBuffer"));
 
     for await (let [response] of responseGenerator) {
       if (cancelToken.isCanceled()) {
@@ -181,7 +181,7 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
   }
 
   @cancelable(true)
-  requestPromise<T>(cancelToken: CancelToken, method: string, params: JSONRPCParams = []): Promise<T> {
+  requestPromise<T, U>(cancelToken: CancelToken, method: string, params: IJSONRPCResponseData<T>): Promise<U> {
     const requestId = this.uuid();
     const request = new JSONRPCRequest(requestId, method, "promise", params);
 
@@ -189,7 +189,7 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
     return new Promise((resolve, reject) => {
       cancelToken.onCanceled(reject);
 
-      this.awaitingPromiseRequests.set(requestId, (result: T) => {
+      this.awaitingPromiseRequests.set(requestId, (result: U) => {
         if (cancelToken.isCanceled()) {
           reject(new CancelTokenException(this.loggerBreadcrumbs.add("requestPromise"), "Cancel token was canceled before processing RPC response."));
         } else {
@@ -205,8 +205,8 @@ export default class JSONRPCClient implements HasLoggerBreadcrumbs, IJSONRPCClie
   }
 
   @cancelable()
-  async sendRequest(cancelToken: CancelToken, request: IJSONRPCRequest): Promise<void> {
-    this.postMessage(request.asObject());
+  async sendRequest<T>(cancelToken: CancelToken, request: IJSONRPCRequest<T>): Promise<void> {
+    this.postMessage(request.asObject(), request.getParams().getTransferables());
   }
 
   useMessageHandler(cancelToken: CancelToken): Worker["onmessage"] {

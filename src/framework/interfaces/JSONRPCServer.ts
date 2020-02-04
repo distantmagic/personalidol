@@ -8,11 +8,11 @@ import JSONRPCServerGeneratorCallback from "src/framework/types/JSONRPCServerGen
 import JSONRPCServerPromiseCallback from "src/framework/types/JSONRPCServerPromiseCallback";
 
 export default interface JSONRPCServer {
-  handleRequest(request: JSONRPCRequest): Promise<void>;
+  handleRequest<T>(request: JSONRPCRequest<T>): Promise<void>;
 
-  returnGenerator<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T>): Promise<void>;
+  returnGenerator<T, U>(cancelToken: CancelToken, method: string, handle: JSONRPCServerGeneratorCallback<T, U>): Promise<void>;
 
-  returnPromise<T>(cancelToken: CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T>): Promise<void>;
+  returnPromise<T, U>(cancelToken: CancelToken, method: string, handle: JSONRPCServerPromiseCallback<T, U>): Promise<void>;
 
   sendResponse<T, U extends Object>(response: JSONRPCResponse<T, U>): Promise<void>;
 

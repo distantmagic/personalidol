@@ -9,7 +9,7 @@ import { default as JSONRPCGeneratorChunkResponse, unobjectify as unobjectifyJSO
 test("incoming requests are processed", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const postMessageMock = jest.fn();
-  const jsonRpcRequest = new JSONRPCRequest("1", "test-promise", "promise", []);
+  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-promise", "promise", new JSONRPCResponseData(null));
   const jsonRpcServer = new JSONRPCServer(loggerBreadcrumbs, postMessageMock);
 
   const cancelToken = new CancelToken(loggerBreadcrumbs);
@@ -28,7 +28,7 @@ test("incoming requests are processed", async function() {
 test("produces a generator", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const postMessageMock = jest.fn();
-  const jsonRpcRequest = new JSONRPCRequest("1", "test-generator", "generator", []);
+  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-generator", "generator", new JSONRPCResponseData(null));
   const jsonRpcServer = new JSONRPCServer(loggerBreadcrumbs, postMessageMock);
 
   const cancelToken = new CancelToken(loggerBreadcrumbs);
@@ -74,7 +74,7 @@ test("produces a generator", async function() {
 test("fails when method does not exist", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const postMessageMock = jest.fn();
-  const jsonRpcRequest = new JSONRPCRequest("1", "test-promise", "promise", []);
+  const jsonRpcRequest = new JSONRPCRequest<null>("1", "test-promise", "promise", new JSONRPCResponseData(null));
   const jsonRpcServer = new JSONRPCServer(loggerBreadcrumbs, postMessageMock);
 
   await jsonRpcServer.handleRequest(jsonRpcRequest);

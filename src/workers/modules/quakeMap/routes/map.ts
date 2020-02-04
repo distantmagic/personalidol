@@ -66,13 +66,13 @@ function getEntityOrigin(entity: QuakeEntity): [number, number, number] {
 
 export default async function* map(
   cancelToken: CancelToken,
-  request: JSONRPCRequest,
+  request: JSONRPCRequest<string>,
   loggerBreadcrumbs: LoggerBreadcrumbs,
   queryBus: QueryBus,
   threeLoadingManager: THREE.LoadingManager
 ): AsyncGenerator<IJSONRPCResponseData<QuakeWorkerAny>> {
   const breadcrumbs = loggerBreadcrumbs.add("/map");
-  const [source] = request.getParams();
+  const source = request.getParams().getResult();
   const quakeMapQuery = new PlainTextQuery(source);
   const quakeMapContent = await queryBus.enqueue(cancelToken, quakeMapQuery).whenExecuted();
   const quakeMapParser = new QuakeMapParser(breadcrumbs, quakeMapContent);

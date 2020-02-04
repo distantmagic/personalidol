@@ -1,7 +1,5 @@
 /// <reference lib="webworker" />
 
-import * as THREE from "three";
-
 import bootstrapWorker from "src/framework/helpers/bootstrapWorker";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -16,10 +14,4 @@ import { default as routeMap } from "src/workers/modules/quakeMap/routes/map";
 
 declare var self: DedicatedWorkerGlobalScope;
 
-self.onmessage = bootstrapWorker(function(serverCancelToken: CancelToken, loggerBreadcrumbs: LoggerBreadcrumbs, jsonRpcServer: JSONRPCServer, queryBus: QueryBus) {
-  const threeLoadingManager = new THREE.LoadingManager();
-
-  jsonRpcServer.returnGenerator<string, QuakeWorkerAny>(serverCancelToken, "/map", function(cancelToken: CancelToken, request: JSONRPCRequest<string>) {
-    return routeMap(cancelToken, request, loggerBreadcrumbs, queryBus, threeLoadingManager);
-  });
-});
+self.onmessage = bootstrapWorker(function(serverCancelToken: CancelToken, loggerBreadcrumbs: LoggerBreadcrumbs, jsonRpcServer: JSONRPCServer, queryBus: QueryBus) {});
