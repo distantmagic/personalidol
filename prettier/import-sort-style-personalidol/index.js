@@ -2,16 +2,8 @@ function isLocalClass(imported) {
   return imported.moduleName.startsWith("src/framework/classes");
 }
 
-function isLocalComponent(imported) {
-  return imported.moduleName.startsWith("src/components");
-}
-
 function isLocalDecorator(imported) {
   return imported.moduleName.startsWith("src/framework/decorators");
-}
-
-function isLocalEffect(imported) {
-  return imported.moduleName.startsWith("src/effect");
 }
 
 function isLocalEnum(imported) {
@@ -62,20 +54,6 @@ function format(styleApi) {
     },
     {
       match: not(isLocalModule),
-      sort: member(naturally),
-    },
-    { separator: true },
-
-    // import Foo from "src/components/Foo"
-    {
-      match: isLocalComponent,
-      sort: member(naturally),
-    },
-    { separator: true },
-
-    // import useFoo from "src/effects/useFoo"
-    {
-      match: isLocalEffect,
       sort: member(naturally),
     },
     { separator: true },

@@ -111,8 +111,9 @@ export default class QuakeMap extends CanvasView {
       quakeMapWorker.onmessage = (evt: MessageEvent) => {
         const entity: null | QuakeWorkerAny = evt.data;
 
+        // means it's done
         if (!entity) {
-          // means it's done
+          this.disposeQuakeMapWorker();
           return void resolve();
         }
 
@@ -358,14 +359,19 @@ export default class QuakeMap extends CanvasView {
       physicsWorker.terminate();
     }
 
-    const quakeMapWorker = this.quakeMapWorker;
-
-    if (quakeMapWorker) {
-      quakeMapWorker.terminate();
-    }
+    this.disposeQuakeMapWorker();
   }
 
   getName(): "QuakeMap" {
     return "QuakeMap";
+  }
+
+  private disposeQuakeMapWorker(): void {
+    const quakeMapWorker = this.quakeMapWorker;
+
+    if (quakeMapWorker) {
+      quakeMapWorker.terminate();
+      this.quakeMapWorker = null;
+    }
   }
 }

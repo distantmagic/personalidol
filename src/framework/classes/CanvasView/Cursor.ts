@@ -20,11 +20,11 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   readonly loadingManager: LoadingManager;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
-  private cursorScene: null | THREE.Scene = null;
+  private cursorScene: THREE.Scene = new THREE.Scene();
   private isPointerDown: boolean = false;
   private position: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
   private scale: number = 1;
-  private spotLight: null | THREE.SpotLight = null;
+  private spotLight: THREE.SpotLight = new THREE.SpotLight();
   private threeLoadingManager: THREE.LoadingManager;
 
   constructor(
@@ -100,28 +100,8 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     this.cameraController.onZoomChange.delete(this.onZoomChange);
   }
 
-  getCursorScene(): THREE.Scene {
-    const scene = this.cursorScene;
-
-    if (!scene) {
-      throw new Error("Cursor scene is not created but it was expected.");
-    }
-
-    return scene;
-  }
-
   getName(): "Cursor" {
     return "Cursor";
-  }
-
-  getSpotLight(): THREE.SpotLight {
-    const spotLight = this.spotLight;
-
-    if (!spotLight) {
-      throw new Error("Cursor spotlight is not created but it was expected.");
-    }
-
-    return spotLight;
   }
 
   onZoomChange(zoom: number): void {
@@ -138,17 +118,17 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   }
 
   setVisible(isVisible: boolean): void {
-    this.getCursorScene().visible = isVisible;
+    this.cursorScene.visible = isVisible;
 
     // do not unset light via .visible to not recompile shaders
     // there might be a small lag while cursor is leaving the game area
-    this.getSpotLight().intensity = isVisible ? 0.2 : 0;
+    this.spotLight.intensity = isVisible ? 0.2 : 0;
   }
 
   update(delta: number): void {
     super.update(delta);
 
-    this.getCursorScene().rotation.x += 0.1;
+    this.cursorScene.rotation.x += 0.1;
   }
 
   useUpdate(): true {

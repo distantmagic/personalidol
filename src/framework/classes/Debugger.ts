@@ -1,5 +1,3 @@
-import { Map } from "immutable";
-
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -15,15 +13,13 @@ export default class Debugger implements IDebugger {
   private _isEnabled: boolean = false;
   private state: DebuggerState;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, state: DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, state: DebuggerState = new Map<LoggerBreadcrumbs, DebuggerStateValue>()) {
     this.callbacks = new EventListenerSet<[DebuggerState]>(loggerBreadcrumbs);
     this.state = state;
   }
 
   deleteState(loggerBreadcrumbs: LoggerBreadcrumbs): void {
-    const state = this.getState();
-
-    return this.setState(state.delete(loggerBreadcrumbs));
+    this.getState().delete(loggerBreadcrumbs);
   }
 
   getState(): DebuggerState {
@@ -47,10 +43,6 @@ export default class Debugger implements IDebugger {
   }
 
   setState(state: DebuggerState): void {
-    if (this.state === state) {
-      return;
-    }
-
     this.state = state;
 
     if (this.isEnabled()) {

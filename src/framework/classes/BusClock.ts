@@ -8,15 +8,7 @@ import BusClockCallback from "src/framework/types/BusClockCallback";
 export default class BusClock implements IBusClock {
   private delay: number;
 
-  static createForMainThread(): IBusClock {
-    return new BusClock(400);
-  }
-
-  static createForWorkerThread(): IBusClock {
-    return new BusClock(200);
-  }
-
-  constructor(delay: number = 400) {
+  constructor(delay: number = 40) {
     this.delay = delay;
   }
 

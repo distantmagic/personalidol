@@ -1,5 +1,6 @@
 import isEmpty from "lodash/isEmpty";
 
+import Exception from "src/framework/classes/Exception";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";
 import QuakeMapParser from "src/framework/classes/QuakeMapParser";
@@ -25,12 +26,15 @@ const SCENERY_OUTDOORS = 1;
 
 const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker", "map"]);
 
+let isConsumed = false;
+
 async function createGeometryBuffers(className: QuakeBrushClassNames, brushes: ReadonlyArray<QuakeBrush>, physicsMessagePort: MessagePort) {
   const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
   for (let brush of brushes) {
     const boundingBox = brush.getBoundingBox();
 
+    // push all static geometries to physics worker to check for collisions
     physicsMessagePort.postMessage({
       max: boundingBox.max.toArray(),
       min: boundingBox.min.toArray(),
@@ -201,6 +205,12 @@ function loadMap(loggerBreadcrumbs: ILoggerBreadcrumbs, quakeMapContent: string,
 }
 
 self.onmessage = function(evt) {
+  if (isConsumed) {
+    throw new Exception(loggerBreadcrumbs, "Map worker is already used. To load another map spawn a different worker.");
+  }
+
+  isConsumed = true;
+
   fetch(evt.data.source)
     .then(response => response.text())
     .then(quakeMapContent => loadMap(loggerBreadcrumbs.add("loadMap"), quakeMapContent, evt.data.physicsMessagePort))

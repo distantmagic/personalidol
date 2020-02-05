@@ -28,8 +28,7 @@ MainLoop.setUpdate(function(delta: number) {
 MainLoop.start();
 
 function onMessagePortMessage(evt: MessageEvent) {
-  // console.log(evt.data);
-  const body = world.add({
+  world.add({
     // type of shape : sphere, box, cylinder
     type: "box",
     // size of shape
@@ -48,14 +47,10 @@ function onMessagePortMessage(evt: MessageEvent) {
     // The bits of the collision groups with which the shape collides.
     collidesWith: 0xffffffff,
   });
-
-  // console.log(body);
 }
 
-function onWorkerMessage(evt: MessageEvent) {
+self.onmessage = function(evt: MessageEvent) {
   const messagePort: MessagePort = evt.data;
 
   messagePort.onmessage = onMessagePortMessage;
-}
-
-self.onmessage = onWorkerMessage;
+};

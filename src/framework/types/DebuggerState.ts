@@ -1,5 +1,3 @@
-import { Map } from "immutable";
-
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 import DebuggerStateValue from "src/framework/types/DebuggerStateValue";
