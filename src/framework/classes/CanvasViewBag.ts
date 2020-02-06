@@ -1,4 +1,5 @@
 import autoBind from "auto-bind";
+import isEmpty from "lodash/isEmpty";
 
 import cancelable from "src/framework/decorators/cancelable";
 
@@ -42,8 +43,14 @@ export default class CanvasViewBag implements HasLoggerBreadcrumbs, ICanvasViewB
 
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
-    for (let canvasView of this.canvasViews.slice().reverse()) {
-      await this.delete(cancelToken, canvasView);
+    while (!isEmpty(this.canvasViews)) {
+      const canvasView = this.canvasViews.pop();
+
+      if (canvasView) {
+        await this.delete(cancelToken, canvasView);
+      } else {
+        return;
+      }
     }
   }
 

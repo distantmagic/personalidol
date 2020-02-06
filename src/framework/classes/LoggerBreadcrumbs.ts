@@ -7,7 +7,7 @@ export default class LoggerBreadcrumbs implements ILoggerBreadcrumbs {
   readonly loggerBreadcrumbsLocalCache: Map<string, ILoggerBreadcrumbs> = new Map<string, ILoggerBreadcrumbs>();
   readonly loggerBreadcrumbsMemo: Map<string, ILoggerBreadcrumbs>;
 
-  constructor(breadcrumbs: ReadonlyArray<string> = ["root"], loggerBreadcrumbsMemo: Map<string, ILoggerBreadcrumbs> = new Map()) {
+  constructor(breadcrumbs: ReadonlyArray<string> = [], loggerBreadcrumbsMemo: Map<string, ILoggerBreadcrumbs> = new Map()) {
     this.breadcrumbs = Object.freeze(breadcrumbs);
     this.loggerBreadcrumbsMemo = loggerBreadcrumbsMemo;
   }
@@ -44,15 +44,18 @@ export default class LoggerBreadcrumbs implements ILoggerBreadcrumbs {
   }
 
   asString(): string {
-    return this.breadcrumbs
-      .map(function(breadcrumb) {
-        if (breadcrumb.includes(" ") || breadcrumb.includes(LOGGER_BREADCRUMB_SEPARATOR)) {
-          return `"${breadcrumb}"`;
-        }
+    return (
+      LOGGER_BREADCRUMB_SEPARATOR +
+      this.breadcrumbs
+        .map(function(breadcrumb) {
+          if (breadcrumb.includes(" ") || breadcrumb.includes(LOGGER_BREADCRUMB_SEPARATOR)) {
+            return `"${breadcrumb}"`;
+          }
 
-        return breadcrumb;
-      })
-      .join(LOGGER_BREADCRUMB_SEPARATOR);
+          return breadcrumb;
+        })
+        .join(LOGGER_BREADCRUMB_SEPARATOR)
+    );
   }
 
   getBreadcrumbs(): ReadonlyArray<string> {

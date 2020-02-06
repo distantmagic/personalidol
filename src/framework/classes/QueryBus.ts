@@ -1,4 +1,5 @@
 import autoBind from "auto-bind";
+import isEmpty from "lodash/isEmpty";
 
 import CancelTokenQuery from "src/framework/classes/CancelTokenQuery";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
@@ -51,6 +52,10 @@ export default class QueryBus implements HasLoggerBreadcrumbs, IQueryBus {
     return queryBatch;
   }
 
+  isFlushable(): boolean {
+    return !isEmpty(this.collection);
+  }
+
   offEnqueued<T>(callback: QueryBusOnEnqueuedCallback<T>): void {
     this.enqueuedCallbacks.delete(callback);
   }
@@ -60,6 +65,8 @@ export default class QueryBus implements HasLoggerBreadcrumbs, IQueryBus {
   }
 
   tick(): void {
-    this.flush().process();
+    if (this.isFlushable()) {
+      this.flush().process();
+    }
   }
 }

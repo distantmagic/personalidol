@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
-import yn from "yn";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 
 import env from "src/framework/helpers/env";
@@ -12,13 +12,13 @@ import { default as PointerController } from "src/framework/classes/CanvasContro
 import { default as QuakeMapView } from "src/framework/classes/CanvasView/QuakeMap";
 
 import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import Debugger from "src/framework/interfaces/Debugger";
 import ElementSize from "src/framework/interfaces/ElementSize";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import KeyboardState from "src/framework/interfaces/KeyboardState";
@@ -40,12 +40,12 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
   readonly cameraController: ICameraController;
   readonly canvasControllerBus: CanvasControllerBus;
   readonly canvasRootGroup: THREE.Group = new THREE.Group();
-  readonly debug: Debugger;
   readonly effectComposer: EffectComposer;
   readonly keyboardState: KeyboardState;
   readonly loadingManager: LoadingManager;
   readonly logger: Logger;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly outlinePass: OutlinePass;
   readonly pointerController: IPointerController;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
@@ -58,7 +58,6 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     loggerBreadcrumbs: LoggerBreadcrumbs,
     canvasControllerBus: CanvasControllerBus,
     canvasViewBag: CanvasViewBag,
-    debug: Debugger,
     keyboardState: KeyboardState,
     loadingManager: LoadingManager,
     logger: Logger,
@@ -76,11 +75,11 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     // this.camera.add(this.audioListener);
 
     this.canvasControllerBus = canvasControllerBus;
-    this.debug = debug;
     this.keyboardState = keyboardState;
     this.loadingManager = loadingManager;
     this.logger = logger;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.outlinePass = new OutlinePass(new THREE.Vector2(1, 1), this.scene, this.camera);
     this.queryBus = queryBus;
     this.pointerState = pointerState;
     this.renderer = renderer;
@@ -91,7 +90,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     const sceneBackgroundColor = 0x000000;
 
     this.scene.background = new THREE.Color(sceneBackgroundColor);
-    // this.scene.fog = new THREE.Fog(sceneBackgroundColor, 512, 1024 + 1024);
+    // this.scene.fog = new THREE.Fog(sceneBackgroundColor, 512, 1024 * 3);
 
     this.scene.add(this.canvasRootGroup);
 
@@ -101,7 +100,6 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
       this.canvasRootGroup,
       canvasViewBag,
       this.cameraController,
-      debug,
       renderer.domElement,
       loadingManager,
       pointerState,
@@ -112,10 +110,9 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
 
     this.threeLoadingManager = threeLoadingManager;
 
-    const renderPass = new RenderPass(this.scene, this.camera);
-
     this.effectComposer = new EffectComposer(renderer);
-    this.effectComposer.addPass(renderPass);
+    this.effectComposer.addPass(new RenderPass(this.scene, this.camera));
+    this.effectComposer.addPass(this.outlinePass);
   }
 
   @cancelable()
@@ -168,38 +165,12 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     await this.canvasControllerBus.delete(cancelToken, this.cameraController);
 
     this.scene.dispose();
-
-    this.debug.deleteState(this.loggerBreadcrumbs.add("fps"));
-    this.debug.deleteState(this.loggerBreadcrumbs.add("draw").add("calls"));
-    this.debug.deleteState(this.loggerBreadcrumbs.add("memory").add("geometries"));
-    this.debug.deleteState(this.loggerBreadcrumbs.add("memory").add("textures"));
-    this.debug.deleteState(
-      this.loggerBreadcrumbs
-        .add("performance")
-        .add("memory")
-        .add("usedJSHeapSize")
-    );
-    this.debug.deleteState(this.loggerBreadcrumbs.add("renderer").add("size"));
   }
 
   draw(interpolationPercentage: number): void {
     super.draw(interpolationPercentage);
 
     this.effectComposer.render();
-  }
-
-  end(fps: number, isPanicked: boolean): void {
-    super.end(fps, isPanicked);
-
-    this.debug.updateState(this.loggerBreadcrumbs.add("fps"), Math.floor(fps));
-    this.debug.updateState(this.loggerBreadcrumbs.add("draw").add("calls"), this.renderer.info.render.calls);
-    this.debug.updateState(this.loggerBreadcrumbs.add("memory").add("geometries"), this.renderer.info.memory.geometries);
-    this.debug.updateState(this.loggerBreadcrumbs.add("memory").add("textures"), this.renderer.info.memory.textures);
-
-    const rendererSize = new THREE.Vector2();
-
-    this.renderer.getSize(rendererSize);
-    this.debug.updateState(this.loggerBreadcrumbs.add("renderer").add("size"), rendererSize);
   }
 
   resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {
@@ -213,13 +184,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     this.effectComposer.setSize(width, height);
   }
 
-  useDraw(): true {
-    return true;
-  }
-
-  useEnd(): boolean {
-    return yn(env(this.loggerBreadcrumbs.add("useEnd").add("env"), "REACT_APP_FEATURE_DEBUGGER", ""), {
-      default: false,
-    });
+  useDraw(): SchedulerUpdateScenario.Always {
+    return SchedulerUpdateScenario.Always;
   }
 }

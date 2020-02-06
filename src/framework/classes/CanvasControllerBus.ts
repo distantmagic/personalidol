@@ -3,33 +3,29 @@ import autoBind from "auto-bind";
 import { default as CanvasControllerException } from "src/framework/classes/Exception/CanvasController";
 
 import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasController from "src/framework/interfaces/CanvasController";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import HTMLElementPositionObserver from "src/framework/interfaces/HTMLElementPositionObserver";
 import HTMLElementSizeObserver from "src/framework/interfaces/HTMLElementSizeObserver";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import Scheduler from "src/framework/interfaces/Scheduler";
 import { default as ICanvasControllerBus } from "src/framework/interfaces/CanvasControllerBus";
-import { default as IElementPosition } from "src/framework/interfaces/ElementPosition";
 import { default as IElementSize } from "src/framework/interfaces/ElementSize";
 
 export default class CanvasControllerBus implements ICanvasControllerBus, HasLoggerBreadcrumbs {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly positionObserver: HTMLElementPositionObserver;
   readonly resizeObserver: HTMLElementSizeObserver;
   readonly scheduler: Scheduler;
-  private lastElementPosition: null | IElementPosition<ElementPositionUnit.Px> = null;
   private lastElementSize: null | IElementSize<ElementPositionUnit.Px> = null;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, positionObserver: HTMLElementPositionObserver, resizeObserver: HTMLElementSizeObserver, scheduler: Scheduler) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, resizeObserver: HTMLElementSizeObserver, scheduler: Scheduler) {
     autoBind(this);
 
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.positionObserver = positionObserver;
     this.resizeObserver = resizeObserver;
     this.scheduler = scheduler;
   }
@@ -46,15 +42,7 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       throw new CanvasControllerException(this.loggerBreadcrumbs.add("add"), "Canvas controller wasn't properly attached. Did you forget to call parent 'super.attach' method?");
     }
 
-    this.positionObserver.onPositionChange.add(canvasController.setPosition);
     this.resizeObserver.onResize.add(canvasController.resize);
-
-    // catch up with last events
-    const lastElementPosition = this.lastElementPosition;
-
-    if (lastElementPosition) {
-      canvasController.setPosition(lastElementPosition);
-    }
 
     const lastElementSize = this.lastElementSize;
 
@@ -62,16 +50,16 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       canvasController.resize(lastElementSize);
     }
 
-    if (canvasController.useBegin()) {
+    if (SchedulerUpdateScenario.Always === canvasController.useBegin()) {
       this.scheduler.onBegin(canvasController.begin);
     }
-    if (canvasController.useDraw()) {
+    if (SchedulerUpdateScenario.Always === canvasController.useDraw()) {
       this.scheduler.onDraw(canvasController.draw);
     }
-    if (canvasController.useEnd()) {
+    if (SchedulerUpdateScenario.Always === canvasController.useEnd()) {
       this.scheduler.onEnd(canvasController.end);
     }
-    if (canvasController.useUpdate()) {
+    if (SchedulerUpdateScenario.Always === canvasController.useUpdate()) {
       this.scheduler.onUpdate(canvasController.update);
     }
   }
@@ -82,20 +70,19 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       throw new CanvasControllerException(this.loggerBreadcrumbs.add("delete"), "Canvas controller cannot is already disposed and cannot be disposed again.");
     }
 
-    if (canvasController.useBegin()) {
+    if (SchedulerUpdateScenario.Always === canvasController.useBegin()) {
       this.scheduler.offBegin(canvasController.begin);
     }
-    if (canvasController.useDraw()) {
+    if (SchedulerUpdateScenario.Always === canvasController.useDraw()) {
       this.scheduler.offDraw(canvasController.draw);
     }
-    if (canvasController.useEnd()) {
+    if (SchedulerUpdateScenario.Always === canvasController.useEnd()) {
       this.scheduler.offEnd(canvasController.end);
     }
-    if (canvasController.useUpdate()) {
+    if (SchedulerUpdateScenario.Always === canvasController.useUpdate()) {
       this.scheduler.offUpdate(canvasController.update);
     }
 
-    this.positionObserver.onPositionChange.delete(canvasController.setPosition);
     this.resizeObserver.onResize.delete(canvasController.resize);
 
     await canvasController.dispose(cancelToken);
@@ -109,17 +96,11 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
   }
 
   disconnect(): void {
-    this.positionObserver.onPositionChange.delete(this.setPosition);
     this.resizeObserver.onResize.delete(this.resize);
   }
 
   observe(): void {
-    this.positionObserver.onPositionChange.add(this.setPosition);
     this.resizeObserver.onResize.add(this.resize);
-  }
-
-  setPosition(elementPosition: IElementPosition<ElementPositionUnit.Px>): void {
-    this.lastElementPosition = elementPosition;
   }
 
   resize(elementSize: IElementSize<ElementPositionUnit.Px>): void {

@@ -1,4 +1,5 @@
 import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import cancelable from "src/framework/decorators/cancelable";
 
@@ -50,19 +51,19 @@ export default class CanvasController implements ICanvasController {
 
   update(delta: number): void {}
 
-  useBegin(): boolean {
-    return false;
+  useBegin(): SchedulerUpdateScenario {
+    return SchedulerUpdateScenario.Never;
   }
 
-  useDraw(): boolean {
-    return false;
+  useDraw(): SchedulerUpdateScenario {
+    return SchedulerUpdateScenario.Never;
   }
 
-  useEnd(): boolean {
-    return false;
+  useEnd(): SchedulerUpdateScenario {
+    return SchedulerUpdateScenario.Never;
   }
 
-  useUpdate(): boolean {
-    return false;
+  useUpdate(): SchedulerUpdateScenario {
+    return SchedulerUpdateScenario.Never;
   }
 }

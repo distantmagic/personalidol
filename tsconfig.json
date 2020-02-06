@@ -8,6 +8,7 @@
       "esnext",
     ],
     "allowJs": false,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": false,
     "esModuleInterop": true,

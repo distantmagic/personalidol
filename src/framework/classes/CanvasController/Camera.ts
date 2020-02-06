@@ -6,6 +6,7 @@ import CanvasController from "src/framework/classes/CanvasController";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
 import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import cancelable from "src/framework/decorators/cancelable";
 
@@ -20,9 +21,13 @@ import { default as IEventListenerSet } from "src/framework/interfaces/EventList
 export default class Camera extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
   readonly camera: THREE.PerspectiveCamera;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly onFrustumChange: IEventListenerSet<[THREE.Frustum]>;
   readonly onZoomChange: IEventListenerSet<[number]>;
+  private frustumNeedsUpdate: boolean = true;
   private height: number = 0;
-  private needsUpdate: boolean = true;
+  private aspectNeedsUpdate: boolean = true;
+  private tempCameraFrustum: THREE.Frustum = new THREE.Frustum();
+  private tempProjectionMatrix: THREE.Matrix4 = new THREE.Matrix4();
   private width: number = 0;
   private zoom: number = 3;
 
@@ -32,6 +37,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
 
     this.camera = camera;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.onFrustumChange = new EventListenerSet<[THREE.Frustum]>(loggerBreadcrumbs.add("EventListenerSet"));
     this.onZoomChange = new EventListenerSet<[number]>(loggerBreadcrumbs.add("EventListenerSet"));
   }
 
@@ -44,18 +50,9 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
     // this.lookAt(new THREE.Vector3(0, 0, 0));
     this.lookAt(new THREE.Vector3(256, 0, 256 * 2));
-    this.needsUpdate = true;
-  }
 
-  begin(): void {
-    super.begin();
-
-    if (!this.needsUpdate) {
-      return;
-    }
-
-    this.needsUpdate = false;
-    this.updateProjectionMatrix();
+    this.aspectNeedsUpdate = true;
+    this.frustumNeedsUpdate = true;
   }
 
   decreaseZoom(): void {
@@ -72,11 +69,7 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   }
 
   getCameraFrustum(): THREE.Frustum {
-    const frustum = new THREE.Frustum();
-
-    frustum.setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
-
-    return frustum;
+    return this.tempCameraFrustum;
   }
 
   getZoom(): number {
@@ -97,7 +90,8 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
       position.z + baseDistance
     );
 
-    this.camera.lookAt(position.clone());
+    this.camera.lookAt(position);
+    this.frustumNeedsUpdate = true;
   }
 
   resize(viewportSize: ElementSize<ElementPositionUnit.Px>): void {
@@ -113,7 +107,8 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     this.height = height;
     this.width = width;
 
-    this.needsUpdate = true;
+    this.aspectNeedsUpdate = true;
+    this.frustumNeedsUpdate = true;
   }
 
   setZoom(zoom: number): void {
@@ -124,20 +119,28 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     }
 
     this.zoom = clampedZoom;
-    this.needsUpdate = true;
-
+    this.aspectNeedsUpdate = true;
+    this.frustumNeedsUpdate = true;
     this.onZoomChange.notify([clampedZoom]);
   }
 
-  updateProjectionMatrix() {
-    // this.camera.fov = 60;
-    this.camera.aspect = this.width / this.height;
-    this.camera.zoom = this.zoom;
+  update(delta: number): void {
+    super.update(delta);
 
-    this.camera.updateProjectionMatrix();
+    if (this.aspectNeedsUpdate) {
+      this.aspectNeedsUpdate = false;
+      this.camera.aspect = this.width / this.height;
+      this.camera.zoom = this.zoom;
+      this.camera.updateProjectionMatrix();
+    }
+
+    if (this.frustumNeedsUpdate) {
+      this.frustumNeedsUpdate = false;
+      this.tempCameraFrustum.setFromProjectionMatrix(this.tempProjectionMatrix.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
+    }
   }
 
-  useBegin(): true {
-    return true;
+  useUpdate(): SchedulerUpdateScenario.Always {
+    return SchedulerUpdateScenario.Always;
   }
 }

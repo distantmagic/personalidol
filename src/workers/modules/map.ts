@@ -11,7 +11,6 @@ import { default as QuakeMapException } from "src/framework/classes/Exception/Qu
 import CancelToken from "src/framework/interfaces/CancelToken";
 import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import QuakeEntity from "src/framework/interfaces/QuakeEntity";
-import QueryBus from "src/framework/interfaces/QueryBus";
 import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";

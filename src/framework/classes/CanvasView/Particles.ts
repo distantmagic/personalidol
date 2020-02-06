@@ -4,6 +4,8 @@ import Partykals from "partykals/partykals";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -75,7 +77,7 @@ export default class Particles extends CanvasView {
     this.system.update(delta);
   }
 
-  useUpdate(): boolean {
-    return true;
+  useUpdate(): SchedulerUpdateScenario.Always {
+    return SchedulerUpdateScenario.Always;
   }
 }

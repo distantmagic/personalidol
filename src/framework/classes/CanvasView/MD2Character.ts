@@ -7,6 +7,8 @@ import { default as QuakeMapException } from "src/framework/classes/Exception/Qu
 import { default as RemoteJSONQuery } from "src/framework/classes/Query/RemoteJSON";
 import { default as THREEMD2Character } from "src/framework/classes/MD2Character";
 
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -153,7 +155,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     this.getCharacter().update(delta / 1000);
   }
 
-  useUpdate(): boolean {
-    return true;
+  useUpdate(): SchedulerUpdateScenario.Always {
+    return SchedulerUpdateScenario.Always;
   }
 }

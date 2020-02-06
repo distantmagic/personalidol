@@ -28,6 +28,7 @@ MainLoop.setUpdate(function(delta: number) {
 MainLoop.start();
 
 function onMessagePortMessage(evt: MessageEvent) {
+  // console.log(evt.data);
   world.add({
     // type of shape : sphere, box, cylinder
     type: "box",

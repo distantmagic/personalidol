@@ -1,6 +1,6 @@
 enum ElementPositionUnit {
-  Px = "px",
-  Tile = "tile",
+  Px,
+  Tile,
 }
 
 export default ElementPositionUnit;

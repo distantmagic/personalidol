@@ -1,7 +1,7 @@
 enum ElementRotationUnit {
-  Degrees180 = "degrees180",
-  Degrees360 = "degrees360",
-  Radians = "radians",
+  Degrees180,
+  Degrees360,
+  Radians,
 }
 
 export default ElementRotationUnit;

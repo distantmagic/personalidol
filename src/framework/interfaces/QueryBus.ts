@@ -11,6 +11,8 @@ export default interface QueryBus extends ClockReactive {
 
   flush(): QueryBatch;
 
+  isFlushable(): boolean;
+
   onEnqueued<T>(callback: QueryBusOnEnqueuedCallback<T>): void;
 
   offEnqueued<T>(callback: QueryBusOnEnqueuedCallback<T>): void;

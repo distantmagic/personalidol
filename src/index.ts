@@ -1,17 +1,11 @@
 import * as THREE from "three";
-import yn from "yn";
-
-import env from "src/framework/helpers/env";
 
 import BusClock from "src/framework/classes/BusClock";
 import CancelToken from "src/framework/classes/CancelToken";
 import CanvasControllerBus from "src/framework/classes/CanvasControllerBus";
 import CanvasViewBag from "src/framework/classes/CanvasViewBag";
 import CanvasViewBus from "src/framework/classes/CanvasViewBus";
-import ClockReactiveController from "src/framework/classes/ClockReactiveController";
-import Debugger from "src/framework/classes/Debugger";
 import ExceptionHandler from "src/framework/classes/ExceptionHandler";
-import HTMLElementPositionObserver from "src/framework/classes/HTMLElementPositionObserver";
 import HTMLElementSize from "src/framework/classes/HTMLElementSize";
 import HTMLElementSizeObserver from "src/framework/classes/HTMLElementSizeObserver";
 import KeyboardState from "src/framework/classes/KeyboardState";
@@ -25,6 +19,8 @@ import { default as ConsoleLogger } from "src/framework/classes/Logger/Console";
 import { default as RootCanvasController } from "src/framework/classes/CanvasController/Root";
 import { default as UnexpectedExceptionHandlerFilter } from "src/framework/classes/ExceptionHandlerFilter/Unexpected";
 
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
 // import * as serviceWorker from "src/serviceWorker";
 
 const rootElement = document.getElementById("dd-root");
@@ -37,14 +33,13 @@ if (!(rootElement instanceof HTMLCanvasElement)) {
   throw new Error("Root element is not a canvas.");
 }
 
-const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker"]);
+const busClock = new BusClock();
+const loggerBreadcrumbs = new LoggerBreadcrumbs();
 const logger = new ConsoleLogger();
 const cancelToken = new CancelToken(loggerBreadcrumbs.add("CancelToken"));
-const debug = new Debugger(loggerBreadcrumbs);
 const exceptionHandlerFilter = new UnexpectedExceptionHandlerFilter();
 const exceptionHandler = new ExceptionHandler(logger, exceptionHandlerFilter);
 const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs.add("QueryBus"));
-const clockReactiveController = new ClockReactiveController(new BusClock(), queryBus);
 const loadingManager = new LoadingManager(loggerBreadcrumbs.add("LoadingManager"), exceptionHandler);
 const threeLoadingManager = new THREE.LoadingManager();
 
@@ -55,42 +50,45 @@ const mainLoopControlToken = mainLoop.getControllable().obtainControlToken();
 
 // mainLoop.setMaxAllowedFPS(80);
 mainLoop.attachScheduler(scheduler);
+mainLoop.start(mainLoopControlToken);
 
-clockReactiveController.interval(cancelToken);
-
-debug.setIsEnabled(
-  yn(env(loggerBreadcrumbs, "REACT_APP_FEATURE_DEBUGGER", ""), {
-    default: false,
-  })
-);
+busClock.interval(cancelToken, queryBus.tick);
 
 window.addEventListener("beforeunload", function() {
   cancelToken.cancel(loggerBreadcrumbs.add("beforeunload"));
 });
 
+document.addEventListener("visibilitychange", function() {
+  if (document.visibilityState === "visible") {
+    mainLoop.start(mainLoopControlToken);
+  } else {
+    mainLoop.stop(mainLoopControlToken);
+  }
+});
+
 bootstrap(rootElement);
 
 async function bootstrap(sceneCanvas: HTMLCanvasElement) {
-  const positionObserver = new HTMLElementPositionObserver(loggerBreadcrumbs.add("HTMLElementPositionObserver"), sceneCanvas);
-  const pointerState = new PointerState(loggerBreadcrumbs.add("PointerState"), sceneCanvas);
-  const resizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs.add("HTMLElementSizeObserver"), sceneCanvas);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, positionObserver, resizeObserver, scheduler);
-
-  canvasControllerBus.observe();
-  keyboardState.observe();
-  pointerState.observe();
-  positionObserver.observe();
-  resizeObserver.observe();
-  mainLoop.start(mainLoopControlToken);
-
   function onWindowResize() {
     sceneCanvas.style.height = `${window.innerHeight}px`;
     sceneCanvas.style.width = `${window.innerWidth}px`;
   }
 
-  window.addEventListener("resize", onWindowResize);
+  const pointerState = new PointerState(loggerBreadcrumbs.add("PointerState"), sceneCanvas);
+  const resizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs.add("HTMLElementSizeObserver"), sceneCanvas);
+  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, resizeObserver, scheduler);
 
-  const resizeInterval = setInterval(onWindowResize, 100);
+  canvasControllerBus.observe();
+  keyboardState.observe();
+  pointerState.observe();
+  resizeObserver.observe();
+
+  if (SchedulerUpdateScenario.Always === busClock.useUpdate()) {
+    scheduler.onUpdate(busClock.update);
+  }
+
+  window.addEventListener("resize", onWindowResize);
+  onWindowResize();
 
   const renderer = new THREE.WebGLRenderer({
     alpha: false,
@@ -110,7 +108,6 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
     loggerBreadcrumbs.add("RootCanvasController"),
     canvasControllerBus,
     canvasViewBag.fork(loggerBreadcrumbs.add("RootCanvasControllert")),
-    debug,
     keyboardState,
     loadingManager,
     logger,
@@ -133,8 +130,6 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
 
   await cancelToken.whenCanceled();
 
-  clearInterval(resizeInterval);
-
   // prevent some memory leaks
   renderer.dispose();
   renderer.forceContextLoss();
@@ -146,9 +141,12 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   canvasControllerBus.disconnect();
   keyboardState.disconnect();
   pointerState.disconnect();
-  positionObserver.disconnect();
   resizeObserver.disconnect();
   mainLoop.stop(mainLoopControlToken);
+
+  if (SchedulerUpdateScenario.Always === busClock.useUpdate()) {
+    scheduler.offUpdate(busClock.update);
+  }
 
   await logger.debug(loggerBreadcrumbs.add("attachRenderer"), "Game is completely disposed of.");
 }

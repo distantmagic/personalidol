@@ -5,6 +5,7 @@ import CanvasController from "src/framework/classes/CanvasController";
 import { default as PlayerView } from "src/framework/classes/CanvasView/Player";
 
 import PointerButtonNames from "src/framework/enums/PointerButtonNames";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import cancelable from "src/framework/decorators/cancelable";
 
@@ -32,6 +33,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
   readonly threeLoadingManager: THREE.LoadingManager;
+  private pointerVectorRotationPivot: THREE.Vector2 = new THREE.Vector2(0, 0);
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -90,8 +92,8 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     character.setVelocity(new THREE.Vector3(0, 0, 0));
   }
 
-  useUpdate(): true {
-    return true;
+  useUpdate(): SchedulerUpdateScenario.Always {
+    return SchedulerUpdateScenario.Always;
   }
 
   update(delta: number): void {
@@ -105,7 +107,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
     const pointerVector = this.pointerController.getPointerVector();
 
-    pointerVector.rotateAround(new THREE.Vector2(0, 0), (3 * Math.PI) / 4);
+    pointerVector.rotateAround(this.pointerVectorRotationPivot, (3 * Math.PI) / 4);
 
     const direction = new THREE.Vector3(pointerVector.y, 0, pointerVector.x).multiplyScalar(30);
     const directionLength = direction.length();

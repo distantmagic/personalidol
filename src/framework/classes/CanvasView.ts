@@ -3,6 +3,8 @@ import isEmpty from "lodash/isEmpty";
 
 import dispose from "src/framework/helpers/dispose";
 
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -12,12 +14,13 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as ICanvasView } from "src/framework/interfaces/CanvasView";
 
 export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanvasView {
-  private _isAttached: boolean = false;
-  private _isDisposed: boolean = false;
   readonly canvasViewBag: CanvasViewBag;
   readonly children: THREE.Group = new THREE.Group();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly parentGroup: THREE.Group;
+  private _isAttached: boolean = false;
+  private _isDisposed: boolean = false;
+  private _isInCameraFrustum: boolean = false;
 
   static useBegin: boolean = true;
   static useEnd: boolean = true;
@@ -73,8 +76,12 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     return this._isDisposed;
   }
 
+  isInCameraFrustum(): boolean {
+    return this._isInCameraFrustum;
+  }
+
   isInFrustum(frustum: THREE.Frustum): boolean {
-    return false;
+    return frustum.containsPoint(this.children.position);
   }
 
   onPointerAuxiliaryClick(): void {}
@@ -99,21 +106,25 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   onPointerSecondaryPressed(): void {}
 
+  setIsInCameraFrustum(isInCameraFrustum: boolean): void {
+    this._isInCameraFrustum = isInCameraFrustum;
+  }
+
   update(delta: number): void {}
 
-  useBegin(): boolean {
-    return false;
+  useBegin(): SchedulerUpdateScenario {
+    return SchedulerUpdateScenario.Never;
   }
 
-  useDraw(): boolean {
-    return false;
+  useDraw(): SchedulerUpdateScenario {
+    return SchedulerUpdateScenario.Never;
   }
 
-  useEnd(): boolean {
-    return false;
+  useEnd(): SchedulerUpdateScenario {
+    return SchedulerUpdateScenario.Never;
   }
 
-  useUpdate(): boolean {
-    return false;
+  useUpdate(): SchedulerUpdateScenario {
+    return SchedulerUpdateScenario.Never;
   }
 }

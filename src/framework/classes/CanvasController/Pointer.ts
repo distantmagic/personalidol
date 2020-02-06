@@ -5,12 +5,12 @@ import CanvasController from "src/framework/classes/CanvasController";
 import { default as CursorView } from "src/framework/classes/CanvasView/Cursor";
 
 import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import Debugger from "src/framework/interfaces/Debugger";
 import ElementPosition from "src/framework/interfaces/ElementPosition";
 import ElementSize from "src/framework/interfaces/ElementSize";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
@@ -25,7 +25,6 @@ import { default as ICursorCanvasView } from "src/framework/interfaces/CanvasVie
 export default class Pointer extends CanvasController implements HasLoggerBreadcrumbs {
   readonly cameraController: ICameraController;
   readonly cursorView: ICursorCanvasView;
-  readonly debug: Debugger;
   readonly domElement: HTMLElement;
   readonly loadingManager: LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -44,7 +43,6 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     canvasRootGroup: THREE.Group,
     canvasViewBag: CanvasViewBag,
     cameraController: ICameraController,
-    debug: Debugger,
     domElement: HTMLElement,
     loadingManager: LoadingManager,
     pointerState: PointerState,
@@ -56,7 +54,6 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     autoBind(this);
 
     this.cameraController = cameraController;
-    this.debug = debug;
     this.domElement = domElement;
     this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
@@ -109,11 +106,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   }
 
   getPointerVector(): THREE.Vector2 {
-    const ret = new THREE.Vector2(0, 0);
-
-    ret.copy(this.pointerVector);
-
-    return ret;
+    return this.pointerVector.clone();
   }
 
   onContextMenu(evt: MouseEvent): void {
@@ -128,6 +121,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     this.pointerVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
 
     this.cursorView.setVisible(true);
+    this.cursorView.setPosition(this.cursorPlaneIntersection);
   }
 
   onMouseLeave(evt: MouseEvent): void {
@@ -169,7 +163,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     this.cursorView.setPosition(this.cursorPlaneIntersection);
   }
 
-  useUpdate(): true {
-    return true;
+  useUpdate(): SchedulerUpdateScenario.Always {
+    return SchedulerUpdateScenario.Always;
   }
 }

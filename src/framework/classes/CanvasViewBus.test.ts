@@ -8,13 +8,15 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import Scheduler from "src/framework/classes/Scheduler";
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
 import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
 import { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 class FooCanvasView extends CanvasView {
-  readonly useCallbacks: boolean;
+  readonly useCallbacks: SchedulerUpdateScenario;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: ICanvasViewBag, group: THREE.Group, useCallbacks: boolean) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: ICanvasViewBag, group: THREE.Group, useCallbacks: SchedulerUpdateScenario) {
     super(loggerBreadcrumbs, canvasViewBag, group);
 
     this.useCallbacks = useCallbacks;
@@ -65,7 +67,7 @@ test("cannot attach the same view more than once", async function() {
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
-  const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, true);
+  const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, SchedulerUpdateScenario.Always);
 
   await canvasViewBus.add(cancelToken, canvasView);
 
@@ -80,7 +82,7 @@ test("cannot detach the same view more than once", async function() {
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
-  const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, true);
+  const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, SchedulerUpdateScenario.Always);
 
   await canvasViewBus.add(cancelToken, canvasView);
   await canvasViewBus.delete(cancelToken, canvasView);
@@ -125,7 +127,7 @@ test("properly attaches and detaches canvas views", async function() {
   const group = new THREE.Group();
 
   // use callbacks
-  const canvasViewCallbacks = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, true);
+  const canvasViewCallbacks = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, SchedulerUpdateScenario.Always);
 
   expect(canvasViewCallbacks.isAttached()).toBe(false);
   expect(canvasViewCallbacks.isDisposed()).toBe(false);
@@ -150,7 +152,7 @@ test("properly attaches and detaches canvas views without callbacks", async func
   const group = new THREE.Group();
 
   // do not use callbacks
-  const canvasViewNoCallbacks = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, false);
+  const canvasViewNoCallbacks = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, SchedulerUpdateScenario.Never);
 
   expect(canvasViewNoCallbacks.isAttached()).toBe(false);
   expect(canvasViewNoCallbacks.isDisposed()).toBe(false);

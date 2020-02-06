@@ -1,4 +1,4 @@
-// import * as THREE from "three";
+import * as THREE from "three";
 
 import CanvasView from "src/framework/classes/CanvasView";
 import { default as MD2CharacterView } from "src/framework/classes/CanvasView/MD2Character";

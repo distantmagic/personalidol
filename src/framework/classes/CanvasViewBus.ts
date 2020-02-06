@@ -2,6 +2,8 @@ import isEmpty from "lodash/isEmpty";
 
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -37,16 +39,16 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
       );
     }
 
-    if (canvasView.useBegin()) {
+    if (SchedulerUpdateScenario.Always === canvasView.useBegin()) {
       this.scheduler.onBegin(canvasView.begin);
     }
-    if (canvasView.useDraw()) {
+    if (SchedulerUpdateScenario.Always === canvasView.useDraw()) {
       this.scheduler.onDraw(canvasView.draw);
     }
-    if (canvasView.useEnd()) {
+    if (SchedulerUpdateScenario.Always === canvasView.useEnd()) {
       this.scheduler.onEnd(canvasView.end);
     }
-    if (canvasView.useUpdate()) {
+    if (SchedulerUpdateScenario.Always === canvasView.useUpdate()) {
       this.scheduler.onUpdate(canvasView.update);
     }
   }
@@ -59,16 +61,16 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
       throw new CanvasViewException(this.loggerBreadcrumbs.add("delete"), `Canvas view cannot is already disposed and cannot be disposed again: ${canvasViewName}`);
     }
 
-    if (canvasView.useBegin()) {
+    if (SchedulerUpdateScenario.Always === canvasView.useBegin()) {
       this.scheduler.offBegin(canvasView.begin);
     }
-    if (canvasView.useDraw()) {
+    if (SchedulerUpdateScenario.Always === canvasView.useDraw()) {
       this.scheduler.offDraw(canvasView.draw);
     }
-    if (canvasView.useEnd()) {
+    if (SchedulerUpdateScenario.Always === canvasView.useEnd()) {
       this.scheduler.offEnd(canvasView.end);
     }
-    if (canvasView.useUpdate()) {
+    if (SchedulerUpdateScenario.Always === canvasView.useUpdate()) {
       this.scheduler.offUpdate(canvasView.update);
     }
 

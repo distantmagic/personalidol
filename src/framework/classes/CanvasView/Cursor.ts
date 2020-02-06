@@ -4,6 +4,8 @@ import autoBind from "auto-bind";
 import CanvasView from "src/framework/classes/CanvasView";
 import { default as GLTFModelQuery } from "src/framework/classes/Query/GLTFModel";
 
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -131,7 +133,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     this.cursorScene.rotation.x += 0.1;
   }
 
-  useUpdate(): true {
-    return true;
+  useUpdate(): SchedulerUpdateScenario.Always {
+    return SchedulerUpdateScenario.Always;
   }
 }

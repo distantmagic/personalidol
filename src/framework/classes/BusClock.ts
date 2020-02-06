@@ -1,3 +1,7 @@
+import autoBind from "auto-bind";
+
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
 import cancelable from "src/framework/decorators/cancelable";
 
 import CancelToken from "src/framework/interfaces/CancelToken";
@@ -6,36 +10,37 @@ import { default as IBusClock } from "src/framework/interfaces/BusClock";
 import BusClockCallback from "src/framework/types/BusClockCallback";
 
 export default class BusClock implements IBusClock {
-  private delay: number;
+  private callback: null | BusClockCallback = null;
+  private callInterval: number;
+  private ticksInterval: number = 0;
 
-  constructor(delay: number = 40) {
-    this.delay = delay;
+  constructor(callInterval: number = 4) {
+    autoBind(this);
+
+    this.callInterval = callInterval;
   }
 
   @cancelable()
   async interval(cancelToken: CancelToken, callback: BusClockCallback): Promise<void> {
-    return new Promise((resolve, reject) => {
-      let timeoutId: null | ReturnType<typeof setTimeout> = null;
+    this.callback = callback;
 
-      const tick = () => {
-        if (cancelToken.isCanceled()) {
-          resolve();
-        } else {
-          callback();
-          timeoutId = setTimeout(tick, this.delay);
-        }
-      };
+    await cancelToken.whenCanceled();
 
-      timeoutId = setTimeout(tick, this.delay);
-      cancelToken
-        .whenCanceled()
-        .then(function() {
-          if (timeoutId) {
-            clearTimeout(timeoutId);
-          }
-          resolve();
-        })
-        .catch(reject);
-    });
+    this.callback = null;
+  }
+
+  update(delta: number): void {
+    const callback = this.callback;
+
+    this.ticksInterval += 1;
+
+    if (callback && this.ticksInterval >= this.callInterval) {
+      this.ticksInterval = 0;
+      callback();
+    }
+  }
+
+  useUpdate(): SchedulerUpdateScenario.Always {
+    return SchedulerUpdateScenario.Always;
   }
 }
