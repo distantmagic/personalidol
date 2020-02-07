@@ -142,11 +142,11 @@ function getMaterial(textureAtlas: THREE.Texture, textureCount: number): THREE.S
 }
 
 export default class QuakeBrush extends CanvasView {
-  private mesh: null | THREE.Mesh = null;
-  private textureAtlas: null | THREE.DataTexture = null;
   readonly entity: QuakeWorkerBrush;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly textureLoader: IQuakeMapTextureLoader;
+  private mesh: null | THREE.Mesh = null;
+  private textureAtlas: null | THREE.DataTexture = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -179,6 +179,9 @@ export default class QuakeBrush extends CanvasView {
     geometry.setAttribute("texture_index", new THREE.BufferAttribute(texturesIndices, 1));
     geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
     geometry.setIndex(new THREE.BufferAttribute(indices, 1));
+    geometry.computeBoundingBox();
+
+    this.boundingBox = geometry.boundingBox;
 
     for (let texture of this.entity.texturesNames) {
       if ("__TB_empty" === texture) {
@@ -246,5 +249,9 @@ export default class QuakeBrush extends CanvasView {
 
   getName(): "QuakeBrush" {
     return "QuakeBrush";
+  }
+
+  useCameraFrustum(): true {
+    return true;
   }
 }

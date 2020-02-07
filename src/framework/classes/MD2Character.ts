@@ -179,11 +179,6 @@ export default class MD2Character implements HasLoggerBreadcrumbs, IMD2Character
     const loader = new MD2Loader(this.loadingManager);
 
     loader.load(config.baseUrl + config.body, function(geo) {
-      const boundingBox = new THREE.Box3();
-
-      // @ts-ignore
-      boundingBox.setFromBufferAttribute(geo.attributes.position);
-
       const mesh = createPart(scope, geo, scope.skinsBody[0]);
 
       scope.root.add(mesh);

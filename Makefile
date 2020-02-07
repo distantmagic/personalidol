@@ -25,7 +25,7 @@ endif
 
 frontend: frontend.dependencies build/index.html
 
-frontend.dependencies: node_modules public/vendor/modernizr.js
+frontend.dependencies: node_modules
 
 node_modules: yarn.lock
 	$(CMD_YARN) install
@@ -49,9 +49,6 @@ pretty.frontend:
 	rm -rf ./node_modules/import-sort-style-personalidol
 	ln -s ${CURDIR}/prettier/import-sort-style-personalidol ./node_modules
 	$(CMD_YARN) run prettier
-
-public/vendor/modernizr.js: node_modules
-	$(CMD_YARN) run modernizr
 
 setup: setup.trenchbroom
 

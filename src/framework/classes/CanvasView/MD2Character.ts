@@ -26,7 +26,6 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   readonly animationOffset: number;
   readonly baseUrl: string;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly origin: THREE.Vector3;
   readonly queryBus: QueryBus;
   readonly skin: number;
   readonly threeLoadingManager: THREE.LoadingManager;
@@ -51,10 +50,11 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     this.animationOffset = animationOffset;
     this.baseUrl = baseUrl;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.origin = new THREE.Vector3(entity.origin[0], entity.origin[1], entity.origin[2]);
     this.queryBus = queryBus;
     this.skin = entity.skin;
     this.threeLoadingManager = threeLoadingManager;
+
+    this.children.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
   }
 
   @cancelable()
@@ -89,8 +89,8 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     character.setSkin(this.skin);
     character.update(this.animationOffset);
 
-    this.children.position.copy(this.origin);
     this.children.add(character.root);
+    this.computeBoundingBox();
 
     this.character = character;
 
@@ -148,6 +148,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
 
   setVelocity(velocity: THREE.Vector3): void {
     this.children.position.add(velocity);
+    this.boundingBox.translate(velocity);
   }
 
   update(delta: number): void {
@@ -155,12 +156,10 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
 
     if (!this.isInCameraFrustum()) {
       this.accumulatedDelta += delta;
-      this.children.visible = false;
 
       return;
     }
 
-    this.children.visible = true;
     this.getCharacter().update((this.accumulatedDelta + delta) / 1000);
     this.accumulatedDelta = 0;
   }

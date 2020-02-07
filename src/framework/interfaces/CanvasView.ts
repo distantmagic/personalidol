@@ -6,6 +6,10 @@ import CanvasPointerEventHandler from "src/framework/interfaces/CanvasPointerEve
 import Disposable from "src/framework/interfaces/Disposable";
 
 export default interface CanvasView extends Animatable, CameraFrustumResponder, CanvasPointerEventHandler, Disposable {
+  computeBoundingBox(): void;
+
+  getBoundingBox(): THREE.Box3;
+
   getChildren(): THREE.Group;
 
   getName(): string;

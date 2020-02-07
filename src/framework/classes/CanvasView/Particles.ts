@@ -15,21 +15,18 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import QuakeWorkerSparkParticles from "src/framework/types/QuakeWorkerSparkParticles";
 
 export default class Particles extends CanvasView {
-  readonly origin: THREE.Vector3;
   private system: any;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, group: THREE.Group, entity: QuakeWorkerSparkParticles) {
     super(loggerBreadcrumbs, canvasViewBag, group);
     autoBind(this);
 
-    this.origin = new THREE.Vector3(entity.origin[0], entity.origin[1], entity.origin[2]);
+    this.children.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
   }
 
   @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
-
-    this.children.position.copy(this.origin);
 
     this.system = new Partykals.ParticlesSystem({
       container: this.children,
@@ -69,6 +66,10 @@ export default class Particles extends CanvasView {
 
   getName(): "Particles" {
     return "Particles";
+  }
+
+  isInFrustum(frustum: THREE.Frustum): boolean {
+    return frustum.containsPoint(this.children.position);
   }
 
   update(delta: number): void {

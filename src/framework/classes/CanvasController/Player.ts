@@ -2,7 +2,7 @@ import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import CanvasController from "src/framework/classes/CanvasController";
-import { default as PlayerView } from "src/framework/classes/CanvasView/Player";
+import { default as MD2CharacterView } from "src/framework/classes/CanvasView/MD2Character";
 
 import PointerButtonNames from "src/framework/enums/PointerButtonNames";
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
@@ -17,7 +17,7 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
 import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
-import { default as IPlayerView } from "src/framework/interfaces/CanvasView/Player";
+import { default as IMD2CharacterView } from "src/framework/interfaces/CanvasView/MD2Character";
 import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
 import QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
@@ -25,15 +25,15 @@ import QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
 export default class Player extends CanvasController implements HasLoggerBreadcrumbs {
   readonly cameraController: ICameraController;
   readonly entity: QuakeWorkerPlayer;
-  readonly group: THREE.Group;
   readonly loadingManager: LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly playerView: IPlayerView;
+  readonly playerView: IMD2CharacterView;
   readonly pointerController: IPointerController;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
   readonly threeLoadingManager: THREE.LoadingManager;
   private pointerVectorRotationPivot: THREE.Vector2 = new THREE.Vector2(0, 0);
+  private zeroVelocityVector: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -52,7 +52,6 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
     this.cameraController = cameraController;
     this.entity = entity;
-    this.group = group;
     this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.pointerController = pointerController;
@@ -60,14 +59,21 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     this.queryBus = queryBus;
     this.threeLoadingManager = threeLoadingManager;
 
-    this.playerView = new PlayerView(
-      this.loggerBreadcrumbs.add("Player"),
-      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Player")),
-      this.group,
-      this.entity,
-      this.loadingManager,
+    this.playerView = new MD2CharacterView(
+      this.loggerBreadcrumbs.add("MD2Character"),
+      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("MD2Character")),
+      group,
       this.queryBus,
-      this.threeLoadingManager
+      this.threeLoadingManager,
+      `/models/model-md2-necron99/`,
+      0,
+      {
+        angle: 0,
+        classname: "model_md2",
+        model_name: "necron99",
+        origin: this.entity.origin,
+        skin: 4,
+      }
     );
   }
 
@@ -86,10 +92,8 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
   }
 
   setIdle(): void {
-    const character = this.playerView.getCharacter();
-
-    character.setAnimationIdle();
-    character.setVelocity(new THREE.Vector3(0, 0, 0));
+    this.playerView.setAnimationIdle();
+    // this.playerView.setVelocity(this.zeroVelocityVector);
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {
@@ -98,8 +102,6 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
   update(delta: number): void {
     super.update(delta);
-
-    const character = this.playerView.getCharacter();
 
     if (!this.pointerState.isPressed(PointerButtonNames.Primary)) {
       return void this.setIdle();
@@ -120,10 +122,10 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
         return void this.setIdle();
     }
 
-    character.setAnimationRunning();
-    character.setRotationY(pointerVector.angle());
-    character.setVelocity(direction);
+    this.playerView.setAnimationRunning();
+    this.playerView.setRotationY(pointerVector.angle());
+    this.playerView.setVelocity(direction);
 
-    this.cameraController.lookAt(character.getPosition());
+    this.cameraController.lookAt(this.playerView.getPosition());
   }
 }

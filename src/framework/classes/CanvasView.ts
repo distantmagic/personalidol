@@ -18,6 +18,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   readonly children: THREE.Group = new THREE.Group();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly parentGroup: THREE.Group;
+  protected boundingBox: THREE.Box3 = new THREE.Box3();
   private _isAttached: boolean = false;
   private _isDisposed: boolean = false;
   private _isInCameraFrustum: boolean = false;
@@ -44,6 +45,10 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   begin(): void {}
 
+  computeBoundingBox(): void {
+    this.boundingBox = new THREE.Box3().setFromObject(this.children);
+  }
+
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     this._isAttached = false;
@@ -64,6 +69,10 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   end(fps: number, isPanicked: boolean): void {}
 
+  getBoundingBox(): THREE.Box3 {
+    return this.boundingBox;
+  }
+
   getChildren(): THREE.Group {
     return this.children;
   }
@@ -81,7 +90,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   }
 
   isInFrustum(frustum: THREE.Frustum): boolean {
-    return frustum.containsPoint(this.children.position);
+    return frustum.intersectsBox(this.getBoundingBox());
   }
 
   onPointerAuxiliaryClick(): void {}
@@ -108,6 +117,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   setIsInCameraFrustum(isInCameraFrustum: boolean): void {
     this._isInCameraFrustum = isInCameraFrustum;
+    this.children.visible = isInCameraFrustum;
   }
 
   update(delta: number): void {}
