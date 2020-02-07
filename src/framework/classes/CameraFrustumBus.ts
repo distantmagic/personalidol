@@ -1,3 +1,8 @@
+import * as THREE from "three";
+import autoBind from "auto-bind";
+
+import Exception from "src/framework/classes/Exception";
+
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import cancelable from "src/framework/decorators/cancelable";
@@ -6,26 +11,47 @@ import CameraFrustumResponder from "src/framework/interfaces/CameraFrustumRespon
 import CancelToken from "src/framework/interfaces/CancelToken";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as ICameraFrustumBus } from "src/framework/interfaces/CameraFrustumBus";
 
 export default class CameraFrustumBus implements HasLoggerBreadcrumbs, ICameraFrustumBus {
-  readonly cameraController: ICameraController;
-  readonly cameraFrustumResponders: CameraFrustumResponder[] = [];
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly camera: THREE.PerspectiveCamera;
+  private cameraFrustum: THREE.Frustum = new THREE.Frustum();
+  private cameraFrustumResponders: CameraFrustumResponder[] = [];
+  private cameraProjectionMatrix: THREE.Matrix4 = new THREE.Matrix4();
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cameraController: ICameraController) {
-    this.cameraController = cameraController;
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, camera: THREE.PerspectiveCamera) {
+    autoBind(this);
+
+    this.camera = camera;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
   @cancelable()
-  async add(cancelToken: CancelToken, cameraFrustumResponder: CameraFrustumResponder): Promise<void> {}
+  async add(cancelToken: CancelToken, cameraFrustumResponder: CameraFrustumResponder): Promise<void> {
+    if (this.cameraFrustumResponders.includes(cameraFrustumResponder)) {
+      throw new Exception(this.loggerBreadcrumbs.add("add"), "Camera frustum responder is already a part of responders collection.");
+    }
+
+    this.cameraFrustumResponders.push(cameraFrustumResponder);
+  }
 
   @cancelable()
-  async delete(cancelToken: CancelToken, cameraFrustumResponder: CameraFrustumResponder): Promise<void> {}
+  async delete(cancelToken: CancelToken, cameraFrustumResponder: CameraFrustumResponder): Promise<void> {
+    if (!this.cameraFrustumResponders.includes(cameraFrustumResponder)) {
+      throw new Exception(this.loggerBreadcrumbs.add("delete"), "Camera frustum responder is not a part of responders collection.");
+    }
+  }
 
-  update(delta: number): void {}
+  update(delta: number): void {
+    this.cameraFrustum.setFromProjectionMatrix(this.cameraProjectionMatrix.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
+
+    for (let cameraFrustumResponder of this.cameraFrustumResponders) {
+      const isInCameraFrustum = cameraFrustumResponder.isInFrustum(this.cameraFrustum);
+
+      cameraFrustumResponder.setIsInCameraFrustum(isInCameraFrustum);
+    }
+  }
 
   useUpdate(): SchedulerUpdateScenario.Always {
     return SchedulerUpdateScenario.Always;

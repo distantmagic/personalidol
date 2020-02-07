@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 import CancelToken from "src/framework/classes/CancelToken";
 import CancelTokenQuery from "src/framework/classes/CancelTokenQuery";
 import ExceptionHandler from "src/framework/classes/ExceptionHandler";
@@ -15,6 +17,7 @@ type BarObject = {
 
 class Foo implements Query<number> {
   readonly fooReference: number;
+  private static uuid = THREE.MathUtils.generateUUID();
 
   constructor(fooReference: number) {
     this.fooReference = fooReference;
@@ -24,6 +27,10 @@ class Foo implements Query<number> {
     return this.fooReference;
   }
 
+  getQueryUUID(): string {
+    return Foo.uuid;
+  }
+
   isEqual(other: Foo) {
     return this.fooReference === other.fooReference;
   }
@@ -31,6 +38,7 @@ class Foo implements Query<number> {
 
 class Bar implements Query<BarObject> {
   readonly barReference: BarObject;
+  private static uuid = THREE.MathUtils.generateUUID();
 
   constructor(barReference: BarObject) {
     this.barReference = barReference;
@@ -38,6 +46,10 @@ class Bar implements Query<BarObject> {
 
   async execute(cancelToken: ICancelToken): Promise<BarObject> {
     return this.barReference;
+  }
+
+  getQueryUUID(): string {
+    return Bar.uuid;
   }
 
   isEqual(other: Bar) {

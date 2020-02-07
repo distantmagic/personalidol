@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 import CancelToken from "src/framework/classes/CancelToken";
 import ExceptionHandler from "src/framework/classes/ExceptionHandler";
 import ExceptionHandlerFilter from "src/framework/classes/ExceptionHandlerFilter";
@@ -16,6 +18,7 @@ class Foo implements Query<number> {
   readonly id: number;
   readonly reference: number;
   readonly total: Total;
+  private static uuid = THREE.MathUtils.generateUUID();
 
   constructor(total: Total, reference: number, id: number) {
     this.id = id;
@@ -27,6 +30,10 @@ class Foo implements Query<number> {
     this.total.executed += 1;
 
     return this.reference;
+  }
+
+  getQueryUUID(): string {
+    return Foo.uuid;
   }
 
   isEqual(other: Foo) {

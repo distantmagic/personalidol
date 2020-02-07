@@ -116,6 +116,10 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     return SchedulerUpdateScenario.Never;
   }
 
+  useCameraFrustum(): boolean {
+    return false;
+  }
+
   useDraw(): SchedulerUpdateScenario {
     return SchedulerUpdateScenario.Never;
   }

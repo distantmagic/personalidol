@@ -10,5 +10,5 @@ export default interface CanvasView extends Animatable, CameraFrustumResponder, 
 
   getName(): string;
 
-  isInFrustum(frustum: THREE.Frustum): boolean;
+  useCameraFrustum(): boolean;
 }

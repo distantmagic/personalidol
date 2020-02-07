@@ -36,7 +36,7 @@ import { default as IPointerController } from "src/framework/interfaces/CanvasCo
 export default class Root extends CanvasController implements HasLoggerBreadcrumbs {
   readonly audioListener: THREE.AudioListener = new THREE.AudioListener();
   readonly audioLoader: THREE.AudioLoader;
-  readonly camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera();
+  readonly camera: THREE.PerspectiveCamera;
   readonly cameraController: ICameraController;
   readonly canvasControllerBus: CanvasControllerBus;
   readonly canvasRootGroup: THREE.Group = new THREE.Group();
@@ -56,6 +56,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
+    camera: THREE.PerspectiveCamera,
     canvasControllerBus: CanvasControllerBus,
     canvasViewBag: CanvasViewBag,
     keyboardState: KeyboardState,
@@ -71,6 +72,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     autoBind(this);
 
     this.audioLoader = new THREE.AudioLoader(threeLoadingManager);
+    this.camera = camera;
 
     // this.camera.add(this.audioListener);
 

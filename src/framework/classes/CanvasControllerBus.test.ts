@@ -1,3 +1,6 @@
+import * as THREE from "three";
+
+import CameraFrustumBus from "src/framework/classes/CameraFrustumBus";
 import CancelToken from "src/framework/classes/CancelToken";
 import CanvasController from "src/framework/classes/CanvasController";
 import CanvasControllerBus from "src/framework/classes/CanvasControllerBus";
@@ -53,7 +56,9 @@ test("cannot attach the same controller more than once", async function() {
   const htmlElement = document.createElement("div");
   const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
   const canvasController = new FooCanvasController(canvasViewBag, SchedulerUpdateScenario.Always);
@@ -70,7 +75,9 @@ test("cannot detach the same controller more than once", async function() {
   const htmlElement = document.createElement("div");
   const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
   const canvasController = new FooCanvasController(canvasViewBag, SchedulerUpdateScenario.Never);
@@ -88,7 +95,9 @@ test("fails when controller attach is improperly implemented", async function() 
   const htmlElement = document.createElement("div");
   const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
   const canvasController = new ImproperAttachCanvasController(canvasViewBag);
@@ -103,7 +112,9 @@ test("fails when controller dispose is improperly implemented", async function()
   const htmlElement = document.createElement("div");
   const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
   const canvasController = new ImproperDisposeCanvasController(canvasViewBag);
@@ -120,7 +131,9 @@ test("properly attaches and detaches canvas controllers", async function() {
   const htmlElement = document.createElement("div");
   const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
   const canvasController = new FooCanvasController(canvasViewBag, SchedulerUpdateScenario.Always);

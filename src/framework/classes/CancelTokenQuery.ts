@@ -1,5 +1,3 @@
-import canCompare from "src/framework/helpers/canCompare";
-
 import CancelTokenException from "src/framework/classes/Exception/CancelToken";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
@@ -79,7 +77,7 @@ export default class CancelTokenQuery<T> implements ICancelTokenQuery<T>, HasLog
     const aQuery = this.getQuery();
     const bQuery = other.getQuery();
 
-    if (aQuery === bQuery || !canCompare(aQuery, bQuery)) {
+    if (aQuery === bQuery || aQuery.getQueryUUID() !== bQuery.getQueryUUID()) {
       return false;
     }
 

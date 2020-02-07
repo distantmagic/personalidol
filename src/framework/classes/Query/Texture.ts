@@ -9,6 +9,7 @@ import CancelToken from "src/framework/interfaces/CancelToken";
 export default class Texture extends Query<THREE.Texture> {
   readonly textureLoader: THREE.TextureLoader;
   readonly textureSource: string;
+  private static uuid = THREE.MathUtils.generateUUID();
 
   constructor(textureLoader: THREE.TextureLoader, textureSource: string) {
     super();
@@ -31,6 +32,10 @@ export default class Texture extends Query<THREE.Texture> {
         reject
       );
     });
+  }
+
+  getQueryUUID(): string {
+    return Texture.uuid;
   }
 
   isEqual(other: Texture): boolean {

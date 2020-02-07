@@ -30,6 +30,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   readonly queryBus: QueryBus;
   readonly skin: number;
   readonly threeLoadingManager: THREE.LoadingManager;
+  private accumulatedDelta: number = 0;
   private baseCharacter: null | IMD2Character = null;
   private character: null | IMD2Character = null;
 
@@ -152,7 +153,20 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   update(delta: number): void {
     super.update(delta);
 
-    this.getCharacter().update(delta / 1000);
+    if (!this.isInCameraFrustum()) {
+      this.accumulatedDelta += delta;
+      this.children.visible = false;
+
+      return;
+    }
+
+    this.children.visible = true;
+    this.getCharacter().update((this.accumulatedDelta + delta) / 1000);
+    this.accumulatedDelta = 0;
+  }
+
+  useCameraFrustum(): true {
+    return true;
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

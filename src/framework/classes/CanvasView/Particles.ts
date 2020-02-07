@@ -74,7 +74,15 @@ export default class Particles extends CanvasView {
   update(delta: number): void {
     super.update(delta);
 
+    if (!this.isInCameraFrustum()) {
+      return;
+    }
+
     this.system.update(delta);
+  }
+
+  useCameraFrustum(): true {
+    return true;
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

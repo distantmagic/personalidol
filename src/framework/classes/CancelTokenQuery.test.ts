@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 import CancelToken from "src/framework/classes/CancelToken";
 import CancelTokenQuery from "src/framework/classes/CancelTokenQuery";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
@@ -7,12 +9,18 @@ import { default as CancelTokenException } from "src/framework/classes/Exception
 import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
 
 class FooQuery extends Query<number> {
+  private static uuid = THREE.MathUtils.generateUUID();
+
   execute(cancelToken: ICancelToken): Promise<number> {
     return new Promise(function(resolve) {
       setTimeout(function() {
         resolve(4);
       });
     });
+  }
+
+  getQueryUUID(): string {
+    return FooQuery.uuid;
   }
 
   isEqual(other: FooQuery): boolean {

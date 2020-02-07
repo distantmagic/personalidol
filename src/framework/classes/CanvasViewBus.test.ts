@@ -1,5 +1,6 @@
 import * as THREE from "three";
 
+import CameraFrustumBus from "src/framework/classes/CameraFrustumBus";
 import CancelToken from "src/framework/classes/CancelToken";
 import CanvasView from "src/framework/classes/CanvasView";
 import CanvasViewBag from "src/framework/classes/CanvasViewBag";
@@ -63,7 +64,9 @@ test("cannot attach the same view more than once", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
@@ -78,7 +81,9 @@ test("cannot detach the same view more than once", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
@@ -94,7 +99,9 @@ test("fails when view attach is improperly implemented", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
@@ -107,7 +114,9 @@ test("fails when view dispose is improperly implemented", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
@@ -122,7 +131,9 @@ test("properly attaches and detaches canvas views", async function() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
@@ -147,7 +158,9 @@ test("properly attaches and detaches canvas views without callbacks", async func
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, scheduler);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 

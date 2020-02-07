@@ -23,11 +23,8 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onFrustumChange: IEventListenerSet<[THREE.Frustum]>;
   readonly onZoomChange: IEventListenerSet<[number]>;
-  private frustumNeedsUpdate: boolean = true;
   private height: number = 0;
   private aspectNeedsUpdate: boolean = true;
-  private tempCameraFrustum: THREE.Frustum = new THREE.Frustum();
-  private tempProjectionMatrix: THREE.Matrix4 = new THREE.Matrix4();
   private width: number = 0;
   private zoom: number = 3;
 
@@ -52,7 +49,6 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     this.lookAt(new THREE.Vector3(256, 0, 256 * 2));
 
     this.aspectNeedsUpdate = true;
-    this.frustumNeedsUpdate = true;
   }
 
   decreaseZoom(): void {
@@ -66,10 +62,6 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
 
   getCamera(): THREE.PerspectiveCamera {
     return this.camera;
-  }
-
-  getCameraFrustum(): THREE.Frustum {
-    return this.tempCameraFrustum;
   }
 
   getZoom(): number {
@@ -91,7 +83,6 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     );
 
     this.camera.lookAt(position);
-    this.frustumNeedsUpdate = true;
   }
 
   resize(viewportSize: ElementSize<ElementPositionUnit.Px>): void {
@@ -108,7 +99,6 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     this.width = width;
 
     this.aspectNeedsUpdate = true;
-    this.frustumNeedsUpdate = true;
   }
 
   setZoom(zoom: number): void {
@@ -120,7 +110,6 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
 
     this.zoom = clampedZoom;
     this.aspectNeedsUpdate = true;
-    this.frustumNeedsUpdate = true;
     this.onZoomChange.notify([clampedZoom]);
   }
 
@@ -132,11 +121,6 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
       this.camera.aspect = this.width / this.height;
       this.camera.zoom = this.zoom;
       this.camera.updateProjectionMatrix();
-    }
-
-    if (this.frustumNeedsUpdate) {
-      this.frustumNeedsUpdate = false;
-      this.tempCameraFrustum.setFromProjectionMatrix(this.tempProjectionMatrix.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
     }
   }
 

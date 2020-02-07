@@ -1,6 +1,7 @@
 import * as THREE from "three";
 
 import BusClock from "src/framework/classes/BusClock";
+import CameraFrustumBus from "src/framework/classes/CameraFrustumBus";
 import CancelToken from "src/framework/classes/CancelToken";
 import CanvasControllerBus from "src/framework/classes/CanvasControllerBus";
 import CanvasViewBag from "src/framework/classes/CanvasViewBag";
@@ -74,6 +75,8 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
     sceneCanvas.style.width = `${window.innerWidth}px`;
   }
 
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs.add("CameraFrustumBus"), camera);
   const pointerState = new PointerState(loggerBreadcrumbs.add("PointerState"), sceneCanvas);
   const resizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs.add("HTMLElementSizeObserver"), sceneCanvas);
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, resizeObserver, scheduler);
@@ -85,6 +88,9 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
 
   if (SchedulerUpdateScenario.Always === busClock.useUpdate()) {
     scheduler.onUpdate(busClock.update);
+  }
+  if (SchedulerUpdateScenario.Always === cameraFrustumBus.useUpdate()) {
+    scheduler.onUpdate(cameraFrustumBus.update);
   }
 
   window.addEventListener("resize", onWindowResize);
@@ -101,11 +107,12 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
 
   renderer.setPixelRatio(window.devicePixelRatio);
 
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs.add("CanvasViewBus"), scheduler);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs.add("CanvasViewBus"), cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs.add("CanvasViewBag"), canvasViewBus);
 
   const canvasController = new RootCanvasController(
     loggerBreadcrumbs.add("RootCanvasController"),
+    camera,
     canvasControllerBus,
     canvasViewBag.fork(loggerBreadcrumbs.add("RootCanvasControllert")),
     keyboardState,

@@ -9,8 +9,6 @@ export default interface Camera extends CanvasController {
 
   getCamera(): THREE.Camera;
 
-  getCameraFrustum(): THREE.Frustum;
-
   getZoom(): number;
 
   decreaseZoom(): void;

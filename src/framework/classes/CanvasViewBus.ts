@@ -6,6 +6,7 @@ import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario
 
 import cancelable from "src/framework/decorators/cancelable";
 
+import CameraFrustumBus from "src/framework/interfaces/CameraFrustumBus";
 import CancelToken from "src/framework/interfaces/CancelToken";
 import CanvasView from "src/framework/interfaces/CanvasView";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
@@ -14,10 +15,12 @@ import Scheduler from "src/framework/interfaces/Scheduler";
 import { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
 
 export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewBus {
+  readonly cameraFrustumBus: CameraFrustumBus;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly scheduler: Scheduler;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, scheduler: Scheduler) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cameraFrustumBus: CameraFrustumBus, scheduler: Scheduler) {
+    this.cameraFrustumBus = cameraFrustumBus;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.scheduler = scheduler;
   }
@@ -37,6 +40,10 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
         this.loggerBreadcrumbs.add("add"),
         `Canvas view is not properly attached. Did you forget to call parent 'super.attach' method?: ${canvasViewName}`
       );
+    }
+
+    if (canvasView.useCameraFrustum()) {
+      await this.cameraFrustumBus.add(cancelToken, canvasView);
     }
 
     if (SchedulerUpdateScenario.Always === canvasView.useBegin()) {
@@ -72,6 +79,10 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
     }
     if (SchedulerUpdateScenario.Always === canvasView.useUpdate()) {
       this.scheduler.offUpdate(canvasView.update);
+    }
+
+    if (canvasView.useCameraFrustum()) {
+      await this.cameraFrustumBus.delete(cancelToken, canvasView);
     }
 
     await canvasView.dispose(cancelToken);
