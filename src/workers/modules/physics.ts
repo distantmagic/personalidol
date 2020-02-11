@@ -1,10 +1,14 @@
 /// <reference lib="webworker" />
 
 import * as OIMO from "oimo";
-import MainLoop from "mainloop.js";
+
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import MainLoop from "src/framework/classes/MainLoop";
+import Scheduler from "src/framework/classes/Scheduler";
 
 declare var self: DedicatedWorkerGlobalScope;
 
+const loggerBreadcrumbs = new LoggerBreadcrumbs(["worker", "physics"]);
 const world = new OIMO.World({
   timestep: 1 / 60,
   iterations: 8,
@@ -19,13 +23,15 @@ const world = new OIMO.World({
   gravity: [0, -9.8, 0],
 });
 
-MainLoop.setEnd(function(fps: number) {});
+const scheduler = new Scheduler(loggerBreadcrumbs.add("Scheduler"));
+const mainLoop = new MainLoop(loggerBreadcrumbs.add("MainLoop"), scheduler);
+const mainLoopControlToken = mainLoop.getControllable().obtainControlToken();
 
-MainLoop.setUpdate(function(delta: number) {
+mainLoop.start(mainLoopControlToken);
+
+scheduler.update.add(function(delta: number) {
   world.step();
 });
-
-MainLoop.start();
 
 function onMessagePortMessage(evt: MessageEvent) {
   // console.log(evt.data);

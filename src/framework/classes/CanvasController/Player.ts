@@ -22,6 +22,8 @@ import { default as IPointerController } from "src/framework/interfaces/CanvasCo
 
 import QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
 
+const SPEED_UNITS_PER_SECOND = 300;
+
 export default class Player extends CanvasController implements HasLoggerBreadcrumbs {
   readonly cameraController: ICameraController;
   readonly entity: QuakeWorkerPlayer;
@@ -111,16 +113,11 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
     pointerVector.rotateAround(this.pointerVectorRotationPivot, (3 * Math.PI) / 4);
 
-    const direction = new THREE.Vector3(pointerVector.y, 0, pointerVector.x).multiplyScalar(30);
-    const directionLength = direction.length();
-
-    switch (true) {
-      case directionLength > 5:
-        direction.normalize().multiplyScalar(5);
-        break;
-      case directionLength < 1:
-        return void this.setIdle();
+    if (pointerVector.length() < 0.1) {
+      return void this.setIdle();
     }
+
+    const direction = new THREE.Vector3(pointerVector.y, 0, pointerVector.x).normalize().multiplyScalar(delta * SPEED_UNITS_PER_SECOND);
 
     this.playerView.setAnimationRunning();
     this.playerView.setRotationY(pointerVector.angle());

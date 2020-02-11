@@ -6,6 +6,7 @@ import CancelToken from "src/framework/classes/CancelToken";
 import CanvasControllerBus from "src/framework/classes/CanvasControllerBus";
 import CanvasViewBag from "src/framework/classes/CanvasViewBag";
 import CanvasViewBus from "src/framework/classes/CanvasViewBus";
+import Exception from "src/framework/classes/Exception";
 import ExceptionHandler from "src/framework/classes/ExceptionHandler";
 import HTMLElementSize from "src/framework/classes/HTMLElementSize";
 import HTMLElementSizeObserver from "src/framework/classes/HTMLElementSizeObserver";
@@ -46,11 +47,10 @@ const threeLoadingManager = new THREE.LoadingManager();
 
 const scheduler = new Scheduler(loggerBreadcrumbs.add("Scheduler"));
 const keyboardState = new KeyboardState(loggerBreadcrumbs.add("KeyboardState"));
-const mainLoop = MainLoop.getInstance(loggerBreadcrumbs.add("MainLoop"));
+const mainLoop = new MainLoop(loggerBreadcrumbs.add("MainLoop"), scheduler);
 const mainLoopControlToken = mainLoop.getControllable().obtainControlToken();
 
 // mainLoop.setMaxAllowedFPS(80);
-mainLoop.attachScheduler(scheduler);
 mainLoop.start(mainLoopControlToken);
 
 busClock.interval(cancelToken, queryBus.tick);
@@ -87,19 +87,30 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   resizeObserver.observe();
 
   if (SchedulerUpdateScenario.Always === busClock.useUpdate()) {
-    scheduler.onUpdate(busClock.update);
+    scheduler.update.add(busClock.update);
   }
   if (SchedulerUpdateScenario.Always === cameraFrustumBus.useUpdate()) {
-    scheduler.onUpdate(cameraFrustumBus.update);
+    scheduler.update.add(cameraFrustumBus.update);
   }
 
   window.addEventListener("resize", onWindowResize);
   onWindowResize();
 
+  const rendererContext = sceneCanvas.getContext("webgl", {
+    // desynchronized: true,
+    // Other options. See below.
+  });
+
+  if (!rendererContext) {
+    throw new Exception(loggerBreadcrumbs, "Unable to get rendering context.");
+  }
+
   const renderer = new THREE.WebGLRenderer({
     alpha: false,
     antialias: false,
     canvas: sceneCanvas,
+    context: rendererContext,
+    powerPreference: "high-performance",
   });
 
   renderer.shadowMap.enabled = true;
@@ -152,7 +163,7 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   mainLoop.stop(mainLoopControlToken);
 
   if (SchedulerUpdateScenario.Always === busClock.useUpdate()) {
-    scheduler.offUpdate(busClock.update);
+    scheduler.update.delete(busClock.update);
   }
 
   await logger.debug(loggerBreadcrumbs.add("attachRenderer"), "Game is completely disposed of.");

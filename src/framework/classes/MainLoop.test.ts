@@ -6,38 +6,19 @@ import { default as MainLoopException } from "src/framework/classes/Exception/Ma
 
 import { default as IControlToken } from "src/framework/interfaces/ControlToken";
 
-const loggerBreadcrumbs = new LoggerBreadcrumbs();
-const mainLoop = MainLoop.getInstance(loggerBreadcrumbs);
-const controlToken: IControlToken = mainLoop.getControllable().obtainControlToken();
-
-function onBeforeAfter() {
-  mainLoop.stop(controlToken);
-  mainLoop.clear();
-}
-
-beforeEach(onBeforeAfter);
-
-afterEach(onBeforeAfter);
-
-test("is a singleton", function() {
-  expect(function() {
-    new MainLoop();
-  }).toThrow(MainLoopException);
-});
-
 test("attaches scheduler", async function() {
-  const mainLoop = MainLoop.getInstance(loggerBreadcrumbs);
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const scheduler = new Scheduler(loggerBreadcrumbs);
-
-  mainLoop.attachScheduler(scheduler);
+  const mainLoop = new MainLoop(loggerBreadcrumbs, scheduler);
+  const controlToken: IControlToken = mainLoop.getControllable().obtainControlToken();
 
   const promise = new Promise(function(resolve) {
-    function endCallback(fps: number) {
-      scheduler.offEnd(endCallback);
-      resolve(fps);
+    function updateCallback(delta: number) {
+      scheduler.update.delete(updateCallback);
+      resolve(delta);
     }
 
-    scheduler.onEnd(endCallback);
+    scheduler.update.add(updateCallback);
   });
 
   mainLoop.start(controlToken);

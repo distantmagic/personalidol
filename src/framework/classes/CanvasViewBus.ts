@@ -46,17 +46,8 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
       await this.cameraFrustumBus.add(cancelToken, canvasView);
     }
 
-    if (SchedulerUpdateScenario.Always === canvasView.useBegin()) {
-      this.scheduler.onBegin(canvasView.begin);
-    }
-    if (SchedulerUpdateScenario.Always === canvasView.useDraw()) {
-      this.scheduler.onDraw(canvasView.draw);
-    }
-    if (SchedulerUpdateScenario.Always === canvasView.useEnd()) {
-      this.scheduler.onEnd(canvasView.end);
-    }
     if (SchedulerUpdateScenario.Always === canvasView.useUpdate()) {
-      this.scheduler.onUpdate(canvasView.update);
+      this.scheduler.update.add(canvasView.update);
     }
   }
 
@@ -68,17 +59,8 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
       throw new CanvasViewException(this.loggerBreadcrumbs.add("delete"), `Canvas view cannot is already disposed and cannot be disposed again: ${canvasViewName}`);
     }
 
-    if (SchedulerUpdateScenario.Always === canvasView.useBegin()) {
-      this.scheduler.offBegin(canvasView.begin);
-    }
-    if (SchedulerUpdateScenario.Always === canvasView.useDraw()) {
-      this.scheduler.offDraw(canvasView.draw);
-    }
-    if (SchedulerUpdateScenario.Always === canvasView.useEnd()) {
-      this.scheduler.offEnd(canvasView.end);
-    }
     if (SchedulerUpdateScenario.Always === canvasView.useUpdate()) {
-      this.scheduler.offUpdate(canvasView.update);
+      this.scheduler.update.delete(canvasView.update);
     }
 
     if (canvasView.useCameraFrustum()) {

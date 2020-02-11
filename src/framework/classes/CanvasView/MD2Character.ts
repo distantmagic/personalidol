@@ -95,6 +95,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     this.character = character;
 
     this.setRotationY(THREE.MathUtils.degToRad(this.angle));
+    // this.children.add(new THREE.Box3Helper(this.boundingBox));
   }
 
   @cancelable()
@@ -160,7 +161,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
       return;
     }
 
-    this.getCharacter().update((this.accumulatedDelta + delta) / 1000);
+    this.getCharacter().update(this.accumulatedDelta + delta);
     this.accumulatedDelta = 0;
   }
 

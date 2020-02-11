@@ -182,6 +182,7 @@ export default class QuakeBrush extends CanvasView {
     geometry.computeBoundingBox();
 
     this.boundingBox = geometry.boundingBox;
+    // this.boundingBox = new THREE.Box3();
 
     for (let texture of this.entity.texturesNames) {
       if ("__TB_empty" === texture) {

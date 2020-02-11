@@ -43,8 +43,6 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     this.parentGroup.add(this.children);
   }
 
-  begin(): void {}
-
   computeBoundingBox(): void {
     this.boundingBox = new THREE.Box3().setFromObject(this.children);
   }
@@ -64,10 +62,6 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
     this.parentGroup.remove(this.children);
   }
-
-  draw(interpolationPercentage: number): void {}
-
-  end(fps: number, isPanicked: boolean): void {}
 
   getBoundingBox(): THREE.Box3 {
     return this.boundingBox;
@@ -122,20 +116,8 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   update(delta: number): void {}
 
-  useBegin(): SchedulerUpdateScenario {
-    return SchedulerUpdateScenario.Never;
-  }
-
   useCameraFrustum(): boolean {
     return false;
-  }
-
-  useDraw(): SchedulerUpdateScenario {
-    return SchedulerUpdateScenario.Never;
-  }
-
-  useEnd(): SchedulerUpdateScenario {
-    return SchedulerUpdateScenario.Never;
   }
 
   useUpdate(): SchedulerUpdateScenario {

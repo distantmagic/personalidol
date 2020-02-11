@@ -27,18 +27,6 @@ class FooCanvasView extends CanvasView {
     return "Foo";
   }
 
-  useBegin() {
-    return this.useCallbacks;
-  }
-
-  useDraw() {
-    return this.useCallbacks;
-  }
-
-  useEnd() {
-    return this.useCallbacks;
-  }
-
   useUpdate() {
     return this.useCallbacks;
   }

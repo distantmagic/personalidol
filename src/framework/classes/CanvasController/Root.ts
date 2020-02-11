@@ -169,9 +169,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     this.scene.dispose();
   }
 
-  draw(interpolationPercentage: number): void {
-    super.draw(interpolationPercentage);
-
+  draw(): void {
     this.effectComposer.render();
   }
 

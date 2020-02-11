@@ -24,8 +24,6 @@ export default class CanvasController implements ICanvasController {
     this._isDisposed = false;
   }
 
-  begin(): void {}
-
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     this._isAttached = false;
@@ -33,9 +31,7 @@ export default class CanvasController implements ICanvasController {
     this._isDisposed = true;
   }
 
-  draw(interpolationPercentage: number): void {}
-
-  end(fps: number, isPanicked: boolean): void {}
+  draw(): void {}
 
   isAttached(): boolean {
     return this._isAttached;
@@ -51,15 +47,7 @@ export default class CanvasController implements ICanvasController {
 
   update(delta: number): void {}
 
-  useBegin(): SchedulerUpdateScenario {
-    return SchedulerUpdateScenario.Never;
-  }
-
   useDraw(): SchedulerUpdateScenario {
-    return SchedulerUpdateScenario.Never;
-  }
-
-  useEnd(): SchedulerUpdateScenario {
     return SchedulerUpdateScenario.Never;
   }
 

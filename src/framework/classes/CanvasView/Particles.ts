@@ -52,7 +52,7 @@ export default class Particles extends CanvasView {
           interval: new Partykals.Randomizers.MinMaxRandomizer(0, 0.25),
         }),
         depthWrite: false,
-        speed: 0.001,
+        speed: 1,
       },
     });
   }

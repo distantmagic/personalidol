@@ -17,6 +17,8 @@ import QueryBus from "src/framework/interfaces/QueryBus";
 import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as ICursorCanvasView } from "src/framework/interfaces/CanvasView/Cursor";
 
+const SPEED = 5;
+
 export default class Cursor extends CanvasView implements ICursorCanvasView {
   readonly cameraController: ICameraController;
   readonly loadingManager: LoadingManager;
@@ -130,7 +132,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   update(delta: number): void {
     super.update(delta);
 
-    this.cursorScene.rotation.x += 0.1;
+    this.cursorScene.rotation.x += delta * SPEED;
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

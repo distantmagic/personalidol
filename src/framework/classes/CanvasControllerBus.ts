@@ -50,17 +50,11 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       canvasController.resize(lastElementSize);
     }
 
-    if (SchedulerUpdateScenario.Always === canvasController.useBegin()) {
-      this.scheduler.onBegin(canvasController.begin);
-    }
     if (SchedulerUpdateScenario.Always === canvasController.useDraw()) {
-      this.scheduler.onDraw(canvasController.draw);
-    }
-    if (SchedulerUpdateScenario.Always === canvasController.useEnd()) {
-      this.scheduler.onEnd(canvasController.end);
+      this.scheduler.draw.add(canvasController.draw);
     }
     if (SchedulerUpdateScenario.Always === canvasController.useUpdate()) {
-      this.scheduler.onUpdate(canvasController.update);
+      this.scheduler.update.add(canvasController.update);
     }
   }
 
@@ -70,17 +64,11 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       throw new CanvasControllerException(this.loggerBreadcrumbs.add("delete"), "Canvas controller cannot is already disposed and cannot be disposed again.");
     }
 
-    if (SchedulerUpdateScenario.Always === canvasController.useBegin()) {
-      this.scheduler.offBegin(canvasController.begin);
-    }
     if (SchedulerUpdateScenario.Always === canvasController.useDraw()) {
-      this.scheduler.offDraw(canvasController.draw);
-    }
-    if (SchedulerUpdateScenario.Always === canvasController.useEnd()) {
-      this.scheduler.offEnd(canvasController.end);
+      this.scheduler.draw.delete(canvasController.draw);
     }
     if (SchedulerUpdateScenario.Always === canvasController.useUpdate()) {
-      this.scheduler.offUpdate(canvasController.update);
+      this.scheduler.update.delete(canvasController.update);
     }
 
     this.resizeObserver.onResize.delete(canvasController.resize);
