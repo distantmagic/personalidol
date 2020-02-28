@@ -32,11 +32,15 @@ export default class MainLoop implements IMainLoop {
 
   @controlled(true)
   start(controlToken: IControlToken): void {
+    const delta: [number] = [0];
+
     this.clock.start();
 
     const animate = () => {
-      this.scheduler.update.notify([this.clock.getDelta()]);
-      this.scheduler.draw.notify([]);
+      delta[0] = this.clock.getDelta();
+
+      this.scheduler.update.notify(delta);
+      this.scheduler.draw.notify(delta);
       this.rafHandle = raf(animate);
     };
 

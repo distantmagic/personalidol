@@ -1,3 +1,5 @@
+import AbortController from "abort-controller";
+
 import Canceled from "src/framework/classes/Exception/CancelToken/Canceled";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import Exception from "src/framework/classes/Exception";

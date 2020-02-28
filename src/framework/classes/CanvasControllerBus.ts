@@ -36,18 +36,18 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       throw new CanvasControllerException(this.loggerBreadcrumbs.add("add"), "Canvas controller is already attached and cannot be attached again.");
     }
 
-    await canvasController.attach(cancelToken);
-
-    if (!canvasController.isAttached()) {
-      throw new CanvasControllerException(this.loggerBreadcrumbs.add("add"), "Canvas controller wasn't properly attached. Did you forget to call parent 'super.attach' method?");
-    }
-
     this.resizeObserver.onResize.add(canvasController.resize);
+
+    await canvasController.attach(cancelToken);
 
     const lastElementSize = this.lastElementSize;
 
     if (lastElementSize) {
       canvasController.resize(lastElementSize);
+    }
+
+    if (!canvasController.isAttached()) {
+      throw new CanvasControllerException(this.loggerBreadcrumbs.add("add"), "Canvas controller wasn't properly attached. Did you forget to call parent 'super.attach' method?");
     }
 
     if (SchedulerUpdateScenario.Always === canvasController.useDraw()) {

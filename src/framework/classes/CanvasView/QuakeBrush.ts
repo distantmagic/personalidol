@@ -124,7 +124,7 @@ function getMaterial(textureAtlas: THREE.Texture, textureCount: number): THREE.S
       USE_UV: "",
     },
 
-    // fog: true,
+    fog: true,
     fragmentShader: fragmentShader,
 
     uniforms: THREE.UniformsUtils.merge([

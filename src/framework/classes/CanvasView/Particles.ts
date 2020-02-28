@@ -73,8 +73,6 @@ export default class Particles extends CanvasView {
   }
 
   update(delta: number): void {
-    super.update(delta);
-
     if (!this.isInCameraFrustum()) {
       return;
     }

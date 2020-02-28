@@ -14,39 +14,43 @@ test("determines whether loading is blocking or not", async function() {
   const cancelToken2 = new CancelToken(loggerBreadcrumbs);
   const loadingManager = new LoadingManager(loggerBreadcrumbs, exceptionHandler);
 
+  expect(loadingManager.getProgress()).toBe(1);
+
   loadingManager.blocking(cancelToken1.whenCanceled());
 
-  let loadingManagerState = loadingManager.getState();
-  expect(loadingManagerState.getTotalLoading()).toBe(1);
-  expect(loadingManagerState.isBackgroundLoading()).toBe(false);
-  expect(loadingManagerState.isBlocking()).toBe(true);
-  expect(loadingManagerState.isLoading()).toBe(true);
+  expect(loadingManager.getProgress()).toBe(0);
+  expect(loadingManager.getTotalLoading()).toBe(1);
+  expect(loadingManager.isBackgroundLoading()).toBe(false);
+  expect(loadingManager.isBlocking()).toBe(true);
+  expect(loadingManager.isLoading()).toBe(true);
 
   loadingManager.background(cancelToken2.whenCanceled());
 
-  loadingManagerState = loadingManager.getState();
-  expect(loadingManagerState.getTotalLoading()).toBe(2);
-  expect(loadingManagerState.isBackgroundLoading()).toBe(true);
-  expect(loadingManagerState.isBlocking()).toBe(true);
-  expect(loadingManagerState.isLoading()).toBe(true);
+  expect(loadingManager.getProgress()).toBe(0);
+  expect(loadingManager.getTotalLoading()).toBe(2);
+  expect(loadingManager.isBackgroundLoading()).toBe(true);
+  expect(loadingManager.isBlocking()).toBe(true);
+  expect(loadingManager.isLoading()).toBe(true);
 
   cancelToken1.cancel(loggerBreadcrumbs);
+
   await cancelToken1.whenCanceled();
 
-  loadingManagerState = loadingManager.getState();
-  expect(loadingManagerState.getTotalLoading()).toBe(1);
-  expect(loadingManagerState.isBackgroundLoading()).toBe(true);
-  expect(loadingManagerState.isBlocking()).toBe(false);
-  expect(loadingManagerState.isLoading()).toBe(true);
+  expect(loadingManager.getProgress()).toBe(0.5);
+  expect(loadingManager.getTotalLoading()).toBe(1);
+  expect(loadingManager.isBackgroundLoading()).toBe(true);
+  expect(loadingManager.isBlocking()).toBe(false);
+  expect(loadingManager.isLoading()).toBe(true);
 
   cancelToken2.cancel(loggerBreadcrumbs);
+
   await cancelToken2.whenCanceled();
 
-  loadingManagerState = loadingManager.getState();
-  expect(loadingManagerState.getTotalLoading()).toBe(0);
-  expect(loadingManagerState.isBackgroundLoading()).toBe(false);
-  expect(loadingManagerState.isBlocking()).toBe(false);
-  expect(loadingManagerState.isLoading()).toBe(false);
+  expect(loadingManager.getProgress()).toBe(1);
+  expect(loadingManager.getTotalLoading()).toBe(0);
+  expect(loadingManager.isBackgroundLoading()).toBe(false);
+  expect(loadingManager.isBlocking()).toBe(false);
+  expect(loadingManager.isLoading()).toBe(false);
 }, 300);
 
 test("allows to embed comments", async function() {
@@ -62,12 +66,10 @@ test("allows to embed comments", async function() {
   loadingManager.blocking(cancelToken.whenCanceled());
   loadingManager.blocking(cancelToken.whenCanceled(), "test2");
 
-  let loadingManagerState = loadingManager.getState();
+  expect(loadingManager.getTotalLoading()).toBe(4);
+  expect(loadingManager.isLoading()).toBe(true);
 
-  expect(loadingManagerState.getTotalLoading()).toBe(4);
-  expect(loadingManagerState.isLoading()).toBe(true);
-
-  const comments = loadingManagerState.getComments();
+  const comments = loadingManager.getComments();
 
   expect(comments).toHaveLength(2);
   expect(comments).toEqual(["test", "test2"]);

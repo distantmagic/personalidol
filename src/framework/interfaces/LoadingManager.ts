@@ -1,16 +1,30 @@
-import LoadingManagerState from "src/framework/interfaces/LoadingManagerState";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-
-import LoadingManagerStateChangeCallback from "src/framework/types/LoadingManagerStateChangeCallback";
 
 export default interface LoadingManager {
   background<T>(promise: Promise<T>, comment?: string): Promise<T>;
 
   blocking<T>(promise: Promise<T>, comment?: string): Promise<T>;
 
-  getState(): LoadingManagerState;
+  getComments(): ReadonlyArray<string>;
 
-  onChange(callback: LoadingManagerStateChangeCallback): void;
+  getTotalEnqueued(): number;
 
-  offChange(callback: LoadingManagerStateChangeCallback): void;
+  getTotalFailed(): number;
+
+  getTotalLoaded(): number;
+
+  getTotalLoading(): number;
+
+  /**
+   * @return number progress value between 0 and 1
+   */
+  getProgress(): number;
+
+  isBackgroundLoading(): boolean;
+
+  isBlocking(): boolean;
+
+  isFailed(): boolean;
+
+  isLoading(): boolean;
 }

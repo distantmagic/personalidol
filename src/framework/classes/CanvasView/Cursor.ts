@@ -14,13 +14,13 @@ import LoadingManager from "src/framework/interfaces/LoadingManager";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as ICursorCanvasView } from "src/framework/interfaces/CanvasView/Cursor";
+import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
 const SPEED = 5;
 
 export default class Cursor extends CanvasView implements ICursorCanvasView {
-  readonly cameraController: ICameraController;
+  readonly gameCameraController: IPerspectiveCameraController;
   readonly loadingManager: LoadingManager;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
@@ -33,18 +33,18 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    cameraController: ICameraController,
+    gameCameraController: IPerspectiveCameraController,
     canvasViewBag: CanvasViewBag,
     loadingManager: LoadingManager,
-    parentGroup: THREE.Group,
+    group: THREE.Group,
     pointerState: PointerState,
     queryBus: QueryBus,
     threeLoadingManager: THREE.LoadingManager
   ) {
-    super(loggerBreadcrumbs, canvasViewBag, parentGroup);
+    super(loggerBreadcrumbs, canvasViewBag, group);
     autoBind(this);
 
-    this.cameraController = cameraController;
+    this.gameCameraController = gameCameraController;
     this.loadingManager = loadingManager;
     this.pointerState = pointerState;
     this.queryBus = queryBus;
@@ -75,7 +75,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     }
 
     this.children.add(response.scene);
-    this.cameraController.onZoomChange.add(this.onZoomChange);
+    this.gameCameraController.onZoomChange.add(this.onZoomChange);
 
     this.cursorScene = response.scene;
 
@@ -93,7 +93,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
 
     this.spotLight = light;
 
-    this.onZoomChange(this.cameraController.getZoom());
+    this.onZoomChange(this.gameCameraController.getZoom());
     this.setVisible(false);
   }
 
@@ -101,7 +101,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.cameraController.onZoomChange.delete(this.onZoomChange);
+    this.gameCameraController.onZoomChange.delete(this.onZoomChange);
   }
 
   getName(): "Cursor" {
@@ -130,8 +130,6 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   }
 
   update(delta: number): void {
-    super.update(delta);
-
     this.cursorScene.rotation.x += delta * SPEED;
   }
 

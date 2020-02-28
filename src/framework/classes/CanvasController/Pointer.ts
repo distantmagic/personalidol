@@ -19,13 +19,13 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
 import Scheduler from "src/framework/interfaces/Scheduler";
-import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as ICursorCanvasView } from "src/framework/interfaces/CanvasView/Cursor";
+import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
 export default class Pointer extends CanvasController implements HasLoggerBreadcrumbs {
-  readonly cameraController: ICameraController;
   readonly cursorView: ICursorCanvasView;
   readonly domElement: HTMLElement;
+  readonly gameCameraController: IPerspectiveCameraController;
   readonly loadingManager: LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly pointerVector: THREE.Vector2 = new THREE.Vector2(0.5, 0.5);
@@ -40,9 +40,9 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    canvasRootGroup: THREE.Group,
+    group: THREE.Group,
     canvasViewBag: CanvasViewBag,
-    cameraController: ICameraController,
+    gameCameraController: IPerspectiveCameraController,
     domElement: HTMLElement,
     loadingManager: LoadingManager,
     pointerState: PointerState,
@@ -53,7 +53,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     super(canvasViewBag);
     autoBind(this);
 
-    this.cameraController = cameraController;
+    this.gameCameraController = gameCameraController;
     this.domElement = domElement;
     this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
@@ -61,10 +61,10 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
 
     this.cursorView = new CursorView(
       this.loggerBreadcrumbs.add("Cursor"),
-      cameraController,
+      gameCameraController,
       this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Cursor")),
       loadingManager,
-      canvasRootGroup,
+      group,
       pointerState,
       queryBus,
       threeLoadingManager
@@ -132,15 +132,13 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
 
   onWheel(evt: WheelEvent): void {
     if (evt.deltaY < 0) {
-      this.cameraController.increaseZoom();
+      this.gameCameraController.increaseZoom(1, 5);
     } else {
-      this.cameraController.decreaseZoom();
+      this.gameCameraController.decreaseZoom(1, 1);
     }
   }
 
   resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {
-    super.resize(elementSize);
-
     this.canvasHeight = elementSize.getHeight();
     this.canvasWidth = elementSize.getWidth();
   }
@@ -153,7 +151,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   }
 
   update(delta: number): void {
-    this.raycaster.setFromCamera(this.pointerVector, this.cameraController.getCamera());
+    this.raycaster.setFromCamera(this.pointerVector, this.gameCameraController.getCamera());
 
     if (!this.cursorView.isAttached()) {
       return;

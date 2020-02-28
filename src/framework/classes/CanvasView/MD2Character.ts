@@ -21,14 +21,18 @@ import { default as IMD2CharacterView } from "src/framework/interfaces/CanvasVie
 import MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
 import QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 
+const boundingBoxSize = new THREE.Vector3(32, 56, 32);
+
 export default class MD2Character extends CanvasView implements IMD2CharacterView {
   readonly angle: number;
   readonly animationOffset: number;
   readonly baseUrl: string;
+  readonly characterGroup: THREE.Group = new THREE.Group();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
   readonly skin: number;
   readonly threeLoadingManager: THREE.LoadingManager;
+  protected boundingBox: THREE.Box3;
   private accumulatedDelta: number = 0;
   private baseCharacter: null | IMD2Character = null;
   private character: null | IMD2Character = null;
@@ -54,7 +58,8 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     this.skin = entity.skin;
     this.threeLoadingManager = threeLoadingManager;
 
-    this.children.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
+    this.characterGroup.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
+    this.boundingBox = new THREE.Box3().setFromCenterAndSize(this.characterGroup.position, boundingBoxSize);
   }
 
   @cancelable()
@@ -89,13 +94,12 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     character.setSkin(this.skin);
     character.update(this.animationOffset);
 
-    this.children.add(character.root);
-    this.computeBoundingBox();
+    this.characterGroup.add(character.root);
+    this.children.add(this.characterGroup);
 
     this.character = character;
 
     this.setRotationY(THREE.MathUtils.degToRad(this.angle));
-    // this.children.add(new THREE.Box3Helper(this.boundingBox));
   }
 
   @cancelable()
@@ -124,7 +128,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   }
 
   getPosition(): THREE.Vector3 {
-    return this.children.position;
+    return this.characterGroup.position;
   }
 
   setAnimationIdle(): void {
@@ -144,17 +148,15 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   }
 
   setRotationY(rotationRadians: number): void {
-    this.children.rotation.y = rotationRadians;
+    this.characterGroup.rotation.y = rotationRadians;
   }
 
   setVelocity(velocity: THREE.Vector3): void {
-    this.children.position.add(velocity);
+    this.characterGroup.position.add(velocity);
     this.boundingBox.translate(velocity);
   }
 
   update(delta: number): void {
-    super.update(delta);
-
     if (!this.isInCameraFrustum()) {
       this.accumulatedDelta += delta;
 

@@ -23,7 +23,7 @@ export default class SpotLight extends CanvasView {
     this.light.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
     this.light.target.position.set(entity.origin[0], 0, entity.origin[2]);
 
-    this.light.angle = 1;
+    this.light.angle = Math.PI / 3;
     this.light.decay = entity.decay;
     this.light.distance = 512;
     this.light.penumbra = 1;

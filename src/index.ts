@@ -8,7 +8,6 @@ import CanvasViewBag from "src/framework/classes/CanvasViewBag";
 import CanvasViewBus from "src/framework/classes/CanvasViewBus";
 import Exception from "src/framework/classes/Exception";
 import ExceptionHandler from "src/framework/classes/ExceptionHandler";
-import HTMLElementSize from "src/framework/classes/HTMLElementSize";
 import HTMLElementSizeObserver from "src/framework/classes/HTMLElementSizeObserver";
 import KeyboardState from "src/framework/classes/KeyboardState";
 import LoadingManager from "src/framework/classes/LoadingManager";
@@ -18,6 +17,7 @@ import PointerState from "src/framework/classes/PointerState";
 import QueryBus from "src/framework/classes/QueryBus";
 import Scheduler from "src/framework/classes/Scheduler";
 import { default as ConsoleLogger } from "src/framework/classes/Logger/Console";
+import { default as LoadingScreenController } from "src/framework/classes/CanvasController/LoadingScreen";
 import { default as RootCanvasController } from "src/framework/classes/CanvasController/Root";
 import { default as UnexpectedExceptionHandlerFilter } from "src/framework/classes/ExceptionHandlerFilter/Unexpected";
 
@@ -25,13 +25,13 @@ import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario
 
 // import * as serviceWorker from "src/serviceWorker";
 
-const rootElement = document.getElementById("dd-root");
+const rootCanvasElement = document.getElementById("dd-canvas");
 
-if (!rootElement) {
+if (!rootCanvasElement) {
   throw new Error("Root element not found.");
 }
 
-if (!(rootElement instanceof HTMLCanvasElement)) {
+if (!(rootCanvasElement instanceof HTMLCanvasElement)) {
   throw new Error("Root element is not a canvas.");
 }
 
@@ -51,7 +51,10 @@ const mainLoop = new MainLoop(loggerBreadcrumbs.add("MainLoop"), scheduler);
 const mainLoopControlToken = mainLoop.getControllable().obtainControlToken();
 
 // mainLoop.setMaxAllowedFPS(80);
-mainLoop.start(mainLoopControlToken);
+
+if ("visible" === window.document.visibilityState) {
+  mainLoop.start(mainLoopControlToken);
+}
 
 busClock.interval(cancelToken, queryBus.tick);
 
@@ -67,7 +70,7 @@ document.addEventListener("visibilitychange", function() {
   }
 });
 
-bootstrap(rootElement);
+bootstrap(rootCanvasElement);
 
 async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   function onWindowResize() {
@@ -75,8 +78,8 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
     sceneCanvas.style.width = `${window.innerWidth}px`;
   }
 
-  const camera = new THREE.PerspectiveCamera();
-  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs.add("CameraFrustumBus"), camera);
+  const gameCamera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs.add("CameraFrustumBus"), gameCamera);
   const pointerState = new PointerState(loggerBreadcrumbs.add("PointerState"), sceneCanvas);
   const resizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs.add("HTMLElementSizeObserver"), sceneCanvas);
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, resizeObserver, scheduler);
@@ -96,10 +99,7 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   window.addEventListener("resize", onWindowResize);
   onWindowResize();
 
-  const rendererContext = sceneCanvas.getContext("webgl", {
-    // desynchronized: true,
-    // Other options. See below.
-  });
+  const rendererContext = sceneCanvas.getContext("webgl");
 
   if (!rendererContext) {
     throw new Exception(loggerBreadcrumbs, "Unable to get rendering context.");
@@ -121,9 +121,19 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs.add("CanvasViewBus"), cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs.add("CanvasViewBag"), canvasViewBus);
 
-  const canvasController = new RootCanvasController(
+  const loadingScreenController = new LoadingScreenController(
+    loggerBreadcrumbs.add("LoadingScreen"),
+    canvasControllerBus,
+    canvasViewBag.fork(loggerBreadcrumbs.add("LoadingScreen")),
+    loadingManager,
+    renderer
+  );
+
+  await loadingManager.blocking(canvasControllerBus.add(cancelToken, loadingScreenController));
+
+  const rootCanvasController = new RootCanvasController(
     loggerBreadcrumbs.add("RootCanvasController"),
-    camera,
+    gameCamera,
     canvasControllerBus,
     canvasViewBag.fork(loggerBreadcrumbs.add("RootCanvasControllert")),
     keyboardState,
@@ -136,9 +146,7 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
     threeLoadingManager
   );
 
-  await loadingManager.blocking(canvasControllerBus.add(cancelToken, canvasController), "Loading initial game resources");
-
-  canvasController.resize(new HTMLElementSize(sceneCanvas));
+  await loadingManager.blocking(canvasControllerBus.add(cancelToken, rootCanvasController), "Loading initial game resources");
 
   logger.debug(loggerBreadcrumbs.add("attachRenderer"), "Game is ready.");
 
@@ -154,7 +162,8 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   sceneCanvas.remove();
 
   await loadingManager.blocking(canvasViewBag.dispose(cancelToken), "Disposing root canvas controller");
-  await loadingManager.blocking(canvasControllerBus.delete(cancelToken, canvasController), "Disposing game resources");
+  await loadingManager.blocking(canvasControllerBus.delete(cancelToken, loadingScreenController));
+  await loadingManager.blocking(canvasControllerBus.delete(cancelToken, rootCanvasController));
 
   canvasControllerBus.disconnect();
   keyboardState.disconnect();

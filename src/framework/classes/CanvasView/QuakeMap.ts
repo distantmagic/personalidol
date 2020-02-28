@@ -25,7 +25,7 @@ import Logger from "src/framework/interfaces/Logger";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
+import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
 import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
@@ -39,10 +39,19 @@ const QuakeMapWorker = require("../../../workers/loader?name=QuakeMapWorker!src/
 const PhysicsWorker = require("../../../workers/loader?name=PhysicsWorker!src/workers/modules/physics");
 /* eslint-enable import/no-webpack-loader-syntax */
 
+function disposeQuakeMapWorker(self: QuakeMap): void {
+  const quakeMapWorker = self.quakeMapWorker;
+
+  if (quakeMapWorker) {
+    quakeMapWorker.terminate();
+    self.quakeMapWorker = null;
+  }
+}
+
 export default class QuakeMap extends CanvasView {
   readonly audioListener: THREE.AudioListener;
   readonly audioLoader: THREE.AudioLoader;
-  readonly cameraController: ICameraController;
+  readonly gameCameraController: IPerspectiveCameraController;
   readonly canvasControllerBus: CanvasControllerBus;
   readonly loadingManager: LoadingManager;
   readonly logger: Logger;
@@ -52,12 +61,12 @@ export default class QuakeMap extends CanvasView {
   readonly source: string;
   readonly threeLoadingManager: THREE.LoadingManager;
   private animationOffset: number;
-  private physicsWorker: null | Worker = null;
-  private quakeMapWorker: null | Worker = null;
+  physicsWorker: null | Worker = null;
+  quakeMapWorker: null | Worker = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    cameraController: ICameraController,
+    gameCameraController: IPerspectiveCameraController,
     canvasControllerBus: CanvasControllerBus,
     canvasViewBag: CanvasViewBag,
     group: THREE.Group,
@@ -76,7 +85,7 @@ export default class QuakeMap extends CanvasView {
     this.animationOffset = 0;
     this.audioListener = audioListener;
     this.audioLoader = audioLoader;
-    this.cameraController = cameraController;
+    this.gameCameraController = gameCameraController;
     this.canvasControllerBus = canvasControllerBus;
     this.loadingManager = loadingManager;
     this.logger = logger;
@@ -113,7 +122,8 @@ export default class QuakeMap extends CanvasView {
 
         // means it's done
         if (!entity) {
-          this.disposeQuakeMapWorker();
+          disposeQuakeMapWorker(this);
+
           return void resolve();
         }
 
@@ -215,7 +225,7 @@ export default class QuakeMap extends CanvasView {
                 cancelToken,
                 new PlayerController(
                   this.loggerBreadcrumbs.add("Player"),
-                  this.cameraController,
+                  this.gameCameraController,
                   this.canvasViewBag.fork(this.loggerBreadcrumbs.add("Player")),
                   this.children,
                   entity,
@@ -359,19 +369,10 @@ export default class QuakeMap extends CanvasView {
       physicsWorker.terminate();
     }
 
-    this.disposeQuakeMapWorker();
+    disposeQuakeMapWorker(this);
   }
 
   getName(): "QuakeMap" {
     return "QuakeMap";
-  }
-
-  private disposeQuakeMapWorker(): void {
-    const quakeMapWorker = this.quakeMapWorker;
-
-    if (quakeMapWorker) {
-      quakeMapWorker.terminate();
-      this.quakeMapWorker = null;
-    }
   }
 }

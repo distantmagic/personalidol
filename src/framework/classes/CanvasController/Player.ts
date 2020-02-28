@@ -16,17 +16,29 @@ import LoadingManager from "src/framework/interfaces/LoadingManager";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as IMD2CharacterView } from "src/framework/interfaces/CanvasView/MD2Character";
+import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
 import QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
 
 const SPEED_UNITS_PER_SECOND = 300;
 
+function cameraLookAt(self: Player, position: THREE.Vector3): void {
+  const baseDistance = 256 * 3;
+
+  self.gameCameraController.camera.lookAt(position);
+  // prettier-ignore
+  self.gameCameraController.camera.position.set(
+    position.x + baseDistance,
+    position.y + baseDistance,
+    position.z + baseDistance
+  );
+}
+
 export default class Player extends CanvasController implements HasLoggerBreadcrumbs {
-  readonly cameraController: ICameraController;
   readonly entity: QuakeWorkerPlayer;
+  readonly gameCameraController: IPerspectiveCameraController;
   readonly loadingManager: LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly playerView: IMD2CharacterView;
@@ -39,7 +51,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    cameraController: ICameraController,
+    gameCameraController: IPerspectiveCameraController,
     canvasViewBag: CanvasViewBag,
     group: THREE.Group,
     entity: QuakeWorkerPlayer,
@@ -52,7 +64,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     super(canvasViewBag);
     autoBind(this);
 
-    this.cameraController = cameraController;
+    this.gameCameraController = gameCameraController;
     this.entity = entity;
     this.loadingManager = loadingManager;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
@@ -83,9 +95,9 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    this.cameraController.lookAt(new THREE.Vector3().fromArray(this.entity.origin));
-
     await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.playerView), "Loading player view");
+
+    cameraLookAt(this, new THREE.Vector3().fromArray(this.entity.origin));
   }
 
   @cancelable()
@@ -103,26 +115,29 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
   }
 
   update(delta: number): void {
-    super.update(delta);
-
     if (!this.pointerState.isPressed(PointerButtonNames.Primary)) {
       return void this.setIdle();
     }
 
     const pointerVector = this.pointerController.getPointerVector();
+    const pointerVectorLength = pointerVector.length();
 
-    pointerVector.rotateAround(this.pointerVectorRotationPivot, (3 * Math.PI) / 4);
-
-    if (pointerVector.length() < 0.1) {
+    if (pointerVectorLength < 0.02) {
       return void this.setIdle();
     }
 
-    const direction = new THREE.Vector3(pointerVector.y, 0, pointerVector.x).normalize().multiplyScalar(delta * SPEED_UNITS_PER_SECOND);
+    pointerVector.rotateAround(this.pointerVectorRotationPivot, (3 * Math.PI) / 4);
+
+    const velocity = new THREE.Vector3(pointerVector.y, 0, pointerVector.x).normalize().multiplyScalar(delta * SPEED_UNITS_PER_SECOND);
+
+    if (pointerVectorLength < 0.1) {
+      velocity.multiplyScalar(pointerVectorLength * 10);
+    }
 
     this.playerView.setAnimationRunning();
     this.playerView.setRotationY(pointerVector.angle());
-    this.playerView.setVelocity(direction);
+    this.playerView.setVelocity(velocity);
 
-    this.cameraController.lookAt(this.playerView.getPosition());
+    cameraLookAt(this, this.playerView.getPosition());
   }
 }

@@ -7,7 +7,7 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import env from "src/framework/helpers/env";
 
 import CanvasController from "src/framework/classes/CanvasController";
-import { default as CameraController } from "src/framework/classes/CanvasController/Camera";
+import { default as PerspectiveCameraController } from "src/framework/classes/CanvasController/PerspectiveCamera";
 import { default as PointerController } from "src/framework/classes/CanvasController/Pointer";
 import { default as QuakeMapView } from "src/framework/classes/CanvasView/QuakeMap";
 
@@ -28,7 +28,7 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import PointerState from "src/framework/interfaces/PointerState";
 import QueryBus from "src/framework/interfaces/QueryBus";
 import Scheduler from "src/framework/interfaces/Scheduler";
-import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
+import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
 // import { default as THREEHelpersView } from "src/framework/classes/CanvasView/THREEHelpers";
@@ -36,13 +36,15 @@ import { default as IPointerController } from "src/framework/interfaces/CanvasCo
 export default class Root extends CanvasController implements HasLoggerBreadcrumbs {
   readonly audioListener: THREE.AudioListener = new THREE.AudioListener();
   readonly audioLoader: THREE.AudioLoader;
-  readonly camera: THREE.PerspectiveCamera;
-  readonly cameraController: ICameraController;
   readonly canvasControllerBus: CanvasControllerBus;
-  readonly canvasRootGroup: THREE.Group = new THREE.Group();
-  readonly effectComposer: EffectComposer;
+  readonly gameCamera: THREE.PerspectiveCamera;
+  readonly gameCameraController: IPerspectiveCameraController;
+  readonly gameEffectComposer: EffectComposer;
+  readonly gameGroup: THREE.Group = new THREE.Group();
+  readonly gameScene: THREE.Scene = new THREE.Scene();
   readonly keyboardState: KeyboardState;
   readonly loadingManager: LoadingManager;
+  // readonly loadingScreenController: ILoadingScreenController;
   readonly logger: Logger;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly outlinePass: OutlinePass;
@@ -50,13 +52,12 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
   readonly renderer: THREE.WebGLRenderer;
-  readonly scene: THREE.Scene = new THREE.Scene();
   readonly scheduler: Scheduler;
   readonly threeLoadingManager: THREE.LoadingManager;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
-    camera: THREE.PerspectiveCamera,
+    gameCamera: THREE.PerspectiveCamera,
     canvasControllerBus: CanvasControllerBus,
     canvasViewBag: CanvasViewBag,
     keyboardState: KeyboardState,
@@ -72,36 +73,35 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     autoBind(this);
 
     this.audioLoader = new THREE.AudioLoader(threeLoadingManager);
-    this.camera = camera;
+    this.gameCamera = gameCamera;
 
-    // this.camera.add(this.audioListener);
+    // this.gameCamera.add(this.audioListener);
 
     this.canvasControllerBus = canvasControllerBus;
     this.keyboardState = keyboardState;
     this.loadingManager = loadingManager;
     this.logger = logger;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.outlinePass = new OutlinePass(new THREE.Vector2(1, 1), this.scene, this.camera);
+    this.outlinePass = new OutlinePass(new THREE.Vector2(1, 1), this.gameScene, this.gameCamera);
     this.queryBus = queryBus;
     this.pointerState = pointerState;
     this.renderer = renderer;
     this.scheduler = scheduler;
 
-    this.scene.matrixAutoUpdate = false;
+    const gameSceneBackgroundColor = 0x000000;
 
-    const sceneBackgroundColor = 0x000000;
+    this.gameScene.matrixAutoUpdate = false;
+    this.gameScene.background = new THREE.Color(gameSceneBackgroundColor);
+    this.gameScene.fog = new THREE.Fog(gameSceneBackgroundColor, 1024, 1024 * 3);
+    this.gameScene.add(this.gameGroup);
 
-    this.scene.background = new THREE.Color(sceneBackgroundColor);
-    // this.scene.fog = new THREE.Fog(sceneBackgroundColor, 512, 1024 * 3);
+    this.gameCameraController = new PerspectiveCameraController(loggerBreadcrumbs.add("Camera"), canvasViewBag.fork(loggerBreadcrumbs.add("Camera")), this.gameCamera);
 
-    this.scene.add(this.canvasRootGroup);
-
-    this.cameraController = new CameraController(loggerBreadcrumbs.add("CameraController"), canvasViewBag, this.camera);
     this.pointerController = new PointerController(
-      loggerBreadcrumbs.add("PointerController"),
-      this.canvasRootGroup,
-      canvasViewBag,
-      this.cameraController,
+      loggerBreadcrumbs.add("Pointer"),
+      this.gameGroup,
+      canvasViewBag.fork(loggerBreadcrumbs.add("Pointer")),
+      this.gameCameraController,
       renderer.domElement,
       loadingManager,
       pointerState,
@@ -112,16 +112,16 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
 
     this.threeLoadingManager = threeLoadingManager;
 
-    this.effectComposer = new EffectComposer(renderer);
-    this.effectComposer.addPass(new RenderPass(this.scene, this.camera));
-    this.effectComposer.addPass(this.outlinePass);
+    this.gameEffectComposer = new EffectComposer(renderer);
+    this.gameEffectComposer.addPass(new RenderPass(this.gameScene, this.gameCamera));
+    this.gameEffectComposer.addPass(this.outlinePass);
   }
 
   @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    await this.canvasControllerBus.add(cancelToken, this.cameraController);
+    await this.canvasControllerBus.add(cancelToken, this.gameCameraController);
     await this.canvasControllerBus.add(cancelToken, this.pointerController);
 
     await this.loadingManager.blocking(
@@ -129,10 +129,10 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
         cancelToken,
         new QuakeMapView(
           this.loggerBreadcrumbs.add("QuakeMap"),
-          this.cameraController,
+          this.gameCameraController,
           this.canvasControllerBus,
           this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
-          this.canvasRootGroup,
+          this.gameGroup,
           this.audioListener,
           this.audioLoader,
           this.loadingManager,
@@ -153,7 +153,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     //     new THREEHelpersView(
     //       this.loggerBreadcrumbs.add("THREEHelpers"),
     //       this.canvasViewBag.fork(this.loggerBreadcrumbs.add("THREEHelpers")),
-    //       this.canvasRootGroup,
+    //       this.gameGroup,
     //     )
     //   ),
     //   "Loading map helpers"
@@ -164,24 +164,27 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    await this.canvasControllerBus.delete(cancelToken, this.cameraController);
+    await this.canvasControllerBus.delete(cancelToken, this.gameCameraController);
+    await this.canvasControllerBus.add(cancelToken, this.pointerController);
 
-    this.scene.dispose();
+    this.gameScene.dispose();
   }
 
-  draw(): void {
-    this.effectComposer.render();
+  draw(delta: number): void {
+    if (this.loadingManager.isBlocking()) {
+      return;
+    }
+
+    // this.gameEffectComposer.render(delta);
   }
 
   resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {
-    super.resize(elementSize);
-
     const height = elementSize.getHeight();
     const width = elementSize.getWidth();
 
     this.renderer.setSize(width, height);
 
-    this.effectComposer.setSize(width, height);
+    this.gameEffectComposer.setSize(width, height);
   }
 
   useDraw(): SchedulerUpdateScenario.Always {

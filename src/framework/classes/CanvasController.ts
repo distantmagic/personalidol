@@ -31,7 +31,7 @@ export default class CanvasController implements ICanvasController {
     this._isDisposed = true;
   }
 
-  draw(): void {}
+  draw(delta: number): void {}
 
   isAttached(): boolean {
     return this._isAttached;

@@ -15,10 +15,10 @@ import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import ElementSize from "src/framework/interfaces/ElementSize";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ICameraController } from "src/framework/interfaces/CanvasController/Camera";
 import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
-export default class Camera extends CanvasController implements HasLoggerBreadcrumbs, ICameraController {
+export default class PerspectiveCamera extends CanvasController implements HasLoggerBreadcrumbs, IPerspectiveCameraController {
   readonly camera: THREE.PerspectiveCamera;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onFrustumChange: IEventListenerSet<[THREE.Frustum]>;
@@ -44,15 +44,11 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
 
     // this.camera.near = -512;
     this.camera.far = 4096;
-    // this.lookAt(new THREE.Vector3(256 * 2, 0, 256 * 2));
-    // this.lookAt(new THREE.Vector3(0, 0, 0));
-    this.lookAt(new THREE.Vector3(256, 0, 256 * 2));
-
     this.aspectNeedsUpdate = true;
   }
 
-  decreaseZoom(): void {
-    this.setZoom(this.zoom - 1);
+  decreaseZoom(step: number, min: number): void {
+    this.setZoom(clamp(this.zoom - step, min, this.zoom));
   }
 
   @cancelable()
@@ -68,26 +64,11 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
     return this.zoom;
   }
 
-  increaseZoom(): void {
-    this.setZoom(this.zoom + 1);
-  }
-
-  lookAt(position: THREE.Vector3): void {
-    const baseDistance = 256 * 3;
-
-    // prettier-ignore
-    this.camera.position.set(
-      position.x + baseDistance,
-      position.y + baseDistance,
-      position.z + baseDistance
-    );
-
-    this.camera.lookAt(position);
+  increaseZoom(step: number, max: number): void {
+    this.setZoom(clamp(this.zoom + step, this.zoom, max));
   }
 
   resize(viewportSize: ElementSize<ElementPositionUnit.Px>): void {
-    super.resize(viewportSize);
-
     const height = viewportSize.getHeight();
     const width = viewportSize.getWidth();
 
@@ -102,20 +83,16 @@ export default class Camera extends CanvasController implements HasLoggerBreadcr
   }
 
   setZoom(zoom: number): void {
-    const clampedZoom = clamp(zoom, 1, 5);
-
-    if (this.zoom === clampedZoom) {
+    if (this.zoom === zoom) {
       return;
     }
 
-    this.zoom = clampedZoom;
+    this.zoom = zoom;
     this.aspectNeedsUpdate = true;
-    this.onZoomChange.notify([clampedZoom]);
+    this.onZoomChange.notify([zoom]);
   }
 
   update(delta: number): void {
-    super.update(delta);
-
     if (this.aspectNeedsUpdate) {
       this.aspectNeedsUpdate = false;
       this.camera.aspect = this.width / this.height;

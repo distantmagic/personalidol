@@ -19,7 +19,7 @@ const world = new OIMO.World({
   // randomize sample
   random: true,
   // calculate statistic or not
-  info: true,
+  info: false,
   gravity: [0, -9.8, 0],
 });
 

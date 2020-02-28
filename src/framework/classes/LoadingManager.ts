@@ -1,77 +1,101 @@
 import filter from "lodash/filter";
 
-import EventListenerSet from "src/framework/classes/EventListenerSet";
-import LoadingManagerState from "src/framework/classes/LoadingManagerState";
-
 import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 import { default as ILoadingManager } from "src/framework/interfaces/LoadingManager";
-import { default as ILoadingManagerState } from "src/framework/interfaces/LoadingManagerState";
 
-import LoadingManagerStateChangeCallback from "src/framework/types/LoadingManagerStateChangeCallback";
+async function awaitBlocker<T>(self: LoadingManager, collection: Map<Promise<any>, string>, blocker: Promise<T>, comment: string): Promise<T> {
+  collection.set(blocker, comment);
+
+  try {
+    self.totalEnqueued += 1;
+
+    const ret = await blocker;
+
+    self.totalLoaded += 1;
+
+    return ret;
+  } catch (err) {
+    self.failedItems.set(blocker, comment);
+    await self.exceptionHandler.captureException(self.loggerBreadcrumbs.add("background"), err);
+    throw err;
+  } finally {
+    collection.delete(blocker);
+
+    if (!self.isLoading()) {
+      self.totalEnqueued = 0;
+      self.totalLoaded = 0;
+    }
+  }
+}
 
 export default class LoadingManager implements HasLoggerBreadcrumbs, ILoadingManager {
   readonly backgroundItems: Map<Promise<any>, string> = new Map<Promise<any>, string>();
   readonly blockingItems: Map<Promise<any>, string> = new Map<Promise<any>, string>();
-  readonly callbacks: IEventListenerSet<[ILoadingManagerState]>;
   readonly exceptionHandler: ExceptionHandler;
   readonly failedItems: Map<Promise<any>, string> = new Map<Promise<any>, string>();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  totalEnqueued: number = 0;
+  totalLoaded: number = 0;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, exceptionHandler: ExceptionHandler) {
-    this.callbacks = new EventListenerSet<[ILoadingManagerState]>(loggerBreadcrumbs.add("EventListenerSet"));
     this.exceptionHandler = exceptionHandler;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
   }
 
-  async background<T>(blocker: Promise<T>, comment: string = ""): Promise<T> {
-    this.backgroundItems.set(blocker, comment);
-    this.callbacks.notify([this.getState()]);
-
-    try {
-      return await blocker;
-    } catch (err) {
-      this.failedItems.set(blocker, comment);
-      await this.exceptionHandler.captureException(this.loggerBreadcrumbs.add("background"), err);
-      throw err;
-    } finally {
-      this.backgroundItems.delete(blocker);
-      this.callbacks.notify([this.getState()]);
-    }
+  background<T>(blocker: Promise<T>, comment: string = ""): Promise<T> {
+    return awaitBlocker<T>(this, this.backgroundItems, blocker, comment);
   }
 
   async blocking<T>(blocker: Promise<T>, comment: string = ""): Promise<T> {
-    this.blockingItems.set(blocker, comment);
-    this.callbacks.notify([this.getState()]);
+    return awaitBlocker<T>(this, this.blockingItems, blocker, comment);
+  }
 
-    try {
-      return await blocker;
-    } catch (err) {
-      this.failedItems.set(blocker, comment);
-      await this.exceptionHandler.captureException(this.loggerBreadcrumbs.add("blocking"), err);
-      throw err;
-    } finally {
-      this.blockingItems.delete(blocker);
-      this.callbacks.notify([this.getState()]);
+  getComments(): ReadonlyArray<string> {
+    const blocking = Array.from(this.blockingItems.values());
+    const background = Array.from(this.backgroundItems.values());
+
+    return filter(blocking).concat(filter(background));
+  }
+
+  getProgress(): number {
+    if (!this.isLoading()) {
+      return 1;
     }
+
+    return this.getTotalLoaded() / this.getTotalEnqueued();
   }
 
-  getState(): ILoadingManagerState {
-    return new LoadingManagerState(
-      this.backgroundItems.size,
-      this.blockingItems.size,
-      this.failedItems.size,
-      filter(Array.from(this.blockingItems.values()).concat(Array.from(this.backgroundItems.values())))
-    );
+  getTotalEnqueued(): number {
+    return this.totalEnqueued;
   }
 
-  onChange(callback: LoadingManagerStateChangeCallback): void {
-    this.callbacks.add(callback);
+  getTotalFailed(): number {
+    return this.failedItems.size;
   }
 
-  offChange(callback: LoadingManagerStateChangeCallback): void {
-    this.callbacks.delete(callback);
+  getTotalLoaded(): number {
+    return this.totalLoaded;
+  }
+
+  getTotalLoading(): number {
+    return this.blockingItems.size + this.backgroundItems.size;
+  }
+
+  isBackgroundLoading(): boolean {
+    return this.backgroundItems.size > 0;
+  }
+
+  isBlocking(): boolean {
+    return this.blockingItems.size > 0;
+  }
+
+  isFailed(): boolean {
+    return this.failedItems.size > 0;
+  }
+
+  isLoading(): boolean {
+    return this.isBackgroundLoading() || this.isBlocking();
   }
 }
