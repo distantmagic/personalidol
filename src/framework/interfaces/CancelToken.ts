@@ -11,7 +11,7 @@ export default interface CancelToken extends Cancelable {
 
   onCanceled(cancelTokenCallback: CancelTokenCallback): void;
 
-  settle(): void;
+  // settle(): void;
 
   whenCanceled(): Promise<Canceled>;
 }

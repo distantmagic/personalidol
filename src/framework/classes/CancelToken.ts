@@ -13,7 +13,6 @@ import CancelTokenCallback from "src/framework/types/CancelTokenCallback";
 
 export default class CancelToken implements ICancelToken {
   private _isCanceled: boolean = false;
-  private _isSettled: boolean = false;
   private loggerBreadcrumbsCancel: null | LoggerBreadcrumbs = null;
   readonly abortController: AbortController = new AbortController();
   readonly callbacks: IEventListenerSet<[ICanceled]>;
@@ -25,10 +24,6 @@ export default class CancelToken implements ICancelToken {
   }
 
   cancel(loggerBreadcrumbsCancel: LoggerBreadcrumbs): void {
-    if (this._isSettled) {
-      throw new Exception(this.loggerBreadcrumbsCreate, "Cancel token is settled and cannot be canceled.");
-    }
-
     this.loggerBreadcrumbsCancel = loggerBreadcrumbsCancel;
     this.abortController.abort();
     this._isCanceled = true;
@@ -46,9 +41,6 @@ export default class CancelToken implements ICancelToken {
   }
 
   onCanceled(callback: CancelTokenCallback): void {
-    if (this._isSettled) {
-      throw new Exception(this.loggerBreadcrumbsCreate, "Cancel token is settled and will never be canceled.");
-    }
     if (this._isCanceled) {
       const loggerBreadcrumbsCancel = this.loggerBreadcrumbsCancel;
 
@@ -60,11 +52,6 @@ export default class CancelToken implements ICancelToken {
     } else {
       this.callbacks.add(callback);
     }
-  }
-
-  settle(): void {
-    this._isSettled = true;
-    this.callbacks.clear();
   }
 
   whenCanceled(): Promise<ICanceled> {
