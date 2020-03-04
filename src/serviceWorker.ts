@@ -19,7 +19,7 @@ function getServiceWorkerAPI(loggerBreadcrumbs: LoggerBreadcrumbs): ServiceWorke
 }
 
 export async function register(loggerBreadcrumbs: LoggerBreadcrumbs, logger: Logger): Promise<ServiceWorkerRegistration> {
-  const PUBLIC_URL = env(loggerBreadcrumbs.add("env"), "REACT_APP_PUBLIC_URL");
+  const PUBLIC_URL = env(loggerBreadcrumbs.add("env"), "PUBLIC_URL");
   const serviceWorker = getServiceWorkerAPI(loggerBreadcrumbs.add("getServiceWorkerAPI"));
 
   // The URL constructor is available in all browsers that support SW.

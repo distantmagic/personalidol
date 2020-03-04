@@ -43,8 +43,16 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     this.parentGroup.add(this.children);
   }
 
+  attachCamera(camera: THREE.Camera): void {
+    this.children.add(camera);
+  }
+
   computeBoundingBox(): void {
     this.boundingBox = new THREE.Box3().setFromObject(this.children);
+  }
+
+  detachCamera(camera: THREE.Camera): void {
+    this.children.remove(camera);
   }
 
   @cancelable()

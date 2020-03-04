@@ -64,7 +64,7 @@ else
 endif
 
 start: frontend.dependencies
-	REACT_APP_PUBLIC_URL=http://localhost:9023 $(CMD_YARN) run start
+	PUBLIC_URL=http://localhost:9023 $(CMD_YARN) run start
 
 test: test.backend test.frontend
 

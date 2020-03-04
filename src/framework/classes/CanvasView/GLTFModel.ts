@@ -14,8 +14,8 @@ import QueryBus from "src/framework/interfaces/QueryBus";
 
 import QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
 
-function getMesh(loggerBreadcrumbs: LoggerBreadcrumbs, scene: THREE.Scene): THREE.Mesh {
-  for (let child of scene.children) {
+function getMesh(loggerBreadcrumbs: LoggerBreadcrumbs, group: THREE.Group): THREE.Mesh {
+  for (let child of group.children) {
     if (child instanceof THREE.Mesh) {
       return child;
     }

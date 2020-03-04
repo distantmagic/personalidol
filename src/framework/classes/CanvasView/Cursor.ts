@@ -24,7 +24,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   readonly loadingManager: LoadingManager;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
-  private cursorScene: THREE.Scene = new THREE.Scene();
+  private cursorGroup: THREE.Group = new THREE.Group();
   private isPointerDown: boolean = false;
   private position: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
   private scale: number = 1;
@@ -77,7 +77,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     this.children.add(response.scene);
     this.gameCameraController.onZoomChange.add(this.onZoomChange);
 
-    this.cursorScene = response.scene;
+    this.cursorGroup = response.scene;
 
     const light = new THREE.SpotLight();
 
@@ -122,7 +122,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   }
 
   setVisible(isVisible: boolean): void {
-    this.cursorScene.visible = isVisible;
+    this.cursorGroup.visible = isVisible;
 
     // do not unset light via .visible to not recompile shaders
     // there might be a small lag while cursor is leaving the game area
@@ -130,7 +130,7 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   }
 
   update(delta: number): void {
-    this.cursorScene.rotation.x += delta * SPEED;
+    this.cursorGroup.rotation.x += delta * SPEED;
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {
