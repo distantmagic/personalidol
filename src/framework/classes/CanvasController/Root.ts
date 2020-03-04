@@ -175,7 +175,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
       return;
     }
 
-    // this.gameEffectComposer.render(delta);
+    this.gameEffectComposer.render(delta);
   }
 
   resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {

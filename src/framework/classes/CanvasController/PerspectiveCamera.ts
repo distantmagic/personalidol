@@ -68,6 +68,16 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
     this.setZoom(clamp(this.zoom + step, this.zoom, max));
   }
 
+  lookAtFromDistance(position: THREE.Vector3, distance: number): void {
+    const distanceVector = new THREE.Vector3(1, 1, 1)
+      .normalize()
+      .multiplyScalar(distance)
+      .clampLength(0, distance);
+
+    this.camera.position.copy(position).add(distanceVector);
+    this.camera.lookAt(position);
+  }
+
   resize(viewportSize: ElementSize<ElementPositionUnit.Px>): void {
     const height = viewportSize.getHeight();
     const width = viewportSize.getWidth();

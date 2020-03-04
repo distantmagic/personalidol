@@ -71,6 +71,10 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     return this.children;
   }
 
+  getPosition(): THREE.Vector3 {
+    return this.getChildren().position;
+  }
+
   isAttached(): boolean {
     return this._isAttached;
   }

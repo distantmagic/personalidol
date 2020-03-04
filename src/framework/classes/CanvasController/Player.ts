@@ -22,19 +22,8 @@ import { default as IPointerController } from "src/framework/interfaces/CanvasCo
 
 import QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
 
+const LOOK_AT_DISTANCE = 1024;
 const SPEED_UNITS_PER_SECOND = 300;
-
-function cameraLookAt(self: Player, position: THREE.Vector3): void {
-  const baseDistance = 256 * 3;
-
-  self.gameCameraController.camera.lookAt(position);
-  // prettier-ignore
-  self.gameCameraController.camera.position.set(
-    position.x + baseDistance,
-    position.y + baseDistance,
-    position.z + baseDistance
-  );
-}
 
 export default class Player extends CanvasController implements HasLoggerBreadcrumbs {
   readonly entity: QuakeWorkerPlayer;
@@ -97,7 +86,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
     await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.playerView), "Loading player view");
 
-    cameraLookAt(this, new THREE.Vector3().fromArray(this.entity.origin));
+    this.gameCameraController.lookAtFromDistance(this.playerView.getPosition(), LOOK_AT_DISTANCE);
   }
 
   @cancelable()
@@ -138,6 +127,6 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     this.playerView.setRotationY(pointerVector.angle());
     this.playerView.setVelocity(velocity);
 
-    cameraLookAt(this, this.playerView.getPosition());
+    this.gameCameraController.lookAtFromDistance(this.playerView.getPosition(), LOOK_AT_DISTANCE);
   }
 }

@@ -69,7 +69,7 @@ export default class LoadingScreen extends CanvasController {
     await this.canvasControllerBus.add(cancelToken, this.loaderCameraController);
     await this.canvasViewBag.add(cancelToken, this.loadingScreenView);
 
-    this.loaderCameraController.camera.position.set(0, 1024, 0);
+    this.loaderCameraController.camera.position.set(0, 512, 0);
     this.loaderCameraController.camera.lookAt(new THREE.Vector3(0, 0, 0));
     // this.loaderCameraController.setZoom(0.1);
   }
@@ -85,7 +85,7 @@ export default class LoadingScreen extends CanvasController {
 
   draw(delta: number): void {
     if (!this.loadingManager.isBlocking()) {
-      // return;
+      return;
     }
 
     this.loaderEffectComposer.render(delta);

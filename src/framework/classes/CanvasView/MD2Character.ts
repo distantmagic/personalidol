@@ -27,7 +27,6 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   readonly angle: number;
   readonly animationOffset: number;
   readonly baseUrl: string;
-  readonly characterGroup: THREE.Group = new THREE.Group();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly queryBus: QueryBus;
   readonly skin: number;
@@ -58,8 +57,8 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     this.skin = entity.skin;
     this.threeLoadingManager = threeLoadingManager;
 
-    this.characterGroup.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
-    this.boundingBox = new THREE.Box3().setFromCenterAndSize(this.characterGroup.position, boundingBoxSize);
+    this.children.position.set(entity.origin[0], entity.origin[1], entity.origin[2]);
+    this.boundingBox = new THREE.Box3().setFromCenterAndSize(this.children.position, boundingBoxSize);
   }
 
   @cancelable()
@@ -94,9 +93,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     character.setSkin(this.skin);
     character.update(this.animationOffset);
 
-    this.characterGroup.add(character.root);
-    this.children.add(this.characterGroup);
-
+    this.children.add(character.root);
     this.character = character;
 
     this.setRotationY(THREE.MathUtils.degToRad(this.angle));
@@ -127,10 +124,6 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     return "MD2Character";
   }
 
-  getPosition(): THREE.Vector3 {
-    return this.characterGroup.position;
-  }
-
   setAnimationIdle(): void {
     const controls = this.getCharacter().controls;
 
@@ -148,11 +141,11 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   }
 
   setRotationY(rotationRadians: number): void {
-    this.characterGroup.rotation.y = rotationRadians;
+    this.children.rotation.y = rotationRadians;
   }
 
   setVelocity(velocity: THREE.Vector3): void {
-    this.characterGroup.position.add(velocity);
+    this.children.position.add(velocity);
     this.boundingBox.translate(velocity);
   }
 
