@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeBrush from "src/framework/classes/QuakeBrush";
 import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";

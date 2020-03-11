@@ -1,5 +1,3 @@
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-
 export default interface LoadingManager {
   background<T>(promise: Promise<T>, comment?: string): Promise<T>;
 

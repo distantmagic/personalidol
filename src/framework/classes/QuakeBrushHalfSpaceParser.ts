@@ -1,5 +1,4 @@
 import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";
-import QuakePointParser from "src/framework/classes/QuakePointParser";
 import QuakePointPartsParser from "src/framework/classes/QuakePointPartsParser";
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 

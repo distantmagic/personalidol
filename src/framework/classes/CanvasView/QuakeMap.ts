@@ -275,6 +275,8 @@ export default class QuakeMap extends CanvasView {
           default:
             throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unsupported entity class name: "${entityClassName}"`);
         }
+
+        return void 0;
       };
 
       quakeMapWorker.postMessage(

@@ -25,8 +25,6 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
   private cursorGroup: THREE.Group = new THREE.Group();
-  private isPointerDown: boolean = false;
-  private position: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
   private scale: number = 1;
   private spotLight: THREE.SpotLight = new THREE.SpotLight();
   private threeLoadingManager: THREE.LoadingManager;
@@ -117,7 +115,6 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   }
 
   setPosition(position: THREE.Vector3): void {
-    this.position = position;
     this.children.position.set(position.x + this.scale * 32, position.y + this.scale * 48, position.z + this.scale * 32);
   }
 

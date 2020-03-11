@@ -1,4 +1,3 @@
-import Logger from "src/framework/interfaces/Logger";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default interface ExceptionHandler {

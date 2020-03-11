@@ -3,6 +3,8 @@ import isEmpty from "lodash/isEmpty";
 
 import dispose from "src/framework/helpers/dispose";
 
+import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
+
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import cancelable from "src/framework/decorators/cancelable";
@@ -18,7 +20,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   readonly children: THREE.Group = new THREE.Group();
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly parentGroup: THREE.Group;
-  protected boundingBox: THREE.Box3 = new THREE.Box3();
+  protected boundingBox: null | THREE.Box3 = null;
   private _isAttached: boolean = false;
   private _isDisposed: boolean = false;
   private _isInCameraFrustum: boolean = false;
@@ -72,7 +74,13 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   }
 
   getBoundingBox(): THREE.Box3 {
-    return this.boundingBox;
+    const boundingBox = this.boundingBox;
+
+    if (!boundingBox) {
+      throw new CanvasViewException(this.loggerBreadcrumbs.add("getBoundingBox"), "Bounding box has never been computed, but it is expected to be.");
+    }
+
+    return boundingBox;
   }
 
   getChildren(): THREE.Group {

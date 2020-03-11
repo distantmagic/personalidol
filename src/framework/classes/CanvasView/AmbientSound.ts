@@ -61,7 +61,7 @@ export default class AmbientSound extends CanvasView {
 
             this.sound = sound;
 
-            resolve();
+            return void resolve();
           },
           undefined,
           reject

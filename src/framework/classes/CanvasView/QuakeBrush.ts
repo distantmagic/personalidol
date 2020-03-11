@@ -145,7 +145,6 @@ export default class QuakeBrush extends CanvasView {
   readonly entity: QuakeWorkerBrush;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly textureLoader: IQuakeMapTextureLoader;
-  private mesh: null | THREE.Mesh = null;
   private textureAtlas: null | THREE.DataTexture = null;
 
   constructor(
@@ -224,8 +223,6 @@ export default class QuakeBrush extends CanvasView {
 
     const material = getMaterial(textureAtlas, textureAtlasHeight / config.TEXTURE_SIZE);
     const mesh = new THREE.Mesh(geometry, material);
-
-    this.mesh = mesh;
 
     // TODO ios material behaves like if 'castShadow' if 'false'
     mesh.castShadow = true;

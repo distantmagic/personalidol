@@ -2,13 +2,11 @@ import * as THREE from "three";
 
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeBrushHalfSpace from "src/framework/classes/QuakeBrushHalfSpace";
 
 import { default as IQuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
 
 test("arguments are not changed", function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
   // prettier-ignore
   const halfSpace = new QuakeBrushHalfSpace(
     new THREE.Vector3(128, 128, 0),

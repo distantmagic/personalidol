@@ -31,8 +31,6 @@ export default class GLTFModel extends CanvasView {
   readonly queryBus: QueryBus;
   readonly texture: string;
   readonly threeLoadingManager: THREE.LoadingManager;
-  private baseMesh: null | THREE.Mesh = null;
-  private mesh: null | THREE.Mesh = null;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -66,9 +64,6 @@ export default class GLTFModel extends CanvasView {
     const texture = await this.queryBus.enqueue(cancelToken, textureQuery).whenExecuted();
 
     const baseMesh = getMesh(this.loggerBreadcrumbs.add("attach"), response.scene);
-
-    this.baseMesh = baseMesh;
-
     const boundingBox = new THREE.Box3();
 
     // @ts-ignore
@@ -117,8 +112,6 @@ export default class GLTFModel extends CanvasView {
     mesh.updateMatrix();
 
     this.children.add(mesh);
-
-    this.mesh = mesh;
   }
 
   getName(): "GLTFModel" {

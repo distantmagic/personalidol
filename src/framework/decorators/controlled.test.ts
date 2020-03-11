@@ -8,7 +8,6 @@ import { default as ControlTokenException } from "src/framework/classes/Exceptio
 import controlled from "src/framework/decorators/controlled";
 
 import ControllableDelegate from "src/framework/interfaces/ControllableDelegate";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import { default as IControllable } from "src/framework/interfaces/Controllable";
 import { default as IControlToken } from "src/framework/interfaces/ControlToken";
 import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -91,8 +90,6 @@ describe.each([
   test("fails when no incorrect control token is used", function() {
     const loggerBreadcrumbs = new LoggerBreadcrumbs();
     const foo = new Constructor(loggerBreadcrumbs, 6);
-    const controllable = findControllable(loggerBreadcrumbs, isDelegate, foo);
-    const controlToken = controllable.obtainControlToken();
     const invalidControlToken = new ControlToken(loggerBreadcrumbs);
 
     expect(function() {

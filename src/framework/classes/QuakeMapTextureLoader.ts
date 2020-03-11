@@ -18,7 +18,6 @@ export default class QuakeMapTextureLoader implements HasLoggerBreadcrumbs, IQua
   readonly textureLoader: THREE.TextureLoader;
   readonly texturesIndex: string[] = [];
   readonly texturesSources: Map<string, string> = new Map<string, string>();
-  private _lastId: number = 0;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, loadingManager: THREE.LoadingManager, queryBus: QueryBus) {
     this.loggerBreadcrumbs = loggerBreadcrumbs;
@@ -87,7 +86,5 @@ export default class QuakeMapTextureLoader implements HasLoggerBreadcrumbs, IQua
 
     this.texturesIndex.push(textureName);
     this.texturesSources.set(textureName, src);
-
-    this._lastId += 1;
   }
 }

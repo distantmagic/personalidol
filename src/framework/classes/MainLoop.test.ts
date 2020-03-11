@@ -1,8 +1,6 @@
-import ControlToken from "src/framework/classes/ControlToken";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import MainLoop from "src/framework/classes/MainLoop";
 import Scheduler from "src/framework/classes/Scheduler";
-import { default as MainLoopException } from "src/framework/classes/Exception/MainLoop";
 
 import { default as IControlToken } from "src/framework/interfaces/ControlToken";
 

@@ -13,7 +13,6 @@ import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class LoadingScreen extends CanvasView {
   private accumulatedDelta: number = 0;
-  private progress: number = 0;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, group: THREE.Group) {
     super(loggerBreadcrumbs, canvasViewBag, group);
@@ -42,9 +41,7 @@ export default class LoadingScreen extends CanvasView {
     return "LoadingScreen";
   }
 
-  setProgress(progress: number): void {
-    this.progress = progress;
-  }
+  setProgress(progress: number): void {}
 
   update(delta: number): void {
     this.accumulatedDelta += delta;

@@ -1,4 +1,3 @@
-import CancelToken from "src/framework/interfaces/CancelToken";
 import Query from "src/framework/interfaces/Query";
 
 export default interface CancelTokenQuery<T> {

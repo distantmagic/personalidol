@@ -4,17 +4,11 @@ import Exception from "src/framework/classes/Exception";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";
 import QuakeMapParser from "src/framework/classes/QuakeMapParser";
-import QuakeMapTextureLoader from "src/framework/classes/QuakeMapTextureLoader";
-import { default as PlainTextQuery } from "src/framework/classes/Query/PlainText";
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
 import QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import QuakeEntity from "src/framework/interfaces/QuakeEntity";
 import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
-
-import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
-import QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -87,7 +81,6 @@ function loadMap(loggerBreadcrumbs: ILoggerBreadcrumbs, quakeMapContent: string,
   for (let entity of quakeMapParser.parse()) {
     const entityClassName = entity.getClassName();
     const entityProperties = entity.getProperties();
-    let entityOrigin;
 
     switch (entityClassName) {
       case "func_group":

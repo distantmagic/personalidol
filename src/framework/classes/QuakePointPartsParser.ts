@@ -1,13 +1,10 @@
 import * as THREE from "three";
-import filter from "lodash/filter";
 
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
 import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import { default as IQuakePointParser } from "src/framework/interfaces/QuakePointParser";
-
-const REGEXP_WHITESPACE = /\s+/;
 
 /**
  * This class exists to provide consistency. Although it may seem redundant at

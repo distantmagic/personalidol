@@ -35,7 +35,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
   readonly queryBus: QueryBus;
   readonly threeLoadingManager: THREE.LoadingManager;
   private pointerVectorRotationPivot: THREE.Vector2 = new THREE.Vector2(0, 0);
-  private zeroVelocityVector: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+  // private zeroVelocityVector: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
