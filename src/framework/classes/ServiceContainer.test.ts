@@ -1,10 +1,13 @@
+import ServiceBuilder from "src/framework/classes/ServiceBuilder";
 import ServiceContainer from "src/framework/classes/ServiceContainer";
 
+// import { default as ServicesType } from "src/framework/types/Services";
+
 type Services = {
+  foo: Foo;
   bar: Bar;
   baz: Baz;
   booz: Booz;
-  foo: Foo;
   wooz: Wooz;
 };
 
@@ -47,94 +50,105 @@ class Wooz {
 test("builds only necessary dependencies", function() {
   const di = new ServiceContainer<Services>();
 
-  const fooMock = jest.fn(function() {
+  // --------------------------------------------------------------------------
+  // Foo
+
+  const buildFoo = jest.fn(function() {
     return new Foo();
   });
 
-  const barMock = jest.fn(function(dependencies) {
-    expect(Object.keys(dependencies)).toEqual(["foo"]);
-    expect(dependencies.foo).toBeInstanceOf(Foo);
+  di.register(
+    new (class extends ServiceBuilder<Services, "foo"> {
+      readonly key: "foo" = "foo";
 
-    return new Bar(dependencies.foo);
-  });
-
-  const bazMock = jest.fn(function(dependencies) {
-    expect(Object.keys(dependencies)).toEqual(["bar"]);
-    expect(dependencies.bar).toBeInstanceOf(Bar);
-    expect(dependencies.bar.foo).toBeInstanceOf(Foo);
-
-    return new Baz(dependencies.bar);
-  });
-
-  const boozMock = jest.fn(function(dependencies) {
-    expect(Object.keys(dependencies)).toEqual(["foo", "baz"]);
-    expect(dependencies.foo).toBeInstanceOf(Foo);
-    expect(dependencies.baz).toBeInstanceOf(Baz);
-    expect(dependencies.baz.bar).toBeInstanceOf(Bar);
-    expect(dependencies.baz.bar.foo).toBeInstanceOf(Foo);
-    expect(dependencies.baz.bar.foo).toBe(dependencies.foo);
-
-    return new Booz(dependencies.foo, dependencies.baz);
-  });
-
-  const woozMock = jest.fn(function(dependencies) {
-    expect(Object.keys(dependencies)).toEqual(["baz"]);
-    expect(dependencies.baz).toBeInstanceOf(Baz);
-    expect(dependencies.baz.bar).toBeInstanceOf(Bar);
-    expect(dependencies.baz.bar.foo).toBeInstanceOf(Foo);
-
-    return new Wooz(dependencies.baz);
-  });
-
-  di.register("foo", [], fooMock);
-  di.register("bar", ["foo"], barMock);
-  di.register("baz", ["bar"], bazMock);
-  di.register("booz", ["foo", "baz"], boozMock);
-  di.register("wooz", ["baz"], woozMock);
-
-  expect(di.getServiceDependencies("foo")).toEqual([]);
-  expect(di.getServiceDependencies("bar")).toEqual(["foo"]);
-  expect(di.getServiceDependencies("baz")).toEqual(["bar"]);
-  expect(di.getServiceDependencies("booz")).toEqual(["foo", "baz"]);
-  expect(di.getServiceDependencies("wooz")).toEqual(["baz"]);
+      build(): Foo {
+        return buildFoo();
+      }
+    })()
+  );
 
   expect(di.reuse("foo")).toBeInstanceOf(Foo);
 
-  expect(fooMock.mock.calls).toHaveLength(1);
-  expect(barMock.mock.calls).toHaveLength(0);
-  expect(bazMock.mock.calls).toHaveLength(0);
-  expect(boozMock.mock.calls).toHaveLength(0);
-  expect(woozMock.mock.calls).toHaveLength(0);
+  // --------------------------------------------------------------------------
+  // Bar
 
-  expect(di.reuse("bar")).toBeInstanceOf(Bar);
+  // const buildBar = jest.fn(function (dependencies: Pick<ServicesType, "foo">) {
+  //   return new Bar(dependencies.foo);
+  // });
 
-  expect(fooMock.mock.calls).toHaveLength(2);
-  expect(barMock.mock.calls).toHaveLength(1);
-  expect(bazMock.mock.calls).toHaveLength(0);
-  expect(boozMock.mock.calls).toHaveLength(0);
-  expect(woozMock.mock.calls).toHaveLength(0);
+  // di.register(
+  //   new (class extends ServiceBuilder<Services, "bar", {
+  //     "foo": Foo
+  //   }> {
+  //     readonly dependencies: ["foo"] = ["foo"];
+  //     readonly key: "bar" = "bar";
 
-  expect(di.reuse("baz")).toBeInstanceOf(Baz);
+  //     build(dependencies: Pick<ServicesType, "foo">): Bar {
+  //       return buildBar(dependencies);
+  //     }
+  //   })()
+  // );
 
-  expect(fooMock.mock.calls).toHaveLength(3);
-  expect(barMock.mock.calls).toHaveLength(2);
-  expect(bazMock.mock.calls).toHaveLength(1);
-  expect(boozMock.mock.calls).toHaveLength(0);
-  expect(woozMock.mock.calls).toHaveLength(0);
+  // // expect(di.reuse("bar")).toBeInstanceOf(Bar);
 
-  expect(di.reuse("booz")).toBeInstanceOf(Booz);
+  // // --------------------------------------------------------------------------
+  // // Baz
 
-  expect(fooMock.mock.calls).toHaveLength(4);
-  expect(barMock.mock.calls).toHaveLength(3);
-  expect(bazMock.mock.calls).toHaveLength(2);
-  expect(boozMock.mock.calls).toHaveLength(1);
-  expect(woozMock.mock.calls).toHaveLength(0);
+  // const buildBaz = jest.fn(function (dependencies: Pick<ServicesType, "bar">) {
+  //   return new Baz(dependencies.bar);
+  // });
 
-  expect(di.reuse("wooz")).toBeInstanceOf(Wooz);
+  // di.register(
+  //   new (class extends ServiceBuilder<Services, "baz", {
+  //     "bar": Bar
+  //   }> {
+  //     readonly dependencies: ["bar"] = ["bar"];
+  //     readonly key: "baz" = "baz";
 
-  expect(fooMock.mock.calls).toHaveLength(5);
-  expect(barMock.mock.calls).toHaveLength(4);
-  expect(bazMock.mock.calls).toHaveLength(3);
-  expect(boozMock.mock.calls).toHaveLength(1);
-  expect(woozMock.mock.calls).toHaveLength(1);
+  //     build(dependencies: Pick<ServicesType, "bar">): Baz {
+  //       return buildBaz(dependencies);
+  //     }
+  //   })()
+  // );
+
+  // // --------------------------------------------------------------------------
+  // // Booz
+
+  // const buildBooz = jest.fn(function (dependencies: Pick<ServicesType, "baz" | "foo">) {
+  //   return new Booz(dependencies.foo, dependencies.baz);
+  // });
+
+  // di.register(
+  //   new (class extends ServiceBuilder<Services, "booz", {
+  //     "baz": Baz,
+  //     "foo": Foo
+  //   }> {
+  //     readonly dependencies: ReadonlyArray<"baz" | "foo"> = ["baz", "foo"];
+  //     readonly key: "booz" = "booz";
+
+  //     build(dependencies: Pick<ServicesType, "baz" | "foo">): Booz {
+  //       return buildBooz(dependencies);
+  //     }
+  //   })()
+  // );
+
+  // // --------------------------------------------------------------------------
+  // // Wooz
+
+  // const buildWooz = jest.fn(function (dependencies: Pick<ServicesType, "baz">) {
+  //   return new Wooz(dependencies.baz);
+  // });
+
+  // di.register(
+  //   new (class extends ServiceBuilder<Services, "wooz", {
+  //     "baz": Baz
+  //   }> {
+  //     readonly dependencies: ReadonlyArray<"baz"> = ["baz"];
+  //     readonly key: "wooz" = "wooz";
+
+  //     build(dependencies: Pick<ServicesType, "baz">): Wooz {
+  //       return buildWooz(dependencies);
+  //     }
+  //   })()
+  // );
 });
