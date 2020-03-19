@@ -3,17 +3,18 @@ import isEmpty from "lodash/isEmpty";
 import ServiceBuilder from "src/framework/interfaces/ServiceBuilder";
 import { default as ServiceContainerInterface } from "src/framework/interfaces/ServiceContainer";
 
+import ServiceBuilderParameters from "src/framework/types/ServiceBuilderParameters";
 import { default as ServiceDependenciesType } from "src/framework/types/ServiceDependencies";
 import { default as ServicesType } from "src/framework/types/Services";
 
 type RegisteredServices<Services extends ServicesType> = {
-  [key in keyof Services]?: ServiceBuilder<Services, key, ServiceDependenciesType<Services>>;
+  [key in keyof Services]?: ServiceBuilder<Services, key, ServiceDependenciesType<Services>, ServiceBuilderParameters>;
 };
 
 export default class ServiceContainer<Services extends ServicesType> implements ServiceContainerInterface<Services> {
   private readonly registeredServices: RegisteredServices<Services> = {} as RegisteredServices<Services>;
 
-  register<ServiceKey extends keyof Services>(serviceBuilder: ServiceBuilder<Services, ServiceKey, ServiceDependenciesType<Services>>): void {
+  register<ServiceKey extends keyof Services>(serviceBuilder: ServiceBuilder<Services, ServiceKey, ServiceDependenciesType<Services>, ServiceBuilderParameters>): void {
     if (this.registeredServices.hasOwnProperty(serviceBuilder.key)) {
       throw new Error(`Service is already registered: "${serviceBuilder.key}"`);
     }
@@ -21,7 +22,11 @@ export default class ServiceContainer<Services extends ServicesType> implements 
     this.registeredServices[serviceBuilder.key] = serviceBuilder;
   }
 
-  reuse<ServiceKey extends keyof Services>(serviceKey: ServiceKey, prebuildServices: ServiceDependenciesType<Services> = {}): Services[ServiceKey] {
+  reuse<ServiceKey extends keyof Services>(
+    serviceKey: ServiceKey,
+    parameters: ServiceBuilderParameters = {},
+    prebuildServices: ServiceDependenciesType<Services> = {}
+  ): Services[ServiceKey] {
     const serviceBuilder = this.registeredServices[serviceKey];
 
     if (!serviceBuilder) {
@@ -29,19 +34,19 @@ export default class ServiceContainer<Services extends ServicesType> implements 
     }
 
     if (isEmpty(serviceBuilder.dependencies)) {
-      return serviceBuilder.build({});
+      return serviceBuilder.build({}, parameters);
     }
 
     const dependencies: ServiceDependenciesType<Services> = {};
 
     for (let dependency of serviceBuilder.dependencies) {
       if (!prebuildServices.hasOwnProperty(dependency)) {
-        prebuildServices[dependency] = this.reuse(dependency, prebuildServices);
+        prebuildServices[dependency] = this.reuse(dependency, parameters, prebuildServices);
       }
 
       dependencies[dependency] = prebuildServices[dependency];
     }
 
-    return serviceBuilder.build(dependencies);
+    return serviceBuilder.build(dependencies, parameters);
   }
 }

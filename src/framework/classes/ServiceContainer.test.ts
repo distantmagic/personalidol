@@ -9,6 +9,8 @@ type Services = {
   baz: Baz;
   booz: Booz;
   wooz: Wooz;
+  xar: Xar;
+  zooz: Zooz;
 };
 
 class Foo {}
@@ -44,6 +46,22 @@ class Wooz {
 
   constructor(baz: Baz) {
     this.baz = baz;
+  }
+}
+
+class Xar {
+  readonly parameter: number;
+
+  constructor(parameter: number) {
+    this.parameter = parameter;
+  }
+}
+
+class Zooz {
+  readonly xar: Xar;
+
+  constructor(xar: Xar) {
+    this.xar = xar;
   }
 }
 
@@ -197,4 +215,54 @@ test("builds only necessary dependencies", function() {
   expect(buildWooz.mock.calls.length).toBe(0);
 
   expect(di.reuse("wooz")).toBeInstanceOf(Wooz);
+});
+
+test("builds service with parameters", function() {
+  const di = new ServiceContainer<Services>();
+
+  di.register(
+    new (class extends ServiceBuilder<Services, "xar"> {
+      readonly key: "xar" = "xar";
+
+      build(
+        dependencies: {},
+        parameters: {
+          parameter: number;
+        }
+      ): Xar {
+        return new Xar(parameters.parameter);
+      }
+    })()
+  );
+
+  di.register(
+    new (class extends ServiceBuilder<
+      Services,
+      "zooz",
+      {
+        xar: Xar;
+      }
+    > {
+      readonly dependencies: ["xar"] = ["xar"];
+      readonly key: "zooz" = "zooz";
+
+      build(dependencies: Pick<ServicesType, "xar">): Zooz {
+        return new Zooz(dependencies.xar);
+      }
+    })()
+  );
+
+  const xar = di.reuse("xar", {
+    parameter: 3,
+  });
+
+  expect(xar).toBeInstanceOf(Xar);
+  expect(xar.parameter).toBe(3);
+
+  const zooz = di.reuse("zooz", {
+    parameter: 5,
+  });
+
+  expect(zooz).toBeInstanceOf(Zooz);
+  expect(zooz.xar.parameter).toBe(5);
 });
