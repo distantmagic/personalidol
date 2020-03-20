@@ -1,17 +1,23 @@
 import * as THREE from "three";
 
-import di from "src/framework/helpers/di";
-
 import AmbientLight from "src/framework/classes/CanvasView/AmbientLight";
+import CameraFrustumBus from "src/framework/classes/CameraFrustumBus";
+import CancelToken from "src/framework/classes/CancelToken";
+import CanvasViewBag from "src/framework/classes/CanvasViewBag";
+import CanvasViewBus from "src/framework/classes/CanvasViewBus";
+import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import Scheduler from "src/framework/classes/Scheduler";
 
 import QuakeWorkerLightAmbient from "src/framework/types/QuakeWorkerLightAmbient";
 
 test("is cleanly attached and disposed", async function() {
-  const loggerBreadcrumbs = di.reuse("loggerBreadcrumbs");
-  const cancelToken = di.reuse("cancelToken");
-  const canvasViewBag = di.reuse("canvasViewBag", {
-    camera: new THREE.PerspectiveCamera(),
-  });
+  const loggerBreadcrumbs = new LoggerBreadcrumbs();
+  const cancelToken = new CancelToken(loggerBreadcrumbs);
+  const scheduler = new Scheduler(loggerBreadcrumbs);
+  const camera = new THREE.PerspectiveCamera();
+  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
+  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
   const entity: QuakeWorkerLightAmbient = {
     classname: "light_ambient",

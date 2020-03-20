@@ -48,7 +48,7 @@ class ImproperDisposeFooCanvasView extends CanvasView {
   }
 }
 
-test("cannot attach the same view more than once", async function() {
+function createContext() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -58,11 +58,27 @@ test("cannot attach the same view more than once", async function() {
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 
-  const canvasView = new FooCanvasView(loggerBreadcrumbs, canvasViewBag, group, SchedulerUpdateScenario.Always);
+  return {
+    cancelToken: cancelToken,
+    canvasViewBag: canvasViewBag,
+    canvasViewBus: canvasViewBus,
+    group: group,
+    loggerBreadcrumbs: loggerBreadcrumbs,
+  };
+}
 
-  await canvasViewBus.add(cancelToken, canvasView);
+let context = createContext();
 
-  return expect(canvasViewBus.add(cancelToken, canvasView)).rejects.toThrow(CanvasViewException);
+beforeEach(function() {
+  context = createContext();
+});
+
+test("cannot attach the same view more than once", async function() {
+  const canvasView = new FooCanvasView(context.loggerBreadcrumbs, context.canvasViewBag, context.group, SchedulerUpdateScenario.Always);
+
+  await context.canvasViewBus.add(context.cancelToken, canvasView);
+
+  return expect(context.canvasViewBus.add(context.cancelToken, canvasView)).rejects.toThrow(CanvasViewException);
 });
 
 test("cannot detach the same view more than once", async function() {

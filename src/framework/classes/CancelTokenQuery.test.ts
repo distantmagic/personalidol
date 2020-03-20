@@ -28,50 +28,47 @@ class FooQuery extends Query<number> {
   }
 }
 
-test("cannot be executed more than once", function() {
+function createContext() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const query = new FooQuery();
   const cancelTokenQuery = new CancelTokenQuery(loggerBreadcrumbs, cancelToken, query);
 
+  return {
+    cancelTokenQuery: cancelTokenQuery,
+  };
+}
+
+let context = createContext();
+
+beforeEach(function() {
+  context = createContext();
+});
+
+test("cannot be executed more than once", function() {
   expect(function() {
-    cancelTokenQuery.execute();
-    cancelTokenQuery.execute();
+    context.cancelTokenQuery.execute();
+    context.cancelTokenQuery.execute();
   }).toThrow(CancelTokenException);
 }, 100);
 
 test("cannot get result before execution is finished", function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const query = new FooQuery();
-  const cancelTokenQuery = new CancelTokenQuery(loggerBreadcrumbs, cancelToken, query);
-
   expect(function() {
-    cancelTokenQuery.execute();
-    cancelTokenQuery.getResult();
+    context.cancelTokenQuery.execute();
+    context.cancelTokenQuery.getResult();
   }).toThrow(CancelTokenException);
 }, 100);
 
 test("cannot get result if query is not executed at all", function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const query = new FooQuery();
-  const cancelTokenQuery = new CancelTokenQuery(loggerBreadcrumbs, cancelToken, query);
-
   expect(function() {
-    cancelTokenQuery.getResult();
+    context.cancelTokenQuery.getResult();
   }).toThrow(CancelTokenException);
 }, 100);
 
 test("cannot set result more than once", function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const query = new FooQuery();
-  const cancelTokenQuery = new CancelTokenQuery(loggerBreadcrumbs, cancelToken, query);
-
-  cancelTokenQuery.setExecuted(4);
+  context.cancelTokenQuery.setExecuted(4);
 
   expect(function() {
-    cancelTokenQuery.setExecuted(5);
+    context.cancelTokenQuery.setExecuted(5);
   }).toThrow(CancelTokenException);
 }, 100);

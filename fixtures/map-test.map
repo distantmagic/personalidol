@@ -15,13 +15,15 @@
 }
 // entity 1
 {
-"classname" "info_player_start"
+"classname" "player"
 "origin" "-32 -32 40"
 "foo" "bar\"baz\"booz"
 }
 // entity 2
 {
-"classname" "light"
+"classname" "light_point"
+"color" "FFC000"
+"decay" "2"
 "origin" "16 -32 40"
-"light" "255"
+"intensity" "255"
 }

@@ -34,7 +34,6 @@ scheduler.update.add(function(delta: number) {
 });
 
 function onMessagePortMessage(evt: MessageEvent) {
-  // console.log(evt.data);
   world.add({
     // type of shape : sphere, box, cylinder
     type: "box",

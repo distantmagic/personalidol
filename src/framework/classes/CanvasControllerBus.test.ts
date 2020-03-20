@@ -49,7 +49,7 @@ class ImproperDisposeCanvasController extends CanvasController {
   async dispose(cancelToken: CancelToken): Promise<void> {}
 }
 
-test("cannot attach the same controller more than once", async function() {
+function createContext() {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -61,92 +61,62 @@ test("cannot attach the same controller more than once", async function() {
   const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
-  const canvasController = new FooCanvasController(canvasViewBag, SchedulerUpdateScenario.Always);
+  return {
+    cancelToken: cancelToken,
+    canvasControllerBus: canvasControllerBus,
+    canvasViewBag: canvasViewBag,
+  };
+}
 
-  await canvasControllerBus.add(cancelToken, canvasController);
+let context = createContext();
 
-  return expect(canvasControllerBus.add(cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
+beforeEach(function() {
+  context = createContext();
+});
+
+test("cannot attach the same controller more than once", async function() {
+  const canvasController = new FooCanvasController(context.canvasViewBag, SchedulerUpdateScenario.Always);
+
+  await context.canvasControllerBus.add(context.cancelToken, canvasController);
+
+  return expect(context.canvasControllerBus.add(context.cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
 test("cannot detach the same controller more than once", async function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const scheduler = new Scheduler(loggerBreadcrumbs);
-  const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const camera = new THREE.PerspectiveCamera();
-  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
-  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
+  const canvasController = new FooCanvasController(context.canvasViewBag, SchedulerUpdateScenario.Never);
 
-  const canvasController = new FooCanvasController(canvasViewBag, SchedulerUpdateScenario.Never);
+  await context.canvasControllerBus.add(context.cancelToken, canvasController);
+  await context.canvasControllerBus.delete(context.cancelToken, canvasController);
 
-  await canvasControllerBus.add(cancelToken, canvasController);
-  await canvasControllerBus.delete(cancelToken, canvasController);
-
-  return expect(canvasControllerBus.delete(cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
+  return expect(context.canvasControllerBus.delete(context.cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
 test("fails when controller attach is improperly implemented", async function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const scheduler = new Scheduler(loggerBreadcrumbs);
-  const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const camera = new THREE.PerspectiveCamera();
-  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
-  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
+  const canvasController = new ImproperAttachCanvasController(context.canvasViewBag);
 
-  const canvasController = new ImproperAttachCanvasController(canvasViewBag);
-
-  return expect(canvasControllerBus.add(cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
+  return expect(context.canvasControllerBus.add(context.cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
 test("fails when controller dispose is improperly implemented", async function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const scheduler = new Scheduler(loggerBreadcrumbs);
-  const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const camera = new THREE.PerspectiveCamera();
-  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
-  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
+  const canvasController = new ImproperDisposeCanvasController(context.canvasViewBag);
 
-  const canvasController = new ImproperDisposeCanvasController(canvasViewBag);
+  await context.canvasControllerBus.add(context.cancelToken, canvasController);
 
-  await canvasControllerBus.add(cancelToken, canvasController);
-
-  return expect(canvasControllerBus.delete(cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
+  return expect(context.canvasControllerBus.delete(context.cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
 test("properly attaches and detaches canvas controllers", async function() {
-  const loggerBreadcrumbs = new LoggerBreadcrumbs();
-  const cancelToken = new CancelToken(loggerBreadcrumbs);
-  const scheduler = new Scheduler(loggerBreadcrumbs);
-  const htmlElement = document.createElement("div");
-  const htmlElementResizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs, htmlElement);
-  const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
-  const camera = new THREE.PerspectiveCamera();
-  const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
-  const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
-
-  const canvasController = new FooCanvasController(canvasViewBag, SchedulerUpdateScenario.Always);
+  const canvasController = new FooCanvasController(context.canvasViewBag, SchedulerUpdateScenario.Always);
 
   expect(canvasController.isAttached()).toBe(false);
   expect(canvasController.isDisposed()).toBe(false);
 
-  await canvasControllerBus.add(cancelToken, canvasController);
+  await context.canvasControllerBus.add(context.cancelToken, canvasController);
 
   expect(canvasController.isAttached()).toBe(true);
   expect(canvasController.isDisposed()).toBe(false);
 
-  await canvasControllerBus.delete(cancelToken, canvasController);
+  await context.canvasControllerBus.delete(context.cancelToken, canvasController);
 
   expect(canvasController.isAttached()).toBe(false);
   expect(canvasController.isDisposed()).toBe(true);
