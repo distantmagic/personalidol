@@ -2,17 +2,17 @@ import isEmpty from "lodash/isEmpty";
 
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CameraFrustumBus from "src/framework/interfaces/CameraFrustumBus";
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasView from "src/framework/interfaces/CanvasView";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import Scheduler from "src/framework/interfaces/Scheduler";
-import { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CameraFrustumBus from "src/framework/interfaces/CameraFrustumBus";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasView from "src/framework/interfaces/CanvasView";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type Scheduler from "src/framework/interfaces/Scheduler";
+import type { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
 
 export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewBus {
   readonly cameraFrustumBus: CameraFrustumBus;

@@ -1,5 +1,5 @@
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class Exception extends Error implements HasLoggerBreadcrumbs {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

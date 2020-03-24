@@ -1,6 +1,6 @@
 import { default as EnvironmentException } from "src/framework/classes/Exception/Environment";
 
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default function env(loggerBreadcrumbs: LoggerBreadcrumbs, name: string, dft: null | string = null): string {
   const value = process.env[name];

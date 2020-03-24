@@ -8,7 +8,7 @@ import QueryBus from "src/framework/classes/QueryBus";
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 import { default as SilentLogger } from "src/framework/classes/Logger/Silent";
 
-test("indexes textures and keeps consistent id registry", function() {
+test("indexes textures and keeps consistent id registry", function () {
   const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs);
@@ -28,7 +28,7 @@ test("indexes textures and keeps consistent id registry", function() {
   expect(textureLoader.getTextureIndex("c")).toBe(2);
 });
 
-test("fails when texture definitions are inconsistent", function() {
+test("fails when texture definitions are inconsistent", function () {
   const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs);
@@ -39,18 +39,18 @@ test("fails when texture definitions are inconsistent", function() {
 
   expect(textureLoader.getTextureIndex("a")).toBe(0);
 
-  expect(function() {
+  expect(function () {
     textureLoader.registerTexture("a", "b.png");
   }).toThrow(QuakeMapException);
 });
 
-test("fails when texture does not exist", function() {
+test("fails when texture does not exist", function () {
   const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const queryBus = new QueryBus(exceptionHandler, loggerBreadcrumbs);
   const textureLoader = new QuakeMapTextureLoader(loggerBreadcrumbs, new THREE.LoadingManager(), queryBus);
 
-  expect(function() {
+  expect(function () {
     textureLoader.getTextureIndex("a");
   }).toThrow(QuakeMapException);
 });

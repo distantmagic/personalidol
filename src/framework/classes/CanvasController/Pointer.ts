@@ -4,23 +4,23 @@ import autoBind from "auto-bind";
 import CanvasController from "src/framework/classes/CanvasController";
 import { default as CursorView } from "src/framework/classes/CanvasView/Cursor";
 
-import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import ElementPosition from "src/framework/interfaces/ElementPosition";
-import ElementSize from "src/framework/interfaces/ElementSize";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoadingManager from "src/framework/interfaces/LoadingManager";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import PointerState from "src/framework/interfaces/PointerState";
-import QueryBus from "src/framework/interfaces/QueryBus";
-import Scheduler from "src/framework/interfaces/Scheduler";
-import { default as ICursorCanvasView } from "src/framework/interfaces/CanvasView/Cursor";
-import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
+import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type ElementPosition from "src/framework/interfaces/ElementPosition";
+import type ElementSize from "src/framework/interfaces/ElementSize";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoadingManager from "src/framework/interfaces/LoadingManager";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type PointerState from "src/framework/interfaces/PointerState";
+import type QueryBus from "src/framework/interfaces/QueryBus";
+import type Scheduler from "src/framework/interfaces/Scheduler";
+import type { default as ICursorCanvasView } from "src/framework/interfaces/CanvasView/Cursor";
+import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
 export default class Pointer extends CanvasController implements HasLoggerBreadcrumbs {
   readonly cursorView: ICursorCanvasView;

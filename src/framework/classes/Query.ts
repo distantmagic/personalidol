@@ -1,5 +1,5 @@
-import CancelToken from "src/framework/interfaces/CancelToken";
-import { default as IQuery } from "src/framework/interfaces/Query";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type { default as IQuery } from "src/framework/interfaces/Query";
 
 export default abstract class Query<T> implements IQuery<T> {
   abstract execute(cancelToken: CancelToken): Promise<T>;

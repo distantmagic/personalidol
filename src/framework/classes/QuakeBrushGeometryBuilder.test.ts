@@ -3,7 +3,7 @@ import QuakeBrush from "src/framework/classes/QuakeBrush";
 import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryBuilder";
 import QuakeBrushHalfSpaceParser from "src/framework/classes/QuakeBrushHalfSpaceParser";
 
-test("generates geometry from quake brush", function() {
+test("generates geometry from quake brush", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush = new QuakeBrush(loggerBreadcrumbs, [
     new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0 1 1").parse(),

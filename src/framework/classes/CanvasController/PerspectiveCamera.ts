@@ -5,18 +5,18 @@ import clamp from "lodash/clamp";
 import CanvasController from "src/framework/classes/CanvasController";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
-import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import ElementSize from "src/framework/interfaces/ElementSize";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
-import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
+import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type ElementSize from "src/framework/interfaces/ElementSize";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
 export default class PerspectiveCamera extends CanvasController implements HasLoggerBreadcrumbs, IPerspectiveCameraController {
   readonly camera: THREE.PerspectiveCamera;

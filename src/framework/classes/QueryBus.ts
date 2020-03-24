@@ -7,17 +7,17 @@ import QueryBatch from "src/framework/classes/QueryBatch";
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import Query from "src/framework/interfaces/Query";
-import { default as ICancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
-import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
-import { default as IQueryBus } from "src/framework/interfaces/QueryBus";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type Query from "src/framework/interfaces/Query";
+import type { default as ICancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
+import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import type { default as IQueryBus } from "src/framework/interfaces/QueryBus";
 
-import QueryBusOnEnqueuedCallback from "src/framework/types/QueryBusOnEnqueuedCallback";
-import QueryBusQueueCollection from "src/framework/types/QueryBusQueueCollection";
+import type QueryBusOnEnqueuedCallback from "src/framework/types/QueryBusOnEnqueuedCallback";
+import type QueryBusQueueCollection from "src/framework/types/QueryBusQueueCollection";
 
 export default class QueryBus implements HasLoggerBreadcrumbs, IQueryBus {
   readonly enqueuedCallbacks: IEventListenerSet<[Query<any>]>;

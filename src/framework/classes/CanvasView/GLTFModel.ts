@@ -7,12 +7,12 @@ import { default as TextureQuery } from "src/framework/classes/Query/Texture";
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QueryBus from "src/framework/interfaces/QueryBus";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QueryBus from "src/framework/interfaces/QueryBus";
 
-import QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
+import type QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
 
 function getMesh(loggerBreadcrumbs: LoggerBreadcrumbs, group: THREE.Group): THREE.Mesh {
   for (let child of group.children) {

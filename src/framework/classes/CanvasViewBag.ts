@@ -3,12 +3,12 @@ import isEmpty from "lodash/isEmpty";
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasView from "src/framework/interfaces/CanvasView";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
-import { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasView from "src/framework/interfaces/CanvasView";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import type { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
 
 export default class CanvasViewBag implements HasLoggerBreadcrumbs, ICanvasViewBag {
   readonly canvasViewBus: ICanvasViewBus;

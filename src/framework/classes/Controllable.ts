@@ -1,10 +1,10 @@
 import ControlToken from "src/framework/classes/ControlToken";
 import { default as ControlTokenException } from "src/framework/classes/Exception/ControlToken";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IControllable } from "src/framework/interfaces/Controllable";
-import { default as IControlToken } from "src/framework/interfaces/ControlToken";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as IControllable } from "src/framework/interfaces/Controllable";
+import type { default as IControlToken } from "src/framework/interfaces/ControlToken";
 
 export default class Controllable implements HasLoggerBreadcrumbs, IControllable {
   private controlToken: null | IControlToken = null;

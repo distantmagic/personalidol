@@ -4,7 +4,7 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeBrush from "src/framework/classes/QuakeBrush";
 import QuakeBrushHalfSpaceParser from "src/framework/classes/QuakeBrushHalfSpaceParser";
 
-test("generates vertices from parsed halfspaces", function() {
+test("generates vertices from parsed halfspaces", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush = new QuakeBrush(loggerBreadcrumbs, [
     new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0 1 1").parse(),
@@ -27,7 +27,7 @@ test("generates vertices from parsed halfspaces", function() {
   expect(vertices[7].equals(new THREE.Vector3(64, 16, 64))).toBe(true);
 });
 
-test("finds halfspace by coplanar points", function() {
+test("finds halfspace by coplanar points", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeBrush = new QuakeBrush(loggerBreadcrumbs, [
     new QuakeBrushHalfSpaceParser(loggerBreadcrumbs, "( -64 -64 -16 ) ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty 0 0 0 1 1").parse(),

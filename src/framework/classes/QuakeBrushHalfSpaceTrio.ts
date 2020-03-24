@@ -5,10 +5,10 @@ import isEqualWithEpsilon from "src/framework/helpers/isEqualWithEpsilon";
 
 import Exception from "src/framework/classes/Exception";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
-import { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
+import type { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
 function checkIntersectingPointDeterminant(det: number): boolean {
   // normally it should be enough to check if determinant !== 0, but due to

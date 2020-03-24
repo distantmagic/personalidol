@@ -1,12 +1,12 @@
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
-test("has / breadcrumb", function() {
+test("has / breadcrumb", function () {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   expect(breadcrumbs.asString()).toBe("/");
 });
 
-test("is immutable", function() {
+test("is immutable", function () {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   const breadcrumbsFoo = breadcrumbs.add("foo");
@@ -21,7 +21,7 @@ test("is immutable", function() {
   expect(breadcrumbsFooBar.asString()).toBe("/foo/bar");
 });
 
-test("is memoized", function() {
+test("is memoized", function () {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   const breadcrumbsFoo1 = breadcrumbs.add("foo");
@@ -32,7 +32,7 @@ test("is memoized", function() {
   expect(breadcrumbsFoo1).toBe(breadcrumbsFoo2);
 });
 
-test("is memoized and distinguishes branches", function() {
+test("is memoized and distinguishes branches", function () {
   const breadcrumbs = new LoggerBreadcrumbs();
 
   const breadcrumbsFoo1 = breadcrumbs.add("foo");
@@ -42,13 +42,8 @@ test("is memoized and distinguishes branches", function() {
   expect(breadcrumbsFoo1).not.toBe(breadcrumbsFoo2);
 });
 
-test("is stringable", function() {
+test("is stringable", function () {
   const breadcrumbs = new LoggerBreadcrumbs();
 
-  expect(
-    breadcrumbs
-      .add("foo")
-      .add("bar baz")
-      .asString()
-  ).toEqual('/foo/"bar baz"');
+  expect(breadcrumbs.add("foo").add("bar baz").asString()).toEqual('/foo/"bar baz"');
 });

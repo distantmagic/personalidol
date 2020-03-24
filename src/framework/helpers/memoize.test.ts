@@ -1,6 +1,6 @@
 import memoize from "src/framework/helpers/memoize";
 
-test("calls function only when required variables change", function() {
+test("calls function only when required variables change", function () {
   const mockCallback = jest.fn();
 
   memoize(mockCallback, [1, 2, 3]);

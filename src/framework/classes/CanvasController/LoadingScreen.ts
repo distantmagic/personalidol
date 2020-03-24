@@ -7,19 +7,19 @@ import CanvasController from "src/framework/classes/CanvasController";
 import { default as LoadingScreenView } from "src/framework/classes/CanvasView/LoadingScreen";
 import { default as PerspectiveCameraController } from "src/framework/classes/CanvasController/PerspectiveCamera";
 
-import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import ElementSize from "src/framework/interfaces/ElementSize";
-import LoadingManager from "src/framework/interfaces/LoadingManager";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ILoadingScreenView } from "src/framework/interfaces/CanvasView/LoadingScreen";
-import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
+import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type ElementSize from "src/framework/interfaces/ElementSize";
+import type LoadingManager from "src/framework/interfaces/LoadingManager";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as ILoadingScreenView } from "src/framework/interfaces/CanvasView/LoadingScreen";
+import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
 export default class LoadingScreen extends CanvasController {
   readonly canvasControllerBus: CanvasControllerBus;

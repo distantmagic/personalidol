@@ -1,13 +1,13 @@
 import CancelTokenException from "src/framework/classes/Exception/CancelToken";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 
-import Canceled from "src/framework/interfaces/Exception/Canceled";
-import CancelToken from "src/framework/interfaces/CancelToken";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import Query from "src/framework/interfaces/Query";
-import { default as ICancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
-import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import type Canceled from "src/framework/interfaces/Exception/Canceled";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type Query from "src/framework/interfaces/Query";
+import type { default as ICancelTokenQuery } from "src/framework/interfaces/CancelTokenQuery";
+import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
 export default class CancelTokenQuery<T> implements ICancelTokenQuery<T>, HasLoggerBreadcrumbs {
   private _isExecuted: boolean = false;
@@ -32,7 +32,7 @@ export default class CancelTokenQuery<T> implements ICancelTokenQuery<T>, HasLog
 
     this._isExecuting = true;
 
-    return this.query.execute(this.cancelToken).then(result => {
+    return this.query.execute(this.cancelToken).then((result) => {
       this.setExecuted(result);
 
       return result;

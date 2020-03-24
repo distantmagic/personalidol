@@ -58,11 +58,11 @@ if ("visible" === window.document.visibilityState) {
 
 busClock.interval(cancelToken, queryBus.tick);
 
-window.addEventListener("beforeunload", function() {
+window.addEventListener("beforeunload", function () {
   cancelToken.cancel(loggerBreadcrumbs.add("beforeunload"));
 });
 
-document.addEventListener("visibilitychange", function() {
+document.addEventListener("visibilitychange", function () {
   if (document.visibilityState === "visible") {
     mainLoop.start(mainLoopControlToken);
   } else {

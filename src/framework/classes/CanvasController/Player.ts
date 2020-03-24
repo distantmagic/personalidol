@@ -4,23 +4,23 @@ import autoBind from "auto-bind";
 import CanvasController from "src/framework/classes/CanvasController";
 import { default as MD2CharacterView } from "src/framework/classes/CanvasView/MD2Character";
 
+import cancelable from "src/framework/decorators/cancelable";
+
 import PointerButtonNames from "src/framework/enums/PointerButtonNames";
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
-import cancelable from "src/framework/decorators/cancelable";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoadingManager from "src/framework/interfaces/LoadingManager";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type PointerState from "src/framework/interfaces/PointerState";
+import type QueryBus from "src/framework/interfaces/QueryBus";
+import type { default as IMD2CharacterView } from "src/framework/interfaces/CanvasView/MD2Character";
+import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
+import type { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoadingManager from "src/framework/interfaces/LoadingManager";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import PointerState from "src/framework/interfaces/PointerState";
-import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as IMD2CharacterView } from "src/framework/interfaces/CanvasView/MD2Character";
-import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
-import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
-
-import QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
+import type QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
 
 const SPEED_UNITS_PER_SECOND = 300;
 

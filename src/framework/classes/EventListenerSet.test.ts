@@ -4,27 +4,27 @@ import EventListenerSet from "src/framework/classes/EventListenerSet";
 import Exception from "src/framework/classes/Exception";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
-test("cannot add the same callback more than once", function() {
+test("cannot add the same callback more than once", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const eventListenerSet = new EventListenerSet<[number]>(loggerBreadcrumbs);
 
   eventListenerSet.add(noop);
 
-  expect(function() {
+  expect(function () {
     eventListenerSet.add(noop);
   }).toThrow(Exception);
 });
 
-test("cannot delete callback that is not previously added", function() {
+test("cannot delete callback that is not previously added", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const eventListenerSet = new EventListenerSet<[number]>(loggerBreadcrumbs);
 
-  expect(function() {
+  expect(function () {
     eventListenerSet.delete(noop);
   }).toThrow(Exception);
 });
 
-test("notifies callbacks set about specific event", function() {
+test("notifies callbacks set about specific event", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const mockedCallback = jest.fn();
   const eventListenerSet = new EventListenerSet<[number, number]>(loggerBreadcrumbs);
@@ -40,7 +40,7 @@ test("notifies callbacks set about specific event", function() {
   expect(mockedCallback.mock.calls[1][1]).toBe(4);
 });
 
-test("optimizes notify calls", function() {
+test("optimizes notify calls", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
 
   // 0 arguments

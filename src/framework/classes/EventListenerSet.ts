@@ -1,10 +1,10 @@
 import Exception from "src/framework/classes/Exception";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
-import EventListenerSetCallback from "src/framework/types/EventListenerSetCallback";
+import type EventListenerSetCallback from "src/framework/types/EventListenerSetCallback";
 
 export default class EventListenerSet<Arguments extends readonly any[]> implements HasLoggerBreadcrumbs, IEventListenerSet<Arguments> {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

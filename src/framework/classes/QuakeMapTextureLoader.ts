@@ -5,11 +5,11 @@ import { default as TextureQuery } from "src/framework/classes/Query/Texture";
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as IQuakeMapTextureLoader } from "src/framework/interfaces/QuakeMapTextureLoader";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QueryBus from "src/framework/interfaces/QueryBus";
+import type { default as IQuakeMapTextureLoader } from "src/framework/interfaces/QuakeMapTextureLoader";
 
 export default class QuakeMapTextureLoader implements HasLoggerBreadcrumbs, IQuakeMapTextureLoader {
   readonly loadedTextures: Set<THREE.Texture> = new Set<THREE.Texture>();
@@ -32,7 +32,7 @@ export default class QuakeMapTextureLoader implements HasLoggerBreadcrumbs, IQua
   }
 
   getTextureIndex(textureName: string): number {
-    const index = this.texturesIndex.findIndex(storedTextureName => storedTextureName === textureName);
+    const index = this.texturesIndex.findIndex((storedTextureName) => storedTextureName === textureName);
 
     if (-1 === index) {
       throw new QuakeMapException(this.loggerBreadcrumbs.add("getTextureIndex"), `Texture is not indexed: ${textureName}`);

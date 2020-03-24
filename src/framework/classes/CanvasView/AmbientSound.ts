@@ -5,12 +5,12 @@ import CanvasView from "src/framework/classes/CanvasView";
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import LoadingManager from "src/framework/interfaces/LoadingManager";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type LoadingManager from "src/framework/interfaces/LoadingManager";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
-import QuakeWorkerSounds from "src/framework/types/QuakeWorkerSounds";
+import type QuakeWorkerSounds from "src/framework/types/QuakeWorkerSounds";
 
 export default class AmbientSound extends CanvasView {
   readonly audioListener: THREE.AudioListener;
@@ -47,7 +47,7 @@ export default class AmbientSound extends CanvasView {
       new Promise((resolve, reject) => {
         this.audioLoader.load(
           this.source,
-          buffer => {
+          (buffer) => {
             if (cancelToken.isCanceled()) {
               return void reject(new Canceled(this.loggerBreadcrumbs.add("attach"), "Audio loading was canceled."));
             }

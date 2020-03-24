@@ -3,15 +3,15 @@ import autoBind from "auto-bind";
 
 import Exception from "src/framework/classes/Exception";
 
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CameraFrustumResponder from "src/framework/interfaces/CameraFrustumResponder";
-import CancelToken from "src/framework/interfaces/CancelToken";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ICameraFrustumBus } from "src/framework/interfaces/CameraFrustumBus";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CameraFrustumResponder from "src/framework/interfaces/CameraFrustumResponder";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as ICameraFrustumBus } from "src/framework/interfaces/CameraFrustumBus";
 
 export default class CameraFrustumBus implements HasLoggerBreadcrumbs, ICameraFrustumBus {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

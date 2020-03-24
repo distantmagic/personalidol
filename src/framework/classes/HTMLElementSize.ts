@@ -2,8 +2,8 @@ import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
 import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
 
-import ElementSize from "src/framework/interfaces/ElementSize";
-import { default as IHTMLElementSize } from "src/framework/interfaces/HTMLElementSize";
+import type ElementSize from "src/framework/interfaces/ElementSize";
+import type { default as IHTMLElementSize } from "src/framework/interfaces/HTMLElementSize";
 
 export default class HTMLElementSize implements IHTMLElementSize {
   readonly htmlElement: HTMLElement;

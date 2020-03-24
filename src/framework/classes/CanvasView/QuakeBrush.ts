@@ -6,13 +6,13 @@ import { default as QuakeMapException } from "src/framework/classes/Exception/Qu
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as IQuakeMapTextureLoader } from "src/framework/interfaces/QuakeMapTextureLoader";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QueryBus from "src/framework/interfaces/QueryBus";
+import type { default as IQuakeMapTextureLoader } from "src/framework/interfaces/QuakeMapTextureLoader";
 
-import QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
+import type QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
 
 import config from "src/framework/config";
 

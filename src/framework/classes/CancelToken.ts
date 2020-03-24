@@ -4,12 +4,12 @@ import Canceled from "src/framework/classes/Exception/CancelToken/Canceled";
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import Exception from "src/framework/classes/Exception";
 
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ICanceled } from "src/framework/interfaces/Exception/Canceled";
-import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
-import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as ICanceled } from "src/framework/interfaces/Exception/Canceled";
+import type { default as ICancelToken } from "src/framework/interfaces/CancelToken";
+import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 
-import CancelTokenCallback from "src/framework/types/CancelTokenCallback";
+import type CancelTokenCallback from "src/framework/types/CancelTokenCallback";
 
 export default class CancelToken implements ICancelToken {
   private _isCanceled: boolean = false;
@@ -55,6 +55,6 @@ export default class CancelToken implements ICancelToken {
   }
 
   whenCanceled(): Promise<ICanceled> {
-    return new Promise(resolve => this.onCanceled(resolve));
+    return new Promise((resolve) => this.onCanceled(resolve));
   }
 }

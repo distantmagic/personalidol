@@ -4,9 +4,9 @@ import Idempotence from "src/framework/classes/Exception/Idempotence";
 
 import KeyboardButtonNames from "src/framework/enums/KeyboardButtonNames";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IKeyboardState } from "src/framework/interfaces/KeyboardState";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as IKeyboardState } from "src/framework/interfaces/KeyboardState";
 
 export default class KeyboardState implements HasLoggerBreadcrumbs, IKeyboardState {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

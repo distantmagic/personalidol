@@ -3,17 +3,17 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeEntityProperties from "src/framework/classes/QuakeEntityProperties";
 import QuakeEntityProperty from "src/framework/classes/QuakeEntityProperty";
 
-test("does not accept the same key more than once", function() {
+test("does not accept the same key more than once", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeEntityProperty1 = new QuakeEntityProperty(loggerBreadcrumbs, "foo", "bar");
   const quakeEntityProperty2 = new QuakeEntityProperty(loggerBreadcrumbs, "foo", "booz");
 
-  return expect(function() {
+  return expect(function () {
     return new QuakeEntityProperties(loggerBreadcrumbs, [quakeEntityProperty1, quakeEntityProperty2]);
   }).toThrow(Exception);
 });
 
-test("throws when property does not exist", function() {
+test("throws when property does not exist", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeEntityProperty1 = new QuakeEntityProperty(loggerBreadcrumbs, "foo", "bar");
   const quakeEntityProperty2 = new QuakeEntityProperty(loggerBreadcrumbs, "baz", "booz");
@@ -21,12 +21,12 @@ test("throws when property does not exist", function() {
 
   expect(quakeEntityProperties.hasPropertyKey("bar")).toBe(false);
 
-  return expect(function() {
+  return expect(function () {
     quakeEntityProperties.getPropertyByKey("bar");
   }).toThrow(Exception);
 });
 
-test("finds property by key", function() {
+test("finds property by key", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeEntityProperty1 = new QuakeEntityProperty(loggerBreadcrumbs, "foo", "bar");
   const quakeEntityProperty2 = new QuakeEntityProperty(loggerBreadcrumbs, "baz", "booz");
@@ -36,7 +36,7 @@ test("finds property by key", function() {
   expect(quakeEntityProperties.getPropertyByKey("foo").getValue()).toBe("bar");
 });
 
-test("is equatable", function() {
+test("is equatable", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeEntityProperty1 = new QuakeEntityProperty(loggerBreadcrumbs, "foo", "bar");
   const quakeEntityProperty2 = new QuakeEntityProperty(loggerBreadcrumbs, "baz", "booz");

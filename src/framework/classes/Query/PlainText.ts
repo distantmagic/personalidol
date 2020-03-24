@@ -5,7 +5,7 @@ import Query from "src/framework/classes/Query";
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
+import type CancelToken from "src/framework/interfaces/CancelToken";
 
 export default class PlainText extends Query<string> {
   readonly fetch: Fetch;

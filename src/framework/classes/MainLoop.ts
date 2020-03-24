@@ -6,11 +6,11 @@ import Controllable from "src/framework/classes/Controllable";
 
 import controlled from "src/framework/decorators/controlled";
 
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import Scheduler from "src/framework/interfaces/Scheduler";
-import { default as IControllable } from "src/framework/interfaces/Controllable";
-import { default as IControlToken } from "src/framework/interfaces/ControlToken";
-import { default as IMainLoop } from "src/framework/interfaces/MainLoop";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type Scheduler from "src/framework/interfaces/Scheduler";
+import type { default as IControllable } from "src/framework/interfaces/Controllable";
+import type { default as IControlToken } from "src/framework/interfaces/ControlToken";
+import type { default as IMainLoop } from "src/framework/interfaces/MainLoop";
 
 export default class MainLoop implements IMainLoop {
   readonly clock: THREE.Clock;

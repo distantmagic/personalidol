@@ -58,15 +58,15 @@ async function registerValidSW(loggerBreadcrumbs: LoggerBreadcrumbs, logger: Log
     return registration;
   }
 
-  return new Promise(resolve => {
-    registration.onupdatefound = function() {
+  return new Promise((resolve) => {
+    registration.onupdatefound = function () {
       const installingWorker = registration.installing;
 
       if (installingWorker == null) {
         return resolve(registration);
       }
 
-      installingWorker.onstatechange = async function() {
+      installingWorker.onstatechange = async function () {
         if (installingWorker.state === "installed") {
           if (serviceWorker.controller) {
             // At this point, the updated precached content has been fetched,
@@ -109,7 +109,7 @@ async function checkValidServiceWorker(
   if (response.status === 404 || (contentType != null && contentType.indexOf("javascript") === -1)) {
     // No service worker found. Probably a different app. Reload the page.
     // This step may get stuck in an infinite wait for service worker.
-    serviceWorker.ready.then(function() {
+    serviceWorker.ready.then(function () {
       return unregister(loggerBreadcrumbs.add("unregister"));
     });
 
@@ -122,7 +122,7 @@ async function checkValidServiceWorker(
 export async function unregister(loggerBreadcrumbs: LoggerBreadcrumbs): Promise<void> {
   const serviceWorker = getServiceWorkerAPI(loggerBreadcrumbs.add("getServiceWorkerAPI"));
 
-  serviceWorker.ready.then(function(registration) {
+  serviceWorker.ready.then(function (registration) {
     registration.unregister();
   });
 }

@@ -1,13 +1,13 @@
 import autoBind from "auto-bind";
 
-import CancelTokenQuery from "src/framework/interfaces/CancelTokenQuery";
-import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
-import { default as IQueryBatch } from "src/framework/interfaces/QueryBatch";
+import type CancelTokenQuery from "src/framework/interfaces/CancelTokenQuery";
+import type ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import type { default as IQueryBatch } from "src/framework/interfaces/QueryBatch";
 
-import QueryBusQueueCollection from "src/framework/types/QueryBusQueueCollection";
+import type QueryBusQueueCollection from "src/framework/types/QueryBusQueueCollection";
 
 function checkIsQueryInferable<T>(element: CancelTokenQuery<T>): (cancelTokenQuery: CancelTokenQuery<T>) => boolean {
-  return function(other: CancelTokenQuery<any>) {
+  return function (other: CancelTokenQuery<any>) {
     return element.isInferableFrom(other);
   };
 }
@@ -34,7 +34,7 @@ export default class QueryBatch implements IQueryBatch {
   }
 
   getActive<T>(): QueryBusQueueCollection<T> {
-    return this.getCollection<T>().filter(query => !query.isCanceled());
+    return this.getCollection<T>().filter((query) => !query.isCanceled());
   }
 
   getCollection<T>(): QueryBusQueueCollection<T> {

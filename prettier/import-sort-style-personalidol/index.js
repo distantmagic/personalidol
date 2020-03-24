@@ -86,16 +86,16 @@ function format(styleApi) {
     },
     { separator: true },
 
-    // import useFoo from "src/enums/useFoo"
+    // import useFoo from "src/decorators/useFoo"
     {
-      match: isLocalEnum,
+      match: isLocalDecorator,
       sort: member(naturally),
     },
     { separator: true },
 
-    // import useFoo from "src/decorators/useFoo"
+    // import useFoo from "src/enums/useFoo"
     {
-      match: isLocalDecorator,
+      match: isLocalEnum,
       sort: member(naturally),
     },
     { separator: true },

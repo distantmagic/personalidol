@@ -5,7 +5,7 @@ import LoadingManager from "src/framework/classes/LoadingManager";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import { default as ConsoleLogger } from "src/framework/classes/Logger/Console";
 
-test("determines whether loading is blocking or not", async function() {
+test("determines whether loading is blocking or not", async function () {
   const logger = new ConsoleLogger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandlerFilter = new ExceptionHandlerFilter();
@@ -53,7 +53,7 @@ test("determines whether loading is blocking or not", async function() {
   expect(loadingManager.isLoading()).toBe(false);
 }, 300);
 
-test("allows to embed comments", async function() {
+test("allows to embed comments", async function () {
   const logger = new ConsoleLogger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandlerFilter = new ExceptionHandlerFilter();

@@ -5,15 +5,15 @@ import QuakeBrushGeometryBuilder from "src/framework/classes/QuakeBrushGeometryB
 import QuakeMapParser from "src/framework/classes/QuakeMapParser";
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QuakeBrush from "src/framework/interfaces/QuakeBrush";
-import QuakeEntity from "src/framework/interfaces/QuakeEntity";
-import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
-import { default as IQuakeMapLoader } from "src/framework/interfaces/QuakeMapLoader";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QuakeBrush from "src/framework/interfaces/QuakeBrush";
+import type QuakeEntity from "src/framework/interfaces/QuakeEntity";
+import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import type { default as IQuakeMapLoader } from "src/framework/interfaces/QuakeMapLoader";
 
-import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
-import QuakeWorkerFuncGroup from "src/framework/types/QuakeWorkerFuncGroup";
-import QuakeWorkerWorldspawn from "src/framework/types/QuakeWorkerWorldspawn";
+import type QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
+import type QuakeWorkerFuncGroup from "src/framework/types/QuakeWorkerFuncGroup";
+import type QuakeWorkerWorldspawn from "src/framework/types/QuakeWorkerWorldspawn";
 
 type QuakeBrushClassNames = "func_group" | "worldspawn";
 

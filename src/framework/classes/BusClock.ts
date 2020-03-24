@@ -1,13 +1,13 @@
 import autoBind from "auto-bind";
 
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import { default as IBusClock } from "src/framework/interfaces/BusClock";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
-import BusClockCallback from "src/framework/types/BusClockCallback";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type { default as IBusClock } from "src/framework/interfaces/BusClock";
+
+import type BusClockCallback from "src/framework/types/BusClockCallback";
 
 export default class BusClock implements IBusClock {
   private callback: null | BusClockCallback = null;

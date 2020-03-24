@@ -4,9 +4,9 @@ import findLoggerBreadcrumbs from "src/framework/helpers/findLoggerBreadcrumbs";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import { default as ControlTokenException } from "src/framework/classes/Exception/ControlToken";
 
-import Controllable from "src/framework/interfaces/Controllable";
-import ControllableDelegate from "src/framework/interfaces/ControllableDelegate";
-import ControlToken from "src/framework/interfaces/ControlToken";
+import type Controllable from "src/framework/interfaces/Controllable";
+import type ControllableDelegate from "src/framework/interfaces/ControllableDelegate";
+import type ControlToken from "src/framework/interfaces/ControlToken";
 
 type ControllableTypes = Controllable | ControllableDelegate;
 
@@ -16,7 +16,7 @@ export default function controlled(isDelegate: boolean = false) {
   function decorator(target: ControllableTypes, method: string, propertyDescriptor: PropertyDescriptor) {
     const wrappedMethod = propertyDescriptor.value;
 
-    propertyDescriptor.value = function(controlToken: ControlToken, ...args: any[]) {
+    propertyDescriptor.value = function (controlToken: ControlToken, ...args: any[]) {
       // prettier-ignore
       const loggerBreadcrumbs = findLoggerBreadcrumbs(this, decoratorBreadcrumbs).add("controlled").add("decorator").addVariable(method);
       const controllable: Controllable = findControllable(loggerBreadcrumbs.add("findControllable"), isDelegate, this as ControllableTypes);

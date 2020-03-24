@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { Face } from "three/examples/jsm/math/ConvexHull";
 
-import QuakeBrush from "src/framework/interfaces/QuakeBrush";
-import { default as IQuakeBrushGeometryBuilder } from "src/framework/interfaces/QuakeBrushGeometryBuilder";
+import type QuakeBrush from "src/framework/interfaces/QuakeBrush";
+import type { default as IQuakeBrushGeometryBuilder } from "src/framework/interfaces/QuakeBrushGeometryBuilder";
 
 import config from "src/framework/config";
 

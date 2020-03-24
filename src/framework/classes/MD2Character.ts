@@ -10,13 +10,13 @@ import dispose from "src/framework/helpers/dispose";
 
 import { default as LoaderException } from "src/framework/classes/Exception/Loader";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IMD2Character } from "src/framework/interfaces/MD2Character";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as IMD2Character } from "src/framework/interfaces/MD2Character";
 
-import MD2CharacterAnimations from "src/framework/types/MD2CharacterAnimations";
-import MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
-import MD2CharacterControls from "src/framework/types/MD2CharacterControls";
+import type MD2CharacterAnimations from "src/framework/types/MD2CharacterAnimations";
+import type MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
+import type MD2CharacterControls from "src/framework/types/MD2CharacterControls";
 
 function checkLoadingComplete(scope: IMD2Character): void {
   scope.loadCounter -= 1;
@@ -83,7 +83,7 @@ export default class MD2Character implements HasLoggerBreadcrumbs, IMD2Character
 
   //
 
-  onLoadComplete = function() {};
+  onLoadComplete = function () {};
 
   // internals
 
@@ -178,7 +178,7 @@ export default class MD2Character implements HasLoggerBreadcrumbs, IMD2Character
 
     const loader = new MD2Loader(this.loadingManager);
 
-    loader.load(config.baseUrl + config.body, function(geo) {
+    loader.load(config.baseUrl + config.body, function (geo) {
       const mesh = createPart(scope, geo, scope.skinsBody[0]);
 
       scope.root.add(mesh);
@@ -191,8 +191,8 @@ export default class MD2Character implements HasLoggerBreadcrumbs, IMD2Character
 
     // WEAPONS
 
-    config.weapons.forEach(function([name, texture], index) {
-      loader.load(config.baseUrl + name, function(geo) {
+    config.weapons.forEach(function ([name, texture], index) {
+      loader.load(config.baseUrl + name, function (geo) {
         const mesh = createPart(scope, geo, scope.skinsWeapon[index]);
         mesh.visible = false;
 

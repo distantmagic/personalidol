@@ -1,6 +1,6 @@
 import canCompare from "src/framework/helpers/canCompare";
 
-import Equatable from "src/framework/interfaces/Equatable";
+import type Equatable from "src/framework/interfaces/Equatable";
 
 class Foo implements Equatable<Foo> {
   readonly ref: number;
@@ -35,7 +35,7 @@ test.each([
   [new Baz(1), new Foo(1), false, null],
 ])(
   "detects if object can be compared",
-  function(a: Equatable<any>, b: Equatable<any>, result: boolean, isEqual: null | boolean) {
+  function (a: Equatable<any>, b: Equatable<any>, result: boolean, isEqual: null | boolean) {
     expect(canCompare(a, b)).toBe(result);
 
     if ("boolean" === typeof isEqual) {

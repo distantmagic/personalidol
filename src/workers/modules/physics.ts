@@ -29,7 +29,7 @@ const mainLoopControlToken = mainLoop.getControllable().obtainControlToken();
 
 mainLoop.start(mainLoopControlToken);
 
-scheduler.update.add(function(delta: number) {
+scheduler.update.add(function (delta: number) {
   world.step();
 });
 
@@ -55,7 +55,7 @@ function onMessagePortMessage(evt: MessageEvent) {
   });
 }
 
-self.onmessage = function(evt: MessageEvent) {
+self.onmessage = function (evt: MessageEvent) {
   const messagePort: MessagePort = evt.data;
 
   messagePort.onmessage = onMessagePortMessage;

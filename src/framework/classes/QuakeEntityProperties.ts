@@ -2,10 +2,10 @@ import isArrayEqual from "src/framework/helpers/isArrayEqual";
 
 import Exception from "src/framework/classes/Exception";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QuakeEntityProperty from "src/framework/interfaces/QuakeEntityProperty";
-import { default as IQuakeEntityProperties } from "src/framework/interfaces/QuakeEntityProperties";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QuakeEntityProperty from "src/framework/interfaces/QuakeEntityProperty";
+import type { default as IQuakeEntityProperties } from "src/framework/interfaces/QuakeEntityProperties";
 
 export default class QuakeEntityProperties implements HasLoggerBreadcrumbs, IQuakeEntityProperties {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

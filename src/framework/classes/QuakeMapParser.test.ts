@@ -10,7 +10,7 @@ import QuakeMapParser from "src/framework/classes/QuakeMapParser";
 
 import * as fixtures from "src/fixtures";
 
-test("converts quake map format to something processable by controllers", async function() {
+test("converts quake map format to something processable by controllers", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const mapContent = await fixtures.file("map-test.map");
   const quakeMapParser = new QuakeMapParser(loggerBreadcrumbs, mapContent);
@@ -66,7 +66,7 @@ test("converts quake map format to something processable by controllers", async 
     new QuakeEntity(
       loggerBreadcrumbs,
       new QuakeEntityProperties(loggerBreadcrumbs, [
-        new QuakeEntityProperty(loggerBreadcrumbs, "classname", "info_player_start"),
+        new QuakeEntityProperty(loggerBreadcrumbs, "classname", "player"),
         new QuakeEntityProperty(loggerBreadcrumbs, "origin", "-32 -32 40"),
         new QuakeEntityProperty(loggerBreadcrumbs, "foo", 'bar"baz"booz'),
       ])
@@ -74,9 +74,11 @@ test("converts quake map format to something processable by controllers", async 
     new QuakeEntity(
       loggerBreadcrumbs,
       new QuakeEntityProperties(loggerBreadcrumbs, [
-        new QuakeEntityProperty(loggerBreadcrumbs, "classname", "light"),
+        new QuakeEntityProperty(loggerBreadcrumbs, "classname", "light_point"),
+        new QuakeEntityProperty(loggerBreadcrumbs, "color", "FFC000"),
+        new QuakeEntityProperty(loggerBreadcrumbs, "decay", "2"),
+        new QuakeEntityProperty(loggerBreadcrumbs, "intensity", "255"),
         new QuakeEntityProperty(loggerBreadcrumbs, "origin", "16 -32 40"),
-        new QuakeEntityProperty(loggerBreadcrumbs, "light", "255"),
       ])
     ),
   ];

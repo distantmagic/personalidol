@@ -5,7 +5,7 @@ import QuakeEntityPropertyParser from "src/framework/classes/QuakeEntityProperty
 test.each([
   ['    "foo" "bar\\"baz\\"booz"', "foo", 'bar"baz"booz'],
   ['"origin" "-32 -32 40"', "origin", "-32 -32 40"],
-])("processes brush entity string '%p'", function(line, expectedKey, expectedValue) {
+])("processes brush entity string '%p'", function (line, expectedKey, expectedValue) {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const parser = new QuakeEntityPropertyParser(loggerBreadcrumbs, line);
   const entityProperty = parser.parse();

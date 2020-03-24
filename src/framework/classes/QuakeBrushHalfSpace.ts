@@ -3,7 +3,7 @@ import * as THREE from "three";
 import isEqualWithEpsilon from "src/framework/helpers/isEqualWithEpsilon";
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import { default as IQuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
+import type { default as IQuakeBrushHalfSpace } from "src/framework/interfaces/QuakeBrushHalfSpace";
 
 export default class QuakeBrushHalfSpace implements IQuakeBrushHalfSpace {
   readonly texture: string;

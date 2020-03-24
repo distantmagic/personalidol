@@ -5,13 +5,13 @@ import QuakeEntityProperties from "src/framework/classes/QuakeEntityProperties";
 import QuakeEntityPropertyParser from "src/framework/classes/QuakeEntityPropertyParser";
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
-import QuakeEntityProperty from "src/framework/interfaces/QuakeEntityProperty";
-import { default as IQuakeBrush } from "src/framework/interfaces/QuakeBrush";
-import { default as IQuakeEntity } from "src/framework/interfaces/QuakeEntity";
-import { default as IQuakeMapParser } from "src/framework/interfaces/QuakeMapParser";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
+import type QuakeEntityProperty from "src/framework/interfaces/QuakeEntityProperty";
+import type { default as IQuakeBrush } from "src/framework/interfaces/QuakeBrush";
+import type { default as IQuakeEntity } from "src/framework/interfaces/QuakeEntity";
+import type { default as IQuakeMapParser } from "src/framework/interfaces/QuakeMapParser";
 
 const REGEXP_NEWLINE = /\r?\n/;
 
@@ -123,6 +123,6 @@ export default class QuakeMapParser implements HasLoggerBreadcrumbs, IQuakeMapPa
   }
 
   splitLines(content: string): ReadonlyArray<string> {
-    return content.split(REGEXP_NEWLINE).map(line => line.trim());
+    return content.split(REGEXP_NEWLINE).map((line) => line.trim());
   }
 }

@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 function material(loggerBreadcrumbs: LoggerBreadcrumbs, material: THREE.Material): void {
   if (material instanceof THREE.LineBasicMaterial) {
@@ -41,7 +41,7 @@ function material(loggerBreadcrumbs: LoggerBreadcrumbs, material: THREE.Material
 
 function materials(loggerBreadcrumbs: LoggerBreadcrumbs, materials: THREE.Material | THREE.Material[]): void {
   if (Array.isArray(materials)) {
-    return void materials.forEach(child => {
+    return void materials.forEach((child) => {
       material(loggerBreadcrumbs.add("material"), child);
     });
   }
@@ -58,7 +58,7 @@ export default function dispose(loggerBreadcrumbs: LoggerBreadcrumbs, object: TH
     return void texture(loggerBreadcrumbs.add("texture"), object);
   }
 
-  object.traverse(function(child: THREE.Object3D) {
+  object.traverse(function (child: THREE.Object3D) {
     // materials
     if (child instanceof THREE.Material) {
       return void materials(loggerBreadcrumbs.add("materials"), child);

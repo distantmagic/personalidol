@@ -3,7 +3,7 @@ import EventListenerGenerator from "src/framework/classes/EventListenerGenerator
 import EventListenerSet from "src/framework/classes/EventListenerSet";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 
-test("generates subsequent values", async function() {
+test("generates subsequent values", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const eventListenerSet = new EventListenerSet<[number]>(loggerBreadcrumbs);

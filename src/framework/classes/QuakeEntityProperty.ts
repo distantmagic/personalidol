@@ -1,8 +1,8 @@
 import { default as QuakeMapException } from "src/framework/classes/Exception/QuakeMap";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IQuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as IQuakeEntityProperty } from "src/framework/interfaces/QuakeEntityProperty";
 
 export default class QuakeEntityProperty implements HasLoggerBreadcrumbs, IQuakeEntityProperty {
   readonly key: string;

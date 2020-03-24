@@ -1,9 +1,9 @@
 import filter from "lodash/filter";
 
-import ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ILoadingManager } from "src/framework/interfaces/LoadingManager";
+import type ExceptionHandler from "src/framework/interfaces/ExceptionHandler";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as ILoadingManager } from "src/framework/interfaces/LoadingManager";
 
 async function awaitBlocker<T>(self: LoadingManager, collection: Map<Promise<any>, string>, blocker: Promise<T>, comment: string): Promise<T> {
   collection.set(blocker, comment);

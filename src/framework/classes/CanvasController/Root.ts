@@ -11,25 +11,25 @@ import { default as PerspectiveCameraController } from "src/framework/classes/Ca
 import { default as PointerController } from "src/framework/classes/CanvasController/Pointer";
 import { default as QuakeMapView } from "src/framework/classes/CanvasView/QuakeMap";
 
-import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import ElementSize from "src/framework/interfaces/ElementSize";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import KeyboardState from "src/framework/interfaces/KeyboardState";
-import LoadingManager from "src/framework/interfaces/LoadingManager";
-import Logger from "src/framework/interfaces/Logger";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import PointerState from "src/framework/interfaces/PointerState";
-import QueryBus from "src/framework/interfaces/QueryBus";
-import Scheduler from "src/framework/interfaces/Scheduler";
-import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
-import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
+import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type ElementSize from "src/framework/interfaces/ElementSize";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type KeyboardState from "src/framework/interfaces/KeyboardState";
+import type LoadingManager from "src/framework/interfaces/LoadingManager";
+import type Logger from "src/framework/interfaces/Logger";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type PointerState from "src/framework/interfaces/PointerState";
+import type QueryBus from "src/framework/interfaces/QueryBus";
+import type Scheduler from "src/framework/interfaces/Scheduler";
+import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
+import type { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
 // import { default as THREEHelpersView } from "src/framework/classes/CanvasView/THREEHelpers";
 

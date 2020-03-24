@@ -13,7 +13,7 @@ import { default as CanvasControllerException } from "src/framework/classes/Exce
 
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
-import { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import type { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 class FooCanvasController extends CanvasController {
   readonly useCallbacks: SchedulerUpdateScenario;
@@ -70,11 +70,11 @@ function createContext() {
 
 let context = createContext();
 
-beforeEach(function() {
+beforeEach(function () {
   context = createContext();
 });
 
-test("cannot attach the same controller more than once", async function() {
+test("cannot attach the same controller more than once", async function () {
   const canvasController = new FooCanvasController(context.canvasViewBag, SchedulerUpdateScenario.Always);
 
   await context.canvasControllerBus.add(context.cancelToken, canvasController);
@@ -82,7 +82,7 @@ test("cannot attach the same controller more than once", async function() {
   return expect(context.canvasControllerBus.add(context.cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
-test("cannot detach the same controller more than once", async function() {
+test("cannot detach the same controller more than once", async function () {
   const canvasController = new FooCanvasController(context.canvasViewBag, SchedulerUpdateScenario.Never);
 
   await context.canvasControllerBus.add(context.cancelToken, canvasController);
@@ -91,13 +91,13 @@ test("cannot detach the same controller more than once", async function() {
   return expect(context.canvasControllerBus.delete(context.cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
-test("fails when controller attach is improperly implemented", async function() {
+test("fails when controller attach is improperly implemented", async function () {
   const canvasController = new ImproperAttachCanvasController(context.canvasViewBag);
 
   return expect(context.canvasControllerBus.add(context.cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
-test("fails when controller dispose is improperly implemented", async function() {
+test("fails when controller dispose is improperly implemented", async function () {
   const canvasController = new ImproperDisposeCanvasController(context.canvasViewBag);
 
   await context.canvasControllerBus.add(context.cancelToken, canvasController);
@@ -105,7 +105,7 @@ test("fails when controller dispose is improperly implemented", async function()
   return expect(context.canvasControllerBus.delete(context.cancelToken, canvasController)).rejects.toThrow(CanvasControllerException);
 });
 
-test("properly attaches and detaches canvas controllers", async function() {
+test("properly attaches and detaches canvas controllers", async function () {
   const canvasController = new FooCanvasController(context.canvasViewBag, SchedulerUpdateScenario.Always);
 
   expect(canvasController.isAttached()).toBe(false);

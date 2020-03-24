@@ -7,19 +7,19 @@ import { default as QuakeMapException } from "src/framework/classes/Exception/Qu
 import { default as RemoteJSONQuery } from "src/framework/classes/Query/RemoteJSON";
 import { default as THREEMD2Character } from "src/framework/classes/MD2Character";
 
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as IMD2Character } from "src/framework/interfaces/MD2Character";
-import { default as IMD2CharacterView } from "src/framework/interfaces/CanvasView/MD2Character";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
-import MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
-import QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QueryBus from "src/framework/interfaces/QueryBus";
+import type { default as IMD2Character } from "src/framework/interfaces/MD2Character";
+import type { default as IMD2CharacterView } from "src/framework/interfaces/CanvasView/MD2Character";
+
+import type MD2CharacterConfig from "src/framework/types/MD2CharacterConfig";
+import type QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 
 const BOUNDING_BOX_SIZE = new THREE.Vector3(32, 56, 32);
 const LOOK_AT_DISTANCE = 256 * 3;

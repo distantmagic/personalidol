@@ -2,9 +2,9 @@ import * as THREE from "three";
 
 import isEqualWithPrecision from "src/framework/helpers/isEqualWithPrecision";
 
-import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
 
-import { default as IElementPosition } from "src/framework/interfaces/ElementPosition";
+import type { default as IElementPosition } from "src/framework/interfaces/ElementPosition";
 
 export default class ElementPosition<Unit extends ElementPositionUnit> implements IElementPosition<Unit> {
   readonly unit: Unit;

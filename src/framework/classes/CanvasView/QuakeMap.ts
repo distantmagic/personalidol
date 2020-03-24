@@ -17,20 +17,20 @@ import { default as SpotLightView } from "src/framework/classes/CanvasView/SpotL
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import LoadingManager from "src/framework/interfaces/LoadingManager";
-import Logger from "src/framework/interfaces/Logger";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import PointerState from "src/framework/interfaces/PointerState";
-import QueryBus from "src/framework/interfaces/QueryBus";
-import { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
-import { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasControllerBus from "src/framework/interfaces/CanvasControllerBus";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type LoadingManager from "src/framework/interfaces/LoadingManager";
+import type Logger from "src/framework/interfaces/Logger";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type PointerState from "src/framework/interfaces/PointerState";
+import type QueryBus from "src/framework/interfaces/QueryBus";
+import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
+import type { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
-import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
-import QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
-import QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
+import type QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
+import type QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
+import type QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 
 // those are a few hacks, but in the end it's possible to load web workers
 // with create-react-app without ejecting
@@ -116,7 +116,7 @@ export default class QuakeMap extends CanvasView {
     const gltfModels: QuakeWorkerGLTFModel[] = [];
     const md2Models: QuakeWorkerMD2Model[] = [];
 
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       quakeMapWorker.onmessage = (evt: MessageEvent) => {
         const entity: null | QuakeWorkerAny = evt.data;
 

@@ -8,8 +8,8 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QueryBatch from "src/framework/classes/QueryBatch";
 import { default as SilentLogger } from "src/framework/classes/Logger/Silent";
 
-import Query from "src/framework/interfaces/Query";
-import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
+import type Query from "src/framework/interfaces/Query";
+import type { default as ICancelToken } from "src/framework/interfaces/CancelToken";
 
 type BarObject = {
   reference: number;
@@ -57,7 +57,7 @@ class Bar implements Query<BarObject> {
   }
 }
 
-test("it finds unique queries list", function() {
+test("it finds unique queries list", function () {
   const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
@@ -73,7 +73,7 @@ test("it finds unique queries list", function() {
   expect(queryBatch.getUnique()).toHaveLength(3);
 });
 
-test("it processes unique queries only", function() {
+test("it processes unique queries only", function () {
   const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);

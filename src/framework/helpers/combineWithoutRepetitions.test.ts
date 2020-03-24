@@ -1,6 +1,6 @@
 import combineWithoutRepetitions from "src/framework/helpers/combineWithoutRepetitions";
 
-test("generates combinations", function() {
+test("generates combinations", function () {
   const combinations = Array.from(combineWithoutRepetitions([1, 2, 3], 2));
 
   expect(combinations).toHaveLength(3);

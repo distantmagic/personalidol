@@ -5,15 +5,15 @@ import dispose from "src/framework/helpers/dispose";
 
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as ICanvasView } from "src/framework/interfaces/CanvasView";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as ICanvasView } from "src/framework/interfaces/CanvasView";
 
 export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanvasView {
   readonly canvasViewBag: CanvasViewBag;

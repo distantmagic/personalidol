@@ -1,4 +1,4 @@
-import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 const LOGGER_BREADCRUMB_SEPARATOR = "/";
 
@@ -47,7 +47,7 @@ export default class LoggerBreadcrumbs implements ILoggerBreadcrumbs {
     return (
       LOGGER_BREADCRUMB_SEPARATOR +
       this.breadcrumbs
-        .map(function(breadcrumb) {
+        .map(function (breadcrumb) {
           if (breadcrumb.includes(" ") || breadcrumb.includes(LOGGER_BREADCRUMB_SEPARATOR)) {
             return `"${breadcrumb}"`;
           }

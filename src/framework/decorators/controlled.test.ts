@@ -7,10 +7,10 @@ import { default as ControlTokenException } from "src/framework/classes/Exceptio
 
 import controlled from "src/framework/decorators/controlled";
 
-import ControllableDelegate from "src/framework/interfaces/ControllableDelegate";
-import { default as IControllable } from "src/framework/interfaces/Controllable";
-import { default as IControlToken } from "src/framework/interfaces/ControlToken";
-import { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
+import type ControllableDelegate from "src/framework/interfaces/ControllableDelegate";
+import type { default as IControllable } from "src/framework/interfaces/Controllable";
+import type { default as IControlToken } from "src/framework/interfaces/ControlToken";
+import type { default as ILoggerBreadcrumbs } from "src/framework/interfaces/LoggerBreadcrumbs";
 
 class FooControllable extends Controllable {
   private initial: number;
@@ -57,8 +57,8 @@ class FooControllableDelegate implements ControllableDelegate {
 describe.each([
   ["Controllable", FooControllable, false],
   ["ControllableDelegate", FooControllableDelegate, true],
-])('handles method protection (for consistency, not security) with control token: "%s"', function(klass: string, Constructor, isDelegate: boolean) {
-  test("succeeds with correct control token", function() {
+])('handles method protection (for consistency, not security) with control token: "%s"', function (klass: string, Constructor, isDelegate: boolean) {
+  test("succeeds with correct control token", function () {
     const loggerBreadcrumbs = new LoggerBreadcrumbs();
     const foo = new Constructor(loggerBreadcrumbs, 1);
     const controllable = findControllable(loggerBreadcrumbs, isDelegate, foo);
@@ -67,7 +67,7 @@ describe.each([
     expect(foo.doSomething(controlToken, 2)).toBe(3);
   });
 
-  test("can obtain and cede control token", function() {
+  test("can obtain and cede control token", function () {
     const loggerBreadcrumbs = new LoggerBreadcrumbs();
     const foo = new Constructor(loggerBreadcrumbs, 4);
     const controllable = findControllable(loggerBreadcrumbs, isDelegate, foo);
@@ -80,19 +80,19 @@ describe.each([
 
     const controlToken2 = controllable.obtainControlToken();
 
-    expect(function() {
+    expect(function () {
       foo.doSomething(controlToken1, 5);
     }).toThrow(ControlTokenException);
 
     expect(foo.doSomething(controlToken2, 6)).toBe(10);
   });
 
-  test("fails when no incorrect control token is used", function() {
+  test("fails when no incorrect control token is used", function () {
     const loggerBreadcrumbs = new LoggerBreadcrumbs();
     const foo = new Constructor(loggerBreadcrumbs, 6);
     const invalidControlToken = new ControlToken(loggerBreadcrumbs);
 
-    expect(function() {
+    expect(function () {
       foo.doSomething(invalidControlToken, 7);
     }).toThrow(ControlTokenException);
   });

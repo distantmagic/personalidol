@@ -9,11 +9,11 @@ import serializeVector3 from "src/framework/helpers/serializeVector3";
 import QuakeBrushHalfSpaceTrio from "src/framework/classes/QuakeBrushHalfSpaceTrio";
 import { default as QuakeBrushException } from "src/framework/classes/Exception/QuakeBrush";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
-import { default as IQuakeBrush } from "src/framework/interfaces/QuakeBrush";
-import { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
+import type { default as IQuakeBrush } from "src/framework/interfaces/QuakeBrush";
+import type { default as IQuakeBrushHalfSpaceTrio } from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
 export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   readonly halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>;
@@ -102,7 +102,7 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   }
 
   getTextures(): ReadonlyArray<string> {
-    return uniq(this.getHalfSpaces().map(halfSpace => halfSpace.getTexture()));
+    return uniq(this.getHalfSpaces().map((halfSpace) => halfSpace.getTexture()));
   }
 
   getVertices(): ReadonlyArray<THREE.Vector3> {

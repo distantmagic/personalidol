@@ -2,19 +2,19 @@ import autoBind from "auto-bind";
 
 import { default as CanvasControllerException } from "src/framework/classes/Exception/CanvasController";
 
-import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasController from "src/framework/interfaces/CanvasController";
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import HTMLElementSizeObserver from "src/framework/interfaces/HTMLElementSizeObserver";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import Scheduler from "src/framework/interfaces/Scheduler";
-import { default as ICanvasControllerBus } from "src/framework/interfaces/CanvasControllerBus";
-import { default as IElementSize } from "src/framework/interfaces/ElementSize";
+import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasController from "src/framework/interfaces/CanvasController";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type HTMLElementSizeObserver from "src/framework/interfaces/HTMLElementSizeObserver";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type Scheduler from "src/framework/interfaces/Scheduler";
+import type { default as ICanvasControllerBus } from "src/framework/interfaces/CanvasControllerBus";
+import type { default as IElementSize } from "src/framework/interfaces/ElementSize";
 
 export default class CanvasControllerBus implements ICanvasControllerBus, HasLoggerBreadcrumbs {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

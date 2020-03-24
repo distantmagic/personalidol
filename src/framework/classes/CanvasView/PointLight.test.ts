@@ -8,9 +8,9 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import PointLight from "src/framework/classes/CanvasView/PointLight";
 import Scheduler from "src/framework/classes/Scheduler";
 
-import QuakeWorkerLightPoint from "src/framework/types/QuakeWorkerLightPoint";
+import type QuakeWorkerLightPoint from "src/framework/types/QuakeWorkerLightPoint";
 
-test("is cleanly attached and disposed", async function() {
+test("is cleanly attached and disposed", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);

@@ -2,9 +2,9 @@ import * as THREE from "three";
 
 import { default as QuakeMapParserException } from "src/framework/classes/Exception/QuakeMap/Parser";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IQuakePointParser } from "src/framework/interfaces/QuakePointParser";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as IQuakePointParser } from "src/framework/interfaces/QuakePointParser";
 
 /**
  * This class exists to provide consistency. Although it may seem redundant at

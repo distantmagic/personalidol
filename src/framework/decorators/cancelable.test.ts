@@ -4,7 +4,7 @@ import { default as CancelTokenException } from "src/framework/classes/Exception
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
+import type { default as ICancelToken } from "src/framework/interfaces/CancelToken";
 
 class Foo {
   private something: number;
@@ -28,7 +28,7 @@ class Foo {
   }
 }
 
-test("calls wrapped method if token is not canceled", function() {
+test("calls wrapped method if token is not canceled", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const foo = new Foo(4);
@@ -39,7 +39,7 @@ test("calls wrapped method if token is not canceled", function() {
   expect(foo.getSomething()).toBe(8);
 });
 
-test("does not call wrapped method if token is already canceled", function() {
+test("does not call wrapped method if token is already canceled", function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const foo = new Foo(4);
@@ -50,7 +50,7 @@ test("does not call wrapped method if token is already canceled", function() {
 
   expect(foo.getSomething()).toBe(4);
 
-  expect(function() {
+  expect(function () {
     foo.doSomethingOrThrow(cancelToken, 4);
   }).toThrow(CancelTokenException);
 });

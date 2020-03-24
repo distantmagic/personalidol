@@ -1,13 +1,13 @@
-import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import ElementPosition from "src/framework/interfaces/ElementPosition";
-import ElementSize from "src/framework/interfaces/ElementSize";
-import { default as ICanvasController } from "src/framework/interfaces/CanvasController";
+import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type ElementPosition from "src/framework/interfaces/ElementPosition";
+import type ElementSize from "src/framework/interfaces/ElementSize";
+import type { default as ICanvasController } from "src/framework/interfaces/CanvasController";
 
 export default class CanvasController implements ICanvasController {
   readonly canvasViewBag: CanvasViewBag;

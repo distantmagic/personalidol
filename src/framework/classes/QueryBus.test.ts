@@ -7,8 +7,8 @@ import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QueryBus from "src/framework/classes/QueryBus";
 import { default as SilentLogger } from "src/framework/classes/Logger/Silent";
 
-import Query from "src/framework/interfaces/Query";
-import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
+import type Query from "src/framework/interfaces/Query";
+import type { default as ICancelToken } from "src/framework/interfaces/CancelToken";
 
 type Total = {
   executed: number;
@@ -41,7 +41,7 @@ class Foo implements Query<number> {
   }
 }
 
-test("executes similar queries only once", async function() {
+test("executes similar queries only once", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const exceptionHandler = new ExceptionHandler(new SilentLogger(), new ExceptionHandlerFilter());

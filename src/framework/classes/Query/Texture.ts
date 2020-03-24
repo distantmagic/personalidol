@@ -4,7 +4,7 @@ import Query from "src/framework/classes/Query";
 
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
+import type CancelToken from "src/framework/interfaces/CancelToken";
 
 export default class Texture extends Query<THREE.Texture> {
   readonly textureLoader: THREE.TextureLoader;
@@ -23,7 +23,7 @@ export default class Texture extends Query<THREE.Texture> {
     return new Promise((resolve, reject) => {
       this.textureLoader.load(
         this.textureSource,
-        texture => {
+        (texture) => {
           texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
           resolve(texture);

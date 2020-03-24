@@ -11,8 +11,8 @@ import { default as CanvasViewException } from "src/framework/classes/Exception/
 
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
-import { default as ICancelToken } from "src/framework/interfaces/CancelToken";
-import { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
+import type { default as ICancelToken } from "src/framework/interfaces/CancelToken";
+import type { default as ICanvasViewBag } from "src/framework/interfaces/CanvasViewBag";
 
 class FooCanvasView extends CanvasView {
   readonly useCallbacks: SchedulerUpdateScenario;
@@ -69,11 +69,11 @@ function createContext() {
 
 let context = createContext();
 
-beforeEach(function() {
+beforeEach(function () {
   context = createContext();
 });
 
-test("cannot attach the same view more than once", async function() {
+test("cannot attach the same view more than once", async function () {
   const canvasView = new FooCanvasView(context.loggerBreadcrumbs, context.canvasViewBag, context.group, SchedulerUpdateScenario.Always);
 
   await context.canvasViewBus.add(context.cancelToken, canvasView);
@@ -81,7 +81,7 @@ test("cannot attach the same view more than once", async function() {
   return expect(context.canvasViewBus.add(context.cancelToken, canvasView)).rejects.toThrow(CanvasViewException);
 });
 
-test("cannot detach the same view more than once", async function() {
+test("cannot detach the same view more than once", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -99,7 +99,7 @@ test("cannot detach the same view more than once", async function() {
   return expect(canvasViewBus.delete(cancelToken, canvasView)).rejects.toThrow(CanvasViewException);
 });
 
-test("fails when view attach is improperly implemented", async function() {
+test("fails when view attach is improperly implemented", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -114,7 +114,7 @@ test("fails when view attach is improperly implemented", async function() {
   return expect(canvasViewBus.add(cancelToken, canvasView)).rejects.toThrow(CanvasViewException);
 });
 
-test("fails when view dispose is improperly implemented", async function() {
+test("fails when view dispose is improperly implemented", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -131,7 +131,7 @@ test("fails when view dispose is improperly implemented", async function() {
   return expect(canvasViewBus.delete(cancelToken, canvasView)).rejects.toThrow(CanvasViewException);
 });
 
-test("properly attaches and detaches canvas views", async function() {
+test("properly attaches and detaches canvas views", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
@@ -158,7 +158,7 @@ test("properly attaches and detaches canvas views", async function() {
   expect(canvasViewCallbacks.isDisposed()).toBe(true);
 });
 
-test("properly attaches and detaches canvas views without callbacks", async function() {
+test("properly attaches and detaches canvas views without callbacks", async function () {
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);

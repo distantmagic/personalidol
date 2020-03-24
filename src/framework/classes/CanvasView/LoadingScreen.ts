@@ -3,13 +3,13 @@ import autoBind from "auto-bind";
 
 import CanvasView from "src/framework/classes/CanvasView";
 
-import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
-
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
+
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default class LoadingScreen extends CanvasView {
   private accumulatedDelta: number = 0;

@@ -1,5 +1,5 @@
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default function findLoggerBreadcrumbs(object: Object, defaultBreadcrumbs?: LoggerBreadcrumbs): LoggerBreadcrumbs {
   const loggerBreadcrumbs = (object as HasLoggerBreadcrumbs).loggerBreadcrumbs;

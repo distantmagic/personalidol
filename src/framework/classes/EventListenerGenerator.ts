@@ -1,8 +1,8 @@
 import cancelable from "src/framework/decorators/cancelable";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
-import EventListenerSet from "src/framework/interfaces/EventListenerSet";
-import { default as IEventListenerGenerator } from "src/framework/interfaces/EventListenerGenerator";
+import type CancelToken from "src/framework/interfaces/CancelToken";
+import type EventListenerSet from "src/framework/interfaces/EventListenerSet";
+import type { default as IEventListenerGenerator } from "src/framework/interfaces/EventListenerGenerator";
 
 type GeneratorBuffer<Arguments> = Array<{
   isUtilized: boolean;
@@ -11,9 +11,9 @@ type GeneratorBuffer<Arguments> = Array<{
 }>;
 
 function produceBuffered<Arguments>(buffer: GeneratorBuffer<Arguments>): Promise<void> {
-  return new Promise(resolve => {
-    const bufferedPromise = new Promise<Arguments>(bufferedResolve => {
-      requestAnimationFrame(function() {
+  return new Promise((resolve) => {
+    const bufferedPromise = new Promise<Arguments>((bufferedResolve) => {
+      requestAnimationFrame(function () {
         buffer.push({
           isUtilized: false,
           promise: bufferedPromise,

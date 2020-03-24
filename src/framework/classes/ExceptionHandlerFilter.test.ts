@@ -9,7 +9,7 @@ class FooExceptionHandlerFilter extends ExceptionHandlerFilter {
   }
 }
 
-test("base class is usable", function() {
+test("base class is usable", function () {
   const exceptionHandlerFilter = new ExceptionHandlerFilter();
 
   expect(exceptionHandlerFilter.isCapturable(new Error())).toBe(true);
@@ -18,7 +18,7 @@ test("base class is usable", function() {
 test.each([
   [new Error(), false],
   [new RangeError(), true],
-])("decides which exceptions to report further", function(error: Error, expected: boolean) {
+])("decides which exceptions to report further", function (error: Error, expected: boolean) {
   const logger = new SilentLogger();
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const exceptionHandlerFilter = new FooExceptionHandlerFilter();

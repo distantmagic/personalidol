@@ -6,11 +6,11 @@ import Idempotence from "src/framework/classes/Exception/Idempotence";
 
 import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
 
-import HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
-import { default as IElementSize } from "src/framework/interfaces/ElementSize";
-import { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
-import { default as IHTMLElementSizeObserver } from "src/framework/interfaces/HTMLElementSizeObserver";
+import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type { default as IElementSize } from "src/framework/interfaces/ElementSize";
+import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
+import type { default as IHTMLElementSizeObserver } from "src/framework/interfaces/HTMLElementSizeObserver";
 
 export default class HTMLElementSizeObserver implements HasLoggerBreadcrumbs, IHTMLElementSizeObserver {
   readonly element: HTMLElement;
@@ -25,7 +25,7 @@ export default class HTMLElementSizeObserver implements HasLoggerBreadcrumbs, IH
     this.element = element;
     this.onResize = onResize;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.nativeResizeObserver = new ResizeObserver(function(mutationList) {
+    this.nativeResizeObserver = new ResizeObserver(function (mutationList) {
       for (let mutation of mutationList) {
         const contentRect = mutation.contentRect;
         const elementSize = new ElementSize<ElementPositionUnit.Px>(ElementPositionUnit.Px, contentRect.width, contentRect.height);
