@@ -1,6 +1,6 @@
-import { default as ServiceBuilderParametersType } from "src/framework/types/ServiceBuilderParameters";
-import { default as ServiceDependenciesType } from "src/framework/types/ServiceDependencies";
-import { default as ServicesType } from "src/framework/types/Services";
+import type { default as ServiceBuilderParametersType } from "src/framework/types/ServiceBuilderParameters";
+import type { default as ServiceDependenciesType } from "src/framework/types/ServiceDependencies";
+import type { default as ServicesType } from "src/framework/types/Services";
 
 export default interface ServiceBuilder<
   Services extends ServicesType,

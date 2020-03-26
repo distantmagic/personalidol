@@ -158,7 +158,6 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
 
   // prevent some memory leaks
   renderer.dispose();
-  renderer.forceContextLoss();
   sceneCanvas.remove();
 
   await loadingManager.blocking(canvasViewBag.dispose(cancelToken), "Disposing root canvas controller");

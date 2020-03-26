@@ -1,17 +1,13 @@
-import * as THREE from "three";
+import type * as THREE from "three";
 
-import Equatable from "src/framework/interfaces/Equatable";
+import type Equatable from "src/framework/interfaces/Equatable";
 
 export default interface QuakeBrushHalfSpace extends Equatable<QuakeBrushHalfSpace> {
   containsPoint(point: THREE.Vector3): boolean;
 
   getPlane(): THREE.Plane;
 
-  getPlaneDefiningPoint1(): THREE.Vector3;
-
-  getPlaneDefiningPoint2(): THREE.Vector3;
-
-  getPlaneDefiningPoint3(): THREE.Vector3;
+  getPlaneDefiningPoints(): [THREE.Vector3, THREE.Vector3, THREE.Vector3];
 
   getTexture(): string;
 

@@ -1,6 +1,6 @@
-import LogSeverity from "src/framework/enums/LogSeverity";
+import type LogSeverity from "src/framework/enums/LogSeverity";
 
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default interface Logger {
   /**

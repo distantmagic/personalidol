@@ -1,3 +1,3 @@
-import Sentient from "src/framework/interfaces/Sentient";
+import type Sentient from "src/framework/interfaces/Sentient";
 
 export default interface Feels extends Sentient {}

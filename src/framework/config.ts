@@ -1,4 +1,4 @@
-import Config from "src/framework/types/Config";
+import type Config from "src/framework/types/Config";
 
 const config: Config = {
   TEXTURE_SIZE: 128,

@@ -1,4 +1,4 @@
-import DebuggerState from "src/framework/types/DebuggerState";
+import type DebuggerState from "src/framework/types/DebuggerState";
 
 type DebuggerStateChangeCallback = (state: DebuggerState) => void;
 

@@ -1,7 +1,7 @@
-import * as THREE from "three";
-import { Face } from "three/examples/jsm/math/ConvexHull";
+import type * as THREE from "three";
+import type { Face } from "three/examples/jsm/math/ConvexHull";
 
-import QuakeBrush from "src/framework/interfaces/QuakeBrush";
+import type QuakeBrush from "src/framework/interfaces/QuakeBrush";
 
 export default interface QuakeBrushGeometryBuilder {
   addBrush(brush: QuakeBrush, textures: ReadonlyArray<THREE.Texture>): void;

@@ -5,8 +5,8 @@ import { default as MissingException } from "src/framework/classes/Exception/Ser
 import { default as SecurityException } from "src/framework/classes/Exception/ServiceWorker/Security";
 import { default as UnsupportedException } from "src/framework/classes/Exception/ServiceWorker/Unsupported";
 
-import Logger from "src/framework/interfaces/Logger";
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type Logger from "src/framework/interfaces/Logger";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 function getServiceWorkerAPI(loggerBreadcrumbs: LoggerBreadcrumbs): ServiceWorkerContainer {
   const serviceWorker = navigator.serviceWorker;

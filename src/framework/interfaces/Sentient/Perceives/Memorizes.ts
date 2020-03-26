@@ -1,5 +1,5 @@
-import Memorizable from "src/framework/interfaces/Memorizable";
-import Perceives from "src/framework/interfaces/Sentient/Perceives";
+import type Memorizable from "src/framework/interfaces/Memorizable";
+import type Perceives from "src/framework/interfaces/Sentient/Perceives";
 
 export default interface Memorizes extends Perceives {
   forget(memorizable: Memorizable): Promise<void>;

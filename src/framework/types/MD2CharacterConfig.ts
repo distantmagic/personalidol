@@ -1,4 +1,4 @@
-import MD2CharacterAnimations from "src/framework/types/MD2CharacterAnimations";
+import type MD2CharacterAnimations from "src/framework/types/MD2CharacterAnimations";
 
 type MD2CharacterConfig = {
   readonly animations: MD2CharacterAnimations;

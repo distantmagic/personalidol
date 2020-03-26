@@ -1,5 +1,5 @@
-import QuakeWorkerFuncGroup from "src/framework/types/QuakeWorkerFuncGroup";
-import QuakeWorkerWorldspawn from "src/framework/types/QuakeWorkerWorldspawn";
+import type QuakeWorkerFuncGroup from "src/framework/types/QuakeWorkerFuncGroup";
+import type QuakeWorkerWorldspawn from "src/framework/types/QuakeWorkerWorldspawn";
 
 type QuakeWorkerBrush = QuakeWorkerFuncGroup | QuakeWorkerWorldspawn;
 

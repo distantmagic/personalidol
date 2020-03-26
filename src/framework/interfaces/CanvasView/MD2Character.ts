@@ -1,6 +1,6 @@
-import * as THREE from "three";
+import type * as THREE from "three";
 
-import CanvasView from "src/framework/interfaces/CanvasView";
+import type CanvasView from "src/framework/interfaces/CanvasView";
 
 export default interface MD2Character extends CanvasView {
   setAnimationIdle(): void;

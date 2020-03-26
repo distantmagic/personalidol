@@ -1,6 +1,6 @@
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
-import DebuggerStateValue from "src/framework/types/DebuggerStateValue";
+import type DebuggerStateValue from "src/framework/types/DebuggerStateValue";
 
 type DebuggerState = Map<LoggerBreadcrumbs, DebuggerStateValue>;
 

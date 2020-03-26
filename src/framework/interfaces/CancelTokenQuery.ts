@@ -1,4 +1,4 @@
-import Query from "src/framework/interfaces/Query";
+import type Query from "src/framework/interfaces/Query";
 
 export default interface CancelTokenQuery<T> {
   // constructor(cancelToken: CancelToken, query: Query<T>): void;

@@ -1,4 +1,4 @@
-import LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 
 export default interface HasLoggerBreadcrumbs {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;

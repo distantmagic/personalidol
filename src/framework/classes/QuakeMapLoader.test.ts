@@ -4,8 +4,7 @@ import QuakeMapLoader from "src/framework/classes/QuakeMapLoader";
 import type QuakeBrush from "src/framework/interfaces/QuakeBrush";
 
 import type QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
-import type QuakeWorkerFuncGroup from "src/framework/types/QuakeWorkerFuncGroup";
-import type QuakeWorkerWorldspawn from "src/framework/types/QuakeWorkerWorldspawn";
+import type QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
 
 import * as fixtures from "src/fixtures";
 
@@ -14,17 +13,25 @@ test("parses map content and extracts entities and geometries", async function (
   const loggerBreadcrumbs = new LoggerBreadcrumbs();
   const quakeMapLoader = new QuakeMapLoader(loggerBreadcrumbs);
 
+  const entities: QuakeWorkerAny[] = [];
+  const staticBrushes: QuakeBrush[] = [];
+  const staticGeometries: QuakeWorkerBrush[] = [];
+
   quakeMapLoader.onEntity.add(function (entity: QuakeWorkerAny) {
-    // console.log(entity);
+    entities.push(entity);
   });
 
   quakeMapLoader.onStaticBrush.add(function (brush: QuakeBrush) {
-    // console.log(brush);
+    staticBrushes.push(brush);
   });
 
-  quakeMapLoader.onStaticGeometry.add(function (entity: QuakeWorkerFuncGroup | QuakeWorkerWorldspawn, transferables: Transferable[]) {
-    // console.log(entity);
+  quakeMapLoader.onStaticGeometry.add(function (entity: QuakeWorkerBrush, transferables: Transferable[]) {
+    staticGeometries.push(entity);
   });
 
   await quakeMapLoader.processMapContent(loggerBreadcrumbs, quakeMapContent);
+
+  expect(entities).toHaveLength(2);
+  expect(staticBrushes).toHaveLength(1);
+  expect(staticGeometries).toHaveLength(1);
 });

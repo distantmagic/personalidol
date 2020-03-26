@@ -16,7 +16,7 @@
     "react-scripts": "^3.4.1",
     "resize-observer-polyfill": "^1.5.1",
     "screenfull": "^5.0.2",
-    "three": "^0.114.0",
+    "three": "^0.115.0",
     "yn": "^4.0.0"
   },
   "devDependencies": {

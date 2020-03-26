@@ -12,8 +12,7 @@ import type { default as IEventListenerSet } from "src/framework/interfaces/Even
 import type { default as IQuakeMapLoader } from "src/framework/interfaces/QuakeMapLoader";
 
 import type QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
-import type QuakeWorkerFuncGroup from "src/framework/types/QuakeWorkerFuncGroup";
-import type QuakeWorkerWorldspawn from "src/framework/types/QuakeWorkerWorldspawn";
+import type QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
 
 type QuakeBrushClassNames = "func_group" | "worldspawn";
 
@@ -29,7 +28,7 @@ function getEntityOrigin(entity: QuakeEntity): [number, number, number] {
 export default class QuakeMapLoader implements IQuakeMapLoader {
   readonly onEntity: IEventListenerSet<[QuakeWorkerAny]>;
   readonly onStaticBrush: IEventListenerSet<[QuakeBrush]>;
-  readonly onStaticGeometry: IEventListenerSet<[QuakeWorkerFuncGroup | QuakeWorkerWorldspawn, Transferable[]]>;
+  readonly onStaticGeometry: IEventListenerSet<[QuakeWorkerBrush, Transferable[]]>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     this.onEntity = new EventListenerSet(loggerBreadcrumbs.add("onEntity"));

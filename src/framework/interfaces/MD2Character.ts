@@ -1,8 +1,8 @@
-import * as THREE from "three";
-import { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
+import type * as THREE from "three";
+import type { MorphBlendMesh } from "three/examples/jsm/misc/MorphBlendMesh";
 
-import MD2CharacterAnimations from "src/framework/types/MD2CharacterAnimations";
-import MD2CharacterControls from "src/framework/types/MD2CharacterControls";
+import type MD2CharacterAnimations from "src/framework/types/MD2CharacterAnimations";
+import type MD2CharacterControls from "src/framework/types/MD2CharacterControls";
 
 export default interface MD2Character {
   readonly weapons: ReadonlyArray<MorphBlendMesh>;

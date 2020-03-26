@@ -1,7 +1,7 @@
-import * as THREE from "three";
+import type * as THREE from "three";
 
-import CanvasController from "src/framework/interfaces/CanvasController";
-import EventListenerSet from "src/framework/interfaces/EventListenerSet";
+import type CanvasController from "src/framework/interfaces/CanvasController";
+import type EventListenerSet from "src/framework/interfaces/EventListenerSet";
 
 export default interface PerspectiveCamera extends CanvasController {
   readonly camera: THREE.PerspectiveCamera;

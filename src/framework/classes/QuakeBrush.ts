@@ -19,6 +19,10 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   readonly halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly verticesCache: WeakMap<THREE.Vector3, QuakeBrushHalfSpace> = new WeakMap();
+  private readonly _boundingBox: THREE.Box3 = new THREE.Box3();
+  private _boundingBoxNeedsGenerating: boolean = true;
+  private readonly _vertices: THREE.Vector3[] = [];
+  private _verticesNeedGenerating: boolean = true;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>) {
     if (halfSpaces.length < 4) {
@@ -49,7 +53,13 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
     }
   }
 
-  *generateVertices(): Generator<THREE.Vector3, void, void> {
+  *generateVertices(): Generator<THREE.Vector3> {
+    if (this._verticesNeedGenerating === false) {
+      for (let vertex of this._vertices) {
+        yield vertex;
+      }
+    }
+
     const unique: { [key: string]: boolean } = {};
 
     for (let trio of this.generateHalfSpaceTrios()) {
@@ -61,21 +71,28 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
           unique[serialized] = true;
 
           if (this.containsPoint(intersectingPoint)) {
+            this._vertices.push(intersectingPoint);
             yield intersectingPoint;
           }
         }
       }
     }
+
+    this._verticesNeedGenerating = false;
   }
 
   getBoundingBox(): THREE.Box3 {
-    const boundingBox = new THREE.Box3();
-
-    for (let vertex of this.generateVertices()) {
-      boundingBox.expandByPoint(vertex);
+    if (!this._boundingBoxNeedsGenerating) {
+      return this._boundingBox;
     }
 
-    return boundingBox;
+    for (let vertex of this.generateVertices()) {
+      this._boundingBox.expandByPoint(vertex);
+    }
+
+    this._boundingBoxNeedsGenerating = false;
+
+    return this._boundingBox;
   }
 
   getConvexHull(): ConvexHull {
@@ -106,6 +123,10 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   }
 
   getVertices(): ReadonlyArray<THREE.Vector3> {
+    if (this._verticesNeedGenerating === false) {
+      return this._vertices;
+    }
+
     return Array.from(this.generateVertices());
   }
 

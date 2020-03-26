@@ -13,7 +13,7 @@ export default class ElementPosition<Unit extends ElementPositionUnit> implement
   readonly y: number;
   readonly z: number;
 
-  constructor(unit: Unit, x: number, y: number, z: number = 0) {
+  constructor(unit: Unit, x: number, y: number, z: number) {
     this.unit = unit;
     this.vector = new THREE.Vector3(x, y, z);
     this.x = x;

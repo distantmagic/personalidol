@@ -1,6 +1,6 @@
-import ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
 
-import ElementSize from "src/framework/interfaces/ElementSize";
+import type ElementSize from "src/framework/interfaces/ElementSize";
 
 export default interface HasElementSize<T extends ElementPositionUnit> {
   getElementSize(): ElementSize<T>;

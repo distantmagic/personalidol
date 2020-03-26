@@ -1,12 +1,13 @@
+/// <reference lib="webworker" />
+
 import Exception from "src/framework/classes/Exception";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import QuakeMapLoader from "src/framework/classes/QuakeMapLoader";
 
-import QuakeBrush from "src/framework/interfaces/QuakeBrush";
+import type QuakeBrush from "src/framework/interfaces/QuakeBrush";
 
-import QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
-import QuakeWorkerFuncGroup from "src/framework/types/QuakeWorkerFuncGroup";
-import QuakeWorkerWorldspawn from "src/framework/types/QuakeWorkerWorldspawn";
+import type QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
+import type QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -36,7 +37,7 @@ self.onmessage = function (evt) {
     // });
   });
 
-  quakeMapLoader.onStaticGeometry.add(function (entity: QuakeWorkerFuncGroup | QuakeWorkerWorldspawn, transferables: Transferable[]) {
+  quakeMapLoader.onStaticGeometry.add(function (entity: QuakeWorkerBrush, transferables: Transferable[]) {
     self.postMessage(entity, transferables);
   });
 

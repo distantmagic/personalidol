@@ -1,6 +1,6 @@
-import * as THREE from "three";
+import type * as THREE from "three";
 
-import CancelToken from "src/framework/interfaces/CancelToken";
+import type CancelToken from "src/framework/interfaces/CancelToken";
 
 export default interface QuakeMapTextureLoader {
   dispose(): void;

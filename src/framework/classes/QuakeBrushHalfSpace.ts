@@ -71,23 +71,15 @@ export default class QuakeBrushHalfSpace implements IQuakeBrushHalfSpace {
     //
     // Quake map format stores vertices in a clockwise order
     // http://www.gamers.org/dEngine/quake2/Q2DP/Q2DP_Map/Q2DP_Map-2.html
-    const plane = new THREE.Plane().setFromCoplanarPoints(this.getPlaneDefiningPoint1(), this.getPlaneDefiningPoint2(), this.getPlaneDefiningPoint3());
+    const plane = new THREE.Plane().setFromCoplanarPoints(...this.getPlaneDefiningPoints());
 
     this.cachedPlane = plane;
 
     return plane;
   }
 
-  getPlaneDefiningPoint1(): THREE.Vector3 {
-    return this.v1;
-  }
-
-  getPlaneDefiningPoint2(): THREE.Vector3 {
-    return this.v2;
-  }
-
-  getPlaneDefiningPoint3(): THREE.Vector3 {
-    return this.v3;
+  getPlaneDefiningPoints(): [THREE.Vector3, THREE.Vector3, THREE.Vector3] {
+    return [this.v1, this.v2, this.v3];
   }
 
   getTexture(): string {
@@ -115,10 +107,13 @@ export default class QuakeBrushHalfSpace implements IQuakeBrushHalfSpace {
   }
 
   isEqual(other: IQuakeBrushHalfSpace): boolean {
+    const thisPlaneDefiningPoints = this.getPlaneDefiningPoints();
+    const otherPlaneDefiningPoints = other.getPlaneDefiningPoints();
+
     return (
-      this.getPlaneDefiningPoint1().equals(other.getPlaneDefiningPoint1()) &&
-      this.getPlaneDefiningPoint2().equals(other.getPlaneDefiningPoint2()) &&
-      this.getPlaneDefiningPoint3().equals(other.getPlaneDefiningPoint3()) &&
+      thisPlaneDefiningPoints[0].equals(otherPlaneDefiningPoints[0]) &&
+      thisPlaneDefiningPoints[1].equals(otherPlaneDefiningPoints[1]) &&
+      thisPlaneDefiningPoints[2].equals(otherPlaneDefiningPoints[2]) &&
       this.getTexture() === other.getTexture() &&
       this.getXOffset() === other.getXOffset() &&
       this.getYOffset() === other.getYOffset() &&

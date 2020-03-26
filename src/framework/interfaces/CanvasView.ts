@@ -1,9 +1,9 @@
-import * as THREE from "three";
+import type * as THREE from "three";
 
-import AnimatableUpdatable from "src/framework/interfaces/AnimatableUpdatable";
-import CameraFrustumResponder from "src/framework/interfaces/CameraFrustumResponder";
-import CanvasPointerEventHandler from "src/framework/interfaces/CanvasPointerEventHandler";
-import Disposable from "src/framework/interfaces/Disposable";
+import type AnimatableUpdatable from "src/framework/interfaces/AnimatableUpdatable";
+import type CameraFrustumResponder from "src/framework/interfaces/CameraFrustumResponder";
+import type CanvasPointerEventHandler from "src/framework/interfaces/CanvasPointerEventHandler";
+import type Disposable from "src/framework/interfaces/Disposable";
 
 export default interface CanvasView extends AnimatableUpdatable, CameraFrustumResponder, CanvasPointerEventHandler, Disposable {
   attachCamera(camera: THREE.Camera): void;

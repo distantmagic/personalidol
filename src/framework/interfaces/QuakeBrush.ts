@@ -1,9 +1,9 @@
-import * as THREE from "three";
-import { ConvexHull } from "three/examples/jsm/math/ConvexHull";
+import type * as THREE from "three";
+import type { ConvexHull } from "three/examples/jsm/math/ConvexHull";
 
-import Equatable from "src/framework/interfaces/Equatable";
-import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
-import QuakeBrushHalfSpaceTrio from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
+import type Equatable from "src/framework/interfaces/Equatable";
+import type QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
+import type QuakeBrushHalfSpaceTrio from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
 export default interface QuakeBrush extends Equatable<QuakeBrush> {
   generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrio>;

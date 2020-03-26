@@ -28,7 +28,7 @@ export default class HTMLElementSizeObserver implements HasLoggerBreadcrumbs, IH
     this.nativeResizeObserver = new ResizeObserver(function (mutationList) {
       for (let mutation of mutationList) {
         const contentRect = mutation.contentRect;
-        const elementSize = new ElementSize<ElementPositionUnit.Px>(ElementPositionUnit.Px, contentRect.width, contentRect.height);
+        const elementSize = new ElementSize<ElementPositionUnit.Px>(ElementPositionUnit.Px, contentRect.width, contentRect.height, 0);
 
         onResize.notify([elementSize]);
       }

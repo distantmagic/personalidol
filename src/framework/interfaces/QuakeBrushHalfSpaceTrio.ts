@@ -1,6 +1,6 @@
-import * as THREE from "three";
+import type * as THREE from "three";
 
-import QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
+import type QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
 
 export default interface QuakeBrushHalfSpaceTrio {
   getIntersectingPoint(): THREE.Vector3;

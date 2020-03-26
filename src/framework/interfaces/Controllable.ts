@@ -1,4 +1,4 @@
-import ControlToken from "src/framework/interfaces/ControlToken";
+import type ControlToken from "src/framework/interfaces/ControlToken";
 
 export default interface Controllable {
   cedeExternalControlToken(controlToken: ControlToken): void;

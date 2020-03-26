@@ -1,12 +1,12 @@
-import * as THREE from "three";
+import type * as THREE from "three";
 
-import QuakeEntityClassName from "src/framework/enums/QuakeEntityClassName";
+import type QuakeEntityClassName from "src/framework/enums/QuakeEntityClassName";
 
-import Equatable from "src/framework/interfaces/Equatable";
-import QuakeBrush from "src/framework/interfaces/QuakeBrush";
-import QuakeEntityProperties from "src/framework/interfaces/QuakeEntityProperties";
+import type Equatable from "src/framework/interfaces/Equatable";
+import type QuakeBrush from "src/framework/interfaces/QuakeBrush";
+import type QuakeEntityProperties from "src/framework/interfaces/QuakeEntityProperties";
 
-import QuakeEntityType from "src/framework/types/QuakeEntityType";
+import type QuakeEntityType from "src/framework/types/QuakeEntityType";
 
 export default interface QuakeEntity extends Equatable<QuakeEntity> {
   getBrushes(): ReadonlyArray<QuakeBrush>;

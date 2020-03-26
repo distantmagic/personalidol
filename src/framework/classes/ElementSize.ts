@@ -10,7 +10,7 @@ export default class ElementSize<Unit extends ElementPositionUnit> implements IE
   readonly unit: Unit;
   readonly width: number;
 
-  constructor(unit: Unit, width: number, height: number, depth: number = 0) {
+  constructor(unit: Unit, width: number, height: number, depth: number) {
     this.height = height;
     this.depth = depth;
     this.unit = unit;
