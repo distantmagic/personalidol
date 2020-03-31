@@ -29,7 +29,7 @@ test("parses map content and extracts entities and geometries", async function (
     staticGeometries.push(entity);
   });
 
-  await quakeMapLoader.processMapContent(loggerBreadcrumbs, quakeMapContent);
+  await quakeMapLoader.processMapContent(quakeMapContent);
 
   expect(entities).toHaveLength(2);
   expect(staticBrushes).toHaveLength(1);

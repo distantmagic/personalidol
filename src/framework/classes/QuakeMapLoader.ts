@@ -26,18 +26,20 @@ function getEntityOrigin(entity: QuakeEntity): [number, number, number] {
 }
 
 export default class QuakeMapLoader implements IQuakeMapLoader {
+  readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onEntity: IEventListenerSet<[QuakeWorkerAny]>;
   readonly onStaticBrush: IEventListenerSet<[QuakeBrush]>;
   readonly onStaticGeometry: IEventListenerSet<[QuakeWorkerBrush, Transferable[]]>;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
+    this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.onEntity = new EventListenerSet(loggerBreadcrumbs.add("onEntity"));
     this.onStaticBrush = new EventListenerSet(loggerBreadcrumbs.add("onStaticBrush"));
     this.onStaticGeometry = new EventListenerSet(loggerBreadcrumbs.add("onStaticGeometry"));
   }
 
-  async processMapContent(loggerBreadcrumbs: LoggerBreadcrumbs, quakeMapContent: string): Promise<void> {
-    const quakeMapParser = new QuakeMapParser(loggerBreadcrumbs.add("QuakeMapParser"), quakeMapContent);
+  async processMapContent(quakeMapContent: string): Promise<void> {
+    const quakeMapParser = new QuakeMapParser(this.loggerBreadcrumbs.add("QuakeMapParser"), quakeMapContent);
 
     // standalone entities
     const entitiesWithBrushes: Array<[QuakeBrushClassNames, QuakeEntity]> = [];
@@ -146,7 +148,7 @@ export default class QuakeMapLoader implements IQuakeMapLoader {
                 ]);
                 break;
               default:
-                throw new QuakeMapException(loggerBreadcrumbs, `Unknown map scenery type: "${sceneryType}".`);
+                throw new QuakeMapException(this.loggerBreadcrumbs, `Unknown map scenery type: "${sceneryType}".`);
             }
           }
           if (entityProperties.hasPropertyKey("sounds")) {
@@ -159,7 +161,7 @@ export default class QuakeMapLoader implements IQuakeMapLoader {
           }
           break;
         default:
-          throw new QuakeMapException(loggerBreadcrumbs, `Unsupported entity class name: "${entityClassName}"`);
+          throw new QuakeMapException(this.loggerBreadcrumbs, `Unsupported entity class name: "${entityClassName}"`);
       }
     }
 
