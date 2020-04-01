@@ -170,6 +170,10 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     return true;
   }
 
+  usePhysics(): true {
+    return true;
+  }
+
   useUpdate(): SchedulerUpdateScenario.Always {
     return SchedulerUpdateScenario.Always;
   }

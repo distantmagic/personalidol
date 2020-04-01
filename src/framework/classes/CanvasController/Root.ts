@@ -25,6 +25,7 @@ import type KeyboardState from "src/framework/interfaces/KeyboardState";
 import type LoadingManager from "src/framework/interfaces/LoadingManager";
 import type Logger from "src/framework/interfaces/Logger";
 import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type PhysicsWorld from "src/framework/interfaces/PhysicsWorld";
 import type PointerState from "src/framework/interfaces/PointerState";
 import type QueryBus from "src/framework/interfaces/QueryBus";
 import type Scheduler from "src/framework/interfaces/Scheduler";
@@ -48,6 +49,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
   readonly logger: Logger;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly outlinePass: OutlinePass;
+  readonly physicsWorld: PhysicsWorld;
   readonly pointerController: IPointerController;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
@@ -63,6 +65,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     keyboardState: KeyboardState,
     loadingManager: LoadingManager,
     logger: Logger,
+    physicsWorld: PhysicsWorld,
     pointerState: PointerState,
     queryBus: QueryBus,
     renderer: THREE.WebGLRenderer,
@@ -83,6 +86,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     this.logger = logger;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.outlinePass = new OutlinePass(new THREE.Vector2(1, 1), this.gameScene, this.gameCamera);
+    this.physicsWorld = physicsWorld;
     this.queryBus = queryBus;
     this.pointerState = pointerState;
     this.renderer = renderer;
@@ -137,6 +141,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
           this.audioLoader,
           this.loadingManager,
           this.logger,
+          this.physicsWorld,
           this.pointerController,
           this.pointerState,
           this.queryBus,

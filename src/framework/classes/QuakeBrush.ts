@@ -20,9 +20,10 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly verticesCache: WeakMap<THREE.Vector3, QuakeBrushHalfSpace> = new WeakMap();
   private readonly _boundingBox: THREE.Box3 = new THREE.Box3();
-  private _boundingBoxNeedsGenerating: boolean = true;
   private readonly _vertices: THREE.Vector3[] = [];
+  private _boundingBoxNeedsGenerating: boolean = true;
   private _verticesNeedGenerating: boolean = true;
+  private instanceId: string = `QuakeBrush.${THREE.MathUtils.generateUUID()}`;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>) {
     if (halfSpaces.length < 4) {
@@ -116,6 +117,10 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
 
   getHalfSpaces(): ReadonlyArray<QuakeBrushHalfSpace> {
     return this.halfSpaces;
+  }
+
+  getInstanceId(): string {
+    return this.instanceId;
   }
 
   getTextures(): ReadonlyArray<string> {

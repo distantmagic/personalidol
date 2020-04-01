@@ -144,6 +144,7 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
     keyboardState,
     loadingManager,
     logger,
+    physicsWorld,
     pointerState,
     queryBus,
     renderer,

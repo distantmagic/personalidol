@@ -49,6 +49,10 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
       await this.cameraFrustumBus.add(cancelToken, canvasView);
     }
 
+    if (canvasView.usePhysics()) {
+      this.physicsWorld.addPhysicsController(canvasView);
+    }
+
     if (SchedulerUpdateScenario.Always === canvasView.useUpdate()) {
       this.scheduler.update.add(canvasView.update);
     }
@@ -64,6 +68,10 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
 
     if (SchedulerUpdateScenario.Always === canvasView.useUpdate()) {
       this.scheduler.update.delete(canvasView.update);
+    }
+
+    if (canvasView.usePhysics()) {
+      this.physicsWorld.removePhysicsController(canvasView);
     }
 
     if (canvasView.useCameraFrustum()) {

@@ -4,6 +4,7 @@ import autoBind from "auto-bind";
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type PhysicsController from "src/framework/interfaces/PhysicsController";
 import type { default as IPhysicsWorld } from "src/framework/interfaces/PhysicsWorld";
 
 export default class PhysicsWorld implements IPhysicsWorld {
@@ -26,6 +27,13 @@ export default class PhysicsWorld implements IPhysicsWorld {
 
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.world.postLoop = this.postLoop;
+  }
+
+  addPhysicsController(handler: PhysicsController): void {
+    // console.log(handler.getInstanceId());
+  }
+
+  removePhysicsController(handler: PhysicsController): void {
   }
 
   update(delta: number): void {

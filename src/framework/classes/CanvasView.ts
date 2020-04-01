@@ -21,10 +21,12 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly parentGroup: THREE.Group;
   protected boundingBox: null | THREE.Box3 = null;
-  private instanceId: string;
   private _isAttached: boolean = false;
   private _isDisposed: boolean = false;
   private _isInCameraFrustum: boolean = false;
+  // using .getName() is redundant here, because we are using UUID anyway,
+  // but ID with a human readable name is better for debugging
+  private instanceId: string = `${this.getName()}.${THREE.MathUtils.generateUUID()}`;
 
   static useBegin: boolean = true;
   static useEnd: boolean = true;
@@ -34,10 +36,6 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     this.canvasViewBag = canvasViewBag;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.parentGroup = parentGroup;
-
-    // using .getName() is redundant here, because we are using UUID anyway,
-    // but ID with a human readable name is better for debugging
-    this.instanceId = `${this.getName()}.${THREE.MathUtils.generateUUID()}`;
   }
 
   @cancelable()

@@ -25,7 +25,9 @@ import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import type LoadingManager from "src/framework/interfaces/LoadingManager";
 import type Logger from "src/framework/interfaces/Logger";
 import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type PhysicsWorld from "src/framework/interfaces/PhysicsWorld";
 import type PointerState from "src/framework/interfaces/PointerState";
+import type QuakeBrush from "src/framework/interfaces/QuakeBrush";
 import type QueryBus from "src/framework/interfaces/QueryBus";
 import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 import type { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
@@ -41,6 +43,7 @@ export default class QuakeMap extends CanvasView {
   readonly canvasControllerBus: CanvasControllerBus;
   readonly loadingManager: LoadingManager;
   readonly logger: Logger;
+  readonly physicsWorld: PhysicsWorld;
   readonly pointerController: IPointerController;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
@@ -58,6 +61,7 @@ export default class QuakeMap extends CanvasView {
     audioLoader: THREE.AudioLoader,
     loadingManager: LoadingManager,
     logger: Logger,
+    physicsWorld: PhysicsWorld,
     pointerController: IPointerController,
     pointerState: PointerState,
     queryBus: QueryBus,
@@ -73,6 +77,7 @@ export default class QuakeMap extends CanvasView {
     this.canvasControllerBus = canvasControllerBus;
     this.loadingManager = loadingManager;
     this.logger = logger;
+    this.physicsWorld = physicsWorld;
     this.pointerController = pointerController;
     this.pointerState = pointerState;
     this.queryBus = queryBus;
@@ -222,6 +227,10 @@ export default class QuakeMap extends CanvasView {
         default:
           throw new QuakeMapException(this.loggerBreadcrumbs.add("attach"), `Unsupported entity class name: "${entityClassName}"`);
       }
+    });
+
+    quakeMapLoader.onStaticBrush.add((brush: QuakeBrush) => {
+      // console.log(brush);
     });
 
     quakeMapLoader.onStaticGeometry.add((entity: QuakeWorkerBrush, transferables: Transferable[]) => {
