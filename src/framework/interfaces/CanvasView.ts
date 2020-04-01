@@ -16,9 +16,13 @@ export default interface CanvasView extends AnimatableUpdatable, CameraFrustumRe
 
   getChildren(): THREE.Group;
 
+  getInstanceId(): string;
+
   getPosition(): THREE.Vector3;
 
   getName(): string;
 
   useCameraFrustum(): boolean;
+
+  usePhysics(): boolean;
 }

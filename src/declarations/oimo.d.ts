@@ -2,8 +2,12 @@ declare module "oimo" {
   declare class Body {}
 
   declare class World {
+    postLoop?: () => any;
+    timerate: number;
+    timeStep: number;
+
     constructor(setup: {
-      timestep: number;
+      timestep?: number;
       iterations: number;
       // 1 brute force, 2 sweep and prune, 3 volume tree
       broadphase: 1 | 2 | 3;
@@ -27,6 +31,7 @@ declare module "oimo" {
       rot: [number, number, number];
       // dynamic or statique
       move: boolean;
+      name?: string;
       density: number;
       friction: number;
       restitution: number;

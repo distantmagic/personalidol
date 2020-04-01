@@ -245,10 +245,6 @@ export default class QuakeBrush extends CanvasView {
     }
   }
 
-  getName(): "QuakeBrush" {
-    return "QuakeBrush";
-  }
-
   useCameraFrustum(): true {
     return true;
   }

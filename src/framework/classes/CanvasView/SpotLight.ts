@@ -38,8 +38,4 @@ export default class SpotLight extends CanvasView {
     this.children.add(this.light);
     this.children.add(this.light.target);
   }
-
-  getName(): "SpotLight" {
-    return "SpotLight";
-  }
 }

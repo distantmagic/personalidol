@@ -25,8 +25,4 @@ export default class HemisphereLight extends CanvasView {
 
     this.children.add(this.light);
   }
-
-  getName(): "HemisphereLight" {
-    return "HemisphereLight";
-  }
 }

@@ -25,8 +25,4 @@ export default class AmbientLight extends CanvasView {
 
     this.children.add(this.light);
   }
-
-  getName(): "AmbientLight" {
-    return "AmbientLight";
-  }
 }

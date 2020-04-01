@@ -5,6 +5,7 @@ import CancelToken from "src/framework/classes/CancelToken";
 import CanvasViewBag from "src/framework/classes/CanvasViewBag";
 import CanvasViewBus from "src/framework/classes/CanvasViewBus";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import PhysicsWorld from "src/framework/classes/PhysicsWorld";
 import Scheduler from "src/framework/classes/Scheduler";
 import THREEHelpers from "src/framework/classes/CanvasView/THREEHelpers";
 
@@ -13,8 +14,9 @@ test("is cleanly attached and disposed", async function () {
   const cancelToken = new CancelToken(loggerBreadcrumbs);
   const scheduler = new Scheduler(loggerBreadcrumbs);
   const camera = new THREE.PerspectiveCamera();
+  const physicsWorld = new PhysicsWorld(loggerBreadcrumbs);
   const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, physicsWorld, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
   const group = new THREE.Group();
 

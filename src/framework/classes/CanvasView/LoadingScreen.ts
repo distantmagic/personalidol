@@ -37,10 +37,6 @@ export default class LoadingScreen extends CanvasView {
     this.children.add(sprite);
   }
 
-  getName(): "LoadingScreen" {
-    return "LoadingScreen";
-  }
-
   setProgress(progress: number): void {}
 
   update(delta: number): void {

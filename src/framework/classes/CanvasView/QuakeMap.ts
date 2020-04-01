@@ -329,8 +329,4 @@ export default class QuakeMap extends CanvasView {
 
     await Promise.all(md2ModelsViews);
   }
-
-  getName(): "QuakeMap" {
-    return "QuakeMap";
-  }
 }

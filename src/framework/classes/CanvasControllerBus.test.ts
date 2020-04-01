@@ -8,6 +8,7 @@ import CanvasViewBag from "src/framework/classes/CanvasViewBag";
 import CanvasViewBus from "src/framework/classes/CanvasViewBus";
 import HTMLElementSizeObserver from "src/framework/classes/HTMLElementSizeObserver";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
+import PhysicsWorld from "src/framework/classes/PhysicsWorld";
 import Scheduler from "src/framework/classes/Scheduler";
 import { default as CanvasControllerException } from "src/framework/classes/Exception/CanvasController";
 
@@ -58,7 +59,8 @@ function createContext() {
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, htmlElementResizeObserver, scheduler);
   const camera = new THREE.PerspectiveCamera();
   const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs, camera);
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, scheduler);
+  const physicsWorld = new PhysicsWorld(loggerBreadcrumbs);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs, cameraFrustumBus, physicsWorld, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs, canvasViewBus);
 
   return {

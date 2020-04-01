@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 import Query from "src/framework/classes/Query";
@@ -11,7 +10,6 @@ export default class GLTFModel extends Query<GLTF> {
   readonly loadingManager: THREE.LoadingManager;
   readonly resourcesPath: string;
   readonly url: string;
-  private static uuid = THREE.MathUtils.generateUUID();
 
   constructor(loadingManager: THREE.LoadingManager, resourcesPath: string, url: string) {
     super();
@@ -29,10 +27,6 @@ export default class GLTFModel extends Query<GLTF> {
       loader.setResourcePath(this.resourcesPath);
       loader.load(this.url, resolve, undefined, reject);
     });
-  }
-
-  getQueryUUID(): string {
-    return GLTFModel.uuid;
   }
 
   isEqual(other: GLTFModel): boolean {

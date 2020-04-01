@@ -32,7 +32,7 @@ class Foo implements Query<number> {
     return this.reference;
   }
 
-  getQueryUUID(): string {
+  getQueryType(): string {
     return Foo.uuid;
   }
 

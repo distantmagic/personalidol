@@ -37,18 +37,10 @@ test("generates vertices from parsed halfspaces", function () {
 });
 
 test("finds halfspace by coplanar points", function () {
-  const halfSpace = context.quakeBrush.getHalfSpaceByCoplanarPoints(
-    new THREE.Vector3(64, 16, 64),
-    new THREE.Vector3(64, 16, 32),
-    new THREE.Vector3(32, 16, 32)
-  );
+  const halfSpace = context.quakeBrush.getHalfSpaceByCoplanarPoints(new THREE.Vector3(64, 16, 64), new THREE.Vector3(64, 16, 32), new THREE.Vector3(32, 16, 32));
   const planeDefiningPoints = halfSpace.getPlaneDefiningPoints();
 
-  const expectedPoints = [
-    new THREE.Vector3(64, 16, 64),
-    new THREE.Vector3(65, 16, 64),
-    new THREE.Vector3(64, 16, 65),
-  ];
+  const expectedPoints = [new THREE.Vector3(64, 16, 64), new THREE.Vector3(65, 16, 64), new THREE.Vector3(64, 16, 65)];
 
   expect(planeDefiningPoints[0].equals(expectedPoints[0])).toBe(true);
   expect(planeDefiningPoints[1].equals(expectedPoints[1])).toBe(true);

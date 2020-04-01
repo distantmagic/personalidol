@@ -30,8 +30,4 @@ export default class THREEHelpers extends CanvasView {
     this.children.add(this.axesHelper);
     this.children.add(this.gridHelper);
   }
-
-  getName(): "THREEHelpers" {
-    return "THREEHelpers";
-  }
 }

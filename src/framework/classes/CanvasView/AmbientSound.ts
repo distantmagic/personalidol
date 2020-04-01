@@ -83,8 +83,4 @@ export default class AmbientSound extends CanvasView {
 
     sound.stop();
   }
-
-  getName(): "AmbientSound" {
-    return "AmbientSound";
-  }
 }

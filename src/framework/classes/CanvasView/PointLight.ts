@@ -34,8 +34,4 @@ export default class PointLight extends CanvasView {
 
     this.children.add(this.light);
   }
-
-  getName(): "PointLight" {
-    return "PointLight";
-  }
 }

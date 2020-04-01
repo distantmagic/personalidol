@@ -21,6 +21,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly parentGroup: THREE.Group;
   protected boundingBox: null | THREE.Box3 = null;
+  private instanceId: string;
   private _isAttached: boolean = false;
   private _isDisposed: boolean = false;
   private _isInCameraFrustum: boolean = false;
@@ -29,12 +30,14 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   static useEnd: boolean = true;
   static useUpdate: boolean = true;
 
-  abstract getName(): string;
-
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, parentGroup: THREE.Group) {
     this.canvasViewBag = canvasViewBag;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
     this.parentGroup = parentGroup;
+
+    // using .getName() is redundant here, because we are using UUID anyway,
+    // but ID with a human readable name is better for debugging
+    this.instanceId = `${this.getName()}.${THREE.MathUtils.generateUUID()}`;
   }
 
   @cancelable()
@@ -87,6 +90,14 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     return this.children;
   }
 
+  getInstanceId(): string {
+    return this.instanceId;
+  }
+
+  getName(): string {
+    return this.constructor.name;
+  }
+
   getPosition(): THREE.Vector3 {
     return this.getChildren().position;
   }
@@ -137,6 +148,10 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   update(delta: number): void {}
 
   useCameraFrustum(): boolean {
+    return false;
+  }
+
+  usePhysics(): boolean {
     return false;
   }
 

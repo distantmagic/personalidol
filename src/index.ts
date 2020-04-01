@@ -13,6 +13,7 @@ import KeyboardState from "src/framework/classes/KeyboardState";
 import LoadingManager from "src/framework/classes/LoadingManager";
 import LoggerBreadcrumbs from "src/framework/classes/LoggerBreadcrumbs";
 import MainLoop from "src/framework/classes/MainLoop";
+import PhysicsWorld from "src/framework/classes/PhysicsWorld";
 import PointerState from "src/framework/classes/PointerState";
 import QueryBus from "src/framework/classes/QueryBus";
 import Scheduler from "src/framework/classes/Scheduler";
@@ -80,6 +81,7 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
 
   const gameCamera = new THREE.PerspectiveCamera();
   const cameraFrustumBus = new CameraFrustumBus(loggerBreadcrumbs.add("CameraFrustumBus"), gameCamera);
+  const physicsWorld = new PhysicsWorld(loggerBreadcrumbs.add("PhysicsWorld"));
   const pointerState = new PointerState(loggerBreadcrumbs.add("PointerState"), sceneCanvas);
   const resizeObserver = new HTMLElementSizeObserver(loggerBreadcrumbs.add("HTMLElementSizeObserver"), sceneCanvas);
   const canvasControllerBus = new CanvasControllerBus(loggerBreadcrumbs, resizeObserver, scheduler);
@@ -94,6 +96,9 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   }
   if (SchedulerUpdateScenario.Always === cameraFrustumBus.useUpdate()) {
     scheduler.update.add(cameraFrustumBus.update);
+  }
+  if (SchedulerUpdateScenario.Always === physicsWorld.useUpdate()) {
+    scheduler.update.add(physicsWorld.update);
   }
 
   window.addEventListener("resize", onWindowResize);
@@ -118,7 +123,7 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
 
   renderer.setPixelRatio(window.devicePixelRatio);
 
-  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs.add("CanvasViewBus"), cameraFrustumBus, scheduler);
+  const canvasViewBus = new CanvasViewBus(loggerBreadcrumbs.add("CanvasViewBus"), cameraFrustumBus, physicsWorld, scheduler);
   const canvasViewBag = new CanvasViewBag(loggerBreadcrumbs.add("CanvasViewBag"), canvasViewBus);
 
   const loadingScreenController = new LoadingScreenController(
@@ -172,6 +177,12 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
 
   if (SchedulerUpdateScenario.Always === busClock.useUpdate()) {
     scheduler.update.delete(busClock.update);
+  }
+  if (SchedulerUpdateScenario.Always === cameraFrustumBus.useUpdate()) {
+    scheduler.update.delete(cameraFrustumBus.update);
+  }
+  if (SchedulerUpdateScenario.Always === physicsWorld.useUpdate()) {
+    scheduler.update.delete(physicsWorld.update);
   }
 
   await logger.debug(loggerBreadcrumbs.add("attachRenderer"), "Game is completely disposed of.");

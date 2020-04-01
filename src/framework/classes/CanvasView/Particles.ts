@@ -64,10 +64,6 @@ export default class Particles extends CanvasView {
     this.system.dispose();
   }
 
-  getName(): "Particles" {
-    return "Particles";
-  }
-
   isInFrustum(frustum: THREE.Frustum): boolean {
     return frustum.containsPoint(this.children.position);
   }

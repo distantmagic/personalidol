@@ -102,10 +102,6 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     this.gameCameraController.onZoomChange.delete(this.onZoomChange);
   }
 
-  getName(): "Cursor" {
-    return "Cursor";
-  }
-
   onZoomChange(zoom: number): void {
     // const scale = 1 / zoom;
     const scale = 1 / 4;

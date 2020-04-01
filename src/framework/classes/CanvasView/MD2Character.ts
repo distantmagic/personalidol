@@ -130,10 +130,6 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     return character;
   }
 
-  getName(): "MD2Character" {
-    return "MD2Character";
-  }
-
   setAnimationIdle(): void {
     const controls = this.getCharacter().controls;
 

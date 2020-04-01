@@ -27,7 +27,7 @@ class Foo implements Query<number> {
     return this.fooReference;
   }
 
-  getQueryUUID(): string {
+  getQueryType(): string {
     return Foo.uuid;
   }
 
@@ -48,7 +48,7 @@ class Bar implements Query<BarObject> {
     return this.barReference;
   }
 
-  getQueryUUID(): string {
+  getQueryType(): string {
     return Bar.uuid;
   }
 

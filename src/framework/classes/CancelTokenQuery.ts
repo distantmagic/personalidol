@@ -77,7 +77,7 @@ export default class CancelTokenQuery<T> implements ICancelTokenQuery<T>, HasLog
     const aQuery = this.getQuery();
     const bQuery = other.getQuery();
 
-    if (aQuery === bQuery || aQuery.getQueryUUID() !== bQuery.getQueryUUID()) {
+    if (aQuery === bQuery || aQuery.getQueryType() !== bQuery.getQueryType()) {
       return false;
     }
 

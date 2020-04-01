@@ -16,7 +16,6 @@ export default class MD2Character extends Query<IMD2Character> implements HasLog
   readonly config: MD2CharacterConfig;
   readonly loadingManager: THREE.LoadingManager;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  private static uuid = THREE.MathUtils.generateUUID();
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, loadingManager: THREE.LoadingManager, config: MD2CharacterConfig) {
     super();
@@ -36,10 +35,6 @@ export default class MD2Character extends Query<IMD2Character> implements HasLog
       };
       character.loadParts(this.config);
     });
-  }
-
-  getQueryUUID(): string {
-    return MD2Character.uuid;
   }
 
   isEqual(other: MD2Character): boolean {

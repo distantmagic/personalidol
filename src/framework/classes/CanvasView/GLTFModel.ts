@@ -113,8 +113,4 @@ export default class GLTFModel extends CanvasView {
 
     this.children.add(mesh);
   }
-
-  getName(): "GLTFModel" {
-    return "GLTFModel";
-  }
 }

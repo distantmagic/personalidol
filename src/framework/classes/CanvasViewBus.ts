@@ -11,17 +11,20 @@ import type CancelToken from "src/framework/interfaces/CancelToken";
 import type CanvasView from "src/framework/interfaces/CanvasView";
 import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
+import type PhysicsWorld from "src/framework/interfaces/PhysicsWorld";
 import type Scheduler from "src/framework/interfaces/Scheduler";
 import type { default as ICanvasViewBus } from "src/framework/interfaces/CanvasViewBus";
 
 export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewBus {
   readonly cameraFrustumBus: CameraFrustumBus;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
+  readonly physicsWorld: PhysicsWorld;
   readonly scheduler: Scheduler;
 
-  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cameraFrustumBus: CameraFrustumBus, scheduler: Scheduler) {
+  constructor(loggerBreadcrumbs: LoggerBreadcrumbs, cameraFrustumBus: CameraFrustumBus, physicsWorld: PhysicsWorld, scheduler: Scheduler) {
     this.cameraFrustumBus = cameraFrustumBus;
     this.loggerBreadcrumbs = loggerBreadcrumbs;
+    this.physicsWorld = physicsWorld;
     this.scheduler = scheduler;
   }
 

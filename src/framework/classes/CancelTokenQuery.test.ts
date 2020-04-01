@@ -19,7 +19,7 @@ class FooQuery extends Query<number> {
     });
   }
 
-  getQueryUUID(): string {
+  getQueryType(): string {
     return FooQuery.uuid;
   }
 
