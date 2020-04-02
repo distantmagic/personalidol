@@ -22,7 +22,7 @@ import type { default as IPointerController } from "src/framework/interfaces/Can
 
 import type QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
 
-const SPEED_UNITS_PER_SECOND = 300;
+const SPEED_UNITS_PER_SECOND = 15000;
 
 export default class Player extends CanvasController implements HasLoggerBreadcrumbs {
   readonly entity: QuakeWorkerPlayer;
@@ -35,7 +35,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
   readonly queryBus: QueryBus;
   readonly threeLoadingManager: THREE.LoadingManager;
   private pointerVectorRotationPivot: THREE.Vector2 = new THREE.Vector2(0, 0);
-  // private zeroVelocityVector: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+  private zeroVelocityVector: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -97,7 +97,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
   setIdle(): void {
     this.playerView.setAnimationIdle();
-    // this.playerView.setVelocity(this.zeroVelocityVector);
+    this.playerView.setVelocity(this.zeroVelocityVector);
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

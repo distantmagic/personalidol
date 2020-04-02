@@ -231,6 +231,7 @@ export default class QuakeMap extends CanvasView {
 
     quakeMapLoader.onStaticBrush.add((brush: QuakeBrush) => {
       // console.log(brush);
+      // this.physicsWorld.addPhysicsController(brush);
     });
 
     quakeMapLoader.onStaticGeometry.add((entity: QuakeWorkerBrush, transferables: Transferable[]) => {

@@ -23,7 +23,7 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   private readonly _vertices: THREE.Vector3[] = [];
   private _boundingBoxNeedsGenerating: boolean = true;
   private _verticesNeedGenerating: boolean = true;
-  private instanceId: string = `QuakeBrush.${THREE.MathUtils.generateUUID()}`;
+  // private instanceId: string = `QuakeBrush.${THREE.MathUtils.generateUUID()}`;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, halfSpaces: ReadonlyArray<QuakeBrushHalfSpace>) {
     if (halfSpaces.length < 4) {
@@ -119,9 +119,9 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
     return this.halfSpaces;
   }
 
-  getInstanceId(): string {
-    return this.instanceId;
-  }
+  // getInstanceId(): string {
+  //   return this.instanceId;
+  // }
 
   getTextures(): ReadonlyArray<string> {
     return uniq(this.getHalfSpaces().map((halfSpace) => halfSpace.getTexture()));
@@ -140,5 +140,9 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
     const otherHalfSpaces = other.getHalfSpaces();
 
     return isArrayEqual(this.loggerBreadcrumbs.add("isEqual"), thisHalfSpaces, otherHalfSpaces);
+  }
+
+  isStatic(): true {
+    return true;
   }
 }

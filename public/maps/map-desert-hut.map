@@ -18,11 +18,8 @@
 }
 // entity 1
 {
-"classname" "model_md2"
-"origin" "720 736 32"
-"model_name" "ogro"
-"angle" "0"
-"skin" "0"
+"classname" "player"
+"origin" "792 192 24"
 }
 // entity 2
 {
@@ -34,15 +31,18 @@
 }
 // entity 3
 {
-"classname" "player"
-"origin" "792 192 24"
+"classname" "model_md2"
+"origin" "720 736 32"
+"model_name" "ogro"
+"angle" "0"
+"skin" "0"
 }
 // entity 4
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Tent"
-"_tb_id" "9"
+"_tb_id" "5"
 }
 // entity 5
 {
@@ -52,7 +52,7 @@
 "angle" "45"
 "scale" "10"
 "model_texture" "texture.png"
-"_tb_layer" "9"
+"_tb_layer" "5"
 }
 // entity 6
 {
@@ -62,14 +62,14 @@
 "angle" "-0"
 "scale" "1"
 "model_texture" "green.png"
-"_tb_layer" "9"
+"_tb_layer" "5"
 }
 // entity 7
 {
 "classname" "spark_particles"
 "origin" "976 304 8"
 "angle" ""
-"_tb_layer" "9"
+"_tb_layer" "5"
 }
 // entity 8
 {
@@ -79,14 +79,14 @@
 "angle" "90"
 "decay" "2"
 "color" "FFC000"
-"_tb_layer" "9"
+"_tb_layer" "5"
 }
 // entity 9
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Tower"
-"_tb_id" "10"
+"_tb_id" "6"
 // brush 0
 {
 ( 576 256 736 ) ( 576 240 736 ) ( 576 240 704 ) textures/texture-bricks-128x128 16 -0 -0 1 1
@@ -346,14 +346,14 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "10"
+"_tb_layer" "6"
 }
 // entity 11
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Parish"
-"_tb_id" "11"
+"_tb_id" "7"
 // brush 0
 {
 ( 56 1008 180 ) ( 56 976 180 ) ( 56 976 4 ) textures/texture-bricks-128x128 48 4 -0 1 1
@@ -571,7 +571,7 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "11"
+"_tb_layer" "7"
 }
 // entity 13
 {
@@ -582,7 +582,7 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "11"
+"_tb_layer" "7"
 }
 // entity 14
 {
@@ -593,14 +593,14 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "11"
+"_tb_layer" "7"
 }
 // entity 15
 {
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Temple"
-"_tb_id" "12"
+"_tb_id" "8"
 // brush 0
 {
 ( 16 976 404 ) ( 16 944 404 ) ( 16 944 4 ) textures/texture-bricks-128x128 -48 -12 -0 1 1
@@ -754,5 +754,5 @@
 "decay" "2"
 "color" "FFFFFF"
 "target" "light_dest_warehouse"
-"_tb_layer" "12"
+"_tb_layer" "8"
 }

@@ -1,5 +1,15 @@
 declare module "oimo" {
-  declare class Body {}
+  declare class Body {
+    linearVelocity: {
+      set(x: number, y: number, z: number): void;
+    };
+    name: string;
+    position: {
+      x: number;
+      y: number;
+      z: number;
+    };
+  }
 
   declare class World {
     postLoop?: () => any;
@@ -22,23 +32,23 @@ declare module "oimo" {
 
     add(object: {
       // type of shape : sphere, box, cylinder
-      type: "box" | "cylinder" | "sphere";
+      type?: "box" | "cylinder" | "sphere";
       // size of shape
       size: [number, number, number];
       // start position in degree
       pos: [number, number, number];
       // start rotation in degree
-      rot: [number, number, number];
+      rot?: [number, number, number];
       // dynamic or statique
-      move: boolean;
+      move?: boolean;
       name?: string;
-      density: number;
-      friction: number;
-      restitution: number;
+      density?: number;
+      friction?: number;
+      restitution?: number;
       // The bits of the collision groups to which the shape belongs.
-      belongsTo: number;
+      belongsTo?: number;
       // The bits of the collision groups with which the shape collides.
-      collidesWith: number;
+      collidesWith?: number;
     }): Body;
 
     step(): void;

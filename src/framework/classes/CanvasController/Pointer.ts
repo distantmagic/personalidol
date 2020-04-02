@@ -121,7 +121,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     this.pointerVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
 
     this.cursorView.setVisible(true);
-    this.cursorView.setPosition(this.cursorPlaneIntersection);
+    this.cursorView.setPosition(this.cursorPlaneIntersection.x, this.cursorPlaneIntersection.y, this.cursorPlaneIntersection.z);
   }
 
   onMouseLeave(evt: MouseEvent): void {
@@ -158,7 +158,7 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
     }
 
     this.raycaster.ray.intersectPlane(this.cursorPlane, this.cursorPlaneIntersection);
-    this.cursorView.setPosition(this.cursorPlaneIntersection);
+    this.cursorView.setPosition(this.cursorPlaneIntersection.x, this.cursorPlaneIntersection.y, this.cursorPlaneIntersection.z);
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

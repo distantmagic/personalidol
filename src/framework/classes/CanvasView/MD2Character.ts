@@ -130,6 +130,10 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     return character;
   }
 
+  isStatic(): false {
+    return false;
+  }
+
   setAnimationIdle(): void {
     const controls = this.getCharacter().controls;
 
@@ -151,8 +155,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   }
 
   setVelocity(velocity: THREE.Vector3): void {
-    this.children.position.add(velocity);
-    this.boundingBox.translate(velocity);
+    this.getPhysicsBody().linearVelocity.set(velocity.x, velocity.y, velocity.z);
   }
 
   update(delta: number): void {

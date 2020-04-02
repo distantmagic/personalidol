@@ -1,3 +1,4 @@
+import * as OIMO from "oimo";
 import * as THREE from "three";
 import isEmpty from "lodash/isEmpty";
 
@@ -21,12 +22,14 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly parentGroup: THREE.Group;
   protected boundingBox: null | THREE.Box3 = null;
+  protected physicsBody: null | OIMO.Body = null;
   private _isAttached: boolean = false;
   private _isDisposed: boolean = false;
   private _isInCameraFrustum: boolean = false;
   // using .getName() is redundant here, because we are using UUID anyway,
   // but ID with a human readable name is better for debugging
   private instanceId: string = `${this.getName()}.${THREE.MathUtils.generateUUID()}`;
+  private translationVector: THREE.Vector3 = new THREE.Vector3();
 
   static useBegin: boolean = true;
   static useEnd: boolean = true;
@@ -96,8 +99,22 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     return this.constructor.name;
   }
 
+  getPhysicsBody(): OIMO.Body {
+    const physicsBody = this.physicsBody;
+
+    if (!physicsBody) {
+      throw new CanvasViewException(this.loggerBreadcrumbs.add("getPhysicsBody"), "Physics body is not set but it was expected.");
+    }
+
+    return physicsBody;
+  }
+
   getPosition(): THREE.Vector3 {
     return this.getChildren().position;
+  }
+
+  hasBoundingBox(): boolean {
+    return !!this.boundingBox;
   }
 
   isAttached(): boolean {
@@ -114,6 +131,10 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   isInFrustum(frustum: THREE.Frustum): boolean {
     return frustum.intersectsBox(this.getBoundingBox());
+  }
+
+  isStatic(): boolean {
+    return true;
   }
 
   onPointerAuxiliaryClick(): void {}
@@ -141,6 +162,29 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   setIsInCameraFrustum(isInCameraFrustum: boolean): void {
     this._isInCameraFrustum = isInCameraFrustum;
     this.children.visible = isInCameraFrustum;
+  }
+
+  setPhysicsBody(physicsBody: OIMO.Body): void {
+    this.physicsBody = physicsBody;
+  }
+
+  setPosition(x: number, y: number, z: number): void {
+    if (!this.hasBoundingBox()) {
+      this.children.position.set(x, y, z);
+
+      return;
+    }
+
+    const boundingBox = this.getBoundingBox();
+
+    const diffX = this.children.position.x - x;
+    const diffY = this.children.position.y - y;
+    const diffZ = this.children.position.z - z;
+
+    this.translationVector.set(diffX, diffY, diffZ);
+    this.children.position.set(x, y, z);
+    // console.log(this.translationVector);
+    boundingBox.translate(this.translationVector);
   }
 
   update(delta: number): void {}

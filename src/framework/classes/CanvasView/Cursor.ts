@@ -110,8 +110,8 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     this.scale = scale;
   }
 
-  setPosition(position: THREE.Vector3): void {
-    this.children.position.set(position.x + this.scale * 32, position.y + this.scale * 48, position.z + this.scale * 32);
+  setPosition(x: number, y: number, z: number): void {
+    this.children.position.set(x + this.scale * 32, y + this.scale * 48, z + this.scale * 32);
   }
 
   setVisible(isVisible: boolean): void {

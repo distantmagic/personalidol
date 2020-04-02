@@ -21,6 +21,8 @@ export default interface CanvasView extends AnimatableUpdatable, CameraFrustumRe
 
   getName(): string;
 
+  hasBoundingBox(): boolean;
+
   useCameraFrustum(): boolean;
 
   usePhysics(): boolean;
