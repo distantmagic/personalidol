@@ -51,6 +51,10 @@ export default class QuakeMapLoader implements IQuakeMapLoader {
       const entityClassName = entity.getClassName();
       const entityProperties = entity.getProperties();
 
+      for (let brush of entity.getBrushes()) {
+        this.onStaticBrush.notify([brush]);
+      }
+
       switch (entityClassName) {
         case "func_group":
           // this func is primarily for a game logic, but it can also group
@@ -185,7 +189,6 @@ export default class QuakeMapLoader implements IQuakeMapLoader {
     const quakeBrushGeometryBuilder = new QuakeBrushGeometryBuilder();
 
     for (let brush of brushes) {
-      this.onStaticBrush.notify([brush]);
       quakeBrushGeometryBuilder.addBrush(brush);
     }
 

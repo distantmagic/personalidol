@@ -5,6 +5,7 @@ import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario
 
 import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import type PhysicsController from "src/framework/interfaces/PhysicsController";
+import type PhysicsShape from "src/framework/interfaces/PhysicsShape";
 import type { default as IPhysicsWorld } from "src/framework/interfaces/PhysicsWorld";
 
 export default class PhysicsWorld implements IPhysicsWorld {
@@ -23,7 +24,9 @@ export default class PhysicsWorld implements IPhysicsWorld {
     random: true,
     // calculate statistic or not
     info: false,
-    gravity: [0, -988.8, 0],
+    gravity: [0, -9.8, 0],
+    // gravity: [0, -9.8 * 200, 0],
+    // gravity: [0, 0, 0],
   });
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
@@ -40,30 +43,25 @@ export default class PhysicsWorld implements IPhysicsWorld {
 
     this.controllers[controllerInstanceId] = controller;
 
-    this.world.add({
-      size:[2000, 50, 2000],
-      pos:[0,0,0]
-    });
-
     const body = this.world.add({
       // type of shape : sphere, box, cylinder
       type: "box",
       // size of shape
-      size: [1, 1, 1],
+      size: [32, 64, 32],
       // start position
-      pos: [initialPosition.x, initialPosition.y + 320, initialPosition.z],
+      pos: [initialPosition.x, initialPosition.y, initialPosition.z],
       // start rotation in degree
       rot: [0, 0, 0],
       // dynamic or statique
       move: isDynamic,
       name: controllerInstanceId,
       density: 1,
-      friction: 0.2,
-      restitution: 0.2,
+      // friction: 0.2,
+      // restitution: 0.2,
       // The bits of the collision groups to which the shape belongs.
-      belongsTo: 1,
+      // belongsTo: 1,
       // The bits of the collision groups with which the shape collides.
-      collidesWith: 0xffffffff,
+      // collidesWith: 0xffffffff,
     });
 
     controller.setPhysicsBody(body);
@@ -73,7 +71,38 @@ export default class PhysicsWorld implements IPhysicsWorld {
     }
   }
 
+  addPhysicsShape(shape: PhysicsShape): void {
+    const shapeOrigin = shape.getOrigin();
+    const shapeSize = shape.getSize();
+
+    // console.log({
+    //   origin: [shapeOrigin.getX(), shapeOrigin.getY(), shapeOrigin.getZ()],
+    //   size: [shapeSize.getWidth(), shapeSize.getHeight(), shapeSize.getDepth()],
+    // });
+
+    this.world.add({
+      type: "box",
+      size: [shapeSize.getWidth(), shapeSize.getHeight(), shapeSize.getDepth()],
+      pos: [
+        shapeOrigin.getX() + shapeSize.getWidth() / 2,
+        shapeOrigin.getY() + shapeSize.getHeight() / 2,
+        shapeOrigin.getZ() + shapeSize.getDepth() / 2
+      ],
+      rot: [0, 0, 0],
+      move: false,
+      // name: controllerInstanceId,
+      density: 1,
+      // friction: 0.2,
+      // restitution: 0.2,
+      // belongsTo: 1,
+      // collidesWith: 0xffffffff,
+    });
+  }
+
   removePhysicsController(controller: PhysicsController): void {
+  }
+
+  removePhysicsShape(shape: PhysicsShape): void {
   }
 
   update(delta: number): void {

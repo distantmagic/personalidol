@@ -3,6 +3,7 @@ import groupBy from "lodash/groupBy";
 import uniqBy from "lodash/uniqBy";
 
 import CanvasView from "src/framework/classes/CanvasView";
+import PhysicsShape from "src/framework/classes/PhysicsShape";
 import QuakeMapLoader from "src/framework/classes/QuakeMapLoader";
 import { default as AmbientLightView } from "src/framework/classes/CanvasView/AmbientLight";
 import { default as AmbientSoundView } from "src/framework/classes/CanvasView/AmbientSound";
@@ -230,8 +231,11 @@ export default class QuakeMap extends CanvasView {
     });
 
     quakeMapLoader.onStaticBrush.add((brush: QuakeBrush) => {
-      // console.log(brush);
-      // this.physicsWorld.addPhysicsController(brush);
+      this.physicsWorld.addPhysicsShape(new PhysicsShape(brush));
+
+      // const helper = new THREE.Box3Helper( brush.getBoundingBox() );
+
+      // this.children.add( helper );
     });
 
     quakeMapLoader.onStaticGeometry.add((entity: QuakeWorkerBrush, transferables: Transferable[]) => {

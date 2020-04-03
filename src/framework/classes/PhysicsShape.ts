@@ -15,16 +15,23 @@ import type { default as IPhysicsShape } from "src/framework/interfaces/PhysicsS
 
 export default class PhysicsShape implements IPhysicsShape {
   readonly brush: QuakeBrush;
-  readonly origin: THREE.Vector3;
   private readonly _size: THREE.Vector3 = new THREE.Vector3();
 
-  constructor(origin: THREE.Vector3, brush: QuakeBrush) {
+  constructor(brush: QuakeBrush) {
     this.brush = brush;
-    this.origin = origin;
   }
 
   getOrigin(): IElementPosition<ElementPositionUnit.Px> {
-    return new ElementPosition<ElementPositionUnit.Px>(ElementPositionUnit.Px, this.origin.x, this.origin.y, this.origin.z);
+    const boundingBox = this.brush.getBoundingBox();
+
+    console.log(boundingBox);
+
+    return new ElementPosition<ElementPositionUnit.Px>(
+      ElementPositionUnit.Px,
+      boundingBox.min.x,
+      boundingBox.min.y,
+      boundingBox.min.z
+    );
   }
 
   getRotation(): IElementRotation<ElementRotationUnit.Radians> {

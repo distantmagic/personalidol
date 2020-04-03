@@ -130,7 +130,8 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   }
 
   isInFrustum(frustum: THREE.Frustum): boolean {
-    return frustum.intersectsBox(this.getBoundingBox());
+    return true;
+    // return frustum.intersectsBox(this.getBoundingBox());
   }
 
   isStatic(): boolean {
