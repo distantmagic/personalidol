@@ -1,0 +1,71 @@
+// Game: PersonalIdol
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "./textures"
+// brush 0
+{
+( -304 112 -16 ) ( -304 -528 -16 ) ( -304 -528 -32 ) textures/texture-bricks-128x128 -16 -0 -0 1 1
+( 48 -528 -16 ) ( 48 -528 -32 ) ( -304 -528 -32 ) textures/texture-bricks-128x128 16 -0 -0 1 1
+( -304 -528 -32 ) ( 48 -528 -32 ) ( 48 112 -32 ) textures/texture-bricks-128x128 16 16 -0 1 1
+( 48 112 -16 ) ( 48 -528 -16 ) ( -304 -528 -16 ) textures/texture-bricks-128x128 16 16 -0 1 1
+( 48 112 -32 ) ( 48 112 -16 ) ( -304 112 -16 ) textures/texture-bricks-128x128 16 -0 -0 1 1
+( 48 112 -32 ) ( 48 -528 -32 ) ( 48 -528 -16 ) textures/texture-bricks-128x128 -16 -0 -0 1 1
+}
+// brush 1
+{
+( -224 -128 128 ) ( -224 -144 128 ) ( -224 -144 112 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( -48 -144 128 ) ( -48 -144 112 ) ( -224 -144 112 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( -224 -144 112 ) ( -48 -144 112 ) ( -48 -128 -16 ) textures/texture-crate-128x128 -0 -16 -0 1 1
+( -48 -128 128 ) ( -48 -144 128 ) ( -224 -144 128 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( -48 -128 -16 ) ( -48 -128 128 ) ( -224 -128 128 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( -48 -128 -16 ) ( -48 -144 112 ) ( -48 -144 128 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+}
+}
+// entity 1
+{
+"classname" "model_gltf"
+"origin" "16 -0 8"
+"angle" "0"
+"model_name" "bonfire"
+"model_texture" "texture.png"
+"scale" "10"
+}
+// entity 2
+{
+"classname" "player"
+"origin" "-16 16 8"
+}
+// entity 3
+{
+"classname" "light_spotlight"
+"origin" "-96 -96 48"
+"color" "0xffffff"
+"decay" "1"
+"intensity" "1"
+"angle" "90"
+}
+// entity 4
+{
+"classname" "light_point"
+"origin" "-8 56 -8"
+"color" "0xffffff"
+"decay" "2"
+"intensity" "2"
+"" ""
+}
+// entity 5
+{
+"classname" "light_point"
+"origin" "8 -248 -8"
+"color" "0xffffff"
+"decay" "1"
+"intensity" "2"
+}
+// entity 6
+{
+"classname" "spark_particles"
+"origin" "16 -0 -0"
+"angle" "1"
+}
