@@ -14,6 +14,7 @@ import type CancelToken from "src/framework/interfaces/CancelToken";
 import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import type ElementSize from "src/framework/interfaces/ElementSize";
 import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
+import type HasPosition from "src/framework/interfaces/HasPosition";
 import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
@@ -23,6 +24,7 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onFrustumChange: IEventListenerSet<[THREE.Frustum]>;
   readonly onZoomChange: IEventListenerSet<[number]>;
+  private following: null | HasPosition = null;
   private height: number = 0;
   private aspectNeedsUpdate: boolean = true;
   private width: number = 0;
@@ -54,6 +56,10 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     super.dispose(cancelToken);
+  }
+
+  follow(hasPosition: HasPosition): void {
+    this.following = hasPosition;
   }
 
   getCamera(): THREE.PerspectiveCamera {
@@ -102,13 +108,27 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
     this.onZoomChange.notify([zoom]);
   }
 
+  unfollow(hasPosition: HasPosition): void {
+    this.following = null;
+  }
+
   update(delta: number): void {
+    const following = this.following;
+
     if (this.aspectNeedsUpdate) {
       this.aspectNeedsUpdate = false;
       this.camera.aspect = this.width / this.height;
       this.camera.zoom = this.zoom;
       this.camera.updateProjectionMatrix();
     }
+
+    if (!following) {
+      return;
+    }
+
+    const followedPosition = following.getPosition();
+
+    this.lookAtFromDistance(followedPosition, 256 * 4);
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

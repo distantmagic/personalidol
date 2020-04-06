@@ -4,6 +4,13 @@ declare module "oimo" {
       set(x: number, y: number, z: number): void;
     };
     name: string;
+    quaternion: {
+      w: number;
+      x: number;
+      y: number;
+      z: number;
+      toArray(target: number[]): void;
+    };
     position: {
       x: number;
       y: number;

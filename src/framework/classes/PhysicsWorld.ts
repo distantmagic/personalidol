@@ -24,8 +24,8 @@ export default class PhysicsWorld implements IPhysicsWorld {
     random: true,
     // calculate statistic or not
     info: false,
-    gravity: [0, -9.8, 0],
-    // gravity: [0, -9.8 * 200, 0],
+    // gravity: [0, -9.8, 0],
+    gravity: [0, -9.8 * 1000, 0],
     // gravity: [0, 0, 0],
   });
 
@@ -47,9 +47,10 @@ export default class PhysicsWorld implements IPhysicsWorld {
       // type of shape : sphere, box, cylinder
       type: "box",
       // size of shape
-      size: [32, 64, 32],
+      // size: [32, 64, 32],
+      size: [32, 50, 32],
       // start position
-      pos: [initialPosition.x, initialPosition.y, initialPosition.z],
+      pos: [initialPosition.x, initialPosition.y + 128, initialPosition.z],
       // start rotation in degree
       rot: [0, 0, 0],
       // dynamic or statique
@@ -106,8 +107,8 @@ export default class PhysicsWorld implements IPhysicsWorld {
   }
 
   update(delta: number): void {
-    this.world.timerate = delta * 1000;
-    this.world.timeStep = delta;
+    // this.world.timerate = delta * 1000;
+    // this.world.timeStep = delta;
     this.world.step();
   }
 
@@ -116,10 +117,15 @@ export default class PhysicsWorld implements IPhysicsWorld {
   }
 
   private postLoop(): void {
+    const rotationQuaternion: [number, number, number, number] = [0, 0, 0, 1];
+
     for (let dynamicBody of this.dynamicBodies) {
       const controller: PhysicsController = this.controllers[dynamicBody.name];
 
+      dynamicBody.quaternion.toArray(rotationQuaternion);
+
       controller.setPosition(dynamicBody.position.x, dynamicBody.position.y, dynamicBody.position.z);
+      controller.setRotationQuaternion(rotationQuaternion[0], rotationQuaternion[1], rotationQuaternion[2], rotationQuaternion[3]);
     }
   }
 }

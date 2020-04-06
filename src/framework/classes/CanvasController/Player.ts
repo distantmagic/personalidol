@@ -85,14 +85,14 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
     await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.playerView), "Loading player view");
 
-    this.playerView.attachCamera(this.gameCameraController.camera);
+    this.gameCameraController.follow(this.playerView);
   }
 
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    this.playerView.detachCamera(this.gameCameraController.camera);
+    this.gameCameraController.unfollow(this.playerView);
   }
 
   setIdle(): void {

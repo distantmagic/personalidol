@@ -13,4 +13,6 @@ export default interface PhysicsController {
   setPhysicsBody(body: OIMO.Body): void;
 
   setPosition(x: number, y: number, z: number): void;
+
+  setRotationQuaternion(x: number, y: number, z: number, w: number): void;
 }

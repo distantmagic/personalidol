@@ -50,7 +50,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   }
 
   attachCamera(camera: THREE.Camera): void {
-    this.children.add(camera);
+    // this.children.add(camera);
   }
 
   computeBoundingBox(): void {
@@ -186,6 +186,10 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     this.children.position.set(x, y, z);
     // console.log(this.translationVector);
     boundingBox.translate(this.translationVector);
+  }
+
+  setRotationQuaternion(x: number, y: number, z: number, w: number): void {
+    this.children.quaternion.set(x, y, z, w);
   }
 
   update(delta: number): void {}

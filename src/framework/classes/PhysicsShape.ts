@@ -24,8 +24,6 @@ export default class PhysicsShape implements IPhysicsShape {
   getOrigin(): IElementPosition<ElementPositionUnit.Px> {
     const boundingBox = this.brush.getBoundingBox();
 
-    console.log(boundingBox);
-
     return new ElementPosition<ElementPositionUnit.Px>(
       ElementPositionUnit.Px,
       boundingBox.min.x,
