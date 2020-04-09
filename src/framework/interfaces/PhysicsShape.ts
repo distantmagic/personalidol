@@ -1,14 +1,15 @@
-import type ElementPositionUnit from "src/framework/enums/ElementPositionUnit";
+import type * as THREE from "three";
+
 import type ElementRotationUnit from "src/framework/enums/ElementRotationUnit";
 
-import type ElementPosition from "src/framework/interfaces/ElementPosition";
 import type ElementRotation from "src/framework/interfaces/ElementRotation";
-import type ElementSize from "src/framework/interfaces/ElementSize";
 
 export default interface PhysicsShape {
-  getOrigin(): ElementPosition<ElementPositionUnit.Px>;
+  getBoundingBox(): THREE.Box3;
+
+  getInstanceId(): string;
+
+  getPosition(): THREE.Vector3;
 
   getRotation(): ElementRotation<ElementRotationUnit.Radians>;
-
-  getSize(): ElementSize<ElementPositionUnit.Px>;
 }

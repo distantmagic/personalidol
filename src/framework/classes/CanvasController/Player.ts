@@ -67,14 +67,14 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
       group,
       this.queryBus,
       this.threeLoadingManager,
-      `/models/model-md2-necron99/`,
+      `/models/model-md2-ratamahatta/`,
       0,
       {
         angle: 0,
         classname: "model_md2",
-        model_name: "necron99",
+        model_name: "ratamahatta",
         origin: this.entity.origin,
-        skin: 4,
+        skin: 0,
       }
     );
   }
@@ -82,7 +82,6 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
   @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
-
     await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.playerView), "Loading player view");
 
     this.gameCameraController.follow(this.playerView);
@@ -128,6 +127,6 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     this.playerView.setRotationY(pointerVector.angle());
     this.playerView.setVelocity(velocity);
 
-    // this.gameCameraController.lookAtFromDistance(this.playerView.getPosition(), LOOK_AT_DISTANCE);
+    this.gameCameraController.lookAtFromDistance(this.playerView.getPosition(), 256 * 4);
   }
 }

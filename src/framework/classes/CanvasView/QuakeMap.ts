@@ -231,10 +231,9 @@ export default class QuakeMap extends CanvasView {
     });
 
     quakeMapLoader.onStaticBrush.add((brush: QuakeBrush) => {
-      this.physicsWorld.addPhysicsShape(new PhysicsShape(brush));
+      this.physicsWorld.addPhysicsShape(new PhysicsShape(this.getInstanceId(), brush));
 
       // const helper = new THREE.Box3Helper( brush.getBoundingBox() );
-
       // this.children.add( helper );
     });
 

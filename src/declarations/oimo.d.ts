@@ -25,16 +25,16 @@ declare module "oimo" {
 
     constructor(setup: {
       timestep?: number;
-      iterations: number;
+      iterations?: number;
       // 1 brute force, 2 sweep and prune, 3 volume tree
-      broadphase: 1 | 2 | 3;
+      broadphase?: 1 | 2 | 3;
       // scale full world
-      worldscale: number;
+      worldscale?: number;
       // randomize sample
-      random: boolean;
+      random?: boolean;
       // calculate statistic or not
-      info: boolean;
-      gravity: [number, number, number];
+      info?: boolean;
+      gravity?: [number, number, number];
     });
 
     add(object: {

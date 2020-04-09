@@ -4,10 +4,12 @@ import isEmpty from "lodash/isEmpty";
 
 import dispose from "src/framework/helpers/dispose";
 
+import ElementRotation from "src/framework/classes/ElementRotation";
 import { default as CanvasViewException } from "src/framework/classes/Exception/CanvasView";
 
 import cancelable from "src/framework/decorators/cancelable";
 
+import ElementRotationUnit from "src/framework/enums/ElementRotationUnit";
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import type CancelToken from "src/framework/interfaces/CancelToken";
@@ -15,6 +17,7 @@ import type CanvasViewBag from "src/framework/interfaces/CanvasViewBag";
 import type HasLoggerBreadcrumbs from "src/framework/interfaces/HasLoggerBreadcrumbs";
 import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import type { default as ICanvasView } from "src/framework/interfaces/CanvasView";
+import type { default as IElementRotation } from "src/framework/interfaces/ElementRotation";
 
 export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanvasView {
   readonly canvasViewBag: CanvasViewBag;
@@ -113,8 +116,16 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     return this.getChildren().position;
   }
 
+  getRotation(): IElementRotation<ElementRotationUnit.Radians> {
+    return new ElementRotation<ElementRotationUnit.Radians>(ElementRotationUnit.Radians, 0, 0, 0);
+  }
+
   hasBoundingBox(): boolean {
     return !!this.boundingBox;
+  }
+
+  hasPhysicsBody(): boolean {
+    return !!this.physicsBody;
   }
 
   isAttached(): boolean {

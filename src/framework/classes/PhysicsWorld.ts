@@ -1,4 +1,5 @@
 import * as OIMO from "oimo";
+import * as THREE from "three";
 import autoBind from "auto-bind";
 
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
@@ -8,6 +9,14 @@ import type PhysicsController from "src/framework/interfaces/PhysicsController";
 import type PhysicsShape from "src/framework/interfaces/PhysicsShape";
 import type { default as IPhysicsWorld } from "src/framework/interfaces/PhysicsWorld";
 
+function getShapeSize(physicsShape: PhysicsShape): THREE.Vector3 {
+  const shapeSize = new THREE.Vector3();
+
+  physicsShape.getBoundingBox().getSize(shapeSize);
+
+  return shapeSize;
+}
+
 export default class PhysicsWorld implements IPhysicsWorld {
   readonly controllers: {
     [key: string]: PhysicsController,
@@ -15,18 +24,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
   readonly dynamicBodies: OIMO.Body[] = [];
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly world: OIMO.World = new OIMO.World({
-    iterations: 8,
-    // 1 brute force, 2 sweep and prune, 3 volume tree
-    broadphase: 2,
-    // scale full world
-    worldscale: 1,
-    // randomize sample
-    random: true,
-    // calculate statistic or not
-    info: false,
-    // gravity: [0, -9.8, 0],
     gravity: [0, -9.8 * 1000, 0],
-    // gravity: [0, 0, 0],
   });
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
@@ -40,28 +38,17 @@ export default class PhysicsWorld implements IPhysicsWorld {
     const controllerInstanceId = controller.getInstanceId();
     const initialPosition = controller.getPosition();
     const isDynamic = !controller.isStatic();
+    const shapeSize = getShapeSize(controller);
 
     this.controllers[controllerInstanceId] = controller;
 
     const body = this.world.add({
-      // type of shape : sphere, box, cylinder
-      type: "box",
-      // size of shape
-      // size: [32, 64, 32],
-      size: [32, 50, 32],
-      // start position
-      pos: [initialPosition.x, initialPosition.y + 128, initialPosition.z],
-      // start rotation in degree
-      rot: [0, 0, 0],
-      // dynamic or statique
       move: isDynamic,
       name: controllerInstanceId,
-      density: 1,
-      // friction: 0.2,
-      // restitution: 0.2,
-      // The bits of the collision groups to which the shape belongs.
+      pos: [initialPosition.x, initialPosition.y, initialPosition.z],
+      size: [shapeSize.x, shapeSize.y, shapeSize.z],
+      type: "box",
       // belongsTo: 1,
-      // The bits of the collision groups with which the shape collides.
       // collidesWith: 0xffffffff,
     });
 
@@ -73,28 +60,20 @@ export default class PhysicsWorld implements IPhysicsWorld {
   }
 
   addPhysicsShape(shape: PhysicsShape): void {
-    const shapeOrigin = shape.getOrigin();
-    const shapeSize = shape.getSize();
-
-    // console.log({
-    //   origin: [shapeOrigin.getX(), shapeOrigin.getY(), shapeOrigin.getZ()],
-    //   size: [shapeSize.getWidth(), shapeSize.getHeight(), shapeSize.getDepth()],
-    // });
+    const shapeOrigin = shape.getPosition();
+    const shapeSize = getShapeSize(shape);
+    const bodyPosition: [number, number, number] = [
+      shapeOrigin.x + shapeSize.x / 2,
+      shapeOrigin.y + shapeSize.y / 2,
+      shapeOrigin.z + shapeSize.z / 2
+    ];
 
     this.world.add({
-      type: "box",
-      size: [shapeSize.getWidth(), shapeSize.getHeight(), shapeSize.getDepth()],
-      pos: [
-        shapeOrigin.getX() + shapeSize.getWidth() / 2,
-        shapeOrigin.getY() + shapeSize.getHeight() / 2,
-        shapeOrigin.getZ() + shapeSize.getDepth() / 2
-      ],
-      rot: [0, 0, 0],
       move: false,
-      // name: controllerInstanceId,
-      density: 1,
-      // friction: 0.2,
-      // restitution: 0.2,
+      name: shape.getInstanceId(),
+      pos: bodyPosition,
+      size: [shapeSize.x, shapeSize.y, shapeSize.z],
+      type: "box",
       // belongsTo: 1,
       // collidesWith: 0xffffffff,
     });
@@ -107,8 +86,6 @@ export default class PhysicsWorld implements IPhysicsWorld {
   }
 
   update(delta: number): void {
-    // this.world.timerate = delta * 1000;
-    // this.world.timeStep = delta;
     this.world.step();
   }
 

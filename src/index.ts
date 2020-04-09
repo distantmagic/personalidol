@@ -119,7 +119,7 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   });
 
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.BasicShadowMap;
+  // renderer.shadowMap.type = THREE.BasicShadowMap;
 
   renderer.setPixelRatio(window.devicePixelRatio);
 

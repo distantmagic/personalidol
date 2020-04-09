@@ -1,14 +1,13 @@
 import type * as OIMO from "oimo";
-import type * as THREE from "three";
 
-export default interface PhysicsController {
+import type PhysicsShape from "src/framework/interfaces/PhysicsShape";
+
+export default interface PhysicsController extends PhysicsShape {
   isStatic(): boolean;
 
-  getInstanceId(): string;
-
-  getPosition(): THREE.Vector3;
-
   getPhysicsBody(): OIMO.Body;
+
+  hasPhysicsBody(): boolean;
 
   setPhysicsBody(body: OIMO.Body): void;
 

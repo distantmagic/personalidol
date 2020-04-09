@@ -151,7 +151,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
   }
 
   setRotationY(rotationRadians: number): void {
-    this.characterGroup.rotation.y = rotationRadians;
+    // this.characterGroup.rotation.y = rotationRadians;
   }
 
   setVelocity(velocity: THREE.Vector3): void {
