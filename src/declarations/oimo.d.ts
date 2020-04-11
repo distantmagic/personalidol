@@ -9,6 +9,7 @@ declare module "oimo" {
       x: number;
       y: number;
       z: number;
+      set(x: number, y: number, z: number, w: number): void;
       toArray(target: number[]): void;
     };
     position: {

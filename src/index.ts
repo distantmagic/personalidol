@@ -97,9 +97,6 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   if (SchedulerUpdateScenario.Always === cameraFrustumBus.useUpdate()) {
     scheduler.update.add(cameraFrustumBus.update);
   }
-  if (SchedulerUpdateScenario.Always === physicsWorld.useUpdate()) {
-    scheduler.update.add(physicsWorld.update);
-  }
 
   window.addEventListener("resize", onWindowResize);
   onWindowResize();
@@ -153,6 +150,10 @@ async function bootstrap(sceneCanvas: HTMLCanvasElement) {
   );
 
   await loadingManager.blocking(canvasControllerBus.add(cancelToken, rootCanvasController), "Loading initial game resources");
+
+  if (SchedulerUpdateScenario.Always === physicsWorld.useUpdate()) {
+    scheduler.update.add(physicsWorld.update);
+  }
 
   logger.debug(loggerBreadcrumbs.add("attachRenderer"), "Game is ready.");
 

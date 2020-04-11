@@ -1,4 +1,5 @@
 import type * as OIMO from "oimo";
+import type * as THREE from "three";
 
 import type PhysicsShape from "src/framework/interfaces/PhysicsShape";
 
@@ -13,5 +14,7 @@ export default interface PhysicsController extends PhysicsShape {
 
   setPosition(x: number, y: number, z: number): void;
 
-  setRotationQuaternion(x: number, y: number, z: number, w: number): void;
+  setRotation(quaternion: THREE.Quaternion): void;
+
+  // updateFromPhysicsBody(body: OIMO.Body): void;
 }

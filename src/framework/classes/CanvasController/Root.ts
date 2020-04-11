@@ -97,6 +97,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     this.gameScene.matrixAutoUpdate = false;
     this.gameScene.background = new THREE.Color(gameSceneBackgroundColor);
     this.gameScene.fog = new THREE.Fog(gameSceneBackgroundColor, 1024, 1024 * 3);
+
     this.gameScene.add(this.gameGroup);
 
     this.gameCameraController = new PerspectiveCameraController(loggerBreadcrumbs.add("Camera"), canvasViewBag.fork(loggerBreadcrumbs.add("Camera")), this.gameCamera);
@@ -128,31 +129,34 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
     await this.canvasControllerBus.add(cancelToken, this.gameCameraController);
     await this.canvasControllerBus.add(cancelToken, this.pointerController);
 
+    const quakeMapView = new QuakeMapView(
+      this.loggerBreadcrumbs.add("QuakeMap"),
+      this.gameCameraController,
+      this.canvasControllerBus,
+      this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
+      this.gameGroup,
+      this.audioListener,
+      this.audioLoader,
+      this.loadingManager,
+      this.logger,
+      this.physicsWorld,
+      this.pointerController,
+      this.pointerState,
+      this.queryBus,
+      this.threeLoadingManager,
+      // env(this.loggerBreadcrumbs.add("env"), "PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-box.map")
+      env(this.loggerBreadcrumbs.add("env"), "PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), " REACT_APP_MAP_OVERRIDE", "/maps/map-mountain-caravan.map")
+      // env(this.loggerBreadcrumbs.add("env"), "PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-cube-chipped.map")
+    );
+
     await this.loadingManager.blocking(
       this.canvasViewBag.add(
         cancelToken,
-        new QuakeMapView(
-          this.loggerBreadcrumbs.add("QuakeMap"),
-          this.gameCameraController,
-          this.canvasControllerBus,
-          this.canvasViewBag.fork(this.loggerBreadcrumbs.add("QuakeMap")),
-          this.gameGroup,
-          this.audioListener,
-          this.audioLoader,
-          this.loadingManager,
-          this.logger,
-          this.physicsWorld,
-          this.pointerController,
-          this.pointerState,
-          this.queryBus,
-          this.threeLoadingManager,
-          // env(this.loggerBreadcrumbs.add("env"), "PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-box.map")
-          env(this.loggerBreadcrumbs.add("env"), "PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), " REACT_APP_MAP_OVERRIDE", "/maps/map-mountain-caravan.map")
-          // env(this.loggerBreadcrumbs.add("env"), "PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-cube-chipped.map")
-        )
+        quakeMapView
       ),
       "Loading map"
     );
+
     // await this.loadingManager.blocking(
     //   this.canvasViewBag.add(
     //     cancelToken,

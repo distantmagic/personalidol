@@ -8,6 +8,4 @@ export default interface MD2Character extends CanvasView {
   setAnimationRunning(): void;
 
   setVelocity(direction: THREE.Vector3): void;
-
-  setRotationY(rotationRadians: number): void;
 }

@@ -25,7 +25,10 @@ export default class PhysicsWorld implements IPhysicsWorld {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly world: OIMO.World = new OIMO.World({
     gravity: [0, -9.8 * 1000, 0],
+    iterations: 30,
   });
+  private readonly _rotationArray: [number, number, number, number] = [0, 0, 0, 1];
+  private readonly _rotationQuaternion: THREE.Quaternion = new THREE.Quaternion();
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
@@ -47,7 +50,8 @@ export default class PhysicsWorld implements IPhysicsWorld {
       name: controllerInstanceId,
       pos: [initialPosition.x, initialPosition.y, initialPosition.z],
       size: [shapeSize.x, shapeSize.y, shapeSize.z],
-      type: "box",
+      type: "sphere",
+      restitution: 0,
       // belongsTo: 1,
       // collidesWith: 0xffffffff,
     });
@@ -72,6 +76,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
       move: false,
       name: shape.getInstanceId(),
       pos: bodyPosition,
+      restitution: 0,
       size: [shapeSize.x, shapeSize.y, shapeSize.z],
       type: "box",
       // belongsTo: 1,
@@ -94,15 +99,14 @@ export default class PhysicsWorld implements IPhysicsWorld {
   }
 
   private postLoop(): void {
-    const rotationQuaternion: [number, number, number, number] = [0, 0, 0, 1];
-
     for (let dynamicBody of this.dynamicBodies) {
       const controller: PhysicsController = this.controllers[dynamicBody.name];
 
-      dynamicBody.quaternion.toArray(rotationQuaternion);
+      dynamicBody.quaternion.toArray(this._rotationArray);
+      this._rotationQuaternion.set(this._rotationArray[0], this._rotationArray[1], this._rotationArray[2], this._rotationArray[3]);
 
       controller.setPosition(dynamicBody.position.x, dynamicBody.position.y, dynamicBody.position.z);
-      controller.setRotationQuaternion(rotationQuaternion[0], rotationQuaternion[1], rotationQuaternion[2], rotationQuaternion[3]);
+      controller.setRotation(this._rotationQuaternion);
     }
   }
 }

@@ -22,7 +22,7 @@ import type { default as IPointerController } from "src/framework/interfaces/Can
 
 import type QuakeWorkerPlayer from "src/framework/types/QuakeWorkerPlayer";
 
-const SPEED_UNITS_PER_SECOND = 15000;
+const SPEED_UNITS_PER_SECOND = 20000;
 
 export default class Player extends CanvasController implements HasLoggerBreadcrumbs {
   readonly entity: QuakeWorkerPlayer;
@@ -34,8 +34,10 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
   readonly threeLoadingManager: THREE.LoadingManager;
-  private pointerVectorRotationPivot: THREE.Vector2 = new THREE.Vector2(0, 0);
-  private zeroVelocityVector: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+  private _pointerVectorRotationPivot: THREE.Vector2 = new THREE.Vector2(0, 0);
+  private _playerRotationEuler: THREE.Euler = new THREE.Euler();
+  private _playerRotationQuaternion: THREE.Quaternion = new THREE.Quaternion();
+  private _zeroVelocityVector: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -96,7 +98,7 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
 
   setIdle(): void {
     this.playerView.setAnimationIdle();
-    this.playerView.setVelocity(this.zeroVelocityVector);
+    this.playerView.setVelocity(this._zeroVelocityVector);
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {
@@ -115,16 +117,19 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
       return void this.setIdle();
     }
 
-    pointerVector.rotateAround(this.pointerVectorRotationPivot, (3 * Math.PI) / 4);
+    pointerVector.rotateAround(this._pointerVectorRotationPivot, (3 * Math.PI) / 4);
 
     const velocity = new THREE.Vector3(pointerVector.y, 0, pointerVector.x).normalize().multiplyScalar(delta * SPEED_UNITS_PER_SECOND);
+
+    this._playerRotationEuler.set(0, pointerVector.angle(), 0);
+    this._playerRotationQuaternion.setFromEuler(this._playerRotationEuler);
 
     if (pointerVectorLength < 0.1) {
       velocity.multiplyScalar(pointerVectorLength * 10);
     }
 
     this.playerView.setAnimationRunning();
-    this.playerView.setRotationY(pointerVector.angle());
+    this.playerView.setRotation(this._playerRotationQuaternion);
     this.playerView.setVelocity(velocity);
 
     this.gameCameraController.lookAtFromDistance(this.playerView.getPosition(), 256 * 4);

@@ -199,8 +199,8 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     boundingBox.translate(this.translationVector);
   }
 
-  setRotationQuaternion(x: number, y: number, z: number, w: number): void {
-    this.children.quaternion.set(x, y, z, w);
+  setRotation(quaternion: THREE.Quaternion): void {
+    this.children.quaternion.copy(quaternion);
   }
 
   update(delta: number): void {}

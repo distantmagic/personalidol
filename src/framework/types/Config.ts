@@ -1,5 +1,5 @@
 type Config = {
-  TEXTURE_SIZE: 128;
+  TEXTURE_SIZE: 512;
 };
 
 export default Config;

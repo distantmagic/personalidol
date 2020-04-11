@@ -99,7 +99,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     this.children.add(this.characterGroup);
     this.character = character;
 
-    this.setRotationY(THREE.MathUtils.degToRad(this.angle));
+    // this.setRotationY(THREE.MathUtils.degToRad(this.angle));
   }
 
   attachCamera(camera: THREE.Camera): void {
@@ -148,10 +148,6 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     if (controls) {
       controls.moveForward = true;
     }
-  }
-
-  setRotationY(rotationRadians: number): void {
-    // this.characterGroup.rotation.y = rotationRadians;
   }
 
   setVelocity(velocity: THREE.Vector3): void {
