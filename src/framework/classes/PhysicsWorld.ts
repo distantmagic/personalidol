@@ -25,7 +25,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly world: OIMO.World = new OIMO.World({
     gravity: [0, -9.8 * 1000, 0],
-    iterations: 30,
+    iterations: 16,
   });
   private readonly _rotationArray: [number, number, number, number] = [0, 0, 0, 1];
   private readonly _rotationQuaternion: THREE.Quaternion = new THREE.Quaternion();
