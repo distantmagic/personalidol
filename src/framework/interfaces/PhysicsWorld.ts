@@ -6,6 +6,8 @@ import type PhysicsController from "src/framework/interfaces/PhysicsController";
 import type PhysicsShape from "src/framework/interfaces/PhysicsShape";
 
 export default interface PhysicsWorld extends AnimatableUpdatable, HasLoggerBreadcrumbs {
+  readonly oimo: OIMO.World;
+
   addPhysicsController(handler: PhysicsController): OIMO.Body;
 
   addPhysicsShape(shape: PhysicsShape): OIMO.Body;

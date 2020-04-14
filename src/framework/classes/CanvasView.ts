@@ -152,7 +152,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     return new ElementRotation<ElementRotationUnit.Radians>(ElementRotationUnit.Radians, 0, 0, 0);
   }
 
-  getShapeType(): "box" | "cylinder" | "sphere" {
+  getShapeType(): "box" | "cylinder" | "plane" | "sphere" {
     return "box";
   }
 

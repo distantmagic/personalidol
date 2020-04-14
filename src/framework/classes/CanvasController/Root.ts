@@ -185,6 +185,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
       return;
     }
 
+    this.gameCameraController.onBeforeRender(delta);
     this.gameEffectComposer.render(delta);
   }
 

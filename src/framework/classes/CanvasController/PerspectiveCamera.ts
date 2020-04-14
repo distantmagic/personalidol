@@ -19,16 +19,18 @@ import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
 import type { default as IEventListenerSet } from "src/framework/interfaces/EventListenerSet";
 import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
+const LOOK_AT_BASE_DISTANCE = 1024;
+
 export default class PerspectiveCamera extends CanvasController implements HasLoggerBreadcrumbs, IPerspectiveCameraController {
   readonly camera: THREE.PerspectiveCamera;
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly onFrustumChange: IEventListenerSet<[THREE.Frustum]>;
   readonly onZoomChange: IEventListenerSet<[number]>;
-  private following: null | HasPosition = null;
-  private height: number = 0;
-  private aspectNeedsUpdate: boolean = true;
-  private width: number = 0;
-  private zoom: number = 3;
+  private _following: null | HasPosition = null;
+  private _height: number = 0;
+  private _aspectNeedsUpdate: boolean = true;
+  private _width: number = 0;
+  private _zoom: number = 3;
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs, canvasViewBag: CanvasViewBag, camera: THREE.PerspectiveCamera) {
     super(canvasViewBag);
@@ -46,11 +48,11 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
 
     // this.camera.near = -512;
     this.camera.far = 4096;
-    this.aspectNeedsUpdate = true;
+    this._aspectNeedsUpdate = true;
   }
 
   decreaseZoom(step: number, min: number): void {
-    this.setZoom(clamp(this.zoom - step, min, this.zoom));
+    this.setZoom(clamp(this._zoom - step, min, this._zoom));
   }
 
   @cancelable()
@@ -59,7 +61,7 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
   }
 
   follow(hasPosition: HasPosition): void {
-    this.following = hasPosition;
+    this._following = hasPosition;
   }
 
   getCamera(): THREE.PerspectiveCamera {
@@ -67,11 +69,11 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
   }
 
   getZoom(): number {
-    return this.zoom;
+    return this._zoom;
   }
 
   increaseZoom(step: number, max: number): void {
-    this.setZoom(clamp(this.zoom + step, this.zoom, max));
+    this.setZoom(clamp(this._zoom + step, this._zoom, max));
   }
 
   lookAtFromDistance(position: THREE.Vector3, distance: number): void {
@@ -84,43 +86,8 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
     this.camera.lookAt(position);
   }
 
-  resize(viewportSize: ElementSize<ElementPositionUnit.Px>): void {
-    const height = viewportSize.getHeight();
-    const width = viewportSize.getWidth();
-
-    if (this.height === height && this.width === width) {
-      return;
-    }
-
-    this.height = height;
-    this.width = width;
-
-    this.aspectNeedsUpdate = true;
-  }
-
-  setZoom(zoom: number): void {
-    if (this.zoom === zoom) {
-      return;
-    }
-
-    this.zoom = zoom;
-    this.aspectNeedsUpdate = true;
-    this.onZoomChange.notify([zoom]);
-  }
-
-  unfollow(hasPosition: HasPosition): void {
-    this.following = null;
-  }
-
-  update(delta: number): void {
-    const following = this.following;
-
-    if (this.aspectNeedsUpdate) {
-      this.aspectNeedsUpdate = false;
-      this.camera.aspect = this.width / this.height;
-      this.camera.zoom = this.zoom;
-      this.camera.updateProjectionMatrix();
-    }
+  onBeforeRender(delta: number): void {
+    const following = this._following;
 
     if (!following) {
       return;
@@ -128,7 +95,44 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
 
     const followedPosition = following.getPosition();
 
-    this.lookAtFromDistance(followedPosition, 256 * 4);
+    this.lookAtFromDistance(followedPosition, LOOK_AT_BASE_DISTANCE / this._zoom);
+  }
+
+  resize(viewportSize: ElementSize<ElementPositionUnit.Px>): void {
+    const height = viewportSize.getHeight();
+    const width = viewportSize.getWidth();
+
+    if (this._height === height && this._width === width) {
+      return;
+    }
+
+    this._height = height;
+    this._width = width;
+
+    this._aspectNeedsUpdate = true;
+  }
+
+  setZoom(zoom: number): void {
+    if (this._zoom === zoom) {
+      return;
+    }
+
+    this._zoom = zoom;
+    this._aspectNeedsUpdate = true;
+    this.onZoomChange.notify([zoom]);
+  }
+
+  unfollow(hasPosition: HasPosition): void {
+    this._following = null;
+  }
+
+  update(delta: number): void {
+    if (this._aspectNeedsUpdate) {
+      this._aspectNeedsUpdate = false;
+      this.camera.aspect = this._width / this._height;
+      // this.camera.zoom = this._zoom;
+      this.camera.updateProjectionMatrix();
+    }
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

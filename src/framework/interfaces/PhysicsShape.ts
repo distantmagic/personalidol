@@ -15,5 +15,5 @@ export default interface PhysicsShape {
 
   getRotation(): ElementRotation<ElementRotationUnit.Radians>;
 
-  getShapeType(): "box" | "cylinder" | "sphere";
+  getShapeType(): "box" | "cylinder" | "plane" | "sphere";
 }

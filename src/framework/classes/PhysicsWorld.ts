@@ -2,6 +2,8 @@ import * as OIMO from "oimo";
 import * as THREE from "three";
 import autoBind from "auto-bind";
 
+import { default as PhysicsException } from "src/framework/classes/Exception/Physics";
+
 import SchedulerUpdateScenario from "src/framework/enums/SchedulerUpdateScenario";
 
 import type LoggerBreadcrumbs from "src/framework/interfaces/LoggerBreadcrumbs";
@@ -9,7 +11,7 @@ import type PhysicsController from "src/framework/interfaces/PhysicsController";
 import type PhysicsShape from "src/framework/interfaces/PhysicsShape";
 import type { default as IPhysicsWorld } from "src/framework/interfaces/PhysicsWorld";
 
-function getShapeBoundingBoxSize(physicsShape: PhysicsShape): THREE.Vector3 {
+function getShapeBoundingBoxSize(loggerBreadcrumbs: LoggerBreadcrumbs, physicsShape: PhysicsShape): THREE.Vector3 {
   const shapeSize = new THREE.Vector3();
 
   physicsShape.getBoundingBox().getSize(shapeSize);
@@ -17,18 +19,22 @@ function getShapeBoundingBoxSize(physicsShape: PhysicsShape): THREE.Vector3 {
   return shapeSize;
 }
 
-function getShapeBoundingSphereSize(physicsShape: PhysicsShape): THREE.Vector3 {
+function getShapeBoundingSphereSize(loggerBreadcrumbs: LoggerBreadcrumbs, physicsShape: PhysicsShape): THREE.Vector3 {
   return new THREE.Vector3(physicsShape.getBoundingSphere().radius, 0, 0);
 }
 
-function getShapeSize(shapeType: "box" | "cylinder" | "sphere", physicsShape: PhysicsShape): THREE.Vector3 {
+function getShapeSize(loggerBreadcrumbs: LoggerBreadcrumbs, shapeType: "box" | "cylinder" | "plane" | "sphere", physicsShape: PhysicsShape): THREE.Vector3 {
   switch (shapeType) {
     case "box":
     case "cylinder":
-      return getShapeBoundingBoxSize(physicsShape);
+      return getShapeBoundingBoxSize(loggerBreadcrumbs, physicsShape);
+    case "plane":
+      throw new PhysicsException(loggerBreadcrumbs, "Plane shape is not yet implemented.");
     case "sphere":
-      return getShapeBoundingSphereSize(physicsShape);
+      return getShapeBoundingSphereSize(loggerBreadcrumbs, physicsShape);
   }
+
+  throw new PhysicsException(loggerBreadcrumbs, `Unknown shape: "${shapeType}"`);
 }
 
 export default class PhysicsWorld implements IPhysicsWorld {
@@ -37,7 +43,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
   } = {};
   readonly dynamicBodies: OIMO.Body[] = [];
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
-  readonly world: OIMO.World = new OIMO.World({
+  readonly oimo: OIMO.World = new OIMO.World({
     gravity: [0, -9.8 * 1000, 0],
     // iterations: 16,
   });
@@ -46,7 +52,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
     autoBind(this);
 
     this.loggerBreadcrumbs = loggerBreadcrumbs;
-    this.world.postLoop = this.postLoop;
+    this.oimo.postLoop = this.postLoop;
   }
 
   addPhysicsController(controller: PhysicsController): OIMO.Body {
@@ -69,14 +75,15 @@ export default class PhysicsWorld implements IPhysicsWorld {
   addPhysicsShape(shape: PhysicsShape, isDynamic: boolean = false): OIMO.Body {
     const shapeOrigin = shape.getPosition();
     const shapeType = shape.getShapeType();
-    const shapeSize = getShapeSize(shapeType, shape);
+    const shapeSize = getShapeSize(this.loggerBreadcrumbs.add("getShapeSize"), shapeType, shape);
     const bodyPosition: [number, number, number] = [
       shapeOrigin.x + shapeSize.x / 2,
       shapeOrigin.y + shapeSize.y / 2,
       shapeOrigin.z + shapeSize.z / 2
     ];
 
-    const body = this.world.add({
+    const body = this.oimo.add({
+      // friction: 0.8,
       move: isDynamic,
       name: shape.getInstanceId(),
       pos: bodyPosition,
@@ -97,7 +104,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
   }
 
   update(delta: number): void {
-    this.world.step();
+    this.oimo.step();
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

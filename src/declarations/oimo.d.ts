@@ -40,7 +40,7 @@ declare module "oimo" {
 
     add(object: {
       // type of shape : sphere, box, cylinder
-      type?: "box" | "cylinder" | "sphere";
+      type?: "box" | "cylinder" | "plane" | "sphere";
       // size of shape
       size: [number, number, number];
       // start position in degree

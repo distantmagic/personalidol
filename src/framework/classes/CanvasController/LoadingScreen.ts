@@ -69,9 +69,9 @@ export default class LoadingScreen extends CanvasController {
     await this.canvasControllerBus.add(cancelToken, this.loaderCameraController);
     await this.canvasViewBag.add(cancelToken, this.loadingScreenView);
 
-    this.loaderCameraController.camera.position.set(0, 512, 0);
+    this.loaderCameraController.camera.position.set(0, 256, 0);
     this.loaderCameraController.camera.lookAt(new THREE.Vector3(0, 0, 0));
-    // this.loaderCameraController.setZoom(0.1);
+    // this.loaderCameraController.setZoom(2);
   }
 
   @cancelable()

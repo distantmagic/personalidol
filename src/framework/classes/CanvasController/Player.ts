@@ -69,14 +69,14 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
       group,
       this.queryBus,
       this.threeLoadingManager,
-      `/models/model-md2-ratamahatta/`,
+      `/models/model-md2-necron99/`,
       0,
       {
         angle: 0,
         classname: "model_md2",
-        model_name: "ratamahatta",
+        model_name: "necron99",
         origin: this.entity.origin,
-        skin: 0,
+        skin: 2,
       }
     );
   }
@@ -131,7 +131,6 @@ export default class Player extends CanvasController implements HasLoggerBreadcr
     this.playerView.setAnimationRunning();
     this.playerView.setRotation(this._playerRotationQuaternion);
     this.playerView.setVelocity(velocity);
-
-    this.gameCameraController.lookAtFromDistance(this.playerView.getPosition(), 256 * 4);
+    // this.gameCameraController.lookAtFromDistance(this.playerView.getPosition());
   }
 }

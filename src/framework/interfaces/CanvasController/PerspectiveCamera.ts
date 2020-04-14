@@ -21,6 +21,8 @@ export default interface PerspectiveCamera extends CanvasController {
 
   lookAtFromDistance(position: THREE.Vector3, distance: number): void;
 
+  onBeforeRender(delta: number): void;
+
   setZoom(zoom: number): void;
 
   unfollow(hasPosition: HasPosition): void;
