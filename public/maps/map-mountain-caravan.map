@@ -1908,20 +1908,11 @@
 ( 112 400 1472 ) ( 113 400 1472 ) ( 112 400 1473 ) textures/texture-slate-128x128 -16 -0 -0 1 1
 ( 112 400 1472 ) ( 112 400 1473 ) ( 112 401 1472 ) textures/texture-slate-128x128 -0 -0 -0 1 1
 }
-// brush 193
-{
-( 48 832 1744 ) ( 48 448 1744 ) ( 48 448 1424 ) textures/texture-crate-128x128 -0 -0 -0 1 1
-( 416 448 1744 ) ( 416 448 1424 ) ( 48 448 1424 ) textures/texture-crate-128x128 -0 -0 -0 1 1
-( 48 448 1424 ) ( 416 448 1424 ) ( 416 832 1424 ) textures/texture-crate-128x128 -0 -0 -0 1 1
-( 416 832 1744 ) ( 416 448 1744 ) ( 48 448 1744 ) textures/texture-crate-128x128 -0 -0 -0 1 1
-( 416 832 1424 ) ( 416 832 1744 ) ( 48 832 1744 ) textures/texture-crate-128x128 -0 -0 -0 1 1
-( 416 832 1424 ) ( 416 448 1424 ) ( 416 448 1744 ) textures/texture-crate-128x128 -0 -0 -0 1 1
-}
 }
 // entity 1
 {
 "classname" "player"
-"origin" "128 1536 1448"
+"origin" "176 1520 1448"
 }
 // entity 2
 {
@@ -1944,7 +1935,7 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Barrier"
-"_tb_id" "1"
+"_tb_id" "3"
 // brush 0
 {
 ( 344 1916 1456 ) ( 344 1912 1456 ) ( 344 1912 1424 ) textures/texture-crate-128x128 -0 -0 -0 1 1

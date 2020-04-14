@@ -12,6 +12,8 @@ export default interface QuakeBrush extends Equatable<QuakeBrush>{
 
   getBoundingBox(): THREE.Box3;
 
+  getBoundingSphere(): THREE.Sphere;
+
   getConvexHull(): ConvexHull;
 
   getVertices(): ReadonlyArray<THREE.Vector3>;

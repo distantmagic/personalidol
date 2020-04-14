@@ -130,6 +130,10 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     return character;
   }
 
+  getShapeType(): "sphere" {
+    return "sphere";
+  }
+
   isStatic(): false {
     return false;
   }

@@ -25,6 +25,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly parentGroup: THREE.Group;
   protected boundingBox: null | THREE.Box3 = null;
+  protected boundingSphere: null | THREE.Sphere = null;
   protected physicsBody: null | OIMO.Body = null;
   private _isAttached: boolean = false;
   private _isDisposed: boolean = false;
@@ -60,6 +61,17 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     this.boundingBox = new THREE.Box3().setFromObject(this.children);
   }
 
+  computeBoundingSphere(): void {
+    const boundingBox = this.getBoundingBox();
+    const boundingBoxCenter = new THREE.Vector3();
+    const boundingBoxSize = new THREE.Vector3();
+
+    boundingBox.getCenter(boundingBoxCenter);
+    boundingBox.getSize(boundingBoxSize);
+
+    this.boundingSphere = new THREE.Sphere(boundingBoxCenter, boundingBoxSize.y / 2);
+  }
+
   detachCamera(camera: THREE.Camera): void {
     this.children.remove(camera);
   }
@@ -88,6 +100,16 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     }
 
     return boundingBox;
+  }
+
+  getBoundingSphere(): THREE.Sphere {
+    const boundingSphere = this.boundingSphere;
+
+    if (!boundingSphere) {
+      throw new CanvasViewException(this.loggerBreadcrumbs.add("getBoundingSphere"), "Bounding sphere has never been computed, but it is expected to be.");
+    }
+
+    return boundingSphere;
   }
 
   getChildren(): THREE.Group {
@@ -120,8 +142,16 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     return new ElementRotation<ElementRotationUnit.Radians>(ElementRotationUnit.Radians, 0, 0, 0);
   }
 
+  getShapeType(): "box" | "cylinder" | "sphere" {
+    return "box";
+  }
+
   hasBoundingBox(): boolean {
     return !!this.boundingBox;
+  }
+
+  hasBoundingSphere(): boolean {
+    return !!this.boundingSphere;
   }
 
   hasPhysicsBody(): boolean {
@@ -204,6 +234,11 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   }
 
   update(delta: number): void {}
+
+  updateFromPhysicsBody(dynamicBody: OIMO.Body): void {
+    this.setPosition(dynamicBody.position.x, dynamicBody.position.y, dynamicBody.position.z);
+    // controller.setRotation(this._rotationQuaternion)
+  }
 
   useCameraFrustum(): boolean {
     return false;

@@ -21,6 +21,10 @@ export default class PhysicsShape implements IPhysicsShape {
     return this.brush.getBoundingBox();
   }
 
+  getBoundingSphere(): THREE.Sphere {
+    return this.brush.getBoundingSphere();
+  }
+
   getInstanceId(): string {
     return this.instanceId;
   }
@@ -31,5 +35,9 @@ export default class PhysicsShape implements IPhysicsShape {
 
   getRotation(): IElementRotation<ElementRotationUnit.Radians> {
     return new ElementRotation<ElementRotationUnit.Radians>(ElementRotationUnit.Radians, 0, 0, 0);
+  }
+
+  getShapeType(): "box" {
+    return "box";
   }
 }

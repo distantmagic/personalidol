@@ -10,11 +10,15 @@ import type PhysicsController from "src/framework/interfaces/PhysicsController";
 export default interface CanvasView extends AnimatableUpdatable, CameraFrustumResponder, CanvasPointerEventHandler, Disposable, HasPosition, PhysicsController {
   computeBoundingBox(): void;
 
+  computeBoundingSphere(): void;
+
   getChildren(): THREE.Group;
 
   getName(): string;
 
   hasBoundingBox(): boolean;
+
+  hasBoundingSphere(): boolean;
 
   useCameraFrustum(): boolean;
 

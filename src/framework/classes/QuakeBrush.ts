@@ -20,8 +20,10 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly verticesCache: WeakMap<THREE.Vector3, QuakeBrushHalfSpace> = new WeakMap();
   private readonly _boundingBox: THREE.Box3 = new THREE.Box3();
+  private readonly _boundingSphere: THREE.Sphere = new THREE.Sphere();
   private readonly _vertices: THREE.Vector3[] = [];
   private _boundingBoxNeedsGenerating: boolean = true;
+  private _boundingSphereNeedsGenerating: boolean = true;
   private _verticesNeedGenerating: boolean = true;
   // private instanceId: string = `QuakeBrush.${THREE.MathUtils.generateUUID()}`;
 
@@ -94,6 +96,19 @@ export default class QuakeBrush implements HasLoggerBreadcrumbs, IQuakeBrush {
     this._boundingBoxNeedsGenerating = false;
 
     return this._boundingBox;
+  }
+
+  getBoundingSphere(): THREE.Sphere {
+    if (!this._boundingSphereNeedsGenerating) {
+      return this._boundingSphere;
+    }
+
+    const vertices = this.getVertices();
+
+    this._boundingSphere.setFromPoints(vertices.slice());
+    this._boundingSphereNeedsGenerating = false;
+
+    return this._boundingSphere;
   }
 
   getConvexHull(): ConvexHull {

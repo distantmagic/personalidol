@@ -178,10 +178,6 @@ export default class QuakeBrush extends CanvasView {
     geometry.setAttribute("texture_index", new THREE.BufferAttribute(texturesIndices, 1));
     geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
     geometry.setIndex(new THREE.BufferAttribute(indices, 1));
-    geometry.computeBoundingBox();
-
-    this.boundingBox = geometry.boundingBox;
-    // this.boundingBox = new THREE.Box3();
 
     for (let texture of this.entity.texturesNames) {
       if ("__TB_empty" === texture) {

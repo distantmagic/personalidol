@@ -50,6 +50,8 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
     }
 
     if (canvasView.usePhysics()) {
+      canvasView.computeBoundingBox();
+      canvasView.computeBoundingSphere();
       this.physicsWorld.addPhysicsController(canvasView);
     }
 

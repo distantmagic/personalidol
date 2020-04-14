@@ -16,5 +16,5 @@ export default interface PhysicsController extends PhysicsShape {
 
   setRotation(quaternion: THREE.Quaternion): void;
 
-  // updateFromPhysicsBody(body: OIMO.Body): void;
+  updateFromPhysicsBody(dynamicBody: OIMO.Body): void;
 }

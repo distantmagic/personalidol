@@ -9,12 +9,26 @@ import type PhysicsController from "src/framework/interfaces/PhysicsController";
 import type PhysicsShape from "src/framework/interfaces/PhysicsShape";
 import type { default as IPhysicsWorld } from "src/framework/interfaces/PhysicsWorld";
 
-function getShapeSize(physicsShape: PhysicsShape): THREE.Vector3 {
+function getShapeBoundingBoxSize(physicsShape: PhysicsShape): THREE.Vector3 {
   const shapeSize = new THREE.Vector3();
 
   physicsShape.getBoundingBox().getSize(shapeSize);
 
   return shapeSize;
+}
+
+function getShapeBoundingSphereSize(physicsShape: PhysicsShape): THREE.Vector3 {
+  return new THREE.Vector3(physicsShape.getBoundingSphere().radius, 0, 0);
+}
+
+function getShapeSize(shapeType: "box" | "cylinder" | "sphere", physicsShape: PhysicsShape): THREE.Vector3 {
+  switch (shapeType) {
+    case "box":
+    case "cylinder":
+      return getShapeBoundingBoxSize(physicsShape);
+    case "sphere":
+      return getShapeBoundingSphereSize(physicsShape);
+  }
 }
 
 export default class PhysicsWorld implements IPhysicsWorld {
@@ -27,8 +41,6 @@ export default class PhysicsWorld implements IPhysicsWorld {
     gravity: [0, -9.8 * 1000, 0],
     iterations: 16,
   });
-  private readonly _rotationArray: [number, number, number, number] = [0, 0, 0, 1];
-  private readonly _rotationQuaternion: THREE.Quaternion = new THREE.Quaternion();
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {
     autoBind(this);
@@ -37,51 +49,45 @@ export default class PhysicsWorld implements IPhysicsWorld {
     this.world.postLoop = this.postLoop;
   }
 
-  addPhysicsController(controller: PhysicsController): void {
+  addPhysicsController(controller: PhysicsController): OIMO.Body {
     const controllerInstanceId = controller.getInstanceId();
-    const initialPosition = controller.getPosition();
     const isDynamic = !controller.isStatic();
-    const shapeSize = getShapeSize(controller);
 
     this.controllers[controllerInstanceId] = controller;
 
-    const body = this.world.add({
-      move: isDynamic,
-      name: controllerInstanceId,
-      pos: [initialPosition.x, initialPosition.y, initialPosition.z],
-      size: [shapeSize.x, shapeSize.y, shapeSize.z],
-      type: "sphere",
-      restitution: 0,
-      // belongsTo: 1,
-      // collidesWith: 0xffffffff,
-    });
+    const body = this.addPhysicsShape(controller, isDynamic);
 
     controller.setPhysicsBody(body);
 
     if (isDynamic) {
       this.dynamicBodies.push(body);
     }
+
+    return body;
   }
 
-  addPhysicsShape(shape: PhysicsShape): void {
+  addPhysicsShape(shape: PhysicsShape, isDynamic: boolean = false): OIMO.Body {
     const shapeOrigin = shape.getPosition();
-    const shapeSize = getShapeSize(shape);
+    const shapeType = shape.getShapeType();
+    const shapeSize = getShapeSize(shapeType, shape);
     const bodyPosition: [number, number, number] = [
       shapeOrigin.x + shapeSize.x / 2,
       shapeOrigin.y + shapeSize.y / 2,
       shapeOrigin.z + shapeSize.z / 2
     ];
 
-    this.world.add({
-      move: false,
+    const body = this.world.add({
+      move: isDynamic,
       name: shape.getInstanceId(),
       pos: bodyPosition,
       restitution: 0,
       size: [shapeSize.x, shapeSize.y, shapeSize.z],
-      type: "box",
+      type: shapeType,
       // belongsTo: 1,
       // collidesWith: 0xffffffff,
     });
+
+    return body;
   }
 
   removePhysicsController(controller: PhysicsController): void {
@@ -102,11 +108,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
     for (let dynamicBody of this.dynamicBodies) {
       const controller: PhysicsController = this.controllers[dynamicBody.name];
 
-      dynamicBody.quaternion.toArray(this._rotationArray);
-      this._rotationQuaternion.set(this._rotationArray[0], this._rotationArray[1], this._rotationArray[2], this._rotationArray[3]);
-
-      controller.setPosition(dynamicBody.position.x, dynamicBody.position.y, dynamicBody.position.z);
-      controller.setRotation(this._rotationQuaternion);
+      controller.updateFromPhysicsBody(dynamicBody);
     }
   }
 }
