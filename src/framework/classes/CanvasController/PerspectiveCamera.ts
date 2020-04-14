@@ -77,7 +77,7 @@ export default class PerspectiveCamera extends CanvasController implements HasLo
   }
 
   lookAtFromDistance(position: THREE.Vector3, distance: number): void {
-    const distanceVector = new THREE.Vector3(1, 1, 1)
+    const distanceVector = new THREE.Vector3(1, 1.2, 1)
       .normalize()
       .multiplyScalar(distance)
       .clampLength(0, distance);
