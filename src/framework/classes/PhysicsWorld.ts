@@ -39,7 +39,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
   readonly world: OIMO.World = new OIMO.World({
     gravity: [0, -9.8 * 1000, 0],
-    iterations: 16,
+    // iterations: 16,
   });
 
   constructor(loggerBreadcrumbs: LoggerBreadcrumbs) {

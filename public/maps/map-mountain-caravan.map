@@ -1932,10 +1932,26 @@
 }
 // entity 4
 {
+"classname" "model_md2"
+"origin" "192 1360 1448"
+"model_name" "chicken"
+"angle" "0"
+"skin" "0"
+}
+// entity 5
+{
+"classname" "model_md2"
+"origin" "208 1680 1464"
+"model_name" "chicken"
+"angle" "0"
+"skin" "0"
+}
+// entity 6
+{
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Barrier"
-"_tb_id" "3"
+"_tb_id" "17"
 // brush 0
 {
 ( 344 1916 1456 ) ( 344 1912 1456 ) ( 344 1912 1424 ) textures/texture-crate-128x128 -0 -0 -0 1 1

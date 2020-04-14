@@ -57,11 +57,21 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
     // this.children.add(camera);
   }
 
-  computeBoundingBox(): void {
+  computeBoundingBox(recalculate: boolean): void {
+    if (!recalculate && this.hasBoundingBox()) {
+      return;
+    }
+
     this.boundingBox = new THREE.Box3().setFromObject(this.children);
   }
 
-  computeBoundingSphere(): void {
+  computeBoundingSphere(recalculate: boolean): void {
+    if (!recalculate && this.hasBoundingSphere()) {
+      return;
+    }
+
+    this.computeBoundingBox(recalculate);
+
     const boundingBox = this.getBoundingBox();
     const boundingBoxCenter = new THREE.Vector3();
     const boundingBoxSize = new THREE.Vector3();
