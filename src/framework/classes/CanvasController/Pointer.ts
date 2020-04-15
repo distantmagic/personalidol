@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import autoBind from "auto-bind";
+import clamp from "lodash/clamp";
 
 import CanvasController from "src/framework/classes/CanvasController";
 import { default as CursorView } from "src/framework/classes/CanvasView/Cursor";
@@ -22,6 +23,12 @@ import type Scheduler from "src/framework/interfaces/Scheduler";
 import type { default as ICursorCanvasView } from "src/framework/interfaces/CanvasView/Cursor";
 import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
+const exitPointerLock = (
+  document.exitPointerLock ||
+  // @ts-ignore
+  document.mozExitPointerLock
+);
+
 export default class Pointer extends CanvasController implements HasLoggerBreadcrumbs {
   readonly cursorView: ICursorCanvasView;
   readonly domElement: HTMLElement;
@@ -31,12 +38,15 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   readonly pointerVector: THREE.Vector2 = new THREE.Vector2(0.5, 0.5);
   readonly raycaster: THREE.Raycaster = new THREE.Raycaster();
   readonly scheduler: Scheduler;
-  private canvasHeight: number = 0;
-  private canvasOffsetLeft: number = 0;
-  private canvasOffsetTop: number = 0;
-  private canvasWidth: number = 0;
-  private cursorPlane: THREE.Plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-  private cursorPlaneIntersection: THREE.Vector3 = new THREE.Vector3();
+  private _canvasHeight: number = 0;
+  private _canvasOffsetLeft: number = 0;
+  private _canvasOffsetTop: number = 0;
+  private _canvasWidth: number = 0;
+  private _cursorPlane: THREE.Plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  private _cursorPlaneIntersection: THREE.Vector3 = new THREE.Vector3();
+  private _hasPointerLock: boolean = false;
+  private _pointerLockX: number = 0;
+  private _pointerLockY: number = 0;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -75,18 +85,21 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const domElement = this.domElement;
     const optionsPassive = {
       capture: true,
       passive: true,
     };
 
-    domElement.addEventListener("contextmenu", this.onContextMenu);
-    domElement.addEventListener("mousedown", this.onMouseChange, optionsPassive);
-    domElement.addEventListener("mouseleave", this.onMouseLeave);
-    domElement.addEventListener("mousemove", this.onMouseChange, optionsPassive);
-    domElement.addEventListener("mouseup", this.onMouseChange, optionsPassive);
-    domElement.addEventListener("wheel", this.onWheel);
+    document.addEventListener("mozpointerlockchange", this.onPointerLockChange, optionsPassive);
+    document.addEventListener("pointerlockchange", this.onPointerLockChange, optionsPassive);
+    this.domElement.addEventListener("contextmenu", this.onContextMenu);
+    this.domElement.addEventListener("mousedown", this.onMouseChange, optionsPassive);
+    this.domElement.addEventListener("mousedown", this.onMouseDown, optionsPassive);
+    this.domElement.addEventListener("mouseleave", this.onMouseLeave);
+    this.domElement.addEventListener("mousemove", this.onMouseChange, optionsPassive);
+    this.domElement.addEventListener("mousemove", this.onMouseMove, optionsPassive);
+    this.domElement.addEventListener("mouseup", this.onMouseChange, optionsPassive);
+    this.domElement.addEventListener("wheel", this.onWheel);
 
     await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, this.cursorView), "Loading cursor");
   }
@@ -95,14 +108,20 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   async dispose(cancelToken: CancelToken): Promise<void> {
     await super.dispose(cancelToken);
 
-    const domElement = this.domElement;
+    if (this._hasPointerLock) {
+      exitPointerLock();
+    }
 
-    domElement.removeEventListener("contextmenu", this.onContextMenu);
-    domElement.removeEventListener("mousedown", this.onMouseChange);
-    domElement.removeEventListener("mouseleave", this.onMouseLeave);
-    domElement.removeEventListener("mousemove", this.onMouseChange);
-    domElement.removeEventListener("mouseup", this.onMouseChange);
-    domElement.removeEventListener("wheel", this.onWheel);
+    document.removeEventListener("mozpointerlockchange", this.onPointerLockChange);
+    document.removeEventListener("pointerlockchange", this.onPointerLockChange);
+    this.domElement.removeEventListener("contextmenu", this.onContextMenu);
+    this.domElement.removeEventListener("mousedown", this.onMouseChange);
+    this.domElement.removeEventListener("mousedown", this.onMouseDown);
+    this.domElement.removeEventListener("mouseleave", this.onMouseLeave);
+    this.domElement.removeEventListener("mousemove", this.onMouseChange);
+    this.domElement.removeEventListener("mousemove", this.onMouseMove);
+    this.domElement.removeEventListener("mouseup", this.onMouseChange);
+    this.domElement.removeEventListener("wheel", this.onWheel);
   }
 
   getPointerVector(): THREE.Vector2 {
@@ -114,21 +133,39 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   }
 
   onMouseChange(evt: MouseEvent): void {
-    const relativeX = evt.clientX - this.canvasOffsetLeft;
-    const relativeY = evt.clientY - this.canvasOffsetTop;
+    if (this._hasPointerLock) {
+      return;
+    }
 
-    this.pointerVector.x = (relativeX / this.canvasWidth) * 2 - 1;
-    this.pointerVector.y = -1 * (relativeY / this.canvasHeight) * 2 + 1;
+    const relativeX = evt.clientX - this._canvasOffsetLeft;
+    const relativeY = evt.clientY - this._canvasOffsetTop;
 
-    this.cursorView.setVisible(true);
-    this.cursorView.setPosition(this.cursorPlaneIntersection.x, this.cursorPlaneIntersection.y, this.cursorPlaneIntersection.z);
+    this.onPointerLockPositionChange(relativeX, relativeY);
+  }
+
+  onMouseDown(evt: MouseEvent): void {
+    this.domElement.requestPointerLock();
   }
 
   onMouseLeave(evt: MouseEvent): void {
     this.cursorView.setVisible(false);
   }
 
-  onMouseMove(evt: MouseEvent): void {}
+  onMouseMove(evt: MouseEvent): void {
+    if (!this._hasPointerLock) {
+      return;
+    }
+
+    this.onPointerLockPositionChange(this._pointerLockX + evt.movementX, this._pointerLockY + evt.movementY);
+  }
+
+  onPointerLockChange(): void {
+    this._hasPointerLock = (
+      document.pointerLockElement === this.domElement ||
+      // @ts-ignore
+      document.mozPointerLockElement === this.domElement
+    );
+  }
 
   onWheel(evt: WheelEvent): void {
     if (evt.deltaY < 0) {
@@ -139,15 +176,15 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   }
 
   resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {
-    this.canvasHeight = elementSize.getHeight();
-    this.canvasWidth = elementSize.getWidth();
+    this._canvasHeight = elementSize.getHeight();
+    this._canvasWidth = elementSize.getWidth();
   }
 
   setPosition(elementPosition: ElementPosition<ElementPositionUnit.Px>): void {
     super.setPosition(elementPosition);
 
-    this.canvasOffsetLeft = elementPosition.getX();
-    this.canvasOffsetTop = elementPosition.getY();
+    this._canvasOffsetLeft = elementPosition.getX();
+    this._canvasOffsetTop = elementPosition.getY();
   }
 
   update(delta: number): void {
@@ -157,11 +194,26 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
       return;
     }
 
-    this.raycaster.ray.intersectPlane(this.cursorPlane, this.cursorPlaneIntersection);
-    this.cursorView.setPosition(this.cursorPlaneIntersection.x, this.cursorPlaneIntersection.y, this.cursorPlaneIntersection.z);
+    this.raycaster.ray.intersectPlane(this._cursorPlane, this._cursorPlaneIntersection);
+    this.cursorView.setPosition(this._cursorPlaneIntersection.x, this._cursorPlaneIntersection.y, this._cursorPlaneIntersection.z);
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {
     return SchedulerUpdateScenario.Always;
+  }
+
+  private onPointerLockPositionChange(pointerLockX: number, pointerLockY: number): void {
+    this._pointerLockX = clamp(pointerLockX, 0, this._canvasWidth);
+    this._pointerLockY = clamp(pointerLockY, 0, this._canvasHeight);
+
+    this.onPointerPositionChange(this._pointerLockX, this._pointerLockY);
+  }
+
+  private onPointerPositionChange(x: number, y: number): void {
+    this.pointerVector.x = (x / this._canvasWidth) * 2 - 1;
+    this.pointerVector.y = -1 * (y / this._canvasHeight) * 2 + 1;
+
+    this.cursorView.setVisible(true);
+    this.cursorView.setPosition(this._cursorPlaneIntersection.x, this._cursorPlaneIntersection.y, this._cursorPlaneIntersection.z);
   }
 }

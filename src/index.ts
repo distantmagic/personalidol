@@ -36,6 +36,8 @@ if (!(rootCanvasElement instanceof HTMLCanvasElement)) {
   throw new Error("Root element is not a canvas.");
 }
 
+// rootCanvasElement.requestPointerLock();
+
 const busClock = new BusClock();
 const loggerBreadcrumbs = new LoggerBreadcrumbs();
 const logger = new ConsoleLogger();
