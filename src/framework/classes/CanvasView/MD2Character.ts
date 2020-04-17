@@ -99,18 +99,7 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     this.children.add(this.characterGroup);
     this.character = character;
 
-    // this.setRotationY(THREE.MathUtils.degToRad(this.angle));
-
     this.computeBoundingSphere(false);
-
-    // const geometry = new THREE.SphereBufferGeometry(this.getBoundingSphere().radius, 16, 16);
-    // const material = new THREE.MeshBasicMaterial({
-    //   color: 0xffff00,
-    //   wireframe: true,
-    // });
-    // const sphere = new THREE.Mesh(geometry, material);
-
-    // this.children.add(sphere);
   }
 
   attachCamera(camera: THREE.Camera): void {
@@ -119,14 +108,6 @@ export default class MD2Character extends CanvasView implements IMD2CharacterVie
     camera.position.set(LOOK_AT_DISTANCE, LOOK_AT_DISTANCE, LOOK_AT_DISTANCE);
     camera.lookAt(this.getPosition());
   }
-
-  // computeBoundingBox(recalculate: boolean): void {
-  //   if (!recalculate && this.hasBoundingBox()) {
-  //     return;
-  //   }
-
-  //   this.boundingBox = new THREE.Box3().setFromObject(this.characterGroup);
-  // }
 
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {

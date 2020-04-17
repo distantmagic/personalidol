@@ -28,6 +28,7 @@ export default class SpotLight extends CanvasView {
     this.light.distance = 512;
     this.light.penumbra = 1;
     this.light.castShadow = true;
+    this.light.visible = true;
     this.light.shadow.camera.far = 512;
   }
 
@@ -37,5 +38,9 @@ export default class SpotLight extends CanvasView {
 
     this.children.add(this.light);
     this.children.add(this.light.target);
+  }
+
+  isInFrustum(frustum: THREE.Frustum): boolean {
+    return frustum.containsPoint(this.light.position);
   }
 }

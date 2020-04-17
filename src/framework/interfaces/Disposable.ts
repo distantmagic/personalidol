@@ -8,4 +8,8 @@ export default interface Disposable {
   dispose(cancelToken: CancelToken): Promise<void>;
 
   isDisposed(): boolean;
+
+  setIsAttached(isAttached: boolean): void;
+
+  setIsDisposed(isDisposed: boolean): void;
 }

@@ -46,16 +46,15 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
       canvasController.resize(lastElementSize);
     }
 
-    if (!canvasController.isAttached()) {
-      throw new CanvasControllerException(this.loggerBreadcrumbs.add("add"), "Canvas controller wasn't properly attached. Did you forget to call parent 'super.attach' method?");
-    }
-
     if (SchedulerUpdateScenario.Always === canvasController.useDraw()) {
       this.scheduler.draw.add(canvasController.draw);
     }
     if (SchedulerUpdateScenario.Always === canvasController.useUpdate()) {
       this.scheduler.update.add(canvasController.update);
     }
+
+    canvasController.setIsAttached(true);
+    canvasController.setIsDisposed(false);
   }
 
   @cancelable()
@@ -75,12 +74,8 @@ export default class CanvasControllerBus implements ICanvasControllerBus, HasLog
 
     await canvasController.dispose(cancelToken);
 
-    if (!canvasController.isDisposed()) {
-      throw new CanvasControllerException(
-        this.loggerBreadcrumbs.add("delete"),
-        "Canvas controller wasn't properly disposed. Did you forget to call parent 'super.dispose' method?"
-      );
-    }
+    canvasController.setIsAttached(false);
+    canvasController.setIsDisposed(true);
   }
 
   disconnect(): void {

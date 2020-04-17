@@ -75,15 +75,15 @@ export default class QuakeMapLoader implements IQuakeMapLoader {
           break;
         case "light_point":
         case "light_spotlight":
-          this.onEntity.notify([
-            {
-              classname: entityClassName,
-              color: entityProperties.getPropertyByKey("color").getValue(),
-              decay: entityProperties.getPropertyByKey("decay").asNumber(),
-              intensity: entityProperties.getPropertyByKey("intensity").asNumber(),
-              origin: getEntityOrigin(entity),
-            },
-          ]);
+          // this.onEntity.notify([
+          //   {
+          //     classname: entityClassName,
+          //     color: entityProperties.getPropertyByKey("color").getValue(),
+          //     decay: entityProperties.getPropertyByKey("decay").asNumber(),
+          //     intensity: entityProperties.getPropertyByKey("intensity").asNumber(),
+          //     origin: getEntityOrigin(entity),
+          //   },
+          // ]);
           break;
         case "model_gltf":
           this.onEntity.notify([

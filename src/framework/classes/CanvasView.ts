@@ -47,9 +47,6 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
-    this._isAttached = true;
-    this._isDisposed = false;
-
     this.parentGroup.add(this.children);
   }
 
@@ -88,9 +85,6 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
-    this._isAttached = false;
-    this._isDisposed = true;
-
     await this.canvasViewBag.dispose(cancelToken);
 
     dispose(this.loggerBreadcrumbs.add("dispose"), this.children);
@@ -211,6 +205,14 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
   onPointerSecondaryPressed(): void {}
 
+  setIsAttached(isAttached: boolean): void {
+    this._isAttached = isAttached;
+  }
+
+  setIsDisposed(isDisposed: boolean): void {
+    this._isDisposed = isDisposed;
+  }
+
   setIsInCameraFrustum(isInCameraFrustum: boolean): void {
     this._isInCameraFrustum = isInCameraFrustum;
     this.children.visible = isInCameraFrustum;
@@ -221,12 +223,6 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
   }
 
   setPosition(x: number, y: number, z: number): void {
-    if (!this.hasBoundingBox()) {
-      this.children.position.set(x, y, z);
-
-      return;
-    }
-
     const boundingBox = this.getBoundingBox();
 
     const diffX = this.children.position.x - x;
@@ -235,7 +231,7 @@ export default abstract class CanvasView implements HasLoggerBreadcrumbs, ICanva
 
     this.translationVector.set(diffX, diffY, diffZ);
     this.children.position.set(x, y, z);
-    // console.log(this.translationVector);
+
     boundingBox.translate(this.translationVector);
   }
 

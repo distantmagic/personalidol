@@ -38,26 +38,23 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
 
     await canvasView.attach(cancelToken);
 
-    if (!canvasView.isAttached()) {
-      throw new CanvasViewException(
-        this.loggerBreadcrumbs.add("add"),
-        `Canvas view is not properly attached. Did you forget to call parent 'super.attach' method?: ${canvasViewName}`
-      );
-    }
+    canvasView.computeBoundingBox(false);
+    canvasView.computeBoundingSphere(false);
 
     if (canvasView.useCameraFrustum()) {
       await this.cameraFrustumBus.add(cancelToken, canvasView);
     }
 
     if (canvasView.usePhysics()) {
-      canvasView.computeBoundingBox(false);
-      canvasView.computeBoundingSphere(false);
       this.physicsWorld.addPhysicsController(canvasView);
     }
 
     if (SchedulerUpdateScenario.Always === canvasView.useUpdate()) {
       this.scheduler.update.add(canvasView.update);
     }
+
+    canvasView.setIsAttached(true);
+    canvasView.setIsDisposed(false);
   }
 
   @cancelable()
@@ -82,15 +79,11 @@ export default class CanvasViewBus implements HasLoggerBreadcrumbs, ICanvasViewB
 
     await canvasView.dispose(cancelToken);
 
-    if (!canvasView.isDisposed()) {
-      throw new CanvasViewException(
-        this.loggerBreadcrumbs.add("delete"),
-        `Canvas view wasn't properly disposed. Did you forget to call parent 'super.dispose' method?: ${canvasViewName}`
-      );
-    }
-
     if (!isEmpty(canvasView.getChildren().children)) {
       throw new CanvasViewException(this.loggerBreadcrumbs.add("delete"), `Canvas view is not properly disposed. It still contains attached children: ${canvasViewName}`);
     }
+
+    canvasView.setIsAttached(false);
+    canvasView.setIsDisposed(true);
   }
 }

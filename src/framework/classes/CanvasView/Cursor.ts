@@ -24,10 +24,8 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
   readonly loadingManager: LoadingManager;
   readonly pointerState: PointerState;
   readonly queryBus: QueryBus;
-  private cursorGroup: THREE.Group = new THREE.Group();
-  private scale: number = 1;
-  private spotLight: THREE.SpotLight = new THREE.SpotLight();
-  private threeLoadingManager: THREE.LoadingManager;
+  private _cursorGroup: THREE.Group = new THREE.Group();
+  private _threeLoadingManager: THREE.LoadingManager;
 
   constructor(
     loggerBreadcrumbs: LoggerBreadcrumbs,
@@ -46,14 +44,14 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     this.loadingManager = loadingManager;
     this.pointerState = pointerState;
     this.queryBus = queryBus;
-    this.threeLoadingManager = threeLoadingManager;
+    this._threeLoadingManager = threeLoadingManager;
   }
 
   @cancelable()
   async attach(cancelToken: CancelToken): Promise<void> {
     await super.attach(cancelToken);
 
-    const modelQuery = new GLTFModelQuery(this.threeLoadingManager, "/models/model-glb-cursor/", `/models/model-glb-cursor/model.glb`);
+    const modelQuery = new GLTFModelQuery(this._threeLoadingManager, "/models/model-glb-cursor/", `/models/model-glb-cursor/model.glb`);
     const response = await this.queryBus.enqueue(cancelToken, modelQuery).whenExecuted();
 
     for (let child of response.scene.children) {
@@ -73,57 +71,21 @@ export default class Cursor extends CanvasView implements ICursorCanvasView {
     }
 
     this.children.add(response.scene);
-    this.gameCameraController.onZoomChange.add(this.onZoomChange);
+    this._cursorGroup = response.scene;
 
-    this.cursorGroup = response.scene;
-
-    const light = new THREE.SpotLight();
-
-    light.angle = Math.PI / 2;
-    light.intensity = 0.2;
-    light.position.set(8, 48, -8);
-    light.penumbra = 1;
-    light.target = new THREE.Object3D();
-    light.target.position.set(8, 0, -8);
-
-    this.children.add(light);
-    this.children.add(light.target);
-
-    this.spotLight = light;
-
-    this.onZoomChange(this.gameCameraController.getZoom());
     this.setVisible(false);
   }
 
-  @cancelable()
-  async dispose(cancelToken: CancelToken): Promise<void> {
-    await super.dispose(cancelToken);
-
-    this.gameCameraController.onZoomChange.delete(this.onZoomChange);
-  }
-
-  onZoomChange(zoom: number): void {
-    // const scale = 1 / zoom;
-    const scale = 1 / 4;
-
-    this.children.scale.set(scale, scale, scale);
-    this.scale = scale;
-  }
-
   setPosition(x: number, y: number, z: number): void {
-    this.children.position.set(x + this.scale * 32, y + this.scale * 48, z + this.scale * 32);
+    this.children.position.set(x, y, z);
   }
 
   setVisible(isVisible: boolean): void {
-    this.cursorGroup.visible = isVisible;
-
-    // do not unset light via .visible to not recompile shaders
-    // there might be a small lag while cursor is leaving the game area
-    this.spotLight.intensity = isVisible ? 0.2 : 0;
+    this._cursorGroup.visible = isVisible;
   }
 
   update(delta: number): void {
-    this.cursorGroup.rotation.x += delta * SPEED;
+    this._cursorGroup.rotation.x += delta * SPEED;
   }
 
   useUpdate(): SchedulerUpdateScenario.Always {

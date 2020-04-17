@@ -19,16 +19,11 @@ export default class CanvasController implements ICanvasController {
   }
 
   @cancelable()
-  async attach(cancelToken: CancelToken): Promise<void> {
-    this._isAttached = true;
-    this._isDisposed = false;
-  }
+  async attach(cancelToken: CancelToken): Promise<void> {}
 
   @cancelable()
   async dispose(cancelToken: CancelToken): Promise<void> {
-    this._isAttached = false;
     await this.canvasViewBag.dispose(cancelToken);
-    this._isDisposed = true;
   }
 
   draw(delta: number): void {}
@@ -42,6 +37,14 @@ export default class CanvasController implements ICanvasController {
   }
 
   resize(elementSize: ElementSize<ElementPositionUnit.Px>): void {}
+
+  setIsAttached(isAttached: boolean): void {
+    this._isAttached = isAttached;
+  }
+
+  setIsDisposed(isDisposed: boolean): void {
+    this._isDisposed = isDisposed;
+  }
 
   setPosition(elementPosition: ElementPosition<ElementPositionUnit.Px>): void {}
 
