@@ -11,6 +11,7 @@ build.website: website/public/index.html website/public/build/index.js
 clean:
 	$(CMD_YARN) run lerna clean --yes
 	rm -rf node_modules
+	rm -rf website
 
 node_modules: yarn.lock
 	$(CMD_YARN) install
