@@ -14,7 +14,7 @@
 /packages/*/build
 /public/vendor
 /public/index.css
-/website/public/build
+/website
 
 # misc
 .DS_Store

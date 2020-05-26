@@ -1,5 +1,12 @@
 CMD_YARN := $(shell command -v yarnpkg || command -v yarn )
 
+build/index.js:
+	$(CMD_YARN) run esbuild src/index.ts \
+		--bundle \
+		--minify \
+		--outfile=build/index.js \
+		--sourcemap
+
 node_modules: yarn.lock
 	$(CMD_YARN) install
 
@@ -12,13 +19,8 @@ optimize.jpg:
 optimize.png:
 	find public src -name "*.png" -exec pngout {} \;
 
-prepublish:
-	$(CMD_YARN) run esbuild src/index.ts \
-		--bundle \
-		--minify \
-		--outfile=build/index.js \
-		--sourcemap
-
+.PHONY = prepublish
+prepublish: build/index.js
 
 yarn.lock:
 	$(CMD_YARN) install
