@@ -1,6 +1,7 @@
 CMD_YARN := $(shell command -v yarnpkg || command -v yarn )
+SOURCES_TS := $(shell find src -name "*.ts" -type f)
 
-build/index.js:
+build/index.js: $(SOURCES_TS)
 	$(CMD_YARN) run esbuild src/index.ts \
 		--bundle \
 		--minify \
