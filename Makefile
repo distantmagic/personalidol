@@ -22,8 +22,8 @@ website:
 website/public/index.html: bootstrap website
 	rsync -avz --delete packages/website/public website
 
-website/public/build/index.js: bootstrap website
-	rsync -avz --delete packages/website/build website/public
+website/public/build/index.js: bootstrap website/public/index.html
+	rsync -avz --delete packages/framework/build website/public
 
 yarn.lock:
 	$(CMD_YARN) install
