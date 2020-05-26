@@ -11,7 +11,7 @@
 /coverage
 
 # production
-/build
+/packages/*/build
 /public/vendor
 /public/index.css
 

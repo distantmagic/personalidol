@@ -23,11 +23,10 @@ import type Scheduler from "src/framework/interfaces/Scheduler";
 import type { default as ICursorCanvasView } from "src/framework/interfaces/CanvasView/Cursor";
 import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 
-const exitPointerLock = (
+const exitPointerLock =
   document.exitPointerLock ||
   // @ts-ignore
-  document.mozExitPointerLock
-);
+  document.mozExitPointerLock;
 
 export default class Pointer extends CanvasController implements HasLoggerBreadcrumbs {
   readonly cursorView: ICursorCanvasView;
@@ -160,11 +159,10 @@ export default class Pointer extends CanvasController implements HasLoggerBreadc
   }
 
   onPointerLockChange(): void {
-    this._hasPointerLock = (
+    this._hasPointerLock =
       document.pointerLockElement === this.domElement ||
       // @ts-ignore
-      document.mozPointerLockElement === this.domElement
-    );
+      document.mozPointerLockElement === this.domElement;
   }
 
   onWheel(evt: WheelEvent): void {

@@ -1,0 +1,9 @@
+{
+  "license": "MIT",
+  "main": "build/index.js",
+  "name": "@personalidol/website",
+  "scripts": {
+    "prepublish": "make prepublish"
+  },
+  "version": "0.0.0"
+}

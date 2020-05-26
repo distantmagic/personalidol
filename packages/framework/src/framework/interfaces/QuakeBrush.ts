@@ -5,7 +5,7 @@ import type Equatable from "src/framework/interfaces/Equatable";
 import type QuakeBrushHalfSpace from "src/framework/interfaces/QuakeBrushHalfSpace";
 import type QuakeBrushHalfSpaceTrio from "src/framework/interfaces/QuakeBrushHalfSpaceTrio";
 
-export default interface QuakeBrush extends Equatable<QuakeBrush>{
+export default interface QuakeBrush extends Equatable<QuakeBrush> {
   generateHalfSpaceTrios(): Generator<QuakeBrushHalfSpaceTrio>;
 
   generateVertices(): Generator<THREE.Vector3>;

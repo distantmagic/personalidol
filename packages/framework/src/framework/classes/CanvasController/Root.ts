@@ -149,13 +149,7 @@ export default class Root extends CanvasController implements HasLoggerBreadcrum
       // env(this.loggerBreadcrumbs.add("env"), "PUBLIC_URL") + env(this.loggerBreadcrumbs.add("env"), "REACT_APP_MAP_OVERRIDE", "/maps/map-cube-chipped.map")
     );
 
-    await this.loadingManager.blocking(
-      this.canvasViewBag.add(
-        cancelToken,
-        quakeMapView
-      ),
-      "Loading map"
-    );
+    await this.loadingManager.blocking(this.canvasViewBag.add(cancelToken, quakeMapView), "Loading map");
 
     // await this.loadingManager.blocking(
     //   this.canvasViewBag.add(

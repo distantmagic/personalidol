@@ -39,7 +39,7 @@ function getShapeSize(loggerBreadcrumbs: LoggerBreadcrumbs, shapeType: "box" | "
 
 export default class PhysicsWorld implements IPhysicsWorld {
   readonly controllers: {
-    [key: string]: PhysicsController,
+    [key: string]: PhysicsController;
   } = {};
   readonly dynamicBodies: OIMO.Body[] = [];
   readonly loggerBreadcrumbs: LoggerBreadcrumbs;
@@ -76,11 +76,7 @@ export default class PhysicsWorld implements IPhysicsWorld {
     const shapeOrigin = shape.getPosition();
     const shapeType = shape.getShapeType();
     const shapeSize = getShapeSize(this.loggerBreadcrumbs.add("getShapeSize"), shapeType, shape);
-    const bodyPosition: [number, number, number] = [
-      shapeOrigin.x + shapeSize.x / 2,
-      shapeOrigin.y + shapeSize.y / 2,
-      shapeOrigin.z + shapeSize.z / 2
-    ];
+    const bodyPosition: [number, number, number] = [shapeOrigin.x + shapeSize.x / 2, shapeOrigin.y + shapeSize.y / 2, shapeOrigin.z + shapeSize.z / 2];
 
     const body = this.oimo.add({
       // friction: 0.8,
@@ -97,11 +93,9 @@ export default class PhysicsWorld implements IPhysicsWorld {
     return body;
   }
 
-  removePhysicsController(controller: PhysicsController): void {
-  }
+  removePhysicsController(controller: PhysicsController): void {}
 
-  removePhysicsShape(shape: PhysicsShape): void {
-  }
+  removePhysicsShape(shape: PhysicsShape): void {}
 
   update(delta: number): void {
     this.oimo.step();

@@ -33,7 +33,8 @@ import type QueryBus from "src/framework/interfaces/QueryBus";
 import type { default as IPerspectiveCameraController } from "src/framework/interfaces/CanvasController/PerspectiveCamera";
 import type { default as IPointerController } from "src/framework/interfaces/CanvasController/Pointer";
 
-import type QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";import type QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
+import type QuakeWorkerBrush from "src/framework/types/QuakeWorkerBrush";
+import type QuakeWorkerAny from "src/framework/types/QuakeWorkerAny";
 import type QuakeWorkerGLTFModel from "src/framework/types/QuakeWorkerGLTFModel";
 import type QuakeWorkerMD2Model from "src/framework/types/QuakeWorkerMD2Model";
 

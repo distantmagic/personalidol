@@ -1,5 +1,0 @@
-endOfLine = "lf"
-htmlWhitespaceSensitivity = "ignore"
-trailingComma = "es5"
-plugins = ["import-sort"]
-printWidth = 180
