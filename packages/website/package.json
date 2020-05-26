@@ -1,4 +1,10 @@
 {
+  "dependencies": {
+    "@personalidol/framework": "0.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.4.1"
+  },
   "license": "MIT",
   "main": "build/index.js",
   "name": "@personalidol/website",

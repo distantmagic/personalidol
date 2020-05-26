@@ -13,7 +13,12 @@ optimize.png:
 	find public src -name "*.png" -exec pngout {} \;
 
 prepublish:
-	echo test
+	$(CMD_YARN) run esbuild src/index.ts \
+		--bundle \
+		--minify \
+		--outfile=build/index.js \
+		--sourcemap
+
 
 yarn.lock:
 	$(CMD_YARN) install
