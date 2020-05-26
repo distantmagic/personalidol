@@ -1,0 +1,76 @@
+// Game: PersonalIdol
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "./textures"
+"light" "0.7"
+"scenery" "1"
+// brush 0
+{
+( 256 1024 512 ) ( 256 256 512 ) ( 256 256 -0 ) textures/texture-concrete-128x128 -0 -0 -0 1 -1
+( 272 256 512 ) ( 272 256 -0 ) ( 256 256 -0 ) textures/texture-concrete-128x128 -0 112 270 1 -1
+( 256 256 -0 ) ( 272 256 -0 ) ( 272 1024 -0 ) textures/texture-concrete-128x128 -0 112 90 1 1
+( 272 1024 512 ) ( 272 256 512 ) ( 256 256 512 ) textures/texture-concrete-128x128 -0 112 90 1 1
+( 272 1024 -0 ) ( 272 1024 512 ) ( 256 1024 512 ) textures/texture-concrete-128x128 -0 112 270 1 -1
+( 272 1024 -0 ) ( 272 256 -0 ) ( 272 256 512 ) textures/texture-concrete-128x128 -0 -0 -0 1 -1
+}
+// brush 1
+{
+( 16 256 528 ) ( 16 256 512 ) ( 16 1024 512 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 208 256 528 ) ( 208 256 512 ) ( 16 256 512 ) textures/texture-concrete-128x128 16 -0 180 1 -1
+( 16 256 512 ) ( 208 256 512 ) ( 208 1024 512 ) textures/texture-concrete-128x128 -0 -16 90 1 1
+( 208 1024 528 ) ( 208 256 528 ) ( 16 256 528 ) textures/texture-concrete-128x128 -0 -16 90 1 1
+( 208 1024 512 ) ( 208 1024 528 ) ( 16 1024 528 ) textures/texture-concrete-128x128 16 -0 180 1 -1
+( 208 1024 512 ) ( 208 256 512 ) ( 208 256 528 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+// brush 2
+{
+( -0 1024 512 ) ( -0 1024 1024 ) ( -0 -0 1024 ) textures/texture-concrete-128x128 -0 -0 -0 1 -1
+( -0 -0 512 ) ( -0 -0 1024 ) ( 16 -0 1024 ) textures/texture-concrete-128x128 -0 -16 270 1 -1
+( 16 1024 512 ) ( -0 1024 512 ) ( -0 -0 512 ) textures/texture-concrete-128x128 -0 -16 90 1 1
+( -0 1024 1024 ) ( 16 1024 1024 ) ( 16 -0 1024 ) textures/texture-concrete-128x128 -0 -16 90 1 1
+( 16 1024 512 ) ( 16 1024 1024 ) ( -0 1024 1024 ) textures/texture-concrete-128x128 -0 -16 270 1 -1
+( 16 -0 1024 ) ( 16 1024 1024 ) ( 16 1024 512 ) textures/texture-concrete-128x128 -0 -0 -0 1 -1
+}
+// brush 3
+{
+( 272 1024 16 ) ( 272 256 16 ) ( 272 256 -0 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 784 256 16 ) ( 784 256 -0 ) ( 272 256 -0 ) textures/texture-concrete-128x128 -112 -0 180 1 -1
+( 272 256 -0 ) ( 784 256 -0 ) ( 784 1024 -0 ) textures/texture-concrete-128x128 -0 112 90 1 1
+( 784 1024 16 ) ( 784 256 16 ) ( 272 256 16 ) textures/texture-concrete-128x128 -0 112 90 1 1
+( 784 1024 -0 ) ( 784 1024 16 ) ( 272 1024 16 ) textures/texture-concrete-128x128 -112 -0 180 1 -1
+( 784 1024 -0 ) ( 784 256 -0 ) ( 784 256 16 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+// brush 4
+{
+( 16 -0 528 ) ( 16 256 512 ) ( 16 256 528 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 784 -0 512 ) ( 16 -0 528 ) ( 784 -0 528 ) textures/texture-concrete-128x128 16 -0 180 1 -1
+( 784 -0 512 ) ( 16 256 512 ) ( 16 -0 512 ) textures/texture-concrete-128x128 -0 -16 90 1 1
+( 784 -0 528 ) ( 16 256 528 ) ( 784 256 528 ) textures/texture-concrete-128x128 -0 -16 90 1 1
+( 784 256 528 ) ( 16 256 512 ) ( 784 256 512 ) textures/texture-concrete-128x128 16 -0 180 1 -1
+( 784 -0 512 ) ( 784 256 528 ) ( 784 256 512 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+// brush 5
+{
+( 272 272 528 ) ( 272 256 528 ) ( 272 256 16 ) textures/texture-concrete-128x128 -0 16 -0 1 1
+( 784 256 528 ) ( 784 256 16 ) ( 272 256 16 ) textures/texture-concrete-128x128 112 16 -0 1 1
+( 272 256 16 ) ( 784 256 16 ) ( 784 272 16 ) textures/texture-concrete-128x128 112 -0 -0 1 1
+( 784 272 528 ) ( 784 256 528 ) ( 272 256 528 ) textures/texture-concrete-128x128 112 -0 -0 1 1
+( 784 272 16 ) ( 784 272 528 ) ( 272 272 528 ) textures/texture-concrete-128x128 112 16 -0 1 1
+( 784 272 16 ) ( 784 256 16 ) ( 784 256 528 ) textures/texture-concrete-128x128 -0 16 -0 1 1
+}
+}
+// entity 1
+{
+"classname" "player"
+"origin" "176 240 552"
+}
+// entity 2
+{
+"classname" "light_spotlight"
+"origin" "184 232 920"
+"color" "0xffffff"
+"decay" "1"
+"intensity" "2"
+}

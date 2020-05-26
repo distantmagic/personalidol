@@ -1,0 +1,85 @@
+// Game: PersonalIdol
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "./textures"
+"light" "0.3"
+"scenery" "1"
+// brush 0
+{
+( -0 1024 1424 ) ( -0 1024 1936 ) ( -0 -0 1936 ) textures/texture-concrete-128x128 -0 112 -0 1 -1
+( -0 -0 1424 ) ( -0 -0 1936 ) ( 16 -0 1936 ) textures/texture-concrete-128x128 -112 -16 270 1 -1
+( 16 1024 1424 ) ( -0 1024 1424 ) ( -0 -0 1424 ) textures/texture-concrete-128x128 -0 -16 90 1 1
+( -0 1024 1936 ) ( 16 1024 1936 ) ( 16 -0 1936 ) textures/texture-concrete-128x128 -0 -16 90 1 1
+( 16 1024 1424 ) ( 16 1024 1936 ) ( -0 1024 1936 ) textures/texture-concrete-128x128 -112 -16 270 1 -1
+( 16 -0 1936 ) ( 16 1024 1936 ) ( 16 1024 1424 ) textures/texture-concrete-128x128 -0 112 -0 1 -1
+}
+// brush 1
+{
+( -0 1024 16 ) ( -0 -0 16 ) ( -0 -0 -0 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 832 -0 16 ) ( 832 -0 -0 ) ( -0 -0 -0 ) textures/texture-concrete-128x128 -64 -0 180 1 -1
+( -0 -0 -0 ) ( 832 -0 -0 ) ( 832 1024 -0 ) textures/texture-concrete-128x128 -0 64 90 1 1
+( 832 1024 16 ) ( 832 -0 16 ) ( -0 -0 16 ) textures/texture-concrete-128x128 -0 64 90 1 1
+( 832 1024 -0 ) ( 832 1024 16 ) ( -0 1024 16 ) textures/texture-concrete-128x128 -64 -0 180 1 -1
+( 832 1024 -0 ) ( 832 -0 -0 ) ( 832 -0 16 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+// brush 2
+{
+( -0 1024 1424 ) ( -0 768 1424 ) ( -0 768 16 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 352 768 1424 ) ( 320 768 16 ) ( -0 768 16 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( -0 768 16 ) ( 320 768 16 ) ( 352 1024 16 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 384 1024 1424 ) ( 352 768 1424 ) ( -0 768 1424 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 352 1024 16 ) ( 384 1024 1424 ) ( -0 1024 1424 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( 352 1024 16 ) ( 320 768 16 ) ( 352 768 1424 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+// brush 3
+{
+( -0 256 1424 ) ( -0 -0 1424 ) ( -0 -0 16 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 480 -0 1424 ) ( 448 -0 16 ) ( -0 -0 16 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( -0 -0 16 ) ( 448 -0 16 ) ( 384 256 16 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 416 256 1424 ) ( 480 -0 1424 ) ( -0 -0 1424 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 384 256 16 ) ( 416 256 1424 ) ( -0 256 1424 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( 384 256 16 ) ( 448 -0 16 ) ( 480 -0 1424 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+// brush 4
+{
+( -0 384 1424 ) ( -0 256 1424 ) ( -0 256 16 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 416 256 1424 ) ( 384 256 16 ) ( -0 256 16 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( -0 256 16 ) ( 384 256 16 ) ( 416 384 16 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 448 384 1424 ) ( 416 256 1424 ) ( -0 256 1424 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 416 384 16 ) ( 448 384 1424 ) ( -0 384 1424 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( 416 384 16 ) ( 384 256 16 ) ( 416 256 1424 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+// brush 5
+{
+( -0 768 1424 ) ( -0 384 1424 ) ( -0 384 16 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 448 384 1424 ) ( 416 384 16 ) ( -0 384 16 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( -0 384 16 ) ( 416 384 16 ) ( 320 768 16 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 433.81818181818181 400 976 ) ( 417.81818181818181 464 976 ) ( 545.81818181818176 464 976 ) textures/texture-concrete-128x128 0 0 90 1 1
+( 320 768 16 ) ( 352 768 1424 ) ( -0 768 1424 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( 320 768 16 ) ( 416 384 16 ) ( 448 384 1424 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+// brush 6
+{
+( -0 768 1424 ) ( -0 384 1424 ) ( -0 384 16 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+( 448 384 1424 ) ( 416 384 16 ) ( -0 384 16 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( 433.81818181818181 400 976 ) ( 545.81818181818176 464 976 ) ( 417.81818181818181 464 976 ) textures/texture-concrete-128x128 0 0 90 1 1
+( 352 768 1424 ) ( 448 384 1424 ) ( -0 384 1424 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 320 768 16 ) ( 352 768 1424 ) ( -0 768 1424 ) textures/texture-concrete-128x128 -0 -0 180 1 -1
+( 320 768 16 ) ( 416 384 16 ) ( 448 384 1424 ) textures/texture-concrete-128x128 -0 -0 -0 1 1
+}
+}
+// entity 1
+{
+"classname" "player"
+"origin" "240 272 1448"
+}
+// entity 2
+{
+"classname" "light_spotlight"
+"origin" "248 264 1816"
+"color" "0xffffff"
+"decay" "1"
+"intensity" "2"
+}

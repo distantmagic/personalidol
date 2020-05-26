@@ -1,0 +1,31 @@
+// Game: PersonalIdol
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "./textures"
+"light" "0.3"
+"scenery" "1"
+// brush 0
+{
+( 496 1024 -0 ) ( 496 1024 512 ) ( 496 -0 512 ) textures/texture-concrete-128x128 -0 -0 -0 1 -1
+( 496 -0 -0 ) ( 496 -0 512 ) ( 512 -0 512 ) textures/texture-concrete-128x128 -0 -0 270 1 -1
+( 512 1024 -0 ) ( 496 1024 -0 ) ( 496 -0 -0 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 496 1024 512 ) ( 512 1024 512 ) ( 512 -0 512 ) textures/texture-concrete-128x128 -0 -0 90 1 1
+( 512 1024 -0 ) ( 512 1024 512 ) ( 496 1024 512 ) textures/texture-concrete-128x128 -0 -0 270 1 -1
+( 512 -0 512 ) ( 512 1024 512 ) ( 512 1024 -0 ) textures/texture-concrete-128x128 -0 -0 -0 1 -1
+}
+}
+// entity 1
+{
+"classname" "player"
+"origin" "240 272 552"
+}
+// entity 2
+{
+"classname" "light_spotlight"
+"origin" "248 264 920"
+"color" "0xffffff"
+"decay" "1"
+"intensity" "2"
+}
