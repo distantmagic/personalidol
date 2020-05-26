@@ -1,7 +1,11 @@
 CMD_YARN := $(shell command -v yarnpkg || command -v yarn )
 
-build/index.js: prettier
-	$(CMD_YARN) run esbuild src/index.ts --bundle --minify --sourcemap --outfile=build/index.js
+build/index.js:
+	$(CMD_YARN) run esbuild src/index.ts \
+		--bundle \
+		--minify \
+		--outfile=build/index.js \
+		--sourcemap
 
 node_modules: yarn.lock
 	$(CMD_YARN) install

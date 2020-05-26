@@ -35,18 +35,13 @@
         margin: 0;
         padding: 0;
       }
-      html {
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-font-smoothing: antialiased;
-        font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-      }
       body {
         background-color: black;
         color: white;
         /*cursor: none;*/
         display: grid;
         height: 100%;
+        overflow: hidden;
         transform: translate3d(0, 0, 0);
         width: 100%;
       }
@@ -57,5 +52,14 @@
   </head>
   <body>
     <canvas id="dd-canvas"></canvas>
+    <script>(function () {
+      window.process = {
+        env: {
+          NODE_ENV: "development",
+          PUBLIC_URL: "http://localhost:8080"
+        },
+      };
+    })();</script>
+    <script src="/build/index.js"></script>
   </body>
 </html>
