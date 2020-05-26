@@ -5,6 +5,7 @@
 
 # dependencies
 /node_modules
+/packages/*/node_modules
 
 # testing
 /coverage
@@ -28,6 +29,4 @@
 /.yarn/cache
 /.yarn/unplugged
 .pnp.*
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.log

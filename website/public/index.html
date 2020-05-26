@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no" />
+
+    <link rel="shortcut icon" href="favicon.png" />
+
+    <style>
+      @keyframes pulse {
+        0% {
+          opacity: 0.6;
+          transform: translateX(-50%) translateY(-50%) scale(0.95);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(-50%) translateY(-50%) scale(1);
+        }
+      }
+      @keyframes fadeout {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      *,
+      * * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      body {
+        background-color: black;
+        color: white;
+        /*cursor: none;*/
+        display: grid;
+        height: 100%;
+        transform: translate3d(0, 0, 0);
+        width: 100%;
+      }
+      #dd-canvas {
+      }
+    </style>
+    <title>Personal Idol</title>
+  </head>
+  <body>
+    <canvas id="dd-canvas"></canvas>
+  </body>
+</html>
