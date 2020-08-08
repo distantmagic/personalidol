@@ -1,6 +1,4 @@
-type LoadinManagerItem = {
-  comment: string;
-};
+import type { LoadinManagerItem } from "./LoadinManagerItem.type";
 
 export type LoadingManagerState = {
   comment: string;

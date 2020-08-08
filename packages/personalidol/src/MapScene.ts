@@ -26,6 +26,7 @@ import { getPrimaryPointerVectorY } from "@personalidol/framework/src/getPrimary
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { invoke } from "@personalidol/framework/src/invoke";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
+import { notifyLoadingManager } from "@personalidol/framework/src/notifyLoadingManager";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { resetLoadingManagerState } from "@personalidol/framework/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
@@ -191,14 +192,21 @@ export function MapScene(
     },
 
     async model_md2(entity: EntityMD2Model): Promise<void> {
-      const {
-        load: { geometry },
-      } = await sendRPCMessage(_rpcLookupTable, md2MessagePort, {
+      const loadItemModelMD2 = {
+        comment: `model ${entity.model_name}`,
+        weight: 2,
+      };
+
+      const modelRequest = sendRPCMessage(_rpcLookupTable, md2MessagePort, {
         load: {
           model_name: entity.model_name,
           rpc: MathUtils.generateUUID(),
         },
       });
+
+      const {
+        load: { geometry },
+      } = await notifyLoadingManager(loadingManagerState, loadItemModelMD2, modelRequest);
 
       const textureUrl = `/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}`;
 
@@ -254,7 +262,7 @@ export function MapScene(
       bufferGeometry.setAttribute("uv", new BufferAttribute(entity.uvs, 2));
       bufferGeometry.setIndex(new BufferAttribute(entity.indices, 1));
 
-      console.log(entity.textureNames);
+      // console.log(entity.textureNames);
 
       const textures = await Promise.all(entity.textureNames.map(_loadMapTexture));
 
@@ -309,14 +317,14 @@ export function MapScene(
 
     const _loadItemMap = {
       comment: `map ${mapFilename}`,
+      weight: 1,
     };
 
-    loadingManagerState.expectsAtLeast = 10;
-    loadingManagerState.itemsToLoad.add(_loadItemMap);
+    resetLoadingManagerState(loadingManagerState);
 
-    const {
-      unmarshal: { entities },
-    } = await sendRPCMessage(_rpcLookupTable, quakeMapsMessagePort, {
+    loadingManagerState.expectsAtLeast = 10;
+
+    const mapRPCRequest = sendRPCMessage(_rpcLookupTable, quakeMapsMessagePort, {
       unmarshal: {
         discardOccluding: {
           x: _cameraDirection.x,
@@ -328,7 +336,9 @@ export function MapScene(
       },
     });
 
-    loadingManagerState.itemsLoaded.add(_loadItemMap);
+    const {
+      unmarshal: { entities },
+    } = await notifyLoadingManager(loadingManagerState, _loadItemMap, mapRPCRequest);
 
     await Promise.all(entities.map(_addMapEntity));
 
@@ -367,7 +377,7 @@ export function MapScene(
     }
   }
 
-  async function _addMapEntity<K extends keyof EntityLookup>(entity: EntityLookup[K]): Promise<void> {
+  function _addMapEntity<K extends keyof EntityLookup>(entity: EntityLookup[K]): void | Promise<void> {
     const classname = entity.classname;
 
     if (!entityLookupTable.hasOwnProperty(classname)) {
@@ -376,15 +386,7 @@ export function MapScene(
 
     logger.trace("ADD MAP ENTITY", classname);
 
-    const loadItemEntity = {
-      comment: `entity ${classname}`,
-    };
-
-    loadingManagerState.itemsToLoad.add(loadItemEntity);
-
-    await (entityLookupTable[classname] as EntityLookupCallback<K>)(entity);
-
-    loadingManagerState.itemsLoaded.add(loadItemEntity);
+    return (entityLookupTable[classname] as EntityLookupCallback<K>)(entity);
   }
 
   function _loadMapTexture(textureName: string): Promise<ITexture> {
@@ -394,13 +396,11 @@ export function MapScene(
   async function _loadTexture(textureUrl: string): Promise<ITexture> {
     const loadItemTexture = {
       comment: `texture ${textureUrl}`,
+      weight: 1,
     };
 
-    loadingManagerState.itemsToLoad.add(loadItemTexture);
-
-    const texture = await requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl);
-
-    loadingManagerState.itemsLoaded.add(loadItemTexture);
+    const textureRequest = requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl);
+    const texture = await notifyLoadingManager(loadingManagerState, loadItemTexture, textureRequest);
 
     return texture;
   }

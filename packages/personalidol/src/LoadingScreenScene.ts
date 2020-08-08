@@ -26,6 +26,9 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
     isPreloading: false,
   });
 
+  let _previousComment = "";
+  let _previousProgress = 0;
+
   const _ambientLight = new AmbientLight(0xffffff, 0.1);
   const _camera = new PerspectiveCamera();
 
@@ -128,9 +131,16 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   function update(delta: number): void {
     _boxMesh.rotation.x += delta;
     _boxMesh.rotation.z += delta;
-    _spotLight.intensity = Math.min(2, _spotLight.intensity + 3 * delta);
+    _spotLight.intensity = 2 * loadingManagerState.progress;
 
     rendererState.renderer.shadowMap.needsUpdate = true;
+
+    if (_previousComment === loadingManagerState.comment && _previousProgress === loadingManagerState.progress) {
+      return;
+    }
+
+    _previousComment = loadingManagerState.comment;
+    _previousProgress = loadingManagerState.progress;
 
     domMessagePort.postMessage({
       render: {
