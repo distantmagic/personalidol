@@ -1,6 +1,7 @@
 import Loglevel from "loglevel";
 
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
+import { DOMRendererService } from "@personalidol/dom-renderer/src/DOMRendererService";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCanvasElementById";
@@ -11,6 +12,7 @@ import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultInput";
+import { renderDOMUIRouter } from "@personalidol/personalidol/src/renderDOMUIRouter";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
@@ -18,13 +20,14 @@ import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 import { workers } from "./workers";
 
-const canvas = getHTMLCanvasElementById(window, "game");
+const canvas = getHTMLCanvasElementById(window, "canvas");
 const devicePixelRatio = Math.min(1.5, window.devicePixelRatio);
 const logger = Loglevel.getLogger("main");
 
 logger.setLevel(__LOG_LEVEL);
 
-const root = getHTMLElementById(window, "root");
+const canvasRoot = getHTMLElementById(window, "canvas-root");
+const uiRoot = getHTMLElementById(window, "ui-root");
 
 // Services that need to stay in the main browser thread, because they need
 // access to the DOM API.
@@ -33,7 +36,7 @@ const dimensionsState = Dimensions.createEmptyState();
 const inputState = Input.createEmptyState();
 
 const eventBus = EventBus();
-const htmlElementResizeObserver = HTMLElementResizeObserver(root, dimensionsState);
+const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState);
 
 const mainLoop = MainLoop(RequestAnimationFrameScheduler());
 const mouseObserver = MouseObserver(canvas, dimensionsState, inputState);
@@ -42,13 +45,23 @@ const touchObserver = TouchObserver(canvas, dimensionsState, inputState);
 
 serviceManager.services.add(htmlElementResizeObserver);
 serviceManager.services.add(mouseObserver);
-serviceManager.services.add(MouseWheelObserver(canvas, eventBus));
+serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
 serviceManager.services.add(touchObserver);
 serviceManager.services.add(PreventDefaultInput(canvas));
 
 mainLoop.updatables.add(htmlElementResizeObserver);
 mainLoop.updatables.add(mouseObserver);
 mainLoop.updatables.add(touchObserver);
+mainLoop.updatables.add(serviceManager);
+
+// DOMRendererService receives messages from workers and other sources and
+// redraws the DOM in the main thread.
+
+const domRendererMessageChannel = new MessageChannel();
+const domRendererService = DOMRendererService(domRendererMessageChannel.port1, uiRoot, renderDOMUIRouter);
+
+mainLoop.updatables.add(domRendererService);
+serviceManager.services.add(domRendererService);
 
 // Workers can share a message channel if necessary. If there is no offscreen
 // worker then the message channel can be used in the main thread. It is an
@@ -145,11 +158,12 @@ if ("function" === typeof canvas.transferControlToOffscreen) {
     {
       canvas: offscreenCanvas,
       devicePixelRatio: devicePixelRatio,
+      domMessagePort: domRendererMessageChannel.port2,
       md2MessagePort: md2MessageChannel.port2,
       quakeMapsMessagePort: quakeMapsMessageChannel.port2,
       texturesMessagePort: texturesMessageChannel.port2,
     },
-    [md2MessageChannel.port2, offscreenCanvas, quakeMapsMessageChannel.port2, texturesMessageChannel.port2]
+    [domRendererMessageChannel.port2, md2MessageChannel.port2, offscreenCanvas, quakeMapsMessageChannel.port2, texturesMessageChannel.port2]
   );
 
   const offscreenWorkerZoomRequestMessage = {
@@ -163,9 +177,6 @@ if ("function" === typeof canvas.transferControlToOffscreen) {
 
   mainLoop.updatables.add(offscreenWorkerService);
   serviceManager.services.add(offscreenWorkerService);
-
-  mainLoop.start();
-  serviceManager.start();
 } else {
   // this extra var is a hack to make esbuild leave the dynamic import as-is
   // https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
@@ -182,12 +193,13 @@ if ("function" === typeof canvas.transferControlToOffscreen) {
       dimensionsState,
       inputState,
       logger,
+      domRendererMessageChannel.port2,
       md2MessageChannel.port2,
       quakeMapsMessageChannel.port2,
       texturesMessageChannel.port2,
     );
-
-    mainLoop.start();
-    serviceManager.start();
   });
 }
+
+mainLoop.start();
+serviceManager.start();

@@ -29,6 +29,7 @@ const _canvasStyle = {
 let _canvas: null | OffscreenCanvas = null;
 let _devicePixelRatio: null | number = null;
 let _isBootstrapped = false;
+let domMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
 let quakeMapsMessagePort: null | MessagePort = null;
 let texturesMessagePort: null | MessagePort = null;
@@ -38,6 +39,7 @@ function _bootstrapSafe(): void {
   if (
     _canvas === null ||
     _devicePixelRatio === null ||
+    domMessagePort === null ||
     md2MessagePort === null ||
     quakeMapsMessagePort === null ||
     texturesMessagePort === null
@@ -59,6 +61,7 @@ function _bootstrapSafe(): void {
     dimensionsState,
     inputState,
     logger,
+    domMessagePort,
     md2MessagePort,
     quakeMapsMessagePort,
     texturesMessagePort
@@ -82,6 +85,11 @@ self.onmessage = createRouter({
 
   dimensions(dimensions: Uint16Array): void {
     dimensionsState.set(dimensions);
+  },
+
+  domMessagePort(port: MessagePort): void {
+    domMessagePort = port;
+    _bootstrapSafe();
   },
 
   input(input: Uint8Array): void {

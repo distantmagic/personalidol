@@ -16,6 +16,8 @@ public/lib/index.js public/lib/index_offscreen.worker.js: node_modules/.bin/esbu
 		--bundle \
 		--define:__LOG_LEVEL=\"debug\" \
 		--format=esm \
+		--jsx-factory=h \
+		--jsx-fragment=Fragment \
 		--minify \
 		--outdir=public/lib \
 		--platform=browser \

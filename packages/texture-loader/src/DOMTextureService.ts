@@ -2,27 +2,27 @@ import { createRouter } from "@personalidol/workers/src/createRouter";
 
 import type { DOMTextureService as IDOMTextureService } from "./DOMTextureService.interface";
 
+const _messagesRouter = createRouter({
+  loadImageBitmap({ textureUrl, rpc }: { textureUrl: string; rpc: string }): void {
+    const detachedImage = new Image();
+
+    detachedImage.onload = function () {
+      _textureQueue.push({
+        image: detachedImage,
+        rpc: rpc,
+      });
+    };
+    detachedImage.src = textureUrl;
+  },
+});
+const _textureQueue: Array<{
+  image: HTMLImageElement;
+  rpc: string;
+}> = [];
+
 export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRenderingContext2D, messagePort: MessagePort): IDOMTextureService {
-  const _textureQueue: Array<{
-    image: HTMLImageElement;
-    rpc: string;
-  }> = [];
-  const messagesRouter = createRouter({
-    loadImageBitmap({ textureUrl, rpc }: { textureUrl: string; rpc: string }): void {
-      const detachedImage = new Image();
-
-      detachedImage.onload = function () {
-        _textureQueue.push({
-          image: detachedImage,
-          rpc: rpc,
-        });
-      };
-      detachedImage.src = textureUrl;
-    },
-  });
-
   function start() {
-    messagePort.onmessage = messagesRouter;
+    messagePort.onmessage = _messagesRouter;
   }
 
   function stop() {

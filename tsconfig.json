@@ -10,6 +10,8 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "isolatedModules": true,
+    "jsx": "react",
+    "jsxFactory": "h",
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitReturns": true,

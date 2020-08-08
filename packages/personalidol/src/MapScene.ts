@@ -2,6 +2,7 @@ import { AmbientLight } from "three/src/lights/AmbientLight";
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { Color } from "three/src/math/Color";
+import { Fog } from "three/src/scenes/Fog";
 import { FrontSide } from "three/src/constants";
 import { HemisphereLight } from "three/src/lights/HemisphereLight";
 import { MathUtils } from "three/src/math/MathUtils";
@@ -59,12 +60,20 @@ const CAMERA_ZOOM_MAX = 200;
 const CAMERA_ZOOM_MIN = 1400;
 
 const _camera = new PerspectiveCamera();
+
+_camera.far = 3000;
+_camera.near = 1;
+
 const _cameraDirection = new Vector3();
 const _disposables: Set<Disposable> = new Set();
 const _playerPosition = new Vector3();
 const _pointerVector = new Vector2(0, 0);
 const _pointerVectorRotationPivot = new Vector2(0, 0);
 const _scene = new Scene();
+
+_scene.background = new Color(0x000000);
+_scene.fog = new Fog(_scene.background, _camera.far - 1000, _camera.far);
+
 const _unmountables: Set<Unmountable> = new Set();
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
@@ -98,8 +107,6 @@ export function MapScene(
 
   _camera.position.set(100, 100, 100);
   _camera.lookAt(0, 0, 0);
-  _camera.far = 4000;
-  _camera.near = 1;
   _camera.getWorldDirection(_cameraDirection);
 
   const entityLookupTable: EntityLookupTable = {
@@ -313,8 +320,8 @@ export function MapScene(
       })
       .then(function () {
         rendererState.renderer.shadowMap.needsUpdate = true;
-        state.isPreloading = false;
-        state.isPreloaded = true;
+        // state.isPreloading = false;
+        // state.isPreloaded = true;
 
         console.log(_nextMap);
       });

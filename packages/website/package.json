@@ -5,6 +5,7 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
+    "@personalidol/dom-renderer": "0.0.0",
     "@personalidol/framework": "0.0.0",
     "@personalidol/personalidol": "0.0.0",
     "@personalidol/quakemaps": "0.0.0",

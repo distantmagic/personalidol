@@ -22,6 +22,7 @@ export function bootstrap(
   dimensionsState: Uint16Array,
   inputState: Int16Array,
   logger: Logger,
+  domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort
@@ -69,7 +70,7 @@ export function bootstrap(
     mapFilename
   );
 
-  loadingSceneDirector.state.next = LoadingScreenScene(rendererState);
+  loadingSceneDirector.state.next = LoadingScreenScene(domMessagePort, rendererState);
 
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(loadingSceneDirector);

@@ -6,27 +6,35 @@
     <style>
       body {
         background-color: black;
+        color: white;
         margin: 0;
         overflow: hidden;
       }
-      #game {
+      #canvas {
         height: 100%;
         width: 100%;
         will-change: height, width;
       }
-      #root {
+      #canvas-root, #game-root, #ui-root {
         bottom: 0;
         left: 0;
         position: absolute;
         right: 0;
         top: 0;
       }
+      #ui-root {
+        background-color: rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+      }
     </style>
     <title>Website</title>
   </head>
   <body>
-    <div id="root">
-      <canvas id="game"></canvas>
+    <div id="game-root">
+      <div id="canvas-root">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div id="ui-root"></div>
     </div>
     <script src="/lib/index.js" type="module"></script>
   </body>

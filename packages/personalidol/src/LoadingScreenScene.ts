@@ -17,7 +17,7 @@ import type { Scene as IScene } from "@personalidol/framework/src/Scene.interfac
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
-export function LoadingScreenScene(rendererState: RendererState): IScene {
+export function LoadingScreenScene(domMessagePort: MessagePort, rendererState: RendererState): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -123,6 +123,15 @@ export function LoadingScreenScene(rendererState: RendererState): IScene {
     _spotLight.intensity = Math.min(2, _spotLight.intensity + 3 * delta);
 
     rendererState.renderer.shadowMap.needsUpdate = true;
+
+    domMessagePort.postMessage({
+      render: {
+        route: "/loading-screen",
+        data: {
+          planet: "Earth",
+        },
+      },
+    });
   }
 
   function _unmountFromRenderer() {
