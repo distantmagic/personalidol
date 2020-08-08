@@ -1,8 +1,8 @@
 import type { LoadingManager as ILoadingManager } from "./LoadingManager.interface";
+import type { LoadingManagerItem } from "./LoadingManagerItem.type";
 import type { LoadingManagerState } from "./LoadingManagerState.type";
-import type { LoadinManagerItem } from "./LoadinManagerItem.type";
 
-function sumWeights(items: Set<LoadinManagerItem>): number {
+function sumWeights(items: Set<LoadingManagerItem>): number {
   let _sum = 0;
 
   for (let item of items) {
@@ -32,8 +32,6 @@ export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadi
     }
 
     loadingManagerState.comment = "";
-
-    const comments = [];
 
     for (let itemToLoad of loadingManagerState.itemsToLoad) {
       if (!loadingManagerState.itemsLoaded.has(itemToLoad)) {

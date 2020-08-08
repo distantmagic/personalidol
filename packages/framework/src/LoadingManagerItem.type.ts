@@ -1,4 +1,4 @@
-export type LoadinManagerItem = {
+export type LoadingManagerItem = {
   comment: string;
   weight: number;
 };

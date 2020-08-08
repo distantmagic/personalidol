@@ -1,9 +1,9 @@
-import type { LoadinManagerItem } from "./LoadinManagerItem.type";
+import type { LoadingManagerItem } from "./LoadingManagerItem.type";
 
 export type LoadingManagerState = {
   comment: string;
   expectsAtLeast: number;
-  itemsLoaded: Set<LoadinManagerItem>;
-  itemsToLoad: Set<LoadinManagerItem>;
+  itemsLoaded: Set<LoadingManagerItem>;
+  itemsToLoad: Set<LoadingManagerItem>;
   progress: number;
 };

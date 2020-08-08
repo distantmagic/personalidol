@@ -13,7 +13,6 @@ type ParsedGeometry = {
   normals: Float32Array;
   uvs: Float32Array;
   vertices: Float32Array;
-  transferables: Array<ArrayBuffer>;
 };
 
 const headerNames: [
@@ -438,8 +437,6 @@ export class MD2Loader extends Loader {
     const positionsTypedArray = Float32Array.from(positions);
     const uvsTypedArray = Float32Array.from(uvs);
 
-    const transferables = [normalsTypedArray.buffer, uvsTypedArray.buffer, positionsTypedArray.buffer];
-
     // animation
 
     const morphPositions = [];
@@ -507,7 +504,6 @@ export class MD2Loader extends Loader {
       normals: normalsTypedArray,
       uvs: uvsTypedArray,
       vertices: positionsTypedArray,
-      transferables: transferables,
     };
 
     // geometry.morphAttributes.position = morphPositions;

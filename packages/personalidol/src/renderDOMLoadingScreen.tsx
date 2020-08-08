@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import { h } from "preact";
 
 import type { ComponentChild } from "preact";
 
