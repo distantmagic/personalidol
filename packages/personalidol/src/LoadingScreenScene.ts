@@ -33,8 +33,8 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   const _camera = new PerspectiveCamera();
 
   _camera.lookAt(0, 0, 0);
-  _camera.position.y = 3;
-  _camera.position.z = 15;
+  _camera.position.y = 4;
+  _camera.position.z = 12;
 
   const _disposables: Set<Disposable> = new Set();
   const _unmountables: Set<Unmountable> = new Set();
@@ -64,22 +64,6 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   _disposables.add(disposableGeneric(_boxGeometry));
   _disposables.add(disposableMaterial(_boxMaterial));
 
-  const _planeGeometry = new PlaneBufferGeometry(3000, 3000);
-  const _planeMaterial = new MeshStandardMaterial({
-    color: 0x111111,
-    // color: 0xffc000,
-    flatShading: true,
-  });
-  const _planeMesh = new Mesh(_planeGeometry, _planeMaterial);
-
-  _planeMesh.position.y = 0;
-  _planeMesh.castShadow = true;
-  _planeMesh.receiveShadow = true;
-  _planeMesh.rotation.x = (-1 * Math.PI) / 2;
-
-  _disposables.add(disposableGeneric(_planeGeometry));
-  _disposables.add(disposableMaterial(_planeMaterial));
-
   function dispose(): void {
     state.isDisposed = true;
 
@@ -97,14 +81,12 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
 
     _scene.add(_ambientLight);
     _scene.add(_boxMesh);
-    _scene.add(_planeMesh);
     _scene.add(_spotLight);
 
     _unmountables.add(_unmountFromRenderer);
     _unmountables.add(function () {
       _scene.remove(_ambientLight);
       _scene.remove(_boxMesh);
-      _scene.remove(_planeMesh);
       _scene.remove(_spotLight);
     });
   }
