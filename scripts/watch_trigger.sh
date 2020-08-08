@@ -14,7 +14,7 @@ BUILD_NAME="${PACKAGE_SCOPE}/${PACKAGE_NAME}"
 
 LAST=""
 
-inotifywait -mqr -e create,delete,modify,move "${PWD}/src" --format "%T %w%f" --timefmt "%F %T" | while read EVENT; do
+inotifywait -mqr -e create,delete,modify,move "${PWD}/src" "${PWD}/styles" --format "%T %w%f" --timefmt "%F %T" | while read EVENT; do
     if [ "$LAST" != "$EVENT" ]; then
         notify "Triggered" $BUILD_NAME $WATCH_TARGET
 

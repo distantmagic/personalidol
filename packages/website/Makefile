@@ -1,8 +1,10 @@
 include ../../Makefile_node.mk
 include ../../Makefile_packages.mk
 
+SOURCES_CSS := $(shell find styles -type f -name "*.css")
+
 .PHONY: public
-public: public/lib/index.js public/lib/index_offscreen.worker.js
+public: public/lib/index.js public/lib/index_offscreen.worker.js public/index.css
 
 .PHONY: public.watch
 public.watch: node_modules
@@ -31,6 +33,9 @@ public/lib/index.js public/lib/index_offscreen.worker.js: node_modules/.bin/esbu
 		src/worker_quakemaps.ts \
 		src/worker_textures.ts \
 	;
+
+public/index.css: $(SOURCES_CSS)
+	yarn run postcss -c ./postcss.config.js -o ./public/index.css styles/index.css
 
 .PHONY: serve
 serve: public/lib/index.js

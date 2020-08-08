@@ -1,0 +1,57 @@
+@import "./_fonts.css";
+
+#ui-root *, #ui-root * * {
+  box-sizing: border-box;
+}
+
+#ui-root {
+  /*background-color: rgba(0, 0, 0, 0.5);*/
+  bottom: 0;
+  color: #eeeeee;
+  display: grid;
+  font-family: "Mukta", sans-serif;
+  font-size: 1.6rem;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.pi {
+}
+
+.pi__loading-screen {
+  align-items: flex-end;
+  bottom: 0;
+  display: grid;
+  grid-gap: 0.8rem;
+  line-height: 1;
+  padding: 1.6rem;
+  position: absolute;
+  width: 100%;
+}
+
+.pi__loading-screen__label {
+  font-size: 1rem;
+  font-variant: small-caps;
+  letter-spacing: 0.1ch;
+  padding-left: 0.2rem;
+  text-align: left;
+  text-transform: lowercase;
+}
+
+.pi__loading-screen__progress-bar {
+  align-items: center;
+  background-color: transparent;
+  outline: 1px solid #333333;
+  display: grid;
+  height: 1.6rem;
+  padding: 0.2rem;
+}
+
+.pi__loading-screen__progress-bar__progress {
+  background-color: #eeeeee;
+  color: transparent;
+  font-size: 1.2rem;
+  width: var(--progress);
+}

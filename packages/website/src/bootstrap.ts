@@ -1,6 +1,7 @@
 import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
 import { Director } from "@personalidol/framework/src/Director";
+import { LoadingManager } from "@personalidol/framework/src/LoadingManager";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MapScene } from "@personalidol/personalidol/src/MapScene";
 import { Renderer } from "@personalidol/framework/src/Renderer";
@@ -9,6 +10,7 @@ import { SceneLoader } from "@personalidol/framework/src/SceneLoader";
 import type { Logger } from "loglevel";
 
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { LoadingManagerState } from "@personalidol/framework/src/LoadingManagerState.type";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
@@ -27,6 +29,15 @@ export function bootstrap(
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort
 ): void {
+  const loadingManagerState: LoadingManagerState = Object.seal({
+    comment: "",
+    expectsAtLeast: 0,
+    itemsLoaded: new Set(),
+    itemsToLoad: new Set(),
+    progress: 0,
+  });
+  const loadingManager = LoadingManager(loadingManagerState);
+
   const rendererState: RendererState = Object.seal({
     camera: null,
     renderer: new WebGLRenderer({
@@ -66,18 +77,21 @@ export function bootstrap(
     md2MessagePort,
     quakeMapsMessagePort,
     texturesMessagePort,
+    loadingManagerState,
     rendererState,
     mapFilename
   );
 
-  loadingSceneDirector.state.next = LoadingScreenScene(domMessagePort, rendererState);
+  loadingSceneDirector.state.next = LoadingScreenScene(domMessagePort, loadingManagerState, rendererState);
 
+  serviceManager.services.add(loadingManager);
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(loadingSceneDirector);
   serviceManager.services.add(renderer);
   serviceManager.services.add(sceneLoader);
 
   mainLoop.updatables.add(serviceManager);
+  mainLoop.updatables.add(loadingManager);
   mainLoop.updatables.add(currentSceneDirector);
   mainLoop.updatables.add(loadingSceneDirector);
   mainLoop.updatables.add(sceneLoader);

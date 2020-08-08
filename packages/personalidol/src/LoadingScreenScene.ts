@@ -12,12 +12,13 @@ import { disposableMaterial } from "@personalidol/framework/src/disposableMateri
 import { invoke } from "@personalidol/framework/src/invoke";
 
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { LoadingManagerState } from "@personalidol/framework/src/LoadingManagerState.type";
 import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
-export function LoadingScreenScene(domMessagePort: MessagePort, rendererState: RendererState): IScene {
+export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerState: LoadingManagerState, rendererState: RendererState): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -29,7 +30,7 @@ export function LoadingScreenScene(domMessagePort: MessagePort, rendererState: R
   const _camera = new PerspectiveCamera();
 
   _camera.lookAt(0, 0, 0);
-  _camera.position.y = 4;
+  _camera.position.y = 3;
   _camera.position.z = 15;
 
   const _disposables: Set<Disposable> = new Set();
@@ -113,6 +114,13 @@ export function LoadingScreenScene(domMessagePort: MessagePort, rendererState: R
   function unmount(): void {
     state.isMounted = false;
 
+    domMessagePort.postMessage({
+      render: {
+        route: null,
+        data: {},
+      },
+    });
+
     _unmountables.forEach(invoke);
     _unmountables.clear();
   }
@@ -128,7 +136,8 @@ export function LoadingScreenScene(domMessagePort: MessagePort, rendererState: R
       render: {
         route: "/loading-screen",
         data: {
-          planet: "Earth",
+          comment: loadingManagerState.comment,
+          progress: loadingManagerState.progress,
         },
       },
     });

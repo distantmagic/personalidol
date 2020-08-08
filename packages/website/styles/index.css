@@ -1,0 +1,26 @@
+@import "normalize.css";
+
+@import "@personalidol/personalidol/styles/personalidol.css";
+
+body {
+  background-color: black;
+  overflow: hidden;
+}
+
+body, p {
+  margin: 0;
+}
+
+#canvas {
+  height: 100%;
+  width: 100%;
+  will-change: height, width;
+}
+
+#canvas-root, #game-root {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

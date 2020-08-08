@@ -27,6 +27,7 @@ import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { invoke } from "@personalidol/framework/src/invoke";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
+import { resetLoadingManagerState } from "@personalidol/framework/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
 import type { Logger } from "loglevel";
@@ -47,6 +48,7 @@ import type { EntitySounds } from "@personalidol/quakemaps/src/EntitySounds.type
 import type { EntitySparkParticles } from "@personalidol/quakemaps/src/EntitySparkParticles.type";
 import type { EntityWorldspawn } from "@personalidol/quakemaps/src/EntityWorldspawn.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { LoadingManagerState } from "@personalidol/framework/src/LoadingManagerState.type";
 import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
@@ -95,6 +97,7 @@ export function MapScene(
   md2MessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
+  loadingManagerState: LoadingManagerState,
   rendererState: RendererState,
   mapFilename: string
 ): IScene {
@@ -297,14 +300,23 @@ export function MapScene(
     _unmountables.add(_unmountFromRenderer);
   }
 
-  function preload(): void {
+  async function preload(): Promise<void> {
     state.isPreloading = true;
 
     md2MessagePort.onmessage = _md2MessageRouter;
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
     texturesMessagePort.onmessage = _textureReceiverMessageRouter;
 
-    sendRPCMessage(_rpcLookupTable, quakeMapsMessagePort, {
+    const _loadItemMap = {
+      comment: `map ${mapFilename}`,
+    };
+
+    loadingManagerState.expectsAtLeast = 10;
+    loadingManagerState.itemsToLoad.add(_loadItemMap);
+
+    const {
+      unmarshal: { entities },
+    } = await sendRPCMessage(_rpcLookupTable, quakeMapsMessagePort, {
       unmarshal: {
         discardOccluding: {
           x: _cameraDirection.x,
@@ -314,17 +326,19 @@ export function MapScene(
         filename: mapFilename,
         rpc: MathUtils.generateUUID(),
       },
-    })
-      .then(function ({ unmarshal: { entities } }) {
-        return Promise.all(entities.map(_addMapEntity));
-      })
-      .then(function () {
-        rendererState.renderer.shadowMap.needsUpdate = true;
-        // state.isPreloading = false;
-        // state.isPreloaded = true;
+    });
 
-        console.log(_nextMap);
-      });
+    loadingManagerState.itemsLoaded.add(_loadItemMap);
+
+    await Promise.all(entities.map(_addMapEntity));
+
+    rendererState.renderer.shadowMap.needsUpdate = true;
+    state.isPreloading = false;
+    state.isPreloaded = true;
+
+    resetLoadingManagerState(loadingManagerState);
+
+    console.log(_nextMap);
 
     _unmountables.add(function () {
       md2MessagePort.onmessage = null;
@@ -353,7 +367,7 @@ export function MapScene(
     }
   }
 
-  function _addMapEntity<K extends keyof EntityLookup>(entity: EntityLookup[K]): void | Promise<void> {
+  async function _addMapEntity<K extends keyof EntityLookup>(entity: EntityLookup[K]): Promise<void> {
     const classname = entity.classname;
 
     if (!entityLookupTable.hasOwnProperty(classname)) {
@@ -362,7 +376,15 @@ export function MapScene(
 
     logger.trace("ADD MAP ENTITY", classname);
 
-    return (entityLookupTable[classname] as EntityLookupCallback<K>)(entity);
+    const loadItemEntity = {
+      comment: `entity ${classname}`,
+    };
+
+    loadingManagerState.itemsToLoad.add(loadItemEntity);
+
+    await (entityLookupTable[classname] as EntityLookupCallback<K>)(entity);
+
+    loadingManagerState.itemsLoaded.add(loadItemEntity);
   }
 
   function _loadMapTexture(textureName: string): Promise<ITexture> {
@@ -370,7 +392,17 @@ export function MapScene(
   }
 
   async function _loadTexture(textureUrl: string): Promise<ITexture> {
-    return requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl);
+    const loadItemTexture = {
+      comment: `texture ${textureUrl}`,
+    };
+
+    loadingManagerState.itemsToLoad.add(loadItemTexture);
+
+    const texture = await requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl);
+
+    loadingManagerState.itemsLoaded.add(loadItemTexture);
+
+    return texture;
   }
 
   function _nextMap(filename: string): void {
@@ -383,6 +415,7 @@ export function MapScene(
       md2MessagePort,
       quakeMapsMessagePort,
       texturesMessagePort,
+      loadingManagerState,
       rendererState,
       mapFilename,
     );

@@ -1,13 +1,27 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
+
+import { renderDOMLoadingScreen } from "./renderDOMLoadingScreen";
+
+import type { ComponentChild } from "preact";
 
 type RenderMessage = {
+  data: any;
   route: string;
 };
 
-export function renderDOMUIRouter({ route, data }: RenderMessage) {
+function renderDOMUIRoute(route: string, data: any): null | ComponentChild {
+  switch (route) {
+    case "/loading-screen":
+      return renderDOMLoadingScreen(data);
+    default:
+      return null;
+  }
+}
+
+export function renderDOMUIRouter({ route, data }: RenderMessage): ComponentChild {
   return (
-    <div>
-      Hello, {data.planet}!
+    <div class="pi">
+      {renderDOMUIRoute(route, data)}
     </div>
   );
 }
