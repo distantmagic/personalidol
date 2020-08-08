@@ -51,7 +51,7 @@ export function bootstrap(
   // rendererState.renderer.gammaOutput = true;
   // rendererState.renderer.gammaFactor = 2.2;
   rendererState.renderer.setPixelRatio(devicePixelRatio);
-  rendererState.renderer.shadowMap.enabled = true;
+  rendererState.renderer.shadowMap.enabled = false;
   rendererState.renderer.shadowMap.autoUpdate = false;
 
   const renderer = Renderer(rendererState, dimensionsState);

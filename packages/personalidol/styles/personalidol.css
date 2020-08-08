@@ -43,15 +43,13 @@
 .pi__loading-screen__progress-bar {
   align-items: center;
   background-color: transparent;
-  outline: 1px solid #333333;
   display: grid;
   height: 1.6rem;
-  padding: 0.2rem;
 }
 
 .pi__loading-screen__progress-bar__progress {
   background-color: #eeeeee;
   color: transparent;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   width: var(--progress);
 }
