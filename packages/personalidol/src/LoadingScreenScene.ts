@@ -131,7 +131,7 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   function update(delta: number): void {
     _boxMesh.rotation.x += delta;
     _boxMesh.rotation.z += delta;
-    _spotLight.intensity = 2 * loadingManagerState.progress;
+    _spotLight.intensity = Math.min(2, _spotLight.intensity + 4 * delta);
 
     rendererState.renderer.shadowMap.needsUpdate = true;
 
