@@ -1,0 +1,230 @@
+// Game: PersonalIdol
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "./textures"
+"scenery" "1"
+"light" "1"
+// brush 0
+{
+( -304 112 -16 ) ( -304 -528 -16 ) ( -304 -528 -32 ) textures/texture-bricks-128x128 -16 -0 -0 1 1
+( 48 -528 -16 ) ( 48 -528 -32 ) ( -304 -528 -32 ) textures/texture-bricks-128x128 16 -0 -0 1 1
+( -304 -528 -32 ) ( 48 -528 -32 ) ( 48 112 -32 ) textures/texture-bricks-128x128 16 16 -0 1 1
+( 48 112 -16 ) ( 48 -528 -16 ) ( -304 -528 -16 ) textures/texture-bricks-128x128 16 16 -0 1 1
+( 48 112 -32 ) ( 48 112 -16 ) ( -304 112 -16 ) textures/texture-bricks-128x128 16 -0 -0 1 1
+( 48 112 -32 ) ( 48 -528 -32 ) ( 48 -528 -16 ) textures/texture-bricks-128x128 -16 -0 -0 1 1
+}
+// brush 1
+{
+( -528 -176 144 ) ( -528 -192 144 ) ( -528 -192 -16 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( -320 -192 144 ) ( -320 -192 -16 ) ( -528 -192 -16 ) textures/texture-crate-128x128 48 -0 -0 1 1
+( -528 -192 -16 ) ( -320 -192 -16 ) ( -320 -176 -16 ) textures/texture-crate-128x128 48 -0 -0 1 1
+( -320 -176 144 ) ( -320 -192 144 ) ( -528 -192 144 ) textures/texture-crate-128x128 48 -0 -0 1 1
+( -320 -176 -16 ) ( -320 -176 144 ) ( -528 -176 144 ) textures/texture-crate-128x128 48 -0 -0 1 1
+( -320 -176 -16 ) ( -320 -192 -16 ) ( -320 -192 144 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+}
+// brush 2
+{
+( -224 -80 -16 ) ( -224 -79 -16 ) ( -224 -80 -15 ) textures/texture-crate-128x128 -80 -0 -0 1 1
+( -224 -80 -16 ) ( -224 -80 -15 ) ( -223 -80 -16 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( -224 -80 -16 ) ( -223 -80 -16 ) ( -224 -79 -16 ) textures/texture-crate-128x128 -0 80 -0 1 1
+( -16 -48 -0 ) ( -16 -47 -0 ) ( -15 -48 -0 ) textures/texture-crate-128x128 -0 80 -0 1 1
+( -16 -48 -0 ) ( -15 -48 -0 ) ( -16 -48 1 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( -16 -48 -0 ) ( -16 -48 1 ) ( -16 -47 -0 ) textures/texture-crate-128x128 -80 -0 -0 1 1
+}
+// brush 3
+{
+( 272 -80 -0 ) ( 272 -720 80 ) ( 272 -720 64 ) textures/texture-bricks-128x128 48 16 -0 1 1
+( 272 -80 -16 ) ( 272 -720 64 ) ( 624 -720 -16 ) textures/texture-bricks-128x128 -48 -48 -0 1 1
+( 272 -720 64 ) ( 272 -720 80 ) ( 624 -720 -0 ) textures/texture-bricks-128x128 -48 16 -0 1 1
+( 624 -80 -16 ) ( 272 -80 -16 ) ( 624 -720 -16 ) textures/texture-bricks-128x128 -48 -48 -0 1 1
+( 624 -80 -0 ) ( 272 -720 80 ) ( 272 -80 -0 ) textures/texture-bricks-128x128 -48 -48 -0 1 1
+( 272 -80 -0 ) ( 272 -80 -16 ) ( 624 -80 -16 ) textures/texture-bricks-128x128 -48 16 -0 1 1
+( 624 -720 -0 ) ( 272 -720 80 ) ( 624 -80 -0 ) textures/texture-bricks-128x128 -48 -48 -0 1 1
+( 624 -80 -16 ) ( 624 -720 -16 ) ( 624 -720 -0 ) textures/texture-bricks-128x128 48 16 -0 1 1
+}
+// brush 4
+{
+( -32 -304 -16 ) ( -32 -303 -16 ) ( -32 -304 -15 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+( -32 -304 -16 ) ( -32 -304 -15 ) ( -31 -304 -16 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+( -32 -304 -16 ) ( -31 -304 -16 ) ( -32 -303 -16 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+( -16 -256 -0 ) ( -16 -255 -0 ) ( -15 -256 -0 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+( -16 -256 -0 ) ( -15 -256 -0 ) ( -16 -256 1 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+( -16 -256 -0 ) ( -16 -256 1 ) ( -16 -255 -0 ) textures/texture-cobblestone-128x128 0 0 0 1 1
+}
+}
+// entity 1
+{
+"classname" "model_gltf"
+"origin" "16 -0 8"
+"angle" "0"
+"model_name" "bonfire"
+"model_texture" "texture.png"
+"scale" "10"
+}
+// entity 2
+{
+"classname" "player"
+"origin" "-16 16 8"
+}
+// entity 3
+{
+"classname" "light_spotlight"
+"origin" "-96 -96 48"
+"color" "0xffffff"
+"decay" "1"
+"intensity" "1"
+"angle" "90"
+}
+// entity 4
+{
+"classname" "light_point"
+"origin" "-8 56 -8"
+"color" "0xffffff"
+"decay" "2"
+"intensity" "2"
+"" ""
+}
+// entity 5
+{
+"classname" "light_point"
+"origin" "-40 -344 136"
+"color" "0xffffff"
+"decay" "1"
+"intensity" "2"
+}
+// entity 6
+{
+"classname" "spark_particles"
+"origin" "16 -0 -0"
+"angle" "1"
+}
+// entity 7
+{
+"classname" "model_md2"
+"origin" "-64 -352 8"
+"angle" "0"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 8
+{
+"classname" "model_md2"
+"origin" "-96 -352 8"
+"angle" "0"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 9
+{
+"classname" "model_md2"
+"origin" "-160 -352 8"
+"angle" "0"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 10
+{
+"classname" "model_md2"
+"origin" "-128 -352 8"
+"angle" "0"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 11
+{
+"classname" "model_md2"
+"origin" "-160 -352 64"
+"angle" "1"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 12
+{
+"classname" "model_md2"
+"origin" "-128 -352 64"
+"angle" "1"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 13
+{
+"classname" "model_md2"
+"origin" "-96 -352 64"
+"angle" "1"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 14
+{
+"classname" "model_md2"
+"origin" "-64 -352 64"
+"angle" "1"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 15
+{
+"classname" "model_md2"
+"origin" "-64 -352 176"
+"angle" "1"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 16
+{
+"classname" "model_md2"
+"origin" "-96 -352 176"
+"angle" "1"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 17
+{
+"classname" "model_md2"
+"origin" "-128 -352 176"
+"angle" "1"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 18
+{
+"classname" "model_md2"
+"origin" "-160 -352 176"
+"angle" "1"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 19
+{
+"classname" "model_md2"
+"origin" "-160 -352 120"
+"angle" "0"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 20
+{
+"classname" "model_md2"
+"origin" "-128 -352 120"
+"angle" "0"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 21
+{
+"classname" "model_md2"
+"origin" "-96 -352 120"
+"angle" "0"
+"model_name" "chicken"
+"skin" "0"
+}
+// entity 22
+{
+"classname" "model_md2"
+"origin" "-64 -352 120"
+"angle" "0"
+"model_name" "chicken"
+"skin" "0"
+}

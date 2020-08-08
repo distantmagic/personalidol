@@ -1,0 +1,193 @@
+import Loglevel from "loglevel";
+
+import { Dimensions } from "@personalidol/framework/src/Dimensions";
+import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
+import { EventBus } from "@personalidol/framework/src/EventBus";
+import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCanvasElementById";
+import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
+import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
+import { Input } from "@personalidol/framework/src/Input";
+import { MainLoop } from "@personalidol/framework/src/MainLoop";
+import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
+import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
+import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultInput";
+import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
+import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
+import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
+import { WorkerService } from "@personalidol/framework/src/WorkerService";
+
+import { workers } from "./workers";
+
+const canvas = getHTMLCanvasElementById(window, "game");
+const devicePixelRatio = Math.min(1.5, window.devicePixelRatio);
+const logger = Loglevel.getLogger("main");
+
+logger.setLevel(__LOG_LEVEL);
+
+const root = getHTMLElementById(window, "root");
+
+// Services that need to stay in the main browser thread, because they need
+// access to the DOM API.
+
+const dimensionsState = Dimensions.createEmptyState();
+const inputState = Input.createEmptyState();
+
+const eventBus = EventBus();
+const htmlElementResizeObserver = HTMLElementResizeObserver(root, dimensionsState);
+
+const mainLoop = MainLoop(RequestAnimationFrameScheduler());
+const mouseObserver = MouseObserver(canvas, dimensionsState, inputState);
+const serviceManager = ServiceManager();
+const touchObserver = TouchObserver(canvas, dimensionsState, inputState);
+
+serviceManager.services.add(htmlElementResizeObserver);
+serviceManager.services.add(mouseObserver);
+serviceManager.services.add(MouseWheelObserver(canvas, eventBus));
+serviceManager.services.add(touchObserver);
+serviceManager.services.add(PreventDefaultInput(canvas));
+
+mainLoop.updatables.add(htmlElementResizeObserver);
+mainLoop.updatables.add(mouseObserver);
+mainLoop.updatables.add(touchObserver);
+
+// Workers can share a message channel if necessary. If there is no offscreen
+// worker then the message channel can be used in the main thread. It is an
+// overhead, but unifies how messages are handled in each case.
+
+const quakeMapsMessageChannel = new MessageChannel();
+const quakeMapsWorker = new Worker(workers.quakemaps.url, {
+  credentials: "same-origin",
+  name: workers.quakemaps.name,
+  type: "module",
+});
+
+quakeMapsWorker.postMessage(
+  {
+    quakeMapsMessagePort: quakeMapsMessageChannel.port1,
+  },
+  [quakeMapsMessageChannel.port1]
+);
+
+// Atlas canvas is used to speed up texture atlas creation. If this context is
+// not supported.
+
+const atlasCanvas = document.createElement("canvas");
+
+console.log(atlasCanvas);
+
+// `createImageBitmap` has it's quirks and surprisingly no support in safari
+// and ios. If it's not supported, then we have to use the main thread to
+// generate textures and potentially send them into other workers.
+
+const texturesMessageChannel = new MessageChannel();
+
+if ("function" === typeof window.createImageBitmap) {
+  // const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
+  const texturesWorker = new Worker(workers.textures.url, {
+    credentials: "same-origin",
+    name: workers.textures.name,
+    type: "module",
+  });
+
+  texturesWorker.postMessage(
+    {
+      // atlasCanvas: offscreenAtlas,
+      texturesMessagePort: texturesMessageChannel.port1,
+    },
+    [texturesMessageChannel.port1]
+  );
+} else {
+  const textureCanvas = document.createElement("canvas");
+  const textureCanvasContext2D = textureCanvas.getContext("2d");
+
+  if (null === textureCanvasContext2D) {
+    throw new Error("Unable to get detached canvas 2D context.");
+  }
+
+  const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D, texturesMessageChannel.port1);
+
+  mainLoop.updatables.add(textureService);
+  serviceManager.services.add(textureService);
+}
+
+// MD2 worker offloads model loading from the thread whether it's the main
+// browser thread or the offscreen canvas thread. Loading MD2 models cause
+// rendering to stutter.
+
+const md2MessageChannel = new MessageChannel();
+const md2Worker = new Worker(workers.md2.url, {
+  credentials: "same-origin",
+  name: workers.md2.name,
+  type: "module",
+});
+
+md2Worker.postMessage(
+  {
+    md2MessagePort: md2MessageChannel.port1,
+  },
+  [md2MessageChannel.port1]
+);
+
+// If browser supports the offscreen canvas, then we can offload everything
+// there. If not, then we continue in the main thread.
+
+if ("function" === typeof canvas.transferControlToOffscreen) {
+  const offscreenWorker = new Worker(workers.offscreen.url, {
+    credentials: "same-origin",
+    name: workers.offscreen.name,
+    type: "module",
+  });
+
+  const offscreenCanvas = canvas.transferControlToOffscreen();
+  const offscreenWorkerService = WorkerService(offscreenWorker, dimensionsState, inputState);
+
+  offscreenWorker.postMessage(
+    {
+      canvas: offscreenCanvas,
+      devicePixelRatio: devicePixelRatio,
+      md2MessagePort: md2MessageChannel.port2,
+      quakeMapsMessagePort: quakeMapsMessageChannel.port2,
+      texturesMessagePort: texturesMessageChannel.port2,
+    },
+    [md2MessageChannel.port2, offscreenCanvas, quakeMapsMessageChannel.port2, texturesMessageChannel.port2]
+  );
+
+  const offscreenWorkerZoomRequestMessage = {
+    pointerZoomRequest: 0,
+  };
+
+  eventBus.POINTER_ZOOM_REQUEST.add(function (zoomAmount: number): void {
+    offscreenWorkerZoomRequestMessage.pointerZoomRequest = zoomAmount;
+    offscreenWorker.postMessage(offscreenWorkerZoomRequestMessage);
+  });
+
+  mainLoop.updatables.add(offscreenWorkerService);
+  serviceManager.services.add(offscreenWorkerService);
+
+  mainLoop.start();
+  serviceManager.start();
+} else {
+  // this extra var is a hack to make esbuild leave the dynamic import as-is
+  // https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
+  const filename = "/lib/bootstrap.js";
+
+  import(filename).then(function ({ bootstrap }) {
+    // prettier-ignore
+    bootstrap(
+      devicePixelRatio,
+      eventBus,
+      mainLoop,
+      serviceManager,
+      canvas,
+      dimensionsState,
+      inputState,
+      logger,
+      md2MessageChannel.port2,
+      quakeMapsMessageChannel.port2,
+      texturesMessageChannel.port2,
+    );
+
+    mainLoop.start();
+    serviceManager.start();
+  });
+}

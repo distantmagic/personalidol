@@ -1,0 +1,29 @@
+{
+  "author": "Mateusz Charytoniuk <mateusz.charytoniuk@protonmail.com>",
+  "browser": true,
+  "bugs": {
+    "url": "https://github.com/mcharytoniuk/personalidol/issues"
+  },
+  "dependencies": {
+    "three": "^0.119.1",
+    "tslib": "^2.0.0",
+    "yallist": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.9",
+    "esbuild": "^0.6.17",
+    "jest": "^26.2.2",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.1.4",
+    "typescript": "^3.9.7"
+  },
+  "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
+  "license": "GPL-3.0",
+  "name": "@personalidol/quakemaps",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcharytoniuk/personalidol.git"
+  },
+  "sideEffects": false,
+  "version": "0.0.0"
+}

@@ -1,0 +1,32 @@
+{
+  "author": "Mateusz Charytoniuk <mateusz.charytoniuk@protonmail.com>",
+  "browser": true,
+  "bugs": {
+    "url": "https://github.com/mcharytoniuk/personalidol/issues"
+  },
+  "dependencies": {
+    "loglevel": "^1.6.8",
+    "three": "^0.119.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.9",
+    "@types/jsdom": "^16.2.3",
+    "@types/raf": "^3.4.0",
+    "esbuild": "^0.6.17",
+    "jest": "^26.2.2",
+    "jsdom": "^16.3.0",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.1.4",
+    "typescript": "^3.9.7"
+  },
+  "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
+  "license": "GPL-3.0",
+  "name": "@personalidol/framework",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcharytoniuk/personalidol.git"
+  },
+  "sideEffects": false,
+  "version": "0.0.0"
+}

@@ -1,0 +1,116 @@
+// Game: PersonalIdol
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"light" "1"
+"_tb_textures" "./textures"
+"scenery" "1"
+// brush 0
+{
+( 288 256 64 ) ( 288 -0 64 ) ( 288 -0 -0 ) textures/texture-planks-256x256 -0 -0 -0 1 1
+( 544 -0 64 ) ( 544 -0 -0 ) ( 288 -0 -0 ) textures/texture-planks-256x256 -32 -0 -0 1 1
+( 288 -0 -0 ) ( 544 -0 -0 ) ( 544 256 -0 ) textures/texture-planks-256x256 -32 -0 -0 1 1
+( 544 256 64 ) ( 544 -0 64 ) ( 288 -0 64 ) textures/texture-planks-256x256 -32 -0 -0 1 1
+( 544 256 -0 ) ( 544 256 64 ) ( 288 256 64 ) textures/texture-planks-256x256 -32 -0 -0 1 1
+( 544 256 -0 ) ( 544 -0 -0 ) ( 544 -0 64 ) textures/texture-planks-256x256 -0 -0 -0 1 1
+}
+// brush 1
+{
+( -2048 2048 -0 ) ( -2048 -2048 -0 ) ( -2048 -2048 -16 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
+( 2048 -2048 -0 ) ( 2048 -2048 -16 ) ( -2048 -2048 -16 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
+( -2048 -2048 -16 ) ( 2048 -2048 -16 ) ( 2048 2048 -16 ) textures/texture-cobblestone-128x128 -0 -0 -0 1 1
+( 2048 2048 -0 ) ( 2048 -2048 -0 ) ( -2048 -2048 -0 ) textures/texture-cobblestone-128x128 -0 -0 -0 1 1
+( 2048 2048 -16 ) ( 2048 2048 -0 ) ( -2048 2048 -0 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
+( 2048 2048 -16 ) ( 2048 -2048 -16 ) ( 2048 -2048 -0 ) textures/texture-cobblestone-128x128 -0 -16 -0 1 1
+}
+// brush 2
+{
+( 384 864 160 ) ( 384 384 160 ) ( 384 384 -0 ) textures/texture-crate-128x128 96 -0 -0 1 1
+( 448 384 160 ) ( 448 384 -0 ) ( 384 384 -0 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( 384 384 -0 ) ( 448 384 -0 ) ( 448 864 -0 ) textures/texture-crate-128x128 -0 -96 -0 1 1
+( 448 864 160 ) ( 448 384 160 ) ( 384 384 160 ) textures/texture-crate-128x128 -0 -96 -0 1 1
+( 448 864 -0 ) ( 448 864 160 ) ( 384 864 160 ) textures/texture-crate-128x128 -0 -0 -0 1 1
+( 448 864 -0 ) ( 448 384 -0 ) ( 448 384 160 ) textures/texture-crate-128x128 96 -0 -0 1 1
+}
+}
+// entity 1
+{
+"classname" "player"
+"origin" "600 160 24"
+}
+// entity 2
+{
+"classname" "model_md2"
+"origin" "641 1304 28"
+"model_name" "ogro"
+"angle" "0"
+"skin" "0"
+}
+// entity 3
+{
+"classname" "model_md2"
+"origin" "720 736 32"
+"model_name" "ogro"
+"angle" "0"
+"skin" "0"
+}
+// entity 4
+{
+"classname" "light_spotlight"
+"origin" "976 304 120"
+"intensity" "0.6"
+"angle" "90"
+"decay" "2"
+"color" "FFC000"
+}
+// entity 5
+{
+"classname" "light_spotlight"
+"origin" "688 176 168"
+"intensity" "4"
+"angle" "0"
+"decay" "2"
+"color" "FFFFFF"
+"target" "light_dest_warehouse"
+}
+// entity 6
+{
+"classname" "light_spotlight"
+"origin" "472 1200 144"
+"intensity" "1"
+"angle" "0"
+"decay" "2"
+"color" "FFFFFF"
+"target" "light_dest_warehouse"
+}
+// entity 7
+{
+"classname" "light_spotlight"
+"origin" "640 1200 144"
+"intensity" "1"
+"angle" "0"
+"decay" "2"
+"color" "FFFFFF"
+"target" "light_dest_warehouse"
+}
+// entity 8
+{
+"classname" "light_spotlight"
+"origin" "152 1176 144"
+"intensity" "1"
+"angle" "0"
+"decay" "2"
+"color" "FFFFFF"
+"target" "light_dest_warehouse"
+}
+// entity 9
+{
+"classname" "light_spotlight"
+"origin" "624 736 272"
+"intensity" "3"
+"angle" "0"
+"decay" "2"
+"color" "FFFFFF"
+"target" "light_dest_warehouse"
+}

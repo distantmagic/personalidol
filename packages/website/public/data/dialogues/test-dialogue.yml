@@ -1,0 +1,77 @@
+metadata:
+
+  start_message: start
+
+messages:
+
+  start:
+    actor: Narrator
+    prompt: >
+      Witaj, człowieku
+
+  "1":
+    actor: "{{ turn.initiator.name }}"
+    answer_to: start
+    prompt: >
+      Nie jestem człowiekiem
+
+  "2":
+    actor: Narrator
+    answer_to: "1"
+    prompt: >
+      A, to sorry. A czym jesteś?
+
+  "3.0":
+    actor: "{{ turn.initiator.name }}"
+    answer_to: "2"
+    prompt: >
+      Teraz to się obraziłem i ci nie powiem
+
+  "3.1":
+    actor: "{{ turn.initiator.name }}"
+    answer_to: "2"
+    prompt: >
+      Jestem wielkim, groźnym, głodnym wilkiem i zaraz cie zjem
+
+  "4.0":
+    actor: Narrator
+    answer_to: "3.0"
+    prompt: >
+      No weź...
+
+  "4.1":
+    actor: Narrator
+    answer_to: "3.1"
+    prompt: >
+      O kurwa...
+
+  "5.0":
+    actor: "{{ turn.initiator.name }}"
+    answer_to: "4.0"
+    prompt: >
+      No dobra, to ci powiem. Jestem wielkim, groźnym, głodnym wilkiem. Szukam
+      babci.
+
+  "5.1":
+    actor: "{{ turn.initiator.name }}"
+    answer_to: "4.1"
+    prompt: >
+      Ha, ha, tylko żartowałem. Szukam babci.
+
+  "6.0":
+    actor: Narrator
+    answer_to:
+      - "5.0"
+      - "5.1"
+    prompt: >
+      Yyy, babcia jest bardzo chora, nie przyjmuje gości. Ale mogę jej
+      przekazać wiadomosć od ciebie. Tymczasem w lesie obok znajdziesz pełno
+      młodych, świeżutkich jelonków, właśnie się urodziły. Widziałem też kilka
+      samotnych wilczyc chętnych na wykopanie własnej norki.
+
+  "7.0":
+    actor: "{{ turn.initiator.name }}"
+    answer_to: "6.0"
+    prompt: >
+      Wilczyce mogą poczekać, zresztą mam już jedną na boku. Za to mam wielką
+      ochotę na dobrze wysmażoną ludzinę.

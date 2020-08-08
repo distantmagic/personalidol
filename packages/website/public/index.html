@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <style>
+      body {
+        background-color: black;
+        margin: 0;
+        overflow: hidden;
+      }
+      #game {
+        height: 100%;
+        width: 100%;
+        will-change: height, width;
+      }
+      #root {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    </style>
+    <title>Website</title>
+  </head>
+  <body>
+    <div id="root">
+      <canvas id="game"></canvas>
+    </div>
+    <script src="/lib/index.js" type="module"></script>
+  </body>
+</html>

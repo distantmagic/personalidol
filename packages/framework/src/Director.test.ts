@@ -1,0 +1,186 @@
+import { Director } from "./Director";
+
+test("starts and mounts the new scene", function () {
+  const director = Director();
+
+  const sceneState = {
+    isDisposed: false,
+    isPreloaded: false,
+    isPreloading: false,
+    isMounted: false,
+    isUpdated: false,
+  };
+  const scene = {
+    name: "TestScene",
+    state: sceneState,
+
+    dispose(): void {
+      sceneState.isDisposed = true;
+    },
+
+    mount(): void {
+      sceneState.isMounted = true;
+    },
+
+    preload(): void {},
+
+    unmount(): void {
+      sceneState.isMounted = false;
+    },
+
+    update(): void {
+      sceneState.isUpdated = true;
+    },
+  };
+
+  director.start();
+
+  expect(director.state.next).toBe(null);
+  expect(director.state.current).toBe(null);
+  expect(director.state.isTransitioning).toBe(false);
+  expect(sceneState.isMounted).toBe(false);
+  expect(sceneState.isUpdated).toBe(false);
+
+  director.state.next = scene;
+  director.update(0);
+
+  expect(director.state.next).toBe(null);
+  expect(director.state.current).toBe(null);
+  expect(director.state.isTransitioning).toBe(true);
+  expect(sceneState.isMounted).toBe(false);
+  expect(sceneState.isUpdated).toBe(false);
+
+  scene.state.isPreloading = true;
+  director.update(0);
+
+  expect(director.state.next).toBe(null);
+  expect(director.state.current).toBe(null);
+  expect(director.state.isTransitioning).toBe(true);
+  expect(sceneState.isMounted).toBe(false);
+  expect(sceneState.isUpdated).toBe(false);
+
+  scene.state.isPreloaded = true;
+  scene.state.isPreloading = false;
+  director.update(0);
+
+  expect(director.state.next).toBe(null);
+  expect(director.state.current).toBe(scene);
+  expect(director.state.isTransitioning).toBe(false);
+  expect(sceneState.isMounted).toBe(false);
+  expect(sceneState.isUpdated).toBe(false);
+});
+
+test("replaces the scene with a new one", function () {
+  const director = Director();
+
+  const sceneState1 = {
+    isDisposed: false,
+    isPreloaded: false,
+    isPreloading: false,
+    isMounted: false,
+    isUpdated: false,
+  };
+  const scene1 = {
+    name: "TestScene1",
+    state: sceneState1,
+
+    dispose(): void {
+      sceneState1.isDisposed = true;
+    },
+
+    mount(): void {
+      sceneState1.isMounted = true;
+    },
+
+    preload(): void {},
+
+    unmount(): void {
+      sceneState1.isMounted = false;
+    },
+
+    update(): void {
+      sceneState1.isUpdated = true;
+    },
+  };
+
+  const sceneState2 = {
+    isDisposed: false,
+    isPreloaded: false,
+    isPreloading: false,
+    isMounted: false,
+    isUpdated: false,
+  };
+  const scene2 = {
+    name: "TestScene2",
+    state: sceneState2,
+
+    dispose(): void {
+      sceneState2.isDisposed = true;
+    },
+
+    mount(): void {
+      sceneState2.isMounted = true;
+    },
+
+    preload(): void {},
+
+    unmount(): void {
+      sceneState2.isMounted = false;
+    },
+
+    update(): void {
+      sceneState2.isUpdated = true;
+    },
+  };
+
+  director.start();
+
+  director.state.next = scene1;
+
+  director.update(0);
+
+  scene1.state.isPreloaded = true;
+  scene1.state.isPreloading = false;
+
+  director.update(0);
+
+  expect(director.state.next).toBe(null);
+  expect(director.state.current).toBe(scene1);
+  expect(director.state.isTransitioning).toBe(false);
+  expect(sceneState1.isMounted).toBe(false);
+  expect(sceneState1.isUpdated).toBe(false);
+
+  director.state.next = scene2;
+  director.update(0);
+
+  expect(director.state.next).toBe(scene2);
+  expect(director.state.current).toBe(null);
+  expect(director.state.isTransitioning).toBe(true);
+  expect(sceneState1.isMounted).toBe(false);
+  expect(sceneState1.isUpdated).toBe(false);
+  expect(sceneState2.isMounted).toBe(false);
+  expect(sceneState2.isUpdated).toBe(false);
+
+  director.update(0);
+
+  expect(director.state.next).toBe(null);
+  expect(director.state.current).toBe(null);
+  expect(director.state.isTransitioning).toBe(true);
+  expect(sceneState1.isMounted).toBe(false);
+  expect(sceneState1.isUpdated).toBe(false);
+  expect(sceneState2.isMounted).toBe(false);
+  expect(sceneState2.isUpdated).toBe(false);
+
+  scene2.state.isPreloaded = true;
+  scene2.state.isPreloading = false;
+
+  director.update(0);
+
+  expect(director.state.next).toBe(null);
+  expect(director.state.current).toBe(scene2);
+  expect(director.state.isTransitioning).toBe(false);
+  expect(sceneState1.isMounted).toBe(false);
+  expect(sceneState1.isUpdated).toBe(false);
+  expect(sceneState2.isMounted).toBe(false);
+  expect(sceneState2.isUpdated).toBe(false);
+});
