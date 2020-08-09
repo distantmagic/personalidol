@@ -8,17 +8,22 @@ type Props = {
 };
 
 export function renderDOMLoadingScreen(props: Props): ComponentChild {
-  const progress = Math.min(100, props.progress * 100);
+  const progress = Math.round(Math.min(100, props.progress * 100));
 
   return (
     <div class="pi__loading-screen" style={{
       "--progress": `${progress}%`
     }}>
       <p class="pi__loading-screen__label">
-        Loading {props.comment}...
+        <span class="pi__loading-screen__label__comment">
+          Loading {props.comment}...
+        </span>
+        <span class="pi__loading-screen__label__progress">
+          {progress}%
+        </span>
       </p>
       <div class="pi__loading-screen__progress-bar">
-        <div class="pi__loading-screen__progress-bar__progress">${progress}%</div>
+        <div class="pi__loading-screen__progress-bar__progress">{progress}%</div>
       </div>
     </div>
   );

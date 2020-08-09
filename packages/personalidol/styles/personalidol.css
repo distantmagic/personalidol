@@ -32,14 +32,24 @@
 }
 
 .pi__loading-screen__label {
+  display: grid;
   font-size: 1rem;
   font-variant: small-caps;
+  grid-column-gap: 1.6rem;
+  grid-template-columns: auto auto;
   letter-spacing: 0.1ch;
+  text-transform: lowercase;
+}
+
+.pi__loading-screen__label__comment {
   overflow: hidden;
   text-align: left;
   text-overflow: ellipsis;
-  text-transform: lowercase;
   white-space: nowrap;
+}
+
+.pi__loading-screen__label__progress {
+  text-align: right;
 }
 
 .pi__loading-screen__progress-bar {

@@ -1,86 +1,55 @@
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { LoadingManager } from "three/src/loaders/LoadingManager";
+import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { MD2Loader } from "@personalidol/framework/src/MD2Loader";
+
+import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
+import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 
 type ModelParts = {
   body: string;
 };
 
-type ModelPartsCache = Map<string, Promise<ModelParts>>;
+const emptyTransferables: [] = [];
+const loadingCache: ReusedResponsesCache = {};
+const loadingUsage: ReusedResponsesUsage = {};
 
 const loadingManager = new LoadingManager();
-const loadingModels: {
-  [key: string]: Promise<{
-    normals: Float32Array;
-    uvs: Float32Array;
-    vertices: Float32Array;
-  }>;
-} = {};
-const loadingModelsPending: {
-  [key: string]: number;
-} = {};
 const md2Loader = new MD2Loader(loadingManager);
-const modelPartsCache: ModelPartsCache = new Map();
+const md2LoadAsync = md2Loader.loadAsync.bind(md2Loader);
 
-function fetchModelParts(modelName: string, cache: ModelPartsCache): Promise<ModelParts> {
-  const cached = cache.get(modelName);
+function responseToModelParts(response: Response): Promise<ModelParts> {
+  return response.json() as Promise<ModelParts>;
+}
 
-  if (cached) {
-    return cached;
-  }
-
-  const ret = fetch(`/models/model-md2-${modelName}/parts.json`).then(function (response) {
-    return response.json() as Promise<ModelParts>;
-  });
-
-  cache.set(modelName, ret);
-
-  return ret;
+function fetchModelParts(partsUrl: string): Promise<ModelParts> {
+  return fetch(partsUrl).then(responseToModelParts);
 }
 
 const md2MessagesRouter = {
   async load(messagePort: MessagePort, { model_name, rpc }: { model_name: string; rpc: string }) {
-    const parts = await fetchModelParts(model_name, modelPartsCache);
-    const modelUrl = `/models/model-md2-${model_name}/${parts.body}`;
+    const partsUrl = `/models/model-md2-${model_name}/parts.json`;
+    const parts = await reuseResponse(loadingCache, loadingUsage, partsUrl, fetchModelParts);
 
-    if (!loadingModels.hasOwnProperty(modelUrl)) {
-      loadingModels[modelUrl] = md2Loader.loadAsync(modelUrl);
-      loadingModelsPending[modelUrl] = 0;
-    }
-
-    loadingModelsPending[modelUrl] += 1;
-
-    const geometry = await loadingModels[modelUrl];
-
-    loadingModelsPending[modelUrl] -= 1;
-
-    const geometryCopy =
-      loadingModelsPending[modelUrl] > 0
-        ? {
-            normals: geometry.normals.slice(),
-            vertices: geometry.vertices.slice(),
-            uvs: geometry.uvs.slice(),
-          }
-        : geometry;
-
-    delete loadingModels[modelUrl];
-    delete loadingModelsPending[modelUrl];
+    const modelUrl = `/models/model-md2-${model_name}/${parts.data.body}`;
+    const geometry = await reuseResponse(loadingCache, loadingUsage, modelUrl, md2LoadAsync);
 
     messagePort.postMessage(
       {
         geometry: {
           geometry: {
-            normals: geometryCopy.normals,
-            parts: parts,
-            uvs: geometryCopy.uvs,
-            vertices: geometryCopy.vertices,
+            normals: geometry.data.normals,
+            parts: parts.data,
+            uvs: geometry.data.uvs,
+            vertices: geometry.data.vertices,
           },
           rpc: rpc,
         },
       },
-      [geometryCopy.normals.buffer, geometryCopy.uvs.buffer, geometryCopy.vertices.buffer]
+      // Transfer everything to not use unnecessary memory.
+      geometry.isLast ? [geometry.data.normals.buffer, geometry.data.uvs.buffer, geometry.data.vertices.buffer] : emptyTransferables
     );
   },
 };

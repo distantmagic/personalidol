@@ -11,7 +11,35 @@
       <div id="canvas-root">
         <canvas id="canvas"></canvas>
       </div>
-      <div id="ui-root"></div>
+      <div id="ui-root">
+        <!-- Initial styles before first game engine render. -->
+        <div id="ui-placeholder" style="
+          color: white;
+          font-size: 1rem;
+          font-variant: small-caps;
+          letter-spacing: 0.1ch;
+          left: 50%;
+          position: absolute;
+          text-align: center;
+          text-transform: lowercase;
+          top: 50%;
+          transform: translateX(-50%) translateY(-50%);
+        ">
+          <div id="ui-placeholder-label" style="
+            opacity: 0;
+            transition: opacity 1s ease-in;
+          ">
+            Loading...
+          </div>
+          <noscript>
+            You need to enable JavaScript in your browser to use this
+            application.
+          </noscript>
+        </div>
+        <script>
+          document.getElementById("ui-placeholder-label").style.opacity = 1;
+        </script>
+      </div>
     </div>
     <script src="/lib/index.js" type="module"></script>
   </body>

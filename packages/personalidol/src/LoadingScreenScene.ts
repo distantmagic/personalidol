@@ -3,7 +3,6 @@ import { BoxBufferGeometry } from "three/src/geometries/BoxGeometry";
 import { Mesh } from "three/src/objects/Mesh";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
-import { PlaneBufferGeometry } from "three/src/geometries/PlaneGeometry";
 import { Scene } from "three/src/scenes/Scene";
 import { SpotLight } from "three/src/lights/SpotLight";
 
