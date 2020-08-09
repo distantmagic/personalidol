@@ -1,11 +1,11 @@
 @font-face {
-  font-display: block;
+  font-display: swap;
   font-family: "Almendra";
   src: url("/fonts/font-almendra-regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-display: block;
+  font-display: swap;
   font-family: "Mukta";
   src: url("/fonts/font-mukta-regular.ttf") format("truetype");
 }

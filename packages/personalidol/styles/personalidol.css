@@ -1,29 +1,24 @@
 @import "./_fonts.css";
 
+#ui-root {
+  pointer-events: none;
+}
+
 #ui-root *, #ui-root * * {
   box-sizing: border-box;
 }
 
-#ui-root {
-  /*background-color: rgba(0, 0, 0, 0.5);*/
+.pi__loading-screen {
   bottom: 0;
   color: #eeeeee;
   display: grid;
+  grid-template-rows: 1.6rem 1.6rem;
   font-family: "Mukta", sans-serif;
   font-size: 1.6rem;
   left: 0;
-  position: absolute;
   right: 0;
-  top: 0;
-}
 
-.pi {
-}
-
-.pi__loading-screen {
   align-items: flex-end;
-  bottom: 0;
-  display: grid;
   grid-gap: 0.8rem;
   line-height: 1;
   padding: 1.6rem;
@@ -52,16 +47,20 @@
   text-align: right;
 }
 
+.pi__loading-screen__progress-bar,
+.pi__loading-screen__progress-bar__progress {
+  height: 100%;
+}
+
 .pi__loading-screen__progress-bar {
   align-items: center;
   background-color: #333333;
   display: grid;
-  height: 1.6rem;
 }
 
 .pi__loading-screen__progress-bar__progress {
   background-color: #eeeeee;
   color: transparent;
-  font-size: 1.6rem;
+  display: block;
   width: var(--progress);
 }

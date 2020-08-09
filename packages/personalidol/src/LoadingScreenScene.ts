@@ -73,6 +73,9 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   function mount(): void {
     state.isMounted = true;
 
+    _previousComment = "";
+    _previousProgress = 0;
+
     rendererState.camera = _camera;
     rendererState.scene = _scene;
 
