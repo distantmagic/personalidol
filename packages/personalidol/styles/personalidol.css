@@ -34,7 +34,7 @@
 .pi__loading-screen__label__comment,
 .pi__loading-screen__label__progress {
   color: #eeeeee;
-  bottom: 4rem;
+  bottom: 2.4rem;
   font-family: sans-serif;
   font-size: 1rem;
   font-variant: small-caps;
@@ -59,7 +59,7 @@
 
 .pi__loading-screen__progress-bar,
 .pi__loading-screen__progress-bar__progress {
-  height: 1.6rem;
+  height: 0.2rem;
 }
 
 .pi__loading-screen__progress-bar {
