@@ -75,4 +75,5 @@
   color: transparent;
   display: block;
   width: var(--progress);
+  transition: width 0.3s ease-in-out;
 }

@@ -14,7 +14,7 @@ export function renderDOMLoadingScreen(props: Props): ComponentChild {
     <Fragment>
       <span class="pi__font-preloader" />
       <div class="pi__loading-screen__label__comment">
-        Loading {props.comment}...
+        Loading {props.comment}{" "}...
       </div>
       <div class="pi__loading-screen__label__progress">
         {progress}%
