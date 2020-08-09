@@ -8,29 +8,36 @@
   box-sizing: border-box;
 }
 
-.pi__loading-screen {
-  bottom: 0;
-  color: #eeeeee;
-  display: grid;
-  grid-template-rows: 1.6rem 1.6rem;
-  font-family: "Mukta", sans-serif;
-  font-size: 1.6rem;
-  left: 0;
-  right: 0;
-
-  align-items: flex-end;
-  grid-gap: 0.8rem;
-  line-height: 1;
-  padding: 1.6rem;
+.pi__font-preloader,
+.pi__loading-screen__label__comment,
+.pi__loading-screen__label__progress,
+.pi__loading-screen__progress-bar {
   position: absolute;
-  width: 100%;
+  line-height: 1rem;
 }
 
-.pi__loading-screen__label {
-  display: grid;
+.pi__font-preloader:before {
+  content: "...";
+  font-family: "Almendra", sans-serif;
+}
+
+.pi__font-preloader:after {
+  content: "...";
+  font-family: "Mukta", sans-serif;
+}
+
+.pi__loading-screen__label__comment,
+.pi__loading-screen__progress-bar {
+  left: 1.6rem;
+}
+
+.pi__loading-screen__label__comment,
+.pi__loading-screen__label__progress {
+  color: #eeeeee;
+  bottom: 4rem;
+  font-family: sans-serif;
   font-size: 1rem;
   font-variant: small-caps;
-  grid-column-gap: 1.6rem;
   grid-template-columns: auto auto;
   letter-spacing: 0.1ch;
   text-transform: lowercase;
@@ -41,21 +48,26 @@
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: calc(100% - 6.4rem);
 }
 
 .pi__loading-screen__label__progress {
+  font-size: 0.8rem;
+  right: 1.6rem;
   text-align: right;
 }
 
 .pi__loading-screen__progress-bar,
 .pi__loading-screen__progress-bar__progress {
-  height: 100%;
+  height: 1.6rem;
 }
 
 .pi__loading-screen__progress-bar {
   align-items: center;
   background-color: #333333;
+  bottom: 1.6rem;
   display: grid;
+  width: calc(100% - 3.2rem);
 }
 
 .pi__loading-screen__progress-bar__progress {

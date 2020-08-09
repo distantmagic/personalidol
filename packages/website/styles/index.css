@@ -2,11 +2,6 @@
 
 @import "@personalidol/personalidol/styles/personalidol.css";
 
-body {
-  background-color: black;
-  overflow: hidden;
-}
-
 body, p {
   margin: 0;
 }

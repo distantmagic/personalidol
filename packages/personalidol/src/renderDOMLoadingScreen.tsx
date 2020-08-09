@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 
 import type { ComponentChild } from "preact";
 
@@ -11,20 +11,19 @@ export function renderDOMLoadingScreen(props: Props): ComponentChild {
   const progress = Math.round(props.progress * 100);
 
   return (
-    <div class="pi__loading-screen" style={{
-      "--progress": `${progress}%`
-    }}>
-      <p class="pi__loading-screen__label">
-        <span class="pi__loading-screen__label__comment">
-          Loading {props.comment}...
-        </span>
-        <span class="pi__loading-screen__label__progress">
-          {progress}%
-        </span>
-      </p>
-      <div class="pi__loading-screen__progress-bar">
+    <Fragment>
+      <span class="pi__font-preloader" />
+      <div class="pi__loading-screen__label__comment">
+        Loading {props.comment}...
+      </div>
+      <div class="pi__loading-screen__label__progress">
+        {progress}%
+      </div>
+      <div class="pi__loading-screen__progress-bar" style={{
+        "--progress": `${progress}%`
+      }}>
         <div class="pi__loading-screen__progress-bar__progress" />
       </div>
-    </div>
+    </Fragment>
   );
 }

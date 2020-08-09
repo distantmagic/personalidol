@@ -6,7 +6,16 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <title>Website</title>
   </head>
-  <body>
+  <body style="
+    background-color: black;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+  ">
     <div id="game-root">
       <div id="canvas-root">
         <canvas id="canvas"></canvas>
@@ -21,6 +30,7 @@
           font-variant: small-caps;
           letter-spacing: 0.1ch;
           left: 1.6rem;
+          line-height: 1rem;
           position: absolute;
           text-align: center;
           text-transform: lowercase;
@@ -29,7 +39,7 @@
             opacity: 0;
             transition: opacity 1s ease-in;
           ">
-            Loading...
+            Loading ...
           </div>
           <noscript>
             You need to enable JavaScript in your browser to use this
