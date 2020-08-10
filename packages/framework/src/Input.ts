@@ -1,3 +1,5 @@
+import { isSharedArrayBufferSupported } from "./isSharedArrayBufferSupported";
+
 import type { TypedArrayMap } from "./TypedArrayMap.type";
 
 let index = 0;
@@ -83,13 +85,22 @@ for (let i = 0; i < touchesTotal; i += 1) {
   };
 }
 
-/**
- * Why uint8? To support pressure force. Standards normalize pressure to be
- * between 0 and 1, but here it's stretched between 0 and 100.
- */
-function createEmptyState(): Int16Array {
-  return new Int16Array(Object.keys(code).length);
-}
+const createEmptyState = (function () {
+  const itemsLength = Object.keys(code).length;
+
+  if (isSharedArrayBufferSupported()) {
+    // Int16Array takes 2 bytes per value.
+    const byteLength = itemsLength * 2;
+
+    return function (): Int16Array {
+      return new Int16Array(new SharedArrayBuffer(byteLength));
+    };
+  } else {
+    return function (): Int16Array {
+      return new Int16Array(itemsLength);
+    };
+  }
+})();
 
 export const Input = Object.freeze({
   code: Object.freeze(code),

@@ -363,7 +363,7 @@ export function MapScene(
 
     resetLoadingManagerState(loadingManagerState);
 
-    loadingManagerState.expectsAtLeast = 10;
+    loadingManagerState.expectsAtLeast = 5;
 
     const mapRPCRequest = sendRPCMessage(_rpcLookupTable, quakeMapsMessagePort, {
       unmarshal: {

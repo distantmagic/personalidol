@@ -11,9 +11,7 @@ import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { bootstrap } from "./bootstrap";
 import { workers } from "./workers";
 
-const dimensionsState = Dimensions.createEmptyState();
 const eventBus = EventBus();
-const inputState = Input.createEmptyState();
 const logger = Loglevel.getLogger(workers.offscreen.name);
 
 logger.setLevel(__LOG_LEVEL);
@@ -28,6 +26,8 @@ const _canvasStyle = {
 
 let _canvas: null | OffscreenCanvas = null;
 let _devicePixelRatio: null | number = null;
+let _dimensionsState: null | Uint16Array = null;
+let _inputState: null | Int16Array = null;
 let _isBootstrapped = false;
 let atlasMessagePort: null | MessagePort = null;
 let domMessagePort: null | MessagePort = null;
@@ -40,6 +40,8 @@ function _bootstrapSafe(): void {
   if (
     _canvas === null ||
     _devicePixelRatio === null ||
+    _dimensionsState === null ||
+    _inputState === null ||
     atlasMessagePort === null ||
     domMessagePort === null ||
     md2MessagePort === null ||
@@ -60,8 +62,8 @@ function _bootstrapSafe(): void {
     mainLoop,
     serviceManager,
     _canvas,
-    dimensionsState,
-    inputState,
+    _dimensionsState,
+    _inputState,
     logger,
     atlasMessagePort,
     domMessagePort,
@@ -78,6 +80,16 @@ self.onmessage = createRouter({
     _bootstrapSafe();
   },
 
+  awaitSharedDimensions(awaitSharedDimensions: boolean): void {
+    if (awaitSharedDimensions) {
+      return;
+    }
+
+    _dimensionsState = Dimensions.createEmptyState();
+    _inputState = Input.createEmptyState();
+    _bootstrapSafe();
+  },
+
   canvas(canvas: OffscreenCanvas): void {
     // hack to make it work with three.js
     (canvas as any).style = _canvasStyle;
@@ -91,8 +103,12 @@ self.onmessage = createRouter({
     _bootstrapSafe();
   },
 
-  dimensions(dimensions: Uint16Array): void {
-    dimensionsState.set(dimensions);
+  dimensionsState(dimensions: Uint16Array): void {
+    if (!_dimensionsState) {
+      throw new Error("Dimensions state must be set before it's updated.");
+    }
+
+    _dimensionsState.set(dimensions);
   },
 
   domMessagePort(port: MessagePort): void {
@@ -100,8 +116,12 @@ self.onmessage = createRouter({
     _bootstrapSafe();
   },
 
-  input(input: Uint8Array): void {
-    inputState.set(input);
+  inputState(input: Int16Array): void {
+    if (!_inputState) {
+      throw new Error("Input state must be set before it's updated.");
+    }
+
+    _inputState.set(input);
   },
 
   md2MessagePort(port: MessagePort): void {
@@ -118,6 +138,14 @@ self.onmessage = createRouter({
   quakeMapsMessagePort(port: MessagePort): void {
     quakeMapsMessagePort = port;
     _bootstrapSafe();
+  },
+
+  sharedDimensionsState(dimensions: SharedArrayBuffer): void {
+    _dimensionsState = new Uint16Array(dimensions);
+  },
+
+  sharedInputState(input: SharedArrayBuffer): void {
+    _inputState = new Int16Array(input);
   },
 
   texturesMessagePort(port: MessagePort): void {

@@ -9,6 +9,7 @@ import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCan
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
 import { Input } from "@personalidol/framework/src/Input";
+import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
@@ -88,7 +89,7 @@ quakeMapsWorker.postMessage(
 
 const texturesMessageChannel = new MessageChannel();
 const addTextureMessagePort = (function () {
-  if ("function" === typeof window.createImageBitmap) {
+  if ("function" === typeof globalThis.createImageBitmap) {
     const texturesWorker = new Worker(workers.textures.url, {
       credentials: "same-origin",
       name: workers.textures.name,
@@ -208,10 +209,46 @@ if ("function" === typeof canvas.transferControlToOffscreen) {
   });
 
   const offscreenCanvas = canvas.transferControlToOffscreen();
-  const offscreenWorkerService = WorkerService(offscreenWorker, {
-    dimensions: dimensionsState,
-    input: inputState,
-  });
+
+  // SharedArrayBuffer was disabled after Spectre / Meltdown attacks.
+  // After some time it got enabled again, so it's a bit messy.
+  // If it's enabled, then we should use it, otherwise the app will be sending
+  // copy of input / dimensions states every frame to the worker.
+  const offscreenWorkerService = (function () {
+    function sharedArrayBufferNotAvailable() {
+      offscreenWorker.postMessage({
+        awaitSharedDimensions: false,
+      });
+
+      const updateMessage = {
+        dimensionsState: dimensionsState,
+        inputState: inputState,
+      };
+
+      return WorkerService(offscreenWorker, function () {
+        return updateMessage;
+      });
+    }
+
+    if (isSharedArrayBufferSupported()) {
+      try {
+        offscreenWorker.postMessage({
+          awaitSharedDimensions: true,
+          sharedDimensionsState: dimensionsState.buffer,
+          sharedInputState: inputState.buffer,
+        });
+      } catch (err) {
+        // In some cases, `postMessage` will throw when trying to send
+        // SharedArrayBuffer to a worker. In that case we can fallback to
+        // the copy / update strategy.
+        return sharedArrayBufferNotAvailable();
+      }
+
+      return WorkerService(offscreenWorker);
+    } else {
+      return sharedArrayBufferNotAvailable();
+    }
+  })();
 
   // prettier-ignore
   offscreenWorker.postMessage(

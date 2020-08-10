@@ -1,6 +1,8 @@
 import { WorkerService as IWorkerService } from "./WorkerService.interface";
 
-export function WorkerService(worker: Worker, updateMessage: any = null): IWorkerService {
+type Updater = () => any;
+
+export function WorkerService(worker: Worker, updateMessage: null | Updater = null): IWorkerService {
   const _messageStart = {
     start: null,
   };
@@ -18,7 +20,7 @@ export function WorkerService(worker: Worker, updateMessage: any = null): IWorke
 
   function update(): void {
     if (updateMessage) {
-      worker.postMessage(updateMessage);
+      worker.postMessage(updateMessage());
     }
   }
 
