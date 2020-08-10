@@ -17,6 +17,12 @@ import type { Scene as IScene } from "@personalidol/framework/src/Scene.interfac
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
+const _clearRendererMessage = {
+  render: {
+    route: null,
+  },
+};
+
 export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerState: LoadingManagerState, rendererState: RendererState): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
@@ -101,12 +107,7 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   function unmount(): void {
     state.isMounted = false;
 
-    domMessagePort.postMessage({
-      render: {
-        route: null,
-        data: {},
-      },
-    });
+    domMessagePort.postMessage(_clearRendererMessage);
 
     _unmountables.forEach(invoke);
     _unmountables.clear();

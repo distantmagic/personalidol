@@ -1,68 +1,103 @@
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
+
+import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
+import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 
 import type { DOMTextureService as IDOMTextureService } from "./DOMTextureService.interface";
 
-const _messagesRouter = createRouter({
-  loadImageBitmap({ textureUrl, rpc }: { textureUrl: string; rpc: string }): void {
-    const detachedImage = new Image();
-
-    detachedImage.onload = function () {
-      _textureQueue.push({
-        image: detachedImage,
-        rpc: rpc,
-      });
-    };
-    detachedImage.src = textureUrl;
-  },
-});
-const _textureQueue: Array<{
-  image: HTMLImageElement;
+type TextureQueueItem = {
+  messagePort: MessagePort;
   rpc: string;
-}> = [];
+  textureUrl: string;
+};
 
-export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRenderingContext2D, messagePort: MessagePort): IDOMTextureService {
-  function start() {
-    messagePort.onmessage = _messagesRouter;
+const _emptyTransferables: [] = [];
+const _loadingCache: ReusedResponsesCache = {};
+const _loadingUsage: ReusedResponsesUsage = {};
+const _textureQueue: Array<TextureQueueItem> = [];
+
+const _messagesRouter = {
+  createImageBitmap(messagePort: MessagePort, { textureUrl, rpc }: { textureUrl: string; rpc: string }): void {
+    _textureQueue.push({
+      messagePort: messagePort,
+      rpc: rpc,
+      textureUrl: textureUrl,
+    });
+  },
+};
+
+export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRenderingContext2D): IDOMTextureService {
+  function registerMessagePort(messagePort: MessagePort) {
+    attachMultiRouter(messagePort, _messagesRouter);
   }
 
-  function stop() {
-    messagePort.onmessage = null;
-  }
+  function start() {}
+
+  function stop() {}
 
   function update() {
     if (_textureQueue.length < 1) {
       return;
     }
 
-    const request = _textureQueue.shift();
+    do {
+      let request = _textureQueue.shift();
 
-    if (!request) {
-      throw new Error("Unexpected empty processing request in the texture processing queue.");
-    }
+      if (!request) {
+        throw new Error("Unexpected empty processing request in the texture queue.");
+      }
 
-    const imageNaturalHeight = request.image.naturalHeight;
-    const imageNaturalWidth = request.image.naturalWidth;
+      _processTextureQueue(request);
+    } while (_textureQueue.length > 0);
+  }
+
+  async function _createImageData(request: TextureQueueItem): Promise<ImageData> {
+    const image = await _preloadImage(request.textureUrl);
+
+    const imageNaturalHeight = image.naturalHeight;
+    const imageNaturalWidth = image.naturalWidth;
 
     canvas.height = imageNaturalHeight;
     canvas.width = imageNaturalWidth;
-    context2D.drawImage(request.image, 0, 0, imageNaturalWidth, imageNaturalHeight);
+    context2D.drawImage(image, 0, 0, imageNaturalWidth, imageNaturalHeight);
 
-    const imageData = context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
+    return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
+  }
 
-    messagePort.postMessage(
+  async function _processTextureQueue(request: TextureQueueItem): Promise<void> {
+    const { data: imageData, isLast } = await reuseResponse<ImageData>(_loadingCache, _loadingUsage, request.textureUrl, function () {
+      return _createImageData(request);
+    });
+
+    request.messagePort.postMessage(
       {
         imageData: {
           imageDataBuffer: imageData.data.buffer,
-          imageNaturalHeight: imageNaturalHeight,
-          imageNaturalWidth: imageNaturalWidth,
+          imageNaturalHeight: imageData.height,
+          imageNaturalWidth: imageData.width,
           rpc: request.rpc,
         },
       },
-      [imageData.data.buffer]
+      isLast ? [imageData.data.buffer] : _emptyTransferables
     );
   }
 
+  function _preloadImage(textureUrl: string): Promise<HTMLImageElement> {
+    return new Promise(function (resolve, reject) {
+      const image = new Image();
+
+      image.onerror = reject;
+      image.onload = function () {
+        resolve(image);
+      };
+
+      image.src = textureUrl;
+    });
+  }
+
   return Object.freeze({
+    registerMessagePort: registerMessagePort,
     start: start,
     stop: stop,
     update: update,

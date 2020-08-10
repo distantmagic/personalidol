@@ -6,15 +6,19 @@ import type { ComponentChild } from "preact";
 
 type RenderMessage = {
   data: any;
-  route: string;
+  route: null | string;
 };
 
-function renderDOMUIRoute(route: string, data: any): null | ComponentChild {
+function renderDOMUIRoute(route: null | string, data: any): null | ComponentChild {
   switch (route) {
     case "/loading-screen":
       return renderDOMLoadingScreen(data);
-    default:
+    case "/map":
+      return <div>xd</div>;
+    case null:
       return null;
+    default:
+      throw new Error(`Unknown route: "${route}"`);
   }
 }
 

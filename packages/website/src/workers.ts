@@ -6,13 +6,17 @@ type Workers = {
 };
 
 export const workers: Workers = {
-  offscreen: {
-    name: "Offscreen Canvas",
-    url: "/lib/worker_offscreen.js",
+  atlas: {
+    name: "Texture Atlas Maker",
+    url: "/lib/worker_atlas.js",
   },
   md2: {
     name: "MD2 Model Loader",
     url: "/lib/worker_md2.js",
+  },
+  offscreen: {
+    name: "Offscreen Canvas",
+    url: "/lib/worker_offscreen.js",
   },
   quakemaps: {
     name: "Map Loader",

@@ -1,7 +1,7 @@
 import type { ReusedResponsesCache } from "./ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "./ReusedResponsesUsage.type";
 
-export function reuseResponse<T, K extends string>(
+export function reuseResponse<T, K extends string = string>(
   cache: ReusedResponsesCache,
   usage: ReusedResponsesUsage,
   key: K,

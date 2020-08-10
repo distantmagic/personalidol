@@ -36,6 +36,7 @@ const md2MessagesRouter = {
     const modelUrl = `/models/model-md2-${model_name}/${parts.data.body}`;
     const geometry = await reuseResponse(loadingCache, loadingUsage, modelUrl, md2LoadAsync);
 
+    // prettier-ignore
     messagePort.postMessage(
       {
         geometry: {
@@ -49,7 +50,13 @@ const md2MessagesRouter = {
         },
       },
       // Transfer everything to not use unnecessary memory.
-      geometry.isLast ? [geometry.data.normals.buffer, geometry.data.uvs.buffer, geometry.data.vertices.buffer] : emptyTransferables
+      geometry.isLast
+        ? [
+            geometry.data.normals.buffer,
+            geometry.data.uvs.buffer,
+            geometry.data.vertices.buffer
+          ]
+        : emptyTransferables
     );
   },
 };

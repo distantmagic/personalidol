@@ -88,6 +88,12 @@ const _quakeMapsRouter = createRouter({
 });
 const _textureReceiverMessageRouter = createTextureReceiverMessagesRouter(_rpcLookupTable);
 
+const _clearRendererMessage = {
+  render: {
+    route: null,
+  },
+};
+
 let _cameraZoomAmount = 0;
 
 export function MapScene(
@@ -95,6 +101,8 @@ export function MapScene(
   directorState: DirectorState,
   eventBus: EventBus,
   inputState: Int16Array,
+  atlasMessagePort: MessagePort,
+  domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
@@ -194,7 +202,7 @@ export function MapScene(
     async model_md2(entity: EntityMD2Model): Promise<void> {
       const loadItemModelMD2 = {
         comment: `model ${entity.model_name}`,
-        weight: 2,
+        weight: 1,
       };
 
       const modelRequest = sendRPCMessage(_rpcLookupTable, md2MessagePort, {
@@ -258,9 +266,16 @@ export function MapScene(
 
       bufferGeometry.setAttribute("normal", new BufferAttribute(entity.normals, 3));
       bufferGeometry.setAttribute("position", new BufferAttribute(entity.vertices, 3));
-      bufferGeometry.setAttribute("texture_index", new BufferAttribute(entity.textures, 1));
+      // bufferGeometry.setAttribute("texture_index", new BufferAttribute(entity.textures, 1));
       bufferGeometry.setAttribute("uv", new BufferAttribute(entity.uvs, 2));
       bufferGeometry.setIndex(new BufferAttribute(entity.indices, 1));
+
+      atlasMessagePort.postMessage({
+        createTextureAtlas: {
+          textureUrls: entity.textureNames.map(_createTextureUrl),
+          rpc: MathUtils.generateUUID(),
+        },
+      });
 
       // console.log(entity.textureNames);
 
@@ -272,6 +287,25 @@ export function MapScene(
         meshStandardMaterial.map = texture;
         break;
       }
+
+      // meshStandardMaterial.onBeforeCompile = function (shader, renderer) {
+      //   // Texture atlas is used here, so texture sampling fragment needs to
+      //   // be changed.
+      //   shader.fragmentShader = shader.fragmentShader.replace(
+      //     "#include <map_fragment>",
+      //     `
+      //       #ifdef USE_MAP
+
+      //         // vec4 texelColor = texture2D( map, vUv );
+      //         vec4 texelColor = vec4( 1.0, 1.0, 1.0, 1.0 );
+
+      //         texelColor = mapTexelToLinear( texelColor );
+      //         diffuseColor *= texelColor;
+
+      //       #endif
+      //     `
+      //   );
+      // };
 
       const mesh = new Mesh(bufferGeometry, meshStandardMaterial);
 
@@ -361,12 +395,19 @@ export function MapScene(
     state.isMounted = false;
 
     eventBus.POINTER_ZOOM_REQUEST.delete(_onPointerZoomRequest);
+    domMessagePort.postMessage(_clearRendererMessage);
 
     _unmountables.forEach(invoke);
     _unmountables.clear();
   }
 
   function update(delta: number): void {
+    domMessagePort.postMessage({
+      render: {
+        route: "/map",
+      },
+    });
+
     if (isPrimaryPointerPressed(inputState)) {
       _pointerVector.x = getPrimaryPointerVectorX(inputState);
       _pointerVector.y = getPrimaryPointerVectorY(inputState);
@@ -389,8 +430,12 @@ export function MapScene(
     return (entityLookupTable[classname] as EntityLookupCallback<K>)(entity);
   }
 
+  function _createTextureUrl(textureName: string): string {
+    return `/${textureName}.png`;
+  }
+
   function _loadMapTexture(textureName: string): Promise<ITexture> {
-    return _loadTexture(`/${textureName}.png`);
+    return _loadTexture(_createTextureUrl(textureName));
   }
 
   async function _loadTexture(textureUrl: string): Promise<ITexture> {
@@ -399,7 +444,7 @@ export function MapScene(
       weight: 1,
     };
 
-    const textureRequest = requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl);
+    const textureRequest = requestTexture<ITexture>(_rpcLookupTable, texturesMessagePort, textureUrl);
     const texture = await notifyLoadingManager(loadingManagerState, loadItemTexture, textureRequest);
 
     return texture;
@@ -412,6 +457,8 @@ export function MapScene(
       directorState,
       eventBus,
       inputState,
+      atlasMessagePort,
+      domMessagePort,
       md2MessagePort,
       quakeMapsMessagePort,
       texturesMessagePort,

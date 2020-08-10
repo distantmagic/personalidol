@@ -28,6 +28,7 @@ public/lib/index.js public/lib/index_offscreen.worker.js: node_modules/.bin/esbu
 		--tsconfig=tsconfig.json \
 		src/bootstrap.ts \
 		src/index.ts \
+		src/worker_atlas.ts \
 		src/worker_md2.ts \
 		src/worker_offscreen.ts \
 		src/worker_quakemaps.ts \

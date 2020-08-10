@@ -1,5 +1,6 @@
 import Loglevel from "loglevel";
 
+import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { DOMRendererService } from "@personalidol/dom-renderer/src/DOMRendererService";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
@@ -81,47 +82,102 @@ quakeMapsWorker.postMessage(
   [quakeMapsMessageChannel.port1]
 );
 
-// Atlas canvas is used to speed up texture atlas creation. If this context is
-// not supported.
-
-const atlasCanvas = document.createElement("canvas");
-
-console.log(atlasCanvas);
-
 // `createImageBitmap` has it's quirks and surprisingly no support in safari
 // and ios. If it's not supported, then we have to use the main thread to
 // generate textures and potentially send them into other workers.
 
 const texturesMessageChannel = new MessageChannel();
+const addTextureMessagePort = (function () {
+  if ("function" === typeof window.createImageBitmap) {
+    const texturesWorker = new Worker(workers.textures.url, {
+      credentials: "same-origin",
+      name: workers.textures.name,
+      type: "module",
+    });
 
-if ("function" === typeof window.createImageBitmap) {
-  // const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
-  const texturesWorker = new Worker(workers.textures.url, {
-    credentials: "same-origin",
-    name: workers.textures.name,
-    type: "module",
-  });
+    return function (messagePort: MessagePort) {
+      texturesWorker.postMessage(
+        {
+          texturesMessagePort: messagePort,
+        },
+        [messagePort]
+      );
+    };
+  } else {
+    const textureCanvas = document.createElement("canvas");
+    const textureCanvasContext2D = textureCanvas.getContext("2d");
 
-  texturesWorker.postMessage(
-    {
-      // atlasCanvas: offscreenAtlas,
-      texturesMessagePort: texturesMessageChannel.port1,
-    },
-    [texturesMessageChannel.port1]
-  );
-} else {
-  const textureCanvas = document.createElement("canvas");
-  const textureCanvasContext2D = textureCanvas.getContext("2d");
+    if (null === textureCanvasContext2D) {
+      throw new Error("Unable to get detached canvas 2D context.");
+    }
 
-  if (null === textureCanvasContext2D) {
-    throw new Error("Unable to get detached canvas 2D context.");
+    const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D);
+
+    mainLoop.updatables.add(textureService);
+    serviceManager.services.add(textureService);
+
+    return textureService.registerMessagePort;
   }
+})();
 
-  const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D, texturesMessageChannel.port1);
+addTextureMessagePort(texturesMessageChannel.port1);
 
-  mainLoop.updatables.add(textureService);
-  serviceManager.services.add(textureService);
-}
+// Atlas canvas is used to speed up texture atlas creation. If this context is
+// not supported.
+
+const atlasCanvas = document.createElement("canvas");
+const atlasMessageChannel = new MessageChannel();
+const atlasToTextureMessageChannel = new MessageChannel();
+
+addTextureMessagePort(atlasToTextureMessageChannel.port1);
+
+const addAtlasMessagePort = (function () {
+  if ("function" === typeof atlasCanvas.transferControlToOffscreen) {
+    const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
+    const atlasWorker = new Worker(workers.atlas.url, {
+      credentials: "same-origin",
+      name: workers.atlas.name,
+      type: "module",
+    });
+
+    atlasWorker.postMessage(
+      {
+        atlasCanvas: offscreenAtlas,
+        texturesMessagePort: atlasToTextureMessageChannel.port2,
+      },
+      [atlasToTextureMessageChannel.port2, offscreenAtlas]
+    );
+
+    const atlasWorkerService = WorkerService(atlasWorker);
+
+    mainLoop.updatables.add(atlasWorkerService);
+    serviceManager.services.add(atlasWorkerService);
+
+    return function (messagePort: MessagePort) {
+      atlasWorker.postMessage(
+        {
+          atlasMessagePort: messagePort,
+        },
+        [messagePort]
+      );
+    };
+  } else {
+    const atlasCanvasContext2D = atlasCanvas.getContext("2d");
+
+    if (null === atlasCanvasContext2D) {
+      throw new Error("Unable to get atlas canvas 2D context.");
+    }
+
+    const atlasService = AtlasService(atlasCanvas, atlasCanvasContext2D, atlasToTextureMessageChannel.port2);
+
+    mainLoop.updatables.add(atlasService);
+    serviceManager.services.add(atlasService);
+
+    return atlasService.registerMessagePort;
+  }
+})();
+
+addAtlasMessagePort(atlasMessageChannel.port1);
 
 // MD2 worker offloads model loading from the thread whether it's the main
 // browser thread or the offscreen canvas thread. Loading MD2 models cause
@@ -152,18 +208,30 @@ if ("function" === typeof canvas.transferControlToOffscreen) {
   });
 
   const offscreenCanvas = canvas.transferControlToOffscreen();
-  const offscreenWorkerService = WorkerService(offscreenWorker, dimensionsState, inputState);
+  const offscreenWorkerService = WorkerService(offscreenWorker, {
+    dimensions: dimensionsState,
+    input: inputState,
+  });
 
+  // prettier-ignore
   offscreenWorker.postMessage(
     {
       canvas: offscreenCanvas,
       devicePixelRatio: devicePixelRatio,
+      atlasMessagePort: atlasMessageChannel.port2,
       domMessagePort: domRendererMessageChannel.port2,
       md2MessagePort: md2MessageChannel.port2,
       quakeMapsMessagePort: quakeMapsMessageChannel.port2,
       texturesMessagePort: texturesMessageChannel.port2,
     },
-    [domRendererMessageChannel.port2, md2MessageChannel.port2, offscreenCanvas, quakeMapsMessageChannel.port2, texturesMessageChannel.port2]
+    [
+      atlasMessageChannel.port2,
+      domRendererMessageChannel.port2,
+      md2MessageChannel.port2,
+      offscreenCanvas,
+      quakeMapsMessageChannel.port2,
+      texturesMessageChannel.port2
+    ]
   );
 
   const offscreenWorkerZoomRequestMessage = {
@@ -193,6 +261,7 @@ if ("function" === typeof canvas.transferControlToOffscreen) {
       dimensionsState,
       inputState,
       logger,
+      atlasMessageChannel.port2,
       domRendererMessageChannel.port2,
       md2MessageChannel.port2,
       quakeMapsMessageChannel.port2,

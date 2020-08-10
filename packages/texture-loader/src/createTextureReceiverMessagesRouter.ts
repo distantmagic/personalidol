@@ -8,17 +8,8 @@ import type { Texture as ITexture } from "three";
 
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 
-type ImageBitmapResponse = {
-  imageBitmap: ImageBitmap;
-  rpc: string;
-};
-
-type ImageDataBufferResponse = {
-  imageDataBuffer: ArrayBuffer;
-  imageNaturalHeight: number;
-  imageNaturalWidth: number;
-  rpc: string;
-};
+import type { ImageBitmapResponse } from "./ImageBitmapResponse.type";
+import type { ImageDataBufferResponse } from "./ImageDataBufferResponse.type";
 
 function _onImageBitmap({ imageBitmap }: ImageBitmapResponse) {
   return _onTextureDataLoaded(imageBitmap);

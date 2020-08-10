@@ -11,9 +11,10 @@ const loadingCache: ReusedResponsesCache = {};
 const loadingUsage: ReusedResponsesUsage = {};
 
 const textureMessagesRouter = {
-  async loadImageBitmap(messagePort: MessagePort, { textureUrl, rpc }: { textureUrl: string; rpc: string }): Promise<void> {
+  async createImageBitmap(messagePort: MessagePort, { textureUrl, rpc }: { textureUrl: string; rpc: string }): Promise<void> {
     const imageBitmap = await reuseResponse(loadingCache, loadingUsage, textureUrl, fetchImageBitmap);
 
+    // prettier-ignore
     messagePort.postMessage(
       {
         imageBitmap: {
@@ -22,16 +23,14 @@ const textureMessagesRouter = {
         },
       },
       // Transfer the last one to not occupy more memory than necessary.
-      imageBitmap.isLast ? [imageBitmap.data] : emptyTransferables
+      imageBitmap.isLast
+        ? [imageBitmap.data]
+        : emptyTransferables
     );
   },
 };
 
 self.onmessage = createRouter({
-  atlasCanvas(atlasCanvas: OffscreenCanvas): void {
-    console.log(atlasCanvas);
-  },
-
   texturesMessagePort(port: MessagePort): void {
     attachMultiRouter(port, textureMessagesRouter);
   },

@@ -29,6 +29,7 @@ const _canvasStyle = {
 let _canvas: null | OffscreenCanvas = null;
 let _devicePixelRatio: null | number = null;
 let _isBootstrapped = false;
+let atlasMessagePort: null | MessagePort = null;
 let domMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
 let quakeMapsMessagePort: null | MessagePort = null;
@@ -39,6 +40,7 @@ function _bootstrapSafe(): void {
   if (
     _canvas === null ||
     _devicePixelRatio === null ||
+    atlasMessagePort === null ||
     domMessagePort === null ||
     md2MessagePort === null ||
     quakeMapsMessagePort === null ||
@@ -61,6 +63,7 @@ function _bootstrapSafe(): void {
     dimensionsState,
     inputState,
     logger,
+    atlasMessagePort,
     domMessagePort,
     md2MessagePort,
     quakeMapsMessagePort,
@@ -70,6 +73,11 @@ function _bootstrapSafe(): void {
 }
 
 self.onmessage = createRouter({
+  atlasMessagePort(port: MessagePort): void {
+    atlasMessagePort = port;
+    _bootstrapSafe();
+  },
+
   canvas(canvas: OffscreenCanvas): void {
     // hack to make it work with three.js
     (canvas as any).style = _canvasStyle;

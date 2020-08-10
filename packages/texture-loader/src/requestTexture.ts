@@ -2,17 +2,15 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
-import type { Texture as ITexture } from "three";
-
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 
-function pluckTexture(response: { loadImageBitmap: ITexture }): ITexture {
-  return response.loadImageBitmap;
+function pluckTexture<T>(response: { createImageBitmap: T }): T {
+  return response.createImageBitmap;
 }
 
-export function requestTexture(rpcLookupTable: RPCLookupTable, messagePort: MessagePort, textureUrl: string): Promise<ITexture> {
+export function requestTexture<T>(rpcLookupTable: RPCLookupTable, messagePort: MessagePort, textureUrl: string): Promise<T> {
   return sendRPCMessage(rpcLookupTable, messagePort, {
-    loadImageBitmap: {
+    createImageBitmap: {
       textureUrl: textureUrl,
       rpc: MathUtils.generateUUID(),
     },
