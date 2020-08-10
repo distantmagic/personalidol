@@ -74,8 +74,8 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
       {
         imageData: {
           imageDataBuffer: imageData.data.buffer,
-          imageNaturalHeight: imageData.height,
-          imageNaturalWidth: imageData.width,
+          imageDataHeight: imageData.height,
+          imageDataWidth: imageData.width,
           rpc: request.rpc,
         },
       },

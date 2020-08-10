@@ -1,6 +1,6 @@
 export type ImageDataBufferResponse = {
   imageDataBuffer: ArrayBuffer;
-  imageNaturalHeight: number;
-  imageNaturalWidth: number;
+  imageDataHeight: number;
+  imageDataWidth: number;
   rpc: string;
 };

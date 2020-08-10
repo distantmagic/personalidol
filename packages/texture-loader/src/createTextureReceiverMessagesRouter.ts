@@ -15,8 +15,8 @@ function _onImageBitmap({ imageBitmap }: ImageBitmapResponse) {
   return _onTextureDataLoaded(imageBitmap);
 }
 
-function _onImageDataBuffer({ imageDataBuffer, imageNaturalHeight, imageNaturalWidth }: ImageDataBufferResponse) {
-  const imageData = new ImageData(new Uint8ClampedArray(imageDataBuffer), imageNaturalWidth, imageNaturalHeight);
+function _onImageDataBuffer({ imageDataBuffer, imageDataHeight, imageDataWidth }: ImageDataBufferResponse) {
+  const imageData = new ImageData(new Uint8ClampedArray(imageDataBuffer), imageDataWidth, imageDataHeight);
 
   return _onTextureDataLoaded(imageData);
 }
