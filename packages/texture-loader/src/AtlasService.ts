@@ -29,7 +29,7 @@ const _loadingUsage: ReusedResponsesUsage = {};
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 
 const _messagesRouter = {
-  createTextureAtlas(messagePort: MessagePort, { textureUrls, rpc }: { rpc: string; textureUrls: Array<string> }): void {
+  createTextureAtlas(messagePort: MessagePort, { textureUrls, rpc }: { rpc: string; textureUrls: ReadonlyArray<string> }): void {
     if (textureUrls.length < 1) {
       throw new Error("Can't create texture atlas from 0 textures.");
     }
@@ -37,7 +37,7 @@ const _messagesRouter = {
     _atlasQueue.push({
       messagePort: messagePort,
       rpc: rpc,
-      textureUrls: textureUrls.sort(),
+      textureUrls: textureUrls,
     });
   },
 };
@@ -146,7 +146,18 @@ export function AtlasService(
         const texture = textures[i];
 
         // Both cases need to be handled because of browser support.
-        if (texture instanceof ImageBitmap) {
+        if (texture instanceof ImageData) {
+          // prettier-ignore
+          context2D.putImageData(
+            texture,
+
+            x * textureSize, y * textureSize,
+            0, 0,
+            textureSize, textureSize
+          );
+          console.log(x, y, request.textureUrls[i], textures[i]);
+          // ImageBitmap
+        } else {
           // prettier-ignore
           context2D.drawImage(
             texture,
@@ -157,18 +168,6 @@ export function AtlasService(
             x * textureSize, y * textureSize,
             textureSize, textureSize
           );
-        } else if (texture instanceof ImageData) {
-          // prettier-ignore
-          context2D.putImageData(
-            texture,
-
-            x * textureSize, y * textureSize,
-            0, 0,
-            textureSize, textureSize
-          );
-          console.log(x, y, request.textureUrls[i], textures[i]);
-        } else {
-          throw new Error("Unknown texture data type.");
         }
 
         i += 1;
@@ -185,11 +184,9 @@ export function AtlasService(
       return _createTextureAtlas(request);
     });
 
-    console.log(request, isLast, imageData);
-
     request.messagePort.postMessage(
       {
-        imageData: {
+        textureAtlas: {
           imageDataBuffer: imageData.data.buffer,
           imageDataHeight: imageData.height,
           imageDataWidth: imageData.width,

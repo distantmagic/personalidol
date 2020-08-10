@@ -24,6 +24,7 @@ import { disposableMaterial } from "@personalidol/framework/src/disposableMateri
 import { getPrimaryPointerVectorX } from "@personalidol/framework/src/getPrimaryPointerVectorX";
 import { getPrimaryPointerVectorY } from "@personalidol/framework/src/getPrimaryPointerVectorY";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
+import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { invoke } from "@personalidol/framework/src/invoke";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 import { notifyLoadingManager } from "@personalidol/framework/src/notifyLoadingManager";
@@ -80,6 +81,9 @@ _scene.fog = new Fog(_scene.background, _camera.far - 1000, _camera.far);
 const _unmountables: Set<Unmountable> = new Set();
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
+const _atlasMessageRouter = createRouter({
+  textureAtlas: handleRPCResponse(_rpcLookupTable),
+});
 const _md2MessageRouter = createRouter({
   geometry: handleRPCResponse(_rpcLookupTable),
 });
@@ -202,7 +206,7 @@ export function MapScene(
     async model_md2(entity: EntityMD2Model): Promise<void> {
       const loadItemModelMD2 = {
         comment: `model ${entity.model_name}`,
-        weight: 1,
+        weight: 2,
       };
 
       const modelRequest = sendRPCMessage(_rpcLookupTable, md2MessagePort, {
@@ -212,9 +216,7 @@ export function MapScene(
         },
       });
 
-      const {
-        load: { geometry },
-      } = await notifyLoadingManager(loadingManagerState, loadItemModelMD2, modelRequest);
+      const { load: geometry } = await notifyLoadingManager(loadingManagerState, loadItemModelMD2, modelRequest);
 
       const textureUrl = `/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}`;
 
@@ -258,11 +260,9 @@ export function MapScene(
     },
 
     async worldspawn(entity: EntityWorldspawn): Promise<void> {
+      logger.debug("MAP VERTICES", entity.vertices.length / 3);
+
       const bufferGeometry = new BufferGeometry();
-      const meshStandardMaterial = new MeshStandardMaterial({
-        flatShading: true,
-        side: FrontSide,
-      });
 
       bufferGeometry.setAttribute("normal", new BufferAttribute(entity.normals, 3));
       bufferGeometry.setAttribute("position", new BufferAttribute(entity.vertices, 3));
@@ -270,23 +270,29 @@ export function MapScene(
       bufferGeometry.setAttribute("uv", new BufferAttribute(entity.uvs, 2));
       bufferGeometry.setIndex(new BufferAttribute(entity.indices, 1));
 
-      atlasMessagePort.postMessage({
+      const textureAtlasRequest = sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
         createTextureAtlas: {
           textureUrls: entity.textureNames.map(_createTextureUrl),
           rpc: MathUtils.generateUUID(),
         },
       });
 
-      // console.log(entity.textureNames);
+      const _loadItemTextureAtlas = {
+        comment: "textures",
+        weight: 1,
+      };
 
-      const textures = await Promise.all(entity.textureNames.map(_loadMapTexture));
+      const { createTextureAtlas: textureAtlas } = await notifyLoadingManager(loadingManagerState, _loadItemTextureAtlas, textureAtlasRequest);
 
-      logger.debug("MAP VERTICES", entity.vertices.length / 3);
+      console.log(textureAtlas);
 
-      for (let texture of textures) {
-        meshStandardMaterial.map = texture;
-        break;
-      }
+      const meshStandardMaterial = new MeshStandardMaterial({
+        flatShading: true,
+        map: imageDataBufferResponseToTexture(textureAtlas),
+        side: FrontSide,
+      });
+
+      console.log(entity.textureNames);
 
       // meshStandardMaterial.onBeforeCompile = function (shader, renderer) {
       //   // Texture atlas is used here, so texture sampling fragment needs to
@@ -345,6 +351,7 @@ export function MapScene(
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
+    atlasMessagePort.onmessage = _atlasMessageRouter;
     md2MessagePort.onmessage = _md2MessageRouter;
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
     texturesMessagePort.onmessage = _textureReceiverMessageRouter;
@@ -385,6 +392,7 @@ export function MapScene(
     console.log(_nextMap);
 
     _unmountables.add(function () {
+      atlasMessagePort.onmessage = null;
       md2MessagePort.onmessage = null;
       quakeMapsMessagePort.onmessage = null;
       texturesMessagePort.onmessage = null;
@@ -432,10 +440,6 @@ export function MapScene(
 
   function _createTextureUrl(textureName: string): string {
     return `/${textureName}.png`;
-  }
-
-  function _loadMapTexture(textureName: string): Promise<ITexture> {
-    return _loadTexture(_createTextureUrl(textureName));
   }
 
   async function _loadTexture(textureUrl: string): Promise<ITexture> {

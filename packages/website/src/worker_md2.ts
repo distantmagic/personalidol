@@ -40,13 +40,11 @@ const md2MessagesRouter = {
     messagePort.postMessage(
       {
         geometry: {
-          geometry: {
-            normals: geometry.data.normals,
-            parts: parts.data,
-            uvs: geometry.data.uvs,
-            vertices: geometry.data.vertices,
-          },
+          normals: geometry.data.normals,
+          parts: parts.data,
           rpc: rpc,
+          uvs: geometry.data.uvs,
+          vertices: geometry.data.vertices,
         },
       },
       // Transfer everything to not use unnecessary memory.
