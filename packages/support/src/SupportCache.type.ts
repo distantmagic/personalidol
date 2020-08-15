@@ -1,3 +1,1 @@
-export type SupportCache = {
-  [key: Symbol]: boolean;
-};
+export type SupportCache = Map<Symbol, boolean>;

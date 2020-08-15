@@ -107,6 +107,10 @@ function _getAtlasSideLength(itemsNumber: number): number {
   return Math.pow(2, Math.ceil(Math.log2(itemsNumber) / 2 + 1) - 1);
 }
 
+function _keyFromAtlasQueueItem(atlasQueueItem: AtlasQueueItem): string {
+  return atlasQueueItem.textureUrls.join();
+}
+
 function _onImageBitmap({ imageBitmap }: ImageBitmapResponse): ImageBitmap {
   return imageBitmap;
 }
@@ -146,6 +150,8 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
    * everything into the POT square is enough here.
    */
   async function _createTextureAtlas(request: AtlasQueueItem): Promise<Atlas> {
+    console.log(request.textureUrls);
+
     const textures = await Promise.all(request.textureUrls.map(_requestTexture));
 
     const textureSize = textures[0].height;
@@ -223,7 +229,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   }
 
   async function _processAtlasQueue(request: AtlasQueueItem): Promise<void> {
-    const { data: response, isLast } = await reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, request, _createTextureAtlas);
+    const { data: response, isLast } = await reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, _keyFromAtlasQueueItem(request), request, _createTextureAtlas);
     const { imageData, textureDimensions } = response;
 
     request.messagePort.postMessage(
@@ -241,7 +247,9 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   }
 
   function _requestTexture(textureUrl: string): Promise<ImageBitmap | ImageData> {
-    return requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl);
+    // Do not flip the texture as the entire texture atlas is going to be
+    // flipped later.
+    return requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl, false);
   }
 
   return Object.freeze({

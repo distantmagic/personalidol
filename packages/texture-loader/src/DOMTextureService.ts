@@ -3,15 +3,16 @@ import { createReusedResponsesCache } from "@personalidol/workers/src/createReus
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
+import { keyFromTextureRequest } from "./keyFromTextureRequest";
+
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 
 import type { DOMTextureService as IDOMTextureService } from "./DOMTextureService.interface";
+import type { TextureRequest } from "./TextureRequest.type";
 
-type TextureQueueItem = {
+type TextureQueueItem = TextureRequest & {
   messagePort: MessagePort;
-  rpc: string;
-  textureUrl: string;
 };
 
 const _emptyTransferables: [] = [];
@@ -20,11 +21,10 @@ const _loadingUsage: ReusedResponsesUsage = createReusedResponsesUsage();
 const _textureQueue: Array<TextureQueueItem> = [];
 
 const _messagesRouter = {
-  createImageBitmap(messagePort: MessagePort, { textureUrl, rpc }: { textureUrl: string; rpc: string }): void {
+  createImageBitmap(messagePort: MessagePort, textureRequest: TextureRequest): void {
     _textureQueue.push({
+      ...textureRequest,
       messagePort: messagePort,
-      rpc: rpc,
-      textureUrl: textureUrl,
     });
   },
 };
@@ -63,8 +63,16 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
     canvas.height = imageNaturalHeight;
     canvas.width = imageNaturalWidth;
 
-    // flip image vertically to stay consistent with a 'createImageBitmap'
-    // version
+    // It's worth to note here that JS is asynchronous, but while we are in the
+    // same thread, there is no risk of several images being written to the
+    // canvas at the same time, so no locks are necessary.
+
+    if (!request.flipY) {
+      context2D.drawImage(image, 0, 0);
+
+      return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
+    }
+
     context2D.save();
     context2D.scale(1, -1);
 
@@ -78,7 +86,14 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   }
 
   async function _processTextureQueue(request: TextureQueueItem): Promise<void> {
-    const { data: imageData, isLast } = await reuseResponse<ImageData, TextureQueueItem>(_loadingCache, _loadingUsage, request, _createImageData);
+    // prettier-ignore
+    const { data: imageData, isLast } = await reuseResponse<ImageData, TextureQueueItem>(
+      _loadingCache,
+      _loadingUsage,
+      keyFromTextureRequest(request),
+      request,
+      _createImageData
+    );
 
     request.messagePort.postMessage(
       {

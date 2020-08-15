@@ -2,11 +2,13 @@ import type { SupportCache } from "./SupportCache.type";
 import type { SupportChecker } from "./SupportChecker.type";
 
 export async function _getSetCache(supportCache: SupportCache, key: Symbol, checker: SupportChecker): Promise<boolean> {
-  if (supportCache.hasOwnProperty(key)) {
-    return supportCache[key];
+  if (supportCache.has(key)) {
+    return true === supportCache.get(key);
   }
 
-  supportCache[key] = await checker();
+  const ret = await checker();
 
-  return supportCache[key];
+  supportCache.set(key, ret);
+
+  return ret;
 }

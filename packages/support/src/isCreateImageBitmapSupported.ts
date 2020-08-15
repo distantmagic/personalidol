@@ -22,8 +22,10 @@ async function _check(): Promise<boolean> {
   const blob = new Blob([Uint8Array.from(pixel)], {
     type: "image/gif",
   });
-  const options = {
-    flipY: true,
+  const options: {
+    imageOrientation: "flipY";
+  } = {
+    imageOrientation: "flipY",
   };
 
   // prettier-ignore

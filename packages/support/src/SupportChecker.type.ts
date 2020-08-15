@@ -1,1 +1,1 @@
-export type SupportChecker = () => Promise<boolean>;
+export type SupportChecker = () => boolean | Promise<boolean>;

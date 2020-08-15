@@ -33,10 +33,10 @@ function fetchModelParts(partsUrl: string): Promise<ModelParts> {
 const md2MessagesRouter = {
   async load(messagePort: MessagePort, { model_name, rpc }: { model_name: string; rpc: string }) {
     const partsUrl = `/models/model-md2-${model_name}/parts.json`;
-    const parts = await reuseResponse(loadingCache, loadingUsage, partsUrl, fetchModelParts);
+    const parts = await reuseResponse(loadingCache, loadingUsage, partsUrl, partsUrl, fetchModelParts);
 
     const modelUrl = `/models/model-md2-${model_name}/${parts.data.body}`;
-    const geometry = await reuseResponse(loadingCache, loadingUsage, modelUrl, md2LoadAsync);
+    const geometry = await reuseResponse(loadingCache, loadingUsage, modelUrl, modelUrl, md2LoadAsync);
 
     // prettier-ignore
     messagePort.postMessage(

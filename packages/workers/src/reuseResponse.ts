@@ -1,7 +1,7 @@
 import type { ReusedResponsesCache } from "./ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "./ReusedResponsesUsage.type";
 
-function _getKey<T, U>(map: Map<T, U>, key: T): U {
+function _getKey<V, K extends string = string>(map: Map<K, V>, key: K): V {
   const ret = map.get(key);
 
   if ("undefined" === typeof ret) {
@@ -11,7 +11,7 @@ function _getKey<T, U>(map: Map<T, U>, key: T): U {
   return ret;
 }
 
-function _incrementUsage<U>(usage: ReusedResponsesUsage, key: U, value: number): boolean {
+function _incrementUsage<K extends string = string>(usage: ReusedResponsesUsage, key: K, value: number): boolean {
   const ret = _getKey(usage, key) + value;
 
   usage.set(key, ret);
@@ -19,14 +19,15 @@ function _incrementUsage<U>(usage: ReusedResponsesUsage, key: U, value: number):
   return ret < 1;
 }
 
-export function reuseResponse<T, K = string>(
+export function reuseResponse<T, A, K extends string = string>(
   cache: ReusedResponsesCache,
   usage: ReusedResponsesUsage,
   key: K,
-  requestFactory: (key: K) => Promise<T>
+  argument: A,
+  requestFactory: (arg: A) => Promise<T>
 ): Promise<{ data: T; isLast: boolean }> {
   if (!cache.has(key)) {
-    cache.set(key, requestFactory(key));
+    cache.set(key, requestFactory(argument));
     usage.set(key, 0);
   }
 

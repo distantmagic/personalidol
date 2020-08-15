@@ -1,1 +1,1 @@
-export type ReusedResponsesUsage = Map<any, number>;
+export type ReusedResponsesUsage = Map<string, number>;

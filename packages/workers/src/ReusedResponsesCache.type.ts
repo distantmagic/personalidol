@@ -1,1 +1,1 @@
-export type ReusedResponsesCache = Map<any, Promise<any>>;
+export type ReusedResponsesCache = Map<string, Promise<any>>;

@@ -10,6 +10,7 @@ import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCan
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
 import { Input } from "@personalidol/framework/src/Input";
+import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
@@ -147,8 +148,8 @@ serviceManager.start();
 
   addTextureMessagePort(atlasToTextureMessageChannel.port1);
 
-  const addAtlasMessagePort = (function () {
-    if ("function" === typeof atlasCanvas.transferControlToOffscreen) {
+  const addAtlasMessagePort = await (async function () {
+    if (await isCanvasTransferControlToOffscreenSupported(supportCache, atlasCanvas)) {
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
       const atlasWorker = new Worker(workers.atlas.url, {
         credentials: "same-origin",
@@ -236,7 +237,7 @@ serviceManager.start();
   // If browser supports the offscreen canvas, then we can offload everything
   // there. If not, then we continue in the main thread.
 
-  if ("function" === typeof canvas.transferControlToOffscreen) {
+  if (await isCanvasTransferControlToOffscreenSupported(supportCache, canvas)) {
     const offscreenWorker = new Worker(workers.offscreen.url, {
       credentials: "same-origin",
       name: workers.offscreen.name,
@@ -319,7 +320,6 @@ serviceManager.start();
     // This extra var is a hack to make esbuild leave the dynamic import as-is.
     // https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
     const filename = "/lib/createScenes.js";
-
     const { createScenes } = await import(filename);
 
     // prettier-ignore
