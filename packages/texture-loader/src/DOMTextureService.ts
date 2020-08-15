@@ -73,15 +73,13 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
       return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
     }
 
-    context2D.save();
     context2D.scale(1, -1);
-
     context2D.drawImage(image, 0, -1 * imageNaturalHeight);
 
     try {
       return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
     } finally {
-      context2D.restore();
+      context2D.setTransform(1, 0, 0, 1, 0, 0);
     }
   }
 

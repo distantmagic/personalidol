@@ -66,7 +66,7 @@ const _texturesMessageRouter = createRouter({
  *
  * @see requestTexture
  */
-function _drawAtlasTexture(context2D: Context2D, texture: ImageBitmap | ImageData, textureDimension: AtlasTextureDimension): void {
+function _drawAtlasTexture(context2D: Context2D, atlasSideLengthPx: number, texture: ImageBitmap | ImageData, textureDimension: AtlasTextureDimension): void {
   if (isImageBitmap(texture)) {
     // prettier-ignore
     context2D.drawImage(
@@ -75,7 +75,7 @@ function _drawAtlasTexture(context2D: Context2D, texture: ImageBitmap | ImageDat
       0, 0,
       textureDimension.width, textureDimension.height,
 
-      textureDimension.atlasLeft, textureDimension.atlasTop,
+      textureDimension.atlasLeft, textureDimension.atlasTop - atlasSideLengthPx,
       textureDimension.width, textureDimension.height
     );
 
@@ -83,6 +83,7 @@ function _drawAtlasTexture(context2D: Context2D, texture: ImageBitmap | ImageDat
   }
 
   if (isImageData(texture)) {
+    console.log("IMAGE DATA");
     // prettier-ignore
     context2D.putImageData(
       texture,
@@ -150,8 +151,6 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
    * everything into the POT square is enough here.
    */
   async function _createTextureAtlas(request: AtlasQueueItem): Promise<Atlas> {
-    console.log(request.textureUrls);
-
     const textures = await Promise.all(request.textureUrls.map(_requestTexture));
 
     const textureSize = textures[0].height;
@@ -183,6 +182,8 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
 
     // Reset canvas to pure black first to remove previous textures.
     context2D.clearRect(0, 0, atlasSideLengthPx, atlasSideLengthPx);
+
+    context2D.scale(1, -1);
 
     i = 0;
 
@@ -216,16 +217,20 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
 
         textureDimensions[textureUrl] = textureDimension;
 
-        _drawAtlasTexture(context2D, texture, textureDimension);
+        _drawAtlasTexture(context2D, atlasSideLengthPx, texture, textureDimension);
 
         i += 1;
       }
     }
 
-    return {
-      imageData: context2D.getImageData(0, 0, atlasSideLengthPx, atlasSideLengthPx),
-      textureDimensions: textureDimensions,
-    };
+    try {
+      return {
+        imageData: context2D.getImageData(0, 0, atlasSideLengthPx, atlasSideLengthPx),
+        textureDimensions: textureDimensions,
+      };
+    } finally {
+      context2D.setTransform(1, 0, 0, 1, 0, 0);
+    }
   }
 
   async function _processAtlasQueue(request: AtlasQueueItem): Promise<void> {

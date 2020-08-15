@@ -75,17 +75,13 @@ export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, resolveTe
         for (let i = 0; i < triangle.length; i += 1) {
           const point = triangle[i];
 
-          const marshaled = _marshalToIndex(normal, point);
+          const textureDimensions: AtlasTextureDimension = resolveTextureDimensions(halfSpace.texture.name);
+          const uv = _createUV(halfSpace, point, textureDimensions, triangle, i);
+          const marshaled = _marshalToIndex(halfSpace, point, uv);
 
           if (indexLookup.hasOwnProperty(marshaled)) {
             indices.push(indexLookup[marshaled]);
           } else {
-            const textureDimensions: AtlasTextureDimension = resolveTextureDimensions(halfSpace.texture.name);
-            // console.log(textureDimensions);
-            const uv = _createUV(halfSpace, point, textureDimensions, triangle, i);
-
-            // console.log(uv);
-
             indexLookup[marshaled] = indexIncrement;
 
             atlasUVStart.push(textureDimensions.uvStartU, textureDimensions.uvStartV);
@@ -190,6 +186,6 @@ function _isPointInsideBrush(brush: Brush, point: Vector3): boolean {
   return true;
 }
 
-function _marshalToIndex(normal: Vector3, point: Vector3): string {
-  return `${marshalVector3(normal)} ${marshalVector3(point)}`;
+function _marshalToIndex(halfSpace: HalfSpace, point: Vector3, uv: UV): string {
+  return `${halfSpace.texture.name} ${marshalVector3(halfSpace.plane.normal)} ${marshalVector3(point)} ${uv[0]} ${uv[1]}`;
 }

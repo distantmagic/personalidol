@@ -16,6 +16,7 @@ import { SpotLight } from "three/src/lights/SpotLight";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { attachStandardShaderAtlasSampling } from "@personalidol/texture-loader/src/attachStandardShaderAtlasSampling";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
@@ -276,73 +277,7 @@ export function MapScene(
 
       // Texture atlas is used here, so texture sampling fragment needs to
       // be changed.
-      meshStandardMaterial.onBeforeCompile = function (shader, renderer) {
-        shader.vertexShader = shader.vertexShader.replace(
-          "#include <uv_pars_vertex>",
-          `
-            #include <uv_pars_vertex>
-
-            #ifdef USE_MAP
-
-              attribute vec2 atlas_uv_start;
-              attribute vec2 atlas_uv_stop;
-
-              varying vec2 v_atlas_uv_start;
-              varying vec2 v_atlas_uv_stop;
-
-            #endif
-          `
-        );
-
-        shader.vertexShader = shader.vertexShader.replace(
-          "#include <uv_vertex>",
-          `
-            #include <uv_vertex>
-
-            #ifdef USE_MAP
-
-              v_atlas_uv_start = atlas_uv_start;
-              v_atlas_uv_stop = atlas_uv_stop;
-
-            #endif
-          `
-        );
-
-        shader.fragmentShader = shader.fragmentShader.replace(
-          "#include <uv_pars_fragment>",
-          `
-            #include <uv_pars_fragment>
-
-            #ifdef USE_MAP
-
-              varying vec2 v_atlas_uv_start;
-              varying vec2 v_atlas_uv_stop;
-
-            #endif
-          `
-        );
-
-        // float coordX = (uv.x * (endU - startU) + startU);
-        // float coordY = (uv.y * (startV - endV) + endV);
-        // vec4 textureColor = texture2D(texture, vec2(coordX, coordY));
-
-        shader.fragmentShader = shader.fragmentShader.replace(
-          "#include <map_fragment>",
-          `
-            #ifdef USE_MAP
-
-              vec4 texelColor = texture2D( map, vec2(
-                ( vUv.x * ( v_atlas_uv_stop.x - v_atlas_uv_start.x ) + v_atlas_uv_start.x ),
-                ( vUv.y * ( v_atlas_uv_start.y - v_atlas_uv_stop.y ) + v_atlas_uv_stop.y )
-              ) );
-
-              texelColor = mapTexelToLinear( texelColor );
-              diffuseColor *= texelColor;
-
-            #endif
-          `
-        );
-      };
+      meshStandardMaterial.onBeforeCompile = attachStandardShaderAtlasSampling;
 
       const mesh = new Mesh(bufferGeometry, meshStandardMaterial);
 
