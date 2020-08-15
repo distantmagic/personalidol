@@ -1,18 +1,26 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
+import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
+import { imageDataBufferResponseToImageData } from "./imageDataBufferResponseToImageData";
+import { isImageBitmap } from "./isImageBitmap";
+import { isImageData } from "./isImageData";
 import { requestTexture } from "./requestTexture";
 
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 
+import type { Atlas } from "./Atlas.type";
 import type { AtlasService as IAtlasService } from "./AtlasService.interface";
+import type { AtlasTextureDimension } from "./AtlasTextureDimension.type";
+import type { AtlasTextureDimensions } from "./AtlasTextureDimensions.type";
 import type { ImageBitmapResponse } from "./ImageBitmapResponse.type";
 import type { ImageDataBufferResponse } from "./ImageDataBufferResponse.type";
 
@@ -22,10 +30,12 @@ type AtlasQueueItem = {
   textureUrls: ReadonlyArray<string>;
 };
 
+type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
 const _atlasQueue: Array<AtlasQueueItem> = [];
 const _emptyTransferables: [] = [];
-const _loadingCache: ReusedResponsesCache = {};
-const _loadingUsage: ReusedResponsesUsage = {};
+const _loadingCache: ReusedResponsesCache = createReusedResponsesCache();
+const _loadingUsage: ReusedResponsesUsage = createReusedResponsesUsage();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 
 const _messagesRouter = {
@@ -45,8 +55,49 @@ const _messagesRouter = {
 const _texturesMessageRouter = createRouter({
   imageBitmap: handleRPCResponse<ImageBitmapResponse, void>(_rpcLookupTable, _onImageBitmap),
 
-  imageData: handleRPCResponse<ImageDataBufferResponse, void>(_rpcLookupTable, _onImageDataBuffer),
+  imageData: handleRPCResponse<ImageDataBufferResponse, void>(_rpcLookupTable, imageDataBufferResponseToImageData),
 });
+
+/**
+ * Both cases (ImageBitmap and ImageData) need to be handled because of browser
+ * support. Texture might be coming either from a texture worker which uses
+ * `createImageData` or from the DOM service that uses another canvas to draw
+ * an image.
+ *
+ * @see requestTexture
+ */
+function _drawAtlasTexture(context2D: Context2D, texture: ImageBitmap | ImageData, textureDimension: AtlasTextureDimension): void {
+  if (isImageBitmap(texture)) {
+    // prettier-ignore
+    context2D.drawImage(
+      texture,
+
+      0, 0,
+      textureDimension.width, textureDimension.height,
+
+      textureDimension.atlasLeft, textureDimension.atlasTop,
+      textureDimension.width, textureDimension.height
+    );
+
+    return;
+  }
+
+  if (isImageData(texture)) {
+    // prettier-ignore
+    context2D.putImageData(
+      texture,
+
+      textureDimension.atlasLeft, textureDimension.atlasTop,
+
+      0, 0,
+      textureDimension.width, textureDimension.height
+    );
+
+    return;
+  }
+
+  throw new Error("Unknown image type.");
+}
 
 function _getAtlasSideLength(itemsNumber: number): number {
   if (itemsNumber < 1) {
@@ -60,15 +111,7 @@ function _onImageBitmap({ imageBitmap }: ImageBitmapResponse): ImageBitmap {
   return imageBitmap;
 }
 
-function _onImageDataBuffer({ imageDataBuffer, imageDataHeight, imageDataWidth }: ImageDataBufferResponse) {
-  return new ImageData(new Uint8ClampedArray(imageDataBuffer), imageDataWidth, imageDataHeight);
-}
-
-export function AtlasService(
-  canvas: HTMLCanvasElement | OffscreenCanvas,
-  context2D: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
-  texturesMessagePort: MessagePort
-): IAtlasService {
+export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, context2D: Context2D, texturesMessagePort: MessagePort): IAtlasService {
   function registerMessagePort(messagePort: MessagePort) {
     attachMultiRouter(messagePort, _messagesRouter);
   }
@@ -102,7 +145,7 @@ export function AtlasService(
    * didn't want to go into texture packing / optimization algorithms. Packing
    * everything into the POT square is enough here.
    */
-  async function _createTextureAtlas(request: AtlasQueueItem): Promise<ImageData> {
+  async function _createTextureAtlas(request: AtlasQueueItem): Promise<Atlas> {
     const textures = await Promise.all(request.textureUrls.map(_requestTexture));
 
     const textureSize = textures[0].height;
@@ -137,52 +180,51 @@ export function AtlasService(
 
     i = 0;
 
-    for (let x = 0; x < atlasSideLength; x += 1) {
-      for (let y = 0; y < atlasSideLength; y += 1) {
+    const textureDimensions: AtlasTextureDimensions = {};
+
+    for (let y = 0; y < atlasSideLength; y += 1) {
+      for (let x = 0; x < atlasSideLength; x += 1) {
         if (i >= textures.length) {
           break;
         }
 
         const texture = textures[i];
 
-        // Both cases need to be handled because of browser support.
-        if (texture instanceof ImageData) {
-          // prettier-ignore
-          context2D.putImageData(
-            texture,
+        const atlasLeft = x * textureSize;
+        const atlasTop = y * textureSize;
 
-            x * textureSize, y * textureSize,
-            0, 0,
-            textureSize, textureSize
-          );
-          console.log(x, y, request.textureUrls[i], textures[i]);
-          // ImageBitmap
-        } else {
-          // prettier-ignore
-          context2D.drawImage(
-            texture,
+        const textureDimension: AtlasTextureDimension = {
+          atlasLeft: atlasLeft,
+          atlasTop: atlasTop,
+          height: textureSize,
+          width: textureSize,
 
-            0, 0,
-            textureSize, textureSize,
+          uvStartU: atlasLeft / atlasSideLengthPx,
+          uvStopU: (atlasLeft + textureSize) / atlasSideLengthPx,
 
-            x * textureSize, y * textureSize,
-            textureSize, textureSize
-          );
-        }
+          uvStartV: atlasTop / atlasSideLengthPx,
+          uvStopV: (atlasTop + textureSize) / atlasSideLengthPx,
+        };
+
+        const textureUrl = request.textureUrls[i];
+
+        textureDimensions[textureUrl] = textureDimension;
+
+        _drawAtlasTexture(context2D, texture, textureDimension);
 
         i += 1;
       }
     }
 
-    return context2D.getImageData(0, 0, atlasSideLengthPx, atlasSideLengthPx);
+    return {
+      imageData: context2D.getImageData(0, 0, atlasSideLengthPx, atlasSideLengthPx),
+      textureDimensions: textureDimensions,
+    };
   }
 
   async function _processAtlasQueue(request: AtlasQueueItem): Promise<void> {
-    const key = request.textureUrls.join();
-
-    const { data: imageData, isLast } = await reuseResponse<ImageData>(_loadingCache, _loadingUsage, key, function () {
-      return _createTextureAtlas(request);
-    });
+    const { data: response, isLast } = await reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, request, _createTextureAtlas);
+    const { imageData, textureDimensions } = response;
 
     request.messagePort.postMessage(
       {
@@ -190,6 +232,7 @@ export function AtlasService(
           imageDataBuffer: imageData.data.buffer,
           imageDataHeight: imageData.height,
           imageDataWidth: imageData.width,
+          textureDimensions: textureDimensions,
           rpc: request.rpc,
         },
       },

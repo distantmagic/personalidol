@@ -8,12 +8,12 @@
 "_tb_textures" "./debug;./textures"
 // brush 0
 {
-( -0 -0 -0 ) ( -0 1 -0 ) ( -0 -0 1 ) debug/texture-uv-1024x1024 0 0 0 1 1
-( -0 -0 -0 ) ( -0 -0 1 ) ( 1 -0 -0 ) debug/texture-uv-1024x1024 0 0 0 1 1
-( -0 -0 -0 ) ( 1 -0 -0 ) ( -0 1 -0 ) debug/texture-uv-1024x1024 0 0 0 1 1
-( 128 128 128 ) ( 128 129 128 ) ( 129 128 128 ) debug/texture-uv-1024x1024 0 0 0 1 1
-( 128 128 128 ) ( 129 128 128 ) ( 128 128 129 ) debug/texture-uv-1024x1024 0 0 0 1 1
-( 128 128 128 ) ( 128 128 129 ) ( 128 129 128 ) debug/texture-uv-1024x1024 0 0 0 1 1
+( -0 -0 -0 ) ( -0 1 -0 ) ( -0 -0 1 ) textures/texture-concrete-128x128 0 0 0 1 1
+( -0 -0 -0 ) ( -0 -0 1 ) ( 1 -0 -0 ) textures/texture-rock-128x128 0 0 0 1 1
+( -0 -0 -0 ) ( 1 -0 -0 ) ( -0 1 -0 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 128 128 128 ) ( 128 129 128 ) ( 129 128 128 ) textures/texture-rust-panel-128x128 0 0 0 1 1
+( 128 128 128 ) ( 129 128 128 ) ( 128 128 129 ) textures/texture-slate-128x128 0 0 0 1 1
+( 128 128 128 ) ( 128 128 129 ) ( 128 129 128 ) textures/texture-concrete-128x128 0 0 0 1 1
 }
 }
 // entity 1

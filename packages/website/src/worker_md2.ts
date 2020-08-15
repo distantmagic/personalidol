@@ -2,6 +2,8 @@ import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { LoadingManager } from "three/src/loaders/LoadingManager";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
+import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
+import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { MD2Loader } from "@personalidol/framework/src/MD2Loader";
 
@@ -13,8 +15,8 @@ type ModelParts = {
 };
 
 const emptyTransferables: [] = [];
-const loadingCache: ReusedResponsesCache = {};
-const loadingUsage: ReusedResponsesUsage = {};
+const loadingCache: ReusedResponsesCache = createReusedResponsesCache();
+const loadingUsage: ReusedResponsesUsage = createReusedResponsesUsage();
 
 const loadingManager = new LoadingManager();
 const md2Loader = new MD2Loader(loadingManager);

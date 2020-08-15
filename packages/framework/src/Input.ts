@@ -1,5 +1,3 @@
-import { isSharedArrayBufferSupported } from "./isSharedArrayBufferSupported";
-
 import type { TypedArrayMap } from "./TypedArrayMap.type";
 
 let index = 0;
@@ -85,22 +83,16 @@ for (let i = 0; i < touchesTotal; i += 1) {
   };
 }
 
-const createEmptyState = (function () {
+function createEmptyState(usesSharedBuffer: boolean): Int16Array {
   const itemsLength = Object.keys(code).length;
 
-  if (isSharedArrayBufferSupported()) {
+  if (usesSharedBuffer) {
     // Int16Array takes 2 bytes per value.
-    const byteLength = itemsLength * 2;
-
-    return function (): Int16Array {
-      return new Int16Array(new SharedArrayBuffer(byteLength));
-    };
-  } else {
-    return function (): Int16Array {
-      return new Int16Array(itemsLength);
-    };
+    return new Int16Array(new SharedArrayBuffer(itemsLength * 2));
   }
-})();
+
+  return new Int16Array(itemsLength);
+}
 
 export const Input = Object.freeze({
   code: Object.freeze(code),

@@ -1,4 +1,6 @@
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
+import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
@@ -13,8 +15,8 @@ type TextureQueueItem = {
 };
 
 const _emptyTransferables: [] = [];
-const _loadingCache: ReusedResponsesCache = {};
-const _loadingUsage: ReusedResponsesUsage = {};
+const _loadingCache: ReusedResponsesCache = createReusedResponsesCache();
+const _loadingUsage: ReusedResponsesUsage = createReusedResponsesUsage();
 const _textureQueue: Array<TextureQueueItem> = [];
 
 const _messagesRouter = {
@@ -53,22 +55,30 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   }
 
   async function _createImageData(request: TextureQueueItem): Promise<ImageData> {
-    const image = await _preloadImage(request.textureUrl);
+    const image: HTMLImageElement = await _preloadImage(request.textureUrl);
 
     const imageNaturalHeight = image.naturalHeight;
     const imageNaturalWidth = image.naturalWidth;
 
     canvas.height = imageNaturalHeight;
     canvas.width = imageNaturalWidth;
-    context2D.drawImage(image, 0, 0, imageNaturalWidth, imageNaturalHeight);
 
-    return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
+    // flip image vertically to stay consistent with a 'createImageBitmap'
+    // version
+    context2D.save();
+    context2D.scale(1, -1);
+
+    context2D.drawImage(image, 0, -1 * imageNaturalHeight);
+
+    try {
+      return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
+    } finally {
+      context2D.restore();
+    }
   }
 
   async function _processTextureQueue(request: TextureQueueItem): Promise<void> {
-    const { data: imageData, isLast } = await reuseResponse<ImageData>(_loadingCache, _loadingUsage, request.textureUrl, function () {
-      return _createImageData(request);
-    });
+    const { data: imageData, isLast } = await reuseResponse<ImageData, TextureQueueItem>(_loadingCache, _loadingUsage, request, _createImageData);
 
     request.messagePort.postMessage(
       {

@@ -26,11 +26,12 @@ public/lib/index.js public/lib/index_offscreen.worker.js: node_modules/.bin/esbu
 		--sourcemap \
 		--strict \
 		--tsconfig=tsconfig.json \
-		src/bootstrap.ts \
+		src/createScenes.ts \
 		src/index.ts \
 		src/worker_atlas.ts \
 		src/worker_md2.ts \
 		src/worker_offscreen.ts \
+		src/worker_progress.ts \
 		src/worker_quakemaps.ts \
 		src/worker_textures.ts \
 	;

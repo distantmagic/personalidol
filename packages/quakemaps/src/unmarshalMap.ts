@@ -5,6 +5,7 @@ import { unmarshalHalfSpace } from "./unmarshalHalfSpace";
 
 import type { Brush } from "./Brush.type";
 import type { EntitySketch } from "./EntitySketch.type";
+import type { TextureUrlResolver } from "./TextureUrlResolver.type";
 
 const REGEXP_NEWLINE = /\r?\n/;
 
@@ -20,7 +21,7 @@ function isOpeningBracket(line: string): boolean {
   return line.startsWith("{");
 }
 
-export function* unmarshalMap(filename: string, content: string): Generator<EntitySketch> {
+export function* unmarshalMap(filename: string, content: string, textureUrlResolver: null | TextureUrlResolver = null): Generator<EntitySketch> {
   const lines: ReadonlyArray<string> = content.split(REGEXP_NEWLINE);
   let currentBrushSketch: null | Brush = null;
   let currentEntitySketch: null | EntitySketch = null;
@@ -71,7 +72,7 @@ export function* unmarshalMap(filename: string, content: string): Generator<Enti
     }
 
     if (currentBrushSketch) {
-      currentBrushSketch.halfSpaces.push(unmarshalHalfSpace(filename, lineno, line));
+      currentBrushSketch.halfSpaces.push(unmarshalHalfSpace(filename, lineno, line, textureUrlResolver));
       continue;
     }
 

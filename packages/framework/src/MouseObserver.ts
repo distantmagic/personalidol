@@ -44,6 +44,9 @@ export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint16A
 
     inputState[Input.code.M_CLIENT_X] = evt.clientX;
     inputState[Input.code.M_CLIENT_Y] = evt.clientY;
+
+    // Update relative values to keep the mouse state consistent.
+    update();
   }
 
   return Object.freeze({

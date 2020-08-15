@@ -37,6 +37,7 @@ import type { Texture as ITexture } from "three";
 
 import type { DirectorState } from "@personalidol/framework/src/DirectorState.type";
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { EntityAny } from "@personalidol/quakemaps/src/EntityAny.type";
 import type { EntityFuncGroup } from "@personalidol/quakemaps/src/EntityFuncGroup.type";
 import type { EntityGLTFModel } from "@personalidol/quakemaps/src/EntityGLTFModel.type";
 import type { EntityLightAmbient } from "@personalidol/quakemaps/src/EntityLightAmbient.type";
@@ -81,9 +82,6 @@ _scene.fog = new Fog(_scene.background, _camera.far - 1000, _camera.far);
 const _unmountables: Set<Unmountable> = new Set();
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
-const _atlasMessageRouter = createRouter({
-  textureAtlas: handleRPCResponse(_rpcLookupTable),
-});
 const _md2MessageRouter = createRouter({
   geometry: handleRPCResponse(_rpcLookupTable),
 });
@@ -105,7 +103,6 @@ export function MapScene(
   directorState: DirectorState,
   eventBus: EventBus,
   inputState: Int16Array,
-  atlasMessagePort: MessagePort,
   domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
@@ -259,59 +256,93 @@ export function MapScene(
       // throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
-    async worldspawn(entity: EntityWorldspawn): Promise<void> {
+    async worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): Promise<void> {
       logger.debug("MAP VERTICES", entity.vertices.length / 3);
 
       const bufferGeometry = new BufferGeometry();
 
+      bufferGeometry.setAttribute("atlas_uv_start", new BufferAttribute(entity.atlasUVStart, 2));
+      bufferGeometry.setAttribute("atlas_uv_stop", new BufferAttribute(entity.atlasUVStop, 2));
       bufferGeometry.setAttribute("normal", new BufferAttribute(entity.normals, 3));
       bufferGeometry.setAttribute("position", new BufferAttribute(entity.vertices, 3));
-      // bufferGeometry.setAttribute("texture_index", new BufferAttribute(entity.textures, 1));
       bufferGeometry.setAttribute("uv", new BufferAttribute(entity.uvs, 2));
       bufferGeometry.setIndex(new BufferAttribute(entity.indices, 1));
 
-      const textureAtlasRequest = sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
-        createTextureAtlas: {
-          textureUrls: entity.textureNames.map(_createTextureUrl),
-          rpc: MathUtils.generateUUID(),
-        },
-      });
-
-      const _loadItemTextureAtlas = {
-        comment: "textures",
-        weight: 1,
-      };
-
-      const { createTextureAtlas: textureAtlas } = await notifyLoadingManager(loadingManagerState, _loadItemTextureAtlas, textureAtlasRequest);
-
-      console.log(textureAtlas);
-
       const meshStandardMaterial = new MeshStandardMaterial({
         flatShading: true,
-        map: imageDataBufferResponseToTexture(textureAtlas),
+        map: worldspawnTexture,
         side: FrontSide,
       });
 
-      console.log(entity.textureNames);
+      // Texture atlas is used here, so texture sampling fragment needs to
+      // be changed.
+      meshStandardMaterial.onBeforeCompile = function (shader, renderer) {
+        shader.vertexShader = shader.vertexShader.replace(
+          "#include <uv_pars_vertex>",
+          `
+            #include <uv_pars_vertex>
 
-      // meshStandardMaterial.onBeforeCompile = function (shader, renderer) {
-      //   // Texture atlas is used here, so texture sampling fragment needs to
-      //   // be changed.
-      //   shader.fragmentShader = shader.fragmentShader.replace(
-      //     "#include <map_fragment>",
-      //     `
-      //       #ifdef USE_MAP
+            #ifdef USE_MAP
 
-      //         // vec4 texelColor = texture2D( map, vUv );
-      //         vec4 texelColor = vec4( 1.0, 1.0, 1.0, 1.0 );
+              attribute vec2 atlas_uv_start;
+              attribute vec2 atlas_uv_stop;
 
-      //         texelColor = mapTexelToLinear( texelColor );
-      //         diffuseColor *= texelColor;
+              varying vec2 v_atlas_uv_start;
+              varying vec2 v_atlas_uv_stop;
 
-      //       #endif
-      //     `
-      //   );
-      // };
+            #endif
+          `
+        );
+
+        shader.vertexShader = shader.vertexShader.replace(
+          "#include <uv_vertex>",
+          `
+            #include <uv_vertex>
+
+            #ifdef USE_MAP
+
+              v_atlas_uv_start = atlas_uv_start;
+              v_atlas_uv_stop = atlas_uv_stop;
+
+            #endif
+          `
+        );
+
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <uv_pars_fragment>",
+          `
+            #include <uv_pars_fragment>
+
+            #ifdef USE_MAP
+
+              varying vec2 v_atlas_uv_start;
+              varying vec2 v_atlas_uv_stop;
+
+            #endif
+          `
+        );
+
+        // float coordX = (uv.x * (endU - startU) + startU);
+        // float coordY = (uv.y * (startV - endV) + endV);
+        // vec4 textureColor = texture2D(texture, vec2(coordX, coordY));
+
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <map_fragment>",
+          `
+            #ifdef USE_MAP
+
+              vec4 texelColor = texture2D( map, vec2(
+                ( vUv.x * ( v_atlas_uv_stop.x - v_atlas_uv_start.x ) + v_atlas_uv_start.x ),
+                ( vUv.y * ( v_atlas_uv_start.y - v_atlas_uv_stop.y ) + v_atlas_uv_stop.y )
+              ) );
+
+              texelColor = mapTexelToLinear( texelColor );
+              diffuseColor *= texelColor;
+
+            #endif
+          `
+        );
+      };
 
       const mesh = new Mesh(bufferGeometry, meshStandardMaterial);
 
@@ -351,7 +382,6 @@ export function MapScene(
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
-    atlasMessagePort.onmessage = _atlasMessageRouter;
     md2MessagePort.onmessage = _md2MessageRouter;
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
     texturesMessagePort.onmessage = _textureReceiverMessageRouter;
@@ -378,10 +408,18 @@ export function MapScene(
     });
 
     const {
-      unmarshal: { entities },
+      unmarshal: { entities, textureAtlas },
     } = await notifyLoadingManager(loadingManagerState, _loadItemMap, mapRPCRequest);
 
-    await Promise.all(entities.map(_addMapEntity));
+    const worldspawnTexture = imageDataBufferResponseToTexture(textureAtlas);
+
+    _disposables.add(disposableGeneric(worldspawnTexture));
+
+    await Promise.all(
+      entities.map(function (entity: EntityAny) {
+        return _addMapEntity(entity, worldspawnTexture);
+      })
+    );
 
     rendererState.renderer.shadowMap.needsUpdate = true;
     state.isPreloading = false;
@@ -392,7 +430,6 @@ export function MapScene(
     console.log(_nextMap);
 
     _unmountables.add(function () {
-      atlasMessagePort.onmessage = null;
       md2MessagePort.onmessage = null;
       quakeMapsMessagePort.onmessage = null;
       texturesMessagePort.onmessage = null;
@@ -426,7 +463,7 @@ export function MapScene(
     }
   }
 
-  function _addMapEntity<K extends keyof EntityLookup>(entity: EntityLookup[K]): void | Promise<void> {
+  function _addMapEntity<K extends keyof EntityLookup>(entity: EntityLookup[K], worldspawnTexture: ITexture): void | Promise<void> {
     const classname = entity.classname;
 
     if (!entityLookupTable.hasOwnProperty(classname)) {
@@ -435,11 +472,7 @@ export function MapScene(
 
     logger.trace("ADD MAP ENTITY", classname);
 
-    return (entityLookupTable[classname] as EntityLookupCallback<K>)(entity);
-  }
-
-  function _createTextureUrl(textureName: string): string {
-    return `/${textureName}.png`;
+    return (entityLookupTable[classname] as EntityLookupCallback<K>)(entity, worldspawnTexture);
   }
 
   async function _loadTexture(textureUrl: string): Promise<ITexture> {
@@ -451,6 +484,8 @@ export function MapScene(
     const textureRequest = requestTexture<ITexture>(_rpcLookupTable, texturesMessagePort, textureUrl);
     const texture = await notifyLoadingManager(loadingManagerState, loadItemTexture, textureRequest);
 
+    _disposables.add(disposableGeneric(texture));
+
     return texture;
   }
 
@@ -461,7 +496,6 @@ export function MapScene(
       directorState,
       eventBus,
       inputState,
-      atlasMessagePort,
       domMessagePort,
       md2MessagePort,
       quakeMapsMessagePort,

@@ -15,7 +15,7 @@ import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 
-export function bootstrap(
+export function createScenes(
   devicePixelRatio: number,
   eventBus: EventBus,
   mainLoop: MainLoop,
@@ -24,7 +24,6 @@ export function bootstrap(
   dimensionsState: Uint16Array,
   inputState: Int16Array,
   logger: Logger,
-  atlasMessagePort: MessagePort,
   domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
@@ -64,8 +63,9 @@ export function bootstrap(
   // const mapFilename = "/maps/map-cube-chipped.map";
   // const mapFilename = "/maps/map-cube.map";
   // const mapFilename = "/maps/map-desert-hut.map";
+  const mapFilename = "/maps/map-flatiron.map";
   // const mapFilename = "/maps/map-flint.map";
-  const mapFilename = "/maps/map-mountain-caravan.map";
+  // const mapFilename = "/maps/map-mountain-caravan.map";
   // const mapFilename = "/maps/map-zagaj.map";
   const currentSceneDirectorState = currentSceneDirector.state;
 
@@ -75,7 +75,6 @@ export function bootstrap(
     currentSceneDirectorState,
     eventBus,
     inputState,
-    atlasMessagePort,
     domMessagePort,
     md2MessagePort,
     quakeMapsMessagePort,

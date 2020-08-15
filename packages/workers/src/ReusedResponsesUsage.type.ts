@@ -1,3 +1,1 @@
-export type ReusedResponsesUsage = {
-  [key: string]: number;
-};
+export type ReusedResponsesUsage = Map<any, number>;

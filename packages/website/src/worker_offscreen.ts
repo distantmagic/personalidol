@@ -8,7 +8,7 @@ import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
-import { bootstrap } from "./bootstrap";
+import { createScenes } from "./createScenes";
 import { workers } from "./workers";
 
 const eventBus = EventBus();
@@ -29,20 +29,18 @@ let _devicePixelRatio: null | number = null;
 let _dimensionsState: null | Uint16Array = null;
 let _inputState: null | Int16Array = null;
 let _isBootstrapped = false;
-let atlasMessagePort: null | MessagePort = null;
 let domMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
 let quakeMapsMessagePort: null | MessagePort = null;
 let texturesMessagePort: null | MessagePort = null;
 
-function _bootstrapSafe(): void {
+function _createScenesSafe(): void {
   // prettier-ignore
   if (
     _canvas === null ||
     _devicePixelRatio === null ||
     _dimensionsState === null ||
     _inputState === null ||
-    atlasMessagePort === null ||
     domMessagePort === null ||
     md2MessagePort === null ||
     quakeMapsMessagePort === null ||
@@ -56,7 +54,7 @@ function _bootstrapSafe(): void {
   }
 
   // prettier-ignore
-  bootstrap(
+  createScenes(
     _devicePixelRatio,
     eventBus,
     mainLoop,
@@ -65,7 +63,6 @@ function _bootstrapSafe(): void {
     _dimensionsState,
     _inputState,
     logger,
-    atlasMessagePort,
     domMessagePort,
     md2MessagePort,
     quakeMapsMessagePort,
@@ -75,19 +72,14 @@ function _bootstrapSafe(): void {
 }
 
 self.onmessage = createRouter({
-  atlasMessagePort(port: MessagePort): void {
-    atlasMessagePort = port;
-    _bootstrapSafe();
-  },
-
   awaitSharedDimensions(awaitSharedDimensions: boolean): void {
     if (awaitSharedDimensions) {
       return;
     }
 
-    _dimensionsState = Dimensions.createEmptyState();
-    _inputState = Input.createEmptyState();
-    _bootstrapSafe();
+    _dimensionsState = Dimensions.createEmptyState(false);
+    _inputState = Input.createEmptyState(false);
+    _createScenesSafe();
   },
 
   canvas(canvas: OffscreenCanvas): void {
@@ -95,12 +87,12 @@ self.onmessage = createRouter({
     (canvas as any).style = _canvasStyle;
 
     _canvas = canvas;
-    _bootstrapSafe();
+    _createScenesSafe();
   },
 
   devicePixelRatio(devicePixelRatio: number): void {
     _devicePixelRatio = devicePixelRatio;
-    _bootstrapSafe();
+    _createScenesSafe();
   },
 
   dimensionsState(dimensions: Uint16Array): void {
@@ -113,7 +105,7 @@ self.onmessage = createRouter({
 
   domMessagePort(port: MessagePort): void {
     domMessagePort = port;
-    _bootstrapSafe();
+    _createScenesSafe();
   },
 
   inputState(input: Int16Array): void {
@@ -126,7 +118,7 @@ self.onmessage = createRouter({
 
   md2MessagePort(port: MessagePort): void {
     md2MessagePort = port;
-    _bootstrapSafe();
+    _createScenesSafe();
   },
 
   pointerZoomRequest(zoomAmount: number): void {
@@ -137,7 +129,7 @@ self.onmessage = createRouter({
 
   quakeMapsMessagePort(port: MessagePort): void {
     quakeMapsMessagePort = port;
-    _bootstrapSafe();
+    _createScenesSafe();
   },
 
   sharedDimensionsState(dimensions: SharedArrayBuffer): void {
@@ -150,7 +142,7 @@ self.onmessage = createRouter({
 
   texturesMessagePort(port: MessagePort): void {
     texturesMessagePort = port;
-    _bootstrapSafe();
+    _createScenesSafe();
   },
 
   start(): void {

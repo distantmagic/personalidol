@@ -1,6 +1,5 @@
 import { buildGeometryAttributes } from "./buildGeometryAttributes";
 import { UnmarshalException } from "./UnmarshalException";
-import { unmarshalMap } from "./unmarshalMap";
 import { unmarshalVector3 } from "./unmarshalVector3";
 
 import type { Vector3 } from "three";
@@ -8,6 +7,7 @@ import type { Vector3 } from "three";
 import type { Brush } from "./Brush.type";
 import type { EntityAny } from "./EntityAny.type";
 import type { EntitySketch } from "./EntitySketch.type";
+import type { TextureDimensionsResolver } from "./TextureDimensionsResolver.type";
 import type { Vector3Simple } from "./Vector3Simple.type";
 
 const SCENERY_INDOORS = 0;
@@ -28,11 +28,16 @@ function getEntityOrigin(filename: string, entity: EntitySketch): Vector3Simple 
   };
 }
 
-export function* unmarshal(filename: string, content: string, discardOccluding: null | Vector3 = null): Generator<EntityAny> {
+export function* buildEntities(
+  filename: string,
+  entitySketches: ReadonlyArray<EntitySketch>,
+  resolveTextureDimensions: TextureDimensionsResolver,
+  discardOccluding: null | Vector3 = null
+): Generator<EntityAny> {
   // brushes to be merged into the bigger static geometry
   const worldBrushes: Array<EntitySketch> = [];
 
-  for (let entity of unmarshalMap(filename, content)) {
+  for (let entity of entitySketches) {
     const entityClassName = String(entity.properties.classname);
     const entityType = String(entity.properties._tb_type);
 
@@ -52,7 +57,7 @@ export function* unmarshal(filename: string, content: string, discardOccluding: 
           default:
             yield {
               classname: entityClassName,
-              ...buildGeometryAttributes(entity.brushes, discardOccluding),
+              ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, discardOccluding),
             };
             break;
         }
@@ -158,6 +163,6 @@ export function* unmarshal(filename: string, content: string, discardOccluding: 
 
   yield {
     classname: "worldspawn",
-    ...buildGeometryAttributes(mergedBrushes, discardOccluding),
+    ...buildGeometryAttributes(mergedBrushes, resolveTextureDimensions, discardOccluding),
   };
 }

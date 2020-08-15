@@ -1,3 +1,1 @@
-export type ReusedResponsesCache = {
-  [key: string]: any;
-};
+export type ReusedResponsesCache = Map<any, Promise<any>>;

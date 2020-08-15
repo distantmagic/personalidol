@@ -1,14 +1,28 @@
 import { Plane } from "three/src/math/Plane";
 import { Vector3 } from "three/src/math/Vector3";
 
-import { UnmarshalException } from "./UnmarshalException";
+import { isEmptyTexturePlaceholder } from "./isEmptyTexturePlaceholder";
 import { sanitizeVector3 } from "./sanitizeVector3";
+import { UnmarshalException } from "./UnmarshalException";
 
 import type { HalfSpace } from "./HalfSpace.type";
+import type { TextureUrlResolver } from "./TextureUrlResolver.type";
 
 const REGEXP_WHITESPACE = /\s+/;
 
-export function unmarshalHalfSpace(filename: string, lineno: number, line: string): HalfSpace {
+function resolveTextureUrl(textureName: string, textureUrlResolver: null | TextureUrlResolver = null): string {
+  if (!textureUrlResolver) {
+    return textureName;
+  }
+
+  if (isEmptyTexturePlaceholder(textureName)) {
+    return textureName;
+  }
+
+  return textureUrlResolver(textureName);
+}
+
+export function unmarshalHalfSpace(filename: string, lineno: number, line: string, textureUrlResolver: null | TextureUrlResolver = null): HalfSpace {
   const parts = line.trim().split(REGEXP_WHITESPACE);
 
   if (parts.length !== 21) {
@@ -41,7 +55,7 @@ export function unmarshalHalfSpace(filename: string, lineno: number, line: strin
     // to be used later
     points: [],
     texture: {
-      name: String(parts[15]),
+      name: resolveTextureUrl(String(parts[15]), textureUrlResolver),
       offset: {
         x: Number(parts[16]),
         y: Number(parts[17]),

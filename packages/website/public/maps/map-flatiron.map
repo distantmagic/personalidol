@@ -1,0 +1,57 @@
+// Game: PersonalIdol
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "./debug;./textures"
+"light" "0.8"
+"scenery" "0"
+// brush 0
+{
+( -0 -0 -0 ) ( -0 512 16 ) ( -0 -0 16 ) debug/texture-uv-1024x1024 0 0 -0 1 1
+( 512 -0 -0 ) ( -0 -0 16 ) ( 512 -0 16 ) debug/texture-uv-1024x1024 0 0 -0 1 1
+( 512 -0 -0 ) ( -0 512 -0 ) ( -0 -0 -0 ) debug/texture-uv-1024x1024 0 0 -0 1 1
+( 512 -0 16 ) ( -0 512 16 ) ( 512 512 16 ) debug/texture-uv-1024x1024 0 0 -0 1 1
+( 512 512 16 ) ( -0 512 -0 ) ( 512 512 -0 ) debug/texture-uv-1024x1024 0 0 -0 1 1
+( 512 -0 -0 ) ( 512 512 16 ) ( 512 512 -0 ) debug/texture-uv-1024x1024 0 0 -0 1 1
+}
+// brush 1
+{
+( -0 -256 -0 ) ( -0 -255 -0 ) ( -0 -256 1 ) debug/texture-uv-1024x1024 0 -0 -0 1 1
+( -0 -256 -0 ) ( -0 -256 1 ) ( 1 -256 -0 ) debug/texture-uv-1024x1024 0 -0 -0 1 1
+( -0 -256 -0 ) ( 1 -256 -0 ) ( -0 -255 -0 ) debug/texture-uv-1024x1024 0 0 -0 1 1
+( 256 -0 256 ) ( 256 1 256 ) ( 257 -0 256 ) debug/texture-uv-1024x1024 0 0 -0 1 1
+( 256 -0 256 ) ( 257 -0 256 ) ( 256 -0 257 ) debug/texture-uv-1024x1024 0 -0 -0 1 1
+( 256 -0 256 ) ( 256 -0 257 ) ( 256 1 256 ) debug/texture-uv-1024x1024 0 -0 -0 1 1
+}
+// brush 2
+{
+( -256 -0 -0 ) ( -256 1 -0 ) ( -256 -0 1 ) debug/texture-uv-1024x1024 -0 -0 -0 1 1
+( -256 -0 -0 ) ( -256 -0 1 ) ( -255 -0 -0 ) debug/texture-uv-1024x1024 0 -0 -0 1 1
+( -256 -0 -0 ) ( -255 -0 -0 ) ( -256 1 -0 ) debug/texture-uv-1024x1024 0 -0 -0 1 1
+( -0 256 256 ) ( -0 257 256 ) ( 1 256 256 ) debug/texture-uv-1024x1024 0 -0 -0 1 1
+( -0 256 256 ) ( 1 256 256 ) ( -0 256 257 ) debug/texture-uv-1024x1024 0 -0 -0 1 1
+( -0 256 256 ) ( -0 256 257 ) ( -0 257 256 ) debug/texture-uv-1024x1024 -0 -0 -0 1 1
+}
+}
+// entity 1
+{
+"classname" "player"
+"origin" "160 176 40"
+}
+// entity 2
+{
+"classname" "light_spotlight"
+"origin" "144 240 192"
+"color" "0xFFC000"
+"decay" "1"
+"intensity" "2"
+}
+// entity 3
+{
+"classname" "light_point"
+"origin" "376 200 120"
+"color" "0xffc000"
+"decay" "2"
+"intensity" "2"
+}

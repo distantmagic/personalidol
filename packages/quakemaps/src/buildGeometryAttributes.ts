@@ -1,29 +1,35 @@
 import { getIntersectingPoint } from "./getIntersectingPoint";
 import { isAlmostEqual } from "./isAlmostEqual";
+import { isEmptyTexturePlaceholder } from "./isEmptyTexturePlaceholder";
 import { marshalVector3 } from "./marshalVector3";
 import { triangulateFacePoints } from "./triangulateFacePoints";
 
-import type { Vector3 as IVector3 } from "three";
+import type { Vector3 } from "three";
+
+import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
 
 import type { Brush } from "./Brush.type";
+import type { HalfSpace } from "./HalfSpace.type";
 import type { IntersectingPointsCache } from "./IntersectingPointsCache.type";
+import type { TextureDimensionsResolver } from "./TextureDimensionsResolver.type";
+import type { TriangleSimple } from "./TriangleSimple.type";
+
+type UV = [number, number];
 
 const PI_HALF = Math.PI / 2;
-const TEXTURE_EMPTY = "__TB_empty";
-const TEXTURE_SIZE = 512;
 
-export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, discardOccluding: null | IVector3 = null) {
+export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, resolveTextureDimensions: TextureDimensionsResolver, discardOccluding: null | Vector3 = null) {
   let indexIncrement = 0;
   const indexLookup: {
     [key: string]: number;
   } = {};
   const pointsCache: IntersectingPointsCache = {};
-  const textureNames: Array<string> = [];
 
   // BufferGeometry attributes
+  const atlasUVStart: Array<number> = [];
+  const atlasUVStop: Array<number> = [];
   const indices: Array<number> = [];
   const normals: Array<number> = [];
-  const textures: Array<number> = [];
   const uvs: Array<number> = [];
   const vertices: Array<number> = [];
 
@@ -52,7 +58,7 @@ export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, discardOc
 
   for (let brush of brushes) {
     for (let halfSpace of brush.halfSpaces) {
-      if (TEXTURE_EMPTY === halfSpace.texture.name) {
+      if (isEmptyTexturePlaceholder(halfSpace.texture.name)) {
         // no texture means that those vertcies should not be rendered
         continue;
       }
@@ -65,43 +71,30 @@ export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, discardOc
         continue;
       }
 
-      if (!textureNames.includes(halfSpace.texture.name)) {
-        textureNames.push(halfSpace.texture.name);
-      }
-
-      const textureIndex = textureNames.indexOf(halfSpace.texture.name);
-
       for (let triangle of triangulateFacePoints(normal, halfSpace.points)) {
-        for (let point of triangle) {
+        for (let i = 0; i < triangle.length; i += 1) {
+          const point = triangle[i];
+
           const marshaled = _marshalToIndex(normal, point);
 
           if (indexLookup.hasOwnProperty(marshaled)) {
             indices.push(indexLookup[marshaled]);
           } else {
+            const textureDimensions: AtlasTextureDimension = resolveTextureDimensions(halfSpace.texture.name);
+            // console.log(textureDimensions);
+            const uv = _createUV(halfSpace, point, textureDimensions, triangle, i);
+
+            // console.log(uv);
+
             indexLookup[marshaled] = indexIncrement;
 
+            atlasUVStart.push(textureDimensions.uvStartU, textureDimensions.uvStartV);
+            atlasUVStop.push(textureDimensions.uvStopU, textureDimensions.uvStopV);
             indices.push(indexIncrement);
-            vertices.push(point.x, point.y, point.z);
             normals.push(normal.x, normal.y, normal.z);
-            textures.push(textureIndex);
 
-            switch (true) {
-              case normal.x > normal.y && normal.x > normal.z:
-              case normal.x < normal.y && normal.x < normal.z:
-                uvs.push(point.z / TEXTURE_SIZE, point.y / TEXTURE_SIZE);
-                break;
-              case normal.z > normal.x && normal.z > normal.y:
-              case normal.z < normal.x && normal.z < normal.y:
-                uvs.push(point.x / TEXTURE_SIZE, point.y / TEXTURE_SIZE);
-                break;
-              case normal.y > normal.x && normal.y > normal.z:
-              case normal.y < normal.x && normal.y < normal.z:
-              case isAlmostEqual(normal.x, normal.y) && isAlmostEqual(normal.x, normal.z) && normal.x > 0:
-                uvs.push(point.z / TEXTURE_SIZE, point.x / TEXTURE_SIZE);
-                break;
-              default:
-                throw new Error("Unable to determine UVs.");
-            }
+            uvs.push(uv[0], uv[1]);
+            vertices.push(point.x, point.y, point.z);
 
             indexIncrement += 1;
           }
@@ -110,31 +103,33 @@ export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, discardOc
     }
   }
 
+  const atlasUVStartTypedArray = Float32Array.from(atlasUVStart);
+  const atlasUVStopTypedArray = Float32Array.from(atlasUVStop);
   const indicesTypedArray = Uint32Array.from(indices);
   const normalsTypedArray = Float32Array.from(normals);
-  const texturesTypedArray = Float32Array.from(textures);
   const uvsTypedArray = Float32Array.from(uvs);
   const verticesTypedArray = Float32Array.from(vertices);
 
   // prettier-ignore
   return {
+    atlasUVStart: atlasUVStartTypedArray,
+    atlasUVStop: atlasUVStopTypedArray,
     indices: indicesTypedArray,
     normals: normalsTypedArray,
-    textureNames: textureNames,
-    textures: texturesTypedArray,
     uvs: uvsTypedArray,
     vertices: verticesTypedArray,
     transferables: [
+      atlasUVStartTypedArray.buffer,
+      atlasUVStopTypedArray.buffer,
       indicesTypedArray.buffer,
       normalsTypedArray.buffer,
-      texturesTypedArray.buffer,
       uvsTypedArray.buffer,
       verticesTypedArray.buffer
     ],
   };
 }
 
-function _addUniquePointToBrush(brush: Brush, points: Array<IVector3>, point: IVector3): void {
+function _addUniquePointToBrush(brush: Brush, points: Array<Vector3>, point: Vector3): void {
   if (points.includes(point)) {
     return;
   }
@@ -142,11 +137,48 @@ function _addUniquePointToBrush(brush: Brush, points: Array<IVector3>, point: IV
   points.push(point);
 }
 
+function _textureWrapU(halfSpace: HalfSpace, textureDimensions: AtlasTextureDimension, u: number): number {
+  return u / textureDimensions.width;
+}
+
+function _textureWrapV(halfSpace: HalfSpace, textureDimensions: AtlasTextureDimension, v: number): number {
+  return v / textureDimensions.height;
+}
+
+function _createUV(halfSpace: HalfSpace, point: Vector3, textureDimensions: AtlasTextureDimension, triangle: TriangleSimple, i: number): UV {
+  const normal = halfSpace.plane.normal;
+
+  // prettier-ignore
+  switch (true) {
+    case normal.x > normal.y && normal.x > normal.z:
+    case normal.x < normal.y && normal.x < normal.z:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.z),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.z > normal.x && normal.z > normal.y:
+    case normal.z < normal.x && normal.z < normal.y:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.y > normal.x && normal.y > normal.z:
+    case normal.y < normal.x && normal.y < normal.z:
+    case isAlmostEqual(normal.x, normal.y) && isAlmostEqual(normal.x, normal.z) && normal.x > 0:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.z),
+        _textureWrapV(halfSpace, textureDimensions, point.x),
+      ];
+    default:
+      throw new Error("Unable to determine UVs.");
+  }
+}
+
 /**
  * This is really important, as the given point, which can be a valid
  * halfspaces intersection, can still land outside the brush boundaries
  */
-function _isPointInsideBrush(brush: Brush, point: IVector3): boolean {
+function _isPointInsideBrush(brush: Brush, point: Vector3): boolean {
   for (let halfSpace of brush.halfSpaces) {
     const distanceToPoint = halfSpace.plane.distanceToPoint(point);
 
@@ -158,6 +190,6 @@ function _isPointInsideBrush(brush: Brush, point: IVector3): boolean {
   return true;
 }
 
-function _marshalToIndex(normal: IVector3, point: IVector3): string {
+function _marshalToIndex(normal: Vector3, point: Vector3): string {
   return `${marshalVector3(normal)} ${marshalVector3(point)}`;
 }

@@ -14,7 +14,12 @@ test.skip("geometry attributes are created", async function () {
     halfSpaces: halfSpaces,
   };
 
-  const geometryAttributes = buildGeometryAttributes([brush]);
+  const geometryAttributes = buildGeometryAttributes([brush], function (textureName: string) {
+    return {
+      height: 128,
+      width: 128,
+    };
+  });
 
   // Then we list all the data needed for the cube.
   // Remember again that if a vertex has any unique parts it has to be a
