@@ -72,6 +72,7 @@ export function TouchObserver(
   }
 
   return Object.freeze({
+    name: "TouchObserver",
     state: state,
 
     start: start,

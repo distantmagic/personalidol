@@ -262,6 +262,8 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   }
 
   return Object.freeze({
+    name: "AtlasService",
+
     registerMessagePort: registerMessagePort,
     start: start,
     stop: stop,

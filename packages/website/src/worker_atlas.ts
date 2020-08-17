@@ -1,3 +1,5 @@
+import Loglevel from "loglevel";
+
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
@@ -11,8 +13,13 @@ let _canvas: null | OffscreenCanvas = null;
 let _context2d: null | OffscreenCanvasRenderingContext2D = null;
 let _texturesMessagePort: null | MessagePort = null;
 
+const logger = Loglevel.getLogger(self.name);
+
+logger.setLevel(__LOG_LEVEL);
+logger.debug(`WORKER_SPAWNED(${self.name})`);
+
 const mainLoop = MainLoop(RequestAnimationFrameScheduler());
-const serviceManager = ServiceManager();
+const serviceManager = ServiceManager(logger);
 
 mainLoop.updatables.add(serviceManager);
 

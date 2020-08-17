@@ -7,27 +7,27 @@ type Workers = {
 
 export const workers: Workers = {
   atlas: {
-    name: "Texture atlas maker",
+    name: "Loader(Atlas)",
     url: "/lib/worker_atlas.js",
   },
   md2: {
-    name: "MD2 model loader",
+    name: "Loader(MD2)",
     url: "/lib/worker_md2.js",
   },
   offscreen: {
-    name: "Offscreen Canvas",
+    name: "OffscreenCanvas",
     url: "/lib/worker_offscreen.js",
   },
   progress: {
-    name: "Progress monitor",
+    name: "ProgressMonitor",
     url: "/lib/worker_progress.js",
   },
   quakemaps: {
-    name: "Map loader",
+    name: "Loader(Map)",
     url: "/lib/worker_quakemaps.js",
   },
   textures: {
-    name: "Texture loader",
+    name: "Loader(Texture)",
     url: "/lib/worker_textures.js",
   },
 };

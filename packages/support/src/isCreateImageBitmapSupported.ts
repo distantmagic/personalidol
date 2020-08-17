@@ -43,11 +43,15 @@ function _onImageBitmapError(err: Error): boolean {
   // Firefox ("createImageBitmap fails when providing options object")
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1335594
   if (err.message.includes("2 is not a valid argument count for any overload")) {
+    // It's all or nothing, because partial support does not have "flipY"
+    // and other features and it would cause more polyfills and shims in other
+    // places. It's better to fail early here and not to try using
+    // `createImageBitmap` at all costs.
     return false;
   }
 
   // Something we were not prepared for. It's better to throw and fix the
-  // issue.
+  // issue or handle other error.
   throw err;
 }
 

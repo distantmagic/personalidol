@@ -9,15 +9,15 @@ import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/Requ
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
 import { createScenes } from "./createScenes";
-import { workers } from "./workers";
 
 const eventBus = EventBus();
-const logger = Loglevel.getLogger(workers.offscreen.name);
+const logger = Loglevel.getLogger(self.name);
 
 logger.setLevel(__LOG_LEVEL);
+logger.debug(`WORKER_SPAWNED(${self.name})`);
 
 const mainLoop = MainLoop(RequestAnimationFrameScheduler());
-const serviceManager = ServiceManager();
+const serviceManager = ServiceManager(logger);
 
 const _canvasStyle = {
   height: 0,

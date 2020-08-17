@@ -55,8 +55,8 @@ export function createScenes(
   rendererState.renderer.shadowMap.autoUpdate = false;
 
   const renderer = Renderer(rendererState, dimensionsState);
-  const currentSceneDirector = Director(logger);
-  const loadingSceneDirector = Director(logger);
+  const currentSceneDirector = Director(logger, "Scene");
+  const loadingSceneDirector = Director(logger, "LoadingScreen");
   const sceneLoader = SceneLoader(logger, rendererState, currentSceneDirector, loadingSceneDirector);
 
   // const mapFilename = "/maps/map-box.map";

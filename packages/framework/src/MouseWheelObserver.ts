@@ -31,6 +31,8 @@ export function MouseWheelObserver(htmlElement: HTMLElement, eventBus: EventBus,
   }
 
   return Object.freeze({
+    name: "MouseWheelObserver",
+
     start: start,
     stop: stop,
   });

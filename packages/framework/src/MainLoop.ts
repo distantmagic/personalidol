@@ -6,6 +6,28 @@ import type { Scheduler } from "./Scheduler.interface";
 import type { TickTimerState } from "./TickTimerState.type";
 
 export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLoop {
+  /**
+   * Why tick timer state exists? There are some services that need to sync
+   * depending on the time their data was last modified. Since
+   * `performance.now()` is not that reliable since Spectre/Meltdown, I decided
+   * to use something else and measure time in elapsed main loop ticks.
+   * In the worst case it would cause 1 frame delay between syncing data, but
+   * in most cases update/sync would be done in the same frame. To achieve that
+   * though, services need to be added to the main loop in the adequate order.
+   *
+   * Is this safe on the basic level though?
+   * It can increment until it reaches Number.MAX_SAFE_INTEGER. At the moment
+   * of writing this MAX_SAFE_INTEGER is about 9007199254740991 on most
+   * devices. It means that it will work for 9007199254740991 frames, then it
+   * would crash or behave unpredictably. Achieving 9007199254740991 frames at
+   * 100 FPS would take 90071992547409,91 seconds, which is 171369848 years.
+   * After that time, you would have to reload the page to continue using the
+   * app. I think that this is acceptable.
+   *
+   * @see HTMLElementResizeObserver
+   * @see MouseObserevr
+   * @see TouchObserver
+   */
   const tickTimerState: TickTimerState = Object.seal({
     currentTick: 0,
   });
@@ -60,6 +82,7 @@ export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLo
   }
 
   return Object.freeze({
+    name: "MainLoop",
     tickTimerState: tickTimerState,
     updatables: updatables,
 

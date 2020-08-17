@@ -11,6 +11,6 @@ export function sceneDispose(logger: Logger, scene: Scene): void {
 
   sceneUnmountSoft(logger, scene);
 
-  logger.debug("DISPOSE SCENE", scene.name);
+  logger.debug(`DISPOSE_SCENE(${scene.name})`);
   scene.dispose();
 }

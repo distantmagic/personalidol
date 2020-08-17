@@ -7,7 +7,7 @@ import type { Director as IDirector } from "./Director.interface";
 import type { DirectorState } from "./DirectorState.type";
 import type { Scene } from "./Scene.interface";
 
-export function Director(logger: Logger): IDirector {
+export function Director(logger: Logger, directorDebugName: string): IDirector {
   const state: DirectorState = Object.seal({
     current: null,
     isStarted: false,
@@ -52,7 +52,7 @@ export function Director(logger: Logger): IDirector {
 
     // 0,1,0
     if (!next && _transitioning && !current && _transitioning.state.isPreloaded) {
-      logger.debug("FINISHED PRELOADING SCENE", _transitioning.name);
+      logger.debug(`FINISHED_PRELOADING_SCENE(${_transitioning.name})`);
 
       state.current = _transitioning;
       state.isTransitioning = false;
@@ -119,6 +119,7 @@ export function Director(logger: Logger): IDirector {
   }
 
   return Object.freeze({
+    name: `Director(${directorDebugName})`,
     state: state,
 
     start: start,

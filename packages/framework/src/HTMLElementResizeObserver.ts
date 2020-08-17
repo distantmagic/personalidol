@@ -1,3 +1,5 @@
+/// <reference path="./ResizeObserver.d.ts" />
+
 import { Dimensions } from "./Dimensions";
 
 import type { HTMLElementResizeObserver as IHTMLElementResizeObserver } from "./HTMLElementResizeObserver.interface";
@@ -46,6 +48,7 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
   }
 
   return Object.freeze({
+    name: "HTMLElementResizeObserver",
     state: state,
 
     start: start,

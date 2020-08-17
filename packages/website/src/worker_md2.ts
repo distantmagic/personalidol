@@ -1,3 +1,5 @@
+import Loglevel from "loglevel";
+
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { LoadingManager } from "three/src/loaders/LoadingManager";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
@@ -13,6 +15,11 @@ import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedRespo
 type ModelParts = {
   body: string;
 };
+
+const logger = Loglevel.getLogger(self.name);
+
+logger.setLevel(__LOG_LEVEL);
+logger.debug(`WORKER_SPAWNED(${self.name})`);
 
 const emptyTransferables: [] = [];
 const loadingCache: ReusedResponsesCache = createReusedResponsesCache();

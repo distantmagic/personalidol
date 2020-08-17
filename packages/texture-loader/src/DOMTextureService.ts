@@ -67,20 +67,9 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
     // same thread, there is no risk of several images being written to the
     // canvas at the same time, so no locks are necessary.
 
-    if (request.flipY) {
-      context2D.drawImage(image, 0, 0);
+    context2D.drawImage(image, 0, 0);
 
-      return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
-    }
-
-    context2D.scale(1, -1);
-    context2D.drawImage(image, 0, -1 * imageNaturalHeight);
-
-    try {
-      return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
-    } finally {
-      context2D.setTransform(1, 0, 0, 1, 0, 0);
-    }
+    return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
   }
 
   async function _processTextureQueue(request: TextureQueueItem): Promise<void> {
@@ -120,6 +109,8 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   }
 
   return Object.freeze({
+    name: "DOMTextureService",
+
     registerMessagePort: registerMessagePort,
     start: start,
     stop: stop,

@@ -1,3 +1,5 @@
+import Loglevel from "loglevel";
+
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
@@ -8,6 +10,11 @@ import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 import type { TextureRequest } from "@personalidol/texture-loader/src/TextureRequest.type";
+
+const logger = Loglevel.getLogger(self.name);
+
+logger.setLevel(__LOG_LEVEL);
+logger.debug(`WORKER_SPAWNED(${self.name})`);
 
 const createImageBitmapOptions: {
   imageOrientation: "flipY";
@@ -23,13 +30,7 @@ function _createImageBitmapFlipY(blob: Blob): Promise<ImageBitmap> {
 }
 
 function _fetchImageBitmap(textureRequest: TextureRequest): Promise<ImageBitmap> {
-  const blobPromise = fetch(textureRequest.textureUrl).then(_responseToBlob);
-
-  if (textureRequest.flipY) {
-    return blobPromise.then(_createImageBitmapFlipY);
-  }
-
-  return blobPromise.then(createImageBitmap);
+  return fetch(textureRequest.textureUrl).then(_responseToBlob).then(_createImageBitmapFlipY);
 }
 
 function _responseToBlob(response: Response): Promise<Blob> {

@@ -3,7 +3,7 @@ import type { WorkerService as IWorkerService } from "./WorkerService.interface"
 
 function _noop(): void {}
 
-export function WorkerService(worker: Worker, updater: null | MainLoopUpdateCallback = null): IWorkerService {
+export function WorkerService(worker: Worker, workerName: string, updater: null | MainLoopUpdateCallback = null): IWorkerService {
   const _messageStart = {
     start: null,
   };
@@ -20,6 +20,8 @@ export function WorkerService(worker: Worker, updater: null | MainLoopUpdateCall
   }
 
   return {
+    name: `WorkerService(${workerName})`,
+
     start: start,
     stop: stop,
     update: updater ? updater : _noop,

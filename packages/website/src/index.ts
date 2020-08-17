@@ -48,7 +48,7 @@ const mainLoop = MainLoop(RequestAnimationFrameScheduler());
 const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
 const mouseObserver = MouseObserver(canvas, dimensionsState, inputState, htmlElementResizeObserver.state, mainLoop.tickTimerState);
-const serviceManager = ServiceManager();
+const serviceManager = ServiceManager(logger);
 const touchObserver = TouchObserver(canvas, dimensionsState, inputState, htmlElementResizeObserver.state, mainLoop.tickTimerState);
 
 serviceManager.services.add(htmlElementResizeObserver);
@@ -107,6 +107,8 @@ serviceManager.start();
   const texturesMessageChannel = new MessageChannel();
   const addTextureMessagePort = await (async function () {
     if (await isCreateImageBitmapSupported(supportCache)) {
+      logger.debug("SUPPORTED(createImageBitmap)");
+
       const texturesWorker = new Worker(workers.textures.url, {
         credentials: "same-origin",
         name: workers.textures.name,
@@ -122,6 +124,8 @@ serviceManager.start();
         );
       };
     } else {
+      logger.debug("NO_SUPPORT(createImageBitmap) // starting texture service in the main thread");
+
       const textureCanvas = document.createElement("canvas");
       const textureCanvasContext2D = textureCanvas.getContext("2d");
 
@@ -150,7 +154,9 @@ serviceManager.start();
   addTextureMessagePort(atlasToTextureMessageChannel.port1);
 
   const addAtlasMessagePort = await (async function () {
-    if (await isCanvasTransferControlToOffscreenSupported(supportCache, atlasCanvas)) {
+    if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
+      logger.debug("SUPPORTED(canvas.transferControlToOffscreen)");
+
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
       const atlasWorker = new Worker(workers.atlas.url, {
         credentials: "same-origin",
@@ -166,7 +172,7 @@ serviceManager.start();
         [atlasToTextureMessageChannel.port2, offscreenAtlas]
       );
 
-      const atlasWorkerService = WorkerService(atlasWorker);
+      const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
 
       mainLoop.updatables.add(atlasWorkerService);
       serviceManager.services.add(atlasWorkerService);
@@ -180,6 +186,8 @@ serviceManager.start();
         );
       };
     } else {
+      logger.debug("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
+
       const atlasCanvasContext2D = atlasCanvas.getContext("2d");
 
       if (null === atlasCanvasContext2D) {
@@ -238,7 +246,9 @@ serviceManager.start();
   // If browser supports the offscreen canvas, then we can offload everything
   // there. If not, then we continue in the main thread.
 
-  if (await isCanvasTransferControlToOffscreenSupported(supportCache, canvas)) {
+  if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
+    logger.debug("SUPPORTED(canvas.transferControlToOffscreen)");
+
     const offscreenWorker = new Worker(workers.offscreen.url, {
       credentials: "same-origin",
       name: workers.offscreen.name,
@@ -253,6 +263,8 @@ serviceManager.start();
     // copy of input / dimensions states every frame to the worker.
     const offscreenWorkerService = (function () {
       function sharedArrayBufferNotAvailable() {
+        logger.debug("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
+
         offscreenWorker.postMessage({
           awaitSharedDimensions: false,
         });
@@ -263,7 +275,7 @@ serviceManager.start();
           inputState: inputState,
         };
 
-        return WorkerService(offscreenWorker, function () {
+        return WorkerService(offscreenWorker, workers.offscreen.name, function () {
           // prettier-ignore
           if ( _lastNotificationTick < htmlElementResizeObserver.state.lastUpdate
             || _lastNotificationTick < mouseObserver.state.lastUpdate
@@ -289,7 +301,9 @@ serviceManager.start();
           return sharedArrayBufferNotAvailable();
         }
 
-        return WorkerService(offscreenWorker);
+        logger.debug("SUPPORTED(SharedArrayBuffer) // sharing dimensions/input array with worker");
+
+        return WorkerService(offscreenWorker, workers.offscreen.name);
       } else {
         return sharedArrayBufferNotAvailable();
       }
@@ -326,6 +340,8 @@ serviceManager.start();
     mainLoop.updatables.add(offscreenWorkerService);
     serviceManager.services.add(offscreenWorkerService);
   } else {
+    logger.debug("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
+
     // This extra var is a hack to make esbuild leave the dynamic import as-is.
     // https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
     const filename = "/lib/createScenes.js";

@@ -44,6 +44,8 @@ export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadi
   }
 
   return Object.freeze({
+    name: "LoadingManager",
+
     start: start,
     stop: stop,
     update: update,

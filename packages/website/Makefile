@@ -20,6 +20,7 @@ public/lib/index.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
 		--format=esm \
 		--jsx-factory=h \
 		--jsx-fragment=Fragment \
+		--minify \
 		--outdir=public/lib \
 		--platform=browser \
 		--sourcemap \

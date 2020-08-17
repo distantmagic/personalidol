@@ -1,5 +1,3 @@
-/// <reference path="./ResizeObserver.d.ts" />
-
 import { computePointerVectorX } from "./computePointerVectorX";
 import { computePointerVectorY } from "./computePointerVectorY";
 import { Dimensions } from "./Dimensions";
@@ -71,6 +69,7 @@ export function MouseObserver(
   }
 
   return Object.freeze({
+    name: "MouseObserver",
     state: state,
 
     start: start,

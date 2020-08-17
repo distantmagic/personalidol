@@ -48,8 +48,6 @@ const fragmentShaderPars = `
   #endif
 `;
 
-// float coordX = (uv.x * (endU - startU) + startU);
-// float coordY = (uv.y * (startV - endV) + endV);
 const fragmentShaderReplace = "#include <map_fragment>";
 const fragmentShader = `
   #ifdef USE_MAP

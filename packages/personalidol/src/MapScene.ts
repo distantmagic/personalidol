@@ -258,7 +258,7 @@ export function MapScene(
     },
 
     async worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): Promise<void> {
-      logger.debug("MAP VERTICES", entity.vertices.length / 3);
+      logger.debug(`LOADED_MAP_VERTICES(${entity.vertices.length / 3})`);
 
       const bufferGeometry = new BufferGeometry();
 
@@ -465,7 +465,7 @@ export function MapScene(
   }
 
   return Object.freeze({
-    name: `Map(${mapFilename})`,
+    name: `MAP(${mapFilename})`,
     state: state,
 
     dispose: dispose,

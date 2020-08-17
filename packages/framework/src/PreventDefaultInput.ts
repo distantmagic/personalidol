@@ -24,6 +24,8 @@ export function PreventDefaultInput(htmlElement: HTMLElement): IPreventDefaultIn
   }
 
   return Object.freeze({
+    name: "PreventDefaultInput",
+
     start: start,
     stop: stop,
   });

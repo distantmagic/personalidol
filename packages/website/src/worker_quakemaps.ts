@@ -1,3 +1,5 @@
+import Loglevel from "loglevel";
+
 import { MathUtils } from "three/src/math/MathUtils";
 import { Vector3 } from "three/src/math/Vector3";
 
@@ -16,6 +18,11 @@ import type { EntityAny } from "@personalidol/quakemaps/src/EntityAny.type";
 import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
+
+const logger = Loglevel.getLogger(self.name);
+
+logger.setLevel(__LOG_LEVEL);
+logger.debug(`WORKER_SPAWNED(${self.name})`);
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 let _atlasMessagePort: null | MessagePort = null;

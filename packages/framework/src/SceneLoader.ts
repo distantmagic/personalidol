@@ -36,6 +36,8 @@ export function SceneLoader(logger: Logger, rendererState: RendererState, sceneD
   }
 
   return {
+    name: "SceneLoader",
+
     start: start,
     stop: stop,
     update: update,

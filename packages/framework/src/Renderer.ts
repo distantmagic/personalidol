@@ -52,6 +52,7 @@ export function Renderer(state: RendererState, dimensionsState: Uint16Array): IR
   }
 
   return Object.freeze({
+    name: "Renderer",
     state: state,
 
     start: start,

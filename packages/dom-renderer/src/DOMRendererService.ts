@@ -47,6 +47,8 @@ export function DOMRendererService(messagePort: MessagePort, uiRootElement: HTML
   }
 
   return Object.freeze({
+    name: "DOMRendererService",
+
     start: start,
     stop: stop,
     update: update,
