@@ -67,7 +67,7 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
     // same thread, there is no risk of several images being written to the
     // canvas at the same time, so no locks are necessary.
 
-    if (!request.flipY) {
+    if (request.flipY) {
       context2D.drawImage(image, 0, 0);
 
       return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);

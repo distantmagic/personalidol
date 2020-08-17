@@ -16,7 +16,7 @@ import { SpotLight } from "three/src/lights/SpotLight";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
-import { attachStandardShaderAtlasSampling } from "@personalidol/texture-loader/src/attachStandardShaderAtlasSampling";
+import { attachAtlasSamplerToStandardShader } from "@personalidol/texture-loader/src/attachAtlasSamplerToStandardShader";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
@@ -277,7 +277,7 @@ export function MapScene(
 
       // Texture atlas is used here, so texture sampling fragment needs to
       // be changed.
-      meshStandardMaterial.onBeforeCompile = attachStandardShaderAtlasSampling;
+      meshStandardMaterial.onBeforeCompile = attachAtlasSamplerToStandardShader;
 
       const mesh = new Mesh(bufferGeometry, meshStandardMaterial);
 

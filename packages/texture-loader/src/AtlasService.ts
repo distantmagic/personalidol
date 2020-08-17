@@ -165,8 +165,6 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   async function _createTextureAtlas(request: AtlasQueueItem): Promise<Atlas> {
     const textures = await Promise.all(request.textureUrls.map(_requestTexture));
 
-    console.log(request.textureUrls);
-
     const textureSize = textures[0].height;
     const width = textures[0].width;
 
@@ -235,8 +233,6 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
       }
     }
 
-    console.log(textureDimensions);
-
     return {
       imageData: context2D.getImageData(0, 0, atlasSideLengthPx, atlasSideLengthPx),
       textureDimensions: textureDimensions,
@@ -262,8 +258,6 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   }
 
   function _requestTexture(textureUrl: string): Promise<ImageBitmap | ImageData> {
-    // Do not flip the texture as the entire texture atlas is going to be
-    // flipped later.
     return requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl);
   }
 

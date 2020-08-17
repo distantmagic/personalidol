@@ -134,11 +134,11 @@ function _addUniquePointToBrush(brush: Brush, points: Array<Vector3>, point: Vec
 }
 
 function _textureWrapU(halfSpace: HalfSpace, textureDimensions: AtlasTextureDimension, u: number): number {
-  return u / textureDimensions.width;
+  return (u + halfSpace.texture.offset.x) / textureDimensions.width;
 }
 
 function _textureWrapV(halfSpace: HalfSpace, textureDimensions: AtlasTextureDimension, v: number): number {
-  return v / textureDimensions.height;
+  return (v + halfSpace.texture.offset.y) / textureDimensions.height;
 }
 
 function _createUV(halfSpace: HalfSpace, point: Vector3, textureDimensions: AtlasTextureDimension, triangle: TriangleSimple, i: number): UV {
