@@ -85,19 +85,30 @@ serviceManager.start();
   // information.
 
   const progressMessageChannel = new MessageChannel();
-
   const progressWorker = new Worker(workers.progress.url, {
     credentials: "same-origin",
     name: workers.progress.name,
     type: "module",
   });
 
-  progressWorker.postMessage(
-    {
-      progressMessagePort: progressMessageChannel.port1,
-    },
-    [progressMessageChannel.port1]
-  );
+  const progressWorkerService = WorkerService(progressWorker, workers.progress.name);
+
+  mainLoop.updatables.add(progressWorkerService);
+  serviceManager.services.add(progressWorkerService);
+
+  function addProgressMessagePort(messagePort: MessagePort, broadcastProgress: boolean) {
+    progressWorker.postMessage(
+      {
+        progressMessagePort: {
+          broadcastProgress: broadcastProgress,
+          messagePort: messagePort,
+        },
+      },
+      [messagePort]
+    );
+  }
+
+  addProgressMessagePort(progressMessageChannel.port1, true);
 
   // `createImageBitmap` has it's quirks and surprisingly has no support in
   // safari and ios. Also it has partial support in Firefox.
@@ -105,6 +116,10 @@ serviceManager.start();
   // generate textures and potentially send them into other workers.
 
   const texturesMessageChannel = new MessageChannel();
+  const texturesToProgressMessageChannel = new MessageChannel();
+
+  addProgressMessagePort(texturesToProgressMessageChannel.port1, false);
+
   const addTextureMessagePort = await (async function () {
     if (await isCreateImageBitmapSupported(supportCache)) {
       logger.debug("SUPPORTED(createImageBitmap)");
@@ -114,6 +129,13 @@ serviceManager.start();
         name: workers.textures.name,
         type: "module",
       });
+
+      texturesWorker.postMessage(
+        {
+          progressMessagePort: texturesToProgressMessageChannel.port2,
+        },
+        [texturesToProgressMessageChannel.port2]
+      );
 
       return function (messagePort: MessagePort) {
         texturesWorker.postMessage(
@@ -133,7 +155,7 @@ serviceManager.start();
         throw new Error("Unable to get detached canvas 2D context.");
       }
 
-      const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D);
+      const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D, texturesToProgressMessageChannel.port2);
 
       mainLoop.updatables.add(textureService);
       serviceManager.services.add(textureService);
@@ -150,7 +172,9 @@ serviceManager.start();
   const atlasCanvas = document.createElement("canvas");
   const atlasMessageChannel = new MessageChannel();
   const atlasToTextureMessageChannel = new MessageChannel();
+  const atlasToProgressMessageChannel = new MessageChannel();
 
+  addProgressMessagePort(atlasToProgressMessageChannel.port1, false);
   addTextureMessagePort(atlasToTextureMessageChannel.port1);
 
   const addAtlasMessagePort = await (async function () {
@@ -167,9 +191,10 @@ serviceManager.start();
       atlasWorker.postMessage(
         {
           atlasCanvas: offscreenAtlas,
+          progressMessagePort: atlasToProgressMessageChannel.port2,
           texturesMessagePort: atlasToTextureMessageChannel.port2,
         },
-        [atlasToTextureMessageChannel.port2, offscreenAtlas]
+        [atlasToProgressMessageChannel.port2, atlasToTextureMessageChannel.port2, offscreenAtlas]
       );
 
       const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
@@ -194,7 +219,7 @@ serviceManager.start();
         throw new Error("Unable to get atlas canvas 2D context.");
       }
 
-      const atlasService = AtlasService(atlasCanvas, atlasCanvasContext2D, atlasToTextureMessageChannel.port2);
+      const atlasService = AtlasService(atlasCanvas, atlasCanvasContext2D, atlasToProgressMessageChannel.port2, atlasToTextureMessageChannel.port2);
 
       mainLoop.updatables.add(atlasService);
       serviceManager.services.add(atlasService);
@@ -210,6 +235,9 @@ serviceManager.start();
   // overhead, but unifies how messages are handled in each case.
 
   const quakeMapsMessageChannel = new MessageChannel();
+  const quakeMapsToProgressMessageChannel = new MessageChannel();
+
+  addProgressMessagePort(quakeMapsToProgressMessageChannel.port1, false);
 
   const quakeMapsWorker = new Worker(workers.quakemaps.url, {
     credentials: "same-origin",
@@ -220,9 +248,10 @@ serviceManager.start();
   quakeMapsWorker.postMessage(
     {
       atlasMessagePort: atlasMessageChannel.port2,
+      progressMessagePort: quakeMapsToProgressMessageChannel.port2,
       quakeMapsMessagePort: quakeMapsMessageChannel.port1,
     },
-    [atlasMessageChannel.port2, quakeMapsMessageChannel.port1]
+    [atlasMessageChannel.port2, quakeMapsMessageChannel.port1, quakeMapsToProgressMessageChannel.port2]
   );
 
   // MD2 worker offloads model loading from the thread whether it's the main
@@ -230,6 +259,10 @@ serviceManager.start();
   // rendering to stutter.
 
   const md2MessageChannel = new MessageChannel();
+  const md2ToProgressMessageChannel = new MessageChannel();
+
+  addProgressMessagePort(md2ToProgressMessageChannel.port1, false);
+
   const md2Worker = new Worker(workers.md2.url, {
     credentials: "same-origin",
     name: workers.md2.name,
@@ -239,8 +272,9 @@ serviceManager.start();
   md2Worker.postMessage(
     {
       md2MessagePort: md2MessageChannel.port1,
+      progressMessagePort: md2ToProgressMessageChannel.port2,
     },
-    [md2MessageChannel.port1]
+    [md2MessageChannel.port1, md2ToProgressMessageChannel.port2]
   );
 
   // If browser supports the offscreen canvas, then we can offload everything
@@ -316,6 +350,7 @@ serviceManager.start();
         devicePixelRatio: devicePixelRatio,
         domMessagePort: domRendererMessageChannel.port2,
         md2MessagePort: md2MessageChannel.port2,
+        progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
         texturesMessagePort: texturesMessageChannel.port2,
       },
@@ -323,6 +358,7 @@ serviceManager.start();
         domRendererMessageChannel.port2,
         md2MessageChannel.port2,
         offscreenCanvas,
+        progressMessageChannel.port2,
         quakeMapsMessageChannel.port2,
         texturesMessageChannel.port2
       ]
@@ -359,6 +395,7 @@ serviceManager.start();
       logger,
       domRendererMessageChannel.port2,
       md2MessageChannel.port2,
+      progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,
       texturesMessageChannel.port2,
     );

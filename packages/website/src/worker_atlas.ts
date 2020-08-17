@@ -11,6 +11,7 @@ import type { AtlasService as IAtlasService } from "@personalidol/texture-loader
 let _atlasService: null | IAtlasService = null;
 let _canvas: null | OffscreenCanvas = null;
 let _context2d: null | OffscreenCanvasRenderingContext2D = null;
+let _progressMessagePort: null | MessagePort = null;
 let _texturesMessagePort: null | MessagePort = null;
 
 const logger = Loglevel.getLogger(self.name);
@@ -24,11 +25,11 @@ const serviceManager = ServiceManager(logger);
 mainLoop.updatables.add(serviceManager);
 
 function _safeStartService() {
-  if (null === _canvas || null === _context2d || null === _texturesMessagePort) {
+  if (null === _canvas || null === _context2d || null === _progressMessagePort || null === _texturesMessagePort) {
     return;
   }
 
-  _atlasService = AtlasService(_canvas, _context2d, _texturesMessagePort);
+  _atlasService = AtlasService(_canvas, _context2d, _progressMessagePort, _texturesMessagePort);
 
   mainLoop.updatables.add(_atlasService);
   serviceManager.services.add(_atlasService);
@@ -37,13 +38,13 @@ function _safeStartService() {
 self.onmessage = createRouter({
   atlasCanvas(canvas: OffscreenCanvas) {
     if (null !== _canvas) {
-      throw new Error("Offscreen canvas was already received by the atlas worker.");
+      throw new Error(`Offscreen canvas was already received by WORKER(${self.name}).`);
     }
 
     const context2d = canvas.getContext("2d");
 
     if (!context2d) {
-      throw new Error("Unable to obtain 2D context from the offscreen atlas canvas");
+      throw new Error(`Unable to obtain 2D context from the offscreen atlas canvas within WORKER(${self.name}).`);
     }
 
     _canvas = canvas;
@@ -53,10 +54,19 @@ self.onmessage = createRouter({
 
   atlasMessagePort(port: MessagePort) {
     if (null === _atlasService) {
-      throw new Error("Atlas service is not yet initialized.");
+      throw new Error(`Atlas service is not yet initialized in WORKER(${self.name}).`);
     }
 
     _atlasService.registerMessagePort(port);
+  },
+
+  progressMessagePort(port: MessagePort): void {
+    if (null !== _progressMessagePort) {
+      throw new Error(`Progress message port was already received by WORKER(${self.name}).`);
+    }
+
+    _progressMessagePort = port;
+    _safeStartService();
   },
 
   start(): void {
@@ -71,7 +81,7 @@ self.onmessage = createRouter({
 
   texturesMessagePort(messagePort: MessagePort) {
     if (null !== _texturesMessagePort) {
-      throw new Error("Textures message port was already received by the atlas worker.");
+      throw new Error(`Textures message port was already received by WORKER(${self.name}).`);
     }
 
     _texturesMessagePort = messagePort;

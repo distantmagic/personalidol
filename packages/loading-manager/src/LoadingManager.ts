@@ -1,5 +1,8 @@
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+
 import type { LoadingManager as ILoadingManager } from "./LoadingManager.interface";
 import type { LoadingManagerItem } from "./LoadingManagerItem.type";
+import type { LoadingManagerProgress } from "./LoadingManagerProgress.type";
 import type { LoadingManagerState } from "./LoadingManagerState.type";
 
 function sumWeights(items: Set<LoadingManagerItem>): number {
@@ -13,11 +16,16 @@ function sumWeights(items: Set<LoadingManagerItem>): number {
 }
 
 export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadingManager {
-  function start() {}
+  const _progress = Object.seal({
+    comment: loadingManagerState.comment,
+    progress: loadingManagerState.progress,
+  });
 
-  function stop() {}
+  function getProgress(): LoadingManagerProgress {
+    return _progress;
+  }
 
-  function update() {
+  function refreshProgress() {
     const itemsToLoadWeights = sumWeights(loadingManagerState.itemsToLoad);
     const totalWeights = Math.max(loadingManagerState.expectsAtLeast, itemsToLoadWeights);
 
@@ -41,13 +49,28 @@ export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadi
     }
 
     loadingManagerState.progress = Math.max(loadingManagerState.progress, itemsLoadedWeights / totalWeights);
+
+    if (_progress.comment === loadingManagerState.comment && _progress.progress === loadingManagerState.progress) {
+      return;
+    }
+
+    _progress.comment = loadingManagerState.comment;
+    _progress.progress = loadingManagerState.progress;
+
+    loadingManagerState.lastUpdate += 1;
   }
+
+  function start() {}
+
+  function stop() {}
 
   return Object.freeze({
     name: "LoadingManager",
 
+    getProgress: getProgress,
+    refreshProgress: refreshProgress,
     start: start,
     stop: stop,
-    update: update,
+    update: refreshProgress,
   });
 }

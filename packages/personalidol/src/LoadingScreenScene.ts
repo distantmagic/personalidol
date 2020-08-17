@@ -6,12 +6,13 @@ import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Scene } from "three/src/scenes/Scene";
 import { SpotLight } from "three/src/lights/SpotLight";
 
+import { createRouter } from "@personalidol/workers/src/createRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { invoke } from "@personalidol/framework/src/invoke";
 
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
-import type { LoadingManagerState } from "@personalidol/framework/src/LoadingManagerState.type";
+import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
 import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
@@ -23,7 +24,7 @@ const _clearRendererMessage = {
   },
 };
 
-export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerState: LoadingManagerState, rendererState: RendererState): IScene {
+export function LoadingScreenScene(domMessagePort: MessagePort, progressMessagePort: MessagePort, rendererState: RendererState): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -31,8 +32,11 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
     isPreloading: false,
   });
 
-  let _previousComment = "";
-  let _previousProgress = 0;
+  let _loadingManagerProgressNeedsUpdate = false;
+  let _loadingManagerProgress: LoadingManagerProgress = {
+    comment: "",
+    progress: 0,
+  };
 
   const _ambientLight = new AmbientLight(0xffffff, 0.1);
   const _camera = new PerspectiveCamera();
@@ -69,6 +73,13 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   _disposables.add(disposableGeneric(_boxGeometry));
   _disposables.add(disposableMaterial(_boxMaterial));
 
+  const _progressRouter = createRouter({
+    progress(progress: LoadingManagerProgress): void {
+      _loadingManagerProgressNeedsUpdate = true;
+      _loadingManagerProgress = progress;
+    },
+  });
+
   function dispose(): void {
     state.isDisposed = true;
 
@@ -79,8 +90,7 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   function mount(): void {
     state.isMounted = true;
 
-    _previousComment = "";
-    _previousProgress = 0;
+    progressMessagePort.onmessage = _progressRouter;
 
     rendererState.camera = _camera;
     rendererState.scene = _scene;
@@ -107,6 +117,7 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
   function unmount(): void {
     state.isMounted = false;
 
+    progressMessagePort.onmessage = null;
     domMessagePort.postMessage(_clearRendererMessage);
 
     _unmountables.forEach(invoke);
@@ -121,22 +132,14 @@ export function LoadingScreenScene(domMessagePort: MessagePort, loadingManagerSt
       _boxMesh.rotation.z += delta;
     }
 
-    rendererState.renderer.shadowMap.needsUpdate = true;
-
-    if (_previousComment === loadingManagerState.comment && _previousProgress === loadingManagerState.progress) {
+    if (!_loadingManagerProgressNeedsUpdate) {
       return;
     }
-
-    _previousComment = loadingManagerState.comment;
-    _previousProgress = loadingManagerState.progress;
 
     domMessagePort.postMessage({
       render: {
         route: "/loading-screen",
-        data: {
-          comment: loadingManagerState.comment,
-          progress: loadingManagerState.progress,
-        },
+        data: _loadingManagerProgress,
       },
     });
   }

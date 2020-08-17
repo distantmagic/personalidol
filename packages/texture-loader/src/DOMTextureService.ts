@@ -1,6 +1,9 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
+import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import { keyFromTextureRequest } from "./keyFromTextureRequest";
@@ -29,7 +32,7 @@ const _messagesRouter = {
   },
 };
 
-export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRenderingContext2D): IDOMTextureService {
+export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRenderingContext2D, progressMessagePort: MessagePort): IDOMTextureService {
   function registerMessagePort(messagePort: MessagePort) {
     attachMultiRouter(messagePort, _messagesRouter);
   }
@@ -73,14 +76,14 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   }
 
   async function _processTextureQueue(request: TextureQueueItem): Promise<void> {
-    // prettier-ignore
-    const { data: imageData, isLast } = await reuseResponse<ImageData, TextureQueueItem>(
-      _loadingCache,
-      _loadingUsage,
-      keyFromTextureRequest(request),
-      request,
-      _createImageData
-    );
+    const requestKey = keyFromTextureRequest(request);
+    const loadItemTexture = {
+      comment: `texture ${request.textureUrl}`,
+      id: MathUtils.generateUUID(),
+      weight: 1,
+    };
+    const textureResponse = reuseResponse<ImageData, TextureQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createImageData);
+    const { data: imageData, isLast } = await notifyLoadingManager(progressMessagePort, loadItemTexture, textureResponse);
 
     request.messagePort.postMessage(
       {

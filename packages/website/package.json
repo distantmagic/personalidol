@@ -7,6 +7,7 @@
   "dependencies": {
     "@personalidol/dom-renderer": "0.0.0",
     "@personalidol/framework": "0.0.0",
+    "@personalidol/loading-manager": "0.0.0",
     "@personalidol/personalidol": "0.0.0",
     "@personalidol/quakemaps": "0.0.0",
     "@personalidol/support": "0.0.0",

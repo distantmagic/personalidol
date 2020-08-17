@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@personalidol/framework": "0.0.0",
+    "@personalidol/loading-manager": "0.0.0",
     "@personalidol/workers": "0.0.0",
     "three": "^0.119.1"
   },

@@ -31,6 +31,7 @@ let _inputState: null | Int16Array = null;
 let _isBootstrapped = false;
 let domMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
+let progressMessagePort: null | MessagePort = null;
 let quakeMapsMessagePort: null | MessagePort = null;
 let texturesMessagePort: null | MessagePort = null;
 
@@ -43,6 +44,7 @@ function _createScenesSafe(): void {
     _inputState === null ||
     domMessagePort === null ||
     md2MessagePort === null ||
+    progressMessagePort === null ||
     quakeMapsMessagePort === null ||
     texturesMessagePort === null
   ) {
@@ -50,7 +52,7 @@ function _createScenesSafe(): void {
   }
 
   if (_isBootstrapped) {
-    throw new Error("Offscreen worker can be only presented with canvas once. It has to be torn down and reinitialized if you need to use another canvas.");
+    throw new Error(`WORKER(${self.name}) can be only presented with canvas once. It has to be torn down and reinitialized if you need to use another canvas.`);
   }
 
   // prettier-ignore
@@ -65,6 +67,7 @@ function _createScenesSafe(): void {
     logger,
     domMessagePort,
     md2MessagePort,
+    progressMessagePort,
     quakeMapsMessagePort,
     texturesMessagePort
   );
@@ -125,6 +128,11 @@ self.onmessage = createRouter({
     eventBus.POINTER_ZOOM_REQUEST.forEach(function (callback) {
       callback(zoomAmount);
     });
+  },
+
+  progressMessagePort(port: MessagePort): void {
+    progressMessagePort = port;
+    _createScenesSafe();
   },
 
   quakeMapsMessagePort(port: MessagePort): void {

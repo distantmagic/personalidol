@@ -1,5 +1,7 @@
 import { Clock } from "three/src/core/Clock";
 
+import { SchedulerException } from "./SchedulerException";
+
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
 import type { Scheduler } from "./Scheduler.interface";
@@ -75,6 +77,26 @@ export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLo
     if (_continue) {
       _frameId = frameScheduler.requestFrame(tick);
     }
+  }
+
+  function _safeRequestFrame(): void {
+    _frameId = _requestFrame(frameScheduler, tick);
+    _retryFrame();
+  }
+
+  /**
+   * This is the recovery function to mitigate strange bug. Sometimes
+   * Firefox and iOS safari report that `requestAnimationFrame` is not
+   * available in the web worker and after a while it is available again.
+   */
+  function _retryFrame(): void {
+    if (null !== _frameId || !_continue) {
+      // All is good.
+      return;
+    }
+
+    // `setTimeout` seems to be always a safe choice.
+    setTimeout(_safeRequestFrame, 40);
   }
 
   function _updateUpdatable(updatable: MainLoopUpdatable): void {

@@ -8,7 +8,7 @@ function cancelFrame(frameId: TickType): void {
 }
 
 function requestFrame(callback: SchedulerCallback): TickType {
-  return setTimeout(callback, 10);
+  return setTimeout(callback, 40);
 }
 
 export function SetTimeoutScheduler(): Scheduler<TickType> {

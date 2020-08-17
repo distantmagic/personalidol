@@ -8,6 +8,7 @@ import { buildEntities } from "@personalidol/quakemaps/src/buildEntities";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
+import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
 
@@ -26,12 +27,25 @@ logger.debug(`WORKER_SPAWNED(${self.name})`);
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 let _atlasMessagePort: null | MessagePort = null;
+let _progressMessagePort: null | MessagePort = null;
 
 const _atlasMessageRouter = createRouter({
   textureAtlas: handleRPCResponse(_rpcLookupTable),
 });
 
-async function onMapContentLoaded(
+async function _fetchUnmarshalMapContent(
+  messagePort: MessagePort,
+  atlasMessagePort: MessagePort,
+  filename: string,
+  rpc: string,
+  discardOccluding: null | Vector3Simple = null
+): Promise<void> {
+  const content: string = await fetch(filename).then(_responseToText);
+
+  return _onMapContentLoaded(messagePort, atlasMessagePort, filename, rpc, content, discardOccluding);
+}
+
+async function _onMapContentLoaded(
   messagePort: MessagePort,
   atlasMessagePort: MessagePort,
   filename: string,
@@ -67,7 +81,7 @@ async function onMapContentLoaded(
 
   function _resolveTextureDimensions(textureName: string): AtlasTextureDimension {
     if (!textureAtlas.textureDimensions.hasOwnProperty(textureName)) {
-      throw new Error(`Unexpected texture dimensions resolve request. Texture is not included in the texture atlas: "${textureName}"`);
+      throw new Error(`WORKER(${self.name}) received unexpected texture dimensions resolve request. Texture is not included in the texture atlas: "${textureName}"`);
     }
 
     return textureAtlas.textureDimensions[textureName];
@@ -97,14 +111,22 @@ function _responseToText(response: Response): Promise<string> {
 }
 
 const quakeMapsMessagesRouter = {
-  async unmarshal(messagePort: MessagePort, { discardOccluding, filename, rpc }: { discardOccluding: null | Vector3Simple; filename: string; rpc: string }): Promise<void> {
+  unmarshal(messagePort: MessagePort, { discardOccluding, filename, rpc }: { discardOccluding: null | Vector3Simple; filename: string; rpc: string }): void {
     if (null === _atlasMessagePort) {
-      throw new Error("Atlas message port must be set before loading map.");
+      throw new Error(`Atlas message port must be set in WORKER(${self.name}) before loading map.`);
     }
 
-    const content: string = await fetch(filename).then(_responseToText);
+    if (null === _progressMessagePort) {
+      throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading map.`);
+    }
 
-    return onMapContentLoaded(messagePort, _atlasMessagePort, filename, rpc, content, discardOccluding);
+    const loadItemMap = {
+      comment: `map ${filename}`,
+      id: MathUtils.generateUUID(),
+      weight: 2,
+    };
+
+    notifyLoadingManager(_progressMessagePort, loadItemMap, _fetchUnmarshalMapContent(messagePort, _atlasMessagePort, filename, rpc, discardOccluding));
   },
 };
 
@@ -115,10 +137,18 @@ self.onmessage = createRouter({
 
   atlasMessagePort(port: MessagePort): void {
     if (null !== _atlasMessagePort) {
-      throw new Error("Atlas message port was already received by the maps worker.");
+      throw new Error(`Atlas message port was already received by WORKER(${self.name}).`);
     }
 
     _atlasMessagePort = port;
     _atlasMessagePort.onmessage = _atlasMessageRouter;
+  },
+
+  progressMessagePort(port: MessagePort): void {
+    if (null !== _progressMessagePort) {
+      throw new Error(`Progress message port was already received by WORKER(${self.name}).`);
+    }
+
+    _progressMessagePort = port;
   },
 });

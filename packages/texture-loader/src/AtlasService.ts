@@ -6,6 +6,7 @@ import { createReusedResponsesUsage } from "@personalidol/workers/src/createReus
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
+import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import { imageDataBufferResponseToImageData } from "./imageDataBufferResponseToImageData";
@@ -115,7 +116,7 @@ function _onImageBitmap({ imageBitmap }: ImageBitmapResponse): ImageBitmap {
   return imageBitmap;
 }
 
-export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, context2D: Context2D, texturesMessagePort: MessagePort): IAtlasService {
+export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, context2D: Context2D, progressMessagePort: MessagePort, texturesMessagePort: MessagePort): IAtlasService {
   function registerMessagePort(messagePort: MessagePort) {
     attachMultiRouter(messagePort, _messagesRouter);
   }
@@ -240,7 +241,14 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   }
 
   async function _processAtlasQueue(request: AtlasQueueItem): Promise<void> {
-    const { data: response, isLast } = await reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, _keyFromAtlasQueueItem(request), request, _createTextureAtlas);
+    const requestKey = _keyFromAtlasQueueItem(request);
+    const atlasResponse = reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createTextureAtlas);
+    const loadItemAtlas = {
+      comment: `atlas ${requestKey}`,
+      id: MathUtils.generateUUID(),
+      weight: request.textureUrls.length,
+    };
+    const { data: response, isLast } = await notifyLoadingManager(progressMessagePort, loadItemAtlas, atlasResponse);
     const { imageData, textureDimensions } = response;
 
     request.messagePort.postMessage(
