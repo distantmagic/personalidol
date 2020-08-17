@@ -28,7 +28,7 @@ const vertexShader = `
     v_atlas_uv_stop = atlas_uv_stop;
 
     v_atlas_texture_u_size = v_atlas_uv_stop.x - v_atlas_uv_start.x;
-    v_atlas_texture_v_size = v_atlas_uv_stop.y - v_atlas_uv_start.y;
+    v_atlas_texture_v_size = v_atlas_uv_start.y - v_atlas_uv_stop.y;
 
   #endif
 `;
@@ -48,13 +48,15 @@ const fragmentShaderPars = `
   #endif
 `;
 
+// float coordX = (uv.x * (endU - startU) + startU);
+// float coordY = (uv.y * (startV - endV) + endV);
 const fragmentShaderReplace = "#include <map_fragment>";
 const fragmentShader = `
   #ifdef USE_MAP
 
     vec4 texelColor = texture2D( map, vec2(
-      mod( vUv.x, v_atlas_texture_u_size ) + v_atlas_uv_start.x,
-      mod( vUv.y, v_atlas_texture_v_size ) + v_atlas_uv_start.y
+      fract( vUv.x ) * v_atlas_texture_u_size + v_atlas_uv_start.x,
+      fract( vUv.y ) * v_atlas_texture_v_size + v_atlas_uv_start.y
     ) );
 
     texelColor = mapTexelToLinear( texelColor );

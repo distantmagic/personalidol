@@ -43,12 +43,13 @@ const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
 const inputState = Input.createEmptyState(useSharedBuffers);
 
 const eventBus = EventBus();
-const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState);
-
 const mainLoop = MainLoop(RequestAnimationFrameScheduler());
-const mouseObserver = MouseObserver(canvas, dimensionsState, inputState);
+
+const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
+
+const mouseObserver = MouseObserver(canvas, dimensionsState, inputState, htmlElementResizeObserver.state, mainLoop.tickTimerState);
 const serviceManager = ServiceManager();
-const touchObserver = TouchObserver(canvas, dimensionsState, inputState);
+const touchObserver = TouchObserver(canvas, dimensionsState, inputState, htmlElementResizeObserver.state, mainLoop.tickTimerState);
 
 serviceManager.services.add(htmlElementResizeObserver);
 serviceManager.services.add(mouseObserver);
@@ -256,13 +257,21 @@ serviceManager.start();
           awaitSharedDimensions: false,
         });
 
+        let _lastNotificationTick = 0;
         const updateMessage = {
           dimensionsState: dimensionsState,
           inputState: inputState,
         };
 
         return WorkerService(offscreenWorker, function () {
-          return updateMessage;
+          // prettier-ignore
+          if ( _lastNotificationTick < htmlElementResizeObserver.state.lastUpdate
+            || _lastNotificationTick < mouseObserver.state.lastUpdate
+            || _lastNotificationTick < touchObserver.state.lastUpdate
+          ) {
+            offscreenWorker.postMessage(updateMessage);;
+            _lastNotificationTick = mainLoop.tickTimerState.currentTick;
+          }
         });
       }
 

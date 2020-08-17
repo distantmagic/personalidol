@@ -2008,7 +2008,7 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Barrier"
-"_tb_id" "45"
+"_tb_id" "3"
 // brush 0
 {
 ( 344 1916 1456 ) ( 344 1912 1456 ) ( 344 1912 1424 ) textures/texture-crate-128x128 -0 -0 -0 1 1
@@ -2195,7 +2195,7 @@
 "classname" "func_group"
 "_tb_type" "_tb_layer"
 "_tb_name" "Platform"
-"_tb_id" "46"
+"_tb_id" "4"
 // brush 0
 {
 ( 992 1800 1432 ) ( 992 1792 1432 ) ( 992 1792 1392 ) textures/texture-rust-panel-128x128 -32 -0 -0 1 1
@@ -2670,5 +2670,5 @@
 "color" "0xffffff"
 "decay" "1"
 "intensity" "2"
-"_tb_layer" "46"
+"_tb_layer" "4"
 }

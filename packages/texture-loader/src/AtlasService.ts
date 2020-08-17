@@ -66,7 +66,7 @@ const _texturesMessageRouter = createRouter({
  *
  * @see requestTexture
  */
-function _drawAtlasTexture(context2D: Context2D, atlasSideLengthPx: number, texture: ImageBitmap | ImageData, textureDimension: AtlasTextureDimension): void {
+function _drawAtlasTexture(context2D: Context2D, texture: ImageBitmap | ImageData, textureDimension: AtlasTextureDimension): void {
   if (isImageBitmap(texture)) {
     // prettier-ignore
     context2D.drawImage(
@@ -75,7 +75,7 @@ function _drawAtlasTexture(context2D: Context2D, atlasSideLengthPx: number, text
       0, 0,
       textureDimension.width, textureDimension.height,
 
-      textureDimension.atlasLeft, textureDimension.atlasTop - atlasSideLengthPx,
+      textureDimension.atlasLeft, textureDimension.atlasTop,
       textureDimension.width, textureDimension.height
     );
 
@@ -83,7 +83,6 @@ function _drawAtlasTexture(context2D: Context2D, atlasSideLengthPx: number, text
   }
 
   if (isImageData(texture)) {
-    console.log("IMAGE DATA");
     // prettier-ignore
     context2D.putImageData(
       texture,
@@ -149,9 +148,24 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
    * Textures must be the same size and have other constraints, because I
    * didn't want to go into texture packing / optimization algorithms. Packing
    * everything into the POT square is enough here.
+   *
+   * Example atlas with 4 textures:
+   * Each texture is flipped vertically.
+   *
+   * +-------+-------+  UVs:
+   * |       |       |  0: (0.0, 0.0) - (0.5, 0.5)
+   * |       |       |  1: (0.5, 0.0) - (1.0, 0.5)
+   * | 2     | 3     |  2: (0.0, 0.5) - (0.5, 1.0)
+   * +-------+-------+  3: (0.5, 0.5) - (1.0, 1.0)
+   * |       |       |
+   * |       |       |
+   * | 0     | 1     |
+   * +-------+-------+
    */
   async function _createTextureAtlas(request: AtlasQueueItem): Promise<Atlas> {
     const textures = await Promise.all(request.textureUrls.map(_requestTexture));
+
+    console.log(request.textureUrls);
 
     const textureSize = textures[0].height;
     const width = textures[0].width;
@@ -183,13 +197,11 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
     // Reset canvas to pure black first to remove previous textures.
     context2D.clearRect(0, 0, atlasSideLengthPx, atlasSideLengthPx);
 
-    context2D.scale(1, -1);
-
     i = 0;
 
     const textureDimensions: AtlasTextureDimensions = {};
 
-    for (let y = 0; y < atlasSideLength; y += 1) {
+    for (let y = atlasSideLength - 1; y >= 0; y -= 1) {
       for (let x = 0; x < atlasSideLength; x += 1) {
         if (i >= textures.length) {
           break;
@@ -209,28 +221,26 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
           uvStartU: atlasLeft / atlasSideLengthPx,
           uvStopU: (atlasLeft + textureSize) / atlasSideLengthPx,
 
-          uvStartV: atlasTop / atlasSideLengthPx,
-          uvStopV: (atlasTop + textureSize) / atlasSideLengthPx,
+          uvStartV: (atlasTop + textureSize) / atlasSideLengthPx,
+          uvStopV: atlasTop / atlasSideLengthPx,
         };
 
         const textureUrl = request.textureUrls[i];
 
         textureDimensions[textureUrl] = textureDimension;
 
-        _drawAtlasTexture(context2D, atlasSideLengthPx, texture, textureDimension);
+        _drawAtlasTexture(context2D, texture, textureDimension);
 
         i += 1;
       }
     }
 
-    try {
-      return {
-        imageData: context2D.getImageData(0, 0, atlasSideLengthPx, atlasSideLengthPx),
-        textureDimensions: textureDimensions,
-      };
-    } finally {
-      context2D.setTransform(1, 0, 0, 1, 0, 0);
-    }
+    console.log(textureDimensions);
+
+    return {
+      imageData: context2D.getImageData(0, 0, atlasSideLengthPx, atlasSideLengthPx),
+      textureDimensions: textureDimensions,
+    };
   }
 
   async function _processAtlasQueue(request: AtlasQueueItem): Promise<void> {
@@ -254,7 +264,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   function _requestTexture(textureUrl: string): Promise<ImageBitmap | ImageData> {
     // Do not flip the texture as the entire texture atlas is going to be
     // flipped later.
-    return requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl, false);
+    return requestTexture(_rpcLookupTable, texturesMessagePort, textureUrl);
   }
 
   return Object.freeze({

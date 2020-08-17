@@ -1,8 +1,9 @@
-import { WorkerService as IWorkerService } from "./WorkerService.interface";
+import type { MainLoopUpdateCallback } from "./MainLoopUpdateCallback.type";
+import type { WorkerService as IWorkerService } from "./WorkerService.interface";
 
-type Updater = () => any;
+function _noop(): void {}
 
-export function WorkerService(worker: Worker, updateMessage: null | Updater = null): IWorkerService {
+export function WorkerService(worker: Worker, updater: null | MainLoopUpdateCallback = null): IWorkerService {
   const _messageStart = {
     start: null,
   };
@@ -18,15 +19,9 @@ export function WorkerService(worker: Worker, updateMessage: null | Updater = nu
     worker.postMessage(_messageStop);
   }
 
-  function update(): void {
-    if (updateMessage) {
-      worker.postMessage(updateMessage());
-    }
-  }
-
   return {
     start: start,
     stop: stop,
-    update: update,
+    update: updater ? updater : _noop,
   };
 }

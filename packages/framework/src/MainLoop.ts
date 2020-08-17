@@ -3,8 +3,12 @@ import { Clock } from "three/src/core/Clock";
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
 import type { Scheduler } from "./Scheduler.interface";
+import type { TickTimerState } from "./TickTimerState.type";
 
 export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLoop {
+  const tickTimerState: TickTimerState = Object.seal({
+    currentTick: 0,
+  });
   const updatables = new Set<MainLoopUpdatable>();
 
   const _clock = new Clock(false);
@@ -41,6 +45,7 @@ export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLo
   function tick(): void {
     _delta = _clock.getDelta();
     _elapsedTime = _clock.getElapsedTime();
+    tickTimerState.currentTick += 1;
 
     updatables.forEach(_updateUpdatable);
 
@@ -55,6 +60,7 @@ export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLo
   }
 
   return Object.freeze({
+    tickTimerState: tickTimerState,
     updatables: updatables,
 
     start: start,

@@ -4,7 +4,7 @@ include ../../Makefile_packages.mk
 SOURCES_CSS := $(shell find styles -type f -name "*.css")
 
 .PHONY: public
-public: public/lib/index.js public/lib/index_offscreen.worker.js public/index.css
+public: public/lib/index.js public/index.css
 
 .PHONY: public.watch
 public.watch: node_modules
@@ -13,14 +13,13 @@ public.watch: node_modules
 public/lib:
 	mkdir -p public/lib
 
-public/lib/index.js public/lib/index_offscreen.worker.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
+public/lib/index.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
 	yarn run esbuild \
 		--bundle \
 		--define:__LOG_LEVEL=\"debug\" \
 		--format=esm \
 		--jsx-factory=h \
 		--jsx-fragment=Fragment \
-		--minify \
 		--outdir=public/lib \
 		--platform=browser \
 		--sourcemap \

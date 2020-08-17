@@ -382,11 +382,11 @@ export function MapScene(
   }
 
   function update(delta: number): void {
-    domMessagePort.postMessage({
-      render: {
-        route: "/map",
-      },
-    });
+    // domMessagePort.postMessage({
+    //   render: {
+    //     route: "/map",
+    //   },
+    // });
 
     if (isPrimaryPointerPressed(inputState)) {
       _pointerVector.x = getPrimaryPointerVectorX(inputState);

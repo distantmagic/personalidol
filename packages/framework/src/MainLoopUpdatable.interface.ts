@@ -1,3 +1,5 @@
+import type { MainLoopUpdateCallback } from "./MainLoopUpdateCallback.type";
+
 export interface MainLoopUpdatable {
-  update(delta: number, elapsedTime: number): void;
+  update: MainLoopUpdateCallback;
 }
