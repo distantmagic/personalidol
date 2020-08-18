@@ -4,10 +4,9 @@ import { sceneUnmountSoft } from "./sceneUnmountSoft";
 import type { Logger } from "loglevel";
 
 import type { Director as IDirector } from "./Director.interface";
-import type { RendererState } from "./RendererState.type";
 import type { SceneLoader as ISceneLoader } from "./SceneLoader.interface";
 
-export function SceneLoader(logger: Logger, rendererState: RendererState, sceneDirector: IDirector, loadingScreenDirector: IDirector): ISceneLoader {
+export function SceneLoader(logger: Logger, sceneDirector: IDirector, loadingScreenDirector: IDirector): ISceneLoader {
   function start(): void {}
 
   function stop(): void {}

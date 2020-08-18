@@ -10,6 +10,7 @@
     "@personalidol/loading-manager": "^0.0.0",
     "@personalidol/quakemaps": "^0.0.0",
     "@personalidol/texture-loader": "^0.0.0",
+    "@personalidol/three-modules": "^0.0.0",
     "@personalidol/workers": "^0.0.0",
     "loglevel": "^1.6.8",
     "preact": "^10.4.7",

@@ -1,6 +1,7 @@
 import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
 import { Director } from "@personalidol/framework/src/Director";
+import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MapScene } from "@personalidol/personalidol/src/MapScene";
 import { Renderer } from "@personalidol/framework/src/Renderer";
@@ -10,7 +11,6 @@ import type { Logger } from "loglevel";
 
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
-import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 
 export function createScenes(
@@ -28,53 +28,58 @@ export function createScenes(
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort
 ): void {
-  const rendererState: RendererState = Object.seal({
-    camera: null,
-    renderer: new WebGLRenderer({
-      alpha: false,
-      antialias: false,
-      canvas: canvas,
-    }),
-    scene: null,
+  const webGLRenderer = new WebGLRenderer({
+    alpha: false,
+    antialias: false,
+    canvas: canvas,
   });
 
-  // rendererState.renderer.gammaOutput = true;
-  // rendererState.renderer.gammaFactor = 2.2;
-  rendererState.renderer.setPixelRatio(devicePixelRatio);
-  rendererState.renderer.shadowMap.enabled = false;
-  rendererState.renderer.shadowMap.autoUpdate = false;
+  // webGLRenderer.gammaOutput = true;
+  // webGLRenderer.gammaFactor = 2.2;
+  webGLRenderer.setPixelRatio(devicePixelRatio);
+  webGLRenderer.shadowMap.enabled = false;
+  webGLRenderer.shadowMap.autoUpdate = false;
 
-  const renderer = Renderer(rendererState, dimensionsState);
+  const effectComposer = new EffectComposer(webGLRenderer);
+
+  const renderer = Renderer(dimensionsState, effectComposer, webGLRenderer);
   const currentSceneDirector = Director(logger, "Scene");
   const loadingSceneDirector = Director(logger, "LoadingScreen");
-  const sceneLoader = SceneLoader(logger, rendererState, currentSceneDirector, loadingSceneDirector);
+  const sceneLoader = SceneLoader(logger, currentSceneDirector, loadingSceneDirector);
 
   // const mapFilename = "/maps/map-box.map";
-  // const mapFilename = "/maps/map-cube-chipped.map";
+  const mapFilename = "/maps/map-cube-chipped.map";
   // const mapFilename = "/maps/map-cube.map";
   // const mapFilename = "/maps/map-desert-hut.map";
   // const mapFilename = "/maps/map-flatiron.map";
   // const mapFilename = "/maps/map-flint.map";
-  const mapFilename = "/maps/map-mountain-caravan.map";
+  // const mapFilename = "/maps/map-mountain-caravan.map";
   // const mapFilename = "/maps/map-zagaj.map";
   const currentSceneDirectorState = currentSceneDirector.state;
 
   // prettier-ignore
   currentSceneDirector.state.next = MapScene(
     logger,
+    effectComposer,
     currentSceneDirectorState,
     eventBus,
+    dimensionsState,
     inputState,
     domMessagePort,
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
     texturesMessagePort,
-    rendererState,
     mapFilename
   );
 
-  loadingSceneDirector.state.next = LoadingScreenScene(domMessagePort, progressMessagePort, rendererState);
+  // prettier-ignore
+  loadingSceneDirector.state.next = LoadingScreenScene(
+    effectComposer,
+    dimensionsState,
+    domMessagePort,
+    progressMessagePort
+  );
 
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(loadingSceneDirector);

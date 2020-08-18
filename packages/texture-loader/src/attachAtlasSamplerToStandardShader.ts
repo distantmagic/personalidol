@@ -10,7 +10,6 @@ const vertexShaderPars = `
     attribute vec2 atlas_uv_stop;
 
     varying vec2 v_atlas_uv_start;
-    varying vec2 v_atlas_uv_stop;
 
     varying float v_atlas_texture_u_size;
     varying float v_atlas_texture_v_size;
@@ -25,10 +24,9 @@ const vertexShader = `
   #ifdef USE_MAP
 
     v_atlas_uv_start = atlas_uv_start;
-    v_atlas_uv_stop = atlas_uv_stop;
 
-    v_atlas_texture_u_size = v_atlas_uv_stop.x - v_atlas_uv_start.x;
-    v_atlas_texture_v_size = v_atlas_uv_start.y - v_atlas_uv_stop.y;
+    v_atlas_texture_u_size = atlas_uv_stop.x - atlas_uv_start.x;
+    v_atlas_texture_v_size = atlas_uv_start.y - atlas_uv_stop.y;
 
   #endif
 `;
@@ -40,7 +38,6 @@ const fragmentShaderPars = `
   #ifdef USE_MAP
 
     varying vec2 v_atlas_uv_start;
-    varying vec2 v_atlas_uv_stop;
 
     varying float v_atlas_texture_u_size;
     varying float v_atlas_texture_v_size;

@@ -24,6 +24,7 @@ public/lib/index.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
 		--outdir=public/lib \
 		--platform=browser \
 		--sourcemap \
+		--target=safari13 \
 		--strict \
 		--tsconfig=tsconfig.json \
 		src/createScenes.ts \

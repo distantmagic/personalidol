@@ -12,7 +12,9 @@ import { ShaderPass } from "./ShaderPass";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget as IWebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
-export class EffectComposer {
+import type { EffectComposer as IEffectComposer } from "./EffectComposer.interface";
+
+export class EffectComposer implements IEffectComposer {
   private _pixelRatio: number;
   private _width: number;
   private _height: number;
@@ -91,6 +93,12 @@ export class EffectComposer {
     }
 
     return true;
+  }
+
+  removePass(pass: Pass): void {
+    this.passes = this.passes.filter(function (_pass: Pass) {
+      return _pass !== pass;
+    });
   }
 
   render(deltaTime: null | number = null) {

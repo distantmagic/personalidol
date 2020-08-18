@@ -29,15 +29,18 @@ import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/s
 import { invoke } from "@personalidol/framework/src/invoke";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
+import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
+import { updateStoreCameraAspect } from "@personalidol/framework/src/updateStoreCameraAspect";
 
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three";
 
 import type { DirectorState } from "@personalidol/framework/src/DirectorState.type";
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EntityAny } from "@personalidol/quakemaps/src/EntityAny.type";
 import type { EntityFuncGroup } from "@personalidol/quakemaps/src/EntityFuncGroup.type";
 import type { EntityGLTFModel } from "@personalidol/quakemaps/src/EntityGLTFModel.type";
@@ -52,7 +55,6 @@ import type { EntitySounds } from "@personalidol/quakemaps/src/EntitySounds.type
 import type { EntitySparkParticles } from "@personalidol/quakemaps/src/EntitySparkParticles.type";
 import type { EntityWorldspawn } from "@personalidol/quakemaps/src/EntityWorldspawn.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
-import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
@@ -100,15 +102,16 @@ let _cameraZoomAmount = 0;
 
 export function MapScene(
   logger: Logger,
+  effectComposer: EffectComposer,
   directorState: DirectorState,
   eventBus: EventBus,
+  dimensionsState: Uint32Array,
   inputState: Int32Array,
   domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
-  rendererState: RendererState,
   mapFilename: string
 ): IScene {
   const state: SceneState = Object.seal({
@@ -296,13 +299,15 @@ export function MapScene(
 
     eventBus.POINTER_ZOOM_REQUEST.add(_onPointerZoomRequest);
 
-    rendererState.camera = _camera;
-    rendererState.scene = _scene;
+    const renderPass = new RenderPass(_scene, _camera);
+
+    effectComposer.addPass(renderPass);
+    _unmountables.add(function () {
+      effectComposer.removePass(renderPass);
+    });
 
     _cameraZoomAmount = 400;
     _onCameraUpdate();
-
-    _unmountables.add(_unmountFromRenderer);
   }
 
   async function preload(): Promise<void> {
@@ -342,7 +347,6 @@ export function MapScene(
 
     await createEntities;
 
-    rendererState.renderer.shadowMap.needsUpdate = true;
     state.isPreloading = false;
     state.isPreloaded = true;
 
@@ -368,6 +372,8 @@ export function MapScene(
   }
 
   function update(delta: number): void {
+    updateStoreCameraAspect(_camera, dimensionsState);
+
     // domMessagePort.postMessage({
     //   render: {
     //     route: "/map",
@@ -408,15 +414,16 @@ export function MapScene(
     // prettier-ignore
     directorState.next = MapScene(
       logger,
+      effectComposer,
       directorState,
       eventBus,
+      dimensionsState,
       inputState,
       domMessagePort,
       md2MessagePort,
       progressMessagePort,
       quakeMapsMessagePort,
       texturesMessagePort,
-      rendererState,
       mapFilename,
     );
   }
@@ -437,11 +444,6 @@ export function MapScene(
     _cameraZoomAmount = Math.max(CAMERA_ZOOM_MAX, _cameraZoomAmount);
     _cameraZoomAmount = Math.min(CAMERA_ZOOM_MIN, _cameraZoomAmount);
     _onCameraUpdate();
-  }
-
-  function _unmountFromRenderer() {
-    rendererState.camera = null;
-    rendererState.scene = null;
   }
 
   return Object.freeze({

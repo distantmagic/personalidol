@@ -10,12 +10,15 @@ import { SpotLight } from "three/src/lights/SpotLight";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
+import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
 import { invoke } from "@personalidol/framework/src/invoke";
+import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
+import { updateStoreCameraAspect } from "@personalidol/framework/src/updateStoreCameraAspect";
 
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
-import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
@@ -26,7 +29,7 @@ const _clearRendererMessage = {
   },
 };
 
-export function LoadingScreenScene(domMessagePort: MessagePort, progressMessagePort: MessagePort, rendererState: RendererState): IScene {
+export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -82,6 +85,13 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
       _loadingManagerDOMNeedsUpdate = true;
 
       _boxMaterial.color = new Color(0xff0000);
+
+      const glitchPass = new GlitchPass();
+
+      effectComposer.addPass(glitchPass);
+      _unmountables.add(function () {
+        effectComposer.removePass(glitchPass);
+      });
     },
 
     progress(progress: LoadingManagerProgress): void {
@@ -102,8 +112,12 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
 
     progressMessagePort.onmessage = _progressRouter;
 
-    rendererState.camera = _camera;
-    rendererState.scene = _scene;
+    const renderPass = new RenderPass(_scene, _camera);
+
+    effectComposer.addPass(renderPass);
+    _unmountables.add(function () {
+      effectComposer.removePass(renderPass);
+    });
 
     _spotLight.intensity = 0;
 
@@ -111,7 +125,6 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
     _scene.add(_boxMesh);
     _scene.add(_spotLight);
 
-    _unmountables.add(_unmountFromRenderer);
     _unmountables.add(function () {
       _scene.remove(_ambientLight);
       _scene.remove(_boxMesh);
@@ -143,11 +156,6 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
     }
   }
 
-  function _unmountFromRenderer() {
-    rendererState.camera = null;
-    rendererState.scene = null;
-  }
-
   function _updateDOM(): void {
     if (_loadingError) {
       domMessagePort.postMessage({
@@ -169,6 +177,7 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
   }
 
   function _updateScene(delta: number): void {
+    updateStoreCameraAspect(_camera, dimensionsState);
     _spotLight.intensity = Math.min(2, _spotLight.intensity + 2 * delta);
 
     if (_spotLight.intensity > 0.4) {
