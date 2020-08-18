@@ -1,0 +1,15 @@
+.pi__loading-screen.pi__loading-screen--error {
+  background-color: rgba(0, 0, 0, 0.6);
+  bottom: 1.6rem;
+  color: white;
+  font-family: monospace;
+  font-size: 1rem;
+  left: 1.6rem;
+  letter-spacing: 0.1ch;
+  line-height: 1.3rem;
+  overflow-wrap: break-word;
+  pointer-events: all;
+  position: absolute;
+  right: 1.6rem;
+  top: 1.6rem;
+}

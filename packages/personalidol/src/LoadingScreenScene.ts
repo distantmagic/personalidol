@@ -1,5 +1,6 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
 import { BoxBufferGeometry } from "three/src/geometries/BoxGeometry";
+import { Color } from "three/src/math/Color";
 import { Mesh } from "three/src/objects/Mesh";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
@@ -12,6 +13,7 @@ import { disposableMaterial } from "@personalidol/framework/src/disposableMateri
 import { invoke } from "@personalidol/framework/src/invoke";
 
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
 import type { RendererState } from "@personalidol/framework/src/RendererState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
@@ -33,6 +35,7 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
   });
 
   let _loadingManagerProgressNeedsUpdate = false;
+  let _loadingError: null | LoadingError = null;
   let _loadingManagerProgress: LoadingManagerProgress = {
     comment: "",
     progress: 0,
@@ -74,9 +77,16 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
   _disposables.add(disposableMaterial(_boxMaterial));
 
   const _progressRouter = createRouter({
-    progress(progress: LoadingManagerProgress): void {
+    error(error: LoadingError): void {
+      _loadingError = error;
       _loadingManagerProgressNeedsUpdate = true;
+
+      _boxMaterial.color = new Color(0xff0000);
+    },
+
+    progress(progress: LoadingManagerProgress): void {
       _loadingManagerProgress = progress;
+      _loadingManagerProgressNeedsUpdate = true;
     },
   });
 
@@ -133,6 +143,19 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
     }
 
     if (!_loadingManagerProgressNeedsUpdate) {
+      return;
+    }
+
+    _loadingManagerProgressNeedsUpdate = false;
+
+    if (_loadingError) {
+      domMessagePort.postMessage({
+        render: {
+          route: "/loading-screen/error",
+          data: _loadingError,
+        },
+      });
+
       return;
     }
 

@@ -1,3 +1,5 @@
+import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
+
 import { Dimensions } from "./Dimensions";
 import { updateCameraAspect } from "./updateCameraAspect";
 
@@ -7,6 +9,8 @@ import type { RendererState } from "./RendererState.type";
 
 export function Renderer(state: RendererState, dimensionsState: Uint16Array): IRenderer {
   let _isStarted = false;
+
+  console.log(EffectComposer);
 
   function start(): void {
     if (_isStarted) {

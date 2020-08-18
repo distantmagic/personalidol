@@ -1,5 +1,3 @@
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-
 import type { LoadingManager as ILoadingManager } from "./LoadingManager.interface";
 import type { LoadingManagerItem } from "./LoadingManagerItem.type";
 import type { LoadingManagerProgress } from "./LoadingManagerProgress.type";

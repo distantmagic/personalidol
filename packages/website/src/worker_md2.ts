@@ -6,7 +6,7 @@ import { createReusedResponsesCache } from "@personalidol/workers/src/createReus
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { LoadingManager } from "three/src/loaders/LoadingManager";
-import { MD2Loader } from "@personalidol/framework/src/MD2Loader";
+import { MD2Loader } from "@personalidol/three-modules/src/loaders/MD2Loader";
 import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 

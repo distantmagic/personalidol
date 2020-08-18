@@ -12,6 +12,7 @@
     "@personalidol/quakemaps": "0.0.0",
     "@personalidol/support": "0.0.0",
     "@personalidol/texture-loader": "0.0.0",
+    "@personalidol/three-modules": "0.0.0",
     "@personalidol/workers": "0.0.0",
     "loglevel": "^1.6.8",
     "three": "^0.119.1"

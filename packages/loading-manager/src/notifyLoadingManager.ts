@@ -15,7 +15,13 @@ export function notifyLoadingManager<T>(progressMessagePort: MessagePort, item: 
     })
     .catch(function (err) {
       progressMessagePort.postMessage({
-        error: item,
+        error: {
+          item: item,
+          error: {
+            message: err.message,
+            stack: err.stack,
+          },
+        },
       });
 
       throw err;

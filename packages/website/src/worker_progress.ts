@@ -6,6 +6,7 @@ import { createRouter } from "@personalidol/workers/src/createRouter";
 import { LoadingManager } from "@personalidol/loading-manager/src/LoadingManager";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
+import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 import type { LoadingManagerItem } from "@personalidol/loading-manager/src/LoadingManagerItem.type";
 import type { LoadingManagerState } from "@personalidol/loading-manager/src/LoadingManagerState.type";
 
@@ -51,8 +52,10 @@ const progressMessagesRouter = {
     _refreshNotifyProgress();
   },
 
-  error(messagePort: MessagePort, item: LoadingManagerItem) {
-    console.log("error");
+  error(messagePort: MessagePort, error: LoadingError) {
+    broadcastMessage(messagePorts, {
+      error: error,
+    });
   },
 
   expectAtLeast(messagePort: MessagePort, expectAtLeast: number) {
@@ -74,7 +77,7 @@ const progressMessagesRouter = {
 };
 
 self.onmessage = createRouter({
-  progressMessagePort({ broadcastProgress, messagePort }: { broadcastProgress: boolean, messagePort: MessagePort }): void {
+  progressMessagePort({ broadcastProgress, messagePort }: { broadcastProgress: boolean; messagePort: MessagePort }): void {
     if (broadcastProgress) {
       messagePorts.push(messagePort);
     }
