@@ -34,7 +34,7 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
     isPreloading: false,
   });
 
-  let _loadingManagerProgressNeedsUpdate = false;
+  let _loadingManagerDOMNeedsUpdate = false;
   let _loadingError: null | LoadingError = null;
   let _loadingManagerProgress: LoadingManagerProgress = {
     comment: "",
@@ -79,14 +79,14 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
   const _progressRouter = createRouter({
     error(error: LoadingError): void {
       _loadingError = error;
-      _loadingManagerProgressNeedsUpdate = true;
+      _loadingManagerDOMNeedsUpdate = true;
 
       _boxMaterial.color = new Color(0xff0000);
     },
 
     progress(progress: LoadingManagerProgress): void {
       _loadingManagerProgress = progress;
-      _loadingManagerProgressNeedsUpdate = true;
+      _loadingManagerDOMNeedsUpdate = true;
     },
   });
 
@@ -135,19 +135,20 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
   }
 
   function update(delta: number): void {
-    _spotLight.intensity = Math.min(2, _spotLight.intensity + 2 * delta);
+    _updateScene(delta);
 
-    if (_spotLight.intensity > 0.4) {
-      _boxMesh.rotation.x += delta;
-      _boxMesh.rotation.z += delta;
+    if (_loadingManagerDOMNeedsUpdate) {
+      _updateDOM();
+      _loadingManagerDOMNeedsUpdate = false;
     }
+  }
 
-    if (!_loadingManagerProgressNeedsUpdate) {
-      return;
-    }
+  function _unmountFromRenderer() {
+    rendererState.camera = null;
+    rendererState.scene = null;
+  }
 
-    _loadingManagerProgressNeedsUpdate = false;
-
+  function _updateDOM(): void {
     if (_loadingError) {
       domMessagePort.postMessage({
         render: {
@@ -167,9 +168,13 @@ export function LoadingScreenScene(domMessagePort: MessagePort, progressMessageP
     });
   }
 
-  function _unmountFromRenderer() {
-    rendererState.camera = null;
-    rendererState.scene = null;
+  function _updateScene(delta: number): void {
+    _spotLight.intensity = Math.min(2, _spotLight.intensity + 2 * delta);
+
+    if (_spotLight.intensity > 0.4) {
+      _boxMesh.rotation.x += delta;
+      _boxMesh.rotation.z += delta;
+    }
   }
 
   return Object.freeze({

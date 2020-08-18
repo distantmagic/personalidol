@@ -1,6 +1,6 @@
-import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
-import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
-import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
+// import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
+// import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
+// import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
 
 import { Dimensions } from "./Dimensions";
 import { updateCameraAspect } from "./updateCameraAspect";
@@ -14,10 +14,6 @@ const _DIMENSIONS_LAST_UPDATE = Symbol("_DIMENSIONS_LAST_UPDATE");
 export function Renderer(state: RendererState, dimensionsState: Uint32Array): IRenderer {
   let _isStarted: boolean = false;
   let _lastDimensionsUpdate: number = 0;
-
-  console.log(EffectComposer);
-  console.log(RenderPass);
-  console.log(GlitchPass);
 
   function start(): void {
     if (_isStarted) {
