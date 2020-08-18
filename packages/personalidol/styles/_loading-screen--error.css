@@ -4,12 +4,15 @@
   color: white;
   font-family: monospace;
   font-size: 1rem;
-  left: 1.6rem;
+  left: 50%;
   letter-spacing: 0.1ch;
   line-height: 1.3rem;
+  max-width: 80ch;
   overflow-wrap: break-word;
   pointer-events: all;
+  padding: 1.6rem;
   position: absolute;
-  right: 1.6rem;
   top: 1.6rem;
+  transform: translateX(-50%);
+  width: calc(100vw - 3.2rem);
 }
