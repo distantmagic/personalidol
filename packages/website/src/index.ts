@@ -12,7 +12,7 @@ import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLEleme
 import { Input } from "@personalidol/framework/src/Input";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
-import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
+import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
@@ -35,41 +35,41 @@ logger.setLevel(__LOG_LEVEL);
 const canvasRoot = getHTMLElementById(window, "canvas-root");
 const uiRoot = getHTMLElementById(window, "ui-root");
 
-// Services that need to stay in the main browser thread, because they need
-// access to the DOM API.
-
-const useSharedBuffers = isSharedArrayBufferSupported();
-const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
-const inputState = Input.createEmptyState(useSharedBuffers);
-
-const eventBus = EventBus();
-const mainLoop = MainLoop(RequestAnimationFrameScheduler());
-
-const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
-
-const mouseObserver = MouseObserver(canvas, dimensionsState, inputState, htmlElementResizeObserver.state, mainLoop.tickTimerState);
-const serviceManager = ServiceManager(logger);
-const touchObserver = TouchObserver(canvas, dimensionsState, inputState, htmlElementResizeObserver.state, mainLoop.tickTimerState);
-
-serviceManager.services.add(htmlElementResizeObserver);
-serviceManager.services.add(mouseObserver);
-serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
-serviceManager.services.add(touchObserver);
-serviceManager.services.add(PreventDefaultInput(canvas));
-
-mainLoop.updatables.add(htmlElementResizeObserver);
-mainLoop.updatables.add(mouseObserver);
-mainLoop.updatables.add(touchObserver);
-mainLoop.updatables.add(serviceManager);
-
-mainLoop.start();
-serviceManager.start();
-
 // The entire bootstrap code is wrapped to allow 'await'. Global await is not
 // widely supported yet.
 // Depending on browser feature support, some workers will be started or not.
 // Checking for features is asynchronous.
 (async function () {
+  // Services that need to stay in the main browser thread, because they need
+  // access to the DOM API.
+
+  const useSharedBuffers = await isSharedArrayBufferSupported(supportCache);
+  const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
+  const inputState = Input.createEmptyState(useSharedBuffers);
+
+  const eventBus = EventBus();
+  const mainLoop = MainLoop(RequestAnimationFrameScheduler());
+
+  const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
+
+  const mouseObserver = MouseObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
+  const serviceManager = ServiceManager(logger);
+  const touchObserver = TouchObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
+
+  serviceManager.services.add(htmlElementResizeObserver);
+  serviceManager.services.add(mouseObserver);
+  serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
+  serviceManager.services.add(touchObserver);
+  serviceManager.services.add(PreventDefaultInput(canvas));
+
+  mainLoop.updatables.add(htmlElementResizeObserver);
+  mainLoop.updatables.add(mouseObserver);
+  mainLoop.updatables.add(touchObserver);
+  mainLoop.updatables.add(serviceManager);
+
+  mainLoop.start();
+  serviceManager.start();
+
   // DOMRendererService receives messages from workers and other sources and
   // redraws the DOM in the main thread.
 
@@ -311,9 +311,8 @@ serviceManager.start();
 
         return WorkerService(offscreenWorker, workers.offscreen.name, function () {
           // prettier-ignore
-          if ( _lastNotificationTick < htmlElementResizeObserver.state.lastUpdate
-            || _lastNotificationTick < mouseObserver.state.lastUpdate
-            || _lastNotificationTick < touchObserver.state.lastUpdate
+          if ( _lastNotificationTick < dimensionsState[Dimensions.code.LAST_UPDATE]
+            || _lastNotificationTick < inputState[Input.code.LAST_UPDATE]
           ) {
             offscreenWorker.postMessage(updateMessage);;
             _lastNotificationTick = mainLoop.tickTimerState.currentTick;

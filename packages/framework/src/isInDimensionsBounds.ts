@@ -1,6 +1,6 @@
 import { Dimensions } from "./Dimensions";
 
-export function isInDimensionsBounds(dimensionsState: Uint16Array, clientX: number, clientY: number): boolean {
+export function isInDimensionsBounds(dimensionsState: Uint32Array, clientX: number, clientY: number): boolean {
   // prettier-ignore
   return clientX > dimensionsState[Dimensions.code.P_LEFT]
     && clientY > dimensionsState[Dimensions.code.P_TOP]

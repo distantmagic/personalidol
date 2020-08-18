@@ -22,7 +22,7 @@ export class MaskPass extends Pass {
     this.inverse = false;
   }
 
-  render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget /*, deltaTime, maskActive */) {
+  render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
     var context = renderer.getContext();
     var state = renderer.state;
 

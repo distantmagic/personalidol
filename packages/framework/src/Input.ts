@@ -7,6 +7,8 @@ const code: TypedArrayMap = {};
 const touchesTotal = 3;
 const rangeMouseMin = 0;
 
+code["LAST_UPDATE"] = index++;
+
 // mouse
 code["M_BUTTON_L"] = index++;
 code["M_BUTTON_R"] = index++;
@@ -83,15 +85,15 @@ for (let i = 0; i < touchesTotal; i += 1) {
   };
 }
 
-function createEmptyState(usesSharedBuffer: boolean): Int16Array {
+function createEmptyState(usesSharedBuffer: boolean): Int32Array {
   const itemsLength = Object.keys(code).length;
 
   if (usesSharedBuffer) {
-    // Int16Array takes 2 bytes per value.
-    return new Int16Array(new SharedArrayBuffer(itemsLength * 2));
+    // Int32Array takes 2 bytes per value.
+    return new Int32Array(new SharedArrayBuffer(itemsLength * 4));
   }
 
-  return new Int16Array(itemsLength);
+  return new Int32Array(itemsLength);
 }
 
 export const Input = Object.freeze({

@@ -2,7 +2,7 @@ import { Input } from "./Input";
 import { isPrimaryMouseButtonPressed } from "./isPrimaryMouseButtonPressed";
 import { isPrimaryTouchPressed } from "./isPrimaryTouchPressed";
 
-export function getPrimaryPointerVectorX(inputState: Int16Array): number {
+export function getPrimaryPointerVectorX(inputState: Int32Array): number {
   if (isPrimaryTouchPressed(inputState)) {
     return inputState[Input.code.T0_VECTOR_X] / Input.vector_scale;
   }

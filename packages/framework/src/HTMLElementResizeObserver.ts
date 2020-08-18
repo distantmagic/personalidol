@@ -3,13 +3,9 @@
 import { Dimensions } from "./Dimensions";
 
 import type { HTMLElementResizeObserver as IHTMLElementResizeObserver } from "./HTMLElementResizeObserver.interface";
-import type { HTMLElementResizeObserverState } from "./HTMLElementResizeObserverState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 
-export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsState: Uint16Array, tickTimerState: TickTimerState): IHTMLElementResizeObserver {
-  const state: HTMLElementResizeObserverState = Object.seal({
-    lastUpdate: 0,
-  });
+export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, tickTimerState: TickTimerState): IHTMLElementResizeObserver {
   const _resizeObserver = new ResizeObserver(_onResizeObserverTriggered);
 
   let _needsUpdating = false;
@@ -39,7 +35,8 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
     dimensionsState[Dimensions.code.D_HEIGHT] = bottom - top;
     dimensionsState[Dimensions.code.D_WIDTH] = right - left;
 
-    state.lastUpdate = tickTimerState.currentTick;
+    dimensionsState[Dimensions.code.LAST_UPDATE] = tickTimerState.currentTick;
+
     _needsUpdating = false;
   }
 
@@ -49,7 +46,6 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
 
   return Object.freeze({
     name: "HTMLElementResizeObserver",
-    state: state,
 
     start: start,
     stop: stop,

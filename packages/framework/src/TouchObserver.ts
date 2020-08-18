@@ -5,22 +5,11 @@ import { Input } from "./Input";
 import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { passiveEventListener } from "./passiveEventListener";
 
-import type { HTMLElementResizeObserverState } from "./HTMLElementResizeObserverState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { TouchObserver as ITouchObserver } from "./TouchObserver.interface";
-import type { TouchObserverState } from "./TouchObserverState.type";
 
-export function TouchObserver(
-  htmlElement: HTMLElement,
-  dimensionsState: Uint16Array,
-  inputState: Int16Array,
-  resizeObserverState: HTMLElementResizeObserverState,
-  tickTimerState: TickTimerState
-): ITouchObserver {
+export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, inputState: Int32Array, tickTimerState: TickTimerState): ITouchObserver {
   let _touches = 0;
-  const state: TouchObserverState = Object.seal({
-    lastUpdate: 0,
-  });
 
   function start(): void {
     htmlElement.addEventListener("touchcancel", _onTouchChange, passiveEventListener);
@@ -37,7 +26,7 @@ export function TouchObserver(
   }
 
   function update(): void {
-    if (resizeObserverState.lastUpdate > state.lastUpdate) {
+    if (dimensionsState[Dimensions.code.LAST_UPDATE] > inputState[Input.code.LAST_UPDATE]) {
       _updateRelativeCoords();
     }
   }
@@ -68,12 +57,11 @@ export function TouchObserver(
       );
     }
 
-    state.lastUpdate = tickTimerState.currentTick;
+    inputState[Input.code.LAST_UPDATE] = tickTimerState.currentTick;
   }
 
   return Object.freeze({
     name: "TouchObserver",
-    state: state,
 
     start: start,
     stop: stop,

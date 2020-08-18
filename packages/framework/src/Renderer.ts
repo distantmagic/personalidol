@@ -1,4 +1,6 @@
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
+import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
+import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
 
 import { Dimensions } from "./Dimensions";
 import { updateCameraAspect } from "./updateCameraAspect";
@@ -7,10 +9,15 @@ import type { Renderer as IRenderer } from "./Renderer.interface";
 
 import type { RendererState } from "./RendererState.type";
 
-export function Renderer(state: RendererState, dimensionsState: Uint16Array): IRenderer {
-  let _isStarted = false;
+const _DIMENSIONS_LAST_UPDATE = Symbol("_DIMENSIONS_LAST_UPDATE");
+
+export function Renderer(state: RendererState, dimensionsState: Uint32Array): IRenderer {
+  let _isStarted: boolean = false;
+  let _lastDimensionsUpdate: number = 0;
 
   console.log(EffectComposer);
+  console.log(RenderPass);
+  console.log(GlitchPass);
 
   function start(): void {
     if (_isStarted) {
@@ -43,15 +50,23 @@ export function Renderer(state: RendererState, dimensionsState: Uint16Array): IR
       throw new Error("Renderer is set, but scene and camera is not set. Try either setting both (camera and scene) or none of them.");
     }
 
-    if (camera) {
-      updateCameraAspect(camera, dimensionsState);
-    }
-
     if (!scene || !camera) {
       return;
     }
 
-    renderer.setSize(dimensionsState[Dimensions.code.D_WIDTH], dimensionsState[Dimensions.code.D_HEIGHT]);
+    const dimensionsLastUpdate = dimensionsState[Dimensions.code.LAST_UPDATE];
+    const cameraUserData: any = camera.userData as any;
+
+    if (!cameraUserData.hasOwnProperty(_DIMENSIONS_LAST_UPDATE) || dimensionsLastUpdate > cameraUserData[_DIMENSIONS_LAST_UPDATE]) {
+      updateCameraAspect(camera, dimensionsState);
+      cameraUserData[_DIMENSIONS_LAST_UPDATE] = dimensionsLastUpdate;
+    }
+
+    if (dimensionsLastUpdate > _lastDimensionsUpdate) {
+      renderer.setSize(dimensionsState[Dimensions.code.D_WIDTH], dimensionsState[Dimensions.code.D_HEIGHT]);
+      _lastDimensionsUpdate = dimensionsState[Dimensions.code.LAST_UPDATE];
+    }
+
     renderer.render(scene, camera);
   }
 

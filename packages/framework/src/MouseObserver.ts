@@ -5,22 +5,10 @@ import { Input } from "./Input";
 import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { passiveEventListener } from "./passiveEventListener";
 
-import type { HTMLElementResizeObserverState } from "./HTMLElementResizeObserverState.type";
 import type { MouseObserver as IMouseObserver } from "./MouseObserver.interface";
-import type { MouseObserverState } from "./MouseObserverState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 
-export function MouseObserver(
-  htmlElement: HTMLElement,
-  dimensionsState: Uint16Array,
-  inputState: Int16Array,
-  resizeObserverState: HTMLElementResizeObserverState,
-  tickTimerState: TickTimerState
-): IMouseObserver {
-  const state: MouseObserverState = Object.seal({
-    lastUpdate: 0,
-  });
-
+export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, inputState: Int32Array, tickTimerState: TickTimerState): IMouseObserver {
   function start(): void {
     document.addEventListener("mousedown", _onMouseChange, passiveEventListener);
     document.addEventListener("mousemove", _onMouseChange, passiveEventListener);
@@ -34,7 +22,7 @@ export function MouseObserver(
   }
 
   function update(): void {
-    if (resizeObserverState.lastUpdate > state.lastUpdate) {
+    if (dimensionsState[Dimensions.code.LAST_UPDATE] > inputState[Input.code.LAST_UPDATE]) {
       _updateRelativeCoords();
     }
   }
@@ -65,12 +53,11 @@ export function MouseObserver(
     inputState[Input.code.M_VECTOR_Y] = computePointerVectorY(dimensionsState, inputState[Input.code.M_RELATIVE_Y]);
     inputState[Input.code.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, inputState[Input.code.M_CLIENT_X], inputState[Input.code.M_CLIENT_Y]));
 
-    state.lastUpdate = tickTimerState.currentTick;
+    inputState[Input.code.LAST_UPDATE] = tickTimerState.currentTick;
   }
 
   return Object.freeze({
     name: "MouseObserver",
-    state: state,
 
     start: start,
     stop: stop,

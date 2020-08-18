@@ -19,8 +19,8 @@ export function createScenes(
   mainLoop: MainLoop,
   serviceManager: ServiceManager,
   canvas: HTMLCanvasElement | OffscreenCanvas,
-  dimensionsState: Uint16Array,
-  inputState: Int16Array,
+  dimensionsState: Uint32Array,
+  inputState: Int32Array,
   logger: Logger,
   domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
@@ -50,12 +50,12 @@ export function createScenes(
   const sceneLoader = SceneLoader(logger, rendererState, currentSceneDirector, loadingSceneDirector);
 
   // const mapFilename = "/maps/map-box.map";
-  const mapFilename = "/maps/map-cube-chipped.map";
+  // const mapFilename = "/maps/map-cube-chipped.map";
   // const mapFilename = "/maps/map-cube.map";
   // const mapFilename = "/maps/map-desert-hut.map";
   // const mapFilename = "/maps/map-flatiron.map";
   // const mapFilename = "/maps/map-flint.map";
-  // const mapFilename = "/maps/map-mountain-caravan.map";
+  const mapFilename = "/maps/map-mountain-caravan.map";
   // const mapFilename = "/maps/map-zagaj.map";
   const currentSceneDirectorState = currentSceneDirector.state;
 

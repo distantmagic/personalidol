@@ -26,8 +26,8 @@ const _canvasStyle = {
 
 let _canvas: null | OffscreenCanvas = null;
 let _devicePixelRatio: null | number = null;
-let _dimensionsState: null | Uint16Array = null;
-let _inputState: null | Int16Array = null;
+let _dimensionsState: null | Uint32Array = null;
+let _inputState: null | Int32Array = null;
 let _isBootstrapped = false;
 let domMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
@@ -98,7 +98,7 @@ self.onmessage = createRouter({
     _createScenesSafe();
   },
 
-  dimensionsState(dimensions: Uint16Array): void {
+  dimensionsState(dimensions: Uint32Array): void {
     if (!_dimensionsState) {
       throw new Error("Dimensions state must be set before it's updated.");
     }
@@ -111,7 +111,7 @@ self.onmessage = createRouter({
     _createScenesSafe();
   },
 
-  inputState(input: Int16Array): void {
+  inputState(input: Int32Array): void {
     if (!_inputState) {
       throw new Error("Input state must be set before it's updated.");
     }
@@ -141,11 +141,11 @@ self.onmessage = createRouter({
   },
 
   sharedDimensionsState(dimensions: SharedArrayBuffer): void {
-    _dimensionsState = new Uint16Array(dimensions);
+    _dimensionsState = new Uint32Array(dimensions);
   },
 
   sharedInputState(input: SharedArrayBuffer): void {
-    _inputState = new Int16Array(input);
+    _inputState = new Int32Array(input);
   },
 
   texturesMessagePort(port: MessagePort): void {

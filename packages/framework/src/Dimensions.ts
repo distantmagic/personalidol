@@ -4,6 +4,7 @@ let index = 0;
 
 const code: TypedArrayMap = {};
 
+code["LAST_UPDATE"] = index++;
 code["D_HEIGHT"] = index++;
 code["D_WIDTH"] = index++;
 code["P_BOTTOM"] = index++;
@@ -11,15 +12,15 @@ code["P_LEFT"] = index++;
 code["P_RIGHT"] = index++;
 code["P_TOP"] = index++;
 
-function createEmptyState(usesSharedBuffer: boolean): Uint16Array {
+function createEmptyState(usesSharedBuffer: boolean): Uint32Array {
   const itemsLength = Object.keys(code).length;
 
   if (usesSharedBuffer) {
-    // Uint16Array takes 2 bytes per value.
-    return new Uint16Array(new SharedArrayBuffer(itemsLength * 2));
+    // Uint32Array takes 4 bytes per value.
+    return new Uint32Array(new SharedArrayBuffer(itemsLength * 4));
   }
 
-  return new Uint16Array(itemsLength);
+  return new Uint32Array(itemsLength);
 }
 
 export const Dimensions = Object.freeze({

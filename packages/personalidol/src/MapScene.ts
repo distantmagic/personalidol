@@ -102,7 +102,7 @@ export function MapScene(
   logger: Logger,
   directorState: DirectorState,
   eventBus: EventBus,
-  inputState: Int16Array,
+  inputState: Int32Array,
   domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
