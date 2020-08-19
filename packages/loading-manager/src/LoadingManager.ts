@@ -14,13 +14,13 @@ function sumWeights(items: Set<LoadingManagerItem>): number {
 }
 
 export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadingManager {
-  const _progress = Object.seal({
+  const _previousProgress = Object.seal({
     comment: loadingManagerState.comment,
     progress: loadingManagerState.progress,
   });
 
   function getProgress(): LoadingManagerProgress {
-    return _progress;
+    return _previousProgress;
   }
 
   function refreshProgress() {
@@ -48,14 +48,27 @@ export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadi
 
     loadingManagerState.progress = Math.max(loadingManagerState.progress, itemsLoadedWeights / totalWeights);
 
-    if (_progress.comment === loadingManagerState.comment && _progress.progress === loadingManagerState.progress) {
+    if (_previousProgress.comment === loadingManagerState.comment && _previousProgress.progress === loadingManagerState.progress) {
       return;
     }
 
-    _progress.comment = loadingManagerState.comment;
-    _progress.progress = loadingManagerState.progress;
+    _previousProgress.comment = loadingManagerState.comment;
+    _previousProgress.progress = loadingManagerState.progress;
 
     loadingManagerState.lastUpdate += 1;
+  }
+
+  function reset() {
+    loadingManagerState.comment = "";
+    loadingManagerState.expectsAtLeast = 0;
+    loadingManagerState.itemsLoaded.clear();
+    loadingManagerState.itemsToLoad.clear();
+    loadingManagerState.lastUpdate += 1;
+    loadingManagerState.progress = 0;
+
+    _previousProgress.comment = "";
+    _previousProgress.progress = 0;
+
   }
 
   function start() {}
@@ -67,6 +80,7 @@ export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadi
 
     getProgress: getProgress,
     refreshProgress: refreshProgress,
+    reset: reset,
     start: start,
     stop: stop,
     update: refreshProgress,

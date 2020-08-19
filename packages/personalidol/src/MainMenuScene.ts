@@ -10,6 +10,8 @@ import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager
 import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
+// import { MapScene } from "./MapScene";
+
 import type { Logger } from "loglevel";
 
 import type { ClearRoutesMessage } from "@personalidol/dom-renderer/src/ClearRoutesMessage.type";
@@ -108,8 +110,6 @@ const _disposables: Set<Disposable> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _unmountables: Set<Unmountable> = new Set();
 
-// "/maps/map-mountain-caravan.map"
-
 const _clearRoutesMessage: ClearRoutesMessage & RenderRoutesMessage = {
   clear: ["/main-menu"],
   render: {},
@@ -180,6 +180,24 @@ export function MainMenuScene(
   }
 
   function update(delta: number): void {}
+
+  // function _loadMap(filename: string): void {
+  //   // prettier-ignore
+  //   directorState.next = MapScene(
+  //     logger,
+  //     effectComposer,
+  //     directorState,
+  //     eventBus,
+  //     dimensionsState,
+  //     inputState,
+  //     domMessagePort,
+  //     md2MessagePort,
+  //     progressMessagePort,
+  //     quakeMapsMessagePort,
+  //     texturesMessagePort,
+  //     filename,
+  //   );
+  // }
 
   async function _preloadFont(fontParameters: FontPreloadParameters) {
     await sendRPCMessage(_rpcLookupTable, fontPreloaderMessagePort, {

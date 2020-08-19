@@ -77,7 +77,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   const domRendererMessageChannel = new MessageChannel();
   const domRendererService = DOMRendererService(domRendererMessageChannel.port1, uiRoot, renderDOMUIRouter);
 
-  mainLoop.updatables.add(domRendererService);
   serviceManager.services.add(domRendererService);
 
   // Progress worker is used to gather information about assets and other
@@ -124,7 +123,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   const fontPreloaderService = FontPreloaderService(fontPreloaderMessageChannel.port1, fontPreloaderToProgressMessageChannel.port2);
 
-  mainLoop.updatables.add(fontPreloaderService);
   serviceManager.services.add(fontPreloaderService);
 
   // `createImageBitmap` has it's quirks and surprisingly has no support in

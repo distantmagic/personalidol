@@ -1,4 +1,3 @@
-import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpdatable.interface";
 import type { Service } from "@personalidol/framework/src/Service.interface";
 
-export interface FontPreloaderService extends MainLoopUpdatable, Service {}
+export interface FontPreloaderService extends Service {}

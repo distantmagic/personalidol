@@ -32,8 +32,6 @@ export function DOMRendererService(messagePort: MessagePort, uiRootElement: HTML
     messagePort.onmessage = null;
   }
 
-  function update() {}
-
   function _clear(clearRoutesList: ClearRoutesList) {
     for (let route of clearRoutesList) {
       delete _routesState[route];
@@ -70,6 +68,5 @@ export function DOMRendererService(messagePort: MessagePort, uiRootElement: HTML
 
     start: start,
     stop: stop,
-    update: update,
   });
 }

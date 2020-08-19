@@ -23,8 +23,6 @@ export function FontPreloaderService(fontPreloaderMessagePort: MessagePort, prog
     fontPreloaderMessagePort.onmessage = null;
   }
 
-  function update() {}
-
   async function _preloadFont(parameters: FontPreloadParameters) {
     const loadItemFont = {
       comment: `font ${parameters.family}`,
@@ -47,6 +45,5 @@ export function FontPreloaderService(fontPreloaderMessagePort: MessagePort, prog
 
     start: start,
     stop: stop,
-    update: update,
   });
 }

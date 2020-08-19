@@ -343,8 +343,6 @@ export function MapScene(
 
     resetLoadingManagerState(progressMessagePort);
 
-    console.log(_nextMap);
-
     _unmountables.add(function () {
       md2MessagePort.onmessage = null;
       quakeMapsMessagePort.onmessage = null;
@@ -393,23 +391,23 @@ export function MapScene(
     return texture;
   }
 
-  function _nextMap(filename: string): void {
-    // prettier-ignore
-    directorState.next = MapScene(
-      logger,
-      effectComposer,
-      directorState,
-      eventBus,
-      dimensionsState,
-      inputState,
-      domMessagePort,
-      md2MessagePort,
-      progressMessagePort,
-      quakeMapsMessagePort,
-      texturesMessagePort,
-      mapFilename,
-    );
-  }
+  // function _nextMap(filename: string): void {
+  //   // prettier-ignore
+  //   directorState.next = MapScene(
+  //     logger,
+  //     effectComposer,
+  //     directorState,
+  //     eventBus,
+  //     dimensionsState,
+  //     inputState,
+  //     domMessagePort,
+  //     md2MessagePort,
+  //     progressMessagePort,
+  //     quakeMapsMessagePort,
+  //     texturesMessagePort,
+  //     filename,
+  //   );
+  // }
 
   function _onCameraUpdate(): void {
     // prettier-ignore

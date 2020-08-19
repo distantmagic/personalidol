@@ -105,13 +105,12 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   function dispose(): void {
     state.isDisposed = true;
 
+    progressMessagePort.onmessage = null;
     fDispose(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
-
-    progressMessagePort.onmessage = _progressRouter;
 
     const renderPass = new RenderPass(_scene, _camera);
 
@@ -133,14 +132,14 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   }
 
   function preload(): void {
-    // state.isPreloading = true;
+    progressMessagePort.onmessage = _progressRouter;
+
     state.isPreloaded = true;
   }
 
   function unmount(): void {
     state.isMounted = false;
 
-    progressMessagePort.onmessage = null;
     domMessagePort.postMessage(_clearRoutesMessage);
 
     fUnmount(_unmountables);

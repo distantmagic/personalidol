@@ -7,4 +7,6 @@ export interface LoadingManager extends MainLoopUpdatable, Service {
   getProgress(): LoadingManagerProgress;
 
   refreshProgress(): void;
+
+  reset(): void;
 }
