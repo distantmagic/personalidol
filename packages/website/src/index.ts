@@ -6,6 +6,7 @@ import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { DOMRendererService } from "@personalidol/dom-renderer/src/DOMRendererService";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { EventBus } from "@personalidol/framework/src/EventBus";
+import { FontPreloaderService } from "@personalidol/dom-renderer/src/FontPreloaderService";
 import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCanvasElementById";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
@@ -109,6 +110,22 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   }
 
   addProgressMessagePort(progressMessageChannel.port1, true);
+
+  // FontPreloaderService does exactly what it name says. Thanks to this
+  // service it is possible for worker threads to request font face to be
+  // preloaded, display loading indicator  and receive notification back when
+  // it's ready. Thanks to that, there should be no UI twitching while fonts
+  // are being loaded.
+
+  const fontPreloaderMessageChannel = new MessageChannel();
+  const fontPreloaderToProgressMessageChannel = new MessageChannel();
+
+  addProgressMessagePort(fontPreloaderToProgressMessageChannel.port1, false);
+
+  const fontPreloaderService = FontPreloaderService(fontPreloaderMessageChannel.port1, fontPreloaderToProgressMessageChannel.port2);
+
+  mainLoop.updatables.add(fontPreloaderService);
+  serviceManager.services.add(fontPreloaderService);
 
   // `createImageBitmap` has it's quirks and surprisingly has no support in
   // safari and ios. Also it has partial support in Firefox.
@@ -348,6 +365,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
         canvas: offscreenCanvas,
         devicePixelRatio: devicePixelRatio,
         domMessagePort: domRendererMessageChannel.port2,
+        fontPreloaderMessagePort: fontPreloaderMessageChannel.port2,
         md2MessagePort: md2MessageChannel.port2,
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
@@ -355,6 +373,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       },
       [
         domRendererMessageChannel.port2,
+        fontPreloaderMessageChannel.port2,
         md2MessageChannel.port2,
         offscreenCanvas,
         progressMessageChannel.port2,
@@ -393,6 +412,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       inputState,
       logger,
       domRendererMessageChannel.port2,
+      fontPreloaderMessageChannel.port2,
       md2MessageChannel.port2,
       progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,

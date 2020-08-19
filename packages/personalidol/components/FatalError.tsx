@@ -10,10 +10,10 @@ type Props = {
 
 export function FatalError(props: Props) {
   return (
-    <div class="fatal-error">
+    <main class="fatal-error">
       <h1>{props.title}</h1>
       {props.userFeedback}
       <div class="fatal-error__error">{props.technicalDescription}</div>
-    </div>
+    </main>
   );
 }

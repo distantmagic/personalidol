@@ -1,6 +1,6 @@
 .pi__font-preloader,
-.loading-screen__label__comment,
-.loading-screen__label__progress,
+.loading-screen__comment,
+.loading-screen__progress,
 .loading-screen__progress-bar {
   position: absolute;
   line-height: 1rem;
@@ -16,13 +16,13 @@
   font-family: "Mukta", sans-serif;
 }
 
-.loading-screen__label__comment,
+.loading-screen__comment,
 .loading-screen__progress-bar {
   left: 1.6rem;
 }
 
-.loading-screen__label__comment,
-.loading-screen__label__progress {
+.loading-screen__comment,
+.loading-screen__progress {
   color: #eeeeee;
   bottom: 2.4rem;
   font-family: sans-serif;
@@ -33,7 +33,7 @@
   text-transform: lowercase;
 }
 
-.loading-screen__label__comment {
+.loading-screen__comment {
   overflow: hidden;
   text-align: left;
   text-overflow: ellipsis;
@@ -41,7 +41,7 @@
   width: calc(100% - 6.4rem);
 }
 
-.loading-screen__label__progress {
+.loading-screen__progress {
   font-size: 0.8rem;
   right: 1.6rem;
   text-align: right;
@@ -65,5 +65,5 @@
   color: transparent;
   display: block;
   width: var(--progress);
-  transition: width 0.3s ease-in-out;
+  transition: width 0.1s ease-in-out;
 }

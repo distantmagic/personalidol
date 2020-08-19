@@ -2,11 +2,12 @@ import { sceneMountSoft } from "./sceneMountSoft";
 import { sceneUnmountSoft } from "./sceneUnmountSoft";
 
 import type { Logger } from "loglevel";
+import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
 import type { Director as IDirector } from "./Director.interface";
 import type { SceneLoader as ISceneLoader } from "./SceneLoader.interface";
 
-export function SceneLoader(logger: Logger, sceneDirector: IDirector, loadingScreenDirector: IDirector): ISceneLoader {
+export function SceneLoader(logger: Logger, renderer: WebGLRenderer, sceneDirector: IDirector, loadingScreenDirector: IDirector): ISceneLoader {
   function start(): void {}
 
   function stop(): void {}
@@ -18,6 +19,7 @@ export function SceneLoader(logger: Logger, sceneDirector: IDirector, loadingScr
     if (scene) {
       if (loadingScreen) {
         sceneUnmountSoft(logger, loadingScreen);
+        renderer.clear();
       }
 
       sceneMountSoft(logger, scene);

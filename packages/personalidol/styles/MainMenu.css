@@ -1,0 +1,8 @@
+.main-menu {
+  color: white;
+  font-family: "Almendra", sans-serif;
+  font-size: 1.6rem;
+  padding: 1.6rem;
+  position: relative;
+  pointer-events: all;
+}

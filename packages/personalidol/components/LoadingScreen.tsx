@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import { h } from "preact";
 
 type Props = {
   comment: string;
@@ -9,10 +9,9 @@ export function LoadingScreen(props: Props) {
   const progress = Math.round(props.progress * 100);
 
   return (
-    <Fragment>
-      <span class="pi__font-preloader" />
-      <div class="loading-screen__label__comment">Loading {props.comment} ...</div>
-      <div class="loading-screen__label__progress">{progress}%</div>
+    <main class="loading-screen">
+      <div class="loading-screen__comment">Loading {props.comment} ...</div>
+      <div class="loading-screen__progress">{progress}%</div>
       <div
         class="loading-screen__progress-bar"
         style={{
@@ -21,6 +20,6 @@ export function LoadingScreen(props: Props) {
       >
         <div class="loading-screen__progress-bar__progress" />
       </div>
-    </Fragment>
+    </main>
   );
 }

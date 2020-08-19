@@ -1,7 +1,6 @@
-import { h } from "preact";
-
 import { LoadingScreen } from "../components/LoadingScreen";
 import { LoadingErrorScreen } from "../components/LoadingErrorScreen";
+import { MainMenuScreen } from "../components/MainMenuScreen";
 
 import type { ComponentChild } from "preact";
 
@@ -13,8 +12,8 @@ function renderDOMUIRoute(route: string, data: any): ComponentChild {
       return LoadingScreen(data);
     case "/loading-error-screen":
       return LoadingErrorScreen(data);
-    case "/map":
-      return <div>xd</div>;
+    case "/main-menu":
+      return MainMenuScreen();
     default:
       throw new Error(`Unknown route: "${route}"`);
   }

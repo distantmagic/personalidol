@@ -27,7 +27,7 @@ import type { Scene as IScene } from "@personalidol/framework/src/Scene.interfac
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
-const _clearRoutesMessage: ClearRoutesMessage = {
+const _clearRoutesMessage: ClearRoutesMessage & RenderRoutesMessage = {
   clear: ["/loading-screen", "/loading-error-screen"],
   render: {},
 };

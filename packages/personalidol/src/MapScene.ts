@@ -93,13 +93,6 @@ const _quakeMapsRouter = createRouter({
   map: handleRPCResponse(_rpcLookupTable),
 });
 const _textureReceiverMessageRouter = createTextureReceiverMessagesRouter(_rpcLookupTable);
-
-const _clearRendererMessage = {
-  render: {
-    route: null,
-  },
-};
-
 let _cameraZoomAmount = 0;
 
 export function MapScene(
@@ -317,8 +310,6 @@ export function MapScene(
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
     texturesMessagePort.onmessage = _textureReceiverMessageRouter;
 
-    resetLoadingManagerState(progressMessagePort);
-
     const {
       unmarshal: { entities, textureAtlas },
     } = await sendRPCMessage(_rpcLookupTable, quakeMapsMessagePort, {
@@ -365,19 +356,12 @@ export function MapScene(
     state.isMounted = false;
 
     eventBus.POINTER_ZOOM_REQUEST.delete(_onPointerZoomRequest);
-    domMessagePort.postMessage(_clearRendererMessage);
 
     fUnmount(_unmountables);
   }
 
   function update(delta: number): void {
     updateStoreCameraAspect(_camera, dimensionsState);
-
-    // domMessagePort.postMessage({
-    //   render: {
-    //     route: "/map",
-    //   },
-    // });
 
     if (isPrimaryPointerPressed(inputState)) {
       _pointerVector.x = getPrimaryPointerVectorX(inputState);
@@ -446,7 +430,7 @@ export function MapScene(
   }
 
   return Object.freeze({
-    name: `MAP(${mapFilename})`,
+    name: `Map(${mapFilename})`,
     state: state,
 
     dispose: dispose,

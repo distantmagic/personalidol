@@ -6,10 +6,13 @@
   },
   "dependencies": {
     "@personalidol/framework": "0.0.0",
+    "@personalidol/loading-manager": "0.0.0",
     "@personalidol/workers": "0.0.0",
-    "preact": "^10.4.7"
+    "preact": "^10.4.7",
+    "three": "^0.119.1"
   },
   "devDependencies": {
+    "@types/css-font-loading-module": "^0.0.4",
     "@types/jest": "^26.0.9",
     "esbuild": "^0.6.17",
     "jest": "^26.2.2",

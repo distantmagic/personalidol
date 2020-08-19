@@ -3,7 +3,7 @@ import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import { Director } from "@personalidol/framework/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
-import { MapScene } from "@personalidol/personalidol/src/MapScene";
+import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
 import { Renderer } from "@personalidol/three-renderer/src/Renderer";
 import { SceneLoader } from "@personalidol/framework/src/SceneLoader";
 
@@ -23,6 +23,7 @@ export function createScenes(
   inputState: Int32Array,
   logger: Logger,
   domMessagePort: MessagePort,
+  fontPreloaderMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
@@ -45,15 +46,12 @@ export function createScenes(
   const renderer = Renderer(dimensionsState, effectComposer, webGLRenderer);
   const currentSceneDirector = Director(logger, "Scene");
   const loadingSceneDirector = Director(logger, "LoadingScreen");
-  const sceneLoader = SceneLoader(logger, currentSceneDirector, loadingSceneDirector);
+  const sceneLoader = SceneLoader(logger, webGLRenderer, currentSceneDirector, loadingSceneDirector);
 
-  // const mapFilename = "/maps/map-desert-hut.map";
-  // const mapFilename = "/maps/map-cube-chipped.map";
-  const mapFilename = "/maps/map-mountain-caravan.map";
   const currentSceneDirectorState = currentSceneDirector.state;
 
   // prettier-ignore
-  currentSceneDirector.state.next = MapScene(
+  currentSceneDirector.state.next = MainMenuScene(
     logger,
     effectComposer,
     currentSceneDirectorState,
@@ -61,11 +59,11 @@ export function createScenes(
     dimensionsState,
     inputState,
     domMessagePort,
+    fontPreloaderMessagePort,
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
     texturesMessagePort,
-    mapFilename
   );
 
   // prettier-ignore

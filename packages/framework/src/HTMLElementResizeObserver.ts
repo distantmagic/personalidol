@@ -1,4 +1,4 @@
-/// <reference path="./ResizeObserver.d.ts" />
+/// <reference types="@types/resize-observer-browser" />
 
 import { Dimensions } from "./Dimensions";
 
