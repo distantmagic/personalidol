@@ -1,10 +1,6 @@
 @import "normalize.css";
 
-@import "@personalidol/personalidol/styles/personalidol.css";
-
-body, p {
-  margin: 0;
-}
+@import "@personalidol/personalidol/styles/index.css";
 
 #canvas {
   height: 100%;

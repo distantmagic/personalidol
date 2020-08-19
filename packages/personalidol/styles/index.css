@@ -1,6 +1,8 @@
-@import "./_fonts.css";
-@import "./_loading-screen.css";
-@import "./_loading-screen--error.css";
+@import "./fonts.css";
+
+@import "./LoadingScreen.css";
+@import "./FatalError.css";
+@import "./FontPreloader.css";
 
 #ui-root {
   pointer-events: none;

@@ -26,7 +26,7 @@ node_modules/.bin/jest node_modules/.bin/prettier node_modules/.bin/esbuild: nod
 
 .PHONY: prettier
 prettier: node_modules/.bin/prettier $(SOURCES_TS)
-	yarn run prettier --write --print-width 180 "src/**/*.ts"
+	yarn run prettier --write --print-width 180 "{components,src}/**/*.{ts,tsx}"
 
 .PHONY: test
 test: node_modules/.bin/jest
@@ -34,7 +34,6 @@ test: node_modules/.bin/jest
 
 .PHONY: test.watch
 test.watch: node_modules
-# 	../../scripts/watch_trigger.sh $(MAKE) "test"
 	yarn run jest --watch
 
 .PHONY: typecheck

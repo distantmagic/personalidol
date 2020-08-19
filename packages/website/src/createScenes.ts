@@ -47,14 +47,9 @@ export function createScenes(
   const loadingSceneDirector = Director(logger, "LoadingScreen");
   const sceneLoader = SceneLoader(logger, currentSceneDirector, loadingSceneDirector);
 
-  // const mapFilename = "/maps/map-box.map";
-  const mapFilename = "/maps/map-cube-chipped.map";
-  // const mapFilename = "/maps/map-cube.map";
   // const mapFilename = "/maps/map-desert-hut.map";
-  // const mapFilename = "/maps/map-flatiron.map";
-  // const mapFilename = "/maps/map-flint.map";
-  // const mapFilename = "/maps/map-mountain-caravan.map";
-  // const mapFilename = "/maps/map-zagaj.map";
+  // const mapFilename = "/maps/map-cube-chipped.map";
+  const mapFilename = "/maps/map-mountain-caravan.map";
   const currentSceneDirectorState = currentSceneDirector.state;
 
   // prettier-ignore

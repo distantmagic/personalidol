@@ -15,20 +15,21 @@ import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/Glitc
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
-import { updateStoreCameraAspect } from "@personalidol/framework/src/updateStoreCameraAspect";
+import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
+import type { ClearRoutesMessage } from "@personalidol/dom-renderer/src/ClearRoutesMessage.type";
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
+import type { RenderRoutesMessage } from "@personalidol/dom-renderer/src/RenderRoutesMessage.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
-const _clearRendererMessage = {
-  render: {
-    route: null,
-  },
+const _clearRoutesMessage: ClearRoutesMessage = {
+  clear: ["/loading-screen", "/loading-error-screen"],
+  render: {},
 };
 
 export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
@@ -140,7 +141,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     state.isMounted = false;
 
     progressMessagePort.onmessage = null;
-    domMessagePort.postMessage(_clearRendererMessage);
+    domMessagePort.postMessage(_clearRoutesMessage);
 
     fUnmount(_unmountables);
   }
@@ -154,24 +155,26 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     }
   }
 
-  function _updateDOM(): void {
+  function _getUpdateDOMMessage(): ClearRoutesMessage & RenderRoutesMessage {
     if (_loadingError) {
-      domMessagePort.postMessage({
+      return {
+        clear: ["/loading-screen"],
         render: {
-          route: "/loading-screen/error",
-          data: _loadingError,
+          "/loading-error-screen": _loadingError,
         },
-      });
-
-      return;
+      };
     }
 
-    domMessagePort.postMessage({
+    return {
+      clear: ["/loading-error-screen"],
       render: {
-        route: "/loading-screen",
-        data: _loadingManagerProgress,
+        "/loading-screen": _loadingManagerProgress,
       },
-    });
+    };
+  }
+
+  function _updateDOM(): void {
+    domMessagePort.postMessage(_getUpdateDOMMessage());
   }
 
   function _updateScene(delta: number): void {

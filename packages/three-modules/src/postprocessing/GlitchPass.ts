@@ -42,11 +42,9 @@ export class GlitchPass extends Pass {
       vertexShader: shader.vertexShader,
       fragmentShader: shader.fragmentShader,
     });
-
     this._disposables.add(disposableMaterial(this.material));
 
     this.fsQuad = new FullScreenQuad(this.material);
-
     this._disposables.add(disposableGeneric(this.fsQuad));
 
     this.generateTrigger();

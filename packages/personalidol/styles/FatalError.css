@@ -1,4 +1,4 @@
-.pi__loading-screen.pi__loading-screen--error {
+.fatal-error {
   background-color: rgba(0, 0, 0, 0.6);
   bottom: 1.6rem;
   color: white;
@@ -18,6 +18,6 @@
   width: calc(100vw - 3.2rem);
 }
 
-.pi__loading-screen.pi__loading-screen--error p + p {
+.fatal-error p + p {
   margin-top: 1rem;
 }

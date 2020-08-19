@@ -1,4 +1,5 @@
-import { Dimensions } from "./Dimensions";
+import { Dimensions } from "@personalidol/framework/src/Dimensions";
+
 import { updateCameraAspect } from "./updateCameraAspect";
 
 import type { Camera } from "three";

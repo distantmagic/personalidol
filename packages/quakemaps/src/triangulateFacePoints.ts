@@ -6,7 +6,7 @@ import type { TriangleSimple } from "./TriangleSimple.type";
 
 export function* triangulateFacePoints(faceNormal: Vector3, pointsInput: ReadonlyArray<Vector3>): Generator<TriangleSimple> {
   if (pointsInput.length < 3) {
-    throw new Error("Can't triangulate 2, 1 or 0 points");
+    throw new Error(`Can't triangulate 2, 1 or 0 points. Got ${pointsInput.length} points.`);
   }
 
   const points = sortPointsCounterClockwise(faceNormal, pointsInput);

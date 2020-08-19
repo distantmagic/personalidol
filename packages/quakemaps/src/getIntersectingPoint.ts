@@ -1,7 +1,6 @@
 import { Matrix3 } from "three/src/math/Matrix3";
 import { Vector3 } from "three/src/math/Vector3";
 
-import { isAlmostEqual } from "./isAlmostEqual";
 import { marshalCoords } from "./marshalCoords";
 
 import type { Vector3 as IVector3 } from "three";
@@ -33,9 +32,7 @@ function getIntersectionDeterminant(hs1: HalfSpace, hs2: HalfSpace, hs3: HalfSpa
 export function getIntersectingPoint(hs1: HalfSpace, hs2: HalfSpace, hs3: HalfSpace, pointsCache: IntersectingPointsCache): null | IVector3 {
   const det = getIntersectionDeterminant(hs1, hs2, hs3);
 
-  if (isAlmostEqual(det, 0)) {
-    // it should be compared to zero, but due to the floating point imprecision
-    // this comparison is good enough in most cases
+  if (det === 0) {
     return null;
   }
 

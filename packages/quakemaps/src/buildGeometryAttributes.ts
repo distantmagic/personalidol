@@ -178,7 +178,7 @@ function _isPointInsideBrush(brush: Brush, point: Vector3): boolean {
   for (let halfSpace of brush.halfSpaces) {
     const distanceToPoint = halfSpace.plane.distanceToPoint(point);
 
-    if (distanceToPoint > 0 && !isAlmostEqual(distanceToPoint, 0)) {
+    if (distanceToPoint > 0 && !isAlmostEqual(distanceToPoint, 0, 0.5)) {
       return false;
     }
   }

@@ -1,4 +1,4 @@
-import { Dimensions } from "./Dimensions";
+import { Dimensions } from "@personalidol/framework/src/Dimensions";
 
 import type { PerspectiveCamera } from "three";
 

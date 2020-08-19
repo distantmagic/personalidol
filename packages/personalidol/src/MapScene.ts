@@ -35,7 +35,7 @@ import { resetLoadingManagerState } from "@personalidol/loading-manager/src/rese
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
-import { updateStoreCameraAspect } from "@personalidol/framework/src/updateStoreCameraAspect";
+import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three";

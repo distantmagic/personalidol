@@ -1,34 +1,27 @@
 import { h } from "preact";
 
-import { renderDOMLoadingScreen } from "./renderDOMLoadingScreen";
-import { renderDOMLoadingScreenError } from "./renderDOMLoadingScreenError";
+import { LoadingScreen } from "../components/LoadingScreen";
+import { LoadingErrorScreen } from "../components/LoadingErrorScreen";
 
 import type { ComponentChild } from "preact";
 
-type RenderMessage = {
-  data: any;
-  route: null | string;
-};
+import type { RoutesState } from "@personalidol/dom-renderer/src/RoutesState.type";
 
-function renderDOMUIRoute(route: null | string, data: any): null | ComponentChild {
+function renderDOMUIRoute(route: string, data: any): ComponentChild {
   switch (route) {
     case "/loading-screen":
-      return renderDOMLoadingScreen(data);
-    case "/loading-screen/error":
-      return renderDOMLoadingScreenError(data);
+      return LoadingScreen(data);
+    case "/loading-error-screen":
+      return LoadingErrorScreen(data);
     case "/map":
       return <div>xd</div>;
-    case null:
-      return null;
     default:
       throw new Error(`Unknown route: "${route}"`);
   }
 }
 
-export function renderDOMUIRouter({ route, data }: RenderMessage): ComponentChild {
-  return (
-    <div class="pi">
-      {renderDOMUIRoute(route, data)}
-    </div>
-  );
+export function renderDOMUIRouter(routesState: RoutesState): Array<ComponentChild> {
+  return Object.keys(routesState).map(function (route: string) {
+    return renderDOMUIRoute(route, routesState[route]);
+  });
 }
