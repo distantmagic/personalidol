@@ -10,9 +10,10 @@ import { SpotLight } from "three/src/lights/SpotLight";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
+import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
-import { invoke } from "@personalidol/framework/src/invoke";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
+import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/framework/src/updateStoreCameraAspect";
 
@@ -91,6 +92,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
 
       effectComposer.addPass(glitchPass);
       _unmountables.add(unmountPass(effectComposer, glitchPass));
+      _disposables.add(disposableGeneric(glitchPass));
     },
 
     progress(progress: LoadingManagerProgress): void {
@@ -102,8 +104,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   function dispose(): void {
     state.isDisposed = true;
 
-    _disposables.forEach(invoke);
-    _disposables.clear();
+    fDispose(_disposables);
   }
 
   function mount(): void {
@@ -115,6 +116,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
 
     effectComposer.addPass(renderPass);
     _unmountables.add(unmountPass(effectComposer, renderPass));
+    _disposables.add(disposableGeneric(renderPass));
 
     _spotLight.intensity = 0;
 
@@ -140,8 +142,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     progressMessagePort.onmessage = null;
     domMessagePort.postMessage(_clearRendererMessage);
 
-    _unmountables.forEach(invoke);
-    _unmountables.clear();
+    fUnmount(_unmountables);
   }
 
   function update(delta: number): void {

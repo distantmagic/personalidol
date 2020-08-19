@@ -3,15 +3,21 @@ import { LinearFilter, RGBAFormat } from "three/src/constants";
 import { Vector2 } from "three/src/math/Vector2";
 import { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
+import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
+import { dispose } from "@personalidol/framework/src/dispose";
+
 import { Pass } from "./Pass";
 import { ShaderPass } from "./ShaderPass";
 
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget as IWebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
+import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+
 import type { EffectComposer as IEffectComposer } from "./EffectComposer.interface";
 
 export class EffectComposer implements IEffectComposer {
+  private _disposables: Set<Disposable> = new Set();
   private _pixelRatio: number;
   private _width: number;
   private _height: number;
@@ -42,6 +48,8 @@ export class EffectComposer implements IEffectComposer {
       this._height = size.height;
 
       renderTarget = new WebGLRenderTarget(this._width * this._pixelRatio, this._height * this._pixelRatio, parameters);
+      this._disposables.add(disposableGeneric(renderTarget));
+
       renderTarget.texture.name = "EffectComposer.rt1";
     } else {
       this._pixelRatio = 1;
@@ -50,7 +58,11 @@ export class EffectComposer implements IEffectComposer {
     }
 
     this.renderTarget1 = renderTarget;
+    this._disposables.add(disposableGeneric(renderTarget));
+
     this.renderTarget2 = renderTarget.clone();
+    this._disposables.add(disposableGeneric(this.renderTarget2));
+
     this.renderTarget2.texture.name = "EffectComposer.rt2";
 
     this.writeBuffer = this.renderTarget1;
@@ -61,12 +73,15 @@ export class EffectComposer implements IEffectComposer {
     this.passes = [];
 
     this.copyPass = new ShaderPass(CopyShader);
+    this._disposables.add(disposableGeneric(this.copyPass));
+  }
+
+  dispose(): void {
+    dispose(this._disposables);
   }
 
   swapBuffers() {
-    const tmp = this.readBuffer;
-    this.readBuffer = this.writeBuffer;
-    this.writeBuffer = tmp;
+    [this.readBuffer, this.writeBuffer] = [this.writeBuffer, this.readBuffer];
   }
 
   addPass(pass: Pass) {
@@ -107,8 +122,9 @@ export class EffectComposer implements IEffectComposer {
 
       if (pass.enabled === false) continue;
 
-      pass.renderToScreen = this.renderToScreen && this.isLastEnabledPass(i);
-      pass.render(this.renderer, this.writeBuffer, this.readBuffer, deltaTime, maskActive);
+      const renderToScreen = this.renderToScreen && this.isLastEnabledPass(i);
+
+      pass.render(this.renderer, renderToScreen, this.writeBuffer, this.readBuffer, deltaTime, maskActive);
 
       if (pass.needsSwap) {
         if (maskActive) {
@@ -118,7 +134,7 @@ export class EffectComposer implements IEffectComposer {
           //context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
           stencil.setFunc(context.NOTEQUAL, 1, 0xffffffff);
 
-          this.copyPass.render(this.renderer, this.writeBuffer, this.readBuffer, deltaTime);
+          this.copyPass.render(this.renderer, renderToScreen, this.writeBuffer, this.readBuffer, deltaTime);
 
           //context.stencilFunc( context.EQUAL, 1, 0xffffffff );
           stencil.setFunc(context.EQUAL, 1, 0xffffffff);
@@ -131,26 +147,6 @@ export class EffectComposer implements IEffectComposer {
     }
 
     this.renderer.setRenderTarget(currentRenderTarget);
-  }
-
-  reset(renderTarget: null | IWebGLRenderTarget = null) {
-    if (renderTarget === null) {
-      const size = this.renderer.getSize(new Vector2());
-      this._pixelRatio = this.renderer.getPixelRatio();
-      this._width = size.width;
-      this._height = size.height;
-
-      renderTarget = this.renderTarget1.clone();
-      renderTarget.setSize(this._width * this._pixelRatio, this._height * this._pixelRatio);
-    }
-
-    this.renderTarget1.dispose();
-    this.renderTarget2.dispose();
-    this.renderTarget1 = renderTarget;
-    this.renderTarget2 = renderTarget.clone();
-
-    this.writeBuffer = this.renderTarget1;
-    this.readBuffer = this.renderTarget2;
   }
 
   setSize(width: number, height: number) {

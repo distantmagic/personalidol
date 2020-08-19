@@ -5,6 +5,10 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { ShaderMaterial } from "three/src/materials/ShaderMaterial";
 import { UniformsUtils } from "three/src/renderers/shaders/UniformsUtils";
 
+import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
+import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
+import { dispose } from "@personalidol/framework/src/dispose";
+
 import { FullScreenQuad } from "./FullScreenQuad";
 import { Pass } from "./Pass";
 
@@ -13,7 +17,10 @@ import type { Uniform } from "three/src/core/Uniform";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
+import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+
 export class GlitchPass extends Pass {
+  private _disposables: Set<Disposable> = new Set();
   private curF: number = 0;
   private fsQuad: FullScreenQuad;
   private goWild: boolean = false;
@@ -36,11 +43,20 @@ export class GlitchPass extends Pass {
       fragmentShader: shader.fragmentShader,
     });
 
+    this._disposables.add(disposableMaterial(this.material));
+
     this.fsQuad = new FullScreenQuad(this.material);
+
+    this._disposables.add(disposableGeneric(this.fsQuad));
+
     this.generateTrigger();
   }
 
-  render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
+  dispose(): void {
+    dispose(this._disposables);
+  }
+
+  render(renderer: WebGLRenderer, renderToScreen: boolean, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
     this.uniforms["tDiffuse"].value = readBuffer.texture;
     this.uniforms["seed"].value = Math.random(); //default seeding
     this.uniforms["byp"].value = 0;
@@ -67,7 +83,7 @@ export class GlitchPass extends Pass {
 
     this.curF++;
 
-    if (this.renderToScreen) {
+    if (renderToScreen) {
       renderer.setRenderTarget(null);
       this.fsQuad.render(renderer);
     } else {
@@ -92,6 +108,10 @@ export class GlitchPass extends Pass {
       data_arr[i * 3 + 2] = val;
     }
 
-    return new DataTexture(data_arr, dt_size, dt_size, RGBFormat, FloatType);
+    const dataTexture = new DataTexture(data_arr, dt_size, dt_size, RGBFormat, FloatType);
+
+    this._disposables.add(disposableGeneric(dataTexture));
+
+    return dataTexture;
   }
 }

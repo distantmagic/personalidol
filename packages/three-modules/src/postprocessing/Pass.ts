@@ -10,9 +10,10 @@ export abstract class Pass implements IPass {
 
   enabled: boolean = true;
   clear: boolean = false;
-  renderToScreen: boolean = false;
 
-  abstract render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget, deltaTime: number, maskActive: boolean): void;
+  abstract dispose(): void;
+
+  abstract render(renderer: WebGLRenderer, renderToScreen: boolean, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget, deltaTime: number, maskActive: boolean): void;
 
   setSize(width: number, height: number): void {}
 }

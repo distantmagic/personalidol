@@ -1,6 +1,10 @@
 import { ShaderMaterial } from "three/src/materials/ShaderMaterial";
 import { UniformsUtils } from "three/src/renderers/shaders/UniformsUtils";
 
+import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
+import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
+import { dispose } from "@personalidol/framework/src/dispose";
+
 import { FullScreenQuad } from "./FullScreenQuad";
 import { Pass } from "./Pass";
 
@@ -11,6 +15,8 @@ import type { Uniform } from "three/src/core/Uniform";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
+import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+
 type Shader = {
   defines?: { [key: string]: number };
   uniforms: { [key: string]: Uniform };
@@ -19,6 +25,8 @@ type Shader = {
 };
 
 export class ShaderPass extends Pass {
+  private _disposables: Set<Disposable> = new Set();
+
   fsQuad: FullScreenQuad;
   material: Material;
   textureID: string;
@@ -36,27 +44,37 @@ export class ShaderPass extends Pass {
     } else if (shader) {
       this.uniforms = UniformsUtils.clone(shader.uniforms);
 
-      this.material = new ShaderMaterial({
+      const material = new ShaderMaterial({
         defines: Object.assign({}, shader.defines),
         uniforms: this.uniforms,
         vertexShader: shader.vertexShader,
         fragmentShader: shader.fragmentShader,
       });
+
+      this._disposables.add(disposableMaterial(material));
+      this.material = material;
     } else {
       throw new Error("Could not get shader pass material.");
     }
 
-    this.fsQuad = new FullScreenQuad(this.material);
+    const fsQuad = new FullScreenQuad(this.material);
+
+    this._disposables.add(disposableGeneric(fsQuad));
+    this.fsQuad = fsQuad;
   }
 
-  render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget, deltaTime: number = 0 /*,  maskActive */) {
+  dispose(): void {
+    dispose(this._disposables);
+  }
+
+  render(renderer: WebGLRenderer, renderToScreen: boolean, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget, deltaTime: number = 0 /*,  maskActive */) {
     if (this.uniforms[this.textureID]) {
       this.uniforms[this.textureID].value = readBuffer.texture;
     }
 
     this.fsQuad.material = this.material;
 
-    if (this.renderToScreen) {
+    if (renderToScreen) {
       renderer.setRenderTarget(null);
       this.fsQuad.render(renderer);
     } else {

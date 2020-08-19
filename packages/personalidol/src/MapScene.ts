@@ -22,17 +22,18 @@ import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupT
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
+import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { getPrimaryPointerVectorX } from "@personalidol/framework/src/getPrimaryPointerVectorX";
 import { getPrimaryPointerVectorY } from "@personalidol/framework/src/getPrimaryPointerVectorY";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
-import { invoke } from "@personalidol/framework/src/invoke";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
+import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/framework/src/updateStoreCameraAspect";
 
@@ -291,8 +292,7 @@ export function MapScene(
   function dispose(): void {
     state.isDisposed = true;
 
-    _disposables.forEach(invoke);
-    _disposables.clear();
+    fDispose(_disposables);
   }
 
   function mount(): void {
@@ -304,6 +304,7 @@ export function MapScene(
 
     effectComposer.addPass(renderPass);
     _unmountables.add(unmountPass(effectComposer, renderPass));
+    _disposables.add(disposableGeneric(renderPass));
 
     _cameraZoomAmount = 400;
     _onCameraUpdate();
@@ -366,8 +367,7 @@ export function MapScene(
     eventBus.POINTER_ZOOM_REQUEST.delete(_onPointerZoomRequest);
     domMessagePort.postMessage(_clearRendererMessage);
 
-    _unmountables.forEach(invoke);
-    _unmountables.clear();
+    fUnmount(_unmountables);
   }
 
   function update(delta: number): void {

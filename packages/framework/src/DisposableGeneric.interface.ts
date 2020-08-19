@@ -1,5 +1,5 @@
 import type { Disposable } from "./Disposable.type";
 
-export type DisposableGeneric = {
+export interface DisposableGeneric {
   dispose: Disposable;
-};
+}

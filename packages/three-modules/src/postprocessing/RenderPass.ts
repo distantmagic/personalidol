@@ -30,7 +30,9 @@ export class RenderPass extends Pass {
     this.clearAlpha = clearAlpha;
   }
 
-  render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
+  dispose(): void {}
+
+  render(renderer: WebGLRenderer, renderToScreen: boolean, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
     const oldAutoClear = renderer.autoClear;
 
     renderer.autoClear = false;
@@ -60,7 +62,7 @@ export class RenderPass extends Pass {
       renderer.clearDepth();
     }
 
-    renderer.setRenderTarget(this.renderToScreen ? null : readBuffer);
+    renderer.setRenderTarget(renderToScreen ? null : readBuffer);
 
     // TODO: Avoid using autoClear properties, see https://github.com/mrdoob/three.js/pull/15571#issuecomment-465669600
     if (this.clear) {
