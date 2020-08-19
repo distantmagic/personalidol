@@ -6,8 +6,12 @@ import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
 export class MaskPass extends Pass {
+  readonly clear: true = true;
+  readonly mask: true = true;
+  readonly needsSwap: false = false;
+
   camera: Camera;
-  inverse: boolean;
+  inverse: boolean = false;
   scene: Scene;
 
   constructor(scene: Scene, camera: Camera) {
@@ -15,16 +19,11 @@ export class MaskPass extends Pass {
 
     this.scene = scene;
     this.camera = camera;
-
-    this.clear = true;
-    this.needsSwap = false;
-
-    this.inverse = false;
   }
 
   render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
-    var context = renderer.getContext();
-    var state = renderer.state;
+    const context = renderer.getContext();
+    const state = renderer.state;
 
     // don't update color or depth
 
@@ -38,7 +37,7 @@ export class MaskPass extends Pass {
 
     // set up stencil
 
-    var writeValue, clearValue;
+    let writeValue, clearValue;
 
     if (this.inverse) {
       writeValue = 0;

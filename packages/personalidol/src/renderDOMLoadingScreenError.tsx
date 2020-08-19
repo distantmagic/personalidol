@@ -9,8 +9,10 @@ type Props = LoadingError;
 export function renderDOMLoadingScreenError(props: Props): ComponentChild {
   return (
     <div class="pi__loading-screen pi__loading-screen--error">
-      {props.error.message}<br />
-      {props.error.stack}
+      <p>error while loading {props.item.comment}</p>
+      <p>{props.item.id}</p>
+      <p>{props.error.message}</p>
+      <p>{props.error.stack}</p>
     </div>
   );
 }

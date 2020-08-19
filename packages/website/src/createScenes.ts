@@ -4,7 +4,7 @@ import { Director } from "@personalidol/framework/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MapScene } from "@personalidol/personalidol/src/MapScene";
-import { Renderer } from "@personalidol/framework/src/Renderer";
+import { Renderer } from "@personalidol/three-renderer/src/Renderer";
 import { SceneLoader } from "@personalidol/framework/src/SceneLoader";
 
 import type { Logger } from "loglevel";

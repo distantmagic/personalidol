@@ -33,6 +33,7 @@ import { RenderPass } from "@personalidol/three-modules/src/postprocessing/Rende
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
+import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/framework/src/updateStoreCameraAspect";
 
 import type { Logger } from "loglevel";
@@ -302,9 +303,7 @@ export function MapScene(
     const renderPass = new RenderPass(_scene, _camera);
 
     effectComposer.addPass(renderPass);
-    _unmountables.add(function () {
-      effectComposer.removePass(renderPass);
-    });
+    _unmountables.add(unmountPass(effectComposer, renderPass));
 
     _cameraZoomAmount = 400;
     _onCameraUpdate();

@@ -5,38 +5,21 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/dom-renderer": "0.0.0",
     "@personalidol/framework": "0.0.0",
-    "@personalidol/loading-manager": "0.0.0",
-    "@personalidol/personalidol": "0.0.0",
-    "@personalidol/quakemaps": "0.0.0",
-    "@personalidol/support": "0.0.0",
-    "@personalidol/texture-loader": "0.0.0",
-    "@personalidol/three-modules": "0.0.0",
-    "@personalidol/three-renderer": "0.0.0",
-    "@personalidol/workers": "0.0.0",
-    "loglevel": "^1.6.8",
+    "@personalidol/three-modules": "^0.0.0",
     "three": "^0.119.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.9",
-    "autoprefixer": "^9.8.6",
-    "cssnano": "^4.1.10",
     "esbuild": "^0.6.17",
-    "http-server": "^0.12.3",
     "jest": "^26.2.2",
-    "normalize.css": "^8.0.1",
-    "postcss": "^7.0.32",
-    "postcss-cli": "^7.1.1",
-    "postcss-import": "^12.0.1",
     "prettier": "^2.0.5",
     "ts-jest": "^26.1.4",
     "typescript": "^3.9.7"
   },
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",
-  "name": "@personalidol/website",
-  "private": true,
+  "name": "@personalidol/three-renderer",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"

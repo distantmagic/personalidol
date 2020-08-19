@@ -1,11 +1,8 @@
-import { Clock } from "three/src/core/Clock";
 import { CopyShader } from "three/examples/jsm/shaders/CopyShader";
 import { LinearFilter, RGBAFormat } from "three/src/constants";
 import { Vector2 } from "three/src/math/Vector2";
 import { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
-import { ClearMaskPass } from "./ClearMaskPass";
-import { MaskPass } from "./MaskPass";
 import { Pass } from "./Pass";
 import { ShaderPass } from "./ShaderPass";
 
@@ -19,7 +16,6 @@ export class EffectComposer implements IEffectComposer {
   private _width: number;
   private _height: number;
 
-  clock: Clock;
   copyPass: ShaderPass;
   passes: Array<Pass>;
   renderer: WebGLRenderer;
@@ -65,8 +61,6 @@ export class EffectComposer implements IEffectComposer {
     this.passes = [];
 
     this.copyPass = new ShaderPass(CopyShader);
-
-    this.clock = new Clock();
   }
 
   swapBuffers() {
@@ -101,22 +95,14 @@ export class EffectComposer implements IEffectComposer {
     });
   }
 
-  render(deltaTime: null | number = null) {
-    // deltaTime value is in seconds
-
-    if (deltaTime === null) {
-      deltaTime = this.clock.getDelta();
-    }
-
+  render(deltaTime: number) {
     const currentRenderTarget = this.renderer.getRenderTarget();
 
     let maskActive = false;
 
-    let pass,
-      i,
-      il = this.passes.length;
+    let pass;
 
-    for (i = 0; i < il; i++) {
+    for (let i = 0; i < this.passes.length; i += 1) {
       pass = this.passes[i];
 
       if (pass.enabled === false) continue;
@@ -141,21 +127,15 @@ export class EffectComposer implements IEffectComposer {
         this.swapBuffers();
       }
 
-      if (MaskPass !== undefined) {
-        if (pass instanceof MaskPass) {
-          maskActive = true;
-        } else if (pass instanceof ClearMaskPass) {
-          maskActive = false;
-        }
-      }
+      maskActive = pass.mask && !pass.clearMask;
     }
 
     this.renderer.setRenderTarget(currentRenderTarget);
   }
 
-  reset(renderTarget: IWebGLRenderTarget) {
-    if (renderTarget === undefined) {
-      var size = this.renderer.getSize(new Vector2());
+  reset(renderTarget: null | IWebGLRenderTarget = null) {
+    if (renderTarget === null) {
+      const size = this.renderer.getSize(new Vector2());
       this._pixelRatio = this.renderer.getPixelRatio();
       this._width = size.width;
       this._height = size.height;

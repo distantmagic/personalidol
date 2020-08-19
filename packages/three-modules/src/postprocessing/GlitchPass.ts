@@ -14,17 +14,18 @@ import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
 export class GlitchPass extends Pass {
-  curF: number;
-  fsQuad: FullScreenQuad;
-  goWild: boolean;
-  material: Material;
-  randX: number = 0;
-  uniforms: { [key: string]: Uniform };
+  private curF: number = 0;
+  private fsQuad: FullScreenQuad;
+  private goWild: boolean = false;
+  private material: Material;
+  private randX: number = 0;
+  private uniforms: { [key: string]: Uniform };
 
   constructor(dt_size: number = 64) {
     super();
 
-    var shader = DigitalGlitch;
+    const shader = DigitalGlitch;
+
     this.uniforms = UniformsUtils.clone(shader.uniforms);
 
     this.uniforms["tDisp"].value = this.generateHeightmap(dt_size);
@@ -36,9 +37,6 @@ export class GlitchPass extends Pass {
     });
 
     this.fsQuad = new FullScreenQuad(this.material);
-
-    this.goWild = false;
-    this.curF = 0;
     this.generateTrigger();
   }
 
@@ -84,11 +82,11 @@ export class GlitchPass extends Pass {
   }
 
   generateHeightmap(dt_size: number) {
-    var data_arr = new Float32Array(dt_size * dt_size * 3);
-    var length = dt_size * dt_size;
+    const data_arr = new Float32Array(dt_size * dt_size * 3);
+    const length = dt_size * dt_size;
 
-    for (var i = 0; i < length; i++) {
-      var val = MathUtils.randFloat(0, 1);
+    for (let i = 0; i < length; i++) {
+      const val = MathUtils.randFloat(0, 1);
       data_arr[i * 3 + 0] = val;
       data_arr[i * 3 + 1] = val;
       data_arr[i * 3 + 2] = val;

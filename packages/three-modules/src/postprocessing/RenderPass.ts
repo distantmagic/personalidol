@@ -8,9 +8,12 @@ import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
 export class RenderPass extends Pass {
+  readonly needsSwap: false = false;
+
   camera: Camera;
+  clear: boolean = true;
   clearColor: null | Color;
-  clearDepth: boolean;
+  clearDepth: boolean = false;
   clearAlpha: number;
   overrideMaterial: null | Material;
   scene: Scene;
@@ -25,14 +28,11 @@ export class RenderPass extends Pass {
 
     this.clearColor = clearColor;
     this.clearAlpha = clearAlpha;
-
-    this.clear = true;
-    this.clearDepth = false;
-    this.needsSwap = false;
   }
 
   render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
     const oldAutoClear = renderer.autoClear;
+
     renderer.autoClear = false;
 
     let oldClearColor: null | number | Color = null;

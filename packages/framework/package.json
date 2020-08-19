@@ -5,7 +5,6 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/three-modules": "^0.0.0",
     "loglevel": "^1.6.8",
     "three": "^0.119.1"
   },

@@ -13,6 +13,7 @@ import { disposableMaterial } from "@personalidol/framework/src/disposableMateri
 import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
 import { invoke } from "@personalidol/framework/src/invoke";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
+import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/framework/src/updateStoreCameraAspect";
 
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
@@ -89,9 +90,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
       const glitchPass = new GlitchPass();
 
       effectComposer.addPass(glitchPass);
-      _unmountables.add(function () {
-        effectComposer.removePass(glitchPass);
-      });
+      _unmountables.add(unmountPass(effectComposer, glitchPass));
     },
 
     progress(progress: LoadingManagerProgress): void {
@@ -115,9 +114,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     const renderPass = new RenderPass(_scene, _camera);
 
     effectComposer.addPass(renderPass);
-    _unmountables.add(function () {
-      effectComposer.removePass(renderPass);
-    });
+    _unmountables.add(unmountPass(effectComposer, renderPass));
 
     _spotLight.intensity = 0;
 

@@ -4,8 +4,11 @@ import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 import type { Pass as IPass } from "./Pass.interface";
 
 export abstract class Pass implements IPass {
+  readonly clearMask: boolean = false;
+  readonly mask: boolean = false;
+  readonly needsSwap: boolean = true;
+
   enabled: boolean = true;
-  needsSwap: boolean = true;
   clear: boolean = false;
   renderToScreen: boolean = false;
 

@@ -9,3 +9,8 @@
 #ui-root *, #ui-root * * {
   box-sizing: border-box;
 }
+
+::selection {
+  background-color: white;
+  color: black;
+}

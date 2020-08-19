@@ -6,13 +6,18 @@
   font-size: 1rem;
   left: 50%;
   letter-spacing: 0.1ch;
-  line-height: 1.3rem;
+  line-height: 1.6;
   max-width: 80ch;
   overflow-wrap: break-word;
+  overflow-y: auto;
   pointer-events: all;
-  padding: 1.6rem;
+  padding: 0.8rem;
   position: absolute;
   top: 1.6rem;
   transform: translateX(-50%);
   width: calc(100vw - 3.2rem);
+}
+
+.pi__loading-screen.pi__loading-screen--error p + p {
+  margin-top: 1rem;
 }
