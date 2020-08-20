@@ -1,8 +1,8 @@
 import type { RPCLookupTable } from "./RPCLookupTable.type";
-import type { RPCResponseData } from "./RPCResponseData.type";
 import type { RPCResponseHandler } from "./RPCResponseHandler.type";
+import type { RPCMessage } from "./RPCMessage.type";
 
-export function handleRPCResponse<ResponseData extends RPCResponseData, MappedValue>(
+export function handleRPCResponse<ResponseData extends RPCMessage, MappedValue>(
   rpcLookupTable: RPCLookupTable,
   mapper: null | RPCResponseHandler<ResponseData, MappedValue> = null
 ) {

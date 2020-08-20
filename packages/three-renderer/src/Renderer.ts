@@ -38,8 +38,6 @@ export function Renderer(dimensionsState: Uint32Array, effectComposer: EffectCom
       effectComposer.setSize(dimensionsState[Dimensions.code.D_WIDTH], dimensionsState[Dimensions.code.D_HEIGHT]);
       _lastDimensionsUpdate = dimensionsState[Dimensions.code.LAST_UPDATE];
     }
-
-    effectComposer.render(delta);
   }
 
   return Object.freeze({

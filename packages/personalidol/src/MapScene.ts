@@ -369,6 +369,8 @@ export function MapScene(
       _playerPosition.z += 10 * _pointerVector.x;
       _onCameraUpdate();
     }
+
+    effectComposer.render(delta);
   }
 
   function _addMapEntity<K extends keyof EntityLookup>(entity: EntityLookup[K], worldspawnTexture: ITexture): void | Promise<void> {

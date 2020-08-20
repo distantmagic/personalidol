@@ -184,6 +184,8 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
       _boxMesh.rotation.x += delta;
       _boxMesh.rotation.z += delta;
     }
+
+    effectComposer.render(delta);
   }
 
   return Object.freeze({

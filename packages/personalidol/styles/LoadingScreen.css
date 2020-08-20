@@ -1,19 +1,15 @@
-.pi__font-preloader,
+/*@import "./fadeIn.css";*/
+
+.loading-screen {
+/*  animation-duration: 1000ms;
+  animation-name: fadeIn;*/
+}
+
 .loading-screen__comment,
 .loading-screen__progress,
 .loading-screen__progress-bar {
   position: absolute;
   line-height: 1rem;
-}
-
-.pi__font-preloader:before {
-  content: "...";
-  font-family: "Almendra", sans-serif;
-}
-
-.pi__font-preloader:after {
-  content: "...";
-  font-family: "Mukta", sans-serif;
 }
 
 .loading-screen__comment,

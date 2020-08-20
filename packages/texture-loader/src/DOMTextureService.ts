@@ -1,9 +1,11 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { canvas2DDrawImage } from "@personalidol/dom-renderer/src/canvas2DDrawImage";
 import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
+import { preloadImage } from "@personalidol/dom-renderer/src/preloadImage";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import { keyFromTextureRequest } from "./keyFromTextureRequest";
@@ -58,21 +60,11 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   }
 
   async function _createImageData(request: TextureQueueItem): Promise<ImageData> {
-    const image: HTMLImageElement = await _preloadImage(request.textureUrl);
+    const image: HTMLImageElement = await preloadImage(request.textureUrl);
 
-    const imageNaturalHeight = image.naturalHeight;
-    const imageNaturalWidth = image.naturalWidth;
+    canvas2DDrawImage(canvas, context2D, image);
 
-    canvas.height = imageNaturalHeight;
-    canvas.width = imageNaturalWidth;
-
-    // It's worth to note here that JS is asynchronous, but while we are in the
-    // same thread, there is no risk of several images being written to the
-    // canvas at the same time, so no locks are necessary.
-
-    context2D.drawImage(image, 0, 0);
-
-    return context2D.getImageData(0, 0, imageNaturalWidth, imageNaturalHeight);
+    return context2D.getImageData(0, 0, image.naturalWidth, image.naturalHeight);
   }
 
   async function _processTextureQueue(request: TextureQueueItem): Promise<void> {
@@ -96,19 +88,6 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
       },
       isLast ? [imageData.data.buffer] : _emptyTransferables
     );
-  }
-
-  function _preloadImage(textureUrl: string): Promise<HTMLImageElement> {
-    return new Promise(function (resolve, reject) {
-      const image = new Image();
-
-      image.onerror = reject;
-      image.onload = function () {
-        resolve(image);
-      };
-
-      image.src = textureUrl;
-    });
   }
 
   return Object.freeze({

@@ -1,32 +1,32 @@
 /// <reference types="@types/css-font-loading-module" />
 
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
 
-import type { FontPreloaderService as IFontPreloaderService } from "./FontPreloaderService.interface";
+import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
+
+import type { FontPreloadService as IFontPreloadService } from "./FontPreloadService.interface";
 import type { FontPreloadParameters } from "./FontPreloadParameters.type";
 
-export function FontPreloaderService(fontPreloaderMessagePort: MessagePort, progressMessagePort: MessagePort): IFontPreloaderService {
+export function FontPreloadService(fontPreloadMessagePort: MessagePort, progressMessagePort: MessagePort): IFontPreloadService {
   const _messageHandlers = {
-    preload: _preloadFont,
+    preloadFont: _preloadFont,
   };
 
   const _messagesRouter = createRouter(_messageHandlers);
 
   function start() {
-    fontPreloaderMessagePort.onmessage = _messagesRouter;
+    fontPreloadMessagePort.onmessage = _messagesRouter;
   }
 
   function stop() {
-    fontPreloaderMessagePort.onmessage = null;
+    fontPreloadMessagePort.onmessage = null;
   }
 
-  async function _preloadFont(parameters: FontPreloadParameters) {
+  async function _preloadFont(parameters: FontPreloadParameters & RPCMessage) {
     const loadItemFont = {
       comment: `font ${parameters.family}`,
-      id: MathUtils.generateUUID(),
+      id: parameters.rpc,
       weight: 1,
     };
 
@@ -35,13 +35,13 @@ export function FontPreloaderService(fontPreloaderMessagePort: MessagePort, prog
     await notifyLoadingManager(progressMessagePort, loadItemFont, fontFace.load());
     document.fonts.add(fontFace);
 
-    fontPreloaderMessagePort.postMessage({
-      preloaded: parameters,
+    fontPreloadMessagePort.postMessage({
+      preloadedFont: parameters,
     });
   }
 
   return Object.freeze({
-    name: "FontPreloaderService",
+    name: "FontPreloadService",
 
     start: start,
     stop: stop,

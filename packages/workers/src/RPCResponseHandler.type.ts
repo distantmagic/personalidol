@@ -1,3 +1,3 @@
-import type { RPCResponseData } from "./RPCResponseData.type";
+import type { RPCMessage } from "./RPCMessage.type";
 
-export type RPCResponseHandler<ResponseData extends RPCResponseData, MappedValue> = (data: ResponseData) => MappedValue;
+export type RPCResponseHandler<ResponseData extends RPCMessage, MappedValue> = (data: ResponseData) => MappedValue;

@@ -2,6 +2,10 @@
 @import "./FatalError.css";
 @import "./MainMenu.css";
 
+body {
+  user-select: none;
+}
+
 #ui-root {
   pointer-events: none;
 }

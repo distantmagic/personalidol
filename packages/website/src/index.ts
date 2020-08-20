@@ -6,10 +6,11 @@ import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { DOMRendererService } from "@personalidol/dom-renderer/src/DOMRendererService";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { EventBus } from "@personalidol/framework/src/EventBus";
-import { FontPreloaderService } from "@personalidol/dom-renderer/src/FontPreloaderService";
+import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
 import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCanvasElementById";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
+import { ImagePreloadService } from "@personalidol/dom-renderer/src/ImagePreloadService";
 import { Input } from "@personalidol/framework/src/Input";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
@@ -110,20 +111,41 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   addProgressMessagePort(progressMessageChannel.port1, true);
 
-  // FontPreloaderService does exactly what it name says. Thanks to this
+  // FontPreloadService does exactly what it name says. Thanks to this
   // service it is possible for worker threads to request font face to be
   // preloaded, display loading indicator  and receive notification back when
   // it's ready. Thanks to that, there should be no UI twitching while fonts
   // are being loaded.
 
-  const fontPreloaderMessageChannel = new MessageChannel();
-  const fontPreloaderToProgressMessageChannel = new MessageChannel();
+  const fontPreloadMessageChannel = new MessageChannel();
+  const fontPreloadToProgressMessageChannel = new MessageChannel();
 
-  addProgressMessagePort(fontPreloaderToProgressMessageChannel.port1, false);
+  addProgressMessagePort(fontPreloadToProgressMessageChannel.port1, false);
 
-  const fontPreloaderService = FontPreloaderService(fontPreloaderMessageChannel.port1, fontPreloaderToProgressMessageChannel.port2);
+  const fontPreloadService = FontPreloadService(fontPreloadMessageChannel.port1, fontPreloadToProgressMessageChannel.port2);
 
-  serviceManager.services.add(fontPreloaderService);
+  serviceManager.services.add(fontPreloadService);
+
+  // ImagePreloadService does exactly the same thing as FontPreloadService, but
+  // with images. Preloading images is actually surprisingly tricky. The most
+  // reliable way I found is to fetch image via JS and then append CSS with
+  // a dataURL.
+
+  const textureCanvas = document.createElement("canvas");
+  const textureCanvasContext2D = textureCanvas.getContext("2d");
+
+  if (null === textureCanvasContext2D) {
+    throw new Error("Unable to get detached canvas 2D context.");
+  }
+
+  const imagePreloadMessageChannel = new MessageChannel();
+  const imagePreloadToProgressMessageChannel = new MessageChannel();
+
+  addProgressMessagePort(imagePreloadToProgressMessageChannel.port1, false);
+
+  const imagePreloadService = ImagePreloadService(textureCanvas, textureCanvasContext2D, imagePreloadMessageChannel.port1, imagePreloadToProgressMessageChannel.port2);
+
+  serviceManager.services.add(imagePreloadService);
 
   // `createImageBitmap` has it's quirks and surprisingly has no support in
   // safari and ios. Also it has partial support in Firefox.
@@ -162,13 +184,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       };
     } else {
       logger.debug("NO_SUPPORT(createImageBitmap) // starting texture service in the main thread");
-
-      const textureCanvas = document.createElement("canvas");
-      const textureCanvasContext2D = textureCanvas.getContext("2d");
-
-      if (null === textureCanvasContext2D) {
-        throw new Error("Unable to get detached canvas 2D context.");
-      }
 
       const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D, texturesToProgressMessageChannel.port2);
 
@@ -363,7 +378,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
         canvas: offscreenCanvas,
         devicePixelRatio: devicePixelRatio,
         domMessagePort: domRendererMessageChannel.port2,
-        fontPreloaderMessagePort: fontPreloaderMessageChannel.port2,
+        fontPreloadMessagePort: fontPreloadMessageChannel.port2,
+        imagePreloadMessagePort: imagePreloadMessageChannel.port2,
         md2MessagePort: md2MessageChannel.port2,
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
@@ -371,7 +387,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       },
       [
         domRendererMessageChannel.port2,
-        fontPreloaderMessageChannel.port2,
+        fontPreloadMessageChannel.port2,
+        imagePreloadMessageChannel.port2,
         md2MessageChannel.port2,
         offscreenCanvas,
         progressMessageChannel.port2,
@@ -410,7 +427,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       inputState,
       logger,
       domRendererMessageChannel.port2,
-      fontPreloaderMessageChannel.port2,
+      fontPreloadMessageChannel.port2,
+      imagePreloadMessageChannel.port2,
       md2MessageChannel.port2,
       progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,

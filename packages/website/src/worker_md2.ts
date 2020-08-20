@@ -12,6 +12,11 @@ import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
+import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
+
+type ModelLoadRequest = RPCMessage & {
+  model_name: string;
+};
 
 type ModelParts = {
   body: string;
@@ -68,7 +73,7 @@ function _fetchModelParts(partsUrl: string): Promise<ModelParts> {
 }
 
 const md2MessagesRouter = {
-  async load(messagePort: MessagePort, { model_name, rpc }: { model_name: string; rpc: string }) {
+  async load(messagePort: MessagePort, { model_name, rpc }: ModelLoadRequest) {
     if (null === _progressMessagePort) {
       throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading MD2 model.`);
     }

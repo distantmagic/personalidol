@@ -18,7 +18,14 @@ import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/Atl
 import type { EntityAny } from "@personalidol/quakemaps/src/EntityAny.type";
 import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
+import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
+
+type UnmarshalRequest = RPCMessage & {
+  discardOccluding: null | Vector3Simple;
+  filename: string;
+  rpc: string;
+};
 
 const logger = Loglevel.getLogger(self.name);
 
@@ -111,7 +118,7 @@ function _responseToText(response: Response): Promise<string> {
 }
 
 const quakeMapsMessagesRouter = {
-  unmarshal(messagePort: MessagePort, { discardOccluding, filename, rpc }: { discardOccluding: null | Vector3Simple; filename: string; rpc: string }): void {
+  unmarshal(messagePort: MessagePort, { discardOccluding, filename, rpc }: UnmarshalRequest): void {
     if (null === _atlasMessagePort) {
       throw new Error(`Atlas message port must be set in WORKER(${self.name}) before loading map.`);
     }

@@ -17,6 +17,7 @@ import { requestTexture } from "./requestTexture";
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
+import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
 
 import type { Atlas } from "./Atlas.type";
 import type { AtlasService as IAtlasService } from "./AtlasService.interface";
@@ -25,13 +26,16 @@ import type { AtlasTextureDimensions } from "./AtlasTextureDimensions.type";
 import type { ImageBitmapResponse } from "./ImageBitmapResponse.type";
 import type { ImageDataBufferResponse } from "./ImageDataBufferResponse.type";
 
-type AtlasQueueItem = {
+type AtlasQueueItem = RPCMessage & {
   messagePort: MessagePort;
-  rpc: string;
   textureUrls: ReadonlyArray<string>;
 };
 
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
+type CreateAtlasTextureRequest = RPCMessage & {
+  textureUrls: ReadonlyArray<string>;
+};
 
 const _atlasQueue: Array<AtlasQueueItem> = [];
 const _emptyTransferables: [] = [];
@@ -40,7 +44,7 @@ const _loadingUsage: ReusedResponsesUsage = createReusedResponsesUsage();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 
 const _messagesRouter = {
-  createTextureAtlas(messagePort: MessagePort, { textureUrls, rpc }: { rpc: string; textureUrls: ReadonlyArray<string> }): void {
+  createTextureAtlas(messagePort: MessagePort, { textureUrls, rpc }: CreateAtlasTextureRequest): void {
     if (textureUrls.length < 1) {
       throw new Error("Can't create texture atlas from 0 textures.");
     }

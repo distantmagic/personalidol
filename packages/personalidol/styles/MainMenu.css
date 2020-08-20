@@ -1,8 +1,23 @@
 .main-menu {
+  align-items: center;
+  bottom: 0;
   color: white;
+  display: grid;
   font-family: "Almendra", sans-serif;
   font-size: 1.6rem;
+  height: 100%;
+  justify-content: center;
+  left: 0;
   padding: 1.6rem;
-  position: relative;
   pointer-events: all;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.main-menu__title {
+  font-size: 3.2rem;
+  font-variant: small-caps;
+  margin: 0;
+  text-align: center;
 }

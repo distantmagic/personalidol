@@ -68,7 +68,6 @@ export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadi
 
     _previousProgress.comment = "";
     _previousProgress.progress = 0;
-
   }
 
   function start() {}

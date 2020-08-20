@@ -13,6 +13,7 @@
   pointer-events: all;
   padding: 0.8rem;
   position: absolute;
+  user-select: text;
   top: 1.6rem;
   transform: translateX(-50%);
   width: calc(100vw - 3.2rem);
