@@ -11,6 +11,7 @@ import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
+import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
 
@@ -47,18 +48,20 @@ const _atlasMessageRouter = createRouter({
 async function _fetchUnmarshalMapContent(
   messagePort: MessagePort,
   atlasMessagePort: MessagePort,
+  progressMessagePort: MessagePort,
   filename: string,
   rpc: string,
   discardOccluding: null | Vector3Simple = null
 ): Promise<void> {
   const content: string = await fetch(filename).then(_responseToText);
 
-  return _onMapContentLoaded(messagePort, atlasMessagePort, filename, rpc, content, discardOccluding);
+  return _onMapContentLoaded(messagePort, atlasMessagePort, progressMessagePort, filename, rpc, content, discardOccluding);
 }
 
 async function _onMapContentLoaded(
   messagePort: MessagePort,
   atlasMessagePort: MessagePort,
+  progressMessagePort: MessagePort,
   filename: string,
   rpc: string,
   content: string,
@@ -79,9 +82,24 @@ async function _onMapContentLoaded(
     return textureUrl;
   }
 
+  let expectedItemsToLoad = textureUrls.length;
+
   for (let entitySketch of unmarshalMap(filename, content, _resolveTextureUrl)) {
     entitySketches.push(entitySketch);
+    switch (entitySketch.properties.classname) {
+      case "model_gltf":
+        expectedItemsToLoad += 2;
+        break;
+      case "model_md2":
+        expectedItemsToLoad += 2;
+        break;
+      default:
+        expectedItemsToLoad += 1;
+        break;
+    }
   }
+
+  notifyLoadingManagerToExpectItems(progressMessagePort, expectedItemsToLoad);
 
   const { createTextureAtlas: textureAtlas } = await sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
     createTextureAtlas: {
@@ -135,7 +153,7 @@ const quakeMapsMessagesRouter = {
     notifyLoadingManager(
       _progressMessagePort,
       createResourceLoadMessage("map", filename),
-      _fetchUnmarshalMapContent(messagePort, _atlasMessagePort, filename, rpc, discardOccluding)
+      _fetchUnmarshalMapContent(messagePort, _atlasMessagePort, _progressMessagePort, filename, rpc, discardOccluding)
     );
   },
 };

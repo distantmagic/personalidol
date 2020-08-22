@@ -1,13 +1,20 @@
-import { sceneDispose } from "./sceneDispose";
-import { scenePreload } from "./scenePreload";
+import { invoke } from "@personalidol/framework/src/invoke";
+import { sceneDispose } from "@personalidol/framework/src/sceneDispose";
+import { scenePreload } from "@personalidol/framework/src/scenePreload";
 
 import type { Logger } from "loglevel";
 
+import type { Scene } from "@personalidol/framework/src/Scene.interface";
+
 import type { Director as IDirector } from "./Director.interface";
+import type { DirectorEventCallback } from "./DirectorEventCallback.type";
+import type { DirectorEvents } from "./DirectorEvents.type";
 import type { DirectorState } from "./DirectorState.type";
-import type { Scene } from "./Scene.interface";
 
 export function Director(logger: Logger, directorDebugName: string): IDirector {
+  const events: DirectorEvents = Object.seal({
+    PRELOAD: new Set<DirectorEventCallback>(),
+  });
   const state: DirectorState = Object.seal({
     current: null,
     isStarted: false,
@@ -78,6 +85,7 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
 
     // 1,0,0
     if (next && !_transitioning && !current) {
+      events.PRELOAD.forEach(invoke);
       scenePreload(logger, next);
 
       state.next = null;
@@ -120,6 +128,7 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
 
   return Object.freeze({
     name: `Director(${directorDebugName})`,
+    events: events,
     state: state,
 
     start: start,

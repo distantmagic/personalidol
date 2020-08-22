@@ -9,6 +9,7 @@ import type { Vector3 } from "three";
 import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
 
 import type { Brush } from "./Brush.type";
+import type { GeometryAttributes } from "./GeometryAttributes.type";
 import type { HalfSpace } from "./HalfSpace.type";
 import type { IntersectingPointsCache } from "./IntersectingPointsCache.type";
 import type { TextureDimensionsResolver } from "./TextureDimensionsResolver.type";
@@ -18,7 +19,11 @@ type UV = [number, number];
 
 const PI_HALF = Math.PI / 2;
 
-export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, resolveTextureDimensions: TextureDimensionsResolver, discardOccluding: null | Vector3 = null) {
+export function buildGeometryAttributes(
+  brushes: ReadonlyArray<Brush>,
+  resolveTextureDimensions: TextureDimensionsResolver,
+  discardOccluding: null | Vector3 = null
+): GeometryAttributes {
   let indexIncrement = 0;
   const indexLookup: {
     [key: string]: number;

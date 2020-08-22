@@ -1,4 +1,4 @@
-import type { Scene } from "./Scene.interface";
+import type { Scene } from "@personalidol/framework/src/Scene.interface";
 
 export type DirectorState = {
   current: null | Scene;

@@ -1,5 +1,7 @@
-import { sceneMountSoft } from "./sceneMountSoft";
-import { sceneUnmountSoft } from "./sceneUnmountSoft";
+import { sceneMountSoft } from "@personalidol/framework/src/sceneMountSoft";
+import { sceneUnmountSoft } from "@personalidol/framework/src/sceneUnmountSoft";
+
+import { resetLoadingManagerState } from "./resetLoadingManagerState";
 
 import type { Logger } from "loglevel";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
@@ -7,7 +9,7 @@ import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { Director as IDirector } from "./Director.interface";
 import type { SceneLoader as ISceneLoader } from "./SceneLoader.interface";
 
-export function SceneLoader(logger: Logger, renderer: WebGLRenderer, sceneDirector: IDirector, loadingScreenDirector: IDirector): ISceneLoader {
+export function SceneLoader(logger: Logger, progressMessagePort: MessagePort, renderer: WebGLRenderer, sceneDirector: IDirector, loadingScreenDirector: IDirector): ISceneLoader {
   function start(): void {}
 
   function stop(): void {}
@@ -22,7 +24,10 @@ export function SceneLoader(logger: Logger, renderer: WebGLRenderer, sceneDirect
         renderer.clear();
       }
 
-      sceneMountSoft(logger, scene);
+      if (sceneMountSoft(logger, scene)) {
+        resetLoadingManagerState(progressMessagePort);
+      }
+
       scene.update(delta, elapsedTime);
 
       return;

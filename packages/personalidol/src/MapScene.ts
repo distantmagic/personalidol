@@ -28,10 +28,8 @@ import { getPrimaryPointerVectorY } from "@personalidol/framework/src/getPrimary
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
-import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
-import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
@@ -40,7 +38,7 @@ import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/update
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three";
 
-import type { DirectorState } from "@personalidol/framework/src/DirectorState.type";
+import type { DirectorState } from "@personalidol/loading-manager/src/DirectorState.type";
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EntityAny } from "@personalidol/quakemaps/src/EntityAny.type";
@@ -327,9 +325,6 @@ export function MapScene(
 
     _disposables.add(disposableGeneric(worldspawnTexture));
 
-    // Now the loader should have a good idea of what is actually expected.
-    notifyLoadingManagerToExpectItems(progressMessagePort, entities.length);
-
     const createEntities = Promise.all(
       entities.map(function (entity: EntityAny) {
         return _addMapEntity(entity, worldspawnTexture);
@@ -340,8 +335,6 @@ export function MapScene(
 
     state.isPreloading = false;
     state.isPreloaded = true;
-
-    resetLoadingManagerState(progressMessagePort);
 
     _unmountables.add(function () {
       md2MessagePort.onmessage = _md2MessageRouter;

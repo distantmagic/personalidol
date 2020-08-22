@@ -17,27 +17,30 @@ function _sumWeights(items: Set<LoadingManagerItem>): number {
 export function LoadingManager(): ILoadingManager {
   const state: LoadingManagerState = Object.seal({
     comment: "",
+    expectsAtLeast: 0,
     progress: 0,
     version: 0,
   });
 
   const _itemsLoaded: Set<LoadingManagerItem> = new Set();
   const _itemsToLoad: Set<LoadingManagerItem> = new Set();
-  let _expectsAtLeast: number = 0;
   let _previousComment: string = "";
   let _previousProgress: number = -1;
+  let _startProgress: boolean = false;
 
   function done(item: LoadingManagerItem) {
     _itemsLoaded.add(item);
   }
 
   function expectAtLeast(expectAtLeast: number) {
-    _expectsAtLeast = expectAtLeast;
+    state.expectsAtLeast = expectAtLeast;
+    _startProgress = true;
+    update();
   }
 
   function update() {
     const itemsToLoadWeights = _sumWeights(_itemsToLoad);
-    const totalWeights = Math.max(_expectsAtLeast, itemsToLoadWeights);
+    const totalWeights = Math.max(state.expectsAtLeast, itemsToLoadWeights);
 
     if (totalWeights < 1) {
       return;
@@ -50,7 +53,10 @@ export function LoadingManager(): ILoadingManager {
     }
 
     state.comment = createLoadingComment(_itemsLoaded, _itemsToLoad);
-    state.progress = Math.max(state.progress, itemsLoadedWeights / totalWeights);
+
+    if (_startProgress) {
+      state.progress = Math.max(state.progress, itemsLoadedWeights / totalWeights);
+    }
 
     if (_previousComment === state.comment && _previousProgress === state.progress) {
       return;
@@ -63,12 +69,13 @@ export function LoadingManager(): ILoadingManager {
   }
 
   function reset() {
-    _expectsAtLeast = 0;
     _itemsLoaded.clear();
     _itemsToLoad.clear();
     _previousComment = "";
     _previousProgress = -1;
+    _startProgress = false;
     state.comment = "";
+    state.expectsAtLeast = 0;
     state.progress = 0;
     state.version += 1;
   }

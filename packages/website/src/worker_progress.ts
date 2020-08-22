@@ -10,6 +10,7 @@ import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 import type { LoadingManagerItem } from "@personalidol/loading-manager/src/LoadingManagerItem.type";
+import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -35,11 +36,14 @@ function _refreshNotifyProgress(): void {
 
   _lastProgressBroadcast = loadingManager.state.version;
 
+  const progress: LoadingManagerProgress = {
+    comment: loadingManager.state.comment,
+    expectsAtLeast: loadingManager.state.expectsAtLeast,
+    progress: loadingManager.state.progress,
+  };
+
   broadcastMessage(messagePorts, {
-    progress: {
-      comment: loadingManager.state.comment,
-      progress: loadingManager.state.progress,
-    },
+    progress: progress,
   });
 }
 
@@ -56,6 +60,7 @@ const progressMessagesRouter = {
   },
 
   expectAtLeast(messagePort: MessagePort, expectAtLeast: number) {
+    logger.debug(`PROGRESS_EXPECT_AT_LEAST(${expectAtLeast})`);
     loadingManager.expectAtLeast(expectAtLeast);
   },
 

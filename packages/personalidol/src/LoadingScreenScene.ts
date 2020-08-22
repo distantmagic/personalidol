@@ -44,6 +44,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   let _loadingError: null | LoadingError = null;
   let _loadingManagerProgress: LoadingManagerProgress = {
     comment: "",
+    expectsAtLeast: 0,
     progress: 0,
   };
 

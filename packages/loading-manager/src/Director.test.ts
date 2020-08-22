@@ -1,7 +1,10 @@
+import Loglevel from "loglevel";
+
 import { Director } from "./Director";
 
 test("starts and mounts the new scene", function () {
-  const director = Director();
+  const logger = Loglevel.getLogger("test");
+  const director = Director(logger, "test");
 
   const sceneState = {
     isDisposed: false,
@@ -42,7 +45,7 @@ test("starts and mounts the new scene", function () {
   expect(sceneState.isUpdated).toBe(false);
 
   director.state.next = scene;
-  director.update(0);
+  director.update(0, 0);
 
   expect(director.state.next).toBe(null);
   expect(director.state.current).toBe(null);
@@ -51,7 +54,7 @@ test("starts and mounts the new scene", function () {
   expect(sceneState.isUpdated).toBe(false);
 
   scene.state.isPreloading = true;
-  director.update(0);
+  director.update(0, 0);
 
   expect(director.state.next).toBe(null);
   expect(director.state.current).toBe(null);
@@ -61,7 +64,7 @@ test("starts and mounts the new scene", function () {
 
   scene.state.isPreloaded = true;
   scene.state.isPreloading = false;
-  director.update(0);
+  director.update(0, 0);
 
   expect(director.state.next).toBe(null);
   expect(director.state.current).toBe(scene);
@@ -71,7 +74,8 @@ test("starts and mounts the new scene", function () {
 });
 
 test("replaces the scene with a new one", function () {
-  const director = Director();
+  const logger = Loglevel.getLogger("test");
+  const director = Director(logger, "test");
 
   const sceneState1 = {
     isDisposed: false,
@@ -137,12 +141,12 @@ test("replaces the scene with a new one", function () {
 
   director.state.next = scene1;
 
-  director.update(0);
+  director.update(0, 0);
 
   scene1.state.isPreloaded = true;
   scene1.state.isPreloading = false;
 
-  director.update(0);
+  director.update(0, 0);
 
   expect(director.state.next).toBe(null);
   expect(director.state.current).toBe(scene1);
@@ -151,7 +155,7 @@ test("replaces the scene with a new one", function () {
   expect(sceneState1.isUpdated).toBe(false);
 
   director.state.next = scene2;
-  director.update(0);
+  director.update(0, 0);
 
   expect(director.state.next).toBe(scene2);
   expect(director.state.current).toBe(null);
@@ -161,7 +165,7 @@ test("replaces the scene with a new one", function () {
   expect(sceneState2.isMounted).toBe(false);
   expect(sceneState2.isUpdated).toBe(false);
 
-  director.update(0);
+  director.update(0, 0);
 
   expect(director.state.next).toBe(null);
   expect(director.state.current).toBe(null);
@@ -174,7 +178,7 @@ test("replaces the scene with a new one", function () {
   scene2.state.isPreloaded = true;
   scene2.state.isPreloading = false;
 
-  director.update(0);
+  director.update(0, 0);
 
   expect(director.state.next).toBe(null);
   expect(director.state.current).toBe(scene2);

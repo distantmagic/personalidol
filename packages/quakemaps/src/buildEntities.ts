@@ -14,7 +14,7 @@ const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
 const _transferablesEmpty: [] = [];
 
-function getEntityOrigin(filename: string, entity: EntitySketch): Vector3Simple {
+function _getEntityOrigin(filename: string, entity: EntitySketch): Vector3Simple {
   if ("string" !== typeof entity.properties.origin) {
     throw new UnmarshalException(filename, 0, "Entity does not have an origin but it was expected.");
   }
@@ -69,7 +69,7 @@ export function* buildEntities(
           color: entity.properties.color,
           decay: Number(entity.properties.decay),
           intensity: Number(entity.properties.intensity),
-          origin: getEntityOrigin(filename, entity),
+          origin: _getEntityOrigin(filename, entity),
           transferables: _transferablesEmpty,
         };
         break;
@@ -79,7 +79,7 @@ export function* buildEntities(
           classname: entityClassName,
           model_name: entity.properties.model_name,
           model_texture: entity.properties.model_texture,
-          origin: getEntityOrigin(filename, entity),
+          origin: _getEntityOrigin(filename, entity),
           scale: Number(entity.properties.scale),
           transferables: _transferablesEmpty,
         };
@@ -90,7 +90,7 @@ export function* buildEntities(
           angle: Number(entity.properties.angle),
           classname: entityClassName,
           model_name: entity.properties.model_name,
-          origin: getEntityOrigin(filename, entity),
+          origin: _getEntityOrigin(filename, entity),
           skin: Number(entity.properties.skin),
           transferables: _transferablesEmpty,
         };
@@ -98,14 +98,14 @@ export function* buildEntities(
       case "player":
         yield {
           classname: entityClassName,
-          origin: getEntityOrigin(filename, entity),
+          origin: _getEntityOrigin(filename, entity),
           transferables: _transferablesEmpty,
         };
         break;
       case "spark_particles":
         yield {
           classname: entityClassName,
-          origin: getEntityOrigin(filename, entity),
+          origin: _getEntityOrigin(filename, entity),
           transferables: _transferablesEmpty,
         };
         break;

@@ -7,7 +7,6 @@ import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
-import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
 import { MapScene } from "./MapScene";
@@ -15,7 +14,7 @@ import { MapScene } from "./MapScene";
 import type { Logger } from "loglevel";
 
 import type { ClearRoutesMessage } from "@personalidol/dom-renderer/src/ClearRoutesMessage.type";
-import type { DirectorState } from "@personalidol/framework/src/DirectorState.type";
+import type { DirectorState } from "@personalidol/loading-manager/src/DirectorState.type";
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
@@ -209,8 +208,6 @@ export function MainMenuScene(
 
     state.isPreloading = false;
     state.isPreloaded = true;
-
-    resetLoadingManagerState(progressMessagePort);
 
     // setTimeout(function () {
     //   _loadMap("/maps/map-mountain-caravan.map");

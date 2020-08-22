@@ -1,16 +1,14 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 
-type Props = {
-  comment: string;
-  progress: number;
-};
+import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
 
-export function LoadingScreen(props: Props) {
-  const progress = Math.round(props.progress * 100);
+function renderProgressIndicator(expectsAtLeast: number, progress: number) {
+  if (expectsAtLeast < 1) {
+    return;
+  }
 
   return (
-    <main class="loading-screen">
-      <div class="loading-screen__comment">Loading {props.comment} ...</div>
+    <Fragment>
       <div class="loading-screen__progress">{progress}%</div>
       <div
         class="loading-screen__progress-bar"
@@ -20,6 +18,17 @@ export function LoadingScreen(props: Props) {
       >
         <div class="loading-screen__progress-bar__progress" />
       </div>
+    </Fragment>
+  );
+}
+
+export function LoadingScreen(props: LoadingManagerProgress) {
+  const progress = Math.round(props.progress * 100);
+
+  return (
+    <main class="loading-screen">
+      <div class="loading-screen__comment">Loading {props.comment} ...</div>
+      {renderProgressIndicator(props.expectsAtLeast, progress)}
     </main>
   );
 }
