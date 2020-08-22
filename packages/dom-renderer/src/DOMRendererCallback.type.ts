@@ -1,3 +1,3 @@
 import type { ComponentChild } from "preact";
 
-export type DOMRendererCallback = (data: any) => null | ComponentChild | Array<ComponentChild>;
+export type DOMRendererCallback = (uiMessagePort: MessagePort, data: any) => null | ComponentChild | Array<ComponentChild>;

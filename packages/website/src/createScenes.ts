@@ -28,7 +28,8 @@ export function createScenes(
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
-  texturesMessagePort: MessagePort
+  texturesMessagePort: MessagePort,
+  uiMessagePort: MessagePort
 ): void {
   const webGLRenderer = new WebGLRenderer({
     alpha: false,
@@ -66,6 +67,7 @@ export function createScenes(
     progressMessagePort,
     quakeMapsMessagePort,
     texturesMessagePort,
+    uiMessagePort
   );
 
   // prettier-ignore

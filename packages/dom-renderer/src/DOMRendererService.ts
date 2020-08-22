@@ -13,7 +13,12 @@ function _clearHTMLElement(htmlElement: HTMLElement): void {
   }
 }
 
-export function DOMRendererService(messagePort: MessagePort, uiRootElement: HTMLElement, renderDOMUIRouter: DOMRendererCallback): IDOMRendererService {
+export function DOMRendererService(
+  domRendererMessagePort: MessagePort,
+  uiMessagePort: MessagePort,
+  uiRootElement: HTMLElement,
+  renderDOMUIRouter: DOMRendererCallback
+): IDOMRendererService {
   const _routesState: RoutesState = {};
   let _isRootElementCleared = false;
 
@@ -25,11 +30,11 @@ export function DOMRendererService(messagePort: MessagePort, uiRootElement: HTML
   const _messagesRouter = createRouter(_messageHandlers);
 
   function start() {
-    messagePort.onmessage = _messagesRouter;
+    domRendererMessagePort.onmessage = _messagesRouter;
   }
 
   function stop() {
-    messagePort.onmessage = null;
+    domRendererMessagePort.onmessage = null;
   }
 
   function _clear(clearRoutesList: ClearRoutesList) {
@@ -52,7 +57,7 @@ export function DOMRendererService(messagePort: MessagePort, uiRootElement: HTML
 
   function _renderWithoutCleanup(diffRoutesState: RoutesState) {
     _updateRoutesState(diffRoutesState);
-    render(renderDOMUIRouter(_routesState), uiRootElement);
+    render(renderDOMUIRouter(uiMessagePort, _routesState), uiRootElement);
   }
 
   function _updateRoutesState(diffRoutesState: RoutesState) {

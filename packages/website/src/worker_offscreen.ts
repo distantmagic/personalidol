@@ -40,6 +40,7 @@ let md2MessagePort: null | MessagePort = null;
 let progressMessagePort: null | MessagePort = null;
 let quakeMapsMessagePort: null | MessagePort = null;
 let texturesMessagePort: null | MessagePort = null;
+let uiMessagePort: null | MessagePort = null;
 
 function _createScenesSafe(): void {
   // prettier-ignore
@@ -54,7 +55,8 @@ function _createScenesSafe(): void {
     md2MessagePort === null ||
     progressMessagePort === null ||
     quakeMapsMessagePort === null ||
-    texturesMessagePort === null
+    texturesMessagePort === null ||
+    uiMessagePort === null
   ) {
     return;
   }
@@ -79,7 +81,8 @@ function _createScenesSafe(): void {
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
-    texturesMessagePort
+    texturesMessagePort,
+    uiMessagePort
   );
   _isBootstrapped = true;
 }
@@ -174,11 +177,6 @@ self.onmessage = createRouter({
     _inputState = new Int32Array(input);
   },
 
-  texturesMessagePort(port: MessagePort): void {
-    texturesMessagePort = port;
-    _createScenesSafe();
-  },
-
   start(): void {
     mainLoop.start();
     serviceManager.start();
@@ -187,5 +185,15 @@ self.onmessage = createRouter({
   stop(): void {
     mainLoop.stop();
     serviceManager.stop();
+  },
+
+  texturesMessagePort(port: MessagePort): void {
+    texturesMessagePort = port;
+    _createScenesSafe();
+  },
+
+  uiMessagePort(port: MessagePort): void {
+    uiMessagePort = port;
+    _createScenesSafe();
   },
 });

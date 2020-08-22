@@ -87,8 +87,9 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   // DOMRendererService receives messages from workers and other sources and
   // redraws the DOM in the main thread.
 
+  const uiMessageChannel = createMessageChannel();
   const domRendererMessageChannel = createMessageChannel();
-  const domRendererService = DOMRendererService(domRendererMessageChannel.port1, uiRoot, renderDOMUIRouter);
+  const domRendererService = DOMRendererService(domRendererMessageChannel.port1, uiMessageChannel.port1, uiRoot, renderDOMUIRouter);
 
   serviceManager.services.add(domRendererService);
 
@@ -401,6 +402,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
         texturesMessagePort: texturesMessageChannel.port2,
+        uiMessagePort: uiMessageChannel.port2,
       },
       [
         domRendererMessageChannel.port2,
@@ -410,7 +412,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
         offscreenCanvas,
         progressMessageChannel.port2,
         quakeMapsMessageChannel.port2,
-        texturesMessageChannel.port2
+        texturesMessageChannel.port2,
+        uiMessageChannel.port2,
       ]
     );
 
@@ -450,6 +453,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,
       texturesMessageChannel.port2,
+      uiMessageChannel.port2
     );
   }
 })();
