@@ -1,6 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
@@ -246,13 +247,14 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
 
   async function _processAtlasQueue(request: AtlasQueueItem): Promise<void> {
     const requestKey = _keyFromAtlasQueueItem(request);
-    const atlasResponse = reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createTextureAtlas);
-    const loadItemAtlas = {
-      comment: `atlas ${requestKey}`,
-      id: MathUtils.generateUUID(),
-      weight: request.textureUrls.length,
-    };
-    const { data: response, isLast } = await notifyLoadingManager(progressMessagePort, loadItemAtlas, atlasResponse);
+
+    // prettier-ignore
+    const { data: response, isLast } = await notifyLoadingManager(
+      progressMessagePort,
+      createResourceLoadMessage("atlas", requestKey),
+      reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createTextureAtlas)
+    );
+
     const { imageData, textureDimensions } = response;
 
     request.messagePort.postMessage(

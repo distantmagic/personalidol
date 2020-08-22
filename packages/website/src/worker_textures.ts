@@ -1,7 +1,9 @@
+/// <reference lib="webworker" />
+
 import Loglevel from "loglevel";
-import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
@@ -12,6 +14,8 @@ import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 import type { TextureRequest } from "@personalidol/texture-loader/src/TextureRequest.type";
+
+declare var self: DedicatedWorkerGlobalScope;
 
 type CreateImageBitmapOptions = {
   imageOrientation: "flipY";
@@ -48,13 +52,8 @@ const textureMessagesRouter = {
       throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading texture.`);
     }
 
-    const loadItemImageBitmap = {
-      comment: `texture ${textureRequest.textureUrl}`,
-      id: MathUtils.generateUUID(),
-      weight: 1,
-    };
     const imageBitmapResponse = reuseResponse(loadingCache, loadingUsage, keyFromTextureRequest(textureRequest), textureRequest, _fetchImageBitmap);
-    const imageBitmap = await notifyLoadingManager(_progressMessagePort, loadItemImageBitmap, imageBitmapResponse);
+    const imageBitmap = await notifyLoadingManager(_progressMessagePort, createResourceLoadMessage("texture", textureRequest.textureUrl), imageBitmapResponse);
 
     // prettier-ignore
     messagePort.postMessage(

@@ -79,13 +79,13 @@ const _fonts: Array<FontPreloadParameters> = [
   //     weight: "200",
   //   }
   // },
-  // {
-  //   family: "Mukta",
-  //   source: "/fonts/font-mukta-light.ttf",
-  //   descriptors: {
-  //     weight: "300",
-  //   }
-  // },
+  {
+    family: "Mukta",
+    source: "/fonts/font-mukta-light.ttf",
+    descriptors: {
+      weight: "300",
+    },
+  },
   // {
   //   family: "Mukta",
   //   source: "/fonts/font-mukta-medium.ttf",
@@ -114,6 +114,14 @@ const _images: Array<ImagePreloadParameters> = [
     url: "/assets/texture-mineshaft-marble-512.png",
     css: `
       .main-menu {
+        background-image: url({dataurl});
+      }
+    `,
+  },
+  {
+    url: "/assets/image-rise-and-fall.png",
+    css: `
+      .main-menu:before {
         background-image: url({dataurl});
       }
     `,

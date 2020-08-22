@@ -1,10 +1,12 @@
-import Loglevel from "loglevel";
+/// <reference lib="webworker" />
 
+import Loglevel from "loglevel";
 import { MathUtils } from "three/src/math/MathUtils";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { buildEntities } from "@personalidol/quakemaps/src/buildEntities";
+import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
@@ -20,6 +22,8 @@ import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
+
+declare var self: DedicatedWorkerGlobalScope;
 
 type UnmarshalRequest = RPCMessage & {
   discardOccluding: null | Vector3Simple;
@@ -127,13 +131,12 @@ const quakeMapsMessagesRouter = {
       throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading map.`);
     }
 
-    const loadItemMap = {
-      comment: `map ${filename}`,
-      id: MathUtils.generateUUID(),
-      weight: 2,
-    };
-
-    notifyLoadingManager(_progressMessagePort, loadItemMap, _fetchUnmarshalMapContent(messagePort, _atlasMessagePort, filename, rpc, discardOccluding));
+    // prettier-ignore
+    notifyLoadingManager(
+      _progressMessagePort,
+      createResourceLoadMessage("map", filename),
+      _fetchUnmarshalMapContent(messagePort, _atlasMessagePort, filename, rpc, discardOccluding)
+    );
   },
 };
 

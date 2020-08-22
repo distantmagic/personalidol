@@ -1,11 +1,5 @@
+/ssl.key
+/ssl.pem
+
 /gfx
-/public/assets
-/public/debug
-/public/images
-/public/lib
-/public/maps/autosave
-/public/models
-/public/sounds
-/public/index.css
-/public/textures
 /screenshots

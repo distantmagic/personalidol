@@ -106,11 +106,14 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     state.isDisposed = true;
 
     progressMessagePort.onmessage = null;
+
     fDispose(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
+
+    _updateDOM();
 
     const renderPass = new RenderPass(_scene, _camera);
 

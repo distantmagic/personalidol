@@ -1,6 +1,7 @@
 import Loglevel from "loglevel";
 
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
+import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { DOMRendererService } from "@personalidol/dom-renderer/src/DOMRendererService";
@@ -22,8 +23,9 @@ import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultI
 import { renderDOMUIRouter } from "@personalidol/personalidol/src/renderDOMUIRouter";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
+import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
-import { WorkerService } from "@personalidol/framework/src/WorkerService";
+import { WorkerService } from "@personalidol/workers/src/WorkerService";
 
 import { workers } from "./workers";
 
@@ -42,6 +44,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 // Depending on browser feature support, some workers will be started or not.
 // Checking for features is asynchronous.
 (async function () {
+  logger.debug(`BUILD_ID(${__BUILD_ID})`);
+
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
 
@@ -72,10 +76,18 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   mainLoop.start();
   serviceManager.start();
 
+  // Register service worker for PWA, offline use and caching.
+
+  if (!navigator.serviceWorker) {
+    throw new Error("Service worker is not supported.");
+  }
+
+  ServiceWorkerManager(logger, "/service_worker.js").install();
+
   // DOMRendererService receives messages from workers and other sources and
   // redraws the DOM in the main thread.
 
-  const domRendererMessageChannel = new MessageChannel();
+  const domRendererMessageChannel = createMessageChannel();
   const domRendererService = DOMRendererService(domRendererMessageChannel.port1, uiRoot, renderDOMUIRouter);
 
   serviceManager.services.add(domRendererService);
@@ -85,7 +97,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   // so it's possible to render loading screen or do something else with that
   // information.
 
-  const progressMessageChannel = new MessageChannel();
+  const progressMessageChannel = createMessageChannel();
   const progressWorker = new Worker(workers.progress.url, {
     credentials: "same-origin",
     name: workers.progress.name,
@@ -93,6 +105,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   });
 
   const progressWorkerService = WorkerService(progressWorker, workers.progress.name);
+
+  await progressWorkerService.ready();
 
   mainLoop.updatables.add(progressWorkerService);
   serviceManager.services.add(progressWorkerService);
@@ -111,14 +125,14 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   addProgressMessagePort(progressMessageChannel.port1, true);
 
-  // FontPreloadService does exactly what it name says. Thanks to this
+  // FontPreloadService does exactly what its name says. Thanks to this
   // service it is possible for worker threads to request font face to be
-  // preloaded, display loading indicator  and receive notification back when
+  // preloaded, display loading indicator and receive notification back when
   // it's ready. Thanks to that, there should be no UI twitching while fonts
   // are being loaded.
 
-  const fontPreloadMessageChannel = new MessageChannel();
-  const fontPreloadToProgressMessageChannel = new MessageChannel();
+  const fontPreloadMessageChannel = createMessageChannel();
+  const fontPreloadToProgressMessageChannel = createMessageChannel();
 
   addProgressMessagePort(fontPreloadToProgressMessageChannel.port1, false);
 
@@ -138,8 +152,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
     throw new Error("Unable to get detached canvas 2D context.");
   }
 
-  const imagePreloadMessageChannel = new MessageChannel();
-  const imagePreloadToProgressMessageChannel = new MessageChannel();
+  const imagePreloadMessageChannel = createMessageChannel();
+  const imagePreloadToProgressMessageChannel = createMessageChannel();
 
   addProgressMessagePort(imagePreloadToProgressMessageChannel.port1, false);
 
@@ -147,13 +161,13 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   serviceManager.services.add(imagePreloadService);
 
-  // `createImageBitmap` has it's quirks and surprisingly has no support in
-  // safari and ios. Also it has partial support in Firefox.
+  // `createImageBitmap` has its quirks and surprisingly has no support in
+  // safari and ios. Also, it has partial support in Firefox.
   // If it's not supported, then we have to use the main thread to
   // generate textures and potentially send them into other workers.
 
-  const texturesMessageChannel = new MessageChannel();
-  const texturesToProgressMessageChannel = new MessageChannel();
+  const texturesMessageChannel = createMessageChannel();
+  const texturesToProgressMessageChannel = createMessageChannel();
 
   addProgressMessagePort(texturesToProgressMessageChannel.port1, false);
 
@@ -196,13 +210,12 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   addTextureMessagePort(texturesMessageChannel.port1);
 
-  // Atlas canvas is used to speed up texture atlas creation. If this context is
-  // not supported.
+  // Atlas canvas is used to speed up texture atlas creation.
 
   const atlasCanvas = document.createElement("canvas");
-  const atlasMessageChannel = new MessageChannel();
-  const atlasToTextureMessageChannel = new MessageChannel();
-  const atlasToProgressMessageChannel = new MessageChannel();
+  const atlasMessageChannel = createMessageChannel();
+  const atlasToTextureMessageChannel = createMessageChannel();
+  const atlasToProgressMessageChannel = createMessageChannel();
 
   addProgressMessagePort(atlasToProgressMessageChannel.port1, false);
   addTextureMessagePort(atlasToTextureMessageChannel.port1);
@@ -228,6 +241,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       );
 
       const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
+
+      atlasWorkerService.ready();
 
       mainLoop.updatables.add(atlasWorkerService);
       serviceManager.services.add(atlasWorkerService);
@@ -264,8 +279,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   // worker then the message channel can be used in the main thread. It is an
   // overhead, but unifies how messages are handled in each case.
 
-  const quakeMapsMessageChannel = new MessageChannel();
-  const quakeMapsToProgressMessageChannel = new MessageChannel();
+  const quakeMapsMessageChannel = createMessageChannel();
+  const quakeMapsToProgressMessageChannel = createMessageChannel();
 
   addProgressMessagePort(quakeMapsToProgressMessageChannel.port1, false);
 
@@ -288,8 +303,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   // browser thread or the offscreen canvas thread. Loading MD2 models cause
   // rendering to stutter.
 
-  const md2MessageChannel = new MessageChannel();
-  const md2ToProgressMessageChannel = new MessageChannel();
+  const md2MessageChannel = createMessageChannel();
+  const md2ToProgressMessageChannel = createMessageChannel();
 
   addProgressMessagePort(md2ToProgressMessageChannel.port1, false);
 
@@ -371,6 +386,8 @@ const uiRoot = getHTMLElementById(window, "ui-root");
         return sharedArrayBufferNotAvailable();
       }
     })();
+
+    await offscreenWorkerService.ready();
 
     // prettier-ignore
     offscreenWorker.postMessage(

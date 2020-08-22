@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import Loglevel from "loglevel";
 
 import { createRouter } from "@personalidol/workers/src/createRouter";
@@ -9,6 +11,8 @@ import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/Requ
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
 import { createScenes } from "./createScenes";
+
+declare var self: DedicatedWorkerGlobalScope;
 
 const eventBus = EventBus();
 const logger = Loglevel.getLogger(self.name);
@@ -154,6 +158,12 @@ self.onmessage = createRouter({
   quakeMapsMessagePort(port: MessagePort): void {
     quakeMapsMessagePort = port;
     _createScenesSafe();
+  },
+
+  ready(): void {
+    self.postMessage({
+      ready: true,
+    });
   },
 
   sharedDimensionsState(dimensions: SharedArrayBuffer): void {

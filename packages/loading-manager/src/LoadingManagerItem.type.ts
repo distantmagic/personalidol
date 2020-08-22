@@ -1,5 +1,6 @@
 export type LoadingManagerItem = {
-  comment: string;
   id: string;
+  resourceType: string;
+  resourceUri: string;
   weight: number;
 };

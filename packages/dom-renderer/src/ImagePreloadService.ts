@@ -1,5 +1,6 @@
 /// <reference types="@types/css-font-loading-module" />
 
+import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
 
@@ -52,18 +53,16 @@ export function ImagePreloadService(
   }
 
   async function _preloadStoreImage(parameters: ImagePreloadParameters & RPCMessage) {
-    const loadItemImage = {
-      comment: `image ${parameters.url}`,
-      id: parameters.rpc,
-      weight: 1,
-    };
-
-    const image = await notifyLoadingManager(progressMessagePort, loadItemImage, preloadImage(parameters.url));
+    // prettier-ignore
+    const image = await notifyLoadingManager(
+      progressMessagePort,
+      createResourceLoadMessage("image", parameters.url),
+      preloadImage(parameters.url)
+    );
 
     canvas2DDrawImage(canvas, context2D, image);
 
     const dataUrl = canvas.toDataURL();
-
     const style = document.createElement("style");
 
     style.setAttribute("data-personalidol-image", parameters.url);

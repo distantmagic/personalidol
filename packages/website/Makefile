@@ -14,28 +14,7 @@ public/lib:
 	mkdir -p public/lib
 
 public/lib/index.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
-	yarn run esbuild \
-		--bundle \
-		--define:__LOG_LEVEL=\"debug\" \
-		--format=esm \
-		--jsx-factory=h \
-		--jsx-fragment=Fragment \
-		--minify \
-		--outdir=public/lib \
-		--platform=browser \
-		--sourcemap \
-		--target=safari13 \
-		--strict \
-		--tsconfig=tsconfig.json \
-		src/createScenes.ts \
-		src/index.ts \
-		src/worker_atlas.ts \
-		src/worker_md2.ts \
-		src/worker_offscreen.ts \
-		src/worker_progress.ts \
-		src/worker_quakemaps.ts \
-		src/worker_textures.ts \
-	;
+	./build_public.sh
 
 public/index.css: $(SOURCES_CSS)
 	yarn run postcss -c ./postcss.config.js -o ./public/index.css styles/index.css
@@ -43,3 +22,7 @@ public/index.css: $(SOURCES_CSS)
 .PHONY: serve
 serve: public/lib/index.js
 	yarn run http-server ./public/
+
+.PHONY: serve.ssl
+serve.ssl: public/lib/index.js
+	yarn run http-server --ssl --cert ./ssl.pem --key ./ssl.key --port 2083 ./public/

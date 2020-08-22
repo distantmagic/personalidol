@@ -1,0 +1,12 @@
+/assets
+/debug
+/images
+/maps/autosave
+/models
+/sounds
+/index.css
+/textures
+
+/lib
+/service_worker.js
+/service_worker.js.map

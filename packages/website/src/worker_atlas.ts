@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import Loglevel from "loglevel";
 
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
@@ -7,6 +9,8 @@ import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/Requ
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
 import type { AtlasService as IAtlasService } from "@personalidol/texture-loader/src/AtlasService.interface";
+
+declare var self: DedicatedWorkerGlobalScope;
 
 let _atlasService: null | IAtlasService = null;
 let _canvas: null | OffscreenCanvas = null;
@@ -67,6 +71,12 @@ self.onmessage = createRouter({
 
     _progressMessagePort = port;
     _safeStartService();
+  },
+
+  ready(): void {
+    self.postMessage({
+      ready: true,
+    });
   },
 
   start(): void {

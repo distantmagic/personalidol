@@ -1,4 +1,5 @@
-import type { MainLoopUpdateCallback } from "./MainLoopUpdateCallback.type";
+import type { MainLoopUpdateCallback } from "@personalidol/framework/src/MainLoopUpdateCallback.type";
+
 import type { WorkerService as IWorkerService } from "./WorkerService.interface";
 
 function _noop(): void {}
@@ -11,6 +12,22 @@ export function WorkerService(worker: Worker, workerName: string, updater: null 
     stop: null,
   };
 
+  function ready(): Promise<void> {
+    return new Promise(function (resolve, reject) {
+      function onMessage(evt: MessageEvent) {
+        if (evt.data.ready) {
+          resolve();
+          worker.removeEventListener("message", onMessage);
+        }
+      }
+
+      worker.addEventListener("message", onMessage);
+      worker.postMessage({
+        ready: null,
+      });
+    });
+  }
+
   function start(): void {
     worker.postMessage(_messageStart);
   }
@@ -22,6 +39,7 @@ export function WorkerService(worker: Worker, workerName: string, updater: null 
   return {
     name: `WorkerService(${workerName})`,
 
+    ready: ready,
     start: start,
     stop: stop,
     update: updater ? updater : _noop,

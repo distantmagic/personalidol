@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import Loglevel from "loglevel";
 
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
@@ -8,47 +10,42 @@ import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 import type { LoadingManagerItem } from "@personalidol/loading-manager/src/LoadingManagerItem.type";
-import type { LoadingManagerState } from "@personalidol/loading-manager/src/LoadingManagerState.type";
+
+declare var self: DedicatedWorkerGlobalScope;
 
 const logger = Loglevel.getLogger(self.name);
 
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
 
+const loadingManager = LoadingManager();
 const messagePorts: Array<MessagePort> = [];
 const serviceManager = ServiceManager(logger);
-
-const loadingManagerState: LoadingManagerState = {
-  comment: "",
-  expectsAtLeast: 0,
-  itemsLoaded: new Set(),
-  itemsToLoad: new Set(),
-  lastUpdate: 0,
-  progress: 0,
-};
-const loadingManager = LoadingManager(loadingManagerState);
 
 let _lastProgressBroadcast: number = 0;
 
 serviceManager.services.add(loadingManager);
 
 function _refreshNotifyProgress(): void {
-  loadingManager.refreshProgress();
+  loadingManager.update();
 
-  if (_lastProgressBroadcast >= loadingManagerState.lastUpdate) {
+  if (_lastProgressBroadcast >= loadingManager.state.version) {
     return;
   }
 
-  _lastProgressBroadcast = loadingManagerState.lastUpdate;
+  _lastProgressBroadcast = loadingManager.state.version;
 
   broadcastMessage(messagePorts, {
-    progress: loadingManager.getProgress(),
+    progress: {
+      comment: loadingManager.state.comment,
+      progress: loadingManager.state.progress,
+    },
   });
 }
 
 const progressMessagesRouter = {
   done(messagePort: MessagePort, item: LoadingManagerItem) {
-    loadingManagerState.itemsLoaded.add(item);
+    loadingManager.done(item);
     _refreshNotifyProgress();
   },
 
@@ -59,11 +56,11 @@ const progressMessagesRouter = {
   },
 
   expectAtLeast(messagePort: MessagePort, expectAtLeast: number) {
-    loadingManagerState.expectsAtLeast = expectAtLeast;
+    loadingManager.expectAtLeast(expectAtLeast);
   },
 
   loading(messagePort: MessagePort, item: LoadingManagerItem) {
-    loadingManagerState.itemsToLoad.add(item);
+    loadingManager.waitFor(item);
     _refreshNotifyProgress();
   },
 
@@ -80,6 +77,12 @@ self.onmessage = createRouter({
     }
 
     attachMultiRouter(messagePort, progressMessagesRouter);
+  },
+
+  ready(): void {
+    self.postMessage({
+      ready: true,
+    });
   },
 
   start(): void {

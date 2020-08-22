@@ -344,9 +344,9 @@ export function MapScene(
     resetLoadingManagerState(progressMessagePort);
 
     _unmountables.add(function () {
-      md2MessagePort.onmessage = null;
-      quakeMapsMessagePort.onmessage = null;
-      texturesMessagePort.onmessage = null;
+      md2MessagePort.onmessage = _md2MessageRouter;
+      quakeMapsMessagePort.onmessage = _quakeMapsRouter;
+      texturesMessagePort.onmessage = _textureReceiverMessageRouter;
     });
   }
 

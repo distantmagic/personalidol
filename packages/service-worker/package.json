@@ -5,8 +5,7 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/framework": "0.0.0",
-    "three": "^0.119.1"
+    "@personalidol/workers": "0.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.9",
@@ -18,7 +17,7 @@
   },
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",
-  "name": "@personalidol/loading-manager",
+  "name": "@personalidol/service-worker",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"

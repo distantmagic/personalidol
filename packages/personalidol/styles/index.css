@@ -4,9 +4,11 @@
 
 body {
   user-select: none;
+  touch-action: none;
 }
 
 #ui-root {
+  font-kerning: normal;
   pointer-events: none;
 }
 

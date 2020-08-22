@@ -37,7 +37,9 @@ function renderUserFeedback(): ComponentChild {
 function renderTechnicalDescription(props: LoadingError): ComponentChild {
   return (
     <Fragment>
-      <p>error while loading {props.item.comment}</p>
+      <p>
+        error while loading {props.item.resourceType} {props.item.resourceUri}
+      </p>
       <p>{props.item.id}</p>
       <p>{props.error.message}</p>
       <p>{props.error.stack}</p>

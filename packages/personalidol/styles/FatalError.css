@@ -10,7 +10,7 @@
   max-width: 80ch;
   overflow-wrap: break-word;
   overflow-y: auto;
-  pointer-events: all;
+  pointer-events: auto;
   padding: 0.8rem;
   position: absolute;
   user-select: text;

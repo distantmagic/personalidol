@@ -1,7 +1,9 @@
+/// <reference lib="webworker" />
+
 import Loglevel from "loglevel";
-import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
@@ -13,6 +15,8 @@ import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
+
+declare var self: DedicatedWorkerGlobalScope;
 
 type ModelLoadRequest = RPCMessage & {
   model_name: string;
@@ -78,13 +82,12 @@ const md2MessagesRouter = {
       throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading MD2 model.`);
     }
 
-    const loadItemGeometry = {
-      comment: `model ${model_name}`,
-      id: MathUtils.generateUUID(),
-      weight: 1,
-    };
-
-    notifyLoadingManager(_progressMessagePort, loadItemGeometry, _loadGeometry(messagePort, rpc, model_name));
+    // prettier-ignore
+    notifyLoadingManager(
+      _progressMessagePort,
+      createResourceLoadMessage("model", model_name),
+      _loadGeometry(messagePort, rpc, model_name)
+    );
   },
 };
 

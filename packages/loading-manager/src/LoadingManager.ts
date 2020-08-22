@@ -1,9 +1,10 @@
+import { createLoadingComment } from "./createLoadingComment";
+
 import type { LoadingManager as ILoadingManager } from "./LoadingManager.interface";
 import type { LoadingManagerItem } from "./LoadingManagerItem.type";
-import type { LoadingManagerProgress } from "./LoadingManagerProgress.type";
 import type { LoadingManagerState } from "./LoadingManagerState.type";
 
-function sumWeights(items: Set<LoadingManagerItem>): number {
+function _sumWeights(items: Set<LoadingManagerItem>): number {
   let _sum = 0;
 
   for (let item of items) {
@@ -13,75 +14,83 @@ function sumWeights(items: Set<LoadingManagerItem>): number {
   return _sum;
 }
 
-export function LoadingManager(loadingManagerState: LoadingManagerState): ILoadingManager {
-  const _previousProgress = Object.seal({
-    comment: loadingManagerState.comment,
-    progress: loadingManagerState.progress,
+export function LoadingManager(): ILoadingManager {
+  const state: LoadingManagerState = Object.seal({
+    comment: "",
+    progress: 0,
+    version: 0,
   });
 
-  function getProgress(): LoadingManagerProgress {
-    return _previousProgress;
+  const _itemsLoaded: Set<LoadingManagerItem> = new Set();
+  const _itemsToLoad: Set<LoadingManagerItem> = new Set();
+  let _expectsAtLeast: number = 0;
+  let _previousComment: string = "";
+  let _previousProgress: number = -1;
+
+  function done(item: LoadingManagerItem) {
+    _itemsLoaded.add(item);
   }
 
-  function refreshProgress() {
-    const itemsToLoadWeights = sumWeights(loadingManagerState.itemsToLoad);
-    const totalWeights = Math.max(loadingManagerState.expectsAtLeast, itemsToLoadWeights);
+  function expectAtLeast(expectAtLeast: number) {
+    _expectsAtLeast = expectAtLeast;
+  }
+
+  function update() {
+    const itemsToLoadWeights = _sumWeights(_itemsToLoad);
+    const totalWeights = Math.max(_expectsAtLeast, itemsToLoadWeights);
 
     if (totalWeights < 1) {
       return;
     }
 
-    const itemsLoadedWeights = sumWeights(loadingManagerState.itemsLoaded);
+    const itemsLoadedWeights = _sumWeights(_itemsLoaded);
 
     if (itemsLoadedWeights > itemsToLoadWeights) {
       throw new Error("There are more items loaded than items that are pending to load.");
     }
 
-    loadingManagerState.comment = "";
+    state.comment = createLoadingComment(_itemsLoaded, _itemsToLoad);
+    state.progress = Math.max(state.progress, itemsLoadedWeights / totalWeights);
 
-    for (let itemToLoad of loadingManagerState.itemsToLoad) {
-      if (!loadingManagerState.itemsLoaded.has(itemToLoad)) {
-        loadingManagerState.comment = itemToLoad.comment;
-        break;
-      }
-    }
-
-    loadingManagerState.progress = Math.max(loadingManagerState.progress, itemsLoadedWeights / totalWeights);
-
-    if (_previousProgress.comment === loadingManagerState.comment && _previousProgress.progress === loadingManagerState.progress) {
+    if (_previousComment === state.comment && _previousProgress === state.progress) {
       return;
     }
 
-    _previousProgress.comment = loadingManagerState.comment;
-    _previousProgress.progress = loadingManagerState.progress;
+    _previousComment = state.comment;
+    _previousProgress = state.progress;
 
-    loadingManagerState.lastUpdate += 1;
+    state.version += 1;
   }
 
   function reset() {
-    loadingManagerState.comment = "";
-    loadingManagerState.expectsAtLeast = 0;
-    loadingManagerState.itemsLoaded.clear();
-    loadingManagerState.itemsToLoad.clear();
-    loadingManagerState.lastUpdate += 1;
-    loadingManagerState.progress = 0;
-
-    _previousProgress.comment = "";
-    _previousProgress.progress = 0;
+    _expectsAtLeast = 0;
+    _itemsLoaded.clear();
+    _itemsToLoad.clear();
+    _previousComment = "";
+    _previousProgress = -1;
+    state.comment = "";
+    state.progress = 0;
+    state.version += 1;
   }
 
   function start() {}
 
   function stop() {}
 
+  function waitFor(item: LoadingManagerItem) {
+    _itemsToLoad.add(item);
+  }
+
   return Object.freeze({
     name: "LoadingManager",
+    state: state,
 
-    getProgress: getProgress,
-    refreshProgress: refreshProgress,
+    done: done,
+    expectAtLeast: expectAtLeast,
     reset: reset,
     start: start,
     stop: stop,
-    update: refreshProgress,
+    update: update,
+    waitFor: waitFor,
   });
 }
