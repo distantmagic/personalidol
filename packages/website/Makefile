@@ -1,7 +1,24 @@
 include ../../Makefile_node.mk
+include ../../Makefile_go.mk
 include ../../Makefile_packages.mk
 
 SOURCES_CSS := $(shell find styles -type f -name "*.css")
+SOURCES_GO := $(shell find cmd internal website.go -type f -name "*.go")
+
+.PHONY: air
+air: public/lib/index.js
+	go run website.go
+
+.PHONY: go.run.dev
+go.run.dev: tmp/main
+	APP_ENV=dev APP_USER=air ./tmp/main serve \
+		--http-listen=127.0.0.1:8080 \
+		--https-listen=:2083 \
+		--ssl-cert=./ssl.pem \
+		--ssl-key=./ssl.key
+
+tmp/main: $(SOURCES_GO)
+	go build -o ./tmp/main .
 
 .PHONY: public
 public: public/lib/index.js public/styles/index.css

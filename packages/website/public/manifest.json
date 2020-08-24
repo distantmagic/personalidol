@@ -1,8 +1,11 @@
 {
-  "name": "Personal Idol",
-  "theme_color": "#000000",
   "background_color": "#000000",
+  "categories": ["games", "entertainment"],
+  "descrption": "Apocalyptic Adventure Game",
   "display": "standalone",
+  "name": "Personal Idol",
+  "orientation": "any",
   "scope": "/",
-  "start_url": "/"
+  "start_url": "/",
+  "theme_color": "#000000"
 }

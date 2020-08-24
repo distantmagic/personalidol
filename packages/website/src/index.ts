@@ -26,7 +26,7 @@ import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWo
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { WorkerService } from "@personalidol/workers/src/WorkerService";
 
-import { workers } from "./workers";
+import workers from "./workers.json";
 
 const canvas = getHTMLCanvasElementById(window, "canvas");
 const devicePixelRatio = Math.min(1.5, window.devicePixelRatio);
@@ -98,7 +98,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   // information.
 
   const progressMessageChannel = createMessageChannel();
-  const progressWorker = new Worker(workers.progress.url, {
+  const progressWorker = new Worker(`${__STATIC_BASE_PATH}${workers.progress.url}`, {
     credentials: "same-origin",
     name: workers.progress.name,
     type: "module",
@@ -161,7 +161,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
     if (await isCreateImageBitmapSupported(supportCache)) {
       logger.debug("SUPPORTED(createImageBitmap)");
 
-      const texturesWorker = new Worker(workers.textures.url, {
+      const texturesWorker = new Worker(`${__STATIC_BASE_PATH}${workers.textures.url}`, {
         credentials: "same-origin",
         name: workers.textures.name,
         type: "module",
@@ -211,7 +211,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       logger.debug("SUPPORTED(canvas.transferControlToOffscreen)");
 
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
-      const atlasWorker = new Worker(workers.atlas.url, {
+      const atlasWorker = new Worker(`${__STATIC_BASE_PATH}${workers.atlas.url}`, {
         credentials: "same-origin",
         name: workers.atlas.name,
         type: "module",
@@ -270,7 +270,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   addProgressMessagePort(quakeMapsToProgressMessageChannel.port1, false);
 
-  const quakeMapsWorker = new Worker(workers.quakemaps.url, {
+  const quakeMapsWorker = new Worker(`${__STATIC_BASE_PATH}${workers.quakemaps.url}`, {
     credentials: "same-origin",
     name: workers.quakemaps.name,
     type: "module",
@@ -294,7 +294,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   addProgressMessagePort(md2ToProgressMessageChannel.port1, false);
 
-  const md2Worker = new Worker(workers.md2.url, {
+  const md2Worker = new Worker(`${__STATIC_BASE_PATH}${workers.md2.url}`, {
     credentials: "same-origin",
     name: workers.md2.name,
     type: "module",
@@ -314,7 +314,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
     logger.debug("SUPPORTED(canvas.transferControlToOffscreen)");
 
-    const offscreenWorker = new Worker(workers.offscreen.url, {
+    const offscreenWorker = new Worker(`${__STATIC_BASE_PATH}${workers.offscreen.url}`, {
       credentials: "same-origin",
       name: workers.offscreen.name,
       type: "module",
