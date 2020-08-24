@@ -20,8 +20,6 @@ import type { EffectComposer } from "@personalidol/three-modules/src/postprocess
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { FontPreloadMessage } from "@personalidol/dom-renderer/src/FontPreloadMessage.type";
 import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontPreloadParameters.type";
-import type { ImagePreloadMessage } from "@personalidol/dom-renderer/src/ImagePreloadMessage.type";
-import type { ImagePreloadParameters } from "@personalidol/dom-renderer/src/ImagePreloadParameters.type";
 import type { RenderRoutesMessage } from "@personalidol/dom-renderer/src/RenderRoutesMessage.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
@@ -108,25 +106,6 @@ const _fonts: Array<FontPreloadParameters> = [
   // },
 ];
 
-const _images: Array<ImagePreloadParameters> = [
-  {
-    url: `${__STATIC_BASE_PATH}/website/texture-mineshaft-marble-512.png`,
-    css: `
-      .main-menu {
-        background-image: url({dataurl});
-      }
-    `,
-  },
-  {
-    url: `${__STATIC_BASE_PATH}/website/image-rise-and-fall.png`,
-    css: `
-      .main-menu:before {
-        background-image: url({dataurl});
-      }
-    `,
-  },
-];
-
 const _disposables: Set<Disposable> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _unmountables: Set<Unmountable> = new Set();
@@ -140,10 +119,6 @@ const _fontMessageRouter = createRouter({
   preloadedFont: handleRPCResponse(_rpcLookupTable),
 });
 
-const _imageMessageRouter = createRouter({
-  preloadedImage: handleRPCResponse(_rpcLookupTable),
-});
-
 export function MainMenuScene(
   logger: Logger,
   effectComposer: EffectComposer,
@@ -153,7 +128,6 @@ export function MainMenuScene(
   inputState: Int32Array,
   domMessagePort: MessagePort,
   fontPreloadMessagePort: MessagePort,
-  imagePreloadMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
@@ -191,7 +165,6 @@ export function MainMenuScene(
     state.isDisposed = true;
 
     fontPreloadMessagePort.onmessage = null;
-    imagePreloadMessagePort.onmessage = null;
 
     fDispose(_disposables);
   }
@@ -211,14 +184,10 @@ export function MainMenuScene(
     state.isPreloading = true;
 
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
-    imagePreloadMessagePort.onmessage = _imageMessageRouter;
 
-    notifyLoadingManagerToExpectItems(progressMessagePort, _fonts.length + _images.length);
+    notifyLoadingManagerToExpectItems(progressMessagePort, _fonts.length);
 
-    const preloadFonts = _fonts.map(_preloadFont);
-    const preloadImages = _images.map(_preloadImage);
-
-    await Promise.all(preloadFonts.concat(preloadImages));
+    await Promise.all(_fonts.map(_preloadFont));
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -270,17 +239,6 @@ export function MainMenuScene(
     };
 
     await sendRPCMessage(_rpcLookupTable, fontPreloadMessagePort, fontPreloadMessage);
-  }
-
-  async function _preloadImage(imageParamteres: ImagePreloadParameters) {
-    const imagePreloadMessage: ImagePreloadMessage = {
-      preloadImage: {
-        ...imageParamteres,
-        rpc: MathUtils.generateUUID(),
-      },
-    };
-
-    await sendRPCMessage(_rpcLookupTable, imagePreloadMessagePort, imagePreloadMessage);
   }
 
   return Object.freeze({

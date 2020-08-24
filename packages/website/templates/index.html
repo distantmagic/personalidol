@@ -3,6 +3,7 @@
   <head>
     <link rel="manifest" href="/public/manifest.json">
     <link rel="stylesheet" type="text/css" href="/public/styles/index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Website</title>
   </head>
   <body style="
@@ -21,50 +22,6 @@
       </div>
       <div id="ui-root">
         <!-- Initial styles before first game engine render. -->
-        <svg
-          id="ui-loader"
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          style="
-            height: 100px;
-            left: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translateX(-50%) translateY(-50%);
-            width: 100px;
-          "
-          viewBox="0 0 100 100"
-          enable-background="new 0 0 100 100"
-          xml:space="preserve"
-        >
-          <rect fill="none" stroke="#fff" stroke-width="4" x="25" y="25" width="50" height="50">
-            <animateTransform
-               attributeName="transform"
-               dur="0.5s"
-               from="0 50 50"
-               to="180 50 50"
-               type="rotate"
-               id="strokeBox"
-               attributeType="XML"
-               begin="rectBox.end"
-             >
-          </rect>
-          <rect x="27" y="27" fill="#fff" width="46" height="50">
-            <animate
-               attributeName="height"
-               dur="1.3s"
-               attributeType="XML"
-               from="50"
-               to="0"
-               id="rectBox"
-               fill="freeze"
-               begin="0s;strokeBox.end"
-             >
-          </rect>
-        </svg>
         <div id="ui-placeholder" style="
           bottom: 2.4rem;
           color: white;
@@ -86,17 +43,14 @@
             application.
           </noscript>
         </div>
-        <script>(function () {
-          document.getElementById("ui-placeholder-label").style.opacity = 1;
-        }());</script>
       </div>
     </div>
     <script>(function () {
       if (navigator.serviceWorker) {
+        document.getElementById("ui-placeholder-label").style.opacity = "1";
         document.getElementById("ui-placeholder-label").textContent = "Loading game engine ...";
       } else {
         document.body.style.backgroundColor = "darkred";
-        document.getElementById("ui-loader").style.display = "none";
         document.getElementById("ui-placeholder-label").textContent = "Error: this app needs to be run under SSL.";
       }
     }());</script>

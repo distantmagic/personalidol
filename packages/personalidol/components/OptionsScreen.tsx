@@ -8,7 +8,7 @@ type Props = {
 };
 
 function _onSubmit(self: OptionsScreen) {
-  return function (evt) {
+  return function (evt: Event) {
     evt.preventDefault();
   };
 }

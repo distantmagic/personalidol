@@ -11,7 +11,6 @@ import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadSe
 import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCanvasElementById";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
-import { ImagePreloadService } from "@personalidol/dom-renderer/src/ImagePreloadService";
 import { Input } from "@personalidol/framework/src/Input";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
@@ -141,10 +140,10 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   serviceManager.services.add(fontPreloadService);
 
-  // ImagePreloadService does exactly the same thing as FontPreloadService, but
-  // with images. Preloading images is actually surprisingly tricky. The most
-  // reliable way I found is to fetch image via JS and then append CSS with
-  // a dataURL.
+  // `createImageBitmap` has its quirks and surprisingly has no support in
+  // safari and ios. Also, it has partial support in Firefox.
+  // If it's not supported, then we have to use the main thread to
+  // generate textures and potentially send them into other workers.
 
   const textureCanvas = document.createElement("canvas");
   const textureCanvasContext2D = textureCanvas.getContext("2d");
@@ -152,20 +151,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   if (null === textureCanvasContext2D) {
     throw new Error("Unable to get detached canvas 2D context.");
   }
-
-  const imagePreloadMessageChannel = createMessageChannel();
-  const imagePreloadToProgressMessageChannel = createMessageChannel();
-
-  addProgressMessagePort(imagePreloadToProgressMessageChannel.port1, false);
-
-  const imagePreloadService = ImagePreloadService(textureCanvas, textureCanvasContext2D, imagePreloadMessageChannel.port1, imagePreloadToProgressMessageChannel.port2);
-
-  serviceManager.services.add(imagePreloadService);
-
-  // `createImageBitmap` has its quirks and surprisingly has no support in
-  // safari and ios. Also, it has partial support in Firefox.
-  // If it's not supported, then we have to use the main thread to
-  // generate textures and potentially send them into other workers.
 
   const texturesMessageChannel = createMessageChannel();
   const texturesToProgressMessageChannel = createMessageChannel();
@@ -397,7 +382,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
         devicePixelRatio: devicePixelRatio,
         domMessagePort: domRendererMessageChannel.port2,
         fontPreloadMessagePort: fontPreloadMessageChannel.port2,
-        imagePreloadMessagePort: imagePreloadMessageChannel.port2,
         md2MessagePort: md2MessageChannel.port2,
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
@@ -407,7 +391,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       [
         domRendererMessageChannel.port2,
         fontPreloadMessageChannel.port2,
-        imagePreloadMessageChannel.port2,
         md2MessageChannel.port2,
         offscreenCanvas,
         progressMessageChannel.port2,
@@ -433,7 +416,7 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
     // This extra var is a hack to make esbuild leave the dynamic import as-is.
     // https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
-    const filename = "/lib/createScenes.js";
+    const filename = `${__STATIC_BASE_PATH}/lib/createScenes.js`;
     const { createScenes } = await import(filename);
 
     // prettier-ignore
@@ -448,7 +431,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       logger,
       domRendererMessageChannel.port2,
       fontPreloadMessageChannel.port2,
-      imagePreloadMessageChannel.port2,
       md2MessageChannel.port2,
       progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,

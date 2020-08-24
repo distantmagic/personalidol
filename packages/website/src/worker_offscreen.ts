@@ -35,7 +35,6 @@ let _inputState: null | Int32Array = null;
 let _isBootstrapped = false;
 let domMessagePort: null | MessagePort = null;
 let fontPreloadMessagePort: null | MessagePort = null;
-let imagePreloadMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
 let progressMessagePort: null | MessagePort = null;
 let quakeMapsMessagePort: null | MessagePort = null;
@@ -51,7 +50,6 @@ function _createScenesSafe(): void {
     _inputState === null ||
     domMessagePort === null ||
     fontPreloadMessagePort === null ||
-    imagePreloadMessagePort === null ||
     md2MessagePort === null ||
     progressMessagePort === null ||
     quakeMapsMessagePort === null ||
@@ -77,7 +75,6 @@ function _createScenesSafe(): void {
     logger,
     domMessagePort,
     fontPreloadMessagePort,
-    imagePreloadMessagePort,
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
@@ -126,11 +123,6 @@ self.onmessage = createRouter({
 
   fontPreloadMessagePort(port: MessagePort): void {
     fontPreloadMessagePort = port;
-    _createScenesSafe();
-  },
-
-  imagePreloadMessagePort(port: MessagePort): void {
-    imagePreloadMessagePort = port;
     _createScenesSafe();
   },
 
