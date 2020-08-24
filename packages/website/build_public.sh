@@ -22,6 +22,7 @@ yarn run esbuild \
     --bundle \
     --define:__BUILD_ID=\"${BUILD_ID}\" \
     --define:__LOG_LEVEL=\"debug\" \
+    --define:__STATIC_BASE_PATH=\"/public\" \
     --format=esm \
     --jsx-factory=h \
     --jsx-fragment=Fragment \
@@ -41,18 +42,4 @@ yarn run esbuild \
     src/worker_progress.ts \
     src/worker_quakemaps.ts \
     src/worker_textures.ts \
-&& \
-yarn run esbuild \
-    --bundle \
-    --define:__BUILD_ID=\"${BUILD_ID}\" \
-    --define:__LOG_LEVEL=\"debug\" \
-    --format=esm \
-    --minify \
-    --outdir=public \
-    --platform=browser \
-    --sourcemap \
-    --target=safari13 \
-    --strict \
-    --tsconfig=tsconfig.json \
-    src/service_worker.ts \
 ;

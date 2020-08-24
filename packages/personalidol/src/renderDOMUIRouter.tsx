@@ -3,6 +3,7 @@ import { h } from "preact";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { LoadingErrorScreen } from "../components/LoadingErrorScreen";
 import { MainMenuScreen } from "../components/MainMenuScreen";
+import { OptionsScreen } from "../components/OptionsScreen";
 
 import type { ComponentChild } from "preact";
 
@@ -10,12 +11,14 @@ import type { RoutesState } from "@personalidol/dom-renderer/src/RoutesState.typ
 
 function renderDOMUIRoute(uiMessagePort: MessagePort, route: string, data: any): ComponentChild {
   switch (route) {
-    case "/loading-screen":
+    case "loading-screen":
       return <LoadingScreen {...data} />;
-    case "/loading-error-screen":
+    case "loading-error-screen":
       return <LoadingErrorScreen {...data} />;
-    case "/main-menu":
+    case "main-menu":
       return <MainMenuScreen uiMessagePort={uiMessagePort} />;
+    case "options":
+      return <OptionsScreen uiMessagePort={uiMessagePort} />;
     default:
       throw new Error(`Unknown route: "${route}"`);
   }

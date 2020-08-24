@@ -41,6 +41,12 @@ export function DOMRendererService(
     for (let route of clearRoutesList) {
       delete _routesState[route];
     }
+
+    _render();
+  }
+
+  function _render() {
+    render(renderDOMUIRouter(uiMessagePort, _routesState), uiRootElement);
   }
 
   function _renderWithCleanup(diffRoutesState: RoutesState) {
@@ -57,7 +63,7 @@ export function DOMRendererService(
 
   function _renderWithoutCleanup(diffRoutesState: RoutesState) {
     _updateRoutesState(diffRoutesState);
-    render(renderDOMUIRouter(uiMessagePort, _routesState), uiRootElement);
+    _render();
   }
 
   function _updateRoutesState(diffRoutesState: RoutesState) {

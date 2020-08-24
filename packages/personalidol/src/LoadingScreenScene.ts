@@ -28,7 +28,7 @@ import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
 const _clearRoutesMessage: ClearRoutesMessage & RenderRoutesMessage = {
-  clear: ["/loading-screen", "/loading-error-screen"],
+  clear: ["loading-screen", "loading-error-screen"],
   render: {},
 };
 
@@ -161,17 +161,17 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   function _getUpdateDOMMessage(): ClearRoutesMessage & RenderRoutesMessage {
     if (_loadingError) {
       return {
-        clear: ["/loading-screen"],
+        clear: ["loading-screen"],
         render: {
-          "/loading-error-screen": _loadingError,
+          "loading-error-screen": _loadingError,
         },
       };
     }
 
     return {
-      clear: ["/loading-error-screen"],
+      clear: ["loading-error-screen"],
       render: {
-        "/loading-screen": _loadingManagerProgress,
+        "loading-screen": _loadingManagerProgress,
       },
     };
   }

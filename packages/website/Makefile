@@ -4,7 +4,7 @@ include ../../Makefile_packages.mk
 SOURCES_CSS := $(shell find styles -type f -name "*.css")
 
 .PHONY: public
-public: public/lib/index.js public/index.css
+public: public/lib/index.js public/styles/index.css
 
 .PHONY: public.watch
 public.watch: node_modules
@@ -16,13 +16,9 @@ public/lib:
 public/lib/index.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
 	./build_public.sh
 
-public/index.css: $(SOURCES_CSS)
-	yarn run postcss -c ./postcss.config.js -o ./public/index.css styles/index.css
+public/styles/index.css: $(SOURCES_CSS)
+	yarn run postcss -c ./postcss.config.js -o ./public/styles/index.css styles/index.css
 
 .PHONY: serve
 serve: public/lib/index.js
-	yarn run http-server ./public/
-
-.PHONY: serve.ssl
-serve.ssl: public/lib/index.js
-	yarn run http-server --ssl --cert ./ssl.pem --key ./ssl.key --port 2083 ./public/
+	go run website.go

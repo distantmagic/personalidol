@@ -26,7 +26,7 @@ trim_trailing_whitespace = true
 # Ensure file ends with a newline when saving ["true", "false"]
 insert_final_newline = true
 
-[{Makefile,*.mk}]
+[{Makefile,*.mk,*.go}]
 
 indent_style = tab
 
@@ -36,5 +36,9 @@ indent_style = tab
 tab_width = 2
 
 [*.{rs}]
+
+tab_width = 4
+
+[*.{go}]
 
 tab_width = 4

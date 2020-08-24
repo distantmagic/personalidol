@@ -33,14 +33,14 @@ const _fonts: Array<FontPreloadParameters> = [
 
   // {
   //   family: "Almendra",
-  //   source: "/fonts/font-almendra-bold.ttf",
+  //   source: `${__STATIC_BASE_PATH}/fonts/font-almendra-bold.ttf`,
   //   descriptors: {
   //     weight: "700",
   //   }
   // },
   // {
   //   family: "Almendra",
-  //   source: "/fonts/font-almendra-bolditalic.ttf",
+  //   source: `${__STATIC_BASE_PATH}/fonts/font-almendra-bolditalic.ttf`,
   //   descriptors: {
   //     weight: "700",
   //     style: "italic",
@@ -48,7 +48,7 @@ const _fonts: Array<FontPreloadParameters> = [
   // },
   // {
   //   family: "Almendra",
-  //   source: "/fonts/font-almendra-italic.ttf",
+  //   source: `${__STATIC_BASE_PATH}/fonts/font-almendra-italic.ttf`,
   //   descriptors: {
   //     weight: "400",
   //     style: "italic",
@@ -56,7 +56,7 @@ const _fonts: Array<FontPreloadParameters> = [
   // },
   {
     family: "Almendra",
-    source: "/fonts/font-almendra-regular.ttf",
+    source: `${__STATIC_BASE_PATH}/fonts/font-almendra-regular.ttf`,
     descriptors: {
       weight: "400",
     },
@@ -66,42 +66,42 @@ const _fonts: Array<FontPreloadParameters> = [
 
   // {
   //   family: "Mukta",
-  //   source: "/fonts/font-mukta-extrabold.ttf",
+  //   source: `${__STATIC_BASE_PATH}/fonts/font-mukta-extrabold.ttf`,
   //   descriptors: {
   //     weight: "800",
   //   }
   // },
   // {
   //   family: "Mukta",
-  //   source: "/fonts/font-mukta-extralight.ttf",
+  //   source: `${__STATIC_BASE_PATH}/fonts/font-mukta-extralight.ttf`,
   //   descriptors: {
   //     weight: "200",
   //   }
   // },
   {
     family: "Mukta",
-    source: "/fonts/font-mukta-light.ttf",
+    source: `${__STATIC_BASE_PATH}/fonts/font-mukta-light.ttf`,
     descriptors: {
       weight: "300",
     },
   },
-  // {
-  //   family: "Mukta",
-  //   source: "/fonts/font-mukta-medium.ttf",
-  //   descriptors: {
-  //     weight: "500",
-  //   }
-  // },
   {
     family: "Mukta",
-    source: "/fonts/font-mukta-regular.ttf",
+    source: `${__STATIC_BASE_PATH}/fonts/font-mukta-medium.ttf`,
     descriptors: {
-      weight: "400",
+      weight: "500",
     },
   },
   // {
   //   family: "Mukta",
-  //   source: "/fonts/font-mukta-semibold.ttf",
+  //   source: `${__STATIC_BASE_PATH}/fonts/font-mukta-regular.ttf`,
+  //   descriptors: {
+  //     weight: "400",
+  //   },
+  // },
+  // {
+  //   family: "Mukta",
+  //   source: `${__STATIC_BASE_PATH}/fonts/font-mukta-semibold.ttf`,
   //   descriptors: {
   //     weight: "800",
   //   }
@@ -110,7 +110,7 @@ const _fonts: Array<FontPreloadParameters> = [
 
 const _images: Array<ImagePreloadParameters> = [
   {
-    url: "/assets/texture-mineshaft-marble-512.png",
+    url: `${__STATIC_BASE_PATH}/website/texture-mineshaft-marble-512.png`,
     css: `
       .main-menu {
         background-image: url({dataurl});
@@ -118,7 +118,7 @@ const _images: Array<ImagePreloadParameters> = [
     `,
   },
   {
-    url: "/assets/image-rise-and-fall.png",
+    url: `${__STATIC_BASE_PATH}/website/image-rise-and-fall.png`,
     css: `
       .main-menu:before {
         background-image: url({dataurl});
@@ -132,7 +132,7 @@ const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _unmountables: Set<Unmountable> = new Set();
 
 const _clearRoutesMessage: ClearRoutesMessage & RenderRoutesMessage = {
-  clear: ["/main-menu"],
+  clear: ["main-menu", "options"],
   render: {},
 };
 
@@ -168,8 +168,22 @@ export function MainMenuScene(
   });
 
   const _uiMessageRouter = createRouter({
-    navigateToMap({ filename }: { filename: string }) {
-      _loadMap(filename);
+    map({ mapName }: { mapName: string }) {
+      _loadMap(_mapNameToFilename(mapName));
+    },
+
+    optionsClose() {
+      domMessagePort.postMessage({
+        clear: ["options"],
+      });
+    },
+
+    optionsOpen() {
+      domMessagePort.postMessage({
+        render: {
+          options: {},
+        },
+      });
     },
   });
 
@@ -188,7 +202,7 @@ export function MainMenuScene(
     uiMessagePort.onmessage = _uiMessageRouter;
     domMessagePort.postMessage({
       render: {
-        "/main-menu": {},
+        "main-menu": {},
       },
     });
   }
@@ -241,6 +255,10 @@ export function MainMenuScene(
       texturesMessagePort,
       filename,
     );
+  }
+
+  function _mapNameToFilename(mapName: string): string {
+    return `${__STATIC_BASE_PATH}/maps/${mapName}.map`;
   }
 
   async function _preloadFont(fontParameters: FontPreloadParameters) {

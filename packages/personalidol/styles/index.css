@@ -1,10 +1,16 @@
-@import "./LoadingScreen.css";
 @import "./FatalError.css";
-@import "./MainMenu.css";
+@import "./LoadingScreen.css";
+@import "./MainMenuScreen.css";
+@import "./OptionsScreen.css";
+
+html, body {
+  touch-action: none;
+  user-select: none;
+}
 
 body {
-  user-select: none;
-  touch-action: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 
 #ui-root {

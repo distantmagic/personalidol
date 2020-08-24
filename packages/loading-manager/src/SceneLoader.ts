@@ -25,6 +25,8 @@ export function SceneLoader(logger: Logger, progressMessagePort: MessagePort, re
       }
 
       if (sceneMountSoft(logger, scene)) {
+        // Clean up any loading manager state the scene might have provided
+        // during preload ant mount phases.
         resetLoadingManagerState(progressMessagePort);
       }
 

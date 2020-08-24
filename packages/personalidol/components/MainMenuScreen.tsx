@@ -1,15 +1,22 @@
 import { h } from "preact";
 import { PureComponent } from "preact/compat";
 
-import { uiNavigateToMap } from "../src/uiNavigateToMap";
+import { uiMap } from "../src/uiMap";
+import { uiOptionsOpen } from "../src/uiOptionsOpen";
 
 type Props = {
   uiMessagePort: MessagePort;
 };
 
-function navigateToMap(self: MainMenuScreen, uiMessagePort: MessagePort, filename: string) {
+function _navigateToMap(self: MainMenuScreen, uiMessagePort: MessagePort, filename: string) {
   return function () {
-    uiNavigateToMap(uiMessagePort, filename);
+    uiMap(uiMessagePort, filename);
+  };
+}
+
+function _optionsOpen(self: MainMenuScreen, uiMessagePort: MessagePort) {
+  return function () {
+    uiOptionsOpen(uiMessagePort);
   };
 }
 
@@ -22,9 +29,9 @@ export class MainMenuScreen extends PureComponent<Props> {
           <h2 class="main-menu__title-sub">Apocalyptic Adventure</h2>
           <nav class="main-menu__nav">
             <button disabled>Continue</button>
-            <button onClick={navigateToMap(this, this.props.uiMessagePort, "/maps/map-mountain-caravan.map")}>New Game</button>
+            <button onClick={_navigateToMap(this, this.props.uiMessagePort, "map-mountain-caravan")}>New Game</button>
             <button disabled>Load Game</button>
-            <button disabled>Options</button>
+            <button onClick={_optionsOpen(this, this.props.uiMessagePort)}>Options</button>
             <button disabled>Credits</button>
           </nav>
         </div>

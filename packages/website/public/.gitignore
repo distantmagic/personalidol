@@ -4,8 +4,9 @@
 /maps/autosave
 /models
 /sounds
-/index.css
+/styles
 /textures
+/website
 
 /lib
 /service_worker.js

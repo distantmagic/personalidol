@@ -91,6 +91,7 @@
 .main-menu__title-sub {
   font-size: 1.4rem;
   font-variant: small-caps;
+  font-weight: 500;
   letter-spacing: 0.05  ch;
   text-transform: lowercase;
   word-spacing: 1ch;
