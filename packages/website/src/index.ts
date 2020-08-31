@@ -4,12 +4,13 @@ import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
-import { DOMRendererService } from "@personalidol/dom-renderer/src/DOMRendererService";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
+import { DOMUIController } from "@personalidol/personalidol/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
 import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCanvasElementById";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
+import { HashHistoryService } from "@personalidol/dom-renderer/src/HashHistoryService";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
 import { Input } from "@personalidol/framework/src/Input";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
@@ -19,7 +20,6 @@ import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultInput";
-import { renderDOMUIRouter } from "@personalidol/personalidol/src/renderDOMUIRouter";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
@@ -83,15 +83,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
 
   ServiceWorkerManager(logger, "/service_worker.js").install();
 
-  // DOMRendererService receives messages from workers and other sources and
-  // redraws the DOM in the main thread.
-
-  const uiMessageChannel = createMessageChannel();
-  const domRendererMessageChannel = createMessageChannel();
-  const domRendererService = DOMRendererService(domRendererMessageChannel.port1, uiMessageChannel.port1, uiRoot, renderDOMUIRouter);
-
-  serviceManager.services.add(domRendererService);
-
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,
   // so it's possible to render loading screen or do something else with that
@@ -124,6 +115,24 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   }
 
   addProgressMessagePort(progressMessageChannel.port1, true);
+
+  // HashHistoryService keeps the browser hash router state aligned with
+  // current routes. Browser URL hash does not control the UI state, it
+  // restores it during the initial load. The goal is to reopen subroutes
+  // when user refreshes the page, but do not conflict with other routing
+  // mechanisms.
+
+  const hashHistoryService = HashHistoryService();
+
+  serviceManager.services.add(hashHistoryService);
+
+  // DOMUiController handles DOM rendering using reconciliated routes.
+
+  const domRendererMessageChannel = createMessageChannel();
+  const domUiController = DOMUIController(domRendererMessageChannel.port1, uiRoot);
+
+  mainLoop.updatables.add(domUiController);
+  serviceManager.services.add(domUiController);
 
   // FontPreloadService does exactly what its name says. Thanks to this
   // service it is possible for worker threads to request font face to be
@@ -386,7 +395,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
         texturesMessagePort: texturesMessageChannel.port2,
-        uiMessagePort: uiMessageChannel.port2,
       },
       [
         domRendererMessageChannel.port2,
@@ -396,7 +404,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
         progressMessageChannel.port2,
         quakeMapsMessageChannel.port2,
         texturesMessageChannel.port2,
-        uiMessageChannel.port2,
       ]
     );
 
@@ -435,7 +442,6 @@ const uiRoot = getHTMLElementById(window, "ui-root");
       progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,
       texturesMessageChannel.port2,
-      uiMessageChannel.port2
     );
   }
 })();

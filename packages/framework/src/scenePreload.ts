@@ -11,7 +11,7 @@ export function scenePreload(logger: Logger, scene: Scene): void {
     throw new Error(`Scene is already preloading: "${scene.name}"`);
   }
 
-  logger.debug(`PRELOAD_SCENE(${scene.name})`);
+  logger.info(`PRELOAD_SCENE(${scene.name})`);
 
   scene.preload();
 }

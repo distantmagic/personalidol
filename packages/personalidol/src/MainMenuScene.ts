@@ -9,18 +9,16 @@ import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
-import { MapScene } from "./MapScene";
+// import { MapScene } from "./MapScene";
 
 import type { Logger } from "loglevel";
 
-import type { ClearRoutesMessage } from "@personalidol/dom-renderer/src/ClearRoutesMessage.type";
 import type { DirectorState } from "@personalidol/loading-manager/src/DirectorState.type";
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { FontPreloadMessage } from "@personalidol/dom-renderer/src/FontPreloadMessage.type";
 import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontPreloadParameters.type";
-import type { RenderRoutesMessage } from "@personalidol/dom-renderer/src/RenderRoutesMessage.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
@@ -110,11 +108,6 @@ const _disposables: Set<Disposable> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _unmountables: Set<Unmountable> = new Set();
 
-const _clearRoutesMessage: ClearRoutesMessage & RenderRoutesMessage = {
-  clear: ["main-menu", "options"],
-  render: {},
-};
-
 const _fontMessageRouter = createRouter({
   preloadedFont: handleRPCResponse(_rpcLookupTable),
 });
@@ -131,34 +124,13 @@ export function MainMenuScene(
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
-  texturesMessagePort: MessagePort,
-  uiMessagePort: MessagePort
+  texturesMessagePort: MessagePort
 ): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
     isPreloaded: false,
     isPreloading: false,
-  });
-
-  const _uiMessageRouter = createRouter({
-    map({ mapName }: { mapName: string }) {
-      _loadMap(_mapNameToFilename(mapName));
-    },
-
-    optionsClose() {
-      domMessagePort.postMessage({
-        clear: ["options"],
-      });
-    },
-
-    optionsOpen() {
-      domMessagePort.postMessage({
-        render: {
-          options: {},
-        },
-      });
-    },
   });
 
   function dispose(): void {
@@ -172,11 +144,15 @@ export function MainMenuScene(
   function mount(): void {
     state.isMounted = true;
 
-    uiMessagePort.onmessage = _uiMessageRouter;
     domMessagePort.postMessage({
-      render: {
-        "main-menu": {},
+      cMainMenu: {
+        enabled: true,
+        props: {},
       },
+      // "uiOptions": {
+      //   enabled: true,
+      //   props: {},
+      // },
     });
   }
 
@@ -200,35 +176,28 @@ export function MainMenuScene(
   function unmount(): void {
     state.isMounted = false;
 
-    domMessagePort.postMessage(_clearRoutesMessage);
-    uiMessagePort.onmessage = null;
-
     fUnmount(_unmountables);
   }
 
   function update(delta: number): void {}
 
-  function _loadMap(filename: string): void {
-    // prettier-ignore
-    directorState.next = MapScene(
-      logger,
-      effectComposer,
-      directorState,
-      eventBus,
-      dimensionsState,
-      inputState,
-      domMessagePort,
-      md2MessagePort,
-      progressMessagePort,
-      quakeMapsMessagePort,
-      texturesMessagePort,
-      filename,
-    );
-  }
-
-  function _mapNameToFilename(mapName: string): string {
-    return `${__STATIC_BASE_PATH}/maps/${mapName}.map`;
-  }
+  // function _loadMap(filename: string): void {
+  //   // prettier-ignore
+  //   directorState.next = MapScene(
+  //     logger,
+  //     effectComposer,
+  //     directorState,
+  //     eventBus,
+  //     dimensionsState,
+  //     inputState,
+  //     domMessagePort,
+  //     md2MessagePort,
+  //     progressMessagePort,
+  //     quakeMapsMessagePort,
+  //     texturesMessagePort,
+  //     filename,
+  //   );
+  // }
 
   async function _preloadFont(fontParameters: FontPreloadParameters) {
     const fontPreloadMessage: FontPreloadMessage = {

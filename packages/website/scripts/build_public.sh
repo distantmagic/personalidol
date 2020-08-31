@@ -21,7 +21,7 @@ BUILD_ID="${GIT_LAST_COMMIT_ID}${BUILD_ID_APPEND}";
 yarn run esbuild \
     --bundle \
     --define:__BUILD_ID=\"${BUILD_ID}\" \
-    --define:__LOG_LEVEL=\"debug\" \
+    --define:__LOG_LEVEL=\"info\" \
     --define:__STATIC_BASE_PATH=\"/public\" \
     --format=esm \
     --jsx-factory=h \

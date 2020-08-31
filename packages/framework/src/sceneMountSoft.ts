@@ -7,7 +7,7 @@ export function sceneMountSoft(logger: Logger, scene: Scene): boolean {
     return false;
   }
 
-  logger.debug(`MOUNT_SCENE(${scene.name})`);
+  logger.info(`MOUNT_SCENE(${scene.name})`);
   scene.mount();
 
   return true;

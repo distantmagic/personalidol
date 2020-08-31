@@ -6,7 +6,7 @@ cmd = "make tmp/main"
 # Binary file yields from `cmd`.
 bin = "tmp/main"
 # Customize binary.
-full_bin = "make go.run.dev"
+full_bin = "make serve"
 # Watch these filename extensions.
 include_ext = [
     "go",

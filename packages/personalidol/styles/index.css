@@ -1,7 +1,9 @@
 @import "./FatalError.css";
+
 @import "./LoadingScreen.css";
 @import "./MainMenuScreen.css";
-@import "./OptionsScreen.css";
+
+@import "./OptionsSubView.css";
 
 html, body {
   touch-action: none;

@@ -3,7 +3,7 @@ package webserver
 import (
 	"github.com/gin-gonic/gin"
 
-	"personalidol.com/website/internal/route"
+	"personalidol.com/website/internal/webroute"
 )
 
 func Create() *gin.Engine {
@@ -22,7 +22,7 @@ func Create() *gin.Engine {
 	router.StaticFile("/service_worker.js", "./public/lib/service_worker.js")
 	router.StaticFile("/service_worker.js.map", "./public/lib/service_worker.js.map")
 
-	router.GET("/", route.Index)
+	router.GET("/", webroute.Index)
 
 	return router
 }

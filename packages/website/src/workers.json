@@ -12,7 +12,7 @@
     "url": "/lib/worker_offscreen.js"
   },
   "progress": {
-    "name": "ProgressMonitor",
+    "name": "Progress",
     "url": "/lib/worker_progress.js"
   },
   "quakemaps": {

@@ -2,25 +2,34 @@ import { h } from "preact";
 import { PureComponent } from "preact/compat";
 
 import { uiMap } from "../src/uiMap";
-import { uiOptionsOpen } from "../src/uiOptionsOpen";
+
+import type { UIState } from "../src/UIState.type";
+import type { UIStateUpdateCallback } from "../src/UIStateUpdateCallback.type";
 
 type Props = {
-  uiMessagePort: MessagePort;
+  domMessagePort: MessagePort;
+  uiState: UIState;
+  uiStateUpdateCallback: UIStateUpdateCallback;
 };
 
-function _navigateToMap(self: MainMenuScreen, uiMessagePort: MessagePort, filename: string) {
-  return function () {
-    uiMap(uiMessagePort, filename);
-  };
-}
-
-function _optionsOpen(self: MainMenuScreen, uiMessagePort: MessagePort) {
-  return function () {
-    uiOptionsOpen(uiMessagePort);
-  };
-}
-
 export class MainMenuScreen extends PureComponent<Props> {
+  _navigateToMap = () => {
+    uiMap(this.props.domMessagePort, "map-mountain-caravan");
+  };
+
+  _optionsOpen = (evt: Event) => {
+    evt.preventDefault();
+
+    this.props.uiStateUpdateCallback(
+      Object.assign(this.props.uiState, {
+        cOptions: {
+          enabled: true,
+          props: {},
+        },
+      })
+    );
+  };
+
   render() {
     return (
       <main class="main-menu">
@@ -29,9 +38,9 @@ export class MainMenuScreen extends PureComponent<Props> {
           <h2 class="main-menu__title-sub">Apocalyptic Adventure</h2>
           <nav class="main-menu__nav">
             <button disabled>Continue</button>
-            <button onClick={_navigateToMap(this, this.props.uiMessagePort, "map-mountain-caravan")}>New Game</button>
+            <button onClick={this._navigateToMap}>New Game</button>
             <button disabled>Load Game</button>
-            <button onClick={_optionsOpen(this, this.props.uiMessagePort)}>Options</button>
+            <button onClick={this._optionsOpen}>Options</button>
             <button disabled>Credits</button>
           </nav>
         </div>

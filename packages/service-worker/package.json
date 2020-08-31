@@ -5,7 +5,8 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/workers": "0.0.0"
+    "@personalidol/workers": "0.0.0",
+    "loglevel": "^1.7.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.9",

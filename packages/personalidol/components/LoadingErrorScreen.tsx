@@ -6,6 +6,10 @@ import type { ComponentChild } from "preact";
 
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 
+type Props = {
+  loadingError: LoadingError;
+};
+
 // prettier-ignore
 function renderUserFeedback(): ComponentChild {
   return (
@@ -34,21 +38,21 @@ function renderUserFeedback(): ComponentChild {
   );
 }
 
-function renderTechnicalDescription(props: LoadingError): ComponentChild {
+function renderTechnicalDescription(props: Props): ComponentChild {
   return (
     <Fragment>
       <p>
-        error while loading {props.item.resourceType} {props.item.resourceUri}
+        error while loading {props.loadingError.item.resourceType} {props.loadingError.item.resourceUri}
       </p>
-      <p>{props.item.id}</p>
-      <p>{props.error.message}</p>
-      <p>{props.error.stack}</p>
+      <p>{props.loadingError.item.id}</p>
+      <p>{props.loadingError.error.message}</p>
+      <p>{props.loadingError.error.stack}</p>
     </Fragment>
   );
 }
 
 // prettier-ignore
-export function LoadingErrorScreen(props: LoadingError) {
+export function LoadingErrorScreen(props: Props) {
   return (
     <FatalError
       title="Error"

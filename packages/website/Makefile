@@ -7,15 +7,7 @@ SOURCES_GO := $(shell find cmd internal website.go -type f -name "*.go")
 
 .PHONY: air
 air: public/lib/index.js
-	go run website.go
-
-.PHONY: go.run.dev
-go.run.dev: tmp/main
-	APP_ENV=dev APP_USER=air ./tmp/main serve \
-		--http-listen=127.0.0.1:8080 \
-		--https-listen=:2083 \
-		--ssl-cert=./ssl.pem \
-		--ssl-key=./ssl.key
+	air
 
 tmp/main: $(SOURCES_GO)
 	go build -o ./tmp/main .
@@ -31,11 +23,15 @@ public/lib:
 	mkdir -p public/lib
 
 public/lib/index.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
-	./build_public.sh
+	./scripts/build_public.sh
 
 public/styles/index.css: $(SOURCES_CSS)
 	yarn run postcss -c ./postcss.config.js -o ./public/styles/index.css styles/index.css
 
 .PHONY: serve
-serve: public/lib/index.js
-	go run website.go
+serve: public/lib/index.js tmp/main
+	./tmp/main serve \
+		--http-listen=127.0.0.1:8080 \
+		--https-listen=:2083 \
+		--ssl-cert=./ssl.pem \
+		--ssl-key=./ssl.key
