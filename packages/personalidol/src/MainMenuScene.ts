@@ -9,15 +9,11 @@ import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
-// import { MapScene } from "./MapScene";
 import { uiStateOnly } from "./uiStateOnly";
 
 import type { Logger } from "loglevel";
 
-import type { DirectorState } from "@personalidol/loading-manager/src/DirectorState.type";
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
-import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
-import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { FontPreloadMessage } from "@personalidol/dom-renderer/src/FontPreloadMessage.type";
 import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontPreloadParameters.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
@@ -113,20 +109,7 @@ const _fontMessageRouter = createRouter({
   preloadedFont: handleRPCResponse(_rpcLookupTable),
 });
 
-export function MainMenuScene(
-  logger: Logger,
-  effectComposer: EffectComposer,
-  directorState: DirectorState,
-  eventBus: EventBus,
-  dimensionsState: Uint32Array,
-  inputState: Int32Array,
-  domMessagePort: MessagePort,
-  fontPreloadMessagePort: MessagePort,
-  md2MessagePort: MessagePort,
-  progressMessagePort: MessagePort,
-  quakeMapsMessagePort: MessagePort,
-  texturesMessagePort: MessagePort
-): IScene {
+export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontPreloadMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -137,13 +120,13 @@ export function MainMenuScene(
   function dispose(): void {
     state.isDisposed = true;
 
-    fontPreloadMessagePort.onmessage = null;
-
     fDispose(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
+
+    fontPreloadMessagePort.onmessage = _fontMessageRouter;
 
     domMessagePort.postMessage(
       uiStateOnly({
@@ -151,10 +134,6 @@ export function MainMenuScene(
           enabled: true,
           props: {},
         },
-        // "uiOptions": {
-        //   enabled: true,
-        //   props: {},
-        // },
       })
     );
   }
@@ -170,37 +149,17 @@ export function MainMenuScene(
 
     state.isPreloading = false;
     state.isPreloaded = true;
-
-    // setTimeout(function () {
-    //   _loadMap("/maps/map-mountain-caravan.map");
-    // }, 3000);
   }
 
   function unmount(): void {
     state.isMounted = false;
 
+    fontPreloadMessagePort.onmessage = null;
+
     fUnmount(_unmountables);
   }
 
   function update(delta: number): void {}
-
-  // function _loadMap(filename: string): void {
-  //   // prettier-ignore
-  //   directorState.next = MapScene(
-  //     logger,
-  //     effectComposer,
-  //     directorState,
-  //     eventBus,
-  //     dimensionsState,
-  //     inputState,
-  //     domMessagePort,
-  //     md2MessagePort,
-  //     progressMessagePort,
-  //     quakeMapsMessagePort,
-  //     texturesMessagePort,
-  //     filename,
-  //   );
-  // }
 
   async function _preloadFont(fontParameters: FontPreloadParameters) {
     const fontPreloadMessage: FontPreloadMessage = {

@@ -6,6 +6,7 @@ import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreen
 import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
 import { Renderer } from "@personalidol/three-renderer/src/Renderer";
 import { SceneLoader } from "@personalidol/loading-manager/src/SceneLoader";
+import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
 
 import type { Logger } from "loglevel";
 
@@ -50,8 +51,7 @@ export function createScenes(
 
   const currentSceneDirectorState = currentSceneDirector.state;
 
-  // prettier-ignore
-  currentSceneDirector.state.next = MainMenuScene(
+  const uiMessageResponder = UIMessageResponder(
     logger,
     effectComposer,
     currentSceneDirectorState,
@@ -59,11 +59,18 @@ export function createScenes(
     dimensionsState,
     inputState,
     domMessagePort,
-    fontPreloadMessagePort,
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
-    texturesMessagePort,
+    texturesMessagePort
+  );
+
+  // prettier-ignore
+  currentSceneDirector.state.next = MainMenuScene(
+    logger,
+    domMessagePort,
+    fontPreloadMessagePort,
+    progressMessagePort,
   );
 
   // prettier-ignore
@@ -75,6 +82,7 @@ export function createScenes(
   );
 
   serviceManager.services.add(currentSceneDirector);
+  serviceManager.services.add(uiMessageResponder);
   serviceManager.services.add(loadingSceneDirector);
   serviceManager.services.add(renderer);
   serviceManager.services.add(sceneLoader);

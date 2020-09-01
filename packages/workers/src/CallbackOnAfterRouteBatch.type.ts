@@ -1,0 +1,1 @@
+export type CallbackOnAfterRouteBatch = () => void;

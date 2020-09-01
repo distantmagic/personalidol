@@ -35,6 +35,8 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
+import { uiStateOnly } from "./uiStateOnly";
+
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three";
 
@@ -290,6 +292,8 @@ export function MapScene(
     state.isMounted = true;
 
     eventBus.POINTER_ZOOM_REQUEST.add(_onPointerZoomRequest);
+
+    domMessagePort.postMessage(uiStateOnly({}));
 
     const renderPass = new RenderPass(_scene, _camera);
 

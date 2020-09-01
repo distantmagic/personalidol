@@ -1,8 +1,6 @@
 import { h } from "preact";
 import { PureComponent } from "preact/compat";
 
-import { uiMap } from "../src/uiMap";
-
 import type { UIState } from "../src/UIState.type";
 import type { UIStateUpdateCallback } from "../src/UIStateUpdateCallback.type";
 
@@ -12,22 +10,25 @@ type Props = {
   uiStateUpdateCallback: UIStateUpdateCallback;
 };
 
+const cOptionsEnabled = Object.freeze({
+  enabled: true,
+  props: {},
+});
+
 export class MainMenuScreen extends PureComponent<Props> {
   _navigateToMap = () => {
-    uiMap(this.props.domMessagePort, "map-mountain-caravan");
+    this.props.domMessagePort.postMessage({
+      navigateToMap: {
+        mapName: "map-mountain-caravan",
+      },
+    });
   };
 
   _optionsOpen = (evt: Event) => {
     evt.preventDefault();
 
-    this.props.uiStateUpdateCallback(
-      Object.assign(this.props.uiState, {
-        cOptions: {
-          enabled: true,
-          props: {},
-        },
-      })
-    );
+    this.props.uiState.cOptions = cOptionsEnabled;
+    this.props.uiStateUpdateCallback();
   };
 
   render() {

@@ -8,7 +8,7 @@ import { LoadingScreen } from "../components/LoadingScreen";
 import { MainMenuScreen } from "../components/MainMenuScreen";
 import { OptionsSubView } from "../components/OptionsSubView";
 
-import { createUIComponentsRouter } from "./createUIComponentsRouter";
+import { createUIRenderingRouter } from "./createUIRenderingRouter";
 import { createUIState } from "./createUIState";
 import { createUIStateMessageRoutes } from "./createUIStateMessageRoutes";
 
@@ -20,7 +20,7 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
   const _uiState: UIState = createUIState();
   let _isCleared: boolean = false;
 
-  const _uiComponentsRouter = createUIComponentsRouter({
+  const _uiRenderingRouter = createUIRenderingRouter(_uiState, {
     cLoadingError(props) {
       return <LoadingErrorScreen loadingError={props.loadingError} />;
     },
@@ -30,15 +30,15 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
     },
 
     cMainMenu() {
-      return <MainMenuScreen domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_uiStateUpdateCallback} />;
+      return <MainMenuScreen domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_render} />;
     },
 
     cOptions() {
-      return <OptionsSubView domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_uiStateUpdateCallback} />;
+      return <OptionsSubView domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_render} />;
     },
   });
 
-  const _uiMessageRouter = createRouter(createUIStateMessageRoutes(_uiState, _render));
+  const _uiMessageRouter = createRouter(createUIStateMessageRoutes(_uiState), _render);
 
   function start() {
     domMessagePort.onmessage = _uiMessageRouter;
@@ -50,18 +50,16 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
 
   function update() {}
 
-  function _render() {
+  function _clearUIRootElement() {
     if (!_isCleared) {
       clearHTMLElement(uiRootElement);
       _isCleared = true;
     }
-
-    preactRender(_uiComponentsRouter(_uiState), uiRootElement);
   }
 
-  function _uiStateUpdateCallback(updatedUiState: UIState) {
-    Object.assign(_uiState, updatedUiState);
-    _render();
+  function _render() {
+    _clearUIRootElement();
+    preactRender(_uiRenderingRouter(), uiRootElement);
   }
 
   return Object.freeze({
