@@ -11,6 +11,11 @@ export function createUIStateMessageRoutes(uiState: UIState, updateCallback: Upd
 
   (Object.keys(uiState) as Array<keyof UIState>).forEach(function <ComponentKey extends keyof UIState>(componentKey: ComponentKey) {
     ret[componentKey] = function (uiComponentState: UIState[ComponentKey]): void {
+      if (!uiComponentState.enabled && !uiState[componentKey].enabled) {
+        // No need to update this one.
+        return;
+      }
+
       uiState[componentKey] = uiComponentState;
       updateCallback();
     };

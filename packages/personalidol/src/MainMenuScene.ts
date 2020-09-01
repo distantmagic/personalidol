@@ -10,6 +10,7 @@ import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
 // import { MapScene } from "./MapScene";
+import { uiStateOnly } from "./uiStateOnly";
 
 import type { Logger } from "loglevel";
 
@@ -144,16 +145,18 @@ export function MainMenuScene(
   function mount(): void {
     state.isMounted = true;
 
-    domMessagePort.postMessage({
-      cMainMenu: {
-        enabled: true,
-        props: {},
-      },
-      // "uiOptions": {
-      //   enabled: true,
-      //   props: {},
-      // },
-    });
+    domMessagePort.postMessage(
+      uiStateOnly({
+        cMainMenu: {
+          enabled: true,
+          props: {},
+        },
+        // "uiOptions": {
+        //   enabled: true,
+        //   props: {},
+        // },
+      })
+    );
   }
 
   async function preload(): Promise<void> {

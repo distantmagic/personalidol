@@ -9,6 +9,7 @@ import { MainMenuScreen } from "../components/MainMenuScreen";
 import { OptionsSubView } from "../components/OptionsSubView";
 
 import { createUIComponentsRouter } from "./createUIComponentsRouter";
+import { createUIState } from "./createUIState";
 import { createUIStateMessageRoutes } from "./createUIStateMessageRoutes";
 
 import type { DOMUIController as IDOMUIController } from "@personalidol/dom-renderer/src/DOMUIController.interface";
@@ -16,24 +17,7 @@ import type { DOMUIController as IDOMUIController } from "@personalidol/dom-rend
 import type { UIState } from "./UIState.type";
 
 export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
-  const _uiState: UIState = {
-    cMainMenu: {
-      enabled: false,
-      props: {},
-    },
-    cLoadingError: {
-      enabled: false,
-      props: {},
-    },
-    cLoadingScreen: {
-      enabled: false,
-      props: {},
-    },
-    cOptions: {
-      enabled: false,
-      props: {},
-    },
-  };
+  const _uiState: UIState = createUIState();
 
   const _uiComponentsRouter = createUIComponentsRouter({
     cLoadingError(props) {

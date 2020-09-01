@@ -17,6 +17,8 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
+import { uiStateOnly } from "./uiStateOnly";
+
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
@@ -78,46 +80,42 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
       _unmountables.add(unmountPass(effectComposer, glitchPass));
       _disposables.add(disposableGeneric(glitchPass));
 
-      domMessagePort.postMessage({
-        cLoadingError: {
-          enabled: true,
-          props: {
-            loadingError: error,
+      domMessagePort.postMessage(
+        uiStateOnly({
+          cLoadingError: {
+            enabled: true,
+            props: {
+              loadingError: error,
+            },
           },
-        },
-        cLoadingScreen: {
-          enabled: false,
-          props: {},
-        },
-      });
+        })
+      );
     },
 
     progress(progress: LoadingManagerProgress): void {
-      domMessagePort.postMessage({
-        cLoadingError: {
-          enabled: false,
-          props: {},
-        },
-        cLoadingScreen: {
-          enabled: true,
-          props: {
-            loadingManagerProgress: progress,
+      domMessagePort.postMessage(
+        uiStateOnly({
+          cLoadingScreen: {
+            enabled: true,
+            props: {
+              loadingManagerProgress: progress,
+            },
           },
-        },
-      });
+        })
+      );
     },
   });
 
   function dispose(): void {
     state.isDisposed = true;
 
-    progressMessagePort.onmessage = null;
-
     fDispose(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
+
+    progressMessagePort.onmessage = _progressRouter;
 
     const renderPass = new RenderPass(_scene, _camera);
 
@@ -139,13 +137,13 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   }
 
   function preload(): void {
-    progressMessagePort.onmessage = _progressRouter;
-
     state.isPreloaded = true;
   }
 
   function unmount(): void {
     state.isMounted = false;
+
+    progressMessagePort.onmessage = null;
 
     fUnmount(_unmountables);
   }
