@@ -18,6 +18,7 @@ import type { UIState } from "./UIState.type";
 
 export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
   const _uiState: UIState = createUIState();
+  let _isCleared: boolean = false;
 
   const _uiComponentsRouter = createUIComponentsRouter({
     cLoadingError(props) {
@@ -40,7 +41,6 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
   const _uiMessageRouter = createRouter(createUIStateMessageRoutes(_uiState, _render));
 
   function start() {
-    clearHTMLElement(uiRootElement);
     domMessagePort.onmessage = _uiMessageRouter;
   }
 
@@ -51,6 +51,11 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
   function update() {}
 
   function _render() {
+    if (!_isCleared) {
+      clearHTMLElement(uiRootElement);
+      _isCleared = true;
+    }
+
     preactRender(_uiComponentsRouter(_uiState), uiRootElement);
   }
 
