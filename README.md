@@ -1,2 +1,2 @@
-# `Personal Idol`
+# Personal Idol
 
