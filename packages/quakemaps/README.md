@@ -1,11 +1,3 @@
-# `website`
+# `quakemaps`
 
-> TODO: description
-
-## Usage
-
-```
-const website = require('website');
-
-// TODO: DEMONSTRATE API
-```
+Parser that is able to process quake `.map` files and generate geometry attributes from them.

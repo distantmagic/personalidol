@@ -2,15 +2,21 @@ import type { MainLoopUpdateCallback } from "@personalidol/framework/src/MainLoo
 
 import type { WorkerService as IWorkerService } from "./WorkerService.interface";
 
+const _messageReady = Object.freeze({
+  ready: null,
+});
+
+const _messageStart = Object.freeze({
+  start: null,
+});
+
+const _messageStop = Object.freeze({
+  stop: null,
+});
+
 function _noop(): void {}
 
 export function WorkerService(worker: Worker, workerName: string, updater: null | MainLoopUpdateCallback = null): IWorkerService {
-  const _messageStart = {
-    start: null,
-  };
-  const _messageStop = {
-    stop: null,
-  };
 
   function ready(): Promise<void> {
     return new Promise(function (resolve, reject) {
@@ -22,9 +28,7 @@ export function WorkerService(worker: Worker, workerName: string, updater: null 
       }
 
       worker.addEventListener("message", onMessage);
-      worker.postMessage({
-        ready: null,
-      });
+      worker.postMessage(_messageReady);
     });
   }
 

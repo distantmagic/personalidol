@@ -1,11 +1,3 @@
-# `gameoflife`
+# `workers`
 
-> TODO: description
-
-## Usage
-
-```
-const gameoflife = require('gameoflife');
-
-// TODO: DEMONSTRATE API
-```
+`DedicatedWorker` and `MessageChannel` quality of life utilities. It contains message router, RPC handling etc.

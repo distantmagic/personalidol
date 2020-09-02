@@ -21,7 +21,7 @@ import type { Scene as IScene } from "@personalidol/framework/src/Scene.interfac
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
-const _fonts: Array<FontPreloadParameters> = [
+const _fonts: Array<FontPreloadParameters> = Object.freeze([
   // Almendra
 
   // {
@@ -99,7 +99,7 @@ const _fonts: Array<FontPreloadParameters> = [
   //     weight: "800",
   //   }
   // },
-];
+]);
 
 const _disposables: Set<Disposable> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();

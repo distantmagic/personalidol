@@ -1,11 +1,3 @@
-# `gameoflife`
+# `gameoflife-ruleset-conway`
 
-> TODO: description
-
-## Usage
-
-```
-const gameoflife = require('gameoflife');
-
-// TODO: DEMONSTRATE API
-```
+Game of Life rules as defined by John Conway.

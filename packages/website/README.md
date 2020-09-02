@@ -1,11 +1,5 @@
 # `website`
 
-> TODO: description
+The package to combine them all (at least frontend ones) and start everyting in the browser. Also contains the UI web server implementation (but no API).
 
-## Usage
-
-```
-const website = require('website');
-
-// TODO: DEMONSTRATE API
-```
+Everything is combined in the `src/index.ts` file. It decides which workers to start, what browser features are supported to provide the best user experience possible.

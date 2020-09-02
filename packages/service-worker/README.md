@@ -1,11 +1,3 @@
-# `gameoflife`
+# `service-worker`
 
-> TODO: description
-
-## Usage
-
-```
-const gameoflife = require('gameoflife');
-
-// TODO: DEMONSTRATE API
-```
+Wrapper around service worker to handle installation and some edge cases.

@@ -1,11 +1,11 @@
-# `gameoflife`
+# `dom-renderer`
 
-> TODO: description
+This package contains utilities that handle DOM rendering. By default it's the  user interface (menus, buttons, etc), as it is often impractical to create those in the 3D context.
 
-## Usage
+## Services
 
-```
-const gameoflife = require('gameoflife');
+1. `FontPreloadService` - receives messages via message channel and loads fonts in the main thread (the one with access to DOM) so it's possible to request font preload from worker thread.
 
-// TODO: DEMONSTRATE API
-```
+## Interfaces
+
+1. `DOMUIController` - base iterface that handles DOM rendering. It should be implemented in the application itself.

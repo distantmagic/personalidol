@@ -1,11 +1,7 @@
-# `gameoflife`
+# `three-renderer`
 
-> TODO: description
+Wrapper around THREE WebGL renderer to work as a Personal Idol service. It uses EffectComposer to allow scenes to control most of the rendering process.
 
-## Usage
+## Services
 
-```
-const gameoflife = require('gameoflife');
-
-// TODO: DEMONSTRATE API
-```
+1. `Renderer` - plugs into the animation frame and handles rendering via the EffectComposer.
