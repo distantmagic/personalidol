@@ -19,6 +19,7 @@ import type { UIState } from "./UIState.type";
 export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
   const _uiState: UIState = createUIState();
   let _isCleared: boolean = false;
+  let _needsUpdate: boolean = false;
 
   const _uiRenderingRouter = createUIRenderingRouter(_uiState, {
     cLoadingError(props) {
@@ -30,15 +31,15 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
     },
 
     cMainMenu() {
-      return <MainMenuScreen domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_render} />;
+      return <MainMenuScreen domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_setNeedsUpdate} />;
     },
 
     cOptions() {
-      return <OptionsSubView domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_render} />;
+      return <OptionsSubView domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_setNeedsUpdate} />;
     },
   });
 
-  const _uiMessageRouter = createRouter(createUIStateMessageRoutes(_uiState), _render);
+  const _uiMessageRouter = createRouter(createUIStateMessageRoutes(_uiState), _setNeedsUpdate);
 
   function start() {
     domMessagePort.onmessage = _uiMessageRouter;
@@ -48,7 +49,16 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
     domMessagePort.onmessage = null;
   }
 
-  function update() {}
+  function update() {
+    if (!_needsUpdate) {
+      return;
+    }
+
+    _clearUIRootElement();
+    preactRender(_uiRenderingRouter(), uiRootElement);
+
+    _needsUpdate = false;
+  }
 
   function _clearUIRootElement() {
     if (!_isCleared) {
@@ -57,9 +67,8 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
     }
   }
 
-  function _render() {
-    _clearUIRootElement();
-    preactRender(_uiRenderingRouter(), uiRootElement);
+  function _setNeedsUpdate() {
+    _needsUpdate = true;
   }
 
   return Object.freeze({

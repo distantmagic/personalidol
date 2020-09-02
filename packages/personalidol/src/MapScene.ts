@@ -220,7 +220,8 @@ export function MapScene(
       });
       const mesh = new Mesh(bufferGeometry, material);
 
-      // mesh.castShadow = true;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
       mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
 
       _scene.add(mesh);
