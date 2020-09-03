@@ -1,6 +1,18 @@
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { shadowAttachCSSHTML } from "@personalidol/dom-renderer/src/shadowAttachCSSHTML";
 
+declare module "preact/src/jsx" {
+  namespace JSXInternal {
+    interface IntrinsicElements {
+      "pi-main-menu-button": {
+        children: string;
+        disabled?: undefined | true;
+        onClick?: (evt: MouseEvent) => void;
+      };
+    }
+  }
+}
+
 const _css = `
   :host {
     all: initial;

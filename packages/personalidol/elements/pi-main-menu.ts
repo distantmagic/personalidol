@@ -1,5 +1,13 @@
 import { shadowAttachCSSHTML } from "@personalidol/dom-renderer/src/shadowAttachCSSHTML";
 
+declare module "preact/src/jsx" {
+  namespace JSXInternal {
+    interface IntrinsicElements {
+      "pi-main-menu": {};
+    }
+  }
+}
+
 const _css = `
   :host {
     all: initial;

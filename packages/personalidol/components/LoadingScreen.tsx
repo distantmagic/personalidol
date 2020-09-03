@@ -7,5 +7,11 @@ type Props = {
 };
 
 export function LoadingScreen(props: Props) {
-  return <pi-loading-progress progress-comment={`Loading ${props.loadingManagerProgress.comment} ...`} progress-value={String(props.loadingManagerProgress.progress)} />;
+  // prettier-ignore
+  return (
+    <pi-loading-progress
+      progress-comment={`Loading ${props.loadingManagerProgress.comment} ...`}
+      progress-value={String(props.loadingManagerProgress.progress)}
+    />
+  );
 }

@@ -1,6 +1,16 @@
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { shadowAttachCSSHTML } from "@personalidol/dom-renderer/src/shadowAttachCSSHTML";
 
+declare module "preact/src/jsx" {
+  namespace JSXInternal {
+    interface IntrinsicElements {
+      "pi-options": {
+        oncanceled: () => void;
+      };
+    }
+  }
+}
+
 const _css = `
   :host {
     all: initial;

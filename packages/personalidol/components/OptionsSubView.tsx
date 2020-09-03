@@ -6,12 +6,6 @@ import { uiDisabledComponentState } from "../src/uiDisabledComponentState";
 import type { UIState } from "../src/UIState.type";
 import type { UIStateUpdateCallback } from "../src/UIStateUpdateCallback.type";
 
-declare namespace JSX {
-  interface IntrinsicElements {
-    [elemName: string]: any;
-  }
-}
-
 type Props = {
   domMessagePort: MessagePort;
   uiState: UIState;
