@@ -28,6 +28,9 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v1.4.3
 
+      - name: make bootstrap
+        run: make bootstrap
+
       - name: make typecheck
         run: make typecheck
         working-directory: packages/website
