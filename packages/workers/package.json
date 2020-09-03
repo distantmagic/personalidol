@@ -5,7 +5,7 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/framework": "0.0.0"
+    "@personalidol/framework": "^0.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.9",
