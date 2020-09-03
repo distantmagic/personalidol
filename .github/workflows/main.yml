@@ -30,3 +30,4 @@ jobs:
 
       - name: make typecheck
         run: make typecheck
+        working-directory: packages/website
