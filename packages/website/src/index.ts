@@ -4,11 +4,11 @@ import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
+import { Director } from "@personalidol/loading-manager/src/Director";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { DOMUIController } from "@personalidol/personalidol/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
-import { getHTMLCanvasElementById } from "@personalidol/framework/src/getHTMLCanvasElementById";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HashHistoryService } from "@personalidol/dom-renderer/src/HashHistoryService";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
@@ -21,6 +21,7 @@ import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultInput";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
+import { SceneLoader } from "@personalidol/loading-manager/src/SceneLoader";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
@@ -28,15 +29,20 @@ import { WorkerService } from "@personalidol/workers/src/WorkerService";
 
 import workers from "./workers.json";
 
-const canvas = getHTMLCanvasElementById(window, "canvas");
+const canvas = getHTMLElementById(window.document, "canvas");
+
+if (!(canvas instanceof HTMLCanvasElement)) {
+  throw new Error("Canvas is not an instance of HTMLCanvasElement");
+}
+
 const devicePixelRatio = Math.min(1.5, window.devicePixelRatio);
 const logger = Loglevel.getLogger("main");
 const supportCache = createSupportCache();
 
 logger.setLevel(__LOG_LEVEL);
 
-const canvasRoot = getHTMLElementById(window, "canvas-root");
-const uiRoot = getHTMLElementById(window, "ui-root");
+const canvasRoot = getHTMLElementById(window.document, "canvas-root");
+const uiRoot = getHTMLElementById(window.document, "ui-root");
 
 // The entire bootstrap code is wrapped to allow 'await'. Global await is not
 // widely supported yet.
@@ -129,10 +135,17 @@ const uiRoot = getHTMLElementById(window, "ui-root");
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const domRendererMessageChannel = createMessageChannel();
-  const domUiController = DOMUIController(domRendererMessageChannel.port1, uiRoot);
+  const domUIDirector = Director(logger, "DOMUI");
 
-  mainLoop.updatables.add(domUiController);
-  serviceManager.services.add(domUiController);
+  domUIDirector.state.next = DOMUIController(domRendererMessageChannel.port1, uiRoot);
+
+  mainLoop.updatables.add(domUIDirector);
+  serviceManager.services.add(domUIDirector);
+
+  const domUISceneLoader = SceneLoader(logger, domUIDirector);
+
+  mainLoop.updatables.add(domUISceneLoader);
+  serviceManager.services.add(domUISceneLoader);
 
   // FontPreloadService does exactly what its name says. Thanks to this
   // service it is possible for worker threads to request font face to be

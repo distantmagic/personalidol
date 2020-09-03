@@ -5,7 +5,7 @@ import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/E
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
 import { Renderer } from "@personalidol/three-renderer/src/Renderer";
-import { SceneLoader } from "@personalidol/loading-manager/src/SceneLoader";
+import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
 import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
 
 import type { Logger } from "loglevel";
@@ -47,7 +47,7 @@ export function createScenes(
   const renderer = Renderer(dimensionsState, effectComposer, webGLRenderer);
   const currentSceneDirector = Director(logger, "Scene");
   const loadingSceneDirector = Director(logger, "LoadingScreen");
-  const sceneLoader = SceneLoader(logger, progressMessagePort, webGLRenderer, currentSceneDirector, loadingSceneDirector);
+  const sceneLoader = SceneTransition(logger, webGLRenderer, currentSceneDirector, loadingSceneDirector);
 
   const currentSceneDirectorState = currentSceneDirector.state;
 

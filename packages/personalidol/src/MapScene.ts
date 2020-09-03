@@ -30,6 +30,7 @@ import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/s
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
+import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
@@ -312,6 +313,8 @@ export function MapScene(
     md2MessagePort.onmessage = _md2MessageRouter;
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
     texturesMessagePort.onmessage = _textureReceiverMessageRouter;
+
+    resetLoadingManagerState(progressMessagePort);
 
     const {
       unmarshal: { entities, textureAtlas },

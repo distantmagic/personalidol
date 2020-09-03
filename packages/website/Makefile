@@ -2,7 +2,6 @@ include ../../Makefile_node.mk
 include ../../Makefile_go.mk
 include ../../Makefile_packages.mk
 
-SOURCES_CSS := $(shell find styles -type f -name "*.css")
 SOURCES_GO := $(shell find cmd internal website.go -type f -name "*.go")
 
 .PHONY: air
@@ -13,7 +12,7 @@ tmp/main: $(SOURCES_GO)
 	go build -o ./tmp/main .
 
 .PHONY: public
-public: public/lib/index.js public/styles/index.css
+public: public/lib/index.js
 
 .PHONY: public.watch
 public.watch: node_modules
@@ -24,9 +23,6 @@ public/lib:
 
 public/lib/index.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
 	./scripts/build_public.sh
-
-public/styles/index.css: $(SOURCES_CSS)
-	yarn run postcss -c ./postcss.config.js -o ./public/styles/index.css styles/index.css
 
 .PHONY: serve
 serve: public/lib/index.js tmp/main

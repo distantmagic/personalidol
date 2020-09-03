@@ -8,15 +8,29 @@ import { LoadingScreen } from "../components/LoadingScreen";
 import { MainMenuScreen } from "../components/MainMenuScreen";
 import { OptionsSubView } from "../components/OptionsSubView";
 
+import { FatalError } from "../elements/pi-fatal-error";
+import { LoadingProgress } from "../elements/pi-loading-progress";
+import { MainMenu } from "../elements/pi-main-menu";
+import { MainMenuButton } from "../elements/pi-main-menu-button";
+import { Options } from "../elements/pi-options";
+
 import { createUIRenderingRouter } from "./createUIRenderingRouter";
 import { createUIState } from "./createUIState";
 import { createUIStateMessageRoutes } from "./createUIStateMessageRoutes";
 
 import type { DOMUIController as IDOMUIController } from "@personalidol/dom-renderer/src/DOMUIController.interface";
+import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 
 import type { UIState } from "./UIState.type";
 
 export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
+  const state: SceneState = Object.seal({
+    isDisposed: false,
+    isMounted: false,
+    isPreloaded: false,
+    isPreloading: false,
+  });
+
   const _uiState: UIState = createUIState();
   let _isCleared: boolean = false;
   let _needsUpdate: boolean = false;
@@ -41,11 +55,28 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
 
   const _uiMessageRouter = createRouter(createUIStateMessageRoutes(_uiState), _setNeedsUpdate);
 
-  function start() {
+  function dispose() {}
+
+  async function preload() {
+    customElements.define("pi-fatal-error", FatalError);
+    customElements.define("pi-loading-progress", LoadingProgress);
+    customElements.define("pi-main-menu", MainMenu);
+    customElements.define("pi-main-menu-button", MainMenuButton);
+    customElements.define("pi-options", Options);
+
+    state.isPreloaded = true;
+    state.isPreloading = false;
+  }
+
+  function mount() {
+    state.isMounted = true;
+
     domMessagePort.onmessage = _uiMessageRouter;
   }
 
-  function stop() {
+  function unmount() {
+    state.isMounted = false;
+
     domMessagePort.onmessage = null;
   }
 
@@ -73,9 +104,12 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
 
   return Object.freeze({
     name: "DOMUIController",
+    state: state,
 
-    start: start,
-    stop: stop,
+    dispose: dispose,
+    preload: preload,
+    mount: mount,
+    unmount: unmount,
     update: update,
   });
 }

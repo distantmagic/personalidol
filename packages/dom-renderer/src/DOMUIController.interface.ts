@@ -1,4 +1,3 @@
-import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpdatable.interface";
-import type { Service } from "@personalidol/framework/src/Service.interface";
+import type { Scene } from "@personalidol/framework/src/Scene.interface";
 
-export interface DOMUIController extends MainLoopUpdatable, Service {}
+export interface DOMUIController extends Scene {}

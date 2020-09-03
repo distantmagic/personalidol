@@ -2,20 +2,62 @@
 <html>
   <head>
     <link rel="manifest" href="/public/manifest.json">
-    <link rel="stylesheet" type="text/css" href="/public/styles/index.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Website</title>
+    <style>
+      ::selection {
+        background-color: white;
+        color: black;
+      }
+
+      html, body {
+        touch-action: none;
+        user-select: none;
+      }
+
+      body {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        background-color: black;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+      #canvas {
+        height: 100%;
+        width: 100%;
+        will-change: height, width;
+      }
+
+      #canvas-root, #game-root {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+      #ui-root {
+        bottom: 0;
+        font-kerning: normal;
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+      #ui-root *, #ui-root * * {
+        box-sizing: border-box;
+      }
+    </style>
   </head>
-  <body style="
-    background-color: black;
-    bottom: 0;
-    left: 0;
-    margin: 0;
-    overflow: hidden;
-    position: absolute;
-    right: 0;
-    top: 0;
-  ">
+  <body>
     <div id="game-root">
       <div id="canvas-root">
         <canvas id="canvas"></canvas>

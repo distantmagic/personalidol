@@ -1,8 +1,4 @@
-import { Fragment, h } from "preact";
-
-import { FatalError } from "./FatalError";
-
-import type { ComponentChild } from "preact";
+import { h } from "preact";
 
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 
@@ -11,9 +7,10 @@ type Props = {
 };
 
 // prettier-ignore
-function renderUserFeedback(): ComponentChild {
+export function LoadingErrorScreen(props: Props) {
   return (
-    <Fragment>
+    <pi-fatal-error>
+      <h1 slot="title">Error</h1>
       <p>
         Unexpected error occurred (yes, there are expected, foreseeable,
           recoverable errors). We are really, really sorry about that.
@@ -34,30 +31,14 @@ function renderUserFeedback(): ComponentChild {
         really sorry and deeply ashamed about this. If there is anything that
         can bring us peace, it is your forgiveness.
       </p>
-    </Fragment>
-  );
-}
-
-function renderTechnicalDescription(props: Props): ComponentChild {
-  return (
-    <Fragment>
-      <p>
-        error while loading {props.loadingError.item.resourceType} {props.loadingError.item.resourceUri}
-      </p>
-      <p>{props.loadingError.item.id}</p>
-      <p>{props.loadingError.error.message}</p>
-      <p>{props.loadingError.error.stack}</p>
-    </Fragment>
-  );
-}
-
-// prettier-ignore
-export function LoadingErrorScreen(props: Props) {
-  return (
-    <FatalError
-      title="Error"
-      userFeedback={renderUserFeedback()}
-      technicalDescription={renderTechnicalDescription(props)}
-    />
+      <pre slot="technical-description">
+        <p>
+          error while loading {props.loadingError.item.resourceType} {props.loadingError.item.resourceUri}
+        </p>
+        <p>{props.loadingError.item.id}</p>
+        <p>{props.loadingError.error.message}</p>
+        <p>{props.loadingError.error.stack}</p>
+      </pre>
+    </pi-fatal-error>
   );
 }

@@ -17,7 +17,6 @@ const _messageStop = Object.freeze({
 function _noop(): void {}
 
 export function WorkerService(worker: Worker, workerName: string, updater: null | MainLoopUpdateCallback = null): IWorkerService {
-
   function ready(): Promise<void> {
     return new Promise(function (resolve, reject) {
       function onMessage(evt: MessageEvent) {

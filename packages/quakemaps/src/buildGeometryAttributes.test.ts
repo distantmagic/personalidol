@@ -16,7 +16,13 @@ test.skip("geometry attributes are created", async function () {
 
   const geometryAttributes = buildGeometryAttributes([brush], function (textureName: string) {
     return {
+      atlasLeft: 0,
+      atlasTop: 0,
       height: 128,
+      uvStartU: 0,
+      uvStartV: 0,
+      uvStopU: 0,
+      uvStopV: 0,
       width: 128,
     };
   });

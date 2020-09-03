@@ -4,11 +4,9 @@ test("parses and dispatches event names", async function () {
   let _foo = null;
 
   routeMessages(
+    ({} as unknown) as MessageEvent,
     {
-      type: "foo",
-      messages: {
-        foo: "FOO!",
-      },
+      foo: "FOO!",
     },
     {
       foo: function (message: string) {
@@ -25,12 +23,10 @@ test("dispatches aggregated events", async function () {
   let _bar = null;
 
   routeMessages(
+    ({} as unknown) as MessageEvent,
     {
-      type: "foo+bar",
-      messages: {
-        bar: "BAR!",
-        foo: "FOO!",
-      },
+      bar: "BAR!",
+      foo: "FOO!",
     },
     {
       foo: function (message: string) {

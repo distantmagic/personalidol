@@ -7,6 +7,7 @@ import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
+import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
 import { uiStateOnly } from "./uiStateOnly";
@@ -21,7 +22,7 @@ import type { Scene as IScene } from "@personalidol/framework/src/Scene.interfac
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
-const _fonts: Array<FontPreloadParameters> = Object.freeze([
+const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // Almendra
 
   // {
@@ -143,6 +144,7 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
 
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
 
+    resetLoadingManagerState(progressMessagePort);
     notifyLoadingManagerToExpectItems(progressMessagePort, _fonts.length);
 
     await Promise.all(_fonts.map(_preloadFont));
