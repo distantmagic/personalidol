@@ -35,7 +35,7 @@ test("triangulates a set of points", function () {
     expect(triangles[i]).toHaveLength(3);
 
     for (let j = 0; j < triangles[i].length; j += 1) {
-      expect(triangles[i][j]).toBe(expected[i][j]);
+      expect(triangles[i][j]).toEqual(expected[i][j]);
     }
   }
 });

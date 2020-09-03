@@ -31,3 +31,6 @@ serve: public/lib/index.js tmp/main
 		--https-listen=:2083 \
 		--ssl-cert=./ssl.pem \
 		--ssl-key=./ssl.key
+
+test:
+	echo "-"
