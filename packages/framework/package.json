@@ -23,7 +23,6 @@
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",
   "name": "@personalidol/framework",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
