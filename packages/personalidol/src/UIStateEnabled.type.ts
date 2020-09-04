@@ -22,4 +22,8 @@ export type UIStateEnabled = {
     enabled: true;
     props: {};
   };
+  cPointerFeedback: {
+    enabled: true;
+    props: {};
+  };
 };

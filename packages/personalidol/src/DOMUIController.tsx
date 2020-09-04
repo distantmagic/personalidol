@@ -7,12 +7,14 @@ import { LoadingErrorScreen } from "../components/LoadingErrorScreen";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MainMenuScreen } from "../components/MainMenuScreen";
 import { OptionsSubView } from "../components/OptionsSubView";
+import { WebComponent } from "../components/WebComponent";
 
 import { FatalError } from "../elements/pi-fatal-error";
 import { LoadingProgress } from "../elements/pi-loading-progress";
 import { MainMenu } from "../elements/pi-main-menu";
 import { MainMenuButton } from "../elements/pi-main-menu-button";
 import { Options } from "../elements/pi-options";
+import { PointerFeedback } from "../elements/pi-pointer-feedback";
 
 import { createUIRenderingRouter } from "./createUIRenderingRouter";
 import { createUIState } from "./createUIState";
@@ -23,7 +25,7 @@ import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 
 import type { UIState } from "./UIState.type";
 
-export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
+export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32Array, domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -33,7 +35,8 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
 
   const _uiState: UIState = createUIState();
   let _isCleared: boolean = false;
-  let _needsUpdate: boolean = false;
+  let _needsUpdateComponents: boolean = false;
+  let _pointerFeedback: null | PointerFeedback = null;
 
   const _uiRenderingRouter = createUIRenderingRouter(_uiState, {
     cLoadingError(props) {
@@ -51,18 +54,23 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
     cOptions() {
       return <OptionsSubView domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_setNeedsUpdate} />;
     },
+
+    cPointerFeedback() {
+      return <WebComponent uiRootElement={uiRootElement} webComponent={_pointerFeedback} />;
+    },
   });
 
   const _uiMessageRouter = createRouter(createUIStateMessageRoutes(_uiState), _setNeedsUpdate);
 
   function dispose() {}
 
-  async function preload() {
+  function preload() {
     customElements.define("pi-fatal-error", FatalError);
     customElements.define("pi-loading-progress", LoadingProgress);
     customElements.define("pi-main-menu", MainMenu);
     customElements.define("pi-main-menu-button", MainMenuButton);
     customElements.define("pi-options", Options);
+    customElements.define("pi-pointer-feedback", PointerFeedback);
 
     state.isPreloaded = true;
     state.isPreloading = false;
@@ -72,6 +80,10 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
     state.isMounted = true;
 
     domMessagePort.onmessage = _uiMessageRouter;
+
+    _pointerFeedback = document.createElement("pi-pointer-feedback") as PointerFeedback;
+    _pointerFeedback.setDimensionsState(dimensionsState);
+    _pointerFeedback.setInputState(inputState);
   }
 
   function unmount() {
@@ -81,14 +93,18 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
   }
 
   function update() {
-    if (!_needsUpdate) {
+    if (_pointerFeedback) {
+      _pointerFeedback.update();
+    }
+
+    if (!_needsUpdateComponents) {
       return;
     }
 
     _clearUIRootElement();
     preactRender(_uiRenderingRouter(), uiRootElement);
 
-    _needsUpdate = false;
+    _needsUpdateComponents = false;
   }
 
   function _clearUIRootElement() {
@@ -99,7 +115,7 @@ export function DOMUIController(domMessagePort: MessagePort, uiRootElement: HTML
   }
 
   function _setNeedsUpdate() {
-    _needsUpdate = true;
+    _needsUpdateComponents = true;
   }
 
   return Object.freeze({

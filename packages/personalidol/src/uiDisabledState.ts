@@ -7,4 +7,5 @@ export const uiDisabledState: UIStateDisabled = Object.freeze({
   cLoadingError: uiDisabledComponentState,
   cLoadingScreen: uiDisabledComponentState,
   cOptions: uiDisabledComponentState,
+  cPointerFeedback: uiDisabledComponentState,
 });

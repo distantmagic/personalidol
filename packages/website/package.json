@@ -16,19 +16,19 @@
     "@personalidol/three-modules": "^0.0.0",
     "@personalidol/three-renderer": "^0.0.0",
     "@personalidol/workers": "^0.0.0",
-    "loglevel": "^1.6.8",
-    "three": "^0.119.1"
+    "loglevel": "^1.7.0",
+    "three": "^0.120.1"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.9",
+    "@types/jest": "^26.0.13",
     "autoprefixer": "^9.8.6",
     "cssnano": "^4.1.10",
-    "esbuild": "^0.6.17",
-    "jest": "^26.2.2",
+    "esbuild": "^0.6.30",
+    "jest": "^26.4.2",
     "normalize.css": "^8.0.1",
-    "prettier": "^2.0.5",
-    "ts-jest": "^26.1.4",
-    "typescript": "^3.9.7"
+    "prettier": "^2.1.1",
+    "ts-jest": "^26.3.0",
+    "typescript": "^4.0.2"
   },
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",

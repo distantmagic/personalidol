@@ -42,7 +42,6 @@ export function UIMessageResponder(
     directorState.next = MapScene(
       logger,
       effectComposer,
-      directorState,
       eventBus,
       dimensionsState,
       inputState,

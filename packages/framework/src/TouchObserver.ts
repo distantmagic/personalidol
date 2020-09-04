@@ -1,3 +1,5 @@
+import { computePointerStretchVectorX } from "./computePointerStretchVectorX";
+import { computePointerStretchVectorY } from "./computePointerStretchVectorY";
 import { computePointerVectorX } from "./computePointerVectorX";
 import { computePointerVectorY } from "./computePointerVectorY";
 import { Dimensions } from "./Dimensions";
@@ -9,45 +11,59 @@ import type { TickTimerState } from "./TickTimerState.type";
 import type { TouchObserver as ITouchObserver } from "./TouchObserver.interface";
 
 export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, inputState: Int32Array, tickTimerState: TickTimerState): ITouchObserver {
-  let _touches = 0;
-
   function start(): void {
     htmlElement.addEventListener("touchcancel", _onTouchChange, passiveEventListener);
     htmlElement.addEventListener("touchend", _onTouchChange, passiveEventListener);
     htmlElement.addEventListener("touchmove", _onTouchChange, passiveEventListener);
-    htmlElement.addEventListener("touchstart", _onTouchChange, passiveEventListener);
+    htmlElement.addEventListener("touchstart", _onTouchStart, passiveEventListener);
   }
 
   function stop(): void {
     htmlElement.removeEventListener("touchcancel", _onTouchChange);
     htmlElement.removeEventListener("touchend", _onTouchChange);
     htmlElement.removeEventListener("touchmove", _onTouchChange);
-    htmlElement.removeEventListener("touchstart", _onTouchChange);
+    htmlElement.removeEventListener("touchstart", _onTouchStart);
   }
 
   function update(): void {
     if (dimensionsState[Dimensions.code.LAST_UPDATE] > inputState[Input.code.LAST_UPDATE]) {
-      _updateRelativeCoords();
+      _updateDimensionsRelativeCoords();
     }
   }
 
   function _onTouchChange(evt: TouchEvent): void {
-    // reset touches state
-    inputState.fill(0, Input.range.touches_min, Input.range.touches_max);
+    inputState[Input.code.T_TOTAL] = evt.touches.length;
 
-    _touches = evt.touches.length;
-
-    for (let i = 0; i < _touches && i < Input.range.touches_total; i += 1) {
+    for (let i = 0; i < evt.touches.length && i < Input.range.touches_total; i += 1) {
       inputState[Input.code[Input.touches[i].CLIENT_X]] = evt.touches[i].clientX;
       inputState[Input.code[Input.touches[i].CLIENT_Y]] = evt.touches[i].clientY;
       inputState[Input.code[Input.touches[i].PRESSURE]] = Math.floor(evt.touches[i].force * 100);
+      inputState[Input.code[Input.touches[i].STRETCH_VECTOR_X]] = computePointerStretchVectorX(
+        dimensionsState,
+        inputState[Input.code[Input.touches[i].DOWN_INITIAL_CLIENT_X]],
+        inputState[Input.code[Input.touches[i].CLIENT_X]]
+      );
+      inputState[Input.code[Input.touches[i].STRETCH_VECTOR_Y]] = computePointerStretchVectorY(
+        dimensionsState,
+        inputState[Input.code[Input.touches[i].DOWN_INITIAL_CLIENT_Y]],
+        inputState[Input.code[Input.touches[i].CLIENT_Y]]
+      );
     }
 
-    _updateRelativeCoords();
+    _updateDimensionsRelativeCoords();
   }
 
-  function _updateRelativeCoords(): void {
-    for (let i = 0; i < _touches && i < Input.range.touches_total; i += 1) {
+  function _onTouchStart(evt: TouchEvent): void {
+    for (let i = 0; i < evt.touches.length && i < Input.range.touches_total; i += 1) {
+      inputState[Input.code[Input.touches[i].DOWN_INITIAL_CLIENT_X]] = evt.touches[i].clientX;
+      inputState[Input.code[Input.touches[i].DOWN_INITIAL_CLIENT_Y]] = evt.touches[i].clientY;
+    }
+
+    _onTouchChange(evt);
+  }
+
+  function _updateDimensionsRelativeCoords(): void {
+    for (let i = 0; i < inputState[Input.code.T_TOTAL] && i < Input.range.touches_total; i += 1) {
       inputState[Input.code[Input.touches[i].RELATIVE_X]] = inputState[Input.code[Input.touches[i].CLIENT_X]] - dimensionsState[Dimensions.code.P_LEFT];
       inputState[Input.code[Input.touches[i].RELATIVE_Y]] = inputState[Input.code[Input.touches[i].CLIENT_Y]] - dimensionsState[Dimensions.code.P_TOP];
       inputState[Input.code[Input.touches[i].VECTOR_X]] = computePointerVectorX(dimensionsState, inputState[Input.code[Input.touches[i].RELATIVE_X]]);

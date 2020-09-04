@@ -23,8 +23,8 @@ import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loade
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
-import { getPrimaryPointerVectorX } from "@personalidol/framework/src/getPrimaryPointerVectorX";
-import { getPrimaryPointerVectorY } from "@personalidol/framework/src/getPrimaryPointerVectorY";
+import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
+import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
@@ -41,7 +41,6 @@ import { uiStateOnly } from "./uiStateOnly";
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three";
 
-import type { DirectorState } from "@personalidol/loading-manager/src/DirectorState.type";
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EntityAny } from "@personalidol/quakemaps/src/EntityAny.type";
@@ -99,7 +98,6 @@ let _cameraZoomAmount = 0;
 export function MapScene(
   logger: Logger,
   effectComposer: EffectComposer,
-  directorState: DirectorState,
   eventBus: EventBus,
   dimensionsState: Uint32Array,
   inputState: Int32Array,
@@ -295,7 +293,14 @@ export function MapScene(
 
     eventBus.POINTER_ZOOM_REQUEST.add(_onPointerZoomRequest);
 
-    domMessagePort.postMessage(uiStateOnly({}));
+    domMessagePort.postMessage(
+      uiStateOnly({
+        cPointerFeedback: {
+          enabled: true,
+          props: {},
+        },
+      })
+    );
 
     const renderPass = new RenderPass(_scene, _camera);
 
@@ -363,8 +368,8 @@ export function MapScene(
     updateStoreCameraAspect(_camera, dimensionsState);
 
     if (isPrimaryPointerPressed(inputState)) {
-      _pointerVector.x = getPrimaryPointerVectorX(inputState);
-      _pointerVector.y = getPrimaryPointerVectorY(inputState);
+      _pointerVector.x = getPrimaryPointerStretchVectorX(inputState);
+      _pointerVector.y = getPrimaryPointerStretchVectorY(inputState);
       _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
       _playerPosition.x += 10 * _pointerVector.y;
       _playerPosition.z += 10 * _pointerVector.x;
@@ -393,24 +398,6 @@ export function MapScene(
 
     return texture;
   }
-
-  // function _nextMap(filename: string): void {
-  //   // prettier-ignore
-  //   directorState.next = MapScene(
-  //     logger,
-  //     effectComposer,
-  //     directorState,
-  //     eventBus,
-  //     dimensionsState,
-  //     inputState,
-  //     domMessagePort,
-  //     md2MessagePort,
-  //     progressMessagePort,
-  //     quakeMapsMessagePort,
-  //     texturesMessagePort,
-  //     filename,
-  //   );
-  // }
 
   function _onCameraUpdate(): void {
     // prettier-ignore

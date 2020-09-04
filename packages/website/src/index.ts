@@ -137,7 +137,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const domRendererMessageChannel = createMessageChannel();
   const domUIDirector = Director(logger, "DOMUI");
 
-  domUIDirector.state.next = DOMUIController(domRendererMessageChannel.port1, uiRoot);
+  domUIDirector.state.next = DOMUIController(dimensionsState, inputState, domRendererMessageChannel.port1, uiRoot);
 
   mainLoop.updatables.add(domUIDirector);
   serviceManager.services.add(domUIDirector);
