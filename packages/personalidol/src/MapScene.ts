@@ -169,7 +169,7 @@ export function MapScene(
       spotLight.decay = entity.decay;
       spotLight.distance = 512;
       spotLight.penumbra = 1;
-      spotLight.castShadow = true;
+      // spotLight.castShadow = true;
       spotLight.visible = true;
       spotLight.shadow.camera.far = 512;
 
@@ -219,8 +219,8 @@ export function MapScene(
       });
       const mesh = new Mesh(bufferGeometry, material);
 
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
+      // mesh.castShadow = true;
+      // mesh.receiveShadow = true;
       mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
 
       _scene.add(mesh);
@@ -270,7 +270,7 @@ export function MapScene(
 
       const mesh = new Mesh(bufferGeometry, meshStandardMaterial);
 
-      mesh.castShadow = mesh.receiveShadow = true;
+      // mesh.castShadow = mesh.receiveShadow = true;
       mesh.matrixAutoUpdate = false;
 
       _scene.add(mesh);
@@ -293,14 +293,7 @@ export function MapScene(
 
     eventBus.POINTER_ZOOM_REQUEST.add(_onPointerZoomRequest);
 
-    domMessagePort.postMessage(
-      uiStateOnly({
-        cPointerFeedback: {
-          enabled: true,
-          props: {},
-        },
-      })
-    );
+    domMessagePort.postMessage(uiStateOnly({}));
 
     const renderPass = new RenderPass(_scene, _camera);
 

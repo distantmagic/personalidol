@@ -82,7 +82,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
 
       domMessagePort.postMessage(
         uiStateOnly({
-          cLoadingError: {
+          "pi-fatal-error": {
             enabled: true,
             props: {
               loadingError: error,
@@ -95,7 +95,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     progress(progress: LoadingManagerProgress): void {
       domMessagePort.postMessage(
         uiStateOnly({
-          cLoadingScreen: {
+          "pi-loading-screen": {
             enabled: true,
             props: {
               loadingManagerProgress: progress,

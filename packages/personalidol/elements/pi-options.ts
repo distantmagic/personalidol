@@ -1,15 +1,11 @@
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
-import { shadowAttachCSSHTML } from "@personalidol/dom-renderer/src/shadowAttachCSSHTML";
+import { must } from "@personalidol/framework/src/must";
+import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
-declare module "preact/src/jsx" {
-  namespace JSXInternal {
-    interface IntrinsicElements {
-      "pi-options": {
-        oncanceled: () => void;
-      };
-    }
-  }
-}
+import { ERROR_UI_STATE_NOT_SET, ERROR_UI_UPDATE_CALLBACK_NOT_SET } from "../src/constants";
+
+import type { UIState } from "../src/UIState.type";
+import type { UIStateUpdateCallback } from "../src/UIStateUpdateCallback.type";
 
 const _css = `
   :host {
@@ -150,9 +146,9 @@ const _html = `
   </main>
 `;
 
-const eventCanceled = new CustomEvent("canceled", {
-  bubbles: true,
-  composed: true,
+const _cOptionsDisabled = Object.freeze({
+  enabled: false,
+  props: {},
 });
 
 function _onSubmit(evt: Event) {
@@ -160,33 +156,42 @@ function _onSubmit(evt: Event) {
 }
 
 export class Options extends HTMLElement {
-  buttonCancel: HTMLButtonElement;
-  form: HTMLFormElement;
+  static readonly defineName: "pi-options" = "pi-options";
+
+  onUINeedsUpdate: null | UIStateUpdateCallback = null;
+  uiState: null | UIState = null;
+
+  private _buttonCancel: HTMLButtonElement;
+  private _form: HTMLFormElement;
 
   constructor() {
     super();
+
+    this.onButtonCancelClick = this.onButtonCancelClick.bind(this);
 
     const shadow = this.attachShadow({
       mode: "open",
     });
 
-    shadowAttachCSSHTML(shadow, _css, _html);
+    shadow.innerHTML = _html;
+    shadowAttachStylesheet(shadow, _css);
 
-    this.buttonCancel = getHTMLElementById(shadow, "button-cancel") as HTMLButtonElement;
-    this.form = getHTMLElementById(shadow, "form") as HTMLFormElement;
+    this._buttonCancel = getHTMLElementById(shadow, "button-cancel") as HTMLButtonElement;
+    this._form = getHTMLElementById(shadow, "form") as HTMLFormElement;
   }
 
   connectedCallback() {
-    this.buttonCancel.addEventListener("click", this.onCancelClick);
-    this.form.addEventListener("submit", _onSubmit);
+    this._buttonCancel.addEventListener("click", this.onButtonCancelClick);
+    this._form.addEventListener("submit", _onSubmit);
   }
 
   disconnectedCallback() {
-    this.buttonCancel.removeEventListener("click", this.onCancelClick);
-    this.form.removeEventListener("submit", _onSubmit);
+    this._buttonCancel.removeEventListener("click", this.onButtonCancelClick);
+    this._form.removeEventListener("submit", _onSubmit);
   }
 
-  onCancelClick() {
-    this.dispatchEvent(eventCanceled);
+  onButtonCancelClick() {
+    must(this.uiState, ERROR_UI_STATE_NOT_SET)["pi-options"] = _cOptionsDisabled;
+    must(this.onUINeedsUpdate, ERROR_UI_UPDATE_CALLBACK_NOT_SET)();
   }
 }

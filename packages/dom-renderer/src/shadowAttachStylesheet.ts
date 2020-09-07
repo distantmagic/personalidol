@@ -1,4 +1,7 @@
-type ShadowAttachCSSHTML = (shadow: ShadowRoot, css: string, html: string) => ShadowRoot;
+type ShadowAttachStylesheet = (shadow: ShadowRoot, css: string) => ShadowRoot;
+type StyleElementsCache = {
+  [key: string]: HTMLStyleElement;
+};
 type StyleSheetsCache = {
   [key: string]: CSSStyleSheet;
 };
@@ -20,7 +23,7 @@ let _isConstructableCSSStyleSheetSupported = (function () {
   return true;
 })();
 
-export const shadowAttachCSSHTML: ShadowAttachCSSHTML = (function () {
+export const shadowAttachStylesheet: ShadowAttachStylesheet = (function () {
   if (_isConstructableCSSStyleSheetSupported) {
     return (function () {
       const _styleSheetsCache: StyleSheetsCache = {};
@@ -40,23 +43,37 @@ export const shadowAttachCSSHTML: ShadowAttachCSSHTML = (function () {
         return styleSheet;
       }
 
-      return function (shadow: ShadowRoot, css: string, html: string) {
+      return function (shadow: ShadowRoot, css: string) {
         // @ts-ignore
         shadow.adoptedStyleSheets = [_createStyleSheet(css)];
-
-        shadow.innerHTML = html;
 
         return shadow;
       };
     })();
   }
 
-  return function (shadow: ShadowRoot, css: string, html: string) {
-    shadow.innerHTML = `
-      <style>${css}</style>
-      ${html}
-    `;
+  return (function () {
+    const _styleElementsCache: StyleElementsCache = {};
 
-    return shadow;
-  };
+    function _createStyleSheet(css: string): HTMLStyleElement {
+      if (_styleElementsCache.hasOwnProperty(css)) {
+        // Style element is already adopted somewere, we need to clone it.
+        return _styleElementsCache[css].cloneNode(true) as HTMLStyleElement;
+      }
+
+      const styleElement = document.createElement("style");
+
+      styleElement.textContent = css;
+
+      _styleElementsCache[css] = styleElement;
+
+      return styleElement;
+    }
+
+    return function (shadow: ShadowRoot, css: string) {
+      shadow.appendChild(_createStyleSheet(css));
+
+      return shadow;
+    };
+  })();
 })();

@@ -131,7 +131,7 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
 
     domMessagePort.postMessage(
       uiStateOnly({
-        cMainMenu: {
+        "pi-main-menu": {
           enabled: true,
           props: {},
         },

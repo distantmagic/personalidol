@@ -3,8 +3,8 @@ import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import { Director } from "@personalidol/loading-manager/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
-// import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
-import { MapScene } from "@personalidol/personalidol/src/MapScene";
+import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
+// import { MapScene } from "@personalidol/personalidol/src/MapScene";
 import { Renderer } from "@personalidol/three-renderer/src/Renderer";
 import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
 import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
@@ -66,26 +66,26 @@ export function createScenes(
     texturesMessagePort
   );
 
-  // // prettier-ignore
-  // currentSceneDirector.state.next = MainMenuScene(
-  //   logger,
-  //   domMessagePort,
-  //   fontPreloadMessagePort,
-  //   progressMessagePort,
-  // );
-  currentSceneDirector.state.next = MapScene(
+  // prettier-ignore
+  currentSceneDirector.state.next = MainMenuScene(
     logger,
-    effectComposer,
-    eventBus,
-    dimensionsState,
-    inputState,
     domMessagePort,
-    md2MessagePort,
+    fontPreloadMessagePort,
     progressMessagePort,
-    quakeMapsMessagePort,
-    texturesMessagePort,
-    `${__STATIC_BASE_PATH}/maps/map-mountain-caravan.map`
   );
+  // currentSceneDirector.state.next = MapScene(
+  //   logger,
+  //   effectComposer,
+  //   eventBus,
+  //   dimensionsState,
+  //   inputState,
+  //   domMessagePort,
+  //   md2MessagePort,
+  //   progressMessagePort,
+  //   quakeMapsMessagePort,
+  //   texturesMessagePort,
+  //   `${__STATIC_BASE_PATH}/maps/map-mountain-caravan.map`
+  // );
 
   // prettier-ignore
   loadingSceneDirector.state.next = LoadingScreenScene(

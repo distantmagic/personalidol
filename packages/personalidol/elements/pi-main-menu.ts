@@ -1,12 +1,11 @@
-import { shadowAttachCSSHTML } from "@personalidol/dom-renderer/src/shadowAttachCSSHTML";
+import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
+import { must } from "@personalidol/framework/src/must";
+import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
-declare module "preact/src/jsx" {
-  namespace JSXInternal {
-    interface IntrinsicElements {
-      "pi-main-menu": {};
-    }
-  }
-}
+import { DOM_MESSAGE_PORT_NOT_SET, ERROR_UI_STATE_NOT_SET, ERROR_UI_UPDATE_CALLBACK_NOT_SET } from "../src/constants";
+
+import type { UIState } from "../src/UIState.type";
+import type { UIStateUpdateCallback } from "../src/UIStateUpdateCallback.type";
 
 const _css = `
   :host {
@@ -89,6 +88,34 @@ const _css = `
     padding-top: 3.2rem;
     width: 100%;
   }
+
+  button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    font-family: "Mukta", sans-serif;
+    font-size: 1.4rem;
+    font-variant: small-caps;
+    font-weight: 300;
+    text-align: center;
+    text-transform: lowercase;
+    width: 100%;
+  }
+
+  button:disabled {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  button:enabled {
+    color: white;
+  }
+
+  button:enabled:hover {
+    border-color: white;
+  }
+
+  button:focus {
+    outline: none;
+  }
 `;
 
 const _html = `
@@ -97,20 +124,68 @@ const _html = `
       <h1>Personal Idol</h1>
       <h2>Apocalyptic Adventure</h2>
       <nav>
-        <slot></slot>
+        <button disabled>Continue</button>
+        <button id="button-new-game">New Game</button>
+        <button disabled>Load Game</button>
+        <button id="button-options">Options</button>
+        <button disabled>Credits</button>
       </nav>
     </div>
   </div>
 `;
 
+const _cOptionsEnabled = Object.freeze({
+  enabled: true,
+  props: {},
+});
+
 export class MainMenu extends HTMLElement {
+  static readonly defineName: "pi-main-menu" = "pi-main-menu";
+
+  domMessagePort: null | MessagePort = null;
+  onUINeedsUpdate: null | UIStateUpdateCallback = null;
+  uiState: null | UIState = null;
+
+  private _buttonNewGame: HTMLButtonElement;
+  private _buttonOptions: HTMLButtonElement;
+
   constructor() {
     super();
+
+    this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
+    this.onButtonOptionsClick = this.onButtonOptionsClick.bind(this);
 
     const shadow = this.attachShadow({
       mode: "open",
     });
 
-    shadowAttachCSSHTML(shadow, _css, _html);
+    shadow.innerHTML = _html;
+    shadowAttachStylesheet(shadow, _css);
+
+    this._buttonNewGame = getHTMLElementById(shadow, "button-new-game") as HTMLButtonElement;
+    this._buttonOptions = getHTMLElementById(shadow, "button-options") as HTMLButtonElement;
+  }
+
+  connectedCallback() {
+    this._buttonNewGame.addEventListener("click", this.onButtonNewGameClick);
+    this._buttonOptions.addEventListener("click", this.onButtonOptionsClick);
+  }
+
+  disconnectedCallback() {
+    this._buttonNewGame.removeEventListener("click", this.onButtonNewGameClick);
+    this._buttonOptions.removeEventListener("click", this.onButtonOptionsClick);
+  }
+
+  onButtonNewGameClick(evt: MouseEvent) {
+    must(this.domMessagePort, DOM_MESSAGE_PORT_NOT_SET).postMessage({
+      navigateToMap: {
+        mapName: "map-mountain-caravan",
+      },
+    });
+  }
+
+  onButtonOptionsClick(evt: MouseEvent) {
+    must(this.uiState, ERROR_UI_STATE_NOT_SET)["pi-options"] = _cOptionsEnabled;
+    must(this.onUINeedsUpdate, ERROR_UI_UPDATE_CALLBACK_NOT_SET)();
   }
 }

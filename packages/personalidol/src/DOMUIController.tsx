@@ -1,20 +1,9 @@
-import { h, render as preactRender } from "preact";
-
-import { clearHTMLElement } from "@personalidol/dom-renderer/src/clearHTMLElement";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 
-import { LoadingErrorScreen } from "../components/LoadingErrorScreen";
-import { LoadingScreen } from "../components/LoadingScreen";
-import { MainMenuScreen } from "../components/MainMenuScreen";
-import { OptionsSubView } from "../components/OptionsSubView";
-import { WebComponent } from "../components/WebComponent";
-
 import { FatalError } from "../elements/pi-fatal-error";
-import { LoadingProgress } from "../elements/pi-loading-progress";
+import { LoadingScreen } from "../elements/pi-loading-screen";
 import { MainMenu } from "../elements/pi-main-menu";
-import { MainMenuButton } from "../elements/pi-main-menu-button";
 import { Options } from "../elements/pi-options";
-import { PointerFeedback } from "../elements/pi-pointer-feedback";
 
 import { createUIRenderingRouter } from "./createUIRenderingRouter";
 import { createUIState } from "./createUIState";
@@ -25,6 +14,28 @@ import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 
 import type { UIState } from "./UIState.type";
 
+function _defineCustomElement(name: string, element: typeof HTMLElement): Promise<void> {
+  customElements.define(name, element);
+
+  return customElements.whenDefined(name);
+}
+
+function _renderNodes(uiRootElement: HTMLElement, nodes: ReadonlyArray<HTMLElement>) {
+  // Detach nodes that should not be rendered.
+  for (let node of Array.from(uiRootElement.childNodes)) {
+    if (!(node instanceof HTMLElement) || !nodes.includes(node)) {
+      uiRootElement.removeChild(node);
+    }
+  }
+
+  // Attach nodes that should be rendered.
+  for (let node of nodes) {
+    if (!uiRootElement.contains(node)) {
+      uiRootElement.appendChild(node);
+    }
+  }
+}
+
 export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32Array, domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
   const state: SceneState = Object.seal({
     isDisposed: false,
@@ -34,29 +45,56 @@ export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32A
   });
 
   const _uiState: UIState = createUIState();
-  let _isCleared: boolean = false;
+
   let _needsUpdateComponents: boolean = false;
-  let _pointerFeedback: null | PointerFeedback = null;
+
+  let _fatalError: null | FatalError = null;
+  let _loadingScreen: null | LoadingScreen = null;
+  let _mainMenu: null | MainMenu = null;
+  let _options: null | Options = null;
 
   const _uiRenderingRouter = createUIRenderingRouter(_uiState, {
-    cLoadingError(props) {
-      return <LoadingErrorScreen loadingError={props.loadingError} />;
+    [FatalError.defineName](props) {
+      if (!_fatalError) {
+        throw new Error(`"${FatalError.defineName}" element is not ready.`);
+      }
+
+      _fatalError.loadingError = props.loadingError;
+
+      return _fatalError;
     },
 
-    cLoadingScreen(props) {
-      return <LoadingScreen loadingManagerProgress={props.loadingManagerProgress} />;
+    [LoadingScreen.defineName](props) {
+      if (!_loadingScreen) {
+        throw new Error(`"${LoadingScreen.defineName}" element is not ready.`);
+      }
+
+      _loadingScreen.loadingManagerProgress = props.loadingManagerProgress;
+
+      return _loadingScreen;
     },
 
-    cMainMenu() {
-      return <MainMenuScreen domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_setNeedsUpdate} />;
+    [MainMenu.defineName]() {
+      if (!_mainMenu) {
+        throw new Error(`"${MainMenu.defineName}" element is not ready.`);
+      }
+
+      _mainMenu.domMessagePort = domMessagePort;
+      _mainMenu.onUINeedsUpdate = _setNeedsUpdate;
+      _mainMenu.uiState = _uiState;
+
+      return _mainMenu;
     },
 
-    cOptions() {
-      return <OptionsSubView domMessagePort={domMessagePort} uiState={_uiState} uiStateUpdateCallback={_setNeedsUpdate} />;
-    },
+    [Options.defineName]() {
+      if (!_options) {
+        throw new Error(`"${Options.defineName}" element is not ready.`);
+      }
 
-    cPointerFeedback() {
-      return <WebComponent uiRootElement={uiRootElement} webComponent={_pointerFeedback} />;
+      _options.onUINeedsUpdate = _setNeedsUpdate;
+      _options.uiState = _uiState;
+
+      return _options;
     },
   });
 
@@ -64,13 +102,20 @@ export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32A
 
   function dispose() {}
 
-  function preload() {
-    customElements.define("pi-fatal-error", FatalError);
-    customElements.define("pi-loading-progress", LoadingProgress);
-    customElements.define("pi-main-menu", MainMenu);
-    customElements.define("pi-main-menu-button", MainMenuButton);
-    customElements.define("pi-options", Options);
-    customElements.define("pi-pointer-feedback", PointerFeedback);
+  async function preload() {
+    state.isPreloading = true;
+
+    await Promise.all([
+      _defineCustomElement(FatalError.defineName, FatalError),
+      _defineCustomElement(LoadingScreen.defineName, LoadingScreen),
+      _defineCustomElement(MainMenu.defineName, MainMenu),
+      _defineCustomElement(Options.defineName, Options),
+    ]);
+
+    _fatalError = document.createElement(FatalError.defineName) as FatalError;
+    _loadingScreen = document.createElement(LoadingScreen.defineName) as LoadingScreen;
+    _mainMenu = document.createElement(MainMenu.defineName) as MainMenu;
+    _options = document.createElement(Options.defineName) as Options;
 
     state.isPreloaded = true;
     state.isPreloading = false;
@@ -80,10 +125,6 @@ export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32A
     state.isMounted = true;
 
     domMessagePort.onmessage = _uiMessageRouter;
-
-    _pointerFeedback = document.createElement("pi-pointer-feedback") as PointerFeedback;
-    _pointerFeedback.setDimensionsState(dimensionsState);
-    _pointerFeedback.setInputState(inputState);
   }
 
   function unmount() {
@@ -93,25 +134,12 @@ export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32A
   }
 
   function update() {
-    if (_pointerFeedback) {
-      _pointerFeedback.update();
-    }
-
     if (!_needsUpdateComponents) {
       return;
     }
 
-    _clearUIRootElement();
-    preactRender(_uiRenderingRouter(), uiRootElement);
-
+    _renderNodes(uiRootElement, _uiRenderingRouter());
     _needsUpdateComponents = false;
-  }
-
-  function _clearUIRootElement() {
-    if (!_isCleared) {
-      clearHTMLElement(uiRootElement);
-      _isCleared = true;
-    }
   }
 
   function _setNeedsUpdate() {

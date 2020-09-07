@@ -1,5 +1,3 @@
-import type { ComponentChild } from "preact";
-
 import type { UIComponentRoutes } from "./UIComponentRoutes.type";
 import type { UIState } from "./UIState.type";
 
@@ -9,8 +7,8 @@ export function createUIRenderingRouter(uiState: UIState, uiComponentRoutes: UIC
   // with frontend coding nothing is ever certain.
   const uiStateKeys: Array<keyof UIState> = Object.keys(uiState) as Array<keyof UIState>;
 
-  return function createUIComponents(): Array<ComponentChild> {
-    const ret: Array<ComponentChild> = [];
+  return function createUIComponents(): Array<HTMLElement> {
+    const ret: Array<HTMLElement> = [];
 
     uiStateKeys.forEach(function <ComponentKey extends keyof UIState>(componentKey: ComponentKey) {
       if ("function" !== typeof uiComponentRoutes[componentKey]) {

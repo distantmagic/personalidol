@@ -1,23 +1,18 @@
-// import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
+import { Vector2 } from "three/src/math/Vector2";
+
+import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { getPrimaryPointerClientX } from "@personalidol/framework/src/getPrimaryPointerClientX";
 import { getPrimaryPointerClientY } from "@personalidol/framework/src/getPrimaryPointerClientY";
 import { getPrimaryPointerDownInitialClientX } from "@personalidol/framework/src/getPrimaryPointerDownInitialClientX";
 import { getPrimaryPointerDownInitialClientY } from "@personalidol/framework/src/getPrimaryPointerDownInitialClientY";
-import { getSVGElementById } from "@personalidol/framework/src/getSVGElementById";
 import { Input } from "@personalidol/framework/src/Input";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
-import { shadowAttachCSSHTML } from "@personalidol/dom-renderer/src/shadowAttachCSSHTML";
+import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
+
+import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 
 import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpdatable.interface";
-
-declare module "preact/src/jsx" {
-  namespace JSXInternal {
-    interface IntrinsicElements {
-      "pi-pointer-feedback": {};
-    }
-  }
-}
 
 const _css = `
   :host {
@@ -29,36 +24,26 @@ const _css = `
   }
 
   #pointer-feedback {
+    pointer-events: none;
     position: absolute;
-  }
-
-  #pointer-feedback.active {
-  }
-
-  #pointer-feedback.inactive {
-    display: none;
-  }
-
-  #pointer-feedback-line {
-    stroke: red;
-    stroke-linecap: round;
-    stroke-width: 10px;
+    will-change: height, width;
   }
 `;
 
 const _html = `
-  <svg id="pointer-feedback">
-    <line id="pointer-feedback-line"></line>
-  </svg>
+  <canvas id="pointer-feedback"></canvas>
 `;
 
 export class PointerFeedback extends HTMLElement implements MainLoopUpdatable {
+  static readonly defineName: "pi-pointer-feedback" = "pi-pointer-feedback";
+
+  private _canvas: HTMLCanvasElement;
+  private _canvasContext2D: CanvasRenderingContext2D;
   private _dimensionsState: null | Uint32Array = null;
   private _inputState: null | Int32Array = null;
   private _lastUpdateFromDimensions: number = -1;
   private _lastUpdateFromInput: number = -1;
-  private _svg: SVGElement;
-  private _svgLine: SVGLineElement;
+  private _pointerFeedbackVector: IVector2 = new Vector2();
 
   constructor() {
     super();
@@ -67,14 +52,23 @@ export class PointerFeedback extends HTMLElement implements MainLoopUpdatable {
       mode: "open",
     });
 
-    shadowAttachCSSHTML(shadow, _css, _html);
+    shadow.innerHTML = _html;
+    shadowAttachStylesheet(shadow, _css);
 
-    this._svg = getSVGElementById(shadow, "pointer-feedback");
-    this._svgLine = getSVGElementById(shadow, "pointer-feedback-line") as SVGLineElement;
+    this._canvas = getHTMLElementById(shadow, "pointer-feedback") as HTMLCanvasElement;
+
+    const canvasContext2D = this._canvas.getContext("2d");
+
+    if (!canvasContext2D) {
+      throw new Error("Unable to get canvas rendering context.");
+    }
+
+    this._canvasContext2D = canvasContext2D;
   }
 
   connectedCallback() {
     console.log("PointerFeedback", "connectedCallback");
+    console.log(this._canvas.transferControlToOffscreen);
   }
 
   disconnectedCallback() {
@@ -105,23 +99,39 @@ export class PointerFeedback extends HTMLElement implements MainLoopUpdatable {
     this._lastUpdateFromInput = this._inputState[Input.code.LAST_UPDATE];
 
     if (dimensionsOutdated) {
-      this._svg.setAttribute("viewBox", `0 0 ${this._dimensionsState[Dimensions.code.D_WIDTH]} ${this._dimensionsState[Dimensions.code.D_HEIGHT]}`);
+      this._canvas.setAttribute("height", this._dimensionsState[Dimensions.code.D_HEIGHT]);
+      this._canvas.setAttribute("width", this._dimensionsState[Dimensions.code.D_WIDTH]);
     }
 
     if (!isPrimaryPointerPressed(this._inputState)) {
-      this._svg.classList.remove("active");
-      this._svg.classList.add("inactive");
-
       return;
     }
 
-    this._svg.classList.add("active");
-    this._svg.classList.remove("inactive");
+    this._canvasContext2D.beginPath();
+    this._canvasContext2D.moveTo(getPrimaryPointerDownInitialClientX(this._inputState), getPrimaryPointerDownInitialClientY(this._inputState));
+    this._canvasContext2D.lineTo(getPrimaryPointerClientX(this._inputState), getPrimaryPointerClientY(this._inputState));
+    this._canvasContext2D.stroke();
 
-    this._svgLine.setAttribute("x1", String(getPrimaryPointerDownInitialClientX(this._inputState)));
-    this._svgLine.setAttribute("y1", String(getPrimaryPointerDownInitialClientY(this._inputState)));
+    // this._svg.classList.add("active");
+    // this._svg.classList.remove("inactive");
 
-    this._svgLine.setAttribute("x2", String(getPrimaryPointerClientX(this._inputState)));
-    this._svgLine.setAttribute("y2", String(getPrimaryPointerClientY(this._inputState)));
+    // const x1 = getPrimaryPointerDownInitialClientX(this._inputState);
+    // const y1 = getPrimaryPointerDownInitialClientY(this._inputState);
+    // const x2 = getPrimaryPointerClientX(this._inputState);
+    // const y2 = getPrimaryPointerClientY(this._inputState);
+
+    // this._pointerFeedbackVector.x = x2 - x1;
+    // this._pointerFeedbackVector.y = y2 - y1;
+    // this._pointerFeedbackVector.clampLength(0, 100);
+
+    // this._svgCircle.setAttribute("cx", String(x1));
+    // this._svgCircle.setAttribute("cy", String(y1));
+    // this._svgCircle.setAttribute("r", String(110));
+
+    // this._svgLine.setAttribute("x1", String(x1));
+    // this._svgLine.setAttribute("y1", String(y1));
+
+    // this._svgLine.setAttribute("x2", String(x1 + this._pointerFeedbackVector.x));
+    // this._svgLine.setAttribute("y2", String(y1 + this._pointerFeedbackVector.y));
   }
 }

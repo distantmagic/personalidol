@@ -2,27 +2,23 @@ import type { LoadingError } from "@personalidol/loading-manager/src/LoadingErro
 import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
 
 export type UIStateEnabled = {
-  cMainMenu: {
+  "pi-main-menu": {
     enabled: true;
     props: {};
   };
-  cLoadingError: {
+  "pi-fatal-error": {
     enabled: true;
     props: {
       loadingError: LoadingError;
     };
   };
-  cLoadingScreen: {
+  "pi-loading-screen": {
     enabled: true;
     props: {
       loadingManagerProgress: LoadingManagerProgress;
     };
   };
-  cOptions: {
-    enabled: true;
-    props: {};
-  };
-  cPointerFeedback: {
+  "pi-options": {
     enabled: true;
     props: {};
   };
