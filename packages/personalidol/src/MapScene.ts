@@ -247,7 +247,7 @@ export function MapScene(
     },
 
     async worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): Promise<void> {
-      logger.debug(`LOADED_MAP_VERTICES(${entity.vertices.length / 3})`);
+      logger.debug(`LOADED_MAP_TRIS(${entity.vertices.length / 3})`);
 
       const bufferGeometry = new BufferGeometry();
 
