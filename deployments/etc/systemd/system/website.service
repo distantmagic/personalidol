@@ -1,0 +1,14 @@
+[Unit]
+Description=personalidol/packages/website
+ConditionPathExists=/home/ec2-user/service/main
+After=network.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+Restart=on-failure
+WorkingDirectory=/home/ec2-user/service
+ExecStart=/home/ec2-user/service/main serve --http-listen=:8080
+
+[Install]
+WantedBy=multi-user.target

@@ -19,7 +19,6 @@ var flags = []cli.Flag{
 	&cli.StringFlag{
 		Name:  "http-listen",
 		Usage: "HTTP listen string. If it's not provided then HTTP server won't be started. (example: \"127.0.0.1:8080\")",
-		Value: ":80",
 	},
 	&cli.StringFlag{
 		Name:  "https-listen",

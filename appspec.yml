@@ -2,5 +2,38 @@ version: 0.0
 os: linux
 
 files:
+
   - source: packages/website/tmp/main
-    destination: /opt/personalidol/website
+    destination: /home/ec2-user/service
+
+  - source: deployments/etc/systemd/system/website.service
+    destination: /etc/systemd/system
+
+permissions:
+
+  - object: /home/ec2-user/service/main
+    owner: ec2-user
+    group: ec2-user
+    mode: 544
+    type:
+      - file
+
+  - object: /home/ec2-user/service/templates
+    owner: ec2-user
+    group: ec2-user
+    mode: 444
+
+  - object: /etc/systemd/system/website.service
+    owner: root
+    group: root
+    mode: 644
+    type:
+      - file
+
+hooks:
+
+  ApplicationStop:
+    - location: packages/website/scripts/service_stop.sh
+
+  ApplicationStart:
+    - location: packages/website/scripts/service_start.sh
