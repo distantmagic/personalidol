@@ -25,7 +25,7 @@ export function UIMessageResponder(
 ): IUIMessageResponder {
   const _domMessageRouter = createRouter({
     navigateToMap({ mapName }: { mapName: string }) {
-      _navigateToMap(`${__STATIC_BASE_PATH}/maps/${mapName}.map`);
+      _navigateToMap(`${__ASSETS_BASE_PATH}/maps/${mapName}.map`);
     },
   });
 

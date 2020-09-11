@@ -205,7 +205,7 @@ export function MapScene(
         },
       });
 
-      const textureUrl = `${__STATIC_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}`;
+      const textureUrl = `${__ASSETS_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}`;
       const bufferGeometry = new BufferGeometry();
 
       bufferGeometry.setAttribute("normal", new BufferAttribute(geometry.normals, 3));
