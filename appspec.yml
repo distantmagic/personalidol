@@ -6,7 +6,7 @@ files:
   - source: packages/website/tmp/main
     destination: /home/ec2-user/service
 
-  - source: deployments/etc/systemd/system/website.service
+  - source: packages/website/deployments/etc/systemd/system/website.service
     destination: /etc/systemd/system
 
 permissions:
@@ -34,8 +34,8 @@ hooks:
 
   ApplicationStop:
     - location: packages/website/scripts/website_stop.sh
-      timeout: 20
+      timeout: 10
 
   ApplicationStart:
     - location: packages/website/scripts/website_start.sh
-      timeout: 20
+      timeout: 10
