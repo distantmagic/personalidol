@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+       - make release
+
+artifacts:
+  name: server
+  base-directory: packages/website/tmp
+  files: main

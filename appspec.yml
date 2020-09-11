@@ -1,0 +1,6 @@
+version: 0.0.0
+os: linux
+
+files:
+  - source: packages/website/tmp/main
+    destination: /opt/personalidol/website
