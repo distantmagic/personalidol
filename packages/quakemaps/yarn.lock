@@ -509,9 +509,9 @@
     "@babel/types" "^7.0.0"
 
 "@types/babel__traverse@*", "@types/babel__traverse@^7.0.6":
-  version "7.0.13"
-  resolved "https://registry.yarnpkg.com/@types/babel__traverse/-/babel__traverse-7.0.13.tgz#1874914be974a492e1b4cb00585cabb274e8ba18"
-  integrity sha512-i+zS7t6/s9cdQvbqKDARrcbrPvtJGlbYsMkazo03nTAK3RX9FNrLllXys22uiTGJapPOTZTQ35nHh4ISph4SLQ==
+  version "7.0.14"
+  resolved "https://registry.yarnpkg.com/@types/babel__traverse/-/babel__traverse-7.0.14.tgz#e99da8c075d4fb098c774ba65dabf7dc9954bd13"
+  integrity sha512-8w9szzKs14ZtBVuP6Wn7nMLRJ0D6dfB0VEBEyRgxrZ/Ln49aNMykrghM2FaNn4FJRzNppCSa0Rv9pBRM5Xc3wg==
   dependencies:
     "@babel/types" "^7.3.0"
 
@@ -563,9 +563,9 @@
     pretty-format "^25.2.1"
 
 "@types/node@*":
-  version "14.6.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.6.4.tgz#a145cc0bb14ef9c4777361b7bbafa5cf8e3acb5a"
-  integrity sha512-Wk7nG1JSaMfMpoMJDKUsWYugliB2Vy55pdjLpmLixeyMi7HizW2I/9QoxsPCkXl3dO+ZOVqPumKaDUv5zJu2uQ==
+  version "14.10.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.10.0.tgz#15815dff82c8dc30827f6b1286f865902945095a"
+  integrity sha512-SOIyrdADB4cq6eY1F+9iU48iIomFAPltu11LCvA9PKcyEwHadjCFzNVPotAR+oEJA0bCP4Xvvgy+vwu1ZjVh8g==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1219,10 +1219,10 @@ error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
-esbuild@^0.6.30:
-  version "0.6.32"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.6.32.tgz#f66d54f17cdb1b4699f9ecbd54ab73ef7b4febb3"
-  integrity sha512-jwEQR+iAgQQPYVs0uBuGLS2X9DCY9FBHpmsIZ7E3IdF9UTqisg718GvUqYetns8SG+LOae4jGNME8xiqXgbUjQ==
+esbuild@^0.6.34:
+  version "0.6.34"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.6.34.tgz#76565a60e006f45d5f273b6e59e61ed0816551f5"
+  integrity sha512-InRdL/Q96pUucPqovJzvuLhquZr6jOn81FDVwFjCKz1rYKIm9OdOC+7Fs4vr6x48vKBl5LzKgtjU39BUpO636A==
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"

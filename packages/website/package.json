@@ -23,7 +23,7 @@
     "@types/jest": "^26.0.13",
     "autoprefixer": "^9.8.6",
     "cssnano": "^4.1.10",
-    "esbuild": "^0.6.32",
+    "esbuild": "^0.6.34",
     "jest": "^26.4.2",
     "normalize.css": "^8.0.1",
     "prettier": "^2.1.1",

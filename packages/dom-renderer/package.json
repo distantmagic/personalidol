@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/css-font-loading-module": "^0.0.4",
     "@types/jest": "^26.0.13",
-    "esbuild": "^0.6.32",
+    "esbuild": "^0.6.34",
     "jest": "^26.4.2",
     "prettier": "^2.1.1",
     "ts-jest": "^26.3.0",
