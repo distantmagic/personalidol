@@ -33,7 +33,7 @@ permissions:
 hooks:
 
   ApplicationStop:
-    - location: packages/website/scripts/service_stop.sh
+    - location: packages/website/scripts/website_stop.sh
 
   ApplicationStart:
-    - location: packages/website/scripts/service_start.sh
+    - location: packages/website/scripts/website_start.sh

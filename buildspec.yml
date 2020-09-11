@@ -10,7 +10,6 @@ artifacts:
   files:
     - appspec.yml
     - deployments/**/*
-    - packages/website/scripts/website_start.sh
-    - packages/website/scripts/website_stop.sh
+    - packages/website/scripts/website_*
     - packages/website/templates/*
     - packages/website/tmp/main
