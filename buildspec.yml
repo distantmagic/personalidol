@@ -7,5 +7,6 @@ phases:
 
 artifacts:
   name: server
-  base-directory: packages/website/tmp
-  files: main
+  files:
+    - appspec.yml
+    - packages/website/tmp/main
