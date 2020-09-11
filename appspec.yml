@@ -6,6 +6,9 @@ files:
   - source: packages/website/tmp/main
     destination: /home/ec2-user/service
 
+  - source: packages/website/public
+    destination: /home/ec2-user/service/public
+
   - source: packages/website/templates
     destination: /home/ec2-user/service/templates
 
@@ -20,11 +23,6 @@ permissions:
     mode: 544
     type:
       - file
-
-  - object: /home/ec2-user/service/templates
-    owner: ec2-user
-    group: ec2-user
-    mode: 444
 
   - object: /etc/systemd/system/website.service
     owner: root
@@ -42,3 +40,5 @@ hooks:
   ApplicationStart:
     - location: packages/website/scripts/website_start.sh
       timeout: 10
+
+  ValidateService:

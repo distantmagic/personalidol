@@ -25,7 +25,7 @@ public/lib/index.js: node_modules/.bin/esbuild public/lib $(SOURCES_TS)
 	./scripts/build_public.sh
 
 .PHONY: release
-release: tmp/main
+release: public/lib/index.js tmp/main
 
 .PHONY: serve
 serve: public/lib/index.js tmp/main
