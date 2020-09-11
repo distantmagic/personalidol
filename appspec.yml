@@ -6,6 +6,9 @@ files:
   - source: packages/website/tmp/main
     destination: /home/ec2-user/service
 
+  - source: packages/website/templates
+    destination: /home/ec2-user/service/templates
+
   - source: packages/website/deployments/etc/systemd/system/website.service
     destination: /etc/systemd/system
 
