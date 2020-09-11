@@ -9,7 +9,7 @@ artifacts:
   name: server
   files:
     - appspec.yml
-    - deployments/**/*
+    - packages/website/deployments/**/*
     - packages/website/scripts/website_*
     - packages/website/templates/*
     - packages/website/tmp/main
