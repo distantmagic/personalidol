@@ -1,4 +1,4 @@
-module personalidol.com/website
+module git.distantmagic.com/personalidol/website
 
 go 1.13
 

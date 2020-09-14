@@ -6,7 +6,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"personalidol.com/website/cmd"
+	"git.distantmagic.com/personalidol/website/cmd"
 )
 
 func main() {

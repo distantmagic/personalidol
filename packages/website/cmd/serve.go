@@ -5,7 +5,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"personalidol.com/website/internal/webserver"
+	"git.distantmagic.com/personalidol/website/internal/webserver"
 )
 
 var Serve = cli.Command{

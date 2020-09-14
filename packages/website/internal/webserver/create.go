@@ -3,7 +3,7 @@ package webserver
 import (
 	"github.com/gin-gonic/gin"
 
-	"personalidol.com/website/internal/webroute"
+	"git.distantmagic.com/personalidol/website/internal/webroute"
 )
 
 func Create() *gin.Engine {
