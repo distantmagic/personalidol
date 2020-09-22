@@ -5,12 +5,12 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"git.distantmagic.com/personalidol/website/internal/webserver"
+	"git.distantmagic.com/personalidol/website/internal/server"
 )
 
 var Serve = cli.Command{
 	Name:   "serve",
-	Usage:  "Starts HTTPS server and optionally HTTP server.",
+	Usage:  "Starts HTTP(S) server.",
 	Flags:  flags,
 	Action: serve,
 }
@@ -25,19 +25,19 @@ var flags = []cli.Flag{
 		Usage: "HTTPS listen string (example: \"example.com:443\")",
 	},
 	&cli.StringFlag{
-		Name:     "ssl-key",
-		Usage:    "SSL private key file name (example: \"./ssl.key\")",
+		Name:  "ssl-key",
+		Usage: "SSL private key file name (example: \"./ssl.key\")",
 	},
 	&cli.StringFlag{
-		Name:     "ssl-cert",
-		Usage:    "SSL certificate file name (example: \"./ssl.cert\")",
+		Name:  "ssl-cert",
+		Usage: "SSL certificate file name (example: \"./ssl.cert\")",
 	},
 }
 
 func serve(c *cli.Context) error {
 	var wg sync.WaitGroup
 
-	router := webserver.Create()
+	router := server.Create()
 
 	httpListen := c.String("http-listen")
 	if httpListen != "" {
