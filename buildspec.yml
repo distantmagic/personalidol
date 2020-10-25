@@ -8,5 +8,4 @@ phases:
 artifacts:
   name: server
   files:
-    - appspec.yml
     - packages/website/public/**/*

@@ -45,3 +45,4 @@ yarn run esbuild \
 ;
 
 mv ./public/lib/service_worker.js ./public/service_worker.js
+mv ./public/lib/service_worker.js.map ./public/service_worker.js.map
