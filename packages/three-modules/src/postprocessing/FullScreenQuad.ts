@@ -1,6 +1,6 @@
 import { Mesh } from "three/src/objects/Mesh";
 import { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
-import { PlaneBufferGeometry } from "three/src/geometries/PlaneGeometry";
+import { PlaneBufferGeometry } from "three/src/geometries/PlaneBufferGeometry";
 
 import type { BufferGeometry } from "three/src/core/BufferGeometry";
 import type { Camera } from "three/src/cameras/Camera";

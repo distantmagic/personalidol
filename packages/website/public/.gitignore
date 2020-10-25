@@ -1,14 +1,4 @@
-/assets
-/debug
-/fonts
-/images
-/maps
-/models
-/sounds
-/styles
-/textures
-/website
-
+/cert.pem
+/key.pem
 /lib
 /service_worker.js
-/service_worker.js.map

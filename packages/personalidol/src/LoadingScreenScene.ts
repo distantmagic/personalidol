@@ -1,5 +1,5 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
-import { BoxBufferGeometry } from "three/src/geometries/BoxGeometry";
+import { BoxBufferGeometry } from "three/src/geometries/BoxBufferGeometry";
 import { Color } from "three/src/math/Color";
 import { Mesh } from "three/src/objects/Mesh";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";

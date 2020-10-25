@@ -22,13 +22,12 @@ yarn run esbuild \
     --bundle \
     --define:__ASSETS_BASE_PATH=\"${ASSETS_BASE_PATH}\" \
     --define:__BUILD_ID=\"${BUILD_ID}\" \
+    --define:__CACHE_BUST=\"_v=${BUILD_ID}\" \
     --define:__LOG_LEVEL=\"info\" \
-    --define:__STATIC_BASE_PATH=\"/public\" \
+    --define:__STATIC_BASE_PATH=\"${STATIC_BASE_PATH}\" \
     --format=esm \
-    --jsx-factory=h \
-    --jsx-fragment=Fragment \
     --minify \
-    --outdir=public/lib \
+    --outdir=./public/lib \
     --platform=browser \
     --sourcemap \
     --target=safari13 \
@@ -44,3 +43,5 @@ yarn run esbuild \
     src/worker_quakemaps.ts \
     src/worker_textures.ts \
 ;
+
+mv ./public/lib/service_worker.js ./public/service_worker.js

@@ -87,7 +87,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     throw new Error("Service worker is not supported.");
   }
 
-  ServiceWorkerManager(logger, "/service_worker.js").install();
+  ServiceWorkerManager(logger, `/service_worker.js`).install();
 
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,
