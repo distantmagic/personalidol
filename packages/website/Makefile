@@ -3,7 +3,6 @@ include ../../Makefile_go.mk
 include ../../Makefile_packages.mk
 
 ASSETS_BASE_PATH ?= /public
-SOURCES_GO := $(shell find cmd internal website.go -type f -name "*.go")
 
 .PHONY: public
 public: public/lib/index.js
