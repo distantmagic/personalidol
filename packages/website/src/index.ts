@@ -436,8 +436,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
     // This extra var is a hack to make esbuild leave the dynamic import as-is.
     // https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
-    const filename = `${__STATIC_BASE_PATH}/lib/createScenes.js`;
-    const { createScenes } = await import(filename);
+    const { createScenes } = await import(`${__STATIC_BASE_PATH}/lib/createScenes.js`);
 
     // prettier-ignore
     createScenes(

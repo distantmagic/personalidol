@@ -7,7 +7,7 @@ STATIC_BASE_PATH ?=
 
 .PHONY: public.watch
 public.watch: node_modules
-	../../scripts/watch_trigger.sh $(MAKE) "public" true
+	../../scripts/watch_trigger.sh $(MAKE) "$${PWD}/src" "public" true
 
 public/index.js: node_modules/.bin/esbuild scripts/build_public.sh tsc $(SOURCES_TS)
 	ASSETS_BASE_PATH=${ASSETS_BASE_PATH} \
