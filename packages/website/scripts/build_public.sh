@@ -31,7 +31,6 @@ yarn run esbuild \
     --platform=browser \
     --sourcemap \
     --target=safari13 \
-    --strict \
     --tsconfig=tsconfig.json \
     src/createScenes.ts \
     src/index.ts \
