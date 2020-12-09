@@ -6,7 +6,7 @@ test("loops until canceled", async function () {
 
   let ticks = 0;
 
-  await new Promise(function (resolve) {
+  await new Promise<void>(function (resolve) {
     mainLoop.updatables.add({
       update(delta: number): void {
         ticks += 1;

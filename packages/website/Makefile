@@ -5,28 +5,17 @@ include ../../Makefile_packages.mk
 ASSETS_BASE_PATH ?=
 STATIC_BASE_PATH ?=
 
-.PHONY: public
-public: public/index.js
-
 .PHONY: public.watch
 public.watch: node_modules
 	../../scripts/watch_trigger.sh $(MAKE) "public" true
 
-public:
-	mkdir -p public
-
-.PHONY: public/index.js
-public/index.js: node_modules/.bin/esbuild public scripts/build_public.sh tsc $(SOURCES_TS)
+public/index.js: node_modules/.bin/esbuild scripts/build_public.sh tsc $(SOURCES_TS)
 	ASSETS_BASE_PATH=${ASSETS_BASE_PATH} \
 	STATIC_BASE_PATH=${STATIC_BASE_PATH} \
 		./scripts/build_public.sh
 
 .PHONY: release
 release: public/index.js
-
-.PHONY: tsc
-tsc:
-	yarn run tsc --noEmit
 
 .PHONY: test
 test:

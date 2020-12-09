@@ -1,5 +1,8 @@
 SOURCES_TS := $(shell find src -type f -name "*.ts")
 
+lib:
+	mkdir -p lib
+
 .PHONY: build
 build: node_modules/.bin/esbuild $(SOURCES_TS)
 	yarn run esbuild \
@@ -19,9 +22,6 @@ clean:
 	rm -rf node_modules
 	rm -rf public/lib
 
-lib:
-	mkdir -p lib
-
 node_modules/.bin/jest node_modules/.bin/prettier node_modules/.bin/esbuild: node_modules
 
 .PHONY: prettier
@@ -36,10 +36,10 @@ test: node_modules/.bin/jest
 test.watch: node_modules
 	yarn run jest --watch
 
-.PHONY: typecheck
-typecheck: node_modules
+.PHONY: tsc
+tsc: node_modules
 	yarn run tsc --noEmit
 
-.PHONY: typecheck.watch
-typecheck.watch: node_modules
+.PHONY: tsc.watch
+tsc.watch: node_modules
 	yarn run tsc --noEmit --watch

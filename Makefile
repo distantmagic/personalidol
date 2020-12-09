@@ -37,6 +37,7 @@ link: bootstrap node_modules
 prettier: bootstrap
 	$(call FOREACH,prettier)
 
+.PHONY: release
 release: bootstrap
 	$(MAKE) -C packages/website release
 

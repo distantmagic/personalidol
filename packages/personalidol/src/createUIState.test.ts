@@ -2,19 +2,19 @@ import { createUIState } from "./createUIState";
 
 test("creates empty UI state", function () {
   expect(createUIState()).toEqual({
-    cMainMenu: {
+    "pi-main-menu": {
       enabled: false,
       props: {},
     },
-    cLoadingError: {
+    "pi-fatal-error": {
       enabled: false,
       props: {},
     },
-    cLoadingScreen: {
+    "pi-loading-screen": {
       enabled: false,
       props: {},
     },
-    cOptions: {
+    "pi-options": {
       enabled: false,
       props: {},
     },
