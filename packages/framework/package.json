@@ -32,6 +32,6 @@
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
   "sideEffects": false,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "gitHead": "524bca5e12e690c4025774f44ab41885c513ec5a"
 }
