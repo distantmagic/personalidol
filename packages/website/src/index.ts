@@ -49,7 +49,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 // Depending on browser feature support, some workers will be started or not.
 // Checking for features is asynchronous.
 (async function () {
-  logger.debug(`BUILD_ID(${__BUILD_ID})`);
+  logger.info(`BUILD_ID(${__BUILD_ID})`);
 
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
@@ -250,7 +250,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
       const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
 
-      atlasWorkerService.ready();
+      await atlasWorkerService.ready();
 
       mainLoop.updatables.add(atlasWorkerService);
       serviceManager.services.add(atlasWorkerService);

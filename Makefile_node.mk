@@ -1,4 +1,4 @@
-node_modules: yarn.lock
+node_modules:
 	yarn install
 	touch node_modules
 
