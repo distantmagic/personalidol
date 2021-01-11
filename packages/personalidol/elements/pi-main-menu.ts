@@ -122,7 +122,7 @@ const _html = `
   <div class="main-menu">
     <div class="main-menu__content">
       <h1>Personal Idol</h1>
-      <h2>Apocalyptic Adventure</h2>
+      <h2>You shall not be judged</h2>
       <nav>
         <button disabled>Continue</button>
         <button id="button-new-game">New Game</button>
