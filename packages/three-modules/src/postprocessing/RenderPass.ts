@@ -1,7 +1,9 @@
+import { Color } from "three/src/math/Color";
+
 import { Pass } from "./Pass";
 
 import type { Camera } from "three/src/cameras/Camera";
-import type { Color } from "three/src/math/Color";
+import type { Color as IColor } from "three/src/math/Color";
 import type { Material } from "three/src/materials/Material";
 import type { Scene } from "three/src/scenes/Scene";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
@@ -12,13 +14,14 @@ export class RenderPass extends Pass {
 
   camera: Camera;
   clear: boolean = true;
-  clearColor: null | Color;
+  clearColor: null | IColor;
   clearDepth: boolean = false;
   clearAlpha: number;
+  oldClearColor: IColor = new Color();
   overrideMaterial: null | Material;
   scene: Scene;
 
-  constructor(scene: Scene, camera: Camera, overrideMaterial: null | Material = null, clearColor: null | Color = null, clearAlpha: number = 0) {
+  constructor(scene: Scene, camera: Camera, overrideMaterial: null | Material = null, clearColor: null | IColor = null, clearAlpha: number = 0) {
     super();
 
     this.scene = scene;
@@ -37,7 +40,7 @@ export class RenderPass extends Pass {
 
     renderer.autoClear = false;
 
-    let oldClearColor: null | number | Color = null;
+    let hasOldClearColor: boolean = false;
     let oldClearAlpha;
     let oldOverrideMaterial: null | Material = null;
 
@@ -52,7 +55,9 @@ export class RenderPass extends Pass {
     const clearColor = this.clearColor;
 
     if (clearColor) {
-      oldClearColor = renderer.getClearColor().getHex();
+      hasOldClearColor = true;
+
+      renderer.getClearColor(this.oldClearColor);
       oldClearAlpha = renderer.getClearAlpha();
 
       renderer.setClearColor(clearColor, this.clearAlpha);
@@ -71,8 +76,8 @@ export class RenderPass extends Pass {
 
     renderer.render(this.scene, this.camera);
 
-    if (clearColor && null !== oldClearColor) {
-      renderer.setClearColor(oldClearColor, oldClearAlpha);
+    if (clearColor && hasOldClearColor) {
+      renderer.setClearColor(this.oldClearColor, oldClearAlpha);
     }
 
     if (overrideMaterial !== null) {

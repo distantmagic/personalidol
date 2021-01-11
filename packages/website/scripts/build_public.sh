@@ -24,6 +24,7 @@ yarn run esbuild \
     --define:__BUILD_ID=\"${BUILD_ID}\" \
     --define:__CACHE_BUST=\"_v=${BUILD_ID}\" \
     --define:__LOG_LEVEL=\"info\" \
+    --define:__SERVICE_WORKER_BASE_PATH=\"${SERVICE_WORKER_BASE_PATH}\" \
     --define:__STATIC_BASE_PATH=\"${STATIC_BASE_PATH}\" \
     --format=esm \
     --minify \

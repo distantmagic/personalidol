@@ -87,7 +87,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     throw new Error("Service worker is not supported.");
   }
 
-  ServiceWorkerManager(logger, `/service_worker.js`).install();
+  ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js`).install();
 
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,
@@ -434,9 +434,13 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   } else {
     logger.debug("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
 
-    // This extra var is a hack to make esbuild leave the dynamic import as-is.
-    // https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
-    const { createScenes } = await import(`${__STATIC_BASE_PATH}/lib/createScenes.js`);
+    /**
+     * This extra var is a hack to make esbuild leave the dynamic import as-is.
+     * @see https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
+     * @see  https://github.com/evanw/esbuild/issues/113
+     */
+    const _dynamicImport = `${__STATIC_BASE_PATH}/lib/createScenes.js`;
+    const { createScenes } = await import(_dynamicImport);
 
     // prettier-ignore
     createScenes(
