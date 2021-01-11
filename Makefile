@@ -33,6 +33,10 @@ docs:
 link: bootstrap node_modules
 	yarn run lerna link
 
+.PHONY: ncu
+ncu: bootstrap node_modules
+	yarn run lerna exec "ncu -p yarn -u"
+
 .PHONY: prettier
 prettier: bootstrap
 	$(call FOREACH,prettier)
