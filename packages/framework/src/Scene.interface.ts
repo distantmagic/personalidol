@@ -1,14 +1,6 @@
-import type { DisposableGeneric } from "./DisposableGeneric.interface";
-import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
-import type { SceneState } from "./SceneState.type";
+import type { Mount } from "./Mount.interface";
 
-export interface Scene extends DisposableGeneric, MainLoopUpdatable {
-  readonly name: string;
-  readonly state: SceneState;
-
-  mount(): void;
-
-  preload(): void;
-
-  unmount(): void;
+export interface Scene extends Mount {
+  readonly isScene: true;
+  readonly isView: false;
 }

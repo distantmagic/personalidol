@@ -1,4 +1,4 @@
-export type SceneState = {
+export type MountState = {
   isDisposed: boolean;
   isPreloaded: boolean;
   isPreloading: boolean;

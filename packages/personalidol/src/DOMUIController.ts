@@ -10,7 +10,7 @@ import { createUIState } from "./createUIState";
 import { createUIStateMessageRoutes } from "./createUIStateMessageRoutes";
 
 import type { DOMUIController as IDOMUIController } from "@personalidol/dom-renderer/src/DOMUIController.interface";
-import type { SceneState } from "@personalidol/framework/src/SceneState.type";
+import type { MountState } from "@personalidol/framework/src/MountState.type";
 
 import type { UIState } from "./UIState.type";
 
@@ -37,7 +37,7 @@ function _renderNodes(uiRootElement: HTMLElement, nodes: ReadonlyArray<HTMLEleme
 }
 
 export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32Array, domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
-  const state: SceneState = Object.seal({
+  const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
     isPreloaded: false,
@@ -147,6 +147,8 @@ export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32A
   }
 
   return Object.freeze({
+    isScene: true,
+    isView: false,
     name: "DOMUIController",
     state: state,
 

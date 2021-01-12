@@ -5,21 +5,14 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/dom-renderer": "^0.0.2",
     "@personalidol/framework": "^0.0.2",
-    "@personalidol/loading-manager": "^0.0.2",
     "@personalidol/quakemaps": "^0.0.2",
-    "@personalidol/quakemaps-views": "^0.0.2",
-    "@personalidol/texture-loader": "^0.0.2",
-    "@personalidol/three-modules": "^0.0.2",
-    "@personalidol/three-renderer": "^0.0.2",
-    "@personalidol/workers": "^0.0.2",
-    "loglevel": "^1.7.1",
-    "three": "^0.124.0"
+    "three": "^0.124.0",
+    "tslib": "^2.1.0",
+    "yallist": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
-    "@types/jsdom": "^16.2.5",
     "esbuild": "^0.8.31",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
@@ -29,12 +22,15 @@
   },
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",
-  "name": "@personalidol/personalidol",
-  "private": true,
+  "name": "@personalidol/quakemaps-views",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
   "sideEffects": false,
-  "version": "0.0.2"
+  "version": "0.0.2",
+  "gitHead": "524bca5e12e690c4025774f44ab41885c513ec5a"
 }

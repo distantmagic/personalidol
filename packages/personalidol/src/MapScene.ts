@@ -28,6 +28,7 @@ import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/get
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
+import { mount as fMount } from "@personalidol/framework/src/mount";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
@@ -57,9 +58,10 @@ import type { EntitySounds } from "@personalidol/quakemaps/src/EntitySounds.type
 import type { EntitySparkParticles } from "@personalidol/quakemaps/src/EntitySparkParticles.type";
 import type { EntityWorldspawn } from "@personalidol/quakemaps/src/EntityWorldspawn.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { Mountable } from "@personalidol/framework/src/Mountable.type";
+import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
-import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
 import type { EntityLookupCallback } from "./EntityLookupCallback.type";
@@ -83,6 +85,7 @@ const _scene = new Scene();
 _scene.background = new Color(0x000000);
 _scene.fog = new Fog(_scene.background, _camera.far - 1000, _camera.far);
 
+const _mountables: Set<Mountable> = new Set();
 const _unmountables: Set<Unmountable> = new Set();
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
@@ -94,6 +97,7 @@ const _quakeMapsRouter = createRouter({
 });
 const _textureReceiverMessageRouter = createTextureReceiverMessagesRouter(_rpcLookupTable);
 let _cameraZoomAmount = 0;
+let _dynamicShadows = false;
 
 export function MapScene(
   logger: Logger,
@@ -108,7 +112,7 @@ export function MapScene(
   texturesMessagePort: MessagePort,
   mapFilename: string
 ): IScene {
-  const state: SceneState = Object.seal({
+  const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
     isPreloaded: false,
@@ -127,7 +131,9 @@ export function MapScene(
     light_ambient(entity: EntityLightAmbient): void {
       const ambientLight = new AmbientLight(0xffffff, entity.light);
 
-      _scene.add(ambientLight);
+      _mountables.add(function () {
+        _scene.add(ambientLight);
+      });
 
       _unmountables.add(function () {
         _scene.remove(ambientLight);
@@ -137,7 +143,9 @@ export function MapScene(
     light_hemisphere(entity: EntityLightHemisphere): void {
       const hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, entity.light);
 
-      _scene.add(hemisphereLight);
+      _mountables.add(function () {
+        _scene.add(hemisphereLight);
+      });
 
       _unmountables.add(function () {
         _scene.remove(hemisphereLight);
@@ -150,10 +158,12 @@ export function MapScene(
 
       pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
       pointLight.decay = entity.decay;
-      // pointLight.castShadow = true;
+      pointLight.castShadow = _dynamicShadows;
       pointLight.shadow.camera.far = 512;
 
-      _scene.add(pointLight);
+      _mountables.add(function () {
+        _scene.add(pointLight);
+      });
 
       _unmountables.add(function () {
         _scene.remove(pointLight);
@@ -169,11 +179,14 @@ export function MapScene(
       spotLight.decay = entity.decay;
       spotLight.distance = 512;
       spotLight.penumbra = 1;
-      // spotLight.castShadow = true;
+      spotLight.castShadow = _dynamicShadows;
       spotLight.visible = true;
       spotLight.shadow.camera.far = 512;
 
-      _scene.add(spotLight);
+      _mountables.add(function () {
+        _scene.add(spotLight);
+      });
+
       _unmountables.add(function () {
         _scene.remove(spotLight);
       });
@@ -187,7 +200,9 @@ export function MapScene(
 
       // mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
 
-      // _scene.add(mesh);
+      // _mountables.add(function () {
+      //   _scene.add(mesh);
+      // });
 
       // _disposables.add(disposableGeneric(mesh.geometry));
       // _disposables.add(disposableMaterial(mesh.material));
@@ -219,11 +234,13 @@ export function MapScene(
       });
       const mesh = new Mesh(bufferGeometry, material);
 
-      // mesh.castShadow = true;
-      // mesh.receiveShadow = true;
+      mesh.castShadow = _dynamicShadows;
+      mesh.receiveShadow = _dynamicShadows;
       mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
 
-      _scene.add(mesh);
+      _mountables.add(function () {
+        _scene.add(mesh);
+      });
 
       _disposables.add(disposableGeneric(bufferGeometry));
       _disposables.add(disposableMaterial(material));
@@ -270,13 +287,17 @@ export function MapScene(
 
       const mesh = new Mesh(bufferGeometry, meshStandardMaterial);
 
-      // mesh.castShadow = mesh.receiveShadow = true;
+      mesh.castShadow = mesh.receiveShadow = _dynamicShadows;
       mesh.matrixAutoUpdate = false;
 
-      _scene.add(mesh);
+      _mountables.add(function () {
+        _scene.add(mesh);
+      });
+
       _unmountables.add(function () {
         _scene.remove(mesh);
       });
+
       _disposables.add(disposableGeneric(bufferGeometry));
       _disposables.add(disposableMaterial(meshStandardMaterial));
     },
@@ -290,6 +311,8 @@ export function MapScene(
 
   function mount(): void {
     state.isMounted = true;
+
+    fMount(_mountables);
 
     eventBus.POINTER_ZOOM_REQUEST.add(_onPointerZoomRequest);
 
@@ -411,6 +434,8 @@ export function MapScene(
   }
 
   return Object.freeze({
+    isScene: true,
+    isView: false,
     name: `Map(${mapFilename})`,
     state: state,
 

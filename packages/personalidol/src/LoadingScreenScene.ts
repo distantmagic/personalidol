@@ -23,12 +23,12 @@ import type { Disposable } from "@personalidol/framework/src/Disposable.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
+import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
-import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
 
 export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
-  const state: SceneState = Object.seal({
+  const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
     isPreloaded: false,
@@ -161,6 +161,8 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   }
 
   return Object.freeze({
+    isScene: true,
+    isView: false,
     name: "LoadingScreen",
     state: state,
 
