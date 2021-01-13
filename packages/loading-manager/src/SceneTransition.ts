@@ -1,5 +1,5 @@
-import { sceneMountSoft } from "@personalidol/framework/src/sceneMountSoft";
-import { sceneUnmountSoft } from "@personalidol/framework/src/sceneUnmountSoft";
+import { mountMountSoft } from "@personalidol/framework/src/mountMountSoft";
+import { mountUnmountSoft } from "@personalidol/framework/src/mountUnmountSoft";
 
 import type { Logger } from "loglevel";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
@@ -18,11 +18,11 @@ export function SceneTransition(logger: Logger, renderer: WebGLRenderer, sceneDi
 
     if (scene) {
       if (loadingScreen) {
-        sceneUnmountSoft(logger, loadingScreen);
+        mountUnmountSoft(logger, loadingScreen);
         renderer.clear();
       }
 
-      sceneMountSoft(logger, scene);
+      mountMountSoft(logger, scene);
       scene.update(delta, elapsedTime);
 
       return;
@@ -32,7 +32,7 @@ export function SceneTransition(logger: Logger, renderer: WebGLRenderer, sceneDi
       return;
     }
 
-    sceneMountSoft(logger, loadingScreen);
+    mountMountSoft(logger, loadingScreen);
     loadingScreen.update(delta, elapsedTime);
   }
 

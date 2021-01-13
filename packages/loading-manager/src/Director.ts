@@ -1,5 +1,5 @@
-import { sceneDispose } from "@personalidol/framework/src/sceneDispose";
-import { scenePreload } from "@personalidol/framework/src/scenePreload";
+import { mountDispose } from "@personalidol/framework/src/mountDispose";
+import { mountPreload } from "@personalidol/framework/src/mountPreload";
 
 import type { Logger } from "loglevel";
 
@@ -79,7 +79,7 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
 
     // 1,0,0
     if (next && !_transitioning && !current) {
-      scenePreload(logger, next);
+      mountPreload(logger, next);
 
       state.next = null;
 
@@ -91,7 +91,7 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
 
     // 1,0,1
     if (next && !_transitioning && current) {
-      sceneDispose(logger, current);
+      mountDispose(logger, current);
 
       state.current = null;
       state.isTransitioning = true;
@@ -101,21 +101,23 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
 
     // 1,1,0
     if (next && _transitioning && !current) {
-      sceneDispose(logger, _transitioning);
+      throw new Error("Can't set a new scene while current one is still transitioning.");
+      // mountDispose(logger, _transitioning);
 
-      state.isTransitioning = false;
-      _transitioning = null;
+      // state.isTransitioning = false;
+      // _transitioning = null;
 
-      return;
+      // return;
     }
 
     // 1,1,1
     if (next && _transitioning && current) {
-      sceneDispose(logger, current);
+      throw new Error("Can't set a new scene while current one is still transitioning.");
+      // mountDispose(logger, current);
 
-      state.current = null;
+      // state.current = null;
 
-      return;
+      // return;
     }
   }
 

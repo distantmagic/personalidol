@@ -4,7 +4,6 @@ import { Director } from "@personalidol/loading-manager/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
-// import { MapScene } from "@personalidol/personalidol/src/MapScene";
 import { Renderer } from "@personalidol/three-renderer/src/Renderer";
 import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
 import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
@@ -50,12 +49,10 @@ export function createScenes(
   const loadingSceneDirector = Director(logger, "LoadingScreen");
   const sceneLoader = SceneTransition(logger, webGLRenderer, currentSceneDirector, loadingSceneDirector);
 
-  const currentSceneDirectorState = currentSceneDirector.state;
-
   const uiMessageResponder = UIMessageResponder(
     logger,
     effectComposer,
-    currentSceneDirectorState,
+    currentSceneDirector.state,
     eventBus,
     dimensionsState,
     inputState,
@@ -104,6 +101,7 @@ export function createScenes(
   mainLoop.updatables.add(serviceManager);
   mainLoop.updatables.add(currentSceneDirector);
   mainLoop.updatables.add(loadingSceneDirector);
+  mainLoop.updatables.add(uiMessageResponder);
   mainLoop.updatables.add(sceneLoader);
   mainLoop.updatables.add(renderer);
 }

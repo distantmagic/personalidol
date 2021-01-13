@@ -1,14 +1,14 @@
-import { AmbientLight } from "three/src/lights/AmbientLight";
+import { HemisphereLight } from "three/src/lights/HemisphereLight";
 
 import { noop } from "@personalidol/framework/src/noop";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { EntityLightAmbient } from "@personalidol/quakemaps/src/EntityLightAmbient.type";
+import type { EntityLightHemisphere } from "@personalidol/quakemaps/src/EntityLightHemisphere.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
-export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View {
+export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere): View {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -16,18 +16,18 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
     isPreloading: false,
   });
 
-  const _ambientLight = new AmbientLight(0xffffff, entity.light);
+  const _hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, entity.light);
 
   function dispose(): void {
     state.isDisposed = true;
 
-    scene.remove(_ambientLight);
+    scene.remove(_hemisphereLight);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    scene.add(_ambientLight);
+    scene.add(_hemisphereLight);
   }
 
   function preload(): void {
@@ -42,7 +42,7 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
   return Object.freeze({
     isScene: false,
     isView: true,
-    name: `AmbientLight(${entity.light})`,
+    name: `HemisphereLight(${entity.light})`,
     needsUpdates: false,
     state: state,
 

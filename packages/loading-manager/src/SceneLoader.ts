@@ -1,4 +1,4 @@
-import { sceneMountSoft } from "@personalidol/framework/src/sceneMountSoft";
+import { mountMountSoft } from "@personalidol/framework/src/mountMountSoft";
 
 import type { Logger } from "loglevel";
 
@@ -14,7 +14,7 @@ export function SceneLoader(logger: Logger, sceneDirector: IDirector): ISceneLoa
     const scene = sceneDirector.state.current;
 
     if (scene) {
-      sceneMountSoft(logger, scene);
+      mountMountSoft(logger, scene);
       scene.update(delta, elapsedTime);
     }
   }

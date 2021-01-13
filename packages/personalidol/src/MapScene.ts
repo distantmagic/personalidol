@@ -1,27 +1,15 @@
-import { AmbientLight } from "three/src/lights/AmbientLight";
-import { BufferAttribute } from "three/src/core/BufferAttribute";
-import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { Color } from "three/src/math/Color";
 import { Fog } from "three/src/scenes/Fog";
-import { FrontSide } from "three/src/constants";
-import { HemisphereLight } from "three/src/lights/HemisphereLight";
 import { MathUtils } from "three/src/math/MathUtils";
-import { Mesh } from "three/src/objects/Mesh";
-import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
-import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
-import { PointLight } from "three/src/lights/PointLight";
 import { Scene } from "three/src/scenes/Scene";
-import { SpotLight } from "three/src/lights/SpotLight";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
-import { attachAtlasSamplerToStandardShader } from "@personalidol/texture-loader/src/attachAtlasSamplerToStandardShader";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
-import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
@@ -30,21 +18,26 @@ import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/s
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
-import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
+import { AmbientLightView } from "@personalidol/quakemaps-views/src/AmbientLightView";
+import { HemisphereLightView } from "@personalidol/quakemaps-views/src/HemisphereLightView";
+import { PointLightView } from "@personalidol/quakemaps-views/src/PointLightView";
+import { SpotlightLightView } from "@personalidol/quakemaps-views/src/SpotlightLightView";
+import { MD2ModelView } from "@personalidol/quakemaps-views/src/MD2ModelView";
+import { WorldspawnView } from "@personalidol/quakemaps-views/src/WorldspawnView";
+import { PlayerView } from "@personalidol/quakemaps-views/src/PlayerView";
 
 import { uiStateOnly } from "./uiStateOnly";
 
 import type { Logger } from "loglevel";
-import type { Texture as ITexture } from "three";
+import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { Disposable } from "@personalidol/framework/src/Disposable.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
-import type { EntityAny } from "@personalidol/quakemaps/src/EntityAny.type";
 import type { EntityFuncGroup } from "@personalidol/quakemaps/src/EntityFuncGroup.type";
 import type { EntityGLTFModel } from "@personalidol/quakemaps/src/EntityGLTFModel.type";
 import type { EntityLightAmbient } from "@personalidol/quakemaps/src/EntityLightAmbient.type";
@@ -63,6 +56,8 @@ import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
+import type { View } from "@personalidol/framework/src/View.interface";
+import type { ViewBag } from "@personalidol/loading-manager/src/ViewBag.interface";
 
 import type { EntityLookupCallback } from "./EntityLookupCallback.type";
 import type { EntityLookupTable } from "./EntityLookupTable.type";
@@ -97,12 +92,12 @@ const _quakeMapsRouter = createRouter({
 });
 const _textureReceiverMessageRouter = createTextureReceiverMessagesRouter(_rpcLookupTable);
 let _cameraZoomAmount = 0;
-let _dynamicShadows = false;
 
 export function MapScene(
   logger: Logger,
   effectComposer: EffectComposer,
   eventBus: EventBus,
+  viewBag: ViewBag,
   dimensionsState: Uint32Array,
   inputState: Int32Array,
   domMessagePort: MessagePort,
@@ -124,77 +119,28 @@ export function MapScene(
   _camera.getWorldDirection(_cameraDirection);
 
   const entityLookupTable: EntityLookupTable = {
-    func_group(entity: EntityFuncGroup): void {
+    func_group(entity: EntityFuncGroup): View {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
-    light_ambient(entity: EntityLightAmbient): void {
-      const ambientLight = new AmbientLight(0xffffff, entity.light);
-
-      _mountables.add(function () {
-        _scene.add(ambientLight);
-      });
-
-      _unmountables.add(function () {
-        _scene.remove(ambientLight);
-      });
+    light_ambient(entity: EntityLightAmbient): View {
+      return AmbientLightView(_scene, entity);
     },
 
-    light_hemisphere(entity: EntityLightHemisphere): void {
-      const hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, entity.light);
-
-      _mountables.add(function () {
-        _scene.add(hemisphereLight);
-      });
-
-      _unmountables.add(function () {
-        _scene.remove(hemisphereLight);
-      });
+    light_hemisphere(entity: EntityLightHemisphere): View {
+      return HemisphereLightView(_scene, entity);
     },
 
-    light_point(entity: EntityLightPoint): void {
-      const color = new Color(parseInt(entity.color, 16));
-      const pointLight = new PointLight(color, entity.intensity, 512);
-
-      pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-      pointLight.decay = entity.decay;
-      pointLight.castShadow = _dynamicShadows;
-      pointLight.shadow.camera.far = 512;
-
-      _mountables.add(function () {
-        _scene.add(pointLight);
-      });
-
-      _unmountables.add(function () {
-        _scene.remove(pointLight);
-      });
+    light_point(entity: EntityLightPoint): View {
+      return PointLightView(_scene, entity);
     },
 
-    light_spotlight(entity: EntityLightSpotlight): void {
-      const color = new Color(parseInt(entity.color, 16));
-      const spotLight = new SpotLight(color, entity.intensity);
-
-      spotLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-      spotLight.target.position.set(entity.origin.x, 0, entity.origin.z);
-      spotLight.decay = entity.decay;
-      spotLight.distance = 512;
-      spotLight.penumbra = 1;
-      spotLight.castShadow = _dynamicShadows;
-      spotLight.visible = true;
-      spotLight.shadow.camera.far = 512;
-
-      _mountables.add(function () {
-        _scene.add(spotLight);
-      });
-
-      _unmountables.add(function () {
-        _scene.remove(spotLight);
-      });
+    light_spotlight(entity: EntityLightSpotlight): View {
+      return SpotlightLightView(_scene, entity);
     },
 
-    async model_gltf(entity: EntityGLTFModel): Promise<void> {
-      console.log(entity);
-      return;
+    model_gltf(entity: EntityGLTFModel): View {
+      throw new Error(`Not yet implemented: "${entity.classname}"`);
       // const model = await loaders.gltf.loadAsync(`/models/model-glb-${entity.model_name}/model.glb`);
       // const mesh = model.scene.children[0] as Mesh;
 
@@ -212,94 +158,27 @@ export function MapScene(
       // });
     },
 
-    async model_md2(entity: EntityMD2Model): Promise<void> {
-      const { load: geometry } = await sendRPCMessage(_rpcLookupTable, md2MessagePort, {
-        load: {
-          model_name: entity.model_name,
-          rpc: MathUtils.generateUUID(),
-        },
-      });
-
-      const textureUrl = `${__ASSETS_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}`;
-      const bufferGeometry = new BufferGeometry();
-
-      bufferGeometry.setAttribute("normal", new BufferAttribute(geometry.normals, 3));
-      bufferGeometry.setAttribute("position", new BufferAttribute(geometry.vertices, 3));
-      bufferGeometry.setAttribute("uv", new BufferAttribute(geometry.uvs, 2));
-
-      const material = new MeshBasicMaterial({
-        color: 0xcccccc,
-        flatShading: true,
-        map: await _loadTexture(textureUrl),
-      });
-      const mesh = new Mesh(bufferGeometry, material);
-
-      mesh.castShadow = _dynamicShadows;
-      mesh.receiveShadow = _dynamicShadows;
-      mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-
-      _mountables.add(function () {
-        _scene.add(mesh);
-      });
-
-      _disposables.add(disposableGeneric(bufferGeometry));
-      _disposables.add(disposableMaterial(material));
-
-      _unmountables.add(function () {
-        _scene.remove(mesh);
-      });
+    model_md2(entity: EntityMD2Model): View {
+      return MD2ModelView(_scene, entity, md2MessagePort, texturesMessagePort, _rpcLookupTable);
     },
 
-    player(entity: EntityPlayer): void {
+    player(entity: EntityPlayer): View {
       _playerPosition.set(entity.origin.x, entity.origin.y, entity.origin.z);
       _onCameraUpdate();
+
+      return PlayerView(_scene, entity);
     },
 
-    sounds(entity: EntitySounds): void {
+    sounds(entity: EntitySounds): View {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
-    spark_particles(entity: EntitySparkParticles): void {
-      // throw new Error(`Not yet implemented: "${entity.classname}"`);
+    spark_particles(entity: EntitySparkParticles): View {
+      throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
-    async worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): Promise<void> {
-      logger.debug(`LOADED_MAP_TRIS(${entity.vertices.length / 3})`);
-
-      const bufferGeometry = new BufferGeometry();
-
-      bufferGeometry.setAttribute("atlas_uv_start", new BufferAttribute(entity.atlasUVStart, 2));
-      bufferGeometry.setAttribute("atlas_uv_stop", new BufferAttribute(entity.atlasUVStop, 2));
-      bufferGeometry.setAttribute("normal", new BufferAttribute(entity.normals, 3));
-      bufferGeometry.setAttribute("position", new BufferAttribute(entity.vertices, 3));
-      bufferGeometry.setAttribute("uv", new BufferAttribute(entity.uvs, 2));
-      bufferGeometry.setIndex(new BufferAttribute(entity.indices, 1));
-
-      const meshStandardMaterial = new MeshStandardMaterial({
-        flatShading: true,
-        map: worldspawnTexture,
-        side: FrontSide,
-      });
-
-      // Texture atlas is used here, so texture sampling fragment needs to
-      // be changed.
-      meshStandardMaterial.onBeforeCompile = attachAtlasSamplerToStandardShader;
-
-      const mesh = new Mesh(bufferGeometry, meshStandardMaterial);
-
-      mesh.castShadow = mesh.receiveShadow = _dynamicShadows;
-      mesh.matrixAutoUpdate = false;
-
-      _mountables.add(function () {
-        _scene.add(mesh);
-      });
-
-      _unmountables.add(function () {
-        _scene.remove(mesh);
-      });
-
-      _disposables.add(disposableGeneric(bufferGeometry));
-      _disposables.add(disposableMaterial(meshStandardMaterial));
+    worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): View {
+      return WorldspawnView(logger, _scene, entity, worldspawnTexture);
     },
   };
 
@@ -350,17 +229,14 @@ export function MapScene(
         rpc: MathUtils.generateUUID(),
       },
     });
+
     const worldspawnTexture = imageDataBufferResponseToTexture(textureAtlas);
 
     _disposables.add(disposableGeneric(worldspawnTexture));
 
-    const createEntities = Promise.all(
-      entities.map(function (entity: EntityAny) {
-        return _addMapEntity(entity, worldspawnTexture);
-      })
-    );
-
-    await createEntities;
+    for (let entity of entities) {
+      viewBag.views.add(_createEntityView(entity, worldspawnTexture));
+    }
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -380,7 +256,7 @@ export function MapScene(
     fUnmount(_unmountables);
   }
 
-  function update(delta: number): void {
+  function update(delta: number, elapsedTime: number): void {
     updateStoreCameraAspect(_camera, dimensionsState);
 
     if (isPrimaryPointerPressed(inputState)) {
@@ -395,24 +271,16 @@ export function MapScene(
     effectComposer.render(delta);
   }
 
-  function _addMapEntity<K extends keyof EntityLookup>(entity: EntityLookup[K], worldspawnTexture: ITexture): void | Promise<void> {
+  function _createEntityView<K extends keyof EntityLookup>(entity: EntityLookup[K], worldspawnTexture: ITexture): View {
     const classname = entity.classname;
 
     if (!entityLookupTable.hasOwnProperty(classname)) {
       throw new Error(`Unknown entity class: ${classname}`);
     }
 
-    logger.trace("ADD MAP ENTITY", classname);
+    logger.trace("CREATE MAP ENTITY VIEW", classname);
 
     return (entityLookupTable[classname] as EntityLookupCallback<K>)(entity, worldspawnTexture);
-  }
-
-  async function _loadTexture(textureUrl: string): Promise<ITexture> {
-    const texture = await requestTexture<ITexture>(_rpcLookupTable, texturesMessagePort, textureUrl);
-
-    _disposables.add(disposableGeneric(texture));
-
-    return texture;
   }
 
   function _onCameraUpdate(): void {

@@ -1,14 +1,12 @@
-import { AmbientLight } from "three/src/lights/AmbientLight";
-
 import { noop } from "@personalidol/framework/src/noop";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { EntityLightAmbient } from "@personalidol/quakemaps/src/EntityLightAmbient.type";
+import type { EntityPlayer } from "@personalidol/quakemaps/src/EntityPlayer.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
-export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View {
+export function PlayerView(scene: Scene, entity: EntityPlayer): View {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -16,18 +14,12 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
     isPreloading: false,
   });
 
-  const _ambientLight = new AmbientLight(0xffffff, entity.light);
-
   function dispose(): void {
     state.isDisposed = true;
-
-    scene.remove(_ambientLight);
   }
 
   function mount(): void {
     state.isMounted = true;
-
-    scene.add(_ambientLight);
   }
 
   function preload(): void {
@@ -42,7 +34,7 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
   return Object.freeze({
     isScene: false,
     isView: true,
-    name: `AmbientLight(${entity.light})`,
+    name: `Player`,
     needsUpdates: false,
     state: state,
 
