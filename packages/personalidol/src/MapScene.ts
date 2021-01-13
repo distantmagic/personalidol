@@ -36,7 +36,7 @@ import { uiStateOnly } from "./uiStateOnly";
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
-import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EntityFuncGroup } from "@personalidol/quakemaps/src/EntityFuncGroup.type";
 import type { EntityGLTFModel } from "@personalidol/quakemaps/src/EntityGLTFModel.type";
@@ -51,11 +51,11 @@ import type { EntitySounds } from "@personalidol/quakemaps/src/EntitySounds.type
 import type { EntitySparkParticles } from "@personalidol/quakemaps/src/EntitySparkParticles.type";
 import type { EntityWorldspawn } from "@personalidol/quakemaps/src/EntityWorldspawn.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
-import type { Mountable } from "@personalidol/framework/src/Mountable.type";
+import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
-import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
+import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 import type { ViewBag } from "@personalidol/loading-manager/src/ViewBag.interface";
 
@@ -71,7 +71,7 @@ _camera.far = 3000;
 _camera.near = 1;
 
 const _cameraDirection = new Vector3();
-const _disposables: Set<Disposable> = new Set();
+const _disposables: Set<DisposableCallback> = new Set();
 const _playerPosition = new Vector3();
 const _pointerVector = new Vector2(0, 0);
 const _pointerVectorRotationPivot = new Vector2(0, 0);
@@ -80,8 +80,8 @@ const _scene = new Scene();
 _scene.background = new Color(0x000000);
 _scene.fog = new Fog(_scene.background, _camera.far - 1000, _camera.far);
 
-const _mountables: Set<Mountable> = new Set();
-const _unmountables: Set<Unmountable> = new Set();
+const _mountables: Set<MountableCallback> = new Set();
+const _unmountables: Set<UnmountableCallback> = new Set();
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _md2MessageRouter = createRouter({
@@ -302,6 +302,7 @@ export function MapScene(
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: true,
     isView: false,
     name: `Map(${mapFilename})`,

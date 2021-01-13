@@ -1,8 +1,8 @@
 import { invoke } from "./invoke";
 
-import type { Unmountable } from "./Unmountable.type";
+import type { UnmountableCallback } from "./UnmountableCallback.type";
 
-export function unmount(unmountables: Set<Unmountable>): void {
+export function unmount(unmountables: Set<UnmountableCallback>): void {
   unmountables.forEach(invoke);
   unmountables.clear();
 }

@@ -1,5 +1,7 @@
 /// <reference types="@types/css-font-loading-module" />
 
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
@@ -42,6 +44,7 @@ export function FontPreloadService(fontPreloadMessagePort: MessagePort, progress
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "FontPreloadService",
 
     start: start,

@@ -1,4 +1,5 @@
 import { HemisphereLight } from "three/src/lights/HemisphereLight";
+import { MathUtils } from "three/src/math/MathUtils";
 
 import { noop } from "@personalidol/framework/src/noop";
 
@@ -40,6 +41,7 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
     name: `HemisphereLight(${entity.light})`,

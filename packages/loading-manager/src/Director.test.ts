@@ -2,6 +2,8 @@ import Loglevel from "loglevel";
 
 import { Director } from "./Director";
 
+import type { Scene } from "@personalidol/framework/src/Scene.interface";
+
 test("starts and mounts the new scene", function () {
   const logger = Loglevel.getLogger("test");
   const director = Director(logger, "test");
@@ -13,7 +15,10 @@ test("starts and mounts the new scene", function () {
     isMounted: false,
     isUpdated: false,
   };
-  const scene = {
+  const scene: Scene = {
+    id: "0",
+    isScene: true,
+    isView: false,
     name: "TestScene",
     state: sceneState,
 
@@ -25,7 +30,9 @@ test("starts and mounts the new scene", function () {
       sceneState.isMounted = true;
     },
 
-    preload(): void {},
+    preload(): void {
+      sceneState.isPreloading = true;
+    },
 
     unmount(): void {
       sceneState.isMounted = false;
@@ -84,7 +91,10 @@ test("replaces the scene with a new one", function () {
     isMounted: false,
     isUpdated: false,
   };
-  const scene1 = {
+  const scene1: Scene = {
+    id: "1",
+    isScene: true,
+    isView: false,
     name: "TestScene1",
     state: sceneState1,
 
@@ -96,7 +106,10 @@ test("replaces the scene with a new one", function () {
       sceneState1.isMounted = true;
     },
 
-    preload(): void {},
+    preload(): void {
+      sceneState1.isPreloaded = true;
+      sceneState1.isPreloading = false;
+    },
 
     unmount(): void {
       sceneState1.isMounted = false;
@@ -114,7 +127,10 @@ test("replaces the scene with a new one", function () {
     isMounted: false,
     isUpdated: false,
   };
-  const scene2 = {
+  const scene2: Scene = {
+    id: "2",
+    isScene: true,
+    isView: false,
     name: "TestScene2",
     state: sceneState2,
 
@@ -126,7 +142,10 @@ test("replaces the scene with a new one", function () {
       sceneState2.isMounted = true;
     },
 
-    preload(): void {},
+    preload(): void {
+      sceneState2.isPreloaded = true;
+      sceneState2.isPreloading = false;
+    },
 
     unmount(): void {
       sceneState2.isMounted = false;

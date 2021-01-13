@@ -15,7 +15,7 @@ import type { Uniform } from "three/src/core/Uniform";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
-import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 
 type Shader = {
   defines?: { [key: string]: number };
@@ -25,7 +25,7 @@ type Shader = {
 };
 
 export class ShaderPass extends Pass {
-  private _disposables: Set<Disposable> = new Set();
+  private _disposables: Set<DisposableCallback> = new Set();
 
   fsQuad: FullScreenQuad;
   material: Material;

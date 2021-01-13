@@ -1,7 +1,7 @@
-import type { Disposable } from "./Disposable.type";
+import type { DisposableCallback } from "./DisposableCallback.type";
 import type { DisposableGeneric } from "./DisposableGeneric.interface";
 
-export function disposableGeneric(generic: DisposableGeneric): Disposable {
+export function disposableGeneric(generic: DisposableGeneric): DisposableCallback {
   return function () {
     generic.dispose();
   };

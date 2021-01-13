@@ -1,4 +1,5 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
+import { MathUtils } from "three/src/math/MathUtils";
 
 import { noop } from "@personalidol/framework/src/noop";
 
@@ -40,6 +41,7 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
     name: `AmbientLight(${entity.light})`,

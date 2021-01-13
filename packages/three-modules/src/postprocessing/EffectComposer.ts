@@ -12,12 +12,12 @@ import { ShaderPass } from "./ShaderPass";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget as IWebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
-import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 
 import type { EffectComposer as IEffectComposer } from "./EffectComposer.interface";
 
 export class EffectComposer implements IEffectComposer {
-  private _disposables: Set<Disposable> = new Set();
+  private _disposables: Set<DisposableCallback> = new Set();
   private _pixelRatio: number;
   private _width: number;
   private _height: number;

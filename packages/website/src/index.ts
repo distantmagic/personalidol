@@ -10,7 +10,6 @@ import { DOMUIController } from "@personalidol/personalidol/src/DOMUIController"
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
-import { HashHistoryService } from "@personalidol/dom-renderer/src/HashHistoryService";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
 import { Input } from "@personalidol/framework/src/Input";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
@@ -121,16 +120,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   }
 
   addProgressMessagePort(progressMessageChannel.port1, true);
-
-  // HashHistoryService keeps the browser hash router state aligned with
-  // current routes. Browser URL hash does not control the UI state, it
-  // restores it during the initial load. The goal is to reopen subroutes
-  // when user refreshes the page, but do not conflict with other routing
-  // mechanisms.
-
-  const hashHistoryService = HashHistoryService();
-
-  serviceManager.services.add(hashHistoryService);
 
   // DOMUiController handles DOM rendering using reconciliated routes.
 

@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { isPrimaryPointerInDimensionsBounds } from "./isPrimaryPointerInDimensionsBounds";
 import { passiveEventListener } from "./passiveEventListener";
 
@@ -31,6 +33,7 @@ export function MouseWheelObserver(htmlElement: HTMLElement, eventBus: EventBus,
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "MouseWheelObserver",
 
     start: start,

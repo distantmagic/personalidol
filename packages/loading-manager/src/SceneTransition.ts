@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { mountMountSoft } from "@personalidol/framework/src/mountMountSoft";
 import { mountUnmountSoft } from "@personalidol/framework/src/mountUnmountSoft";
 
@@ -37,6 +39,7 @@ export function SceneTransition(logger: Logger, renderer: WebGLRenderer, sceneDi
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "SceneTransition",
 
     start: start,

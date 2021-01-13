@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { ViewBag } from "@personalidol/loading-manager/src/ViewBag";
 import { ViewBagScene } from "@personalidol/loading-manager/src/ViewBagScene";
@@ -93,6 +95,7 @@ export function UIMessageResponder(
   }
 
   return Object.seal({
+    id: MathUtils.generateUUID(),
     name: "UIMessageResponder",
 
     start: start,

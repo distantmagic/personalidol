@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { noop } from "@personalidol/framework/src/noop";
 
 import type { Scene } from "three/src/scenes/Scene";
@@ -32,6 +34,7 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): View {
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
     name: `Player`,

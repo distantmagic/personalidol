@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import type { PreventDefaultInput as IPreventDefaultInput } from "./PreventDefaultInput.interface";
 
 export function PreventDefaultInput(htmlElement: HTMLElement): IPreventDefaultInput {
@@ -24,6 +26,7 @@ export function PreventDefaultInput(htmlElement: HTMLElement): IPreventDefaultIn
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "PreventDefaultInput",
 
     start: start,

@@ -1,10 +1,9 @@
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
 
+import type { PollablePreloadingState } from "./PollablePreloadingState.interface";
 import type { ViewBag } from "./ViewBag.interface";
 
-export interface ViewBagScene extends Scene {
+export interface ViewBagScene extends PollablePreloadingState, Scene {
   readonly scene: Scene;
   readonly viewBag: ViewBag;
-
-  updatePreloadingState(): void;
 }

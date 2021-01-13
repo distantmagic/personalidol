@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { createRouter } from "@personalidol/workers/src/createRouter";
 
 import { FatalError } from "../elements/pi-fatal-error";
@@ -147,6 +149,7 @@ export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32A
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: true,
     isView: false,
     name: "DOMUIController",

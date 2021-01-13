@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { canvas2DDrawImage } from "@personalidol/dom-renderer/src/canvas2DDrawImage";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
@@ -90,6 +92,7 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "DOMTextureService",
 
     registerMessagePort: registerMessagePort,

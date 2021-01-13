@@ -1,3 +1,7 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
+import { name } from "./name";
+
 import type { Logger } from "loglevel";
 
 import type { Service } from "./Service.interface";
@@ -32,14 +36,14 @@ export function ServiceManager(logger: Logger): IServiceManager {
   }
 
   function _startService(service: Service): void {
-    logger.debug(`SERVICE_START(${service.name})`);
+    logger.debug(`SERVICE_START(${name(service)})`);
 
     service.start();
     _startedServices.add(service);
   }
 
   function _stopService(service: Service): void {
-    logger.debug(`SERVICE_STOP(${service.name})`);
+    logger.debug(`SERVICE_STOP(${name(service)})`);
 
     service.stop();
     _startedServices.delete(service);
@@ -56,6 +60,7 @@ export function ServiceManager(logger: Logger): IServiceManager {
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "ServiceManager",
     services: services,
 

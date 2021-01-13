@@ -1,5 +1,5 @@
-import type { Disposable } from "./Disposable.type";
+import type { DisposableCallback } from "./DisposableCallback.type";
 
 export interface DisposableGeneric {
-  dispose: Disposable;
+  dispose: DisposableCallback;
 }

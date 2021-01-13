@@ -14,13 +14,13 @@ import { uiStateOnly } from "./uiStateOnly";
 
 import type { Logger } from "loglevel";
 
-import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { FontPreloadMessage } from "@personalidol/dom-renderer/src/FontPreloadMessage.type";
 import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontPreloadParameters.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
-import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
+import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // Almendra
@@ -102,9 +102,9 @@ const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // },
 ]);
 
-const _disposables: Set<Disposable> = new Set();
+const _disposables: Set<DisposableCallback> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
-const _unmountables: Set<Unmountable> = new Set();
+const _unmountables: Set<UnmountableCallback> = new Set();
 
 const _fontMessageRouter = createRouter({
   preloadedFont: handleRPCResponse(_rpcLookupTable),
@@ -175,6 +175,7 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: true,
     isView: false,
     name: `MainMenu`,

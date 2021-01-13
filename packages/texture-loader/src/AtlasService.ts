@@ -276,6 +276,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "AtlasService",
 
     registerMessagePort: registerMessagePort,

@@ -1,4 +1,5 @@
 import { Color } from "three/src/math/Color";
+import { MathUtils } from "three/src/math/MathUtils";
 import { SpotLight } from "three/src/lights/SpotLight";
 
 import { noop } from "@personalidol/framework/src/noop";
@@ -51,6 +52,7 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
     name: `SpotlightLight`,

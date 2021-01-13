@@ -1,5 +1,8 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { mountDispose } from "@personalidol/framework/src/mountDispose";
 import { mountPreload } from "@personalidol/framework/src/mountPreload";
+import { name } from "@personalidol/framework/src/name";
 
 import type { Logger } from "loglevel";
 
@@ -53,7 +56,7 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
 
     // 0,1,0
     if (!next && _transitioning && !current && _transitioning.state.isPreloaded) {
-      logger.debug(`FINISHED_PRELOADING_SCENE(${_transitioning.name})`);
+      logger.debug(`FINISHED_PRELOADING_SCENE(${name(_transitioning)})`);
 
       state.current = _transitioning;
       state.isTransitioning = false;
@@ -122,6 +125,7 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: `Director(${directorDebugName})`,
     state: state,
 

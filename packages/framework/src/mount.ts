@@ -1,8 +1,8 @@
 import { invoke } from "./invoke";
 
-import type { Mountable } from "./Mountable.type";
+import type { MountableCallback } from "./MountableCallback.type";
 
-export function mount(mountables: Set<Mountable>): void {
+export function mount(mountables: Set<MountableCallback>): void {
   mountables.forEach(invoke);
   mountables.clear();
 }

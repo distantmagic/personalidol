@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { mountDispose } from "@personalidol/framework/src/mountDispose";
 import { mountMount } from "@personalidol/framework/src/mountMount";
 import { mountPreload } from "@personalidol/framework/src/mountPreload";
@@ -93,7 +95,8 @@ export function ViewBag(logger: Logger): IViewBag {
   }
 
   return Object.freeze({
-    name: `ViewBag`,
+    id: MathUtils.generateUUID(),
+    name: "ViewBag",
     state: state,
     views: views,
 

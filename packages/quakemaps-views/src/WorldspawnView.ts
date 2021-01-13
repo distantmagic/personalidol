@@ -1,6 +1,7 @@
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { FrontSide } from "three/src/constants";
+import { MathUtils } from "three/src/math/MathUtils";
 import { Mesh } from "three/src/objects/Mesh";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 
@@ -17,10 +18,10 @@ import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { EntityWorldspawn } from "@personalidol/quakemaps/src/EntityWorldspawn.type";
-import type { Disposable } from "@personalidol/framework/src/Disposable.type";
-import type { Mountable } from "@personalidol/framework/src/Mountable.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
+import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
-import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
+import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
 export function WorldspawnView(logger: Logger, scene: Scene, entity: EntityWorldspawn, worldspawnTexture: ITexture): View {
@@ -31,9 +32,9 @@ export function WorldspawnView(logger: Logger, scene: Scene, entity: EntityWorld
     isPreloading: false,
   });
 
-  const _disposables: Set<Disposable> = new Set();
-  const _mountables: Set<Mountable> = new Set();
-  const _unmountables: Set<Unmountable> = new Set();
+  const _disposables: Set<DisposableCallback> = new Set();
+  const _mountables: Set<MountableCallback> = new Set();
+  const _unmountables: Set<UnmountableCallback> = new Set();
 
   function dispose(): void {
     state.isDisposed = true;
@@ -98,6 +99,7 @@ export function WorldspawnView(logger: Logger, scene: Scene, entity: EntityWorld
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
     name: `WorldspawnView`,

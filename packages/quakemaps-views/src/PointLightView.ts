@@ -1,4 +1,5 @@
 import { Color } from "three/src/math/Color";
+import { MathUtils } from "three/src/math/MathUtils";
 import { PointLight } from "three/src/lights/PointLight";
 
 import { noop } from "@personalidol/framework/src/noop";
@@ -47,6 +48,7 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
     name: `PointLight`,

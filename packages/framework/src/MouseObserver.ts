@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { computePointerStretchVectorX } from "./computePointerStretchVectorX";
 import { computePointerStretchVectorY } from "./computePointerStretchVectorY";
 import { computePointerVectorX } from "./computePointerVectorX";
@@ -71,6 +73,7 @@ export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "MouseObserver",
 
     start: start,

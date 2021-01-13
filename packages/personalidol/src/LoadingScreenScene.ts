@@ -1,6 +1,7 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
 import { BoxBufferGeometry } from "three/src/geometries/BoxBufferGeometry";
 import { Color } from "three/src/math/Color";
+import { MathUtils } from "three/src/math/MathUtils";
 import { Mesh } from "three/src/objects/Mesh";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
@@ -19,13 +20,13 @@ import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/update
 
 import { uiStateOnly } from "./uiStateOnly";
 
-import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
 import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
-import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
+import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
   const state: MountState = Object.seal({
@@ -42,8 +43,8 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   _camera.position.y = 4;
   _camera.position.z = 12;
 
-  const _disposables: Set<Disposable> = new Set();
-  const _unmountables: Set<Unmountable> = new Set();
+  const _disposables: Set<DisposableCallback> = new Set();
+  const _unmountables: Set<UnmountableCallback> = new Set();
   const _scene = new Scene();
   const _spotLight = new SpotLight(0xffffff);
 
@@ -161,6 +162,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: true,
     isView: false,
     name: "LoadingScreen",

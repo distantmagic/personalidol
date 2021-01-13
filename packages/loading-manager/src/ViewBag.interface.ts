@@ -1,8 +1,8 @@
-import type { Mount } from "@personalidol/framework/src/Mount.interface";
+import type { Mountable } from "@personalidol/framework/src/Mountable.interface";
 import type { View } from "@personalidol/framework/src/View.interface";
 
-export interface ViewBag extends Mount {
-  readonly views: Set<View>;
+import type { PollablePreloadingState } from "./PollablePreloadingState.interface";
 
-  updatePreloadingState(): void;
+export interface ViewBag extends Mountable, PollablePreloadingState {
+  readonly views: Set<View>;
 }

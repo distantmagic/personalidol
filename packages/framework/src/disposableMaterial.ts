@@ -2,9 +2,9 @@ import { disposableGeneric } from "./disposableGeneric";
 
 import type { Material } from "three";
 
-import type { Disposable } from "./Disposable.type";
+import type { DisposableCallback } from "./DisposableCallback.type";
 
-export function disposableMaterial(materials: Material | Array<Material>): Disposable {
+export function disposableMaterial(materials: Material | Array<Material>): DisposableCallback {
   if (!Array.isArray(materials)) {
     return disposableGeneric(materials);
   }

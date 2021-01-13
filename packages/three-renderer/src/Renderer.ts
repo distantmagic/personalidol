@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
@@ -41,6 +43,7 @@ export function Renderer(dimensionsState: Uint32Array, effectComposer: EffectCom
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "Renderer",
 
     start: start,

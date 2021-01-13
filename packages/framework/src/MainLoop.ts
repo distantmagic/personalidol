@@ -1,4 +1,5 @@
 import { Clock } from "three/src/core/Clock";
+import { MathUtils } from "three/src/math/MathUtils";
 
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
@@ -82,6 +83,7 @@ export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLo
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "MainLoop",
     tickTimerState: tickTimerState,
     updatables: updatables,

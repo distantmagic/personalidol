@@ -16,12 +16,12 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
-import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EntityMD2Model } from "@personalidol/quakemaps/src/EntityMD2Model.type";
-import type { Mountable } from "@personalidol/framework/src/Mountable.type";
+import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
-import type { Unmountable } from "@personalidol/framework/src/Unmountable.type";
+import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
 export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePort: MessagePort, texturesMessagePort: MessagePort, rpcLookupTable: RPCLookupTable): View {
@@ -32,9 +32,9 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     isPreloading: false,
   });
 
-  const _disposables: Set<Disposable> = new Set();
-  const _mountables: Set<Mountable> = new Set();
-  const _unmountables: Set<Unmountable> = new Set();
+  const _disposables: Set<DisposableCallback> = new Set();
+  const _mountables: Set<MountableCallback> = new Set();
+  const _unmountables: Set<UnmountableCallback> = new Set();
 
   function dispose(): void {
     state.isDisposed = true;
@@ -106,6 +106,7 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
     name: `MD2Model(${entity.model_name})`,

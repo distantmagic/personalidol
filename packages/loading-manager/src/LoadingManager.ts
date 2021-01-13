@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { createLoadingComment } from "./createLoadingComment";
 
 import type { LoadingManager as ILoadingManager } from "./LoadingManager.interface";
@@ -89,6 +91,7 @@ export function LoadingManager(): ILoadingManager {
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "LoadingManager",
     state: state,
 

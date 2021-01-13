@@ -17,10 +17,10 @@ import type { Uniform } from "three/src/core/Uniform";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
-import type { Disposable } from "@personalidol/framework/src/Disposable.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 
 export class GlitchPass extends Pass {
-  private _disposables: Set<Disposable> = new Set();
+  private _disposables: Set<DisposableCallback> = new Set();
   private curF: number = 0;
   private fsQuad: FullScreenQuad;
   private goWild: boolean = false;

@@ -1,7 +1,10 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { mountDispose } from "@personalidol/framework/src/mountDispose";
 import { mountMount } from "@personalidol/framework/src/mountMount";
 import { mountPreload } from "@personalidol/framework/src/mountPreload";
 import { mountUnmount } from "@personalidol/framework/src/mountUnmount";
+import { name } from "@personalidol/framework/src/name";
 
 import type { Logger } from "loglevel";
 
@@ -78,9 +81,10 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     isScene: true,
     isView: false,
-    name: `ViewBagScene(${scene.name})`,
+    name: `ViewBagScene(${name(scene)})`,
     scene: scene,
     state: state,
     viewBag: viewBag,

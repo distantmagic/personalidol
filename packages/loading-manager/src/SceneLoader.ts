@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { mountMountSoft } from "@personalidol/framework/src/mountMountSoft";
 
 import type { Logger } from "loglevel";
@@ -20,6 +22,7 @@ export function SceneLoader(logger: Logger, sceneDirector: IDirector): ISceneLoa
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
     name: "SceneLoader",
 
     start: start,
