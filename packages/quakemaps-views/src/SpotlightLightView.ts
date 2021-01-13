@@ -55,7 +55,7 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `SpotlightLightView`,
+    name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     needsUpdates: false,
     state: state,
 

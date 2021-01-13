@@ -51,7 +51,7 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `PointLightView`,
+    name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     needsUpdates: false,
     state: state,
 
