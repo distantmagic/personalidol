@@ -44,7 +44,7 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `AmbientLight(${entity.light})`,
+    name: `AmbientLightView(${entity.light})`,
     needsUpdates: false,
     state: state,
 

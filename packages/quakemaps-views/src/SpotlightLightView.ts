@@ -55,7 +55,7 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `SpotlightLight`,
+    name: `SpotlightLightView`,
     needsUpdates: false,
     state: state,
 

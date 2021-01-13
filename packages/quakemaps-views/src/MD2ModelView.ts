@@ -109,7 +109,7 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `MD2Model(${entity.model_name})`,
+    name: `MD2ModelView(${entity.model_name})`,
     needsUpdates: false,
     state: state,
 

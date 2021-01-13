@@ -51,7 +51,7 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `PointLight`,
+    name: `PointLightView`,
     needsUpdates: false,
     state: state,
 

@@ -37,7 +37,7 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): View {
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `Player`,
+    name: `PlayerView`,
     needsUpdates: false,
     state: state,
 

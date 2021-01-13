@@ -44,7 +44,7 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `HemisphereLight(${entity.light})`,
+    name: `HemisphereLightView(${entity.light})`,
     needsUpdates: false,
     state: state,
 
