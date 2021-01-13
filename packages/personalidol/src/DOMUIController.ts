@@ -61,7 +61,7 @@ export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32A
         throw new Error(`"${FatalError.defineName}" element is not ready.`);
       }
 
-      _fatalError.loadingError = props.loadingError;
+      _fatalError.progressError = props.progressError;
 
       return _fatalError;
     },
@@ -71,7 +71,7 @@ export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32A
         throw new Error(`"${LoadingScreen.defineName}" element is not ready.`);
       }
 
-      _loadingScreen.loadingManagerProgress = props.loadingManagerProgress;
+      _loadingScreen.progressManagerProgress = props.progressManagerProgress;
 
       return _loadingScreen;
     },

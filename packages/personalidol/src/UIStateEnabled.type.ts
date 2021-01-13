@@ -1,5 +1,5 @@
-import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
-import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
+import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
+import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 
 export type UIStateEnabled = {
   "pi-main-menu": {
@@ -9,13 +9,13 @@ export type UIStateEnabled = {
   "pi-fatal-error": {
     enabled: true;
     props: {
-      loadingError: LoadingError;
+      progressError: ProgressError;
     };
   };
   "pi-loading-screen": {
     enabled: true;
     props: {
-      loadingManagerProgress: LoadingManagerProgress;
+      progressManagerProgress: ProgressManagerProgress;
     };
   };
   "pi-options": {

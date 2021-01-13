@@ -22,9 +22,9 @@ import { uiStateOnly } from "./uiStateOnly";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
-import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
-import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
+import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
@@ -72,7 +72,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   _disposables.add(disposableMaterial(_boxMaterial));
 
   const _progressRouter = createRouter({
-    error(error: LoadingError): void {
+    error(error: ProgressError): void {
       _boxMaterial.color = new Color(0xff0000);
 
       const glitchPass = new GlitchPass();
@@ -86,20 +86,20 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
           "pi-fatal-error": {
             enabled: true,
             props: {
-              loadingError: error,
+              progressError: error,
             },
           },
         })
       );
     },
 
-    progress(progress: LoadingManagerProgress): void {
+    progress(progress: ProgressManagerProgress): void {
       domMessagePort.postMessage(
         uiStateOnly({
           "pi-loading-screen": {
             enabled: true,
             props: {
-              loadingManagerProgress: progress,
+              progressManagerProgress: progress,
             },
           },
         })

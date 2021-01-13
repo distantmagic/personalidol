@@ -10,8 +10,8 @@ import { createResourceLoadMessage } from "@personalidol/loading-manager/src/cre
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
-import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
-import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
+import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
+import { notifyProgressManagerToExpectItems } from "@personalidol/loading-manager/src/notifyProgressManagerToExpectItems";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
 
@@ -99,7 +99,7 @@ async function _onMapContentLoaded(
     }
   }
 
-  notifyLoadingManagerToExpectItems(progressMessagePort, expectedItemsToLoad);
+  notifyProgressManagerToExpectItems(progressMessagePort, expectedItemsToLoad);
 
   const { createTextureAtlas: textureAtlas } = await sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
     createTextureAtlas: {
@@ -150,7 +150,7 @@ const quakeMapsMessagesRouter = {
     }
 
     // prettier-ignore
-    notifyLoadingManager(
+    notifyProgressManager(
       _progressMessagePort,
       createResourceLoadMessage("map", filename),
       _fetchUnmarshalMapContent(messagePort, _atlasMessagePort, _progressMessagePort, filename, rpc, discardOccluding)

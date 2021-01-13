@@ -6,8 +6,8 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
-import { notifyLoadingManagerToExpectItems } from "@personalidol/loading-manager/src/notifyLoadingManagerToExpectItems";
-import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
+import { notifyProgressManagerToExpectItems } from "@personalidol/loading-manager/src/notifyProgressManagerToExpectItems";
+import { resetProgressManagerState } from "@personalidol/loading-manager/src/resetProgressManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 
 import { uiStateOnly } from "./uiStateOnly";
@@ -144,8 +144,8 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
 
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
 
-    resetLoadingManagerState(progressMessagePort);
-    notifyLoadingManagerToExpectItems(progressMessagePort, _fonts.length);
+    resetProgressManagerState(progressMessagePort);
+    notifyProgressManagerToExpectItems(progressMessagePort, _fonts.length);
 
     await Promise.all(_fonts.map(_preloadFont));
 

@@ -1,6 +1,6 @@
-import type { LoadingManagerItem } from "./LoadingManagerItem.type";
+import type { ProgressManagerItem } from "./ProgressManagerItem.type";
 
-export function notifyLoadingManager<T>(progressMessagePort: MessagePort, item: LoadingManagerItem, waitFor: Promise<T>): Promise<T> {
+export function notifyProgressManager<T>(progressMessagePort: MessagePort, item: ProgressManagerItem, waitFor: Promise<T>): Promise<T> {
   progressMessagePort.postMessage({
     loading: item,
   });

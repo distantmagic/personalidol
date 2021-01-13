@@ -7,7 +7,7 @@ import { createReusedResponsesUsage } from "@personalidol/workers/src/createReus
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
-import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
+import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import { imageDataBufferResponseToImageData } from "./imageDataBufferResponseToImageData";
@@ -249,7 +249,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
     const requestKey = _keyFromAtlasQueueItem(request);
 
     // prettier-ignore
-    const { data: response, isLast } = await notifyLoadingManager(
+    const { data: response, isLast } = await notifyProgressManager(
       progressMessagePort,
       createResourceLoadMessage("atlas", requestKey),
       reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createTextureAtlas)

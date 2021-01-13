@@ -5,7 +5,7 @@ import { canvas2DDrawImage } from "@personalidol/dom-renderer/src/canvas2DDrawIm
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
-import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
+import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 import { preloadImage } from "@personalidol/dom-renderer/src/preloadImage";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
@@ -72,7 +72,7 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
     const requestKey = keyFromTextureRequest(request);
 
     // prettier-ignore
-    const { data: imageData, isLast } = await notifyLoadingManager(
+    const { data: imageData, isLast } = await notifyProgressManager(
       progressMessagePort,
       createResourceLoadMessage("texture", request.textureUrl),
       reuseResponse<ImageData, TextureQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createImageData)

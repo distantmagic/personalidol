@@ -1,15 +1,15 @@
 /// <reference lib="webworker" />
 
 import Loglevel from "loglevel";
+import { LoadingManager } from "three/src/loaders/LoadingManager";
 
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
-import { LoadingManager } from "three/src/loaders/LoadingManager";
 import { MD2Loader } from "@personalidol/three-modules/src/loaders/MD2Loader";
-import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
+import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
@@ -83,7 +83,7 @@ const md2MessagesRouter = {
     }
 
     // prettier-ignore
-    notifyLoadingManager(
+    notifyProgressManager(
       _progressMessagePort,
       createResourceLoadMessage("model", model_name),
       _loadGeometry(messagePort, rpc, model_name)

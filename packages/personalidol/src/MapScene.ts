@@ -6,6 +6,7 @@ import { Scene } from "three/src/scenes/Scene";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { AmbientLightView } from "@personalidol/quakemaps-views/src/AmbientLightView";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
@@ -14,22 +15,21 @@ import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
+import { HemisphereLightView } from "@personalidol/quakemaps-views/src/HemisphereLightView";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
+import { MD2ModelView } from "@personalidol/quakemaps-views/src/MD2ModelView";
 import { mount as fMount } from "@personalidol/framework/src/mount";
+import { PlayerView } from "@personalidol/quakemaps-views/src/PlayerView";
+import { PointLightView } from "@personalidol/quakemaps-views/src/PointLightView";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
-import { resetLoadingManagerState } from "@personalidol/loading-manager/src/resetLoadingManagerState";
+import { resetProgressManagerState } from "@personalidol/loading-manager/src/resetProgressManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
+import { SpotlightLightView } from "@personalidol/quakemaps-views/src/SpotlightLightView";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
-import { AmbientLightView } from "@personalidol/quakemaps-views/src/AmbientLightView";
-import { HemisphereLightView } from "@personalidol/quakemaps-views/src/HemisphereLightView";
-import { PointLightView } from "@personalidol/quakemaps-views/src/PointLightView";
-import { SpotlightLightView } from "@personalidol/quakemaps-views/src/SpotlightLightView";
-import { MD2ModelView } from "@personalidol/quakemaps-views/src/MD2ModelView";
 import { WorldspawnView } from "@personalidol/quakemaps-views/src/WorldspawnView";
-import { PlayerView } from "@personalidol/quakemaps-views/src/PlayerView";
 
 import { uiStateOnly } from "./uiStateOnly";
 
@@ -214,7 +214,7 @@ export function MapScene(
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
     texturesMessagePort.onmessage = _textureReceiverMessageRouter;
 
-    resetLoadingManagerState(progressMessagePort);
+    resetProgressManagerState(progressMessagePort);
 
     const {
       unmarshal: { entities, textureAtlas },

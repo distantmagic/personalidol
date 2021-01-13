@@ -1,6 +1,6 @@
-import type { LoadingManagerItem } from "./LoadingManagerItem.type";
+import type { ProgressManagerItem } from "./ProgressManagerItem.type";
 
-function _isLoaded(itemsLoaded: Set<LoadingManagerItem>, itemToCheck: LoadingManagerItem): boolean {
+function _isLoaded(itemsLoaded: Set<ProgressManagerItem>, itemToCheck: ProgressManagerItem): boolean {
   for (let item of itemsLoaded) {
     if (item.id === itemToCheck.id) {
       return true;
@@ -10,7 +10,7 @@ function _isLoaded(itemsLoaded: Set<LoadingManagerItem>, itemToCheck: LoadingMan
   return false;
 }
 
-export function createLoadingComment(itemsLoaded: Set<LoadingManagerItem>, itemsToLoad: Set<LoadingManagerItem>): string {
+export function createProgressComment(itemsLoaded: Set<ProgressManagerItem>, itemsToLoad: Set<ProgressManagerItem>): string {
   const resources: {
     [key: string]: Array<string>;
   } = {};

@@ -5,12 +5,12 @@ import Loglevel from "loglevel";
 import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
 import { broadcastMessage } from "@personalidol/workers/src/broadcastMessage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
-import { LoadingManager } from "@personalidol/loading-manager/src/LoadingManager";
+import { ProgressManager } from "@personalidol/loading-manager/src/ProgressManager";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
-import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
-import type { LoadingManagerItem } from "@personalidol/loading-manager/src/LoadingManagerItem.type";
-import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
+import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
+import type { ProgressManagerItem } from "@personalidol/loading-manager/src/ProgressManagerItem.type";
+import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -19,27 +19,27 @@ const logger = Loglevel.getLogger(self.name);
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
 
-const loadingManager = LoadingManager();
 const messagePorts: Array<MessagePort> = [];
+const progressManager = ProgressManager();
 const serviceManager = ServiceManager(logger);
 
 let _lastProgressBroadcast: number = 0;
 
-serviceManager.services.add(loadingManager);
+serviceManager.services.add(progressManager);
 
 function _refreshNotifyProgress(): void {
-  loadingManager.update();
+  progressManager.update();
 
-  if (_lastProgressBroadcast >= loadingManager.state.version) {
+  if (_lastProgressBroadcast >= progressManager.state.version) {
     return;
   }
 
-  _lastProgressBroadcast = loadingManager.state.version;
+  _lastProgressBroadcast = progressManager.state.version;
 
-  const progress: LoadingManagerProgress = {
-    comment: loadingManager.state.comment,
-    expectsAtLeast: loadingManager.state.expectsAtLeast,
-    progress: loadingManager.state.progress,
+  const progress: ProgressManagerProgress = {
+    comment: progressManager.state.comment,
+    expectsAtLeast: progressManager.state.expectsAtLeast,
+    progress: progressManager.state.progress,
   };
 
   broadcastMessage(messagePorts, {
@@ -48,12 +48,12 @@ function _refreshNotifyProgress(): void {
 }
 
 const progressMessagesRouter = {
-  done(messagePort: MessagePort, item: LoadingManagerItem) {
-    loadingManager.done(item);
+  done(messagePort: MessagePort, item: ProgressManagerItem) {
+    progressManager.done(item);
     _refreshNotifyProgress();
   },
 
-  error(messagePort: MessagePort, error: LoadingError) {
+  error(messagePort: MessagePort, error: ProgressError) {
     broadcastMessage(messagePorts, {
       error: error,
     });
@@ -61,16 +61,16 @@ const progressMessagesRouter = {
 
   expectAtLeast(messagePort: MessagePort, expectAtLeast: number) {
     logger.debug(`PROGRESS_EXPECT_AT_LEAST(${expectAtLeast})`);
-    loadingManager.expectAtLeast(expectAtLeast);
+    progressManager.expectAtLeast(expectAtLeast);
   },
 
-  loading(messagePort: MessagePort, item: LoadingManagerItem) {
-    loadingManager.waitFor(item);
+  loading(messagePort: MessagePort, item: ProgressManagerItem) {
+    progressManager.waitFor(item);
     _refreshNotifyProgress();
   },
 
   reset() {
-    loadingManager.reset();
+    progressManager.reset();
     _refreshNotifyProgress();
   },
 };

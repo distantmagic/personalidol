@@ -1,6 +1,5 @@
-export type LoadingManagerState = {
+export type ProgressManagerProgress = {
   comment: string;
   expectsAtLeast: number;
   progress: number;
-  version: number;
 };

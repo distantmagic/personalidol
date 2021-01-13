@@ -1,7 +1,7 @@
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
-import type { LoadingManagerProgress } from "@personalidol/loading-manager/src/LoadingManagerProgress.type";
+import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 
 const _css = `
   #comment,
@@ -82,14 +82,14 @@ export class LoadingScreen extends HTMLElement {
   private _progressBar: HTMLElement;
   private _progressValue: HTMLElement;
 
-  set loadingManagerProgress(loadingManagerProgress: LoadingManagerProgress) {
-    const progress = Math.round(loadingManagerProgress.progress * 100);
+  set progressManagerProgress(progressManagerProgress: ProgressManagerProgress) {
+    const progress = Math.round(progressManagerProgress.progress * 100);
     const progressPercentage: string = `${progress}%`;
 
     this._progressBar.style.width = progressPercentage;
     this._progressValue.textContent = progressPercentage;
 
-    this._comment.textContent = `Loading ${loadingManagerProgress.comment} ...`;
+    this._comment.textContent = `Loading ${progressManagerProgress.comment} ...`;
   }
 
   constructor() {

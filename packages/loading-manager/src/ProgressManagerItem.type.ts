@@ -1,4 +1,4 @@
-export type LoadingManagerItem = {
+export type ProgressManagerItem = {
   id: string;
   resourceType: string;
   resourceUri: string;

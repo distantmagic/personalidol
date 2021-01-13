@@ -8,7 +8,7 @@ import { createReusedResponsesCache } from "@personalidol/workers/src/createReus
 import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { keyFromTextureRequest } from "@personalidol/texture-loader/src/keyFromTextureRequest";
-import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
+import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
 
 import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
@@ -53,7 +53,7 @@ const textureMessagesRouter = {
     }
 
     const imageBitmapResponse = reuseResponse(loadingCache, loadingUsage, keyFromTextureRequest(textureRequest), textureRequest, _fetchImageBitmap);
-    const imageBitmap = await notifyLoadingManager(_progressMessagePort, createResourceLoadMessage("texture", textureRequest.textureUrl), imageBitmapResponse);
+    const imageBitmap = await notifyProgressManager(_progressMessagePort, createResourceLoadMessage("texture", textureRequest.textureUrl), imageBitmapResponse);
 
     // prettier-ignore
     messagePort.postMessage(

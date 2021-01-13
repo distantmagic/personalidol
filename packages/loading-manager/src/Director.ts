@@ -105,22 +105,11 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
     // 1,1,0
     if (next && _transitioning && !current) {
       throw new Error("Can't set a new scene while current one is still transitioning.");
-      // mountDispose(logger, _transitioning);
-
-      // state.isTransitioning = false;
-      // _transitioning = null;
-
-      // return;
     }
 
     // 1,1,1
     if (next && _transitioning && current) {
       throw new Error("Can't set a new scene while current one is still transitioning.");
-      // mountDispose(logger, current);
-
-      // state.current = null;
-
-      // return;
     }
   }
 

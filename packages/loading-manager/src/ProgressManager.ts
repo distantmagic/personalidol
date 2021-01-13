@@ -1,12 +1,12 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { createLoadingComment } from "./createLoadingComment";
+import { createProgressComment } from "./createProgressComment";
 
-import type { LoadingManager as ILoadingManager } from "./LoadingManager.interface";
-import type { LoadingManagerItem } from "./LoadingManagerItem.type";
-import type { LoadingManagerState } from "./LoadingManagerState.type";
+import type { ProgressManager as IProgressManager } from "./ProgressManager.interface";
+import type { ProgressManagerItem } from "./ProgressManagerItem.type";
+import type { ProgressManagerState } from "./ProgressManagerState.type";
 
-function _sumWeights(items: Set<LoadingManagerItem>): number {
+function _sumWeights(items: Set<ProgressManagerItem>): number {
   let _sum = 0;
 
   for (let item of items) {
@@ -16,21 +16,21 @@ function _sumWeights(items: Set<LoadingManagerItem>): number {
   return _sum;
 }
 
-export function LoadingManager(): ILoadingManager {
-  const state: LoadingManagerState = Object.seal({
+export function ProgressManager(): IProgressManager {
+  const state: ProgressManagerState = Object.seal({
     comment: "",
     expectsAtLeast: 0,
     progress: 0,
     version: 0,
   });
 
-  const _itemsLoaded: Set<LoadingManagerItem> = new Set();
-  const _itemsToLoad: Set<LoadingManagerItem> = new Set();
+  const _itemsLoaded: Set<ProgressManagerItem> = new Set();
+  const _itemsToLoad: Set<ProgressManagerItem> = new Set();
   let _previousComment: string = "";
   let _previousProgress: number = -1;
   let _startProgress: boolean = false;
 
-  function done(item: LoadingManagerItem) {
+  function done(item: ProgressManagerItem) {
     _itemsLoaded.add(item);
   }
 
@@ -54,7 +54,7 @@ export function LoadingManager(): ILoadingManager {
       throw new Error("There are more items loaded than items that are pending to load.");
     }
 
-    state.comment = createLoadingComment(_itemsLoaded, _itemsToLoad);
+    state.comment = createProgressComment(_itemsLoaded, _itemsToLoad);
 
     if (_startProgress) {
       state.progress = Math.max(state.progress, itemsLoadedWeights / totalWeights);
@@ -86,13 +86,13 @@ export function LoadingManager(): ILoadingManager {
 
   function stop() {}
 
-  function waitFor(item: LoadingManagerItem) {
+  function waitFor(item: ProgressManagerItem) {
     _itemsToLoad.add(item);
   }
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    name: "LoadingManager",
+    name: "ProgressManager",
     state: state,
 
     done: done,

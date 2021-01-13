@@ -1,7 +1,7 @@
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
-import type { LoadingError } from "@personalidol/loading-manager/src/LoadingError.type";
+import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
 
 const _css = `
   :host {
@@ -91,12 +91,12 @@ export class FatalError extends HTMLElement {
   private _itemResourceType: HTMLElement;
   private _itemResourceUri: HTMLElement;
 
-  set loadingError(loadingError: LoadingError) {
-    this._errorMessage.textContent = loadingError.error.message;
-    this._errorStack.textContent = loadingError.error.stack;
-    this._itemId.textContent = loadingError.item.id;
-    this._itemResourceType.textContent = loadingError.item.resourceType;
-    this._itemResourceUri.textContent = loadingError.item.resourceUri;
+  set progressError(progressError: ProgressError) {
+    this._errorMessage.textContent = progressError.error.message;
+    this._errorStack.textContent = progressError.error.stack;
+    this._itemId.textContent = progressError.item.id;
+    this._itemResourceType.textContent = progressError.item.resourceType;
+    this._itemResourceUri.textContent = progressError.item.resourceUri;
   }
 
   constructor() {

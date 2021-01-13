@@ -1,17 +1,17 @@
-import { createLoadingComment } from "./createLoadingComment";
+import { createProgressComment } from "./createProgressComment";
 
-import type { LoadingManagerItem } from "./LoadingManagerItem.type";
+import type { ProgressManagerItem } from "./ProgressManagerItem.type";
 
 test("no resources mean empty comment", function () {
-  const itemsLoaded: Set<LoadingManagerItem> = new Set();
-  const itemsToLoad: Set<LoadingManagerItem> = new Set();
+  const itemsLoaded: Set<ProgressManagerItem> = new Set();
+  const itemsToLoad: Set<ProgressManagerItem> = new Set();
 
-  expect(createLoadingComment(itemsLoaded, itemsToLoad)).toBe("");
+  expect(createProgressComment(itemsLoaded, itemsToLoad)).toBe("");
 });
 
 test("comment is created from a list of resources", function () {
-  const itemsLoaded: Set<LoadingManagerItem> = new Set();
-  const itemsToLoad: Set<LoadingManagerItem> = new Set();
+  const itemsLoaded: Set<ProgressManagerItem> = new Set();
+  const itemsToLoad: Set<ProgressManagerItem> = new Set();
 
   itemsToLoad.add({
     id: "0",
@@ -20,12 +20,12 @@ test("comment is created from a list of resources", function () {
     weight: 1,
   });
 
-  expect(createLoadingComment(itemsLoaded, itemsToLoad)).toBe("texture foo.png");
+  expect(createProgressComment(itemsLoaded, itemsToLoad)).toBe("texture foo.png");
 });
 
 test("similar resources are grouped", function () {
-  const itemsLoaded: Set<LoadingManagerItem> = new Set();
-  const itemsToLoad: Set<LoadingManagerItem> = new Set();
+  const itemsLoaded: Set<ProgressManagerItem> = new Set();
+  const itemsToLoad: Set<ProgressManagerItem> = new Set();
 
   itemsToLoad.add({
     id: "0",
@@ -41,12 +41,12 @@ test("similar resources are grouped", function () {
     weight: 1,
   });
 
-  expect(createLoadingComment(itemsLoaded, itemsToLoad)).toBe("2 textures");
+  expect(createProgressComment(itemsLoaded, itemsToLoad)).toBe("2 textures");
 });
 
 test("if more than two resource types are loading they are never grouped", function () {
-  const itemsLoaded: Set<LoadingManagerItem> = new Set();
-  const itemsToLoad: Set<LoadingManagerItem> = new Set();
+  const itemsLoaded: Set<ProgressManagerItem> = new Set();
+  const itemsToLoad: Set<ProgressManagerItem> = new Set();
 
   itemsToLoad.add({
     id: "0",
@@ -76,12 +76,12 @@ test("if more than two resource types are loading they are never grouped", funct
     weight: 1,
   });
 
-  expect(createLoadingComment(itemsLoaded, itemsToLoad)).toBe("font, 2 images, texture");
+  expect(createProgressComment(itemsLoaded, itemsToLoad)).toBe("font, 2 images, texture");
 });
 
 test("resources from different types are not grouped", function () {
-  const itemsLoaded: Set<LoadingManagerItem> = new Set();
-  const itemsToLoad: Set<LoadingManagerItem> = new Set();
+  const itemsLoaded: Set<ProgressManagerItem> = new Set();
+  const itemsToLoad: Set<ProgressManagerItem> = new Set();
 
   itemsToLoad.add({
     id: "0",
@@ -104,5 +104,5 @@ test("resources from different types are not grouped", function () {
     weight: 1,
   });
 
-  expect(createLoadingComment(itemsLoaded, itemsToLoad)).toBe("font Foo, 2 textures");
+  expect(createProgressComment(itemsLoaded, itemsToLoad)).toBe("font Foo, 2 textures");
 });

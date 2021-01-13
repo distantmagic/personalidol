@@ -4,7 +4,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
-import { notifyLoadingManager } from "@personalidol/loading-manager/src/notifyLoadingManager";
+import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 
 import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
 
@@ -30,7 +30,7 @@ export function FontPreloadService(fontPreloadMessagePort: MessagePort, progress
     const fontFace = new FontFace(parameters.family, `url(${parameters.source})`, parameters.descriptors);
 
     // prettier-ignore
-    await notifyLoadingManager(
+    await notifyProgressManager(
       progressMessagePort,
       createResourceLoadMessage("font", parameters.family),
       fontFace.load()
