@@ -21,15 +21,6 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
   const _color = new Color(parseInt(entity.color, 16));
   const _spotLight = new SpotLight(_color, entity.intensity);
 
-  _spotLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-  _spotLight.target.position.set(entity.origin.x, 0, entity.origin.z);
-  _spotLight.decay = entity.decay;
-  _spotLight.distance = 512;
-  _spotLight.penumbra = 1;
-  _spotLight.castShadow = false;
-  _spotLight.visible = true;
-  _spotLight.shadow.camera.far = 512;
-
   function dispose(): void {
     state.isDisposed = false;
 
@@ -43,6 +34,15 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
   }
 
   function preload(): void {
+    _spotLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    _spotLight.target.position.set(entity.origin.x, 0, entity.origin.z);
+    _spotLight.decay = entity.decay;
+    _spotLight.distance = 512;
+    _spotLight.penumbra = 1;
+    _spotLight.castShadow = false;
+    _spotLight.visible = true;
+    _spotLight.shadow.camera.far = 512;
+
     state.isPreloading = false;
     state.isPreloaded = true;
   }

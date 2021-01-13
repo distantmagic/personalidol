@@ -21,11 +21,6 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
   const _color = new Color(parseInt(entity.color, 16));
   const _pointLight = new PointLight(_color, entity.intensity, 512);
 
-  _pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-  _pointLight.decay = entity.decay;
-  _pointLight.castShadow = false;
-  _pointLight.shadow.camera.far = 512;
-
   function dispose(): void {
     state.isDisposed = true;
 
@@ -39,6 +34,11 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
   }
 
   function preload(): void {
+    _pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    _pointLight.decay = entity.decay;
+    _pointLight.castShadow = false;
+    _pointLight.shadow.camera.far = 512;
+
     state.isPreloading = false;
     state.isPreloaded = true;
   }

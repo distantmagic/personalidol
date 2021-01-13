@@ -56,7 +56,7 @@ export function Director(logger: Logger, directorDebugName: string): IDirector {
 
     // 0,1,0
     if (!next && _transitioning && !current && _transitioning.state.isPreloaded) {
-      logger.debug(`FINISHED_PRELOADING_SCENE(${name(_transitioning)})`);
+      logger.info(`FINISHED_PRELOADING_SCENE(${name(_transitioning)})`);
 
       state.current = _transitioning;
       state.isTransitioning = false;
