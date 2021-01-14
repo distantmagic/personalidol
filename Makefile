@@ -41,6 +41,10 @@ ncu: bootstrap node_modules
 prettier: bootstrap
 	$(call FOREACH,prettier)
 
+.PHONY: publish
+publish: release
+	yarn run lerna publish from-git
+
 .PHONY: release
 release: bootstrap
 	$(MAKE) -C packages/website release
