@@ -86,7 +86,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     throw new Error("Service worker is not supported.");
   }
 
-  ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js`).install();
+  ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js?${__CACHE_BUST}`).install();
 
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,
@@ -94,7 +94,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // information.
 
   const progressMessageChannel = createMessageChannel();
-  const progressWorker = new Worker(`${__STATIC_BASE_PATH}${workers.progress.url}`, {
+  const progressWorker = new Worker(`${__STATIC_BASE_PATH}${workers.progress.url}?${__CACHE_BUST}`, {
     credentials: "same-origin",
     name: workers.progress.name,
     type: "module",
@@ -172,7 +172,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     if (await isCreateImageBitmapSupported(supportCache)) {
       logger.debug("SUPPORTED(createImageBitmap)");
 
-      const texturesWorker = new Worker(`${__STATIC_BASE_PATH}${workers.textures.url}`, {
+      const texturesWorker = new Worker(`${__STATIC_BASE_PATH}${workers.textures.url}?${__CACHE_BUST}`, {
         credentials: "same-origin",
         name: workers.textures.name,
         type: "module",
@@ -222,7 +222,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       logger.debug("SUPPORTED(canvas.transferControlToOffscreen)");
 
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
-      const atlasWorker = new Worker(`${__STATIC_BASE_PATH}${workers.atlas.url}`, {
+      const atlasWorker = new Worker(`${__STATIC_BASE_PATH}${workers.atlas.url}?${__CACHE_BUST}`, {
         credentials: "same-origin",
         name: workers.atlas.name,
         type: "module",
@@ -281,7 +281,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   addProgressMessagePort(quakeMapsToProgressMessageChannel.port1, false);
 
-  const quakeMapsWorker = new Worker(`${__STATIC_BASE_PATH}${workers.quakemaps.url}`, {
+  const quakeMapsWorker = new Worker(`${__STATIC_BASE_PATH}${workers.quakemaps.url}?${__CACHE_BUST}`, {
     credentials: "same-origin",
     name: workers.quakemaps.name,
     type: "module",
@@ -305,7 +305,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   addProgressMessagePort(md2ToProgressMessageChannel.port1, false);
 
-  const md2Worker = new Worker(`${__STATIC_BASE_PATH}${workers.md2.url}`, {
+  const md2Worker = new Worker(`${__STATIC_BASE_PATH}${workers.md2.url}?${__CACHE_BUST}`, {
     credentials: "same-origin",
     name: workers.md2.name,
     type: "module",
@@ -325,7 +325,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
     logger.debug("SUPPORTED(canvas.transferControlToOffscreen)");
 
-    const offscreenWorker = new Worker(`${__STATIC_BASE_PATH}${workers.offscreen.url}`, {
+    const offscreenWorker = new Worker(`${__STATIC_BASE_PATH}${workers.offscreen.url}?${__CACHE_BUST}`, {
       credentials: "same-origin",
       name: workers.offscreen.name,
       type: "module",
