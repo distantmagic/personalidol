@@ -1,5 +1,8 @@
+import { AnimationClip } from "three/src/animation/AnimationClip";
+import { AnimationMixer } from "three/src/animation/AnimationMixer";
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
+import { Float32BufferAttribute } from "three/src/core/BufferAttribute";
 import { MathUtils } from "three/src/math/MathUtils";
 import { Mesh } from "three/src/objects/Mesh";
 import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
@@ -8,11 +11,11 @@ import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { mount as fMount } from "@personalidol/framework/src/mount";
-import { noop } from "@personalidol/framework/src/noop";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
+import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
@@ -35,6 +38,8 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
   const _disposables: Set<DisposableCallback> = new Set();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
+
+  let _animationMixer: null | IAnimationMixer = null;
 
   function dispose(): void {
     state.isDisposed = true;
@@ -65,12 +70,80 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     bufferGeometry.setAttribute("position", new BufferAttribute(geometry.vertices, 3));
     bufferGeometry.setAttribute("uv", new BufferAttribute(geometry.uvs, 2));
 
+    // animation
+
+    const morphPositions = [];
+    const morphNormals = [];
+
+    for (let i = 0, l = geometry.frames.length; i < l; i++) {
+      const frame = geometry.frames[i];
+      const attributeName = frame.name;
+
+      if (frame.vertices.length > 0) {
+        const positions = [];
+
+        for (let j = 0, jl = geometry.qVertexIndices.length; j < jl; j++) {
+          const vertexIndex = geometry.qVertexIndices[j];
+          const stride = vertexIndex * 3;
+
+          const x = frame.vertices[stride];
+          const y = frame.vertices[stride + 1];
+          const z = frame.vertices[stride + 2];
+
+          positions.push(x, y, z);
+        }
+
+        const positionAttribute = new Float32BufferAttribute(positions, 3);
+        positionAttribute.name = attributeName;
+
+        morphPositions.push(positionAttribute);
+      }
+
+      if (frame.normals.length > 0) {
+        const frameNormals: Array<number> = [];
+
+        for (let j = 0, jl = geometry.qVertexIndices.length; j < jl; j++) {
+          const vertexIndex = geometry.qVertexIndices[j];
+          const stride = vertexIndex * 3;
+
+          const nx = frame.normals[stride];
+          const ny = frame.normals[stride + 1];
+          const nz = frame.normals[stride + 2];
+
+          frameNormals.push(nx, ny, nz);
+        }
+
+        var normalAttribute = new Float32BufferAttribute(frameNormals, 3);
+        normalAttribute.name = attributeName;
+
+        morphNormals.push(normalAttribute);
+      }
+    }
+
+    bufferGeometry.morphAttributes.position = morphPositions;
+    bufferGeometry.morphAttributes.normal = morphNormals;
+    bufferGeometry.morphTargetsRelative = false;
+
+    const animations = AnimationClip.CreateClipsFromMorphTargetSequences(geometry.frames, 10, false);
+
     const material = new MeshBasicMaterial({
       color: 0xcccccc,
       flatShading: true,
       map: await _loadTexture(textureUrl),
+      morphTargets: true,
+      // morphNormals: true,
     });
     const mesh = new Mesh(bufferGeometry, material);
+
+    _animationMixer = new AnimationMixer(mesh);
+
+    const animationAction = _animationMixer.clipAction(animations[0], mesh);
+
+    animationAction.play();
+
+    console.log(_animationMixer);
+    console.log(animations);
+    console.log(animationAction);
 
     mesh.castShadow = false;
     mesh.receiveShadow = false;
@@ -97,6 +170,15 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     fUnmount(_unmountables);
   }
 
+  function update(delta: number, elapsedTime: number) {
+    if (_animationMixer === null) {
+      return;
+    }
+
+    console.log('update');
+    _animationMixer.update(delta);
+  }
+
   async function _loadTexture(textureUrl: string): Promise<ITexture> {
     const texture = await requestTexture<ITexture>(rpcLookupTable, texturesMessagePort, textureUrl);
 
@@ -110,13 +192,13 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     isScene: false,
     isView: true,
     name: `MD2ModelView("${entity.model_name}",${entity.skin})`,
-    needsUpdates: false,
+    needsUpdates: true,
     state: state,
 
     dispose: dispose,
     mount: mount,
     preload: preload,
     unmount: unmount,
-    update: noop,
+    update: update,
   });
 }

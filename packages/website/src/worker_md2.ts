@@ -50,8 +50,10 @@ async function _loadGeometry(messagePort: MessagePort, rpc: string, modelName: s
   messagePort.postMessage(
     {
       geometry: {
+        frames: geometry.data.frames,
         normals: geometry.data.normals,
         parts: parts.data,
+        qVertexIndices: geometry.data.qVertexIndices,
         rpc: rpc,
         uvs: geometry.data.uvs,
         vertices: geometry.data.vertices,
@@ -61,6 +63,7 @@ async function _loadGeometry(messagePort: MessagePort, rpc: string, modelName: s
     geometry.isLast
       ? [
           geometry.data.normals.buffer,
+          geometry.data.qVertexIndices.buffer,
           geometry.data.uvs.buffer,
           geometry.data.vertices.buffer
         ]

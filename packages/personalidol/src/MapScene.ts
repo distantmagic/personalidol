@@ -57,7 +57,6 @@ import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.ty
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
-import type { ViewBag } from "@personalidol/loading-manager/src/ViewBag.interface";
 
 import type { EntityLookupCallback } from "./EntityLookupCallback.type";
 import type { EntityLookupTable } from "./EntityLookupTable.type";
@@ -97,7 +96,7 @@ export function MapScene(
   logger: Logger,
   effectComposer: EffectComposer,
   eventBus: EventBus,
-  viewBag: ViewBag,
+  views: Set<View>,
   dimensionsState: Uint32Array,
   inputState: Int32Array,
   domMessagePort: MessagePort,
@@ -235,7 +234,7 @@ export function MapScene(
     _disposables.add(disposableGeneric(worldspawnTexture));
 
     for (let entity of entities) {
-      viewBag.views.add(_createEntityView(entity, worldspawnTexture));
+      views.add(_createEntityView(entity, worldspawnTexture));
     }
 
     state.isPreloading = false;

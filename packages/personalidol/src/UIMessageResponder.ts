@@ -73,7 +73,7 @@ export function UIMessageResponder(
       logger,
       effectComposer,
       eventBus,
-      viewBag,
+      viewBag.views,
       dimensionsState,
       inputState,
       domMessagePort,

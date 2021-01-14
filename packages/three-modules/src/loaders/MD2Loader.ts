@@ -1,16 +1,15 @@
-// import { AnimationClip } from "three/src/animation/AnimationClip";
 import { FileLoader } from "three/src/loaders/FileLoader";
-import { Float32BufferAttribute } from "three/src/core/BufferAttribute";
 import { Loader } from "three/src/loaders/Loader";
 import { Vector3 } from "three/src/math/Vector3";
 
 type ParsedGeometry = {
-  // frames: Array<{
-  //   name: string;
-  //   normals: Array<number> | Float32Array;
-  //   vertices: Array<number> | Float32Array;
-  // }>;
+  frames: Array<{
+    name: string;
+    normals: Array<number> | Float32Array;
+    vertices: Array<number> | Float32Array;
+  }>;
   normals: Float32Array;
+  qVertexIndices: Uint32Array;
   uvs: Float32Array;
   vertices: Float32Array;
 };
@@ -325,11 +324,11 @@ export class MD2Loader extends Loader {
 
     offset = header.offset_tris;
 
-    var vertexIndices = [];
+    var qVertexIndices = [];
     var uvIndices = [];
 
     for (let i = 0, l = header.num_tris; i < l; i++) {
-      vertexIndices.push(data.getUint16(offset + 0, true), data.getUint16(offset + 2, true), data.getUint16(offset + 4, true));
+      qVertexIndices.push(data.getUint16(offset + 0, true), data.getUint16(offset + 2, true), data.getUint16(offset + 4, true));
 
       uvIndices.push(data.getUint16(offset + 6, true), data.getUint16(offset + 8, true), data.getUint16(offset + 10, true));
 
@@ -402,8 +401,8 @@ export class MD2Loader extends Loader {
     var verticesTemp = frames[0].vertices;
     var normalsTemp = frames[0].normals;
 
-    for (let i = 0, l = vertexIndices.length; i < l; i++) {
-      const vertexIndex = vertexIndices[i];
+    for (let i = 0, l = qVertexIndices.length; i < l; i++) {
+      const vertexIndex = qVertexIndices[i];
       let stride = vertexIndex * 3;
 
       //
@@ -433,85 +432,18 @@ export class MD2Loader extends Loader {
       uvs.push(u, v);
     }
 
+    const qVertexIndicesTypedArray = Uint32Array.from(qVertexIndices);
     const normalsTypedArray = Float32Array.from(normals);
     const positionsTypedArray = Float32Array.from(positions);
     const uvsTypedArray = Float32Array.from(uvs);
 
-    // animation
-
-    const morphPositions = [];
-    const morphNormals = [];
-
-    for (let i = 0, l = frames.length; i < l; i++) {
-      const frame = frames[i];
-      const attributeName = frame.name;
-
-      if (frame.vertices.length > 0) {
-        const positions = [];
-
-        for (let j = 0, jl = vertexIndices.length; j < jl; j++) {
-          const vertexIndex = vertexIndices[j];
-          const stride = vertexIndex * 3;
-
-          const x = frame.vertices[stride];
-          const y = frame.vertices[stride + 1];
-          const z = frame.vertices[stride + 2];
-
-          positions.push(x, y, z);
-        }
-
-        const positionAttribute = new Float32BufferAttribute(positions, 3);
-        positionAttribute.name = attributeName;
-
-        morphPositions.push(positionAttribute);
-      }
-
-      if (frame.normals.length > 0) {
-        const normals: Array<number> = [];
-
-        for (let j = 0, jl = vertexIndices.length; j < jl; j++) {
-          const vertexIndex = vertexIndices[j];
-          const stride = vertexIndex * 3;
-
-          const nx = frame.normals[stride];
-          const ny = frame.normals[stride + 1];
-          const nz = frame.normals[stride + 2];
-
-          normals.push(nx, ny, nz);
-        }
-
-        var normalAttribute = new Float32BufferAttribute(normals, 3);
-        normalAttribute.name = attributeName;
-
-        morphNormals.push(normalAttribute);
-      }
-    }
-
-    for (let frame of frames) {
-      frame.normals = Float32Array.from(frame.normals);
-      frame.vertices = Float32Array.from(frame.vertices);
-
-      // transferables.push(frame.normals.buffer);
-      // transferables.push(frame.vertices.buffer);
-    }
-
-    // console.log(morphPositions);
-    // console.log(morphNormals);
-
     // prettier-ignore
     return {
-      // frames: frames,
+      frames: frames,
+      qVertexIndices: qVertexIndicesTypedArray,
       normals: normalsTypedArray,
       uvs: uvsTypedArray,
       vertices: positionsTypedArray,
     };
-
-    // geometry.morphAttributes.position = morphPositions;
-    // geometry.morphAttributes.normal = morphNormals;
-    // geometry.morphTargetsRelative = false;
-
-    // geometry.animations = AnimationClip.CreateClipsFromMorphTargetSequences( frames, 10 );
-
-    // return geometry;
   }
 }
