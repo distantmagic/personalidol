@@ -5,10 +5,10 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/dom-renderer": "^0.0.2",
-    "@personalidol/framework": "^0.0.2",
-    "@personalidol/loading-manager": "^0.0.2",
-    "@personalidol/workers": "^0.0.2",
+    "@personalidol/dom-renderer": "^0.0.3",
+    "@personalidol/framework": "^0.0.3",
+    "@personalidol/loading-manager": "^0.0.3",
+    "@personalidol/workers": "^0.0.3",
     "three": "^0.124.0"
   },
   "devDependencies": {
@@ -31,6 +31,6 @@
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
   "sideEffects": false,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "gitHead": "524bca5e12e690c4025774f44ab41885c513ec5a"
 }

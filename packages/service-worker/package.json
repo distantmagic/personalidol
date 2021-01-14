@@ -5,7 +5,7 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/workers": "^0.0.2",
+    "@personalidol/workers": "^0.0.3",
     "loglevel": "^1.7.1"
   },
   "devDependencies": {
@@ -28,6 +28,6 @@
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
   "sideEffects": false,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "gitHead": "524bca5e12e690c4025774f44ab41885c513ec5a"
 }
