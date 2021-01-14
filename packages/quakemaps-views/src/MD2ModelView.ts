@@ -21,11 +21,31 @@ import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EntityMD2Model } from "@personalidol/quakemaps/src/EntityMD2Model.type";
+// import type { MD2LoaderMorphNormal } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphNormal.type";
+import type { MD2LoaderMorphPosition } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphPosition.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
+
+let _globalAnimationOffset = 0;
+
+// function _morphNormalToBufferAttribute(morphNormal: MD2LoaderMorphNormal) {
+//   const bufferAttribute = new Float32BufferAttribute(morphNormal.normals, 3, true);
+
+//   bufferAttribute.name = morphNormal.name;
+
+//   return bufferAttribute;
+// }
+
+function _morphPositionToBufferAttribute(morphPosition: MD2LoaderMorphPosition) {
+  const bufferAttribute = new Float32BufferAttribute(morphPosition.positions, 3, true);
+
+  bufferAttribute.name = morphPosition.name;
+
+  return bufferAttribute;
+}
 
 export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePort: MessagePort, texturesMessagePort: MessagePort, rpcLookupTable: RPCLookupTable): View {
   const state: MountState = Object.seal({
@@ -35,6 +55,9 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     isPreloading: false,
   });
 
+  _globalAnimationOffset += 0.3;
+
+  const _animationOffset: number = _globalAnimationOffset;
   const _disposables: Set<DisposableCallback> = new Set();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
@@ -63,93 +86,51 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
       },
     });
 
-    const textureUrl = `${__ASSETS_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}`;
+    // Geometry
+
     const bufferGeometry = new BufferGeometry();
 
     bufferGeometry.setAttribute("normal", new BufferAttribute(geometry.normals, 3));
     bufferGeometry.setAttribute("position", new BufferAttribute(geometry.vertices, 3));
     bufferGeometry.setAttribute("uv", new BufferAttribute(geometry.uvs, 2));
 
-    // animation
+    // MorphNormals does not exist in basic material since it's not reflective.
+    // bufferGeometry.morphAttributes.normal = geometry.morphNormals.map(_morphNormalToBufferAttribute);
 
-    const morphPositions = [];
-    const morphNormals = [];
-
-    for (let i = 0, l = geometry.frames.length; i < l; i++) {
-      const frame = geometry.frames[i];
-      const attributeName = frame.name;
-
-      if (frame.vertices.length > 0) {
-        const positions = [];
-
-        for (let j = 0, jl = geometry.qVertexIndices.length; j < jl; j++) {
-          const vertexIndex = geometry.qVertexIndices[j];
-          const stride = vertexIndex * 3;
-
-          const x = frame.vertices[stride];
-          const y = frame.vertices[stride + 1];
-          const z = frame.vertices[stride + 2];
-
-          positions.push(x, y, z);
-        }
-
-        const positionAttribute = new Float32BufferAttribute(positions, 3);
-        positionAttribute.name = attributeName;
-
-        morphPositions.push(positionAttribute);
-      }
-
-      if (frame.normals.length > 0) {
-        const frameNormals: Array<number> = [];
-
-        for (let j = 0, jl = geometry.qVertexIndices.length; j < jl; j++) {
-          const vertexIndex = geometry.qVertexIndices[j];
-          const stride = vertexIndex * 3;
-
-          const nx = frame.normals[stride];
-          const ny = frame.normals[stride + 1];
-          const nz = frame.normals[stride + 2];
-
-          frameNormals.push(nx, ny, nz);
-        }
-
-        var normalAttribute = new Float32BufferAttribute(frameNormals, 3);
-        normalAttribute.name = attributeName;
-
-        morphNormals.push(normalAttribute);
-      }
-    }
-
-    bufferGeometry.morphAttributes.position = morphPositions;
-    bufferGeometry.morphAttributes.normal = morphNormals;
+    bufferGeometry.morphAttributes.position = geometry.morphPositions.map(_morphPositionToBufferAttribute);
     bufferGeometry.morphTargetsRelative = false;
 
-    const animations = AnimationClip.CreateClipsFromMorphTargetSequences(geometry.frames, 10, false);
+    // Material
 
     const material = new MeshBasicMaterial({
       color: 0xcccccc,
       flatShading: true,
-      map: await _loadTexture(textureUrl),
+      map: await _loadTexture(`${__ASSETS_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}`),
       morphTargets: true,
       // morphNormals: true,
     });
+
+    // Mesh
+
     const mesh = new Mesh(bufferGeometry, material);
-
-    _animationMixer = new AnimationMixer(mesh);
-
-    const animationAction = _animationMixer.clipAction(animations[0], mesh);
-
-    animationAction.play();
-
-    console.log(_animationMixer);
-    console.log(animations);
-    console.log(animationAction);
 
     mesh.castShadow = false;
     mesh.receiveShadow = false;
     mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
 
+    // Animations
+
+    _animationMixer = new AnimationMixer(mesh);
+
+    const animations = AnimationClip.CreateClipsFromMorphTargetSequences(geometry.frames, 10, false);
+    const animationAction = _animationMixer.clipAction(animations[0]);
+
     _mountables.add(function () {
+      // Update animationoffset so identical models standing next to each other
+      // won't have synchronized movements.
+      animationAction.time = _animationOffset;
+      animationAction.play();
+
       scene.add(mesh);
     });
 
@@ -157,6 +138,8 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     _disposables.add(disposableMaterial(material));
 
     _unmountables.add(function () {
+      animationAction.stop();
+
       scene.remove(mesh);
     });
 
@@ -170,12 +153,11 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     fUnmount(_unmountables);
   }
 
-  function update(delta: number, elapsedTime: number) {
+  function update(delta: number) {
     if (_animationMixer === null) {
-      return;
+      throw new Error("AnimationMixer should be prepared during 'preload' phase.");
     }
 
-    console.log('update');
     _animationMixer.update(delta);
   }
 

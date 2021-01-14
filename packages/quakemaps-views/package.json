@@ -8,6 +8,7 @@
     "@personalidol/framework": "^0.0.2",
     "@personalidol/quakemaps": "^0.0.2",
     "@personalidol/texture-loader": "^0.0.2",
+    "@personalidol/three-modules": "^0.0.2",
     "@personalidol/workers": "^0.0.2",
     "loglevel": "^1.7.1",
     "three": "^0.124.0",

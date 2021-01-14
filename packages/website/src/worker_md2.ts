@@ -51,9 +51,10 @@ async function _loadGeometry(messagePort: MessagePort, rpc: string, modelName: s
     {
       geometry: {
         frames: geometry.data.frames,
+        morphNormals: geometry.data.morphNormals,
+        morphPositions: geometry.data.morphPositions,
         normals: geometry.data.normals,
         parts: parts.data,
-        qVertexIndices: geometry.data.qVertexIndices,
         rpc: rpc,
         uvs: geometry.data.uvs,
         vertices: geometry.data.vertices,
@@ -61,12 +62,7 @@ async function _loadGeometry(messagePort: MessagePort, rpc: string, modelName: s
     },
     // Transfer everything to not use unnecessary memory.
     geometry.isLast
-      ? [
-          geometry.data.normals.buffer,
-          geometry.data.qVertexIndices.buffer,
-          geometry.data.uvs.buffer,
-          geometry.data.vertices.buffer
-        ]
+      ? geometry.data.transferables
       : emptyTransferables
   );
 }

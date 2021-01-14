@@ -2,16 +2,22 @@ import { FileLoader } from "three/src/loaders/FileLoader";
 import { Loader } from "three/src/loaders/Loader";
 import { Vector3 } from "three/src/math/Vector3";
 
+import type { MD2LoaderMorphNormal } from "./MD2LoaderMorphNormal.type";
+import type { MD2LoaderMorphPosition } from "./MD2LoaderMorphPosition.type";
+
 type ParsedGeometry = {
   frames: Array<{
     name: string;
     normals: Array<number> | Float32Array;
     vertices: Array<number> | Float32Array;
   }>;
+  morphNormals: Array<MD2LoaderMorphNormal>;
+  morphPositions: Array<MD2LoaderMorphPosition>;
   normals: Float32Array;
-  qVertexIndices: Uint32Array;
   uvs: Float32Array;
   vertices: Float32Array;
+
+  transferables: Array<Transferable>;
 };
 
 const headerNames: [
@@ -249,6 +255,7 @@ export class MD2Loader extends Loader {
 
   parse(buffer: ArrayBuffer): ParsedGeometry {
     const data = new DataView(buffer);
+    const transferables: Array<Transferable> = [];
 
     // http://tfc.duke.free.fr/coding/md2-specs-en.html
 
@@ -324,11 +331,11 @@ export class MD2Loader extends Loader {
 
     offset = header.offset_tris;
 
-    var qVertexIndices = [];
+    var vertexIndices = [];
     var uvIndices = [];
 
     for (let i = 0, l = header.num_tris; i < l; i++) {
-      qVertexIndices.push(data.getUint16(offset + 0, true), data.getUint16(offset + 2, true), data.getUint16(offset + 4, true));
+      vertexIndices.push(data.getUint16(offset + 0, true), data.getUint16(offset + 2, true), data.getUint16(offset + 4, true));
 
       uvIndices.push(data.getUint16(offset + 6, true), data.getUint16(offset + 8, true), data.getUint16(offset + 10, true));
 
@@ -401,8 +408,8 @@ export class MD2Loader extends Loader {
     var verticesTemp = frames[0].vertices;
     var normalsTemp = frames[0].normals;
 
-    for (let i = 0, l = qVertexIndices.length; i < l; i++) {
-      const vertexIndex = qVertexIndices[i];
+    for (let i = 0, l = vertexIndices.length; i < l; i++) {
+      const vertexIndex = vertexIndices[i];
       let stride = vertexIndex * 3;
 
       //
@@ -432,18 +439,84 @@ export class MD2Loader extends Loader {
       uvs.push(u, v);
     }
 
-    const qVertexIndicesTypedArray = Uint32Array.from(qVertexIndices);
+    // animation
+
+    const morphPositions = [];
+    const morphNormals = [];
+
+    for (let i = 0, l = frames.length; i < l; i++) {
+      const frame = frames[i];
+      const attributeName = frame.name;
+
+      if (frame.vertices.length > 0) {
+        const positions = [];
+
+        for (let j = 0, jl = vertexIndices.length; j < jl; j++) {
+          const vertexIndex = vertexIndices[j];
+          const stride = vertexIndex * 3;
+
+          const x = frame.vertices[stride];
+          const y = frame.vertices[stride + 1];
+          const z = frame.vertices[stride + 2];
+
+          positions.push(x, y, z);
+        }
+
+        const positionAttribute = {
+          positions: Float32Array.from(positions),
+          name: attributeName,
+        };
+
+        morphPositions.push(positionAttribute);
+        transferables.push(positionAttribute.positions.buffer);
+      }
+
+      if (frame.normals.length > 0) {
+        const frameNormals: Array<number> = [];
+
+        for (let j = 0, jl = vertexIndices.length; j < jl; j++) {
+          const vertexIndex = vertexIndices[j];
+          const stride = vertexIndex * 3;
+
+          const nx = frame.normals[stride];
+          const ny = frame.normals[stride + 1];
+          const nz = frame.normals[stride + 2];
+
+          frameNormals.push(nx, ny, nz);
+        }
+
+        const normalAttribute = {
+          normals: Float32Array.from(frameNormals),
+          name: attributeName,
+        };
+
+        morphNormals.push(normalAttribute);
+        transferables.push(normalAttribute.normals.buffer);
+      }
+    }
+
     const normalsTypedArray = Float32Array.from(normals);
+
+    transferables.push(normalsTypedArray.buffer);
+
     const positionsTypedArray = Float32Array.from(positions);
+
+    transferables.push(positionsTypedArray.buffer);
+
     const uvsTypedArray = Float32Array.from(uvs);
+
+    transferables.push(uvsTypedArray.buffer);
 
     // prettier-ignore
     return {
       frames: frames,
-      qVertexIndices: qVertexIndicesTypedArray,
+      morphNormals: morphNormals,
+      morphPositions: morphPositions,
       normals: normalsTypedArray,
       uvs: uvsTypedArray,
       vertices: positionsTypedArray,
+
+      transferables: transferables,
     };
   }
 }
