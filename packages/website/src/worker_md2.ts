@@ -40,10 +40,10 @@ const _md2LoadAsync = _md2Loader.loadAsync.bind(_md2Loader);
 let _progressMessagePort: null | MessagePort = null;
 
 async function _loadGeometry(messagePort: MessagePort, rpc: string, modelName: string): Promise<void> {
-  const partsUrl = `${__ASSETS_BASE_PATH}/models/model-md2-${modelName}/parts.json`;
+  const partsUrl = `${__ASSETS_BASE_PATH}/models/model-md2-${modelName}/parts.json?${__CACHE_BUST}`;
   const parts = await reuseResponse(loadingCache, loadingUsage, partsUrl, partsUrl, _fetchModelParts);
 
-  const modelUrl = `${__ASSETS_BASE_PATH}/models/model-md2-${modelName}/${parts.data.body}`;
+  const modelUrl = `${__ASSETS_BASE_PATH}/models/model-md2-${modelName}/${parts.data.body}?${__CACHE_BUST}`;
   const geometry = await reuseResponse(loadingCache, loadingUsage, modelUrl, modelUrl, _md2LoadAsync);
 
   // prettier-ignore

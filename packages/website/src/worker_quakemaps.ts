@@ -73,7 +73,7 @@ async function _onMapContentLoaded(
   const textureUrls: Array<string> = [];
 
   function _resolveTextureUrl(textureName: string): string {
-    const textureUrl = `${__ASSETS_BASE_PATH}/${textureName}.png`;
+    const textureUrl = `${__ASSETS_BASE_PATH}/${textureName}.png?${__CACHE_BUST}`;
 
     if (!textureUrls.includes(textureUrl)) {
       textureUrls.push(textureUrl);
