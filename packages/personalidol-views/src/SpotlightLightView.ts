@@ -25,12 +25,14 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
     state.isDisposed = false;
 
     scene.remove(_spotLight);
+    scene.remove(_spotLight.target);
   }
 
   function mount(): void {
     state.isMounted = true;
 
     scene.add(_spotLight);
+    scene.add(_spotLight.target);
   }
 
   function preload(): void {
