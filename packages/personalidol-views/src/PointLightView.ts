@@ -23,8 +23,6 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
 
   function dispose(): void {
     state.isDisposed = true;
-
-    scene.remove(_pointLight);
   }
 
   function mount(): void {
@@ -45,6 +43,8 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
 
   function unmount(): void {
     state.isMounted = false;
+
+    scene.remove(_pointLight);
   }
 
   return Object.freeze({

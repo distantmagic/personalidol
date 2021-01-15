@@ -21,8 +21,6 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
 
   function dispose(): void {
     state.isDisposed = true;
-
-    scene.remove(_ambientLight);
   }
 
   function mount(): void {
@@ -38,6 +36,8 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
 
   function unmount(): void {
     state.isMounted = false;
+
+    scene.remove(_ambientLight);
   }
 
   return Object.freeze({

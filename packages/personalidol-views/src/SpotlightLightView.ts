@@ -23,9 +23,6 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
 
   function dispose(): void {
     state.isDisposed = false;
-
-    scene.remove(_spotLight);
-    scene.remove(_spotLight.target);
   }
 
   function mount(): void {
@@ -51,6 +48,9 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
 
   function unmount(): void {
     state.isMounted = false;
+
+    scene.remove(_spotLight);
+    scene.remove(_spotLight.target);
   }
 
   return Object.freeze({

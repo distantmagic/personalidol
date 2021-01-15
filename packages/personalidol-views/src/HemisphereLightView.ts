@@ -21,8 +21,6 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
 
   function dispose(): void {
     state.isDisposed = true;
-
-    scene.remove(_hemisphereLight);
   }
 
   function mount(): void {
@@ -38,6 +36,8 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
 
   function unmount(): void {
     state.isMounted = false;
+
+    scene.remove(_hemisphereLight);
   }
 
   return Object.freeze({
