@@ -1,14 +1,15 @@
-import { buildGeometryAttributes } from "./buildGeometryAttributes";
-import { UnmarshalException } from "./UnmarshalException";
-import { unmarshalVector3 } from "./unmarshalVector3";
+import { buildGeometryAttributes } from "@personalidol/quakemaps/src/buildGeometryAttributes";
+import { UnmarshalException } from "@personalidol/quakemaps/src/UnmarshalException";
+import { unmarshalVector3 } from "@personalidol/quakemaps/src/unmarshalVector3";
 
 import type { Vector3 } from "three";
 
-import type { Brush } from "./Brush.type";
+import type { Brush } from "@personalidol/quakemaps/src/Brush.type";
+import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
+import type { TextureDimensionsResolver } from "@personalidol/quakemaps/src/TextureDimensionsResolver.type";
+import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
+
 import type { EntityAny } from "./EntityAny.type";
-import type { EntitySketch } from "./EntitySketch.type";
-import type { TextureDimensionsResolver } from "./TextureDimensionsResolver.type";
-import type { Vector3Simple } from "./Vector3Simple.type";
 
 const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
@@ -54,10 +55,12 @@ export function* buildEntities(
           // Grouped objects should be processed as standalone entities,
           // because they can have their own controllers and be handled via
           // triggers. Those can be doors or other animated objects.
+          // Do not discard occluding faces on `func_group` since they may be
+          // rotating, animating, etc.
           default:
             yield {
               classname: entityClassName,
-              ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, discardOccluding),
+              ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, null),
             };
             break;
         }
@@ -100,6 +103,13 @@ export function* buildEntities(
           classname: entityClassName,
           origin: _getEntityOrigin(filename, entity),
           transferables: _transferablesEmpty,
+        };
+        break;
+      case "scripted_block":
+        yield {
+          classname: entityClassName,
+          controller: entity.properties.controller,
+          ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, null),
         };
         break;
       case "spark_particles":

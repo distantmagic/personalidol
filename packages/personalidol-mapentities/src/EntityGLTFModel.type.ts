@@ -1,4 +1,4 @@
-import type { Vector3Simple } from "./Vector3Simple.type";
+import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
 
 export type EntityGLTFModel = {
   readonly angle: number;

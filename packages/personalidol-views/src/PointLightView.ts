@@ -1,15 +1,16 @@
-import { HemisphereLight } from "three/src/lights/HemisphereLight";
+import { Color } from "three/src/math/Color";
 import { MathUtils } from "three/src/math/MathUtils";
+import { PointLight } from "three/src/lights/PointLight";
 
 import { noop } from "@personalidol/framework/src/noop";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { EntityLightHemisphere } from "@personalidol/quakemaps/src/EntityLightHemisphere.type";
+import type { EntityLightPoint } from "@personalidol/personalidol-mapentities/src/EntityLightPoint.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
-export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere): View {
+export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -17,21 +18,27 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
     isPreloading: false,
   });
 
-  const _hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, entity.light);
+  const _color = new Color(parseInt(entity.color, 16));
+  const _pointLight = new PointLight(_color, entity.intensity, 512);
 
   function dispose(): void {
     state.isDisposed = true;
 
-    scene.remove(_hemisphereLight);
+    scene.remove(_pointLight);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    scene.add(_hemisphereLight);
+    scene.add(_pointLight);
   }
 
   function preload(): void {
+    _pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    _pointLight.decay = entity.decay;
+    _pointLight.castShadow = false;
+    _pointLight.shadow.camera.far = 512;
+
     state.isPreloading = false;
     state.isPreloaded = true;
   }
@@ -44,7 +51,7 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `HemisphereLightView(${entity.light})`,
+    name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     needsUpdates: false,
     state: state,
 

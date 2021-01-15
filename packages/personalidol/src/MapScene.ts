@@ -6,7 +6,7 @@ import { Scene } from "three/src/scenes/Scene";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
-import { AmbientLightView } from "@personalidol/quakemaps-views/src/AmbientLightView";
+import { AmbientLightView } from "@personalidol/personalidol-views/src/AmbientLightView";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
@@ -15,21 +15,22 @@ import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
-import { HemisphereLightView } from "@personalidol/quakemaps-views/src/HemisphereLightView";
+import { HemisphereLightView } from "@personalidol/personalidol-views/src/HemisphereLightView";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
-import { MD2ModelView } from "@personalidol/quakemaps-views/src/MD2ModelView";
+import { MD2ModelView } from "@personalidol/personalidol-views/src/MD2ModelView";
 import { mount as fMount } from "@personalidol/framework/src/mount";
-import { PlayerView } from "@personalidol/quakemaps-views/src/PlayerView";
-import { PointLightView } from "@personalidol/quakemaps-views/src/PointLightView";
+import { PlayerView } from "@personalidol/personalidol-views/src/PlayerView";
+import { PointLightView } from "@personalidol/personalidol-views/src/PointLightView";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { resetProgressManagerState } from "@personalidol/loading-manager/src/resetProgressManagerState";
+import { ScriptedBlockView } from "@personalidol/personalidol-views/src/ScriptedBlockView";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
-import { SpotlightLightView } from "@personalidol/quakemaps-views/src/SpotlightLightView";
+import { SpotlightLightView } from "@personalidol/personalidol-views/src/SpotlightLightView";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
-import { WorldspawnView } from "@personalidol/quakemaps-views/src/WorldspawnView";
+import { WorldspawnGeometryView } from "@personalidol/personalidol-views/src/WorldspawnGeometryView";
 
 import { uiStateOnly } from "./uiStateOnly";
 
@@ -38,18 +39,19 @@ import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
-import type { EntityFuncGroup } from "@personalidol/quakemaps/src/EntityFuncGroup.type";
-import type { EntityGLTFModel } from "@personalidol/quakemaps/src/EntityGLTFModel.type";
-import type { EntityLightAmbient } from "@personalidol/quakemaps/src/EntityLightAmbient.type";
-import type { EntityLightHemisphere } from "@personalidol/quakemaps/src/EntityLightHemisphere.type";
-import type { EntityLightPoint } from "@personalidol/quakemaps/src/EntityLightPoint.type";
-import type { EntityLightSpotlight } from "@personalidol/quakemaps/src/EntityLightSpotlight.type";
-import type { EntityLookup } from "@personalidol/quakemaps/src/EntityLookup.type";
-import type { EntityMD2Model } from "@personalidol/quakemaps/src/EntityMD2Model.type";
-import type { EntityPlayer } from "@personalidol/quakemaps/src/EntityPlayer.type";
-import type { EntitySounds } from "@personalidol/quakemaps/src/EntitySounds.type";
-import type { EntitySparkParticles } from "@personalidol/quakemaps/src/EntitySparkParticles.type";
-import type { EntityWorldspawn } from "@personalidol/quakemaps/src/EntityWorldspawn.type";
+import type { EntityFuncGroup } from "@personalidol/personalidol-mapentities/src/EntityFuncGroup.type";
+import type { EntityGLTFModel } from "@personalidol/personalidol-mapentities/src/EntityGLTFModel.type";
+import type { EntityLightAmbient } from "@personalidol/personalidol-mapentities/src/EntityLightAmbient.type";
+import type { EntityLightHemisphere } from "@personalidol/personalidol-mapentities/src/EntityLightHemisphere.type";
+import type { EntityLightPoint } from "@personalidol/personalidol-mapentities/src/EntityLightPoint.type";
+import type { EntityLightSpotlight } from "@personalidol/personalidol-mapentities/src/EntityLightSpotlight.type";
+import type { EntityLookup } from "@personalidol/personalidol-mapentities/src/EntityLookup.type";
+import type { EntityMD2Model } from "@personalidol/personalidol-mapentities/src/EntityMD2Model.type";
+import type { EntityPlayer } from "@personalidol/personalidol-mapentities/src/EntityPlayer.type";
+import type { EntityScriptedBlock } from "@personalidol/personalidol-mapentities/src/EntityScriptedBlock.type";
+import type { EntitySounds } from "@personalidol/personalidol-mapentities/src/EntitySounds.type";
+import type { EntitySparkParticles } from "@personalidol/personalidol-mapentities/src/EntitySparkParticles.type";
+import type { EntityWorldspawn } from "@personalidol/personalidol-mapentities/src/EntityWorldspawn.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
@@ -118,7 +120,7 @@ export function MapScene(
   _camera.getWorldDirection(_cameraDirection);
 
   const entityLookupTable: EntityLookupTable = {
-    func_group(entity: EntityFuncGroup): View {
+    func_group(entity: EntityFuncGroup, worldspawnTexture: ITexture): View {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
@@ -168,6 +170,10 @@ export function MapScene(
       return PlayerView(_scene, entity);
     },
 
+    scripted_block(entity: EntityScriptedBlock, worldspawnTexture: ITexture): View {
+      return ScriptedBlockView(logger, _scene, entity, worldspawnTexture, views);
+    },
+
     sounds(entity: EntitySounds): View {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
@@ -177,7 +183,7 @@ export function MapScene(
     },
 
     worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): View {
-      return WorldspawnView(logger, _scene, entity, worldspawnTexture);
+      return WorldspawnGeometryView(logger, _scene, entity, worldspawnTexture);
     },
   };
 

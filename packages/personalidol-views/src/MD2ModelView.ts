@@ -20,7 +20,7 @@ import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
-import type { EntityMD2Model } from "@personalidol/quakemaps/src/EntityMD2Model.type";
+import type { EntityMD2Model } from "@personalidol/personalidol-mapentities/src/EntityMD2Model.type";
 // import type { MD2LoaderMorphNormal } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphNormal.type";
 import type { MD2LoaderMorphPosition } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphPosition.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";

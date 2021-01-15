@@ -1,13 +1,14 @@
 include ../../Makefile_node.mk
 include ../../Makefile_packages.mk
 
-trenchbroom.setup:
-ifeq ($(FACT_OS), Darwin)
-	rm -rf ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
-	mkdir -p ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
-	cp -r ./trenchbroom ~/Library/Application\ Support/TrenchBroom/games/PersonalIdol
-else
-	rm -rf ~/.TrenchBroom/games/PersonalIdol
+~/.TrenchBroom/games/PersonalIdol:
 	mkdir -p ~/.TrenchBroom/games/PersonalIdol
-	cp -r ./trenchbroom ~/.TrenchBroom/games/PersonalIdol
-endif
+
+~/.TrenchBroom/games/PersonalIdol/GameConfig.cfg: ~/.TrenchBroom/games/PersonalIdol ./trenchbroom/GameConfig.cfg
+	install ./trenchbroom/GameConfig.cfg ~/.TrenchBroom/games/PersonalIdol/GameConfig.cfg
+
+~/.TrenchBroom/games/PersonalIdol/PersonalIdol.fgd: ~/.TrenchBroom/games/PersonalIdol ./trenchbroom/PersonalIdol.fgd
+	install ./trenchbroom/PersonalIdol.fgd ~/.TrenchBroom/games/PersonalIdol/PersonalIdol.fgd
+
+.PHONY: trenchbroom
+trenchbroom: ~/.TrenchBroom/games/PersonalIdol/GameConfig.cfg ~/.TrenchBroom/games/PersonalIdol/PersonalIdol.fgd

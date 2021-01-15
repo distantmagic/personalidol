@@ -170,7 +170,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const addTextureMessagePort = await (async function () {
     if (await isCreateImageBitmapSupported(supportCache)) {
-      logger.debug("SUPPORTED(createImageBitmap)");
+      logger.info("SUPPORTED(createImageBitmap) // offload texture service to a worker thread");
 
       const texturesWorker = new Worker(`${__STATIC_BASE_PATH}${workers.textures.url}?${__CACHE_BUST}`, {
         credentials: "same-origin",
@@ -194,7 +194,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         );
       };
     } else {
-      logger.debug("NO_SUPPORT(createImageBitmap) // starting texture service in the main thread");
+      logger.info("NO_SUPPORT(createImageBitmap) // starting texture service in the main thread");
 
       const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D, texturesToProgressMessageChannel.port2);
 
@@ -219,7 +219,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const addAtlasMessagePort = await (async function () {
     if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
-      logger.debug("SUPPORTED(canvas.transferControlToOffscreen)");
+      logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad atlas service to a worker thread");
 
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
       const atlasWorker = new Worker(`${__STATIC_BASE_PATH}${workers.atlas.url}?${__CACHE_BUST}`, {
@@ -253,7 +253,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         );
       };
     } else {
-      logger.debug("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
+      logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
 
       const atlasCanvasContext2D = atlasCanvas.getContext("2d");
 
@@ -323,7 +323,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // there. If not, then we continue in the main thread.
 
   if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
-    logger.debug("SUPPORTED(canvas.transferControlToOffscreen)");
+    logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad 3D canvas to a worker thread");
 
     const offscreenWorker = new Worker(`${__STATIC_BASE_PATH}${workers.offscreen.url}?${__CACHE_BUST}`, {
       credentials: "same-origin",
@@ -339,7 +339,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     // copy of input / dimensions states every frame to the worker.
     const offscreenWorkerService = (function () {
       function sharedArrayBufferNotAvailable() {
-        logger.debug("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
+        logger.info("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
 
         offscreenWorker.postMessage({
           awaitSharedDimensions: false,
@@ -376,7 +376,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
           return sharedArrayBufferNotAvailable();
         }
 
-        logger.debug("SUPPORTED(SharedArrayBuffer) // sharing dimensions/input array with worker");
+        logger.info("SUPPORTED(SharedArrayBuffer) // sharing dimensions/input memory array between threads");
 
         return WorkerService(offscreenWorker, workers.offscreen.name);
       } else {
@@ -421,7 +421,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     mainLoop.updatables.add(offscreenWorkerService);
     serviceManager.services.add(offscreenWorkerService);
   } else {
-    logger.debug("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
+    logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
 
     /**
      * This extra var is a hack to make esbuild leave the dynamic import as-is.

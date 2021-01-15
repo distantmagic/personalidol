@@ -1,14 +1,16 @@
+import { Color } from "three/src/math/Color";
 import { MathUtils } from "three/src/math/MathUtils";
+import { SpotLight } from "three/src/lights/SpotLight";
 
 import { noop } from "@personalidol/framework/src/noop";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { EntityPlayer } from "@personalidol/quakemaps/src/EntityPlayer.type";
+import type { EntityLightSpotlight } from "@personalidol/personalidol-mapentities/src/EntityLightSpotlight.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
-export function PlayerView(scene: Scene, entity: EntityPlayer): View {
+export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): View {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -16,15 +18,31 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): View {
     isPreloading: false,
   });
 
+  const _color = new Color(parseInt(entity.color, 16));
+  const _spotLight = new SpotLight(_color, entity.intensity);
+
   function dispose(): void {
-    state.isDisposed = true;
+    state.isDisposed = false;
+
+    scene.remove(_spotLight);
   }
 
   function mount(): void {
     state.isMounted = true;
+
+    scene.add(_spotLight);
   }
 
   function preload(): void {
+    _spotLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    _spotLight.target.position.set(entity.origin.x, 0, entity.origin.z);
+    _spotLight.decay = entity.decay;
+    _spotLight.distance = 512;
+    _spotLight.penumbra = 1;
+    _spotLight.castShadow = false;
+    _spotLight.visible = true;
+    _spotLight.shadow.camera.far = 512;
+
     state.isPreloading = false;
     state.isPreloaded = true;
   }
@@ -37,7 +55,7 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): View {
     id: MathUtils.generateUUID(),
     isScene: false,
     isView: true,
-    name: `PlayerView`,
+    name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     needsUpdates: false,
     state: state,
 

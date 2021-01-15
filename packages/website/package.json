@@ -9,6 +9,7 @@
     "@personalidol/framework": "^0.0.3",
     "@personalidol/loading-manager": "^0.0.3",
     "@personalidol/personalidol": "^0.0.3",
+    "@personalidol/personalidol-mapentities": "^0.0.3",
     "@personalidol/quakemaps": "^0.0.3",
     "@personalidol/service-worker": "^0.0.3",
     "@personalidol/support": "^0.0.3",

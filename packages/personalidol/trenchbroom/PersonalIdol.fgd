@@ -30,6 +30,11 @@
 
 @baseclass size(-16 -16 -24, 16 16 32) color(0 255 0) = PlayerModel []
 
+@baseclass = Scripted
+[
+    controller(string) : "Controller name" : ""
+]
+
 @baseclass = Targetname
 [
     targetname(target_source) : "Name"
@@ -82,3 +87,9 @@
 // ----------------------------------------------------------------------------
 
 @PointClass base(PlayerModel) = player : "Player entry point" []
+
+// ----------------------------------------------------------------------------
+// SCRIPTED BRUSHES
+// ----------------------------------------------------------------------------
+
+@SolidClass base(Scripted) = scripted_brush : "Scripted brush" []
