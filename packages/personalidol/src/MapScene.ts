@@ -27,6 +27,7 @@ import { resetProgressManagerState } from "@personalidol/loading-manager/src/res
 import { ScriptedBlockView } from "@personalidol/personalidol-views/src/ScriptedBlockView";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { SpotlightLightView } from "@personalidol/personalidol-views/src/SpotlightLightView";
+import { TargetView } from "@personalidol/personalidol-views/src/TargetView";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
@@ -51,6 +52,7 @@ import type { EntityPlayer } from "@personalidol/personalidol-mapentities/src/En
 import type { EntityScriptedBlock } from "@personalidol/personalidol-mapentities/src/EntityScriptedBlock.type";
 import type { EntitySounds } from "@personalidol/personalidol-mapentities/src/EntitySounds.type";
 import type { EntitySparkParticles } from "@personalidol/personalidol-mapentities/src/EntitySparkParticles.type";
+import type { EntityTarget } from "@personalidol/personalidol-mapentities/src/EntityTarget.type";
 import type { EntityWorldspawn } from "@personalidol/personalidol-mapentities/src/EntityWorldspawn.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
@@ -120,7 +122,7 @@ export function MapScene(
   _camera.getWorldDirection(_cameraDirection);
 
   const entityLookupTable: EntityLookupTable = {
-    func_group(entity: EntityFuncGroup, worldspawnTexture: ITexture): View {
+    func_group(entity: EntityFuncGroup): View {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
@@ -180,6 +182,10 @@ export function MapScene(
 
     spark_particles(entity: EntitySparkParticles): View {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
+    },
+
+    target(entity: EntityTarget): View {
+      return TargetView(_scene, entity);
     },
 
     worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): View {

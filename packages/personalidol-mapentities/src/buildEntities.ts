@@ -5,6 +5,7 @@ import { unmarshalVector3 } from "@personalidol/quakemaps/src/unmarshalVector3";
 import type { Vector3 } from "three";
 
 import type { Brush } from "@personalidol/quakemaps/src/Brush.type";
+import type { EntityProperties } from "@personalidol/quakemaps/src/EntityProperties.type";
 import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
 import type { TextureDimensionsResolver } from "@personalidol/quakemaps/src/TextureDimensionsResolver.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
@@ -37,6 +38,7 @@ export function* buildEntities(
 ): Generator<EntityAny> {
   // brushes to be merged into the bigger static geometry
   const worldBrushes: Array<EntitySketch> = [];
+  let worldProperties: null | EntityProperties = null;
 
   for (let entity of entitySketches) {
     const entityClassName = String(entity.properties.classname);
@@ -60,6 +62,7 @@ export function* buildEntities(
           default:
             yield {
               classname: entityClassName,
+              properties: entity.properties,
               ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, null),
             };
             break;
@@ -73,6 +76,7 @@ export function* buildEntities(
           decay: Number(entity.properties.decay),
           intensity: Number(entity.properties.intensity),
           origin: _getEntityOrigin(filename, entity),
+          properties: entity.properties,
           transferables: _transferablesEmpty,
         };
         break;
@@ -83,6 +87,7 @@ export function* buildEntities(
           model_name: entity.properties.model_name,
           model_texture: entity.properties.model_texture,
           origin: _getEntityOrigin(filename, entity),
+          properties: entity.properties,
           scale: Number(entity.properties.scale),
           transferables: _transferablesEmpty,
         };
@@ -94,6 +99,7 @@ export function* buildEntities(
           classname: entityClassName,
           model_name: entity.properties.model_name,
           origin: _getEntityOrigin(filename, entity),
+          properties: entity.properties,
           skin: Number(entity.properties.skin),
           transferables: _transferablesEmpty,
         };
@@ -102,6 +108,7 @@ export function* buildEntities(
         yield {
           classname: entityClassName,
           origin: _getEntityOrigin(filename, entity),
+          properties: entity.properties,
           transferables: _transferablesEmpty,
         };
         break;
@@ -109,6 +116,9 @@ export function* buildEntities(
         yield {
           classname: entityClassName,
           controller: entity.properties.controller,
+          properties: entity.properties,
+          // Do not discard occluding faces because of the same reasons as
+          // with "func_group".
           ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, null),
         };
         break;
@@ -116,13 +126,25 @@ export function* buildEntities(
         yield {
           classname: entityClassName,
           origin: _getEntityOrigin(filename, entity),
+          properties: entity.properties,
+          transferables: _transferablesEmpty,
+        };
+        break;
+      case "target":
+        yield {
+          classname: entityClassName,
+          origin: _getEntityOrigin(filename, entity),
+          properties: entity.properties,
+          targetname: entity.properties.targetname,
           transferables: _transferablesEmpty,
         };
         break;
       case "worldspawn":
-        // leave worldspawn at the end for better performance
-        // it takes a long time to parse a map file, in the meantime the main
-        // thread can load models, etc
+        if (worldProperties !== null) {
+          throw new Error("Unexpectedly there is more than one worldspawn entity.");
+        }
+
+        worldProperties = entity.properties;
         worldBrushes.push(entity);
 
         if (entity.properties.hasOwnProperty("light")) {
@@ -133,6 +155,7 @@ export function* buildEntities(
               yield {
                 classname: "light_ambient",
                 light: Number(entity.properties.light),
+                properties: entity.properties,
                 transferables: _transferablesEmpty,
               };
               break;
@@ -140,6 +163,7 @@ export function* buildEntities(
               yield {
                 classname: "light_hemisphere",
                 light: Number(entity.properties.light),
+                properties: entity.properties,
                 transferables: _transferablesEmpty,
               };
               break;
@@ -150,6 +174,7 @@ export function* buildEntities(
         if (entity.properties.hasOwnProperty("sounds")) {
           yield {
             classname: "sounds",
+            properties: entity.properties,
             sounds: entity.properties.sounds,
             transferables: _transferablesEmpty,
           };
@@ -158,6 +183,10 @@ export function* buildEntities(
       default:
         throw new UnmarshalException(filename, 0, `Unknown entity class: "${entityClassName}"`);
     }
+  }
+
+  if (worldProperties === null) {
+    throw new Error("Unexpectedly there is no worldspawn entity.");
   }
 
   // this is the static world geometry
@@ -171,8 +200,13 @@ export function* buildEntities(
     return;
   }
 
+  // leave worldspawn at the end for better performance
+  // it takes a long time to parse a map file, in the meantime the main
+  // thread can load models, etc
+
   yield {
     classname: "worldspawn",
+    properties: worldProperties,
     ...buildGeometryAttributes(mergedBrushes, resolveTextureDimensions, discardOccluding),
   };
 }

@@ -2,7 +2,8 @@ import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.ty
 
 import type { BaseEntity } from "./BaseEntity.type";
 
-export type EntitySparkParticles = BaseEntity & {
-  readonly classname: "spark_particles";
+export type EntityTarget = BaseEntity & {
+  readonly classname: "target";
   readonly origin: Vector3Simple;
+  readonly targetname: string;
 };

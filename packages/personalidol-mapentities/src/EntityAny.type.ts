@@ -9,6 +9,7 @@ import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
 import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
+import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 
 // prettier-ignore
@@ -24,5 +25,6 @@ export type EntityAny =
   | EntityScriptedBlock
   | EntitySounds
   | EntitySparkParticles
+  | EntityTarget
   | EntityWorldspawn
 ;

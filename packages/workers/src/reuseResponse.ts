@@ -11,7 +11,7 @@ function _getKey<V, K extends string = string>(map: Map<K, V>, key: K): V {
   return ret;
 }
 
-function _incrementUsage<K extends string = string>(usage: ReusedResponsesUsage, key: K, value: number): boolean {
+function _updateUsage<K extends string = string>(usage: ReusedResponsesUsage, key: K, value: number): boolean {
   const ret = _getKey(usage, key) + value;
 
   usage.set(key, ret);
@@ -31,10 +31,10 @@ export function reuseResponse<T, A, K extends string = string>(
     usage.set(key, 0);
   }
 
-  _incrementUsage(usage, key, 1);
+  _updateUsage(usage, key, 1);
 
   return _getKey(cache, key).then(function (data: T) {
-    const isLast = _incrementUsage(usage, key, -1);
+    const isLast = _updateUsage(usage, key, -1);
 
     if (isLast) {
       cache.delete(key);

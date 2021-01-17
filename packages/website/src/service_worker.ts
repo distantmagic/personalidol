@@ -19,6 +19,10 @@ self.addEventListener("activate", function (event: ExtendableEvent) {
   event.waitUntil(_activate(event));
 });
 
+// self.addEventListener("fetch", async function (event: ExtendableEvent) {
+//   console.log("SERVICE_WORKER_FETCH", event);
+// });
+
 self.addEventListener("install", async function (event: ExtendableEvent) {
   event.waitUntil(_install(event));
 });

@@ -1,5 +1,5 @@
 import type { Mesh } from "three/src/objects/Mesh";
 
-export type WorldspawnGeometryViewTHREE = {
+export type ViewGeometry = {
   mesh: null | Mesh;
 };
