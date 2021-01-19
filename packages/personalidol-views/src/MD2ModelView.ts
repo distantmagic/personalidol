@@ -15,6 +15,7 @@ import { requestTexture } from "@personalidol/texture-loader/src/requestTexture"
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
+import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
 import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
 import type { Mesh as IMesh } from "three/src/objects/Mesh";
 import type { Scene } from "three/src/scenes/Scene";
@@ -30,7 +31,46 @@ import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.ty
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
-let _globalAnimationOffset = 0;
+type AnimationClipsCached = {
+  animations: Array<IAnimationClip>;
+  usage: number;
+};
+
+const _animationClipsCache: Map<string, AnimationClipsCached> = new Map();
+let _globalAnimationOffset: number = 0;
+
+function _clearCachedAnimations(entity: EntityMD2Model): void {
+  const cachedAnimations: undefined | AnimationClipsCached = _animationClipsCache.get(entity.model_name);
+
+  if (!cachedAnimations) {
+    throw new Error(`Expected MD2 animation set to be cached: "${entity.model_name}"`);
+  }
+
+  cachedAnimations.usage -= 1;
+
+  if (cachedAnimations.usage < 1) {
+    _animationClipsCache.delete(entity.model_name);
+  }
+}
+
+function _getSetCachedAnimations(entity: EntityMD2Model, geometry: any): Array<IAnimationClip> {
+  const cachedAnimations: undefined | AnimationClipsCached = _animationClipsCache.get(entity.model_name);
+
+  if (cachedAnimations) {
+    cachedAnimations.usage += 1;
+
+    return cachedAnimations.animations;
+  }
+
+  const animations = AnimationClip.CreateClipsFromMorphTargetSequences(geometry.frames, 10, false);
+
+  _animationClipsCache.set(entity.model_name, {
+    animations: animations,
+    usage: 1,
+  });
+
+  return animations;
+}
 
 // function _morphNormalToBufferAttribute(morphNormal: MD2LoaderMorphNormal) {
 //   const bufferAttribute = new Float32BufferAttribute(morphNormal.normals, 3, true);
@@ -49,6 +89,7 @@ function _morphPositionToBufferAttribute(morphPosition: MD2LoaderMorphPosition) 
 }
 
 export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePort: MessagePort, texturesMessagePort: MessagePort, rpcLookupTable: RPCLookupTable): View {
+  const id: string = MathUtils.generateUUID();
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -128,7 +169,12 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
 
     _animationMixer = new AnimationMixer(_mesh);
 
-    const animations = AnimationClip.CreateClipsFromMorphTargetSequences(geometry.frames, 10, false);
+    const animations = _getSetCachedAnimations(entity, geometry);
+
+    _disposables.add(function () {
+      _clearCachedAnimations(entity);
+    });
+
     const animationAction = _animationMixer.clipAction(animations[0]);
 
     _mountables.add(function () {
@@ -176,7 +222,7 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: id,
     isScene: false,
     isView: true,
     name: `MD2ModelView("${entity.model_name}",${entity.skin})`,
