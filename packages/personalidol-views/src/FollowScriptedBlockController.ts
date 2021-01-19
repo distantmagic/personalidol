@@ -15,7 +15,7 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
 
   const _direction: IVector3 = new Vector3();
   let _followed: null | View = null;
-  let _velocity: number = 1;
+  let _velocity: number = 100;
 
   for (let view of targetedViews) {
     _followed = view;
@@ -26,10 +26,12 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
       throw new Error("Target supposed to be followed does not exist.");
     }
 
+    const _frameDistance: number = _velocity * delta;
+
     _direction.subVectors(_followed.object3D.position, blockView.object3D.position);
 
-    if (_direction.length() > _velocity) {
-      _direction.normalize().multiplyScalar(_velocity);
+    if (_direction.length() > _frameDistance) {
+      _direction.normalize().multiplyScalar(_frameDistance);
       blockView.object3D.position.add(_direction);
     } else {
       blockView.object3D.position.copy(_followed.object3D.position);
