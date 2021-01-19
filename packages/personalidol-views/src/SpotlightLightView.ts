@@ -63,9 +63,8 @@ export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): 
     isView: true,
     name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     needsUpdates: false,
+    object3D: _spotLight,
     state: state,
-    viewPosition: _spotLight.position,
-    viewRotation: _spotLight.rotation,
 
     dispose: dispose,
     mount: mount,

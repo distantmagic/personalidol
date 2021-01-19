@@ -73,9 +73,8 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     isView: true,
     name: `TargetView(${entity.properties.targetname})`,
     needsUpdates: false,
+    object3D: _boxMesh,
     state: state,
-    viewPosition: _boxMesh.position,
-    viewRotation: _boxMesh.rotation,
 
     dispose: dispose,
     mount: mount,

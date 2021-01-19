@@ -27,7 +27,6 @@ import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 import type { WorldspawnGeometryView as IWorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
-import type { ViewGeometry } from "./ViewGeometry.type";
 
 const _geometryOffset = new Vector3();
 
@@ -38,10 +37,6 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
     isMounted: false,
     isPreloaded: false,
     isPreloading: false,
-  });
-
-  const viewGeometry: ViewGeometry = Object.seal({
-    mesh: null,
   });
 
   const _disposables: Set<DisposableCallback> = new Set();
@@ -124,19 +119,12 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
       _mesh.updateMatrix();
     }
 
-    viewGeometry.mesh = _mesh;
-
     _mountables.add(function () {
       scene.add(_mesh);
     });
 
     _unmountables.add(function () {
       scene.remove(_mesh);
-    });
-
-    _disposables.add(function () {
-      // Remove mesh reference so it can be garbage collected.
-      viewGeometry.mesh = null;
     });
 
     state.isPreloading = false;
@@ -155,10 +143,8 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
     isView: true,
     name: `WorldspawnGeometryView`,
     needsUpdates: false,
+    object3D: _mesh,
     state: state,
-    viewGeometry: viewGeometry,
-    viewPosition: _mesh.position,
-    viewRotation: _mesh.rotation,
 
     dispose: dispose,
     mount: mount,

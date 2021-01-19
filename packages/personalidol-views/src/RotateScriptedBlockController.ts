@@ -9,7 +9,7 @@ import type { WorldspawnGeometryView } from "./WorldspawnGeometryView.interface"
 
 export function RotateScriptedBlockController(entityProperties: EntityProperties, blockView: WorldspawnGeometryView): ScriptedBlockController {
   function update(delta: number) {
-    blockView.viewRotation.y += 0.1 * delta;
+    blockView.object3D.rotation.y += 0.1 * delta;
   }
 
   return Object.freeze({

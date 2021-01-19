@@ -26,13 +26,13 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
       throw new Error("Target supposed to be followed does not exist.");
     }
 
-    _direction.subVectors(_followed.viewPosition, blockView.viewPosition);
+    _direction.subVectors(_followed.object3D.position, blockView.object3D.position);
 
     if (_direction.length() > _velocity) {
       _direction.normalize().multiplyScalar(_velocity);
-      blockView.viewPosition.add(_direction);
+      blockView.object3D.position.add(_direction);
     } else {
-      blockView.viewPosition.copy(_followed.viewPosition);
+      blockView.object3D.position.copy(_followed.object3D.position);
     }
   }
 

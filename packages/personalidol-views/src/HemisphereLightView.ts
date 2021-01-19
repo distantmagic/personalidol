@@ -50,9 +50,8 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
     isView: true,
     name: `HemisphereLightView(${entity.light})`,
     needsUpdates: false,
+    object3D: _hemisphereLight,
     state: state,
-    viewPosition: _hemisphereLight.position,
-    viewRotation: _hemisphereLight.rotation,
 
     dispose: dispose,
     mount: mount,

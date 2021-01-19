@@ -181,9 +181,8 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     isView: true,
     name: `MD2ModelView("${entity.model_name}",${entity.skin})`,
     needsUpdates: true,
+    object3D: _mesh,
     state: state,
-    viewPosition: _mesh.position,
-    viewRotation: _mesh.rotation,
 
     dispose: dispose,
     mount: mount,

@@ -65,9 +65,8 @@ export function ScriptedBlockView(
     isView: true,
     name: `ScriptedBlockView("${entity.controller}", ${name(_worldspawnGeometryView)})`,
     needsUpdates: _controller.needsUpdates,
+    object3D: _worldspawnGeometryView.object3D,
     state: state,
-    viewPosition: _worldspawnGeometryView.viewPosition,
-    viewRotation: _worldspawnGeometryView.viewRotation,
 
     dispose: dispose,
     mount: mount,

@@ -50,9 +50,8 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): Enti
     isView: true,
     name: `AmbientLightView(${entity.light})`,
     needsUpdates: false,
+    object3D: _ambientLight,
     state: state,
-    viewPosition: _ambientLight.position,
-    viewRotation: _ambientLight.rotation,
 
     dispose: dispose,
     mount: mount,
