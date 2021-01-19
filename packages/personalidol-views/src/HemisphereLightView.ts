@@ -7,9 +7,10 @@ import type { Scene } from "three/src/scenes/Scene";
 
 import type { EntityLightHemisphere } from "@personalidol/personalidol-mapentities/src/EntityLightHemisphere.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
-import type { View } from "@personalidol/framework/src/View.interface";
 
-export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere): View {
+import type { EntityView } from "./EntityView.interface";
+
+export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -41,7 +42,10 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
   }
 
   return Object.freeze({
+    entity: entity,
     id: MathUtils.generateUUID(),
+    isEntityView: true,
+    isExpectingTargets: false,
     isScene: false,
     isView: true,
     name: `HemisphereLightView(${entity.light})`,

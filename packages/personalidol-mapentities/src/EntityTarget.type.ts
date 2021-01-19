@@ -5,5 +5,4 @@ import type { BaseEntity } from "./BaseEntity.type";
 export type EntityTarget = BaseEntity & {
   readonly classname: "target";
   readonly origin: Vector3Simple;
-  readonly targetname: string;
 };

@@ -8,9 +8,10 @@ import type { Scene } from "three/src/scenes/Scene";
 
 import type { EntityLightPoint } from "@personalidol/personalidol-mapentities/src/EntityLightPoint.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
-import type { View } from "@personalidol/framework/src/View.interface";
 
-export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
+import type { EntityView } from "./EntityView.interface";
+
+export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -48,7 +49,10 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): View {
   }
 
   return Object.freeze({
+    entity: entity,
     id: MathUtils.generateUUID(),
+    isEntityView: true,
+    isExpectingTargets: false,
     isScene: false,
     isView: true,
     name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,

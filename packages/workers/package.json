@@ -5,7 +5,8 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/framework": "^0.0.3"
+    "@personalidol/framework": "^0.0.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
@@ -15,8 +16,7 @@
     "prettier": "^2.2.1",
     "ts-jest": "^26.4.4",
     "tslib": "^2.1.0",
-    "typescript": "^4.1.3",
-    "uuid": "^8.3.2"
+    "typescript": "^4.1.3"
   },
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",

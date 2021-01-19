@@ -2,5 +2,6 @@ import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpda
 import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
 
 export interface ScriptedBlockController extends MainLoopUpdatable, Nameable {
+  readonly isExpectingTargets: boolean;
   readonly isScriptedBlockController: true;
 }

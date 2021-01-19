@@ -2,8 +2,6 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { name } from "@personalidol/framework/src/name";
 
-import { FollowScriptedBlockController } from "./FollowScriptedBlockController";
-import { RotateScriptedBlockController } from "./RotateScriptedBlockController";
 import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 
 import type { Logger } from "loglevel";
@@ -14,11 +12,20 @@ import type { EntityScriptedBlock } from "@personalidol/personalidol-mapentities
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
+import type { EntityView } from "./EntityView.interface";
 import type { ScriptedBlockController } from "./ScriptedBlockController.interface";
+import type { ScriptedBlockControllerResolveCallback } from "./ScriptedBlockControllerResolveCallback.type";
 
 import type { WorldspawnGeometryView as IWorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
 
-export function ScriptedBlockView(logger: Logger, scene: Scene, entity: EntityScriptedBlock, worldspawnTexture: ITexture, views: Set<View>): View {
+export function ScriptedBlockView(
+  logger: Logger,
+  scene: Scene,
+  entity: EntityScriptedBlock,
+  worldspawnTexture: ITexture,
+  views: Set<View>,
+  resolveScriptedBlockController: ScriptedBlockControllerResolveCallback
+): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -27,7 +34,7 @@ export function ScriptedBlockView(logger: Logger, scene: Scene, entity: EntitySc
   });
 
   const _worldspawnGeometryView: IWorldspawnGeometryView = WorldspawnGeometryView(logger, scene, entity, worldspawnTexture, true);
-  const _controller: ScriptedBlockController = _getController(entity.controller);
+  const _controller: ScriptedBlockController = resolveScriptedBlockController(entity, _worldspawnGeometryView.viewGeometry);
 
   function dispose(): void {
     state.isDisposed = true;
@@ -48,19 +55,11 @@ export function ScriptedBlockView(logger: Logger, scene: Scene, entity: EntitySc
     state.isMounted = false;
   }
 
-  function _getController(controllerName: string): ScriptedBlockController {
-    switch (controllerName) {
-      case "follow":
-        return FollowScriptedBlockController();
-      case "rotate_y":
-        return RotateScriptedBlockController(_worldspawnGeometryView.viewGeometry);
-      default:
-        throw new Error(`View controller does not exist: "${controllerName}"`);
-    }
-  }
-
   return Object.freeze({
+    entity: entity,
     id: MathUtils.generateUUID(),
+    isEntityView: true,
+    isExpectingTargets: _controller.isExpectingTargets,
     isScene: false,
     isView: true,
     name: `ScriptedBlockView("${entity.controller}", ${name(_worldspawnGeometryView)})`,

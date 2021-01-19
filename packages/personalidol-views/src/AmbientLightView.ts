@@ -7,9 +7,10 @@ import type { Scene } from "three/src/scenes/Scene";
 
 import type { EntityLightAmbient } from "@personalidol/personalidol-mapentities/src/EntityLightAmbient.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
-import type { View } from "@personalidol/framework/src/View.interface";
 
-export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View {
+import type { EntityView } from "./EntityView.interface";
+
+export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -41,7 +42,10 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): View
   }
 
   return Object.freeze({
+    entity: entity,
     id: MathUtils.generateUUID(),
+    isEntityView: true,
+    isExpectingTargets: false,
     isScene: false,
     isView: true,
     name: `AmbientLightView(${entity.light})`,

@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { buildGeometryAttributes } from "@personalidol/quakemaps/src/buildGeometryAttributes";
 import { UnmarshalException } from "@personalidol/quakemaps/src/UnmarshalException";
 import { unmarshalVector3 } from "@personalidol/quakemaps/src/unmarshalVector3";
@@ -62,6 +64,7 @@ export function* buildEntities(
           default:
             yield {
               classname: entityClassName,
+              id: MathUtils.generateUUID(),
               properties: entity.properties,
               ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, null),
             };
@@ -74,6 +77,7 @@ export function* buildEntities(
           classname: entityClassName,
           color: entity.properties.color,
           decay: Number(entity.properties.decay),
+          id: MathUtils.generateUUID(),
           intensity: Number(entity.properties.intensity),
           origin: _getEntityOrigin(filename, entity),
           properties: entity.properties,
@@ -84,6 +88,7 @@ export function* buildEntities(
         yield {
           angle: Number(entity.properties.angle),
           classname: entityClassName,
+          id: MathUtils.generateUUID(),
           model_name: entity.properties.model_name,
           model_texture: entity.properties.model_texture,
           origin: _getEntityOrigin(filename, entity),
@@ -97,6 +102,7 @@ export function* buildEntities(
         yield {
           angle: Number(entity.properties.angle),
           classname: entityClassName,
+          id: MathUtils.generateUUID(),
           model_name: entity.properties.model_name,
           origin: _getEntityOrigin(filename, entity),
           properties: entity.properties,
@@ -107,6 +113,7 @@ export function* buildEntities(
       case "player":
         yield {
           classname: entityClassName,
+          id: MathUtils.generateUUID(),
           origin: _getEntityOrigin(filename, entity),
           properties: entity.properties,
           transferables: _transferablesEmpty,
@@ -116,6 +123,7 @@ export function* buildEntities(
         yield {
           classname: entityClassName,
           controller: entity.properties.controller,
+          id: MathUtils.generateUUID(),
           properties: entity.properties,
           // Do not discard occluding faces because of the same reasons as
           // with "func_group".
@@ -125,6 +133,7 @@ export function* buildEntities(
       case "spark_particles":
         yield {
           classname: entityClassName,
+          id: MathUtils.generateUUID(),
           origin: _getEntityOrigin(filename, entity),
           properties: entity.properties,
           transferables: _transferablesEmpty,
@@ -133,9 +142,9 @@ export function* buildEntities(
       case "target":
         yield {
           classname: entityClassName,
+          id: MathUtils.generateUUID(),
           origin: _getEntityOrigin(filename, entity),
           properties: entity.properties,
-          targetname: entity.properties.targetname,
           transferables: _transferablesEmpty,
         };
         break;
@@ -154,6 +163,7 @@ export function* buildEntities(
             case SCENERY_INDOORS:
               yield {
                 classname: "light_ambient",
+                id: MathUtils.generateUUID(),
                 light: Number(entity.properties.light),
                 properties: entity.properties,
                 transferables: _transferablesEmpty,
@@ -162,6 +172,7 @@ export function* buildEntities(
             case SCENERY_OUTDOORS:
               yield {
                 classname: "light_hemisphere",
+                id: MathUtils.generateUUID(),
                 light: Number(entity.properties.light),
                 properties: entity.properties,
                 transferables: _transferablesEmpty,
@@ -174,6 +185,7 @@ export function* buildEntities(
         if (entity.properties.hasOwnProperty("sounds")) {
           yield {
             classname: "sounds",
+            id: MathUtils.generateUUID(),
             properties: entity.properties,
             sounds: entity.properties.sounds,
             transferables: _transferablesEmpty,
@@ -206,6 +218,7 @@ export function* buildEntities(
 
   yield {
     classname: "worldspawn",
+    id: MathUtils.generateUUID(),
     properties: worldProperties,
     ...buildGeometryAttributes(mergedBrushes, resolveTextureDimensions, discardOccluding),
   };

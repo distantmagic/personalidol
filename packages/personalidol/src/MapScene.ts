@@ -7,6 +7,7 @@ import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { AmbientLightView } from "@personalidol/personalidol-views/src/AmbientLightView";
+import { buildViews } from "@personalidol/personalidol-views/src/buildViews";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
@@ -24,6 +25,7 @@ import { PlayerView } from "@personalidol/personalidol-views/src/PlayerView";
 import { PointLightView } from "@personalidol/personalidol-views/src/PointLightView";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { resetProgressManagerState } from "@personalidol/loading-manager/src/resetProgressManagerState";
+import { resolveScriptedBlockController } from "@personalidol/personalidol-views/src/resolveScriptedBlockController";
 import { ScriptedBlockView } from "@personalidol/personalidol-views/src/ScriptedBlockView";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { SpotlightLightView } from "@personalidol/personalidol-views/src/SpotlightLightView";
@@ -46,7 +48,7 @@ import type { EntityLightAmbient } from "@personalidol/personalidol-mapentities/
 import type { EntityLightHemisphere } from "@personalidol/personalidol-mapentities/src/EntityLightHemisphere.type";
 import type { EntityLightPoint } from "@personalidol/personalidol-mapentities/src/EntityLightPoint.type";
 import type { EntityLightSpotlight } from "@personalidol/personalidol-mapentities/src/EntityLightSpotlight.type";
-import type { EntityLookup } from "@personalidol/personalidol-mapentities/src/EntityLookup.type";
+import type { EntityLookupTable } from "@personalidol/personalidol-views/src/EntityLookupTable.type";
 import type { EntityMD2Model } from "@personalidol/personalidol-mapentities/src/EntityMD2Model.type";
 import type { EntityPlayer } from "@personalidol/personalidol-mapentities/src/EntityPlayer.type";
 import type { EntityScriptedBlock } from "@personalidol/personalidol-mapentities/src/EntityScriptedBlock.type";
@@ -61,9 +63,6 @@ import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.ty
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
-
-import type { EntityLookupCallback } from "./EntityLookupCallback.type";
-import type { EntityLookupTable } from "./EntityLookupTable.type";
 
 const CAMERA_ZOOM_MAX = 200;
 const CAMERA_ZOOM_MIN = 1400;
@@ -173,7 +172,7 @@ export function MapScene(
     },
 
     scripted_block(entity: EntityScriptedBlock, worldspawnTexture: ITexture): View {
-      return ScriptedBlockView(logger, _scene, entity, worldspawnTexture, views);
+      return ScriptedBlockView(logger, _scene, entity, worldspawnTexture, views, resolveScriptedBlockController);
     },
 
     sounds(entity: EntitySounds): View {
@@ -245,8 +244,8 @@ export function MapScene(
 
     _disposables.add(disposableGeneric(worldspawnTexture));
 
-    for (let entity of entities) {
-      views.add(_createEntityView(entity, worldspawnTexture));
+    for (let view of buildViews(logger, entityLookupTable, worldspawnTexture, entities)) {
+      views.add(view);
     }
 
     state.isPreloading = false;
@@ -280,18 +279,6 @@ export function MapScene(
     }
 
     effectComposer.render(delta);
-  }
-
-  function _createEntityView<K extends keyof EntityLookup>(entity: EntityLookup[K], worldspawnTexture: ITexture): View {
-    const classname = entity.classname;
-
-    if (!entityLookupTable.hasOwnProperty(classname)) {
-      throw new Error(`Unknown entity class: ${classname}`);
-    }
-
-    logger.trace("CREATE MAP ENTITY VIEW", classname);
-
-    return (entityLookupTable[classname] as EntityLookupCallback<K>)(entity, worldspawnTexture);
   }
 
   function _onCameraUpdate(): void {

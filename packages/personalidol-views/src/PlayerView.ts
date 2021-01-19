@@ -6,9 +6,10 @@ import type { Scene } from "three/src/scenes/Scene";
 
 import type { EntityPlayer } from "@personalidol/personalidol-mapentities/src/EntityPlayer.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
-import type { View } from "@personalidol/framework/src/View.interface";
 
-export function PlayerView(scene: Scene, entity: EntityPlayer): View {
+import type { EntityView } from "./EntityView.interface";
+
+export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -34,7 +35,10 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): View {
   }
 
   return Object.freeze({
+    entity: entity,
     id: MathUtils.generateUUID(),
+    isEntityView: true,
+    isExpectingTargets: false,
     isScene: false,
     isView: true,
     name: `PlayerView`,
