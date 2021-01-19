@@ -12,7 +12,7 @@ export function resolveScriptedBlockController(entity: EntityScriptedBlock, bloc
     case "follow":
       return FollowScriptedBlockController(blockView, targetedViews);
     case "rotate":
-      return RotateScriptedBlockController(entity.properties, blockView);
+      return RotateScriptedBlockController(blockView);
     default:
       throw new Error(`View controller does not exist: "${entity.controller}"`);
   }
