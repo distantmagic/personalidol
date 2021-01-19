@@ -1,8 +1,12 @@
+import { Euler } from "three/src/math/Euler";
 import { MathUtils } from "three/src/math/MathUtils";
+import { Vector3 } from "three/src/math/Vector3";
 
 import { noop } from "@personalidol/framework/src/noop";
 
+import type { Euler as IEuler } from "three/src/math/Euler";
 import type { Scene } from "three/src/scenes/Scene";
+import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { EntityPlayer } from "@personalidol/personalidol-mapentities/src/EntityPlayer.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
@@ -16,6 +20,9 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
     isPreloaded: false,
     isPreloading: false,
   });
+
+  const viewPosition: IVector3 = new Vector3();
+  const viewRotation: IEuler = new Euler();
 
   function dispose(): void {
     state.isDisposed = true;
@@ -44,6 +51,8 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
     name: `PlayerView`,
     needsUpdates: false,
     state: state,
+    viewPosition: viewPosition,
+    viewRotation: viewRotation,
 
     dispose: dispose,
     mount: mount,

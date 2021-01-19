@@ -24,6 +24,7 @@ export function ScriptedBlockView(
   entity: EntityScriptedBlock,
   worldspawnTexture: ITexture,
   views: Set<View>,
+  targetedViews: Set<View>,
   resolveScriptedBlockController: ScriptedBlockControllerResolveCallback
 ): EntityView {
   const state: MountState = Object.seal({
@@ -34,7 +35,7 @@ export function ScriptedBlockView(
   });
 
   const _worldspawnGeometryView: IWorldspawnGeometryView = WorldspawnGeometryView(logger, scene, entity, worldspawnTexture, true);
-  const _controller: ScriptedBlockController = resolveScriptedBlockController(entity, _worldspawnGeometryView.viewGeometry);
+  const _controller: ScriptedBlockController = resolveScriptedBlockController(entity, _worldspawnGeometryView, targetedViews);
 
   function dispose(): void {
     state.isDisposed = true;
@@ -63,8 +64,10 @@ export function ScriptedBlockView(
     isScene: false,
     isView: true,
     name: `ScriptedBlockView("${entity.controller}", ${name(_worldspawnGeometryView)})`,
-    needsUpdates: true,
+    needsUpdates: _controller.needsUpdates,
     state: state,
+    viewPosition: _worldspawnGeometryView.viewPosition,
+    viewRotation: _worldspawnGeometryView.viewRotation,
 
     dispose: dispose,
     mount: mount,

@@ -171,8 +171,8 @@ export function MapScene(
       return PlayerView(_scene, entity);
     },
 
-    scripted_block(entity: EntityScriptedBlock, worldspawnTexture: ITexture): View {
-      return ScriptedBlockView(logger, _scene, entity, worldspawnTexture, views, resolveScriptedBlockController);
+    scripted_block(entity: EntityScriptedBlock, worldspawnTexture: ITexture, targetedViews: Set<View>): View {
+      return ScriptedBlockView(logger, _scene, entity, worldspawnTexture, views, targetedViews, resolveScriptedBlockController);
     },
 
     sounds(entity: EntitySounds): View {

@@ -4,9 +4,9 @@ import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { Float32BufferAttribute } from "three/src/core/BufferAttribute";
 import { MathUtils } from "three/src/math/MathUtils";
-import { Mesh } from "three/src/objects/Mesh";
 import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
 
+import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
@@ -16,6 +16,7 @@ import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
 import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
+import type { Mesh as IMesh } from "three/src/objects/Mesh";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
@@ -60,6 +61,7 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
   const _animationOffset: number = _globalAnimationOffset;
   const _disposables: Set<DisposableCallback> = new Set();
   const _mountables: Set<MountableCallback> = new Set();
+  const _mesh: IMesh = createEmptyMesh();
   const _unmountables: Set<UnmountableCallback> = new Set();
 
   let _animationMixer: null | IAnimationMixer = null;
@@ -112,15 +114,19 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
 
     // Mesh
 
-    const mesh = new Mesh(bufferGeometry, material);
+    _mesh.geometry = bufferGeometry;
+    _mesh.material = material;
 
-    mesh.castShadow = false;
-    mesh.receiveShadow = false;
-    mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    // Update morph targets after swapping both geometry and material.
+    _mesh.updateMorphTargets();
+
+    _mesh.castShadow = false;
+    _mesh.receiveShadow = false;
+    _mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
 
     // Animations
 
-    _animationMixer = new AnimationMixer(mesh);
+    _animationMixer = new AnimationMixer(_mesh);
 
     const animations = AnimationClip.CreateClipsFromMorphTargetSequences(geometry.frames, 10, false);
     const animationAction = _animationMixer.clipAction(animations[0]);
@@ -131,7 +137,7 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
       animationAction.time = _animationOffset;
       animationAction.play();
 
-      scene.add(mesh);
+      scene.add(_mesh);
     });
 
     _disposables.add(disposableGeneric(bufferGeometry));
@@ -140,7 +146,7 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     _unmountables.add(function () {
       animationAction.stop();
 
-      scene.remove(mesh);
+      scene.remove(_mesh);
     });
 
     state.isPreloading = false;
@@ -176,6 +182,8 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
     name: `MD2ModelView("${entity.model_name}",${entity.skin})`,
     needsUpdates: true,
     state: state,
+    viewPosition: _mesh.position,
+    viewRotation: _mesh.rotation,
 
     dispose: dispose,
     mount: mount,

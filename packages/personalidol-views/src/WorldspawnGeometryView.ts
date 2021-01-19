@@ -2,11 +2,11 @@ import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { FrontSide } from "three/src/constants";
 import { MathUtils } from "three/src/math/MathUtils";
-import { Mesh } from "three/src/objects/Mesh";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { attachAtlasSamplerToStandardShader } from "@personalidol/texture-loader/src/attachAtlasSamplerToStandardShader";
+import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
@@ -16,6 +16,7 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
 import type { Box3 } from "three/src/math/Box3";
 import type { Logger } from "loglevel";
+import type { Mesh as IMesh } from "three/src/objects/Mesh";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
@@ -44,6 +45,7 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
   });
 
   const _disposables: Set<DisposableCallback> = new Set();
+  const _mesh: IMesh = createEmptyMesh();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
 
@@ -75,6 +77,8 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
     bufferGeometry.setAttribute("uv", new BufferAttribute(entity.uvs, 2));
     bufferGeometry.setIndex(new BufferAttribute(entity.indices, 1));
 
+    _disposables.add(disposableGeneric(bufferGeometry));
+
     // Material
 
     const meshStandardMaterial = new MeshStandardMaterial({
@@ -87,9 +91,12 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
     // be changed.
     meshStandardMaterial.onBeforeCompile = attachAtlasSamplerToStandardShader;
 
+    _disposables.add(disposableMaterial(meshStandardMaterial));
+
     // Mesh
 
-    const mesh = new Mesh(bufferGeometry, meshStandardMaterial);
+    _mesh.geometry = bufferGeometry;
+    _mesh.material = meshStandardMaterial;
 
     // Offset geometry back to its origin, then move the mesh to the place
     // where geometry was expected to be in the map editor. This helps with
@@ -106,28 +113,27 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
     geometryBoundingBox.getCenter(_geometryOffset);
 
     bufferGeometry.translate(-1 * _geometryOffset.x, -1 * _geometryOffset.y, -1 * _geometryOffset.z);
-    mesh.position.set(_geometryOffset.x, _geometryOffset.y, _geometryOffset.z);
 
-    mesh.castShadow = mesh.receiveShadow = false;
-    mesh.matrixAutoUpdate = matrixAutoUpdate;
+    _mesh.position.set(_geometryOffset.x, _geometryOffset.y, _geometryOffset.z);
+
+    _mesh.receiveShadow = false;
+    _mesh.matrixAutoUpdate = matrixAutoUpdate;
 
     if (!matrixAutoUpdate) {
       // This one update is necessary to set offsets correctly.
-      mesh.updateMatrix();
+      _mesh.updateMatrix();
     }
 
-    viewGeometry.mesh = mesh;
+    viewGeometry.mesh = _mesh;
 
     _mountables.add(function () {
-      scene.add(mesh);
+      scene.add(_mesh);
     });
 
     _unmountables.add(function () {
-      scene.remove(mesh);
+      scene.remove(_mesh);
     });
 
-    _disposables.add(disposableGeneric(bufferGeometry));
-    _disposables.add(disposableMaterial(meshStandardMaterial));
     _disposables.add(function () {
       // Remove mesh reference so it can be garbage collected.
       viewGeometry.mesh = null;
@@ -151,6 +157,8 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
     needsUpdates: false,
     state: state,
     viewGeometry: viewGeometry,
+    viewPosition: _mesh.position,
+    viewRotation: _mesh.rotation,
 
     dispose: dispose,
     mount: mount,

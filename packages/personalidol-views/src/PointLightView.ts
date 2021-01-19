@@ -58,6 +58,8 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityVi
     name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     needsUpdates: false,
     state: state,
+    viewPosition: _pointLight.position,
+    viewRotation: _pointLight.rotation,
 
     dispose: dispose,
     mount: mount,
