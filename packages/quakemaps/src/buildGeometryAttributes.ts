@@ -4,7 +4,7 @@ import { isEmptyTexturePlaceholder } from "./isEmptyTexturePlaceholder";
 import { marshalVector3 } from "./marshalVector3";
 import { triangulateFacePoints } from "./triangulateFacePoints";
 
-import type { Vector3 } from "three";
+import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
 
@@ -17,12 +17,12 @@ import type { TriangleSimple } from "./TriangleSimple.type";
 
 type UV = [number, number];
 
-const PI_HALF = Math.PI / 2;
+const PI_HALF: number = Math.PI / 2;
 
 export function buildGeometryAttributes(
   brushes: ReadonlyArray<Brush>,
   resolveTextureDimensions: TextureDimensionsResolver,
-  discardOccluding: null | Vector3 = null
+  discardOccluding: null | IVector3 = null
 ): GeometryAttributes {
   let indexIncrement = 0;
   const indexLookup: {
@@ -130,7 +130,7 @@ export function buildGeometryAttributes(
   };
 }
 
-function _addUniquePointToBrush(brush: Brush, points: Array<Vector3>, point: Vector3): void {
+function _addUniquePointToBrush(brush: Brush, points: Array<IVector3>, point: IVector3): void {
   if (points.includes(point)) {
     return;
   }
@@ -146,31 +146,103 @@ function _textureWrapV(halfSpace: HalfSpace, textureDimensions: AtlasTextureDime
   return (v + halfSpace.texture.offset.y) / textureDimensions.height;
 }
 
-function _createUV(halfSpace: HalfSpace, point: Vector3, textureDimensions: AtlasTextureDimension, triangle: TriangleSimple, i: number): UV {
+function _createUV(halfSpace: HalfSpace, point: IVector3, textureDimensions: AtlasTextureDimension, triangle: TriangleSimple, i: number): UV {
   const normal = halfSpace.plane.normal;
 
   // prettier-ignore
   switch (true) {
-    case normal.x > normal.y && normal.x > normal.z:
-    case normal.x < normal.y && normal.x < normal.z:
-      return [
-        _textureWrapU(halfSpace, textureDimensions, point.z),
-        _textureWrapV(halfSpace, textureDimensions, point.y),
-      ];
-    case normal.z > normal.x && normal.z > normal.y:
-    case normal.z < normal.x && normal.z < normal.y:
+    case isAlmostEqual(normal.x, normal.y) && isAlmostEqual(normal.y, normal.z):
       return [
         _textureWrapU(halfSpace, textureDimensions, point.x),
         _textureWrapV(halfSpace, textureDimensions, point.y),
       ];
-    case normal.y > normal.x && normal.y > normal.z:
-    case normal.y < normal.x && normal.y < normal.z:
-    case isAlmostEqual(normal.x, normal.y) && isAlmostEqual(normal.x, normal.z) && normal.x > 0:
+    case isAlmostEqual(normal.x, normal.y) && normal.z < normal.x:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.y),
+        _textureWrapV(halfSpace, textureDimensions, point.z),
+      ];
+    case isAlmostEqual(normal.x, normal.y) && normal.z > normal.x:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case isAlmostEqual(normal.x, normal.z) && normal.y < normal.x:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case isAlmostEqual(normal.x, normal.z) && normal.y > normal.x:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.z),
+      ];
+    case isAlmostEqual(normal.y, normal.z) && normal.x < normal.y:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.y),
+        _textureWrapV(halfSpace, textureDimensions, point.z),
+      ];
+    case isAlmostEqual(normal.y, normal.z) && normal.x > normal.y:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.y),
+        _textureWrapV(halfSpace, textureDimensions, point.z),
+      ];
+    case normal.x > normal.y && normal.x > normal.z && normal.y < normal.z:
       return [
         _textureWrapU(halfSpace, textureDimensions, point.z),
-        _textureWrapV(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.x > normal.y && normal.x > normal.z && normal.y > normal.z:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.z),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.x < normal.y && normal.x < normal.z && normal.y < normal.z:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.x < normal.y && normal.x < normal.z && normal.y > normal.z:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.z),
+      ];
+    case normal.y > normal.x && normal.y > normal.z && normal.x < normal.z:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.y > normal.x && normal.y > normal.z && normal.x > normal.z:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.z),
+      ];
+    case normal.y < normal.x && normal.y < normal.z && normal.x < normal.z:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.y < normal.x && normal.y < normal.z && normal.x > normal.z:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.z > normal.x && normal.z > normal.y && normal.x < normal.y:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.z > normal.x && normal.z > normal.y && normal.x > normal.y:
+      return [
+        _textureWrapU(halfSpace, textureDimensions, point.x),
+        _textureWrapV(halfSpace, textureDimensions, point.y),
+      ];
+    case normal.z < normal.x && normal.z < normal.y:
+      return [
+        0,
+        0,
       ];
     default:
+      console.log(normal);
       throw new Error("Unable to determine UVs.");
   }
 }
@@ -179,7 +251,7 @@ function _createUV(halfSpace: HalfSpace, point: Vector3, textureDimensions: Atla
  * This is really important, as the given point, which can be a valid
  * halfspaces intersection, can still land outside the brush boundaries
  */
-function _isPointInsideBrush(brush: Brush, point: Vector3): boolean {
+function _isPointInsideBrush(brush: Brush, point: IVector3): boolean {
   for (let halfSpace of brush.halfSpaces) {
     const distanceToPoint = halfSpace.plane.distanceToPoint(point);
 
@@ -191,6 +263,6 @@ function _isPointInsideBrush(brush: Brush, point: Vector3): boolean {
   return true;
 }
 
-function _marshalToIndex(halfSpace: HalfSpace, point: Vector3, uv: UV): string {
+function _marshalToIndex(halfSpace: HalfSpace, point: IVector3, uv: UV): string {
   return `${halfSpace.texture.name} ${marshalVector3(halfSpace.plane.normal)} ${marshalVector3(point)} ${uv[0]} ${uv[1]}`;
 }

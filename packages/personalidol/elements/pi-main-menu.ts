@@ -180,6 +180,7 @@ export class MainMenu extends HTMLElement {
     must(this.domMessagePort, DOM_MESSAGE_PORT_NOT_SET).postMessage({
       navigateToMap: {
         mapName: "map-mountain-caravan",
+        // mapName: "map-uvtest",
       },
     });
   }

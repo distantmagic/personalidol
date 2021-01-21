@@ -1,4 +1,4 @@
-import { RepeatWrapping, RGBAFormat } from "three/src/constants";
+import { NearestFilter, RepeatWrapping, RGBAFormat } from "three/src/constants";
 
 import { CanvasTexture } from "three/src/textures/CanvasTexture";
 
@@ -10,6 +10,7 @@ export function imageToTexture(image: ImageData | ImageBitmap): ITexture {
 
   texture.format = RGBAFormat;
   texture.wrapS = texture.wrapT = RepeatWrapping;
+  texture.magFilter = texture.minFilter = NearestFilter;
   texture.needsUpdate = true;
 
   return texture;

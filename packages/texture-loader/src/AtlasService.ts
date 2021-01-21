@@ -192,8 +192,8 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
       }
     }
 
-    const atlasSideLength = _getAtlasSideLength(textures.length);
-    const atlasSideLengthPx = atlasSideLength * textureSize;
+    const atlasSideLength: number = _getAtlasSideLength(textures.length);
+    const atlasSideLengthPx: number = atlasSideLength * textureSize;
 
     canvas.height = atlasSideLengthPx;
     canvas.width = atlasSideLengthPx;

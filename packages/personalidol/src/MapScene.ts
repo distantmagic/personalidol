@@ -64,8 +64,10 @@ import type { Scene as IScene } from "@personalidol/framework/src/Scene.interfac
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
-const CAMERA_ZOOM_MAX = 200;
-const CAMERA_ZOOM_MIN = 1400;
+const CAMERA_ZOOM_INITIAL = 401;
+const CAMERA_ZOOM_MAX = 1;
+const CAMERA_ZOOM_MIN = 1401;
+const CAMERA_ZOOM_STEP = 50;
 
 const _camera = new PerspectiveCamera();
 
@@ -213,7 +215,7 @@ export function MapScene(
     _unmountables.add(unmountPass(effectComposer, renderPass));
     _disposables.add(disposableGeneric(renderPass));
 
-    _cameraZoomAmount = 400;
+    _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
     _onCameraUpdate();
   }
 
@@ -293,7 +295,7 @@ export function MapScene(
   }
 
   function _onPointerZoomRequest(zoomAmount: number): void {
-    _cameraZoomAmount += zoomAmount < 0 ? -200 : 200;
+    _cameraZoomAmount += zoomAmount < 0 ? -1 * CAMERA_ZOOM_STEP : CAMERA_ZOOM_STEP;
     _cameraZoomAmount = Math.max(CAMERA_ZOOM_MAX, _cameraZoomAmount);
     _cameraZoomAmount = Math.min(CAMERA_ZOOM_MIN, _cameraZoomAmount);
     _onCameraUpdate();

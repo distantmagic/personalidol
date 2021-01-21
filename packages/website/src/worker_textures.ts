@@ -18,7 +18,7 @@ import type { TextureRequest } from "@personalidol/texture-loader/src/TextureReq
 declare var self: DedicatedWorkerGlobalScope;
 
 type CreateImageBitmapOptions = {
-  imageOrientation: "flipY";
+  imageOrientation: "none" | "flipY";
 };
 
 const logger = Loglevel.getLogger(self.name);
