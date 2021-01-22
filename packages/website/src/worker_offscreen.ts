@@ -12,6 +12,8 @@ import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
 import { createScenes } from "./createScenes";
 
+import type { MessageWorkerReady } from "@personalidol/workers/src/MessageWorkerReady.type";
+
 declare var self: DedicatedWorkerGlobalScope;
 
 const eventBus = EventBus();
@@ -153,7 +155,7 @@ self.onmessage = createRouter({
   },
 
   ready(): void {
-    self.postMessage({
+    self.postMessage(<MessageWorkerReady>{
       ready: true,
     });
   },

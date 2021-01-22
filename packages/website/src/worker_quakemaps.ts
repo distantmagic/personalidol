@@ -11,7 +11,6 @@ import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
 import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
-import { notifyProgressManagerToExpectItems } from "@personalidol/loading-manager/src/notifyProgressManagerToExpectItems";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
 import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
 
@@ -99,7 +98,9 @@ async function _onMapContentLoaded(
     }
   }
 
-  notifyProgressManagerToExpectItems(progressMessagePort, expectedItemsToLoad);
+  progressMessagePort.postMessage({
+    expectAtLeast: expectedItemsToLoad,
+  });
 
   const { createTextureAtlas: textureAtlas } = await sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
     createTextureAtlas: {

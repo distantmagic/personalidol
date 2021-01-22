@@ -1,4 +1,4 @@
-import { mountUnmountSoft } from "./mountUnmountSoft";
+import { mountUnmount } from "./mountUnmount";
 import { name } from "./name";
 
 import type { Logger } from "loglevel";
@@ -10,7 +10,9 @@ export function mountDispose(logger: Logger, mount: Mountable): void {
     throw new Error(`Mount point is already disposed: "${name(mount)}"`);
   }
 
-  mountUnmountSoft(logger, mount);
+  if (mount.state.isMounted) {
+    mountUnmount(logger, mount);
+  }
 
   logger.info(`DISPOSE(${name(mount)})`);
   mount.dispose();

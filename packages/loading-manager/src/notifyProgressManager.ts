@@ -1,3 +1,4 @@
+import type { ProgressError } from "./ProgressError.type";
 import type { ProgressManagerItem } from "./ProgressManagerItem.type";
 
 export function notifyProgressManager<T>(progressMessagePort: MessagePort, item: ProgressManagerItem, waitFor: Promise<T>): Promise<T> {
@@ -15,7 +16,7 @@ export function notifyProgressManager<T>(progressMessagePort: MessagePort, item:
     })
     .catch(function (err) {
       progressMessagePort.postMessage({
-        error: {
+        error: <ProgressError>{
           item: item,
           error: {
             message: err.message,

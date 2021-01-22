@@ -8,6 +8,7 @@ import { mountUnmount } from "@personalidol/framework/src/mountUnmount";
 import type { Logger } from "loglevel";
 
 import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
 import type { ViewBag as IViewBag } from "./ViewBag.interface";
@@ -52,9 +53,9 @@ export function ViewBag(logger: Logger): IViewBag {
     state.isMounted = false;
   }
 
-  function update(delta: number, elapsedTime: number): void {
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     for (_view of _updatableViews) {
-      _view.update(delta, elapsedTime);
+      _view.update(delta, elapsedTime, tickTimerState);
     }
   }
 

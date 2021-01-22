@@ -10,6 +10,7 @@ import type { Logger } from "loglevel";
 
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { ViewBagScene as IViewBagScene } from "./ViewBagScene.interface";
 import type { ViewBag as IViewBag } from "./ViewBag.interface";
@@ -55,11 +56,11 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
     state.isMounted = false;
   }
 
-  function update(delta: number, elapsedTime: number): void {
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     // It's important to update the scene first and then update the included
     // views to preserve the hierarchy.
-    scene.update(delta, elapsedTime);
-    viewBag.update(delta, elapsedTime);
+    scene.update(delta, elapsedTime, tickTimerState);
+    viewBag.update(delta, elapsedTime, tickTimerState);
   }
 
   function updatePreloadingState(): void {

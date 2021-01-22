@@ -1,11 +1,8 @@
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
-import { must } from "@personalidol/framework/src/must";
 import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
-import { DOM_MESSAGE_PORT_NOT_SET, ERROR_UI_STATE_NOT_SET, ERROR_UI_UPDATE_CALLBACK_NOT_SET } from "../src/constants";
-
-import type { UIState } from "../src/UIState.type";
-import type { UIStateUpdateCallback } from "../src/UIStateUpdateCallback.type";
+import type { DOMElementProps } from "./DOMElementProps.type";
+import type { DOMElementView } from "./DOMElementView.interface";
 
 const _css = `
   :host {
@@ -127,33 +124,24 @@ const _html = `
         <button disabled>Continue</button>
         <button id="button-new-game">New Game</button>
         <button disabled>Load Game</button>
-        <button id="button-options">Options</button>
+        <button disabled>Options</button>
         <button disabled>Credits</button>
       </nav>
     </div>
   </div>
 `;
 
-const _cOptionsEnabled = Object.freeze({
-  enabled: true,
-  props: {},
-});
-
-export class MainMenu extends HTMLElement {
-  static readonly defineName: "pi-main-menu" = "pi-main-menu";
-
-  domMessagePort: null | MessagePort = null;
-  onUINeedsUpdate: null | UIStateUpdateCallback = null;
-  uiState: null | UIState = null;
+export class ElementMainMenu extends HTMLElement implements DOMElementView {
+  public props: DOMElementProps = {};
+  public propsLastUpdate: number = -1;
+  public viewLastUpdate: number = -1;
 
   private _buttonNewGame: HTMLButtonElement;
-  private _buttonOptions: HTMLButtonElement;
 
   constructor() {
     super();
 
     this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
-    this.onButtonOptionsClick = this.onButtonOptionsClick.bind(this);
 
     const shadow = this.attachShadow({
       mode: "open",
@@ -163,30 +151,19 @@ export class MainMenu extends HTMLElement {
     shadowAttachStylesheet(shadow, _css);
 
     this._buttonNewGame = getHTMLElementById(shadow, "button-new-game") as HTMLButtonElement;
-    this._buttonOptions = getHTMLElementById(shadow, "button-options") as HTMLButtonElement;
   }
 
   connectedCallback() {
     this._buttonNewGame.addEventListener("click", this.onButtonNewGameClick);
-    this._buttonOptions.addEventListener("click", this.onButtonOptionsClick);
   }
 
   disconnectedCallback() {
     this._buttonNewGame.removeEventListener("click", this.onButtonNewGameClick);
-    this._buttonOptions.removeEventListener("click", this.onButtonOptionsClick);
   }
 
   onButtonNewGameClick(evt: MouseEvent) {
-    must(this.domMessagePort, DOM_MESSAGE_PORT_NOT_SET).postMessage({
-      navigateToMap: {
-        mapName: "map-mountain-caravan",
-        // mapName: "map-uvtest",
-      },
-    });
+    console.log("click");
   }
 
-  onButtonOptionsClick(evt: MouseEvent) {
-    must(this.uiState, ERROR_UI_STATE_NOT_SET)["pi-options"] = _cOptionsEnabled;
-    must(this.onUINeedsUpdate, ERROR_UI_UPDATE_CALLBACK_NOT_SET)();
-  }
+  update(delta: number) {}
 }

@@ -259,7 +259,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
 
     request.messagePort.postMessage(
       {
-        textureAtlas: {
+        textureAtlas: <ImageDataBufferResponse>{
           imageDataBuffer: imageData.data.buffer,
           imageDataHeight: imageData.height,
           imageDataWidth: imageData.width,

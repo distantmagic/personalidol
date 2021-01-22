@@ -2,6 +2,10 @@ import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementBy
 import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+
+import type { DOMElementProps } from "./DOMElementProps.type";
+import type { DOMElementView } from "./DOMElementView.interface";
 
 const _css = `
   #comment,
@@ -74,23 +78,14 @@ const _html = `
   </main>
 `;
 
-export class LoadingScreen extends HTMLElement {
-  static readonly defineName: "pi-loading-screen" = "pi-loading-screen";
-  static readonly observedAttributes = ["progress-comment", "progress-value"];
+export class ElementLoadingScreen extends HTMLElement implements DOMElementView {
+  public props: DOMElementProps = {};
+  public propsLastUpdate: number = -1;
+  public viewLastUpdate: number = -1;
 
   private _comment: HTMLElement;
   private _progressBar: HTMLElement;
   private _progressValue: HTMLElement;
-
-  set progressManagerProgress(progressManagerProgress: ProgressManagerProgress) {
-    const progress = Math.round(progressManagerProgress.progress * 100);
-    const progressPercentage: string = `${progress}%`;
-
-    this._progressBar.style.width = progressPercentage;
-    this._progressValue.textContent = progressPercentage;
-
-    this._comment.textContent = `Loading ${progressManagerProgress.comment} ...`;
-  }
 
   constructor() {
     super();
@@ -105,5 +100,27 @@ export class LoadingScreen extends HTMLElement {
     this._comment = getHTMLElementById(shadow, "comment");
     this._progressBar = getHTMLElementById(shadow, "progress-bar");
     this._progressValue = getHTMLElementById(shadow, "progress-value");
+  }
+
+  update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
+    if (this.propsLastUpdate < this.viewLastUpdate) {
+      return;
+    }
+
+    const progressManagerProgress: undefined | ProgressManagerProgress = this.props.progressManagerProgress;
+
+    if (!progressManagerProgress) {
+      return;
+    }
+
+    const progress = Math.round(progressManagerProgress.progress * 100);
+    const progressPercentage: string = `${progress}%`;
+
+    this._progressBar.style.width = progressPercentage;
+    this._progressValue.textContent = progressPercentage;
+
+    this._comment.textContent = `Loading ${progressManagerProgress.comment} ...`;
+
+    this.viewLastUpdate = tickTimerState.currentTick;
   }
 }

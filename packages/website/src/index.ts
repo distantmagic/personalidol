@@ -4,7 +4,6 @@ import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
-import { Director } from "@personalidol/loading-manager/src/Director";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { DOMUIController } from "@personalidol/personalidol/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
@@ -20,7 +19,6 @@ import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultInput";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
-import { SceneLoader } from "@personalidol/loading-manager/src/SceneLoader";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
@@ -124,17 +122,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const domRendererMessageChannel = createMessageChannel();
-  const domUIDirector = Director(logger, "DOMUI");
+  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, domRendererMessageChannel.port1, uiRoot);
 
-  domUIDirector.state.next = DOMUIController(dimensionsState, inputState, domRendererMessageChannel.port1, uiRoot);
-
-  mainLoop.updatables.add(domUIDirector);
-  serviceManager.services.add(domUIDirector);
-
-  const domUISceneLoader = SceneLoader(logger, domUIDirector);
-
-  mainLoop.updatables.add(domUISceneLoader);
-  serviceManager.services.add(domUISceneLoader);
+  mainLoop.updatables.add(domUIController);
+  serviceManager.services.add(domUIController);
 
   // FontPreloadService does exactly what its name says. Thanks to this
   // service it is possible for worker threads to request font face to be
@@ -356,7 +347,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
           if ( _lastNotificationTick < dimensionsState[Dimensions.code.LAST_UPDATE]
             || _lastNotificationTick < inputState[Input.code.LAST_UPDATE]
           ) {
-            offscreenWorker.postMessage(updateMessage);;
+            offscreenWorker.postMessage(updateMessage);
             _lastNotificationTick = mainLoop.tickTimerState.currentTick;
           }
         });

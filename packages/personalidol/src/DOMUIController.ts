@@ -1,164 +1,130 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { clearHTMLElement } from "@personalidol/dom-renderer/src/clearHTMLElement";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 
-import { FatalError } from "../elements/pi-fatal-error";
-import { LoadingScreen } from "../elements/pi-loading-screen";
-import { MainMenu } from "../elements/pi-main-menu";
-import { Options } from "../elements/pi-options";
+import { ElementFatalError } from "./ElementFatalError";
+import { ElementLoadingScreen } from "./ElementLoadingScreen";
+import { ElementMainMenu } from "./ElementMainMenu";
 
-import { createUIRenderingRouter } from "./createUIRenderingRouter";
-import { createUIState } from "./createUIState";
-import { createUIStateMessageRoutes } from "./createUIStateMessageRoutes";
+import type { Logger } from "loglevel";
 
-import type { DOMUIController as IDOMUIController } from "@personalidol/dom-renderer/src/DOMUIController.interface";
-import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { UIState } from "./UIState.type";
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
+import type { DOMElementView } from "./DOMElementView.interface";
+import type { DOMUIController as IDOMUIController } from "./DOMUIController.interface";
+import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
+import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
-function _defineCustomElement(name: string, element: typeof HTMLElement): Promise<void> {
+type RenderedElement = {
+  domElementView: DOMElementView;
+  id: string;
+};
+
+type RenderedElementsLookup = {
+  [key: string]: RenderedElement;
+};
+
+const _domElementsLookup: DOMElementsLookup = {
+  "pi-fatal-error": ElementFatalError,
+  "pi-loading-screen": ElementLoadingScreen,
+  "pi-main-menu": ElementMainMenu,
+};
+
+const _definedCustomElements: Array<string> = [];
+
+async function _defineCustomElement(logger: Logger, name: string, element: typeof HTMLElement): Promise<void> {
+  if (_definedCustomElements.includes(name)) {
+    return;
+  }
+
   customElements.define(name, element);
+  _definedCustomElements.push(name);
 
-  return customElements.whenDefined(name);
+  await customElements.whenDefined(name);
+
+  logger.info(`REGISTER_CUSTOM_ELEMENT("${name}")`);
 }
 
-function _renderNodes(uiRootElement: HTMLElement, nodes: ReadonlyArray<HTMLElement>) {
-  // Detach nodes that should not be rendered.
-  for (let node of Array.from(uiRootElement.childNodes)) {
-    if (!(node instanceof HTMLElement) || !nodes.includes(node)) {
-      uiRootElement.removeChild(node);
-    }
-  }
+export function DOMUIController(logger: Logger, tickTimerState: TickTimerState, domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
+  const _renderedElements: Array<RenderedElement> = [];
+  const _renderedElementsLookup: RenderedElementsLookup = {};
 
-  // Attach nodes that should be rendered.
-  for (let node of nodes) {
-    if (!uiRootElement.contains(node)) {
-      uiRootElement.appendChild(node);
-    }
-  }
-}
-
-export function DOMUIController(dimensionsState: Uint32Array, inputState: Int32Array, domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
-  const state: MountState = Object.seal({
-    isDisposed: false,
-    isMounted: false,
-    isPreloaded: false,
-    isPreloading: false,
-  });
-
-  const _uiState: UIState = createUIState();
-
-  let _needsUpdateComponents: boolean = false;
-
-  let _fatalError: null | FatalError = null;
-  let _loadingScreen: null | LoadingScreen = null;
-  let _mainMenu: null | MainMenu = null;
-  let _options: null | Options = null;
-
-  const _uiRenderingRouter = createUIRenderingRouter(_uiState, {
-    [FatalError.defineName](props) {
-      if (!_fatalError) {
-        throw new Error(`"${FatalError.defineName}" element is not ready.`);
-      }
-
-      _fatalError.progressError = props.progressError;
-
-      return _fatalError;
+  const _uiMessageRouter = createRouter({
+    dispose(message: MessageDOMUIDispose): void {
+      message.forEach(_disposeElementById);
     },
 
-    [LoadingScreen.defineName](props) {
-      if (!_loadingScreen) {
-        throw new Error(`"${LoadingScreen.defineName}" element is not ready.`);
+    render(message: MessageDOMUIRender): void {
+      let renderedElement: undefined | RenderedElement = _renderedElementsLookup[message.id];
+
+      if (!renderedElement) {
+        renderedElement = _createDOMUIElementByRenderMessage(message);
       }
 
-      _loadingScreen.progressManagerProgress = props.progressManagerProgress;
-
-      return _loadingScreen;
-    },
-
-    [MainMenu.defineName]() {
-      if (!_mainMenu) {
-        throw new Error(`"${MainMenu.defineName}" element is not ready.`);
-      }
-
-      _mainMenu.domMessagePort = domMessagePort;
-      _mainMenu.onUINeedsUpdate = _setNeedsUpdate;
-      _mainMenu.uiState = _uiState;
-
-      return _mainMenu;
-    },
-
-    [Options.defineName]() {
-      if (!_options) {
-        throw new Error(`"${Options.defineName}" element is not ready.`);
-      }
-
-      _options.onUINeedsUpdate = _setNeedsUpdate;
-      _options.uiState = _uiState;
-
-      return _options;
+      renderedElement.domElementView.props = message.props;
+      renderedElement.domElementView.propsLastUpdate = tickTimerState.currentTick;
     },
   });
 
-  const _uiMessageRouter = createRouter(createUIStateMessageRoutes(_uiState), _setNeedsUpdate);
+  function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender): RenderedElement {
+    const domElementView: DOMElementView = document.createElement(message.element) as DOMElementView;
+    const renderedElement: RenderedElement = {
+      id: message.id,
+      domElementView: domElementView,
+    };
 
-  function dispose() {}
+    _renderedElementsLookup[message.id] = renderedElement;
+    _renderedElements.push(renderedElement);
 
-  async function preload() {
-    state.isPreloading = true;
+    uiRootElement.appendChild(domElementView);
 
-    await Promise.all([
-      _defineCustomElement(FatalError.defineName, FatalError),
-      _defineCustomElement(LoadingScreen.defineName, LoadingScreen),
-      _defineCustomElement(MainMenu.defineName, MainMenu),
-      _defineCustomElement(Options.defineName, Options),
-    ]);
-
-    _fatalError = document.createElement(FatalError.defineName) as FatalError;
-    _loadingScreen = document.createElement(LoadingScreen.defineName) as LoadingScreen;
-    _mainMenu = document.createElement(MainMenu.defineName) as MainMenu;
-    _options = document.createElement(Options.defineName) as Options;
-
-    state.isPreloaded = true;
-    state.isPreloading = false;
+    return renderedElement;
   }
 
-  function mount() {
-    state.isMounted = true;
+  function _disposeElementById(id: string): void {
+    let renderedElement: undefined | RenderedElement = _renderedElementsLookup[id];
 
-    domMessagePort.onmessage = _uiMessageRouter;
-  }
+    if (!renderedElement) {
+      throw new Error(`Element is not rendered and can't be disposed: "${id}"`);
 
-  function unmount() {
-    state.isMounted = false;
-
-    domMessagePort.onmessage = null;
-  }
-
-  function update() {
-    if (!_needsUpdateComponents) {
       return;
     }
 
-    _renderNodes(uiRootElement, _uiRenderingRouter());
-    _needsUpdateComponents = false;
+    renderedElement.domElementView.remove();
+
+    delete _renderedElementsLookup[id];
+
+    _renderedElements.splice(_renderedElements.indexOf(renderedElement), 1);
   }
 
-  function _setNeedsUpdate() {
-    _needsUpdateComponents = true;
+  function start() {
+    clearHTMLElement(uiRootElement);
+
+    domMessagePort.onmessage = _uiMessageRouter;
+
+    for (let [elementName, ElementConstructor] of Object.entries(_domElementsLookup)) {
+      _defineCustomElement(logger, elementName, ElementConstructor);
+    }
+  }
+
+  function stop() {
+    domMessagePort.onmessage = null;
+  }
+
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
+    for (let renderedElement of _renderedElements) {
+      renderedElement.domElementView.update(delta, elapsedTime, tickTimerState);
+    }
   }
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    isScene: true,
-    isView: false,
     name: "DOMUIController",
-    state: state,
 
-    dispose: dispose,
-    preload: preload,
-    mount: mount,
-    unmount: unmount,
+    start: start,
+    stop: stop,
     update: update,
   });
 }

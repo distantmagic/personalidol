@@ -4,5 +4,8 @@ export type DirectorState = {
   current: null | Scene;
   isStarted: boolean;
   isTransitioning: boolean;
+  lastUpdateCurrentTick: number;
+  lastUpdateNextTick: number;
+  lastUpdateTransitioningTick: number;
   next: null | Scene;
 };

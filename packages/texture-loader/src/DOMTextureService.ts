@@ -15,6 +15,7 @@ import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedRespo
 import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
 
 import type { DOMTextureService as IDOMTextureService } from "./DOMTextureService.interface";
+import type { ImageDataBufferResponse } from "./ImageDataBufferResponse.type";
 import type { TextureRequest } from "./TextureRequest.type";
 
 type TextureQueueItem = TextureRequest & {
@@ -80,7 +81,7 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
 
     request.messagePort.postMessage(
       {
-        imageData: {
+        imageData: <ImageDataBufferResponse>{
           imageDataBuffer: imageData.data.buffer,
           imageDataHeight: imageData.height,
           imageDataWidth: imageData.width,

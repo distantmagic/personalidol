@@ -8,6 +8,7 @@ import { createRouter } from "@personalidol/workers/src/createRouter";
 import { ProgressManager } from "@personalidol/loading-manager/src/ProgressManager";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
+import type { MessageWorkerReady } from "@personalidol/workers/src/MessageWorkerReady.type";
 import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
 import type { ProgressManagerItem } from "@personalidol/loading-manager/src/ProgressManagerItem.type";
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
@@ -85,7 +86,7 @@ self.onmessage = createRouter({
   },
 
   ready(): void {
-    self.postMessage({
+    self.postMessage(<MessageWorkerReady>{
       ready: true,
     });
   },

@@ -2,6 +2,10 @@ import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementBy
 import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
 import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+
+import type { DOMElementProps } from "./DOMElementProps.type";
+import type { DOMElementView } from "./DOMElementView.interface";
 
 const _css = `
   :host {
@@ -75,29 +79,23 @@ const _html = `
     </p>
     <pre>error while loading <span id="item-resource-type"></span> <span id="item-resource-uri"></span>
 
-<span id="item-id"></span>
+    <span id="item-id"></span>
 
-<span id="error-message"></span>
-<span id="error-stack"></span>
+    <span id="error-message"></span>
+    <span id="error-stack"></span>
   </main>
 `;
 
-export class FatalError extends HTMLElement {
-  static readonly defineName: "pi-fatal-error" = "pi-fatal-error";
+export class ElementFatalError extends HTMLElement implements DOMElementView {
+  public props: DOMElementProps = {};
+  public propsLastUpdate: number = -1;
+  public viewLastUpdate: number = -1;
 
   private _errorMessage: HTMLElement;
   private _errorStack: HTMLElement;
   private _itemId: HTMLElement;
   private _itemResourceType: HTMLElement;
   private _itemResourceUri: HTMLElement;
-
-  set progressError(progressError: ProgressError) {
-    this._errorMessage.textContent = progressError.error.message;
-    this._errorStack.textContent = progressError.error.stack;
-    this._itemId.textContent = progressError.item.id;
-    this._itemResourceType.textContent = progressError.item.resourceType;
-    this._itemResourceUri.textContent = progressError.item.resourceUri;
-  }
 
   constructor() {
     super();
@@ -114,5 +112,25 @@ export class FatalError extends HTMLElement {
     this._itemId = getHTMLElementById(shadow, "item-id");
     this._itemResourceType = getHTMLElementById(shadow, "item-resource-type");
     this._itemResourceUri = getHTMLElementById(shadow, "item-resource-uri");
+  }
+
+  update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
+    if (this.propsLastUpdate < this.viewLastUpdate) {
+      return;
+    }
+
+    const progressError: undefined | ProgressError = this.props.progressError;
+
+    if (!progressError) {
+      return;
+    }
+
+    this._errorMessage.textContent = progressError.error.message;
+    this._errorStack.textContent = progressError.error.stack;
+    this._itemId.textContent = progressError.item.id;
+    this._itemResourceType.textContent = progressError.item.resourceType;
+    this._itemResourceUri.textContent = progressError.item.resourceUri;
+
+    this.viewLastUpdate = tickTimerState.currentTick;
   }
 }

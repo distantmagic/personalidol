@@ -79,7 +79,7 @@ export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLo
   }
 
   function _updateUpdatable(updatable: MainLoopUpdatable): void {
-    updatable.update(_delta, _elapsedTime);
+    updatable.update(_delta, _elapsedTime, tickTimerState);
   }
 
   return Object.freeze({

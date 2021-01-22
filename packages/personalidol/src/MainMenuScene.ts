@@ -6,21 +6,20 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
-import { notifyProgressManagerToExpectItems } from "@personalidol/loading-manager/src/notifyProgressManagerToExpectItems";
-import { resetProgressManagerState } from "@personalidol/loading-manager/src/resetProgressManagerState";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
-
-import { uiStateOnly } from "./uiStateOnly";
 
 import type { Logger } from "loglevel";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
-import type { FontPreloadMessage } from "@personalidol/dom-renderer/src/FontPreloadMessage.type";
 import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontPreloadParameters.type";
+import type { MessageFontPreload } from "@personalidol/dom-renderer/src/MessageFontPreload.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
+
+import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
+import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
 const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // Almendra
@@ -118,6 +117,8 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
     isPreloading: false,
   });
 
+  const _domMainMenuElementId: string = MathUtils.generateUUID();
+
   function dispose(): void {
     state.isDisposed = true;
 
@@ -129,14 +130,19 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
 
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
 
-    domMessagePort.postMessage(
-      uiStateOnly({
-        "pi-main-menu": {
-          enabled: true,
-          props: {},
-        },
-      })
-    );
+    domMessagePort.postMessage({
+      render: <MessageDOMUIRender>{
+        id: _domMainMenuElementId,
+        element: "pi-main-menu",
+        props: {},
+      },
+    });
+
+    _unmountables.add(function () {
+      domMessagePort.postMessage({
+        dispose: <MessageDOMUIDispose>[_domMainMenuElementId],
+      });
+    });
   }
 
   async function preload(): Promise<void> {
@@ -144,8 +150,13 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
 
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
 
-    resetProgressManagerState(progressMessagePort);
-    notifyProgressManagerToExpectItems(progressMessagePort, _fonts.length);
+    progressMessagePort.postMessage({
+      reset: true,
+    });
+
+    progressMessagePort.postMessage({
+      expectAtLeast: _fonts.length,
+    });
 
     await Promise.all(_fonts.map(_preloadFont));
 
@@ -164,14 +175,12 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
   function update(delta: number): void {}
 
   async function _preloadFont(fontParameters: FontPreloadParameters) {
-    const fontPreloadMessage: FontPreloadMessage = {
+    await sendRPCMessage(_rpcLookupTable, fontPreloadMessagePort, <MessageFontPreload>{
       preloadFont: {
         ...fontParameters,
         rpc: MathUtils.generateUUID(),
       },
-    };
-
-    await sendRPCMessage(_rpcLookupTable, fontPreloadMessagePort, fontPreloadMessage);
+    });
   }
 
   return Object.freeze({

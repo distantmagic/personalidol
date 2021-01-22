@@ -45,9 +45,9 @@ export function createScenes(
   const effectComposer = new EffectComposer(webGLRenderer);
 
   const renderer = Renderer(dimensionsState, effectComposer, webGLRenderer);
-  const currentSceneDirector = Director(logger, "Scene");
-  const loadingSceneDirector = Director(logger, "LoadingScreen");
-  const sceneLoader = SceneTransition(logger, webGLRenderer, currentSceneDirector, loadingSceneDirector);
+  const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
+  const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
+  const sceneTransition = SceneTransition(logger, webGLRenderer, currentSceneDirector, loadingSceneDirector);
 
   const uiMessageResponder = UIMessageResponder(
     logger,
@@ -96,12 +96,12 @@ export function createScenes(
   serviceManager.services.add(uiMessageResponder);
   serviceManager.services.add(loadingSceneDirector);
   serviceManager.services.add(renderer);
-  serviceManager.services.add(sceneLoader);
+  serviceManager.services.add(sceneTransition);
 
   mainLoop.updatables.add(serviceManager);
   mainLoop.updatables.add(currentSceneDirector);
   mainLoop.updatables.add(loadingSceneDirector);
   mainLoop.updatables.add(uiMessageResponder);
-  mainLoop.updatables.add(sceneLoader);
+  mainLoop.updatables.add(sceneTransition);
   mainLoop.updatables.add(renderer);
 }

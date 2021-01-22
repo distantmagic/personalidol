@@ -9,6 +9,7 @@ import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/Requ
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
 import type { AtlasService as IAtlasService } from "@personalidol/texture-loader/src/AtlasService.interface";
+import type { MessageWorkerReady } from "@personalidol/workers/src/MessageWorkerReady.type";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -74,7 +75,7 @@ self.onmessage = createRouter({
   },
 
   ready(): void {
-    self.postMessage({
+    self.postMessage(<MessageWorkerReady>{
       ready: true,
     });
   },

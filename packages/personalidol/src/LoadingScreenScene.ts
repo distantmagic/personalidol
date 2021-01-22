@@ -18,8 +18,6 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
-import { uiStateOnly } from "./uiStateOnly";
-
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
@@ -28,6 +26,9 @@ import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
+import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
+import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
+
 export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
   const state: MountState = Object.seal({
     isDisposed: false,
@@ -35,6 +36,9 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     isPreloaded: false,
     isPreloading: false,
   });
+
+  let _domFatalErrorElementId: null | string = null;
+  let _domLoadingScreenElementId: null | string = null;
 
   const _ambientLight = new AmbientLight(0xffffff, 0.1);
   const _camera = new PerspectiveCamera();
@@ -81,29 +85,35 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
       _unmountables.add(unmountPass(effectComposer, glitchPass));
       _disposables.add(disposableGeneric(glitchPass));
 
-      domMessagePort.postMessage(
-        uiStateOnly({
-          "pi-fatal-error": {
-            enabled: true,
-            props: {
-              progressError: error,
-            },
+      if (!_domFatalErrorElementId) {
+        _domFatalErrorElementId = MathUtils.generateUUID();
+      }
+
+      domMessagePort.postMessage({
+        render: <MessageDOMUIRender>{
+          id: _domFatalErrorElementId,
+          element: "pi-fatal-error",
+          props: {
+            progressError: error,
           },
-        })
-      );
+        },
+      });
     },
 
     progress(progress: ProgressManagerProgress): void {
-      domMessagePort.postMessage(
-        uiStateOnly({
-          "pi-loading-screen": {
-            enabled: true,
-            props: {
-              progressManagerProgress: progress,
-            },
+      if (!_domLoadingScreenElementId) {
+        _domLoadingScreenElementId = MathUtils.generateUUID();
+      }
+
+      domMessagePort.postMessage({
+        render: <MessageDOMUIRender>{
+          id: _domLoadingScreenElementId,
+          element: "pi-loading-screen",
+          props: {
+            progressManagerProgress: progress,
           },
-        })
-      );
+        },
+      });
     },
   });
 
@@ -145,6 +155,22 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     state.isMounted = false;
 
     progressMessagePort.onmessage = null;
+
+    if (_domLoadingScreenElementId) {
+      domMessagePort.postMessage({
+        dispose: <MessageDOMUIDispose>[_domLoadingScreenElementId],
+      });
+
+      _domLoadingScreenElementId = null;
+    }
+
+    if (_domFatalErrorElementId) {
+      domMessagePort.postMessage({
+        dispose: <MessageDOMUIDispose>[_domFatalErrorElementId],
+      });
+
+      _domFatalErrorElementId = null;
+    }
 
     fUnmount(_unmountables);
   }

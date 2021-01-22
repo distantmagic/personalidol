@@ -24,7 +24,6 @@ import { mount as fMount } from "@personalidol/framework/src/mount";
 import { PlayerView } from "@personalidol/personalidol-views/src/PlayerView";
 import { PointLightView } from "@personalidol/personalidol-views/src/PointLightView";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
-import { resetProgressManagerState } from "@personalidol/loading-manager/src/resetProgressManagerState";
 import { resolveScriptedBlockController } from "@personalidol/personalidol-views/src/resolveScriptedBlockController";
 import { ScriptedBlockView } from "@personalidol/personalidol-views/src/ScriptedBlockView";
 import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
@@ -34,8 +33,6 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 import { WorldspawnGeometryView } from "@personalidol/personalidol-views/src/WorldspawnGeometryView";
-
-import { uiStateOnly } from "./uiStateOnly";
 
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
@@ -104,7 +101,6 @@ export function MapScene(
   views: Set<View>,
   dimensionsState: Uint32Array,
   inputState: Int32Array,
-  domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
@@ -207,8 +203,6 @@ export function MapScene(
 
     eventBus.POINTER_ZOOM_REQUEST.add(_onPointerZoomRequest);
 
-    domMessagePort.postMessage(uiStateOnly({}));
-
     const renderPass = new RenderPass(_scene, _camera);
 
     effectComposer.addPass(renderPass);
@@ -226,7 +220,9 @@ export function MapScene(
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
     texturesMessagePort.onmessage = _textureReceiverMessageRouter;
 
-    resetProgressManagerState(progressMessagePort);
+    progressMessagePort.postMessage({
+      reset: true,
+    });
 
     const {
       unmarshal: { entities, textureAtlas },
