@@ -12,14 +12,13 @@ import type { Logger } from "loglevel";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontPreloadParameters.type";
+import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
+import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MessageFontPreload } from "@personalidol/dom-renderer/src/MessageFontPreload.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
-
-import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
-import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
 const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // Almendra

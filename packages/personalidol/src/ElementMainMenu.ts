@@ -1,8 +1,8 @@
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
-import type { DOMElementProps } from "./DOMElementProps.type";
-import type { DOMElementView } from "./DOMElementView.interface";
+import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
+import type { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView.interface";
 
 const _css = `
   :host {

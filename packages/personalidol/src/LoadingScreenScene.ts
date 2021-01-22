@@ -20,14 +20,13 @@ import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/update
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
+import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
+import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
-
-import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
-import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
 export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
   const state: MountState = Object.seal({
@@ -89,6 +88,8 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
         _domFatalErrorElementId = MathUtils.generateUUID();
       }
 
+      _unmountLoadingScreen();
+
       domMessagePort.postMessage({
         render: <MessageDOMUIRender>{
           id: _domFatalErrorElementId,
@@ -116,6 +117,30 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
       });
     },
   });
+
+  function _unmountFatalErrorScreen() {
+    if (!_domFatalErrorElementId) {
+      return;
+    }
+
+    domMessagePort.postMessage({
+      dispose: <MessageDOMUIDispose>[_domFatalErrorElementId],
+    });
+
+    _domFatalErrorElementId = null;
+  }
+
+  function _unmountLoadingScreen() {
+    if (!_domLoadingScreenElementId) {
+      return;
+    }
+
+    domMessagePort.postMessage({
+      dispose: <MessageDOMUIDispose>[_domLoadingScreenElementId],
+    });
+
+    _domLoadingScreenElementId = null;
+  }
 
   function dispose(): void {
     state.isDisposed = true;
@@ -156,21 +181,8 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
 
     progressMessagePort.onmessage = null;
 
-    if (_domLoadingScreenElementId) {
-      domMessagePort.postMessage({
-        dispose: <MessageDOMUIDispose>[_domLoadingScreenElementId],
-      });
-
-      _domLoadingScreenElementId = null;
-    }
-
-    if (_domFatalErrorElementId) {
-      domMessagePort.postMessage({
-        dispose: <MessageDOMUIDispose>[_domFatalErrorElementId],
-      });
-
-      _domFatalErrorElementId = null;
-    }
+    _unmountLoadingScreen();
+    _unmountFatalErrorScreen();
 
     fUnmount(_unmountables);
   }

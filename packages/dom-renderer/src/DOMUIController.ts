@@ -1,11 +1,8 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { clearHTMLElement } from "@personalidol/dom-renderer/src/clearHTMLElement";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 
-import { ElementFatalError } from "./ElementFatalError";
-import { ElementLoadingScreen } from "./ElementLoadingScreen";
-import { ElementMainMenu } from "./ElementMainMenu";
+import { clearHTMLElement } from "./clearHTMLElement";
 
 import type { Logger } from "loglevel";
 
@@ -26,12 +23,6 @@ type RenderedElementsLookup = {
   [key: string]: RenderedElement;
 };
 
-const _domElementsLookup: DOMElementsLookup = {
-  "pi-fatal-error": ElementFatalError,
-  "pi-loading-screen": ElementLoadingScreen,
-  "pi-main-menu": ElementMainMenu,
-};
-
 const _definedCustomElements: Array<string> = [];
 
 async function _defineCustomElement(logger: Logger, name: string, element: typeof HTMLElement): Promise<void> {
@@ -47,7 +38,13 @@ async function _defineCustomElement(logger: Logger, name: string, element: typeo
   logger.info(`REGISTER_CUSTOM_ELEMENT("${name}")`);
 }
 
-export function DOMUIController(logger: Logger, tickTimerState: TickTimerState, domMessagePort: MessagePort, uiRootElement: HTMLElement): IDOMUIController {
+export function DOMUIController(
+  logger: Logger,
+  tickTimerState: TickTimerState,
+  domMessagePort: MessagePort,
+  uiRootElement: HTMLElement,
+  domElementsLookup: DOMElementsLookup
+): IDOMUIController {
   const _renderedElements: Array<RenderedElement> = [];
   const _renderedElementsLookup: RenderedElementsLookup = {};
 
@@ -104,7 +101,7 @@ export function DOMUIController(logger: Logger, tickTimerState: TickTimerState, 
 
     domMessagePort.onmessage = _uiMessageRouter;
 
-    for (let [elementName, ElementConstructor] of Object.entries(_domElementsLookup)) {
+    for (let [elementName, ElementConstructor] of Object.entries(domElementsLookup)) {
       _defineCustomElement(logger, elementName, ElementConstructor);
     }
   }

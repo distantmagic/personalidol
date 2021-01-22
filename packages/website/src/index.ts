@@ -5,7 +5,7 @@ import { createMessageChannel } from "@personalidol/workers/src/createMessageCha
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
-import { DOMUIController } from "@personalidol/personalidol/src/DOMUIController";
+import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
@@ -23,6 +23,7 @@ import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { WorkerService } from "@personalidol/workers/src/WorkerService";
+import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
 
 import workers from "./workers.json";
 
@@ -122,7 +123,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const domRendererMessageChannel = createMessageChannel();
-  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, domRendererMessageChannel.port1, uiRoot);
+  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, domRendererMessageChannel.port1, uiRoot, domElementsLookup);
 
   mainLoop.updatables.add(domUIController);
   serviceManager.services.add(domUIController);
