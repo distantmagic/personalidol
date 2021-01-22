@@ -49,6 +49,8 @@ export function DOMUIController(
   const _renderedElements: Array<RenderedElement> = [];
   const _renderedElementsLookup: RenderedElementsLookup = {};
 
+  let _isRootElementCleared: boolean = false;
+
   const _uiMessageRouter = createRouter({
     dispose(message: MessageDOMUIDispose): void {
       message.forEach(_disposeElementById);
@@ -79,6 +81,11 @@ export function DOMUIController(
     _renderedElementsLookup[message.id] = renderedElement;
     _renderedElements.push(renderedElement);
 
+    if (!_isRootElementCleared) {
+      clearHTMLElement(uiRootElement);
+      _isRootElementCleared = true;
+    }
+
     uiRootElement.appendChild(domElementView);
 
     return renderedElement;
@@ -101,8 +108,6 @@ export function DOMUIController(
   }
 
   function start() {
-    clearHTMLElement(uiRootElement);
-
     domMessagePort.onmessage = _uiMessageRouter;
 
     for (let [elementName, ElementConstructor] of Object.entries(domElementsLookup)) {
