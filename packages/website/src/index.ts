@@ -123,7 +123,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const domRendererMessageChannel = createMessageChannel();
-  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, domRendererMessageChannel.port1, uiRoot, domElementsLookup);
+  const uiMessageChannel = createMessageChannel();
+  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, domRendererMessageChannel.port1, uiMessageChannel.port1, uiRoot, domElementsLookup);
 
   mainLoop.updatables.add(domUIController);
   serviceManager.services.add(domUIController);
@@ -389,6 +390,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
         texturesMessagePort: texturesMessageChannel.port2,
+        uiMessagePort: uiMessageChannel.port2,
       },
       [
         domRendererMessageChannel.port2,
@@ -398,6 +400,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         progressMessageChannel.port2,
         quakeMapsMessageChannel.port2,
         texturesMessageChannel.port2,
+        uiMessageChannel.port2
       ]
     );
 
@@ -439,6 +442,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,
       texturesMessageChannel.port2,
+      uiMessageChannel.port2,
     );
   }
 })();

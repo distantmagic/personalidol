@@ -8,11 +8,11 @@ import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { Director as IDirector } from "./Director.interface";
+import type { DirectorState } from "./DirectorState.type";
 import type { SceneTransition as ISceneTransition } from "./SceneTransition.interface";
 import type { SceneTransitionState } from "./SceneTransitionState.type";
 
-export function SceneTransition(logger: Logger, renderer: WebGLRenderer, sceneDirector: IDirector, loadingScreenDirector: IDirector): ISceneTransition {
+export function SceneTransition(logger: Logger, renderer: WebGLRenderer, sceneDirectorState: DirectorState, loadingScreenDirectorState: DirectorState): ISceneTransition {
   const state: SceneTransitionState = Object.seal({
     lastUpdateCurrentTick: -1,
     lastUpdateNextTick: -1,
@@ -24,12 +24,12 @@ export function SceneTransition(logger: Logger, renderer: WebGLRenderer, sceneDi
   function stop(): void {}
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    const scene = sceneDirector.state.current;
-    const loadingScreen = loadingScreenDirector.state.current;
+    const scene = sceneDirectorState.current;
+    const loadingScreen = loadingScreenDirectorState.current;
 
-    state.lastUpdateCurrentTick = Math.max(sceneDirector.state.lastUpdateCurrentTick, loadingScreenDirector.state.lastUpdateCurrentTick);
-    state.lastUpdateNextTick = Math.max(sceneDirector.state.lastUpdateNextTick, loadingScreenDirector.state.lastUpdateNextTick);
-    state.lastUpdateTransitioningTick = Math.max(sceneDirector.state.lastUpdateTransitioningTick, loadingScreenDirector.state.lastUpdateTransitioningTick);
+    state.lastUpdateCurrentTick = Math.max(sceneDirectorState.lastUpdateCurrentTick, loadingScreenDirectorState.lastUpdateCurrentTick);
+    state.lastUpdateNextTick = Math.max(sceneDirectorState.lastUpdateNextTick, loadingScreenDirectorState.lastUpdateNextTick);
+    state.lastUpdateTransitioningTick = Math.max(sceneDirectorState.lastUpdateTransitioningTick, loadingScreenDirectorState.lastUpdateTransitioningTick);
 
     if (scene) {
       if (loadingScreen) {

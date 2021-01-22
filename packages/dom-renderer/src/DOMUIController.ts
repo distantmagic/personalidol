@@ -42,6 +42,7 @@ export function DOMUIController(
   logger: Logger,
   tickTimerState: TickTimerState,
   domMessagePort: MessagePort,
+  uiMessagePort: MessagePort,
   uiRootElement: HTMLElement,
   domElementsLookup: DOMElementsLookup
 ): IDOMUIController {
@@ -67,6 +68,9 @@ export function DOMUIController(
 
   function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender): RenderedElement {
     const domElementView: DOMElementView = document.createElement(message.element) as DOMElementView;
+
+    domElementView.uiMessagePort = uiMessagePort;
+
     const renderedElement: RenderedElement = {
       id: message.id,
       domElementView: domElementView,

@@ -1,4 +1,5 @@
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
+import { must } from "@personalidol/framework/src/must";
 import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
 
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
@@ -134,6 +135,7 @@ const _html = `
 export class ElementMainMenu extends HTMLElement implements DOMElementView {
   public props: DOMElementProps = {};
   public propsLastUpdate: number = -1;
+  public uiMessagePort: null | MessagePort = null;
   public viewLastUpdate: number = -1;
 
   private _buttonNewGame: HTMLButtonElement;
@@ -162,7 +164,9 @@ export class ElementMainMenu extends HTMLElement implements DOMElementView {
   }
 
   onButtonNewGameClick(evt: MouseEvent) {
-    console.log("click");
+    must(this.uiMessagePort).postMessage({
+      navigateToMap: "map-mountain-caravan",
+    });
   }
 
   update(delta: number) {}

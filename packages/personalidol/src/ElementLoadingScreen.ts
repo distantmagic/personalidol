@@ -80,6 +80,7 @@ const _html = `
 export class ElementLoadingScreen extends HTMLElement implements DOMElementView {
   public props: DOMElementProps = {};
   public propsLastUpdate: number = -1;
+  public uiMessagePort: null | MessagePort = null;
   public viewLastUpdate: number = -1;
 
   private _comment: HTMLElement;

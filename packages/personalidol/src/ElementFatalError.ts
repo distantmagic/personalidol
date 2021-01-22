@@ -88,6 +88,7 @@ const _html = `
 export class ElementFatalError extends HTMLElement implements DOMElementView {
   public props: DOMElementProps = {};
   public propsLastUpdate: number = -1;
+  public uiMessagePort: null | MessagePort = null;
   public viewLastUpdate: number = -1;
 
   private _errorMessage: HTMLElement;

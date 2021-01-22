@@ -7,6 +7,7 @@ import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
 import { Renderer } from "@personalidol/three-renderer/src/Renderer";
 import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
 import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
+import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
 
 import type { Logger } from "loglevel";
 
@@ -28,7 +29,8 @@ export function createScenes(
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
-  texturesMessagePort: MessagePort
+  texturesMessagePort: MessagePort,
+  uiMessagePort: MessagePort
 ): void {
   const webGLRenderer = new WebGLRenderer({
     alpha: false,
@@ -47,7 +49,8 @@ export function createScenes(
   const renderer = Renderer(dimensionsState, effectComposer, webGLRenderer);
   const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
-  const sceneTransition = SceneTransition(logger, webGLRenderer, currentSceneDirector, loadingSceneDirector);
+  const sceneTransition = SceneTransition(logger, webGLRenderer, currentSceneDirector.state, loadingSceneDirector.state);
+  const viewBagSceneObserver = ViewBagSceneObserver(currentSceneDirector.state);
 
   const uiMessageResponder = UIMessageResponder(
     logger,
@@ -60,7 +63,8 @@ export function createScenes(
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
-    texturesMessagePort
+    texturesMessagePort,
+    uiMessagePort
   );
 
   // prettier-ignore
@@ -70,19 +74,6 @@ export function createScenes(
     fontPreloadMessagePort,
     progressMessagePort,
   );
-  // currentSceneDirector.state.next = MapScene(
-  //   logger,
-  //   effectComposer,
-  //   eventBus,
-  //   dimensionsState,
-  //   inputState,
-  //   domMessagePort,
-  //   md2MessagePort,
-  //   progressMessagePort,
-  //   quakeMapsMessagePort,
-  //   texturesMessagePort,
-  //   `${__STATIC_BASE_PATH}/maps/map-mountain-caravan.map`
-  // );
 
   // prettier-ignore
   loadingSceneDirector.state.next = LoadingScreenScene(
@@ -92,6 +83,7 @@ export function createScenes(
     progressMessagePort
   );
 
+  serviceManager.services.add(viewBagSceneObserver);
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(uiMessageResponder);
   serviceManager.services.add(loadingSceneDirector);
@@ -99,6 +91,7 @@ export function createScenes(
   serviceManager.services.add(sceneTransition);
 
   mainLoop.updatables.add(serviceManager);
+  mainLoop.updatables.add(viewBagSceneObserver);
   mainLoop.updatables.add(currentSceneDirector);
   mainLoop.updatables.add(loadingSceneDirector);
   mainLoop.updatables.add(uiMessageResponder);

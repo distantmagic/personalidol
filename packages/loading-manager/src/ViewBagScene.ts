@@ -85,6 +85,7 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
     id: MathUtils.generateUUID(),
     isScene: true,
     isView: false,
+    isViewBagScene: true,
     name: `ViewBagScene(${name(viewBag)},${name(scene)})`,
     scene: scene,
     state: state,
