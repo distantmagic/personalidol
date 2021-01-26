@@ -102,6 +102,11 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     },
 
     progress(progress: ProgressManagerProgress): void {
+      if (_domFatalErrorElementId) {
+        // There is a fatal error going on.
+        return;
+      }
+
       if (!_domLoadingScreenElementId) {
         _domLoadingScreenElementId = MathUtils.generateUUID();
       }

@@ -1,5 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
 import { createRouter } from "@personalidol/workers/src/createRouter";
 
 import { clearHTMLElement } from "./clearHTMLElement";
@@ -46,6 +47,7 @@ export function DOMUIController(
   uiRootElement: HTMLElement,
   domElementsLookup: DOMElementsLookup
 ): IDOMUIController {
+  const internalDOMMessageChannel: MessageChannel = createMessageChannel();
   const _renderedElements: Array<RenderedElement> = [];
   const _renderedElementsLookup: RenderedElementsLookup = {};
 
@@ -59,8 +61,14 @@ export function DOMUIController(
     render(message: MessageDOMUIRender): void {
       let renderedElement: undefined | RenderedElement = _renderedElementsLookup[message.id];
 
+      if (!_isRootElementCleared) {
+        clearHTMLElement(uiRootElement);
+        _isRootElementCleared = true;
+      }
+
       if (!renderedElement) {
         renderedElement = _createDOMUIElementByRenderMessage(message);
+        uiRootElement.appendChild(renderedElement.domElementView);
       }
 
       renderedElement.domElementView.props = message.props;
@@ -69,9 +77,15 @@ export function DOMUIController(
   });
 
   function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender): RenderedElement {
-    const domElementView: DOMElementView = document.createElement(message.element) as DOMElementView;
+    const DOMElementConstructor = customElements.get(message.element);
 
-    domElementView.uiMessagePort = uiMessagePort;
+    if (!DOMElementConstructor) {
+      throw new Error(`Custom element is not registered: "${message.element}"`);
+    }
+
+    const domElementView: DOMElementView = new DOMElementConstructor();
+
+    domElementView.init(logger, internalDOMMessageChannel.port2, uiMessagePort, tickTimerState);
 
     const renderedElement: RenderedElement = {
       id: message.id,
@@ -81,12 +95,7 @@ export function DOMUIController(
     _renderedElementsLookup[message.id] = renderedElement;
     _renderedElements.push(renderedElement);
 
-    if (!_isRootElementCleared) {
-      clearHTMLElement(uiRootElement);
-      _isRootElementCleared = true;
-    }
-
-    uiRootElement.appendChild(domElementView);
+    logger.info(`DOM_VIEW_MOUNT("${message.element}")#${message.id}`);
 
     return renderedElement;
   }
@@ -100,15 +109,16 @@ export function DOMUIController(
       return;
     }
 
+    logger.info(`DOM_VIEW_DISPOSE()#${id}`);
+
     renderedElement.domElementView.remove();
-
     delete _renderedElementsLookup[id];
-
     _renderedElements.splice(_renderedElements.indexOf(renderedElement), 1);
   }
 
   function start() {
     domMessagePort.onmessage = _uiMessageRouter;
+    internalDOMMessageChannel.port1.onmessage = _uiMessageRouter;
 
     for (let [elementName, ElementConstructor] of Object.entries(domElementsLookup)) {
       _defineCustomElement(logger, elementName, ElementConstructor);
@@ -117,6 +127,7 @@ export function DOMUIController(
 
   function stop() {
     domMessagePort.onmessage = null;
+    internalDOMMessageChannel.port1.onmessage = null;
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {

@@ -31,6 +31,7 @@ export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLo
    */
   const tickTimerState: TickTimerState = Object.seal({
     currentTick: 0,
+    elapsedTime: 0,
   });
   const updatables = new Set<MainLoopUpdatable>();
 
@@ -68,7 +69,9 @@ export function MainLoop<TickType>(frameScheduler: Scheduler<TickType>): IMainLo
   function tick(): void {
     _delta = _clock.getDelta();
     _elapsedTime = _clock.getElapsedTime();
+
     tickTimerState.currentTick += 1;
+    tickTimerState.elapsedTime = _elapsedTime;
 
     updatables.forEach(_updateUpdatable);
 

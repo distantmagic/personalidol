@@ -1,8 +1,8 @@
-import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
-import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
+import { h } from 'preact';
 
-import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
-import type { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView.interface";
+import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
+import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
+
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
@@ -67,60 +67,55 @@ const _css = `
   }
 `;
 
-const _html = `
-  <main id="loading-progress">
-    <div id="comment"></div>
-    <div id="progress-value"></div>
-    <div id="progress-indicator">
-      <div id="progress-bar" />
-    </div>
-  </main>
-`;
-
-export class ElementLoadingScreen extends HTMLElement implements DOMElementView {
-  public props: DOMElementProps = {};
-  public propsLastUpdate: number = -1;
-  public uiMessagePort: null | MessagePort = null;
-  public viewLastUpdate: number = -1;
-
-  private _comment: HTMLElement;
-  private _progressBar: HTMLElement;
-  private _progressValue: HTMLElement;
-
+export class LoadingScreenDOMElementView extends DOMElementView {
   constructor() {
     super();
 
-    const shadow = this.attachShadow({
-      mode: "open",
-    });
-
-    shadow.innerHTML = _html;
-    shadowAttachStylesheet(shadow, _css);
-
-    this._comment = getHTMLElementById(shadow, "comment");
-    this._progressBar = getHTMLElementById(shadow, "progress-bar");
-    this._progressValue = getHTMLElementById(shadow, "progress-value");
+    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
+    super.update(delta, elapsedTime, tickTimerState);
+
     if (this.propsLastUpdate < this.viewLastUpdate) {
       return;
     }
 
+    this.needsRender = true;
+    this.viewLastUpdate = tickTimerState.currentTick;
+  }
+
+  render() {
     const progressManagerProgress: undefined | ProgressManagerProgress = this.props.progressManagerProgress;
 
     if (!progressManagerProgress) {
-      return;
+      return (
+        <main id="loading-progress">
+          <div id="comment">
+            Loading ...
+          </div>
+        </main>
+      );
     }
 
     const progress = Math.round(progressManagerProgress.progress * 100);
     const progressPercentage: string = `${progress}%`;
 
-    this._progressBar.style.width = progressPercentage;
-    this._progressValue.textContent = progressPercentage;
-
-    this._comment.textContent = `Loading ${progressManagerProgress.comment} ...`;
-
-    this.viewLastUpdate = tickTimerState.currentTick;
+    return (
+      <main id="loading-progress">
+        <div id="comment">
+          Loading {progressManagerProgress.comment} ...
+        </div>
+        <div id="progress-value"></div>
+        <div id="progress-indicator">
+          <div
+            id="progress-bar"
+            style={{
+              width: progressPercentage
+            }}
+          >{progressPercentage}</div>
+        </div>
+      </main>
+    );
   }
 }

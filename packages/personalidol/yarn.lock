@@ -477,83 +477,6 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@personalidol/dom-renderer@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@personalidol/dom-renderer/-/dom-renderer-0.0.3.tgz#cbf7b8c93b4d3a0de7ce0e61060105b8e19abf30"
-  integrity sha512-seTpVsVkR6AL5yX+8XDBjND7FPqAulXnE8+bGFJI1MND/V44G/sRHS+Tp/P826yNizdhn4wPEwqpTKBV6aRWXA==
-  dependencies:
-    "@personalidol/framework" "^0.0.3"
-    "@personalidol/loading-manager" "^0.0.3"
-    "@personalidol/workers" "^0.0.3"
-    three "^0.124.0"
-
-"@personalidol/framework@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@personalidol/framework/-/framework-0.0.3.tgz#90c2cc573c4fd914f436aada445a3ef78b5ef66d"
-  integrity sha512-FZN8qxvAfrvvXkg6hh8HSaNJ4prQG4r3W4NiWmYvUKk2mKxcSz78m7ohlCdfSVffW/0WunS/GUMCzI44E1ubPQ==
-  dependencies:
-    loglevel "^1.7.1"
-    three "^0.124.0"
-
-"@personalidol/loading-manager@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@personalidol/loading-manager/-/loading-manager-0.0.3.tgz#603e1c16269256505ed24f038c18316334ab74bc"
-  integrity sha512-F4cA+a6JSTZEF/Y97skq81t2uAn7vFIaA5rXfAsbafRNaUvHyVhzSV7TIV37f5rJReCHB0O5NKQjIwV/zXBGnQ==
-  dependencies:
-    "@personalidol/framework" "^0.0.3"
-    loglevel "^1.7.1"
-    three "^0.124.0"
-
-"@personalidol/quakemaps-views@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@personalidol/quakemaps-views/-/quakemaps-views-0.0.3.tgz#5dfaa3872556aa8a83997f844c5eadab41b4e5f5"
-  integrity sha512-qSYAQJ0ofj/BWy0d16VnmXpT8eNWBeBFtClLTfbTjblubOfRo/hYK8Z2suAloqpRo9NN3KSVQ6aG3dX/vthnXw==
-  dependencies:
-    "@personalidol/framework" "^0.0.3"
-    "@personalidol/quakemaps" "^0.0.3"
-    "@personalidol/texture-loader" "^0.0.3"
-    "@personalidol/three-modules" "^0.0.3"
-    "@personalidol/workers" "^0.0.3"
-    loglevel "^1.7.1"
-    three "^0.124.0"
-    tslib "^2.1.0"
-    yallist "^4.0.0"
-
-"@personalidol/quakemaps@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@personalidol/quakemaps/-/quakemaps-0.0.3.tgz#8b187748a24675959e77e156a6b26510bfc08353"
-  integrity sha512-2PDNE53qrWJhf7UvvaOeWmy2bkQp6fLOib4KaO8m6LMUeQm/fEpcGFW+Dw5ivrAZ6J5oIIhKJ1x3cvVxhH9pxw==
-  dependencies:
-    "@personalidol/texture-loader" "^0.0.3"
-    three "^0.124.0"
-    tslib "^2.1.0"
-
-"@personalidol/texture-loader@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@personalidol/texture-loader/-/texture-loader-0.0.3.tgz#7d159a43a4035339c4c646e9c72c9f0e0e33c1c9"
-  integrity sha512-7b0tQC8EK1QFGMXkZMpNhYsypaSmnStqTyaOrxHeNKHaEW7yij+PA33XFV5dfyxStQxVRjEsw4SyDvY+0xKVPA==
-  dependencies:
-    "@personalidol/dom-renderer" "^0.0.3"
-    "@personalidol/framework" "^0.0.3"
-    "@personalidol/loading-manager" "^0.0.3"
-    "@personalidol/workers" "^0.0.3"
-    three "^0.124.0"
-
-"@personalidol/three-modules@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@personalidol/three-modules/-/three-modules-0.0.3.tgz#43125d8d8ac10804f16952b30bede76cd8309d55"
-  integrity sha512-e/XLBpad7gua1atf4kTjIwuBbInBW1E81iaROmDNiMaSzR214BWJmirMUyneQMYyQcYptvfiCfymRGNE4imP8Q==
-  dependencies:
-    "@personalidol/framework" "^0.0.3"
-    three "^0.124.0"
-
-"@personalidol/workers@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@personalidol/workers/-/workers-0.0.3.tgz#68b5f602ab1e57a6acdb235cc037119762acb4f1"
-  integrity sha512-dmseeGb1NVET9tR7ksx3o5kJsJ2o3JQeC6ClOTISoJhgWZ3z6bSfQzRrolQ41PdykYIr2DgoAMsyNek+yFMy1g==
-  dependencies:
-    "@personalidol/framework" "^0.0.3"
-
 "@sinonjs/commons@^1.7.0":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.1.tgz#e7df00f98a203324f6dc7cc606cad9d4a8ab2217"
@@ -2890,6 +2813,11 @@ posix-character-classes@^0.1.0:
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
   integrity sha1-AerA/jta9xoqbAL+q7jB/vfgDqs=
 
+preact@^10.5.11:
+  version "10.5.11"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.5.11.tgz#2c8a431f16613e442901068175771806cf1cc0f6"
+  integrity sha512-BdtFePVilR1430kDuzh3VkkZktCmp8RTqHOjG8qesyGZXHNYJjdrjEBuc2f7O/vthhVENxJd0/aTjWtYeH46aw==
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
@@ -3774,11 +3702,6 @@ y18n@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.0.tgz#95ef94f85ecc81d007c264e190a120f0a3c8566b"
   integrity sha512-r9S/ZyXu/Xu9q1tYlpsLIsa3EeLXXk0VwlxqTcFRfg9EhMW+17kbt9G0NrgCmhGb5vT2hyhJZLfDGx+7+5Uj/w==
-
-yallist@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
-  integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
 yargs-parser@20.x:
   version "20.2.3"

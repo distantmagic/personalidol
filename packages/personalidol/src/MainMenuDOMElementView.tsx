@@ -1,9 +1,8 @@
-import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
-import { must } from "@personalidol/framework/src/must";
-import { shadowAttachStylesheet } from "@personalidol/dom-renderer/src/shadowAttachStylesheet";
+import { h } from 'preact';
 
-import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
-import type { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView.interface";
+import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
+import { must } from "@personalidol/framework/src/must";
+import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 const _css = `
   :host {
@@ -116,58 +115,40 @@ const _css = `
   }
 `;
 
-const _html = `
-  <div class="main-menu">
-    <div class="main-menu__content">
-      <h1>Personal Idol</h1>
-      <h2>You shall not be judged</h2>
-      <nav>
-        <button disabled>Continue</button>
-        <button id="button-new-game">New Game</button>
-        <button disabled>Load Game</button>
-        <button disabled>Options</button>
-        <button disabled>Credits</button>
-      </nav>
-    </div>
-  </div>
-`;
-
-export class ElementMainMenu extends HTMLElement implements DOMElementView {
-  public props: DOMElementProps = {};
-  public propsLastUpdate: number = -1;
-  public uiMessagePort: null | MessagePort = null;
-  public viewLastUpdate: number = -1;
-
-  private _buttonNewGame: HTMLButtonElement;
-
+export class MainMenuDOMElementView extends DOMElementView {
   constructor() {
     super();
 
     this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
 
-    const shadow = this.attachShadow({
-      mode: "open",
-    });
-
-    shadow.innerHTML = _html;
-    shadowAttachStylesheet(shadow, _css);
-
-    this._buttonNewGame = getHTMLElementById(shadow, "button-new-game") as HTMLButtonElement;
-  }
-
-  connectedCallback() {
-    this._buttonNewGame.addEventListener("click", this.onButtonNewGameClick);
-  }
-
-  disconnectedCallback() {
-    this._buttonNewGame.removeEventListener("click", this.onButtonNewGameClick);
+    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
   onButtonNewGameClick(evt: MouseEvent) {
+    evt.preventDefault();
+
     must(this.uiMessagePort).postMessage({
       navigateToMap: "map-mountain-caravan",
     });
   }
 
-  update(delta: number) {}
+  render() {
+    return (
+      <div class="main-menu">
+        <div class="main-menu__content">
+          <h1>Personal Idol</h1>
+          <h2>You shall not be judged</h2>
+          <nav>
+            <button disabled>Continue</button>
+            <button onClick={this.onButtonNewGameClick}>
+              New Game
+            </button>
+            <button disabled>Load Game</button>
+            <button disabled>Options</button>
+            <button disabled>Credits</button>
+          </nav>
+        </div>
+      </div>
+    );
+  }
 }
