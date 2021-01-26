@@ -1,4 +1,5 @@
 import { h, render } from 'preact';
+import { MathUtils } from "three/src/math/MathUtils";
 
 import { Director } from "@personalidol/loading-manager/src/Director";
 import { mountMount } from "@personalidol/framework/src/mountMount";
@@ -7,6 +8,7 @@ import type { Logger } from "loglevel";
 import type { VNode } from "preact";
 
 import type { Director as IDirector } from "@personalidol/loading-manager/src/Director.interface";
+import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { DOMElementProps } from "./DOMElementProps.type";
@@ -16,6 +18,10 @@ import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./Replacea
 export abstract class DOMElementView extends HTMLElement implements IDOMElementView {
   public domMessagePort: null | MessagePort = null;
   public logger: null | Logger = null;
+  public nameable: Nameable = {
+    id: MathUtils.generateUUID(),
+    name: "DOMElementView",
+  };
   public needsRender: boolean = true;
   public props: DOMElementProps = {};
   public propsLastUpdate: number = -1;

@@ -71,6 +71,7 @@ export class LoadingScreenDOMElementView extends DOMElementView {
   constructor() {
     super();
 
+    this.nameable.name = "LoadingScreenDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 

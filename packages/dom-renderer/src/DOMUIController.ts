@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
 import { createRouter } from "@personalidol/workers/src/createRouter";
+import { name } from "@personalidol/framework/src/name";
 
 import { clearHTMLElement } from "./clearHTMLElement";
 
@@ -95,7 +96,7 @@ export function DOMUIController(
     _renderedElementsLookup[message.id] = renderedElement;
     _renderedElements.push(renderedElement);
 
-    logger.info(`DOM_VIEW_MOUNT("${message.element}")#${message.id}`);
+    logger.info(`MOUNT.DOM(${name(domElementView.nameable)})`);
 
     return renderedElement;
   }
@@ -109,7 +110,7 @@ export function DOMUIController(
       return;
     }
 
-    logger.info(`DOM_VIEW_DISPOSE()#${id}`);
+    logger.info(`DISPOSE.DOM(${name(renderedElement.domElementView.nameable)})`);
 
     renderedElement.domElementView.remove();
     delete _renderedElementsLookup[id];

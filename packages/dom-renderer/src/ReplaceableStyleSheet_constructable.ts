@@ -28,8 +28,6 @@ function _createStyleSheet(css: string): CSSStyleSheet {
 
 export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css: string): IReplaceableStyleSheet {
   const state: ReplaceableStyleSheetState = Object.seal({
-    css: "",
-
     isDisposed: false,
     isMounted: false,
     isPreloaded: false,
@@ -47,7 +45,7 @@ export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css:
     shadowRoot.adoptedStyleSheets = [_createStyleSheet(css)];
   }
 
-  function preload() {
+  async function preload() {
     state.isPreloading = false;
     state.isPreloaded = true;
   }

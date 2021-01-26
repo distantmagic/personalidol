@@ -26,6 +26,7 @@ yarn run esbuild \
     --define:__LOG_LEVEL=\"info\" \
     --define:__SERVICE_WORKER_BASE_PATH=\"${SERVICE_WORKER_BASE_PATH}\" \
     --define:__STATIC_BASE_PATH=\"${STATIC_BASE_PATH}\" \
+    --define:process.env.NODE_ENV=\"${NODE_ENV}\" \
     --format=esm \
     --minify \
     --outdir=./public/lib \

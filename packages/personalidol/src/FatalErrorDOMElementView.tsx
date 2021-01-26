@@ -58,6 +58,7 @@ export class FatalErrorDOMElementView extends DOMElementView {
   constructor() {
     super();
 
+    this.nameable.name = "FatalErrorDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 

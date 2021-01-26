@@ -424,7 +424,13 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
      * @see  https://github.com/evanw/esbuild/issues/113
      */
     const _dynamicImport = `${__STATIC_BASE_PATH}/lib/createScenes.js`;
-    const { createScenes } = await import(_dynamicImport);
+    const { createScenes } = await (async function () {
+      try {
+        return await import(_dynamicImport);
+      } catch (err) {
+        throw err;
+      }
+    }());
 
     // prettier-ignore
     createScenes(
