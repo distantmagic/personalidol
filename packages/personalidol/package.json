@@ -5,15 +5,15 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/dom-renderer": "^0.0.3",
-    "@personalidol/framework": "^0.0.3",
-    "@personalidol/loading-manager": "^0.0.3",
-    "@personalidol/personalidol-mapentities": "^0.0.3",
-    "@personalidol/personalidol-views": "^0.0.3",
-    "@personalidol/quakemaps": "^0.0.3",
-    "@personalidol/texture-loader": "^0.0.3",
-    "@personalidol/three-modules": "^0.0.3",
-    "@personalidol/three-renderer": "^0.0.3",
+    "@personalidol/dom-renderer": "^0.0.4",
+    "@personalidol/framework": "^0.0.4",
+    "@personalidol/loading-manager": "^0.0.4",
+    "@personalidol/personalidol-mapentities": "^0.0.4",
+    "@personalidol/personalidol-views": "^0.0.4",
+    "@personalidol/quakemaps": "^0.0.4",
+    "@personalidol/texture-loader": "^0.0.4",
+    "@personalidol/three-modules": "^0.0.4",
+    "@personalidol/three-renderer": "^0.0.4",
     "loglevel": "^1.7.1",
     "preact": "^10.5.11",
     "three": "^0.124.0"
@@ -37,5 +37,5 @@
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
   "sideEffects": false,
-  "version": "0.0.3"
+  "version": "0.0.4"
 }

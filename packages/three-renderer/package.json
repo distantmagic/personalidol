@@ -5,8 +5,8 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/framework": "^0.0.3",
-    "@personalidol/three-modules": "^0.0.3",
+    "@personalidol/framework": "^0.0.4",
+    "@personalidol/three-modules": "^0.0.4",
     "three": "^0.124.0"
   },
   "devDependencies": {
@@ -29,6 +29,6 @@
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
   "sideEffects": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "gitHead": "524bca5e12e690c4025774f44ab41885c513ec5a"
 }
