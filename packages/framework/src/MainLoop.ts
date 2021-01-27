@@ -1,5 +1,7 @@
-import { Clock } from "three/src/core/Clock";
+// import { Clock } from "three/src/core/Clock";
 import { MathUtils } from "three/src/math/MathUtils";
+
+import { Clock } from "./Clock";
 
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
@@ -36,7 +38,7 @@ export function MainLoop<TickType>(statsHooks: StatsHooks, frameScheduler: Sched
   });
   const updatables = new Set<MainLoopUpdatable>();
 
-  const _clock = new Clock(false);
+  const _clock = Clock();
   let _continue: boolean = false;
   let _delta: number = 0;
   let _elapsedTime: number = 0;
@@ -74,9 +76,8 @@ export function MainLoop<TickType>(statsHooks: StatsHooks, frameScheduler: Sched
     tickTimerState.currentTick += 1;
     tickTimerState.elapsedTime = _elapsedTime;
 
-    statsHooks.tickStart(_delta, _elapsedTime, tickTimerState.currentTick);
+    statsHooks.tick(_delta);
     updatables.forEach(_updateUpdatable);
-    statsHooks.tickEnd(_clock.getElapsedTime(), tickTimerState.currentTick);
 
     // something might have changed withing the update callback
     if (_continue) {

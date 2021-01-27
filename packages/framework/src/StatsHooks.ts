@@ -28,7 +28,8 @@ export function StatsHooks(debugName: string, statsMessagePort: MessagePort): IS
     _currentInterval += 1;
   }
 
-  function tickEnd(elapsedTime: number): void {
+  function tick(delta: number): void {
+    _currentIntervalDuration += delta;
     _currentIntervalTicks += 1;
 
     if (_currentIntervalDuration >= INTERVAL_S) {
@@ -37,15 +38,10 @@ export function StatsHooks(debugName: string, statsMessagePort: MessagePort): IS
     }
   }
 
-  function tickStart(delta: number, elapsedTime: number): void {
-    _currentIntervalDuration += delta;
-  }
-
   return Object.freeze({
     id: MathUtils.generateUUID(),
     name: `StatsHooks("${debugName}")`,
 
-    tickEnd: tickEnd,
-    tickStart: tickStart,
+    tick: tick,
   });
 }
