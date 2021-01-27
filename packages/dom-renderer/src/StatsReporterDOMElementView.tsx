@@ -1,9 +1,9 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 
 import { DOMElementView } from "./DOMElementView";
 import { ReplaceableStyleSheet } from "./ReplaceableStyleSheet";
 
-import type { StatsCollectorReport } from "@personalidol/framework/src/StatsCollectorReport.type";
+import type { StatsHookReportMessage } from "@personalidol/framework/src/StatsHookReportMessage.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
@@ -21,7 +21,7 @@ const _css = `
     color: white;
     display: grid;
     font-family: monospace;
-    font-size: 1rem;
+    font-size: 0.8rem;
     grid-gap: 0.5ch;
     line-height: 1;
     left: 0;
@@ -32,12 +32,12 @@ const _css = `
 `;
 
 export class StatsReporterDOMElementView extends DOMElementView implements IStatsReporterDOMElementView {
-  public statsCollectorReports: Array<StatsCollectorReport> = [];
+  public statsHookReports: Array<StatsHookReportMessage> = [];
 
   constructor() {
     super();
 
-    this.renderStatCollectorReport = this.renderStatCollectorReport.bind(this);
+    this.renderStatHookReport = this.renderStatHookReport.bind(this);
 
     this.nameable.name = "StatsReporterDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
@@ -50,12 +50,12 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
       return;
     }
 
-    const statsCollectorReports = this.props.statsCollectorReports;
+    const statsHookReports = this.props.statsHookReports;
 
-    if (Array.isArray(statsCollectorReports)) {
-      this.statsCollectorReports = statsCollectorReports;
+    if (Array.isArray(statsHookReports)) {
+      this.statsHookReports = statsHookReports;
     } else {
-      this.statsCollectorReports = [];
+      this.statsHookReports = [];
     }
 
     this.needsRender = true;
@@ -65,16 +65,22 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
   render() {
     return (
       <div id="stats">
-        {this.statsCollectorReports.map(this.renderStatCollectorReport)}
+        {this.statsHookReports.map(this.renderStatHookReport)}
       </div>
     );
   }
 
-  renderStatCollectorReport(statsCollectorReport: StatsCollectorReport) {
+  renderStatHookReport(statsHookReport: StatsHookReportMessage) {
     return (
-      <div key={statsCollectorReport.debugName}>
-        {statsCollectorReport.debugName}(fps): {Math.round(statsCollectorReport.averageTicks)}
-      </div>
+      <Fragment>
+        {Object.entries(statsHookReport).map(function ([entry, value]) {
+          return (
+            <div key={statsHookReport.debugName}>
+              {statsHookReport.debugName}({entry}): {value}
+            </div>
+          );
+        })}
+      </Fragment>
     );
   }
 }
