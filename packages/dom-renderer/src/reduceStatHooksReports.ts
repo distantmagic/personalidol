@@ -2,16 +2,16 @@ import type { StatsCollectorReport } from "@personalidol/framework/src/StatsColl
 import type { StatsHookReportMessage } from "@personalidol/framework/src/StatsHookReportMessage.type";
 
 export function reduceStatHooksReports(debugName: string, statsHookReports: ReadonlyArray<StatsHookReportMessage>): StatsCollectorReport {
-  const statsCollectorReport: StatsCollectorReport = Object.seal({
-    averageTicks: 0,
-    debugName: debugName,
-  });
+  let _totalDuration: number = 0;
+  let _totalTicks: number = 0;
 
   for (let statsHookReport of statsHookReports) {
-    statsCollectorReport.averageTicks += statsHookReport.currentIntervalTicks;
+    _totalDuration += statsHookReport.currentIntervalDuration;
+    _totalTicks += statsHookReport.currentIntervalTicks;
   }
 
-  statsCollectorReport.averageTicks /= statsHookReports.length;
-
-  return statsCollectorReport;
+  return Object.seal({
+    averageTicks: _totalTicks / _totalDuration,
+    debugName: debugName,
+  });
 }
