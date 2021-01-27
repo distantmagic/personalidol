@@ -3,7 +3,7 @@ import { Fragment, h } from "preact";
 import { DOMElementView } from "./DOMElementView";
 import { ReplaceableStyleSheet } from "./ReplaceableStyleSheet";
 
-import type { StatsHookReportMessage } from "@personalidol/framework/src/StatsHookReportMessage.type";
+import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
@@ -32,7 +32,7 @@ const _css = `
 `;
 
 export class StatsReporterDOMElementView extends DOMElementView implements IStatsReporterDOMElementView {
-  public statsHookReports: Array<StatsHookReportMessage> = [];
+  public statsReports: Array<StatsReport> = [];
 
   constructor() {
     super();
@@ -50,12 +50,12 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
       return;
     }
 
-    const statsHookReports = this.props.statsHookReports;
+    const statsReports = this.props.statsReports;
 
-    if (Array.isArray(statsHookReports)) {
-      this.statsHookReports = statsHookReports;
+    if (Array.isArray(statsReports)) {
+      this.statsReports = statsReports;
     } else {
-      this.statsHookReports = [];
+      this.statsReports = [];
     }
 
     this.needsRender = true;
@@ -65,18 +65,18 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
   render() {
     return (
       <div id="stats">
-        {this.statsHookReports.map(this.renderStatHookReport)}
+        {this.statsReports.map(this.renderStatHookReport)}
       </div>
     );
   }
 
-  renderStatHookReport(statsHookReport: StatsHookReportMessage) {
+  renderStatHookReport(statsReport: StatsReport) {
     return (
       <Fragment>
-        {Object.entries(statsHookReport).map(function ([entry, value]) {
+        {Object.entries(statsReport).map(function ([entry, value]) {
           return (
-            <div key={statsHookReport.debugName}>
-              {statsHookReport.debugName}({entry}): {value}
+            <div key={statsReport.debugName}>
+              {statsReport.debugName}({entry}): {value}
             </div>
           );
         })}

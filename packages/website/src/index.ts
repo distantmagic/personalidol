@@ -17,6 +17,7 @@ import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/suppo
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
+import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultInput";
@@ -24,7 +25,6 @@ import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/Requ
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
-import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
@@ -60,9 +60,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const inputState = Input.createEmptyState(useSharedBuffers);
 
   const eventBus = EventBus();
-  const statsMessageChanngel = createMessageChannel();
-  const statsHooks = StatsHooks("main_thread", statsMessageChanngel.port1);
-  const mainLoop = MainLoop(statsHooks, RequestAnimationFrameScheduler());
+  const mainLoopToStatsMessageChanngel = createMessageChannel();
+  const mainLoop = MainLoop(MainLoopStatsHook("main_thread", mainLoopToStatsMessageChanngel.port2), RequestAnimationFrameScheduler());
 
   const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
@@ -141,11 +140,13 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   // Stats collector reports debug stats like FPS, memory usage, etc.
 
+  const statsMessageChannel = createMessageChannel();
   const statsToDOMRendererMessageChannel = createMessageChannel();
   const statsCollector = StatsCollector(statsToDOMRendererMessageChannel.port2);
 
   domUIController.registerMessagePort(statsToDOMRendererMessageChannel.port1);
-  statsCollector.registerMessagePort(statsMessageChanngel.port2);
+  statsCollector.registerMessagePort(mainLoopToStatsMessageChanngel.port1);
+  statsCollector.registerMessagePort(statsMessageChannel.port1);
 
   serviceManager.services.add(statsCollector);
   mainLoop.updatables.add(statsCollector);
@@ -401,10 +402,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       }
     })();
 
-    const offscreenToStatsMessageChannel = createMessageChannel();
-
-    statsCollector.registerMessagePort(offscreenToStatsMessageChannel.port1);
-
     // prettier-ignore
     offscreenWorker.postMessage(
       {
@@ -415,7 +412,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         md2MessagePort: md2MessageChannel.port2,
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
-        statsMessagePort: offscreenToStatsMessageChannel.port2,
+        statsMessagePort: statsMessageChannel.port2,
         texturesMessagePort: texturesMessageChannel.port2,
         uiMessagePort: uiMessageChannel.port2,
       },
@@ -424,7 +421,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         fontPreloadMessageChannel.port2,
         md2MessageChannel.port2,
         offscreenCanvas,
-        offscreenToStatsMessageChannel.port2,
+        statsMessageChannel.port2,
         progressMessageChannel.port2,
         quakeMapsMessageChannel.port2,
         texturesMessageChannel.port2,
@@ -477,6 +474,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       md2MessageChannel.port2,
       progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,
+      statsMessageChannel.port2,
       texturesMessageChannel.port2,
       uiMessageChannel.port2,
     );

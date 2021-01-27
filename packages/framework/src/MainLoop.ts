@@ -4,9 +4,9 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { Clock } from "./Clock";
 
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
+import type { MainLoopStatsHook } from "./MainLoopStatsHook.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
 import type { Scheduler } from "./Scheduler.interface";
-import type { StatsHooks } from "./StatsHooks.interface";
 import type { TickTimerState } from "./TickTimerState.type";
 
 /**
@@ -31,7 +31,7 @@ import type { TickTimerState } from "./TickTimerState.type";
  * @see MouseObserevr
  * @see TouchObserver
  */
-export function MainLoop<TickType>(statsHooks: StatsHooks, frameScheduler: Scheduler<TickType>): IMainLoop {
+export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler: Scheduler<TickType>): IMainLoop {
   const tickTimerState: TickTimerState = Object.seal({
     currentTick: 0,
     elapsedTime: 0,
@@ -76,7 +76,7 @@ export function MainLoop<TickType>(statsHooks: StatsHooks, frameScheduler: Sched
     tickTimerState.currentTick += 1;
     tickTimerState.elapsedTime = _elapsedTime;
 
-    statsHooks.tick(_delta);
+    statsHook.tick(_delta);
     updatables.forEach(_updateUpdatable);
 
     // something might have changed withing the update callback

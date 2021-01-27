@@ -1,5 +1,5 @@
 import { Nameable } from "./Nameable.interface";
 
-export interface StatsHooks extends Nameable {
+export interface MainLoopStatsHook extends Nameable {
   tick(delta: number): void;
 }

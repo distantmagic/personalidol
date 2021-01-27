@@ -7,9 +7,9 @@ import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { Input } from "@personalidol/framework/src/Input";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
+import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
-import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 
 import { createScenes } from "./createScenes";
 
@@ -70,9 +70,7 @@ function _createScenesSafe(): void {
     throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
 
-  const statsHooks = StatsHooks(self.name, statsMessagePort);
-
-  _mainLoop = MainLoop(statsHooks, RequestAnimationFrameScheduler());
+  _mainLoop = MainLoop(MainLoopStatsHook(self.name, statsMessagePort), RequestAnimationFrameScheduler());
   _serviceManager = ServiceManager(logger);
 
   // prettier-ignore
@@ -90,6 +88,7 @@ function _createScenesSafe(): void {
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
+    statsMessagePort,
     texturesMessagePort,
     uiMessagePort,
   );

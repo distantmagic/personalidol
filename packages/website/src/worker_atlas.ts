@@ -5,9 +5,9 @@ import Loglevel from "loglevel";
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
+import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
-import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 
 import type { AtlasService as IAtlasService } from "@personalidol/texture-loader/src/AtlasService.interface";
 import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
@@ -42,9 +42,7 @@ function _safeStartService() {
     throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
 
-  const statsHooks = StatsHooks(self.name, _statsMessagePort);
-
-  _mainLoop = MainLoop(statsHooks, RequestAnimationFrameScheduler());
+  _mainLoop = MainLoop(MainLoopStatsHook(self.name, _statsMessagePort), RequestAnimationFrameScheduler());
   _serviceManager = ServiceManager(logger);
 
   _mainLoop.updatables.add(_serviceManager);

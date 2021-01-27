@@ -29,6 +29,7 @@ export function createScenes(
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
+  statsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
   uiMessagePort: MessagePort
 ): void {

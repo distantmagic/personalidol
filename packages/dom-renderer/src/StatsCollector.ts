@@ -2,23 +2,23 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 
-import type { StatsHookReportMessage } from "@personalidol/framework/src/StatsHookReportMessage.type";
+import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
 
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 import type { StatsCollector as IStatsCollector } from "./StatsCollector.interface";
 
-const INTERVAL_S: number = 0.5;
+const INTERVAL_S: number = 1;
 
 type StatsHooksReports = {
-  [key: string]: StatsHookReportMessage;
+  [key: string]: StatsReport;
 };
 
 export function StatsCollector(domMessagePort: MessagePort): IStatsCollector {
   const _domStatsReporterElementId: string = MathUtils.generateUUID();
-  const _statsHooksReports: StatsHooksReports = {};
+  const _statsReports: StatsHooksReports = {};
   const _statsRouter = createRouter({
-    statsReport: function (statsReport: StatsHookReportMessage) {
-      _statsHooksReports[statsReport.debugName] = statsReport;
+    statsReport: function (statsReport: StatsReport) {
+      _statsReports[statsReport.debugName] = statsReport;
     },
   });
 
@@ -30,7 +30,7 @@ export function StatsCollector(domMessagePort: MessagePort): IStatsCollector {
         id: _domStatsReporterElementId,
         element: "pi-stats-reporter",
         props: {
-          statsHookReports: Object.values(_statsHooksReports),
+          statsReports: Object.values(_statsReports),
         },
       },
     });
