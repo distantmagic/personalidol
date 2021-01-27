@@ -8,7 +8,6 @@
     "@personalidol/dom-renderer": "^0.0.3",
     "@personalidol/framework": "^0.0.3",
     "@personalidol/loading-manager": "^0.0.3",
-    "@personalidol/workers": "^0.0.3",
     "three": "^0.124.0"
   },
   "devDependencies": {

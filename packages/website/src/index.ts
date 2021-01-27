@@ -1,10 +1,11 @@
 import Loglevel from "loglevel";
 
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
-import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
+import { createMessageChannel } from "@personalidol/framework/src/createMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
-import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
+import { domElementsLookup as personalidolDOMElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
+import { domElementsLookup } from "@personalidol/dom-renderer/src/domElementsLookup";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
@@ -22,10 +23,10 @@ import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultI
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
-import { StatsCollector } from "@personalidol/framework/src/StatsCollector";
+import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
 import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
-import { WorkerService } from "@personalidol/workers/src/WorkerService";
+import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 import workers from "./workers.json";
 
@@ -62,9 +63,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const statsMessageChanngel = createMessageChannel();
   const statsHooks = StatsHooks("main_thread", statsMessageChanngel.port1);
   const mainLoop = MainLoop(statsHooks, RequestAnimationFrameScheduler());
-  const statsCollector = StatsCollector();
-
-  statsCollector.registerMessagePort(statsMessageChanngel.port2);
 
   const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
@@ -77,12 +75,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
   serviceManager.services.add(touchObserver);
   serviceManager.services.add(PreventDefaultInput(canvas));
-  serviceManager.services.add(statsCollector);
 
   mainLoop.updatables.add(htmlElementResizeObserver);
   mainLoop.updatables.add(mouseObserver);
   mainLoop.updatables.add(touchObserver);
-  mainLoop.updatables.add(statsCollector);
   mainLoop.updatables.add(serviceManager);
 
   mainLoop.start();
@@ -133,12 +129,26 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const domRendererMessageChannel = createMessageChannel();
   const uiMessageChannel = createMessageChannel();
-  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, domElementsLookup);
+  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, {
+    ...domElementsLookup,
+    ...personalidolDOMElementsLookup,
+  });
 
   domUIController.registerMessagePort(domRendererMessageChannel.port1);
 
   mainLoop.updatables.add(domUIController);
   serviceManager.services.add(domUIController);
+
+  // Stats collector reports debug stats like FPS, memory usage, etc.
+
+  const statsToDOMRendererMessageChannel = createMessageChannel();
+  const statsCollector = StatsCollector(statsToDOMRendererMessageChannel.port2);
+
+  domUIController.registerMessagePort(statsToDOMRendererMessageChannel.port1);
+  statsCollector.registerMessagePort(statsMessageChanngel.port2);
+
+  serviceManager.services.add(statsCollector);
+  mainLoop.updatables.add(statsCollector);
 
   // FontPreloadService does exactly what its name says. Thanks to this
   // service it is possible for worker threads to request font face to be
@@ -241,12 +251,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
           statsMessagePort: atlasToStatsMessageChannel.port2,
           texturesMessagePort: atlasToTextureMessageChannel.port2,
         },
-        [
-          atlasToProgressMessageChannel.port2,
-          atlasToStatsMessageChannel.port2,
-          atlasToTextureMessageChannel.port2,
-          offscreenAtlas
-        ]
+        [atlasToProgressMessageChannel.port2, atlasToStatsMessageChannel.port2, atlasToTextureMessageChannel.port2, offscreenAtlas]
       );
 
       const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
@@ -455,7 +460,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       } catch (err) {
         throw err;
       }
-    }());
+    })();
 
     // prettier-ignore
     createScenes(

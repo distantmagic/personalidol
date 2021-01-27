@@ -2,11 +2,11 @@
 
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 
-import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
+import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 
 import type { FontPreloadService as IFontPreloadService } from "./FontPreloadService.interface";
 import type { FontPreloadParameters } from "./FontPreloadParameters.type";

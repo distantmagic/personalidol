@@ -1,18 +1,18 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { canvas2DDrawImage } from "@personalidol/dom-renderer/src/canvas2DDrawImage";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
-import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
-import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
+import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
+import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 import { preloadImage } from "@personalidol/dom-renderer/src/preloadImage";
-import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
+import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import { keyFromTextureRequest } from "./keyFromTextureRequest";
 
-import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
-import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
+import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
+import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
 
 import type { DOMTextureService as IDOMTextureService } from "./DOMTextureService.interface";
 import type { ImageDataBufferResponse } from "./ImageDataBufferResponse.type";

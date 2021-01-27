@@ -8,7 +8,7 @@ import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Scene } from "three/src/scenes/Scene";
 import { SpotLight } from "three/src/lights/SpotLight";
 
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";

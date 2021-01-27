@@ -2,13 +2,13 @@
 
 import Loglevel from "loglevel";
 
-import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
-import { broadcastMessage } from "@personalidol/workers/src/broadcastMessage";
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
+import { broadcastMessage } from "@personalidol/framework/src/broadcastMessage";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { ProgressManager } from "@personalidol/loading-manager/src/ProgressManager";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 
-import type { MessageWorkerReady } from "@personalidol/workers/src/MessageWorkerReady.type";
+import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
 import type { ProgressManagerItem } from "@personalidol/loading-manager/src/ProgressManagerItem.type";
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";

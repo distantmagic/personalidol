@@ -12,7 +12,7 @@ import { disposableMaterial } from "@personalidol/framework/src/disposableMateri
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
-import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
+import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
@@ -27,7 +27,7 @@ import type { EntityMD2Model } from "@personalidol/personalidol-mapentities/src/
 import type { MD2LoaderMorphPosition } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphPosition.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
-import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
+import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 

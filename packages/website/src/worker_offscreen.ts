@@ -2,7 +2,7 @@
 
 import Loglevel from "loglevel";
 
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { Input } from "@personalidol/framework/src/Input";
@@ -14,7 +14,7 @@ import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 import { createScenes } from "./createScenes";
 
 import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
-import type { MessageWorkerReady } from "@personalidol/workers/src/MessageWorkerReady.type";
+import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { ServiceManager as IServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 
 declare var self: DedicatedWorkerGlobalScope;

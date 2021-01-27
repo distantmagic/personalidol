@@ -1,8 +1,8 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
+import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 
-import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
+import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 
 import type { TextureRequest } from "./TextureRequest.type";
 

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";

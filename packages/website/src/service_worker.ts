@@ -2,7 +2,7 @@
 
 import Loglevel from "loglevel";
 
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 
 declare var clients: Clients;
 declare var self: ServiceWorkerGlobalScope;

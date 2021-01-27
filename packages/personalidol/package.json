@@ -14,7 +14,6 @@
     "@personalidol/texture-loader": "^0.0.3",
     "@personalidol/three-modules": "^0.0.3",
     "@personalidol/three-renderer": "^0.0.3",
-    "@personalidol/workers": "^0.0.3",
     "loglevel": "^1.7.1",
     "preact": "^10.5.11",
     "three": "^0.124.0"

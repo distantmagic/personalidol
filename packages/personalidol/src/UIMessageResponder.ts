@@ -1,6 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { ViewBag } from "@personalidol/loading-manager/src/ViewBag";
 import { ViewBagScene } from "@personalidol/loading-manager/src/ViewBagScene";
 

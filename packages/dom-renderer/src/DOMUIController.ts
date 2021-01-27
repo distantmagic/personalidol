@@ -1,7 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createMessageChannel } from "@personalidol/framework/src/createMessageChannel";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { name } from "@personalidol/framework/src/name";
 
 import { clearHTMLElement } from "./clearHTMLElement";
@@ -27,9 +27,13 @@ type RenderedElementsLookup = {
 
 const _definedCustomElements: Array<string> = [];
 
+function _isCustomElementDefined(name: string): boolean {
+  return _definedCustomElements.includes(name);
+}
+
 async function _defineCustomElement(logger: Logger, name: string, element: typeof HTMLElement): Promise<void> {
-  if (_definedCustomElements.includes(name)) {
-    return;
+  if (_isCustomElementDefined(name)) {
+    throw new Error(`Custom element is already defined: "${name}"`);
   }
 
   customElements.define(name, element);
@@ -48,32 +52,13 @@ export function DOMUIController(
   domElementsLookup: DOMElementsLookup
 ): IDOMUIController {
   const internalDOMMessageChannel: MessageChannel = createMessageChannel();
-  const _renderedElements: Array<RenderedElement> = [];
-  const _renderedElementsLookup: RenderedElementsLookup = {};
-
   let _isRootElementCleared: boolean = false;
 
+  const _renderedElements: Array<RenderedElement> = [];
+  const _renderedElementsLookup: RenderedElementsLookup = {};
   const _uiMessageRouter = createRouter({
-    dispose(message: MessageDOMUIDispose): void {
-      message.forEach(_disposeElementById);
-    },
-
-    render(message: MessageDOMUIRender): void {
-      let renderedElement: undefined | RenderedElement = _renderedElementsLookup[message.id];
-
-      if (!_isRootElementCleared) {
-        clearHTMLElement(uiRootElement);
-        _isRootElementCleared = true;
-      }
-
-      if (!renderedElement) {
-        renderedElement = _createDOMUIElementByRenderMessage(message);
-        uiRootElement.appendChild(renderedElement.domElementView);
-      }
-
-      renderedElement.domElementView.props = message.props;
-      renderedElement.domElementView.propsLastUpdate = tickTimerState.currentTick;
-    },
+    dispose: dispose,
+    render: render,
   });
 
   function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender): RenderedElement {
@@ -100,6 +85,20 @@ export function DOMUIController(
     return renderedElement;
   }
 
+  function _definedCustomElementByName(elementName: string): void {
+    if (_isCustomElementDefined(elementName)) {
+      return;
+    }
+
+    const ElementConstructor = domElementsLookup[elementName];
+
+    if (!ElementConstructor) {
+      throw new Error(`Custom element is not available: "${elementName}"`);
+    }
+
+    _defineCustomElement(logger, elementName, ElementConstructor);
+  }
+
   function _disposeElementById(id: string): void {
     let renderedElement: undefined | RenderedElement = _renderedElementsLookup[id];
 
@@ -116,16 +115,35 @@ export function DOMUIController(
     _renderedElements.splice(_renderedElements.indexOf(renderedElement), 1);
   }
 
+  function dispose(message: MessageDOMUIDispose): void {
+    message.forEach(_disposeElementById);
+  }
+
+  function render(message: MessageDOMUIRender): void {
+    _definedCustomElementByName(message.element);
+
+    let renderedElement: undefined | RenderedElement = _renderedElementsLookup[message.id];
+
+    if (!_isRootElementCleared) {
+      clearHTMLElement(uiRootElement);
+      _isRootElementCleared = true;
+    }
+
+    if (!renderedElement) {
+      renderedElement = _createDOMUIElementByRenderMessage(message);
+      uiRootElement.appendChild(renderedElement.domElementView);
+    }
+
+    renderedElement.domElementView.props = message.props;
+    renderedElement.domElementView.propsLastUpdate = tickTimerState.currentTick;
+  }
+
   function registerMessagePort(messagePort: MessagePort) {
     messagePort.onmessage = _uiMessageRouter;
   }
 
   function start() {
     internalDOMMessageChannel.port1.onmessage = _uiMessageRouter;
-
-    for (let [elementName, ElementConstructor] of Object.entries(domElementsLookup)) {
-      _defineCustomElement(logger, elementName, ElementConstructor);
-    }
   }
 
   function stop() {
@@ -142,7 +160,9 @@ export function DOMUIController(
     id: MathUtils.generateUUID(),
     name: "DOMUIController",
 
+    dispose: dispose,
     registerMessagePort: registerMessagePort,
+    render: render,
     start: start,
     stop: stop,
     update: update,

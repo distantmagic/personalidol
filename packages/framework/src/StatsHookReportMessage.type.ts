@@ -1,7 +1,6 @@
-export type StatsReportMessage = {
+export type StatsHookReportMessage = {
   currentInterval: number;
   currentIntervalDuration: number;
-  currentIntervalTickAverageTime: number;
   currentIntervalTicks: number;
   debugName: string;
 };

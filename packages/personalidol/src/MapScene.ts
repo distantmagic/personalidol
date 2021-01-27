@@ -8,14 +8,14 @@ import { Vector3 } from "three/src/math/Vector3";
 
 import { AmbientLightView } from "@personalidol/personalidol-views/src/AmbientLightView";
 import { buildViews } from "@personalidol/personalidol-views/src/buildViews";
-import { createRouter } from "@personalidol/workers/src/createRouter";
-import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
+import { createRouter } from "@personalidol/framework/src/createRouter";
+import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
-import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
+import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { HemisphereLightView } from "@personalidol/personalidol-views/src/HemisphereLightView";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
@@ -26,7 +26,7 @@ import { PointLightView } from "@personalidol/personalidol-views/src/PointLightV
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { resolveScriptedBlockController } from "@personalidol/personalidol-views/src/resolveScriptedBlockController";
 import { ScriptedBlockView } from "@personalidol/personalidol-views/src/ScriptedBlockView";
-import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
+import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { SpotlightLightView } from "@personalidol/personalidol-views/src/SpotlightLightView";
 import { TargetView } from "@personalidol/personalidol-views/src/TargetView";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
@@ -56,7 +56,7 @@ import type { EntityWorldspawn } from "@personalidol/personalidol-mapentities/sr
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
-import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
+import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";

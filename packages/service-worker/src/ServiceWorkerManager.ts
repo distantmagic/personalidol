@@ -1,4 +1,4 @@
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 
 import type { Logger } from "loglevel";
 

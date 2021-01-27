@@ -3,10 +3,10 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
-import { createRouter } from "@personalidol/workers/src/createRouter";
-import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
-import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
-import { sendRPCMessage } from "@personalidol/workers/src/sendRPCMessage";
+import { createRouter } from "@personalidol/framework/src/createRouter";
+import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
+import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
+import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 
 import type { Logger } from "loglevel";
 
@@ -16,7 +16,7 @@ import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/Message
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MessageFontPreload } from "@personalidol/dom-renderer/src/MessageFontPreload.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
-import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
+import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 

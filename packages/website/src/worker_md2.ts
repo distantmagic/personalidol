@@ -3,18 +3,18 @@
 import Loglevel from "loglevel";
 import { LoadingManager } from "three/src/loaders/LoadingManager";
 
-import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
-import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
-import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
+import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { MD2Loader } from "@personalidol/three-modules/src/loaders/MD2Loader";
 import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
-import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
+import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
-import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
-import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
-import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
+import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
+import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
+import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 
 declare var self: DedicatedWorkerGlobalScope;
 

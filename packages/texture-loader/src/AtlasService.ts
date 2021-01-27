@@ -1,24 +1,24 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { attachMultiRouter } from "@personalidol/workers/src/attachMultiRouter";
+import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
-import { createReusedResponsesCache } from "@personalidol/workers/src/createReusedResponsesCache";
-import { createReusedResponsesUsage } from "@personalidol/workers/src/createReusedResponsesUsage";
-import { createRouter } from "@personalidol/workers/src/createRouter";
-import { createRPCLookupTable } from "@personalidol/workers/src/createRPCLookupTable";
-import { handleRPCResponse } from "@personalidol/workers/src/handleRPCResponse";
+import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
+import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
+import { createRouter } from "@personalidol/framework/src/createRouter";
+import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
+import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
-import { reuseResponse } from "@personalidol/workers/src/reuseResponse";
+import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import { imageDataBufferResponseToImageData } from "./imageDataBufferResponseToImageData";
 import { isImageBitmap } from "./isImageBitmap";
 import { isImageData } from "./isImageData";
 import { requestTexture } from "./requestTexture";
 
-import type { ReusedResponsesCache } from "@personalidol/workers/src/ReusedResponsesCache.type";
-import type { ReusedResponsesUsage } from "@personalidol/workers/src/ReusedResponsesUsage.type";
-import type { RPCLookupTable } from "@personalidol/workers/src/RPCLookupTable.type";
-import type { RPCMessage } from "@personalidol/workers/src/RPCMessage.type";
+import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
+import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
+import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
+import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 
 import type { Atlas } from "./Atlas.type";
 import type { AtlasService as IAtlasService } from "./AtlasService.interface";

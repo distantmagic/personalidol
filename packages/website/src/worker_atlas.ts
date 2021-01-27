@@ -3,7 +3,7 @@
 import Loglevel from "loglevel";
 
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
-import { createRouter } from "@personalidol/workers/src/createRouter";
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
@@ -11,7 +11,7 @@ import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 
 import type { AtlasService as IAtlasService } from "@personalidol/texture-loader/src/AtlasService.interface";
 import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
-import type { MessageWorkerReady } from "@personalidol/workers/src/MessageWorkerReady.type";
+import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { ServiceManager as IServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 
 declare var self: DedicatedWorkerGlobalScope;
@@ -34,12 +34,7 @@ logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
 
 function _safeStartService() {
-  if ( null === _canvas
-    || null === _context2d
-    || null === _progressMessagePort
-    || null === _statsMessagePort
-    || null === _texturesMessagePort
-  ) {
+  if (null === _canvas || null === _context2d || null === _progressMessagePort || null === _statsMessagePort || null === _texturesMessagePort) {
     return;
   }
 
