@@ -28,5 +28,5 @@ test("sums up test reports", function () {
     },
   ]);
 
-  expect(reduced.averageTicks).toBe(80.8);
+  expect(reduced.averageTicks).toBe(84);
 });

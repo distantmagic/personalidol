@@ -5,9 +5,10 @@ export function reduceStatHooksReports(debugName: string, statsHookReports: Read
   let _totalDuration: number = 0;
   let _totalTicks: number = 0;
 
-  for (let statsHookReport of statsHookReports) {
-    _totalDuration += statsHookReport.currentIntervalDuration;
-    _totalTicks += statsHookReport.currentIntervalTicks;
+  // Newest ticks have the highest weights.
+  for (let i = 0; i < statsHookReports.length; i += 1) {
+    _totalDuration += (i + 1) * statsHookReports[i].currentIntervalDuration;
+    _totalTicks += (i + 1) * statsHookReports[i].currentIntervalTicks;
   }
 
   return Object.seal({
