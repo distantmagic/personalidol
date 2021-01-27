@@ -1,5 +1,6 @@
 /cert.pem
 /key.pem
+/index.html
 /lib
 /service_worker.js
 /service_worker.js.map

@@ -21,7 +21,7 @@ const _css = `
     color: white;
     display: grid;
     font-family: monospace;
-    font-size: 0.8rem;
+    font-size: 1rem;
     grid-gap: 0.5ch;
     line-height: 1;
     left: 0;

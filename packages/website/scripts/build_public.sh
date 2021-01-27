@@ -15,6 +15,7 @@ if [ $GIT_HAS_CHANGES ]; then
 fi
 
 BUILD_ID="${GIT_LAST_COMMIT_ID}${BUILD_ID_APPEND}";
+CACHE_BUST="_v=${BUILD_ID}"
 
 # Service worker needs to be placed in the root directory.
 
@@ -22,7 +23,7 @@ yarn run esbuild \
     --bundle \
     --define:__ASSETS_BASE_PATH=\"${ASSETS_BASE_PATH}\" \
     --define:__BUILD_ID=\"${BUILD_ID}\" \
-    --define:__CACHE_BUST=\"_v=${BUILD_ID}\" \
+    --define:__CACHE_BUST=\"${CACHE_BUST}\" \
     --define:__LOG_LEVEL=\"info\" \
     --define:__SERVICE_WORKER_BASE_PATH=\"${SERVICE_WORKER_BASE_PATH}\" \
     --define:__STATIC_BASE_PATH=\"${STATIC_BASE_PATH}\" \
@@ -47,3 +48,5 @@ yarn run esbuild \
 
 mv ./public/lib/service_worker.js ./public/service_worker.js
 mv ./public/lib/service_worker.js.map ./public/service_worker.js.map
+
+CACHE_BUST=$CACHE_BUST yarn run build_mustache
