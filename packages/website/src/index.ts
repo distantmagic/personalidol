@@ -4,6 +4,7 @@ import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createMessageChannel } from "@personalidol/workers/src/createMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
+import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
@@ -21,9 +22,10 @@ import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultI
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
+import { StatsCollector } from "@personalidol/framework/src/StatsCollector";
+import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { WorkerService } from "@personalidol/workers/src/WorkerService";
-import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
 
 import workers from "./workers.json";
 
@@ -34,7 +36,7 @@ if (!(canvas instanceof HTMLCanvasElement)) {
 }
 
 const devicePixelRatio = Math.min(1.5, window.devicePixelRatio);
-const logger = Loglevel.getLogger("main");
+const logger = Loglevel.getLogger("main_thread");
 const supportCache = createSupportCache();
 
 logger.setLevel(__LOG_LEVEL);
@@ -57,7 +59,12 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const inputState = Input.createEmptyState(useSharedBuffers);
 
   const eventBus = EventBus();
-  const mainLoop = MainLoop(RequestAnimationFrameScheduler());
+  const statsMessageChanngel = createMessageChannel();
+  const statsHooks = StatsHooks("main_thread", statsMessageChanngel.port1);
+  const mainLoop = MainLoop(statsHooks, RequestAnimationFrameScheduler());
+  const statsCollector = StatsCollector();
+
+  statsCollector.registerMessagePort(statsMessageChanngel.port2);
 
   const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
@@ -70,10 +77,12 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
   serviceManager.services.add(touchObserver);
   serviceManager.services.add(PreventDefaultInput(canvas));
+  serviceManager.services.add(statsCollector);
 
   mainLoop.updatables.add(htmlElementResizeObserver);
   mainLoop.updatables.add(mouseObserver);
   mainLoop.updatables.add(touchObserver);
+  mainLoop.updatables.add(statsCollector);
   mainLoop.updatables.add(serviceManager);
 
   mainLoop.start();
@@ -124,7 +133,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const domRendererMessageChannel = createMessageChannel();
   const uiMessageChannel = createMessageChannel();
-  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, domRendererMessageChannel.port1, uiMessageChannel.port1, uiRoot, domElementsLookup);
+  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, domElementsLookup);
+
+  domUIController.registerMessagePort(domRendererMessageChannel.port1);
 
   mainLoop.updatables.add(domUIController);
   serviceManager.services.add(domUIController);
@@ -206,9 +217,11 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const atlasMessageChannel = createMessageChannel();
   const atlasToTextureMessageChannel = createMessageChannel();
   const atlasToProgressMessageChannel = createMessageChannel();
+  const atlasToStatsMessageChannel = createMessageChannel();
 
   addProgressMessagePort(atlasToProgressMessageChannel.port1, false);
   addTextureMessagePort(atlasToTextureMessageChannel.port1);
+  statsCollector.registerMessagePort(atlasToStatsMessageChannel.port1);
 
   const addAtlasMessagePort = await (async function () {
     if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
@@ -225,9 +238,15 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         {
           atlasCanvas: offscreenAtlas,
           progressMessagePort: atlasToProgressMessageChannel.port2,
+          statsMessagePort: atlasToStatsMessageChannel.port2,
           texturesMessagePort: atlasToTextureMessageChannel.port2,
         },
-        [atlasToProgressMessageChannel.port2, atlasToTextureMessageChannel.port2, offscreenAtlas]
+        [
+          atlasToProgressMessageChannel.port2,
+          atlasToStatsMessageChannel.port2,
+          atlasToTextureMessageChannel.port2,
+          offscreenAtlas
+        ]
       );
 
       const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
@@ -377,7 +396,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       }
     })();
 
-    await offscreenWorkerService.ready();
+    const offscreenToStatsMessageChannel = createMessageChannel();
+
+    statsCollector.registerMessagePort(offscreenToStatsMessageChannel.port1);
 
     // prettier-ignore
     offscreenWorker.postMessage(
@@ -389,6 +410,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         md2MessagePort: md2MessageChannel.port2,
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
+        statsMessagePort: offscreenToStatsMessageChannel.port2,
         texturesMessagePort: texturesMessageChannel.port2,
         uiMessagePort: uiMessageChannel.port2,
       },
@@ -397,6 +419,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         fontPreloadMessageChannel.port2,
         md2MessageChannel.port2,
         offscreenCanvas,
+        offscreenToStatsMessageChannel.port2,
         progressMessageChannel.port2,
         quakeMapsMessageChannel.port2,
         texturesMessageChannel.port2,
@@ -413,6 +436,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       offscreenWorker.postMessage(offscreenWorkerZoomRequestMessage);
     });
 
+    await offscreenWorkerService.ready();
+
     mainLoop.updatables.add(offscreenWorkerService);
     serviceManager.services.add(offscreenWorkerService);
   } else {
@@ -421,7 +446,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     /**
      * This extra var is a hack to make esbuild leave the dynamic import as-is.
      * @see https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
-     * @see  https://github.com/evanw/esbuild/issues/113
+     * @see https://github.com/evanw/esbuild/issues/113
      */
     const _dynamicImport = `${__STATIC_BASE_PATH}/lib/createScenes.js`;
     const { createScenes } = await (async function () {

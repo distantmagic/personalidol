@@ -7,16 +7,25 @@ import { createRouter } from "@personalidol/workers/src/createRouter";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
+import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 
 import type { AtlasService as IAtlasService } from "@personalidol/texture-loader/src/AtlasService.interface";
+import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { MessageWorkerReady } from "@personalidol/workers/src/MessageWorkerReady.type";
+import type { ServiceManager as IServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 
 declare var self: DedicatedWorkerGlobalScope;
 
 let _atlasService: null | IAtlasService = null;
 let _canvas: null | OffscreenCanvas = null;
 let _context2d: null | OffscreenCanvasRenderingContext2D = null;
+let _isBootstrapped: boolean = false;
+let _mainLoop: null | IMainLoop = null;
+let _notifiedReady: boolean = false;
 let _progressMessagePort: null | MessagePort = null;
+let _serviceManager: null | IServiceManager = null;
+let _shouldNotifyReady: boolean = false;
+let _statsMessagePort: null | MessagePort = null;
 let _texturesMessagePort: null | MessagePort = null;
 
 const logger = Loglevel.getLogger(self.name);
@@ -24,23 +33,54 @@ const logger = Loglevel.getLogger(self.name);
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
 
-const mainLoop = MainLoop(RequestAnimationFrameScheduler());
-const serviceManager = ServiceManager(logger);
-
-mainLoop.updatables.add(serviceManager);
-
 function _safeStartService() {
-  if (null === _canvas || null === _context2d || null === _progressMessagePort || null === _texturesMessagePort) {
+  if ( null === _canvas
+    || null === _context2d
+    || null === _progressMessagePort
+    || null === _statsMessagePort
+    || null === _texturesMessagePort
+  ) {
     return;
   }
 
+  if (_isBootstrapped) {
+    throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
+  }
+
+  const statsHooks = StatsHooks(self.name, _statsMessagePort);
+
+  _mainLoop = MainLoop(statsHooks, RequestAnimationFrameScheduler());
+  _serviceManager = ServiceManager(logger);
+
+  _mainLoop.updatables.add(_serviceManager);
+
   _atlasService = AtlasService(_canvas, _context2d, _progressMessagePort, _texturesMessagePort);
 
-  mainLoop.updatables.add(_atlasService);
-  serviceManager.services.add(_atlasService);
+  _mainLoop.updatables.add(_atlasService);
+  _serviceManager.services.add(_atlasService);
+
+  _isBootstrapped = true;
+
+  if (_shouldNotifyReady) {
+    _notifyReady();
+  }
+}
+
+function _notifyReady(): void {
+  if (_notifiedReady) {
+    throw new Error("WORKER(${self.name}) already notified its ready state.");
+  }
+
+  _notifiedReady = true;
+
+  self.postMessage(<MessageWorkerReady>{
+    ready: true,
+  });
 }
 
 self.onmessage = createRouter({
+  // Dependencies
+
   atlasCanvas(canvas: OffscreenCanvas) {
     if (null !== _canvas) {
       throw new Error(`Offscreen canvas was already received by WORKER(${self.name}).`);
@@ -74,20 +114,13 @@ self.onmessage = createRouter({
     _safeStartService();
   },
 
-  ready(): void {
-    self.postMessage(<MessageWorkerReady>{
-      ready: true,
-    });
-  },
+  statsMessagePort(port: MessagePort): void {
+    if (null !== _statsMessagePort) {
+      throw new Error(`Stats message port was already received by WORKER(${self.name}).`);
+    }
 
-  start(): void {
-    mainLoop.start();
-    serviceManager.start();
-  },
-
-  stop(): void {
-    mainLoop.stop();
-    serviceManager.stop();
+    _statsMessagePort = port;
+    _safeStartService();
   },
 
   texturesMessagePort(messagePort: MessagePort) {
@@ -97,5 +130,33 @@ self.onmessage = createRouter({
 
     _texturesMessagePort = messagePort;
     _safeStartService();
+  },
+
+  // WorkerService
+
+  ready(): void {
+    if (_isBootstrapped) {
+      _notifyReady();
+    } else {
+      _shouldNotifyReady = true;
+    }
+  },
+
+  start(): void {
+    if (null === _mainLoop || null === _serviceManager) {
+      throw new Error("MainLoop and ServiceManager are not ready.");
+    }
+
+    _mainLoop.start();
+    _serviceManager.start();
+  },
+
+  stop(): void {
+    if (null === _mainLoop || null === _serviceManager) {
+      throw new Error("MainLoop and ServiceManager are not ready.");
+    }
+
+    _mainLoop.stop();
+    _serviceManager.stop();
   },
 });

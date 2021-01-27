@@ -43,7 +43,6 @@ async function _defineCustomElement(logger: Logger, name: string, element: typeo
 export function DOMUIController(
   logger: Logger,
   tickTimerState: TickTimerState,
-  domMessagePort: MessagePort,
   uiMessagePort: MessagePort,
   uiRootElement: HTMLElement,
   domElementsLookup: DOMElementsLookup
@@ -117,8 +116,11 @@ export function DOMUIController(
     _renderedElements.splice(_renderedElements.indexOf(renderedElement), 1);
   }
 
+  function registerMessagePort(messagePort: MessagePort) {
+    messagePort.onmessage = _uiMessageRouter;
+  }
+
   function start() {
-    domMessagePort.onmessage = _uiMessageRouter;
     internalDOMMessageChannel.port1.onmessage = _uiMessageRouter;
 
     for (let [elementName, ElementConstructor] of Object.entries(domElementsLookup)) {
@@ -127,7 +129,6 @@ export function DOMUIController(
   }
 
   function stop() {
-    domMessagePort.onmessage = null;
     internalDOMMessageChannel.port1.onmessage = null;
   }
 
@@ -141,6 +142,7 @@ export function DOMUIController(
     id: MathUtils.generateUUID(),
     name: "DOMUIController",
 
+    registerMessagePort: registerMessagePort,
     start: start,
     stop: stop,
     update: update,

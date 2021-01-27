@@ -9,10 +9,13 @@ import { Input } from "@personalidol/framework/src/Input";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
+import { StatsHooks } from "@personalidol/framework/src/StatsHooks";
 
 import { createScenes } from "./createScenes";
 
+import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { MessageWorkerReady } from "@personalidol/workers/src/MessageWorkerReady.type";
+import type { ServiceManager as IServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -21,9 +24,6 @@ const logger = Loglevel.getLogger(self.name);
 
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
-
-const mainLoop = MainLoop(RequestAnimationFrameScheduler());
-const serviceManager = ServiceManager(logger);
 
 const _canvasStyle = {
   height: 0,
@@ -34,17 +34,21 @@ let _canvas: null | OffscreenCanvas = null;
 let _devicePixelRatio: null | number = null;
 let _dimensionsState: null | Uint32Array = null;
 let _inputState: null | Int32Array = null;
-let _isBootstrapped = false;
+let _isBootstrapped: boolean = false;
+let _mainLoop: null | IMainLoop = null;
+let _notifiedReady: boolean = false;
+let _serviceManager: null | IServiceManager = null;
+let _shouldNotifyReady: boolean = false;
 let domMessagePort: null | MessagePort = null;
 let fontPreloadMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
 let progressMessagePort: null | MessagePort = null;
 let quakeMapsMessagePort: null | MessagePort = null;
+let statsMessagePort: null | MessagePort = null;
 let texturesMessagePort: null | MessagePort = null;
 let uiMessagePort: null | MessagePort = null;
 
 function _createScenesSafe(): void {
-  // prettier-ignore
   if (
     _canvas === null ||
     _devicePixelRatio === null ||
@@ -55,6 +59,7 @@ function _createScenesSafe(): void {
     md2MessagePort === null ||
     progressMessagePort === null ||
     quakeMapsMessagePort === null ||
+    statsMessagePort === null ||
     texturesMessagePort === null ||
     uiMessagePort === null
   ) {
@@ -62,15 +67,20 @@ function _createScenesSafe(): void {
   }
 
   if (_isBootstrapped) {
-    throw new Error(`WORKER(${self.name}) can be only presented with canvas once. It has to be torn down and reinitialized if you need to use another canvas.`);
+    throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
+
+  const statsHooks = StatsHooks(self.name, statsMessagePort);
+
+  _mainLoop = MainLoop(statsHooks, RequestAnimationFrameScheduler());
+  _serviceManager = ServiceManager(logger);
 
   // prettier-ignore
   createScenes(
     _devicePixelRatio,
     eventBus,
-    mainLoop,
-    serviceManager,
+    _mainLoop,
+    _serviceManager,
     _canvas,
     _dimensionsState,
     _inputState,
@@ -85,9 +95,27 @@ function _createScenesSafe(): void {
   );
 
   _isBootstrapped = true;
+
+  if (_shouldNotifyReady) {
+    _notifyReady();
+  }
+}
+
+function _notifyReady(): void {
+  if (_notifiedReady) {
+    throw new Error("WORKER(${self.name}) already notified its ready state.");
+  }
+
+  _notifiedReady = true;
+
+  self.postMessage(<MessageWorkerReady>{
+    ready: true,
+  });
 }
 
 self.onmessage = createRouter({
+  // Dependencies
+
   awaitSharedDimensions(awaitSharedDimensions: boolean): void {
     if (awaitSharedDimensions) {
       return;
@@ -158,12 +186,6 @@ self.onmessage = createRouter({
     _createScenesSafe();
   },
 
-  ready(): void {
-    self.postMessage(<MessageWorkerReady>{
-      ready: true,
-    });
-  },
-
   sharedDimensionsState(dimensions: SharedArrayBuffer): void {
     _dimensionsState = new Uint32Array(dimensions);
   },
@@ -172,14 +194,13 @@ self.onmessage = createRouter({
     _inputState = new Int32Array(input);
   },
 
-  start(): void {
-    mainLoop.start();
-    serviceManager.start();
-  },
+  statsMessagePort(port: MessagePort): void {
+    if (null !== statsMessagePort) {
+      throw new Error(`Stats message port was already received by WORKER(${self.name}).`);
+    }
 
-  stop(): void {
-    mainLoop.stop();
-    serviceManager.stop();
+    statsMessagePort = port;
+    _createScenesSafe();
   },
 
   texturesMessagePort(port: MessagePort): void {
@@ -190,5 +211,33 @@ self.onmessage = createRouter({
   uiMessagePort(port: MessagePort): void {
     uiMessagePort = port;
     _createScenesSafe();
+  },
+
+  // WorkerService
+
+  ready(): void {
+    if (_isBootstrapped) {
+      _notifyReady();
+    } else {
+      _shouldNotifyReady = true;
+    }
+  },
+
+  start(): void {
+    if (null === _mainLoop || null === _serviceManager) {
+      throw new Error("MainLoop and ServiceManager are not ready.");
+    }
+
+    _mainLoop.start();
+    _serviceManager.start();
+  },
+
+  stop(): void {
+    if (null === _mainLoop || null === _serviceManager) {
+      throw new Error("MainLoop and ServiceManager are not ready.");
+    }
+
+    _mainLoop.stop();
+    _serviceManager.stop();
   },
 });
