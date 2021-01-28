@@ -7,6 +7,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
 
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
+import { CSS2DObject } from "@personalidol/three-renderer/src/CSS2DObject";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
@@ -22,7 +23,6 @@ import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
-import type { EntityMD2Model } from "@personalidol/personalidol-mapentities/src/EntityMD2Model.type";
 // import type { MD2LoaderMorphNormal } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphNormal.type";
 import type { MD2LoaderMorphPosition } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphPosition.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
@@ -30,6 +30,8 @@ import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
+
+import type { EntityMD2Model } from "./EntityMD2Model.type";
 
 type AnimationClipsCached = {
   animations: Array<IAnimationClip>;
@@ -88,7 +90,14 @@ function _morphPositionToBufferAttribute(morphPosition: MD2LoaderMorphPosition) 
   return bufferAttribute;
 }
 
-export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePort: MessagePort, texturesMessagePort: MessagePort, rpcLookupTable: RPCLookupTable): View {
+export function MD2ModelView(
+  scene: Scene,
+  entity: EntityMD2Model,
+  domMessagePort: MessagePort,
+  md2MessagePort: MessagePort,
+  texturesMessagePort: MessagePort,
+  rpcLookupTable: RPCLookupTable
+): View {
   const id: string = MathUtils.generateUUID();
   const state: MountState = Object.seal({
     isDisposed: false,
@@ -121,6 +130,8 @@ export function MD2ModelView(scene: Scene, entity: EntityMD2Model, md2MessagePor
 
   async function preload(): Promise<void> {
     state.isPreloading = true;
+
+    console.log(CSS2DObject);
 
     const { load: geometry } = await sendRPCMessage(rpcLookupTable, md2MessagePort, {
       load: {

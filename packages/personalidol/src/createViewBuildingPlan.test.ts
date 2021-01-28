@@ -1,8 +1,8 @@
 import { createViewBuildingPlan } from "./createViewBuildingPlan";
 
-import type { EntityAny } from "@personalidol/personalidol-mapentities/src/EntityAny.type";
+import type { EntityAny } from "@personalidol/personalidol/src/EntityAny.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
-// import type { TargetOrTargetedEntity } from "@personalidol/personalidol-mapentities/TargetOrTargetedEntity.type";
+// import type { TargetOrTargetedEntity } from "@personalidol/personalidol/TargetOrTargetedEntity.type";
 
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
 

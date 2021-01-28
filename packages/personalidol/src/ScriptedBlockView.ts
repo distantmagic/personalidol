@@ -8,10 +8,10 @@ import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
-import type { EntityScriptedBlock } from "@personalidol/personalidol-mapentities/src/EntityScriptedBlock.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
+import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
 import type { EntityView } from "./EntityView.interface";
 import type { ScriptedBlockController } from "./ScriptedBlockController.interface";
 import type { ScriptedBlockControllerResolveCallback } from "./ScriptedBlockControllerResolveCallback.type";

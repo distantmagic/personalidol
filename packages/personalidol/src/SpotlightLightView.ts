@@ -6,9 +6,9 @@ import { noop } from "@personalidol/framework/src/noop";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { EntityLightSpotlight } from "@personalidol/personalidol-mapentities/src/EntityLightSpotlight.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 
+import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityView } from "./EntityView.interface";
 
 export function SpotlightLightView(scene: Scene, entity: EntityLightSpotlight): EntityView {

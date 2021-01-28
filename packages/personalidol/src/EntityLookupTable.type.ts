@@ -1,5 +1,4 @@
-import type { EntityLookup } from "@personalidol/personalidol-mapentities/src/EntityLookup.type";
-
+import type { EntityLookup } from "./EntityLookup.type";
 import type { EntityLookupCallback } from "./EntityLookupCallback.type";
 
 export type EntityLookupTable = {

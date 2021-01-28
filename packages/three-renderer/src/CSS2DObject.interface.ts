@@ -5,8 +5,11 @@ import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementP
 import type { CSS2DObjectState } from "./CSS2DObjectState.type";
 
 export interface CSS2DObject extends Object3D {
-  element: string;
-  isCSS2DObject: true;
+  readonly element: string;
+  readonly isCSS2DObject: true;
+  readonly state: CSS2DObjectState;
+
+  isDisposed: boolean;
+  isRendered: boolean;
   props: DOMElementProps;
-  state: CSS2DObjectState;
 }

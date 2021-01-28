@@ -1,17 +1,17 @@
+import { Color } from "three/src/math/Color";
 import { MathUtils } from "three/src/math/MathUtils";
-import { Object3D } from "three/src/core/Object3D";
+import { PointLight } from "three/src/lights/PointLight";
 
 import { noop } from "@personalidol/framework/src/noop";
 
-import type { Object3D as IObject3D } from "three/src/core/Object3D";
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { EntityPlayer } from "@personalidol/personalidol-mapentities/src/EntityPlayer.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 
+import type { EntityLightPoint } from "./EntityLightPoint.type";
 import type { EntityView } from "./EntityView.interface";
 
-export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
+export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -19,7 +19,8 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
     isPreloading: false,
   });
 
-  const object3D: IObject3D = new Object3D();
+  const _color = new Color(parseInt(entity.color, 16));
+  const _pointLight = new PointLight(_color, entity.intensity, 512);
 
   function dispose(): void {
     state.isDisposed = true;
@@ -27,15 +28,24 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
 
   function mount(): void {
     state.isMounted = true;
+
+    scene.add(_pointLight);
   }
 
   function preload(): void {
+    _pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    _pointLight.decay = entity.decay;
+    _pointLight.castShadow = false;
+    _pointLight.shadow.camera.far = 512;
+
     state.isPreloading = false;
     state.isPreloaded = true;
   }
 
   function unmount(): void {
     state.isMounted = false;
+
+    scene.remove(_pointLight);
   }
 
   return Object.freeze({
@@ -45,10 +55,10 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
     isExpectingTargets: false,
     isScene: false,
     isView: true,
-    name: `PlayerView`,
+    name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     needsUpdates: false,
-    object3D: object3D,
     state: state,
+    object3D: _pointLight,
 
     dispose: dispose,
     mount: mount,

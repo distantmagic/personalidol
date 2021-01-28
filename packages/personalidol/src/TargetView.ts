@@ -11,9 +11,9 @@ import { noop } from "@personalidol/framework/src/noop";
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
-import type { EntityTarget } from "@personalidol/personalidol-mapentities/src/EntityTarget.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 
+import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityView } from "./EntityView.interface";
 
 // "target" is an abstract entity. At this point it won't be used with brushes,

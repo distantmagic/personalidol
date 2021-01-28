@@ -5,7 +5,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
-import { buildEntities } from "@personalidol/personalidol-mapentities/src/buildEntities";
+import { buildEntities } from "@personalidol/personalidol/src/buildEntities";
 import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
@@ -17,7 +17,7 @@ import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
 import type { Vector3 as IVector3 } from "three";
 
 import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
-import type { EntityAny } from "@personalidol/personalidol-mapentities/src/EntityAny.type";
+import type { EntityAny } from "@personalidol/personalidol/src/EntityAny.type";
 import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";

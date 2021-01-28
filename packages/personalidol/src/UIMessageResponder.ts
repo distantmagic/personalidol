@@ -58,6 +58,7 @@ export function UIMessageResponder(
       viewBag.views,
       dimensionsState,
       inputState,
+      domMessagePort,
       md2MessagePort,
       progressMessagePort,
       quakeMapsMessagePort,

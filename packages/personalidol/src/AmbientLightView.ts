@@ -1,17 +1,16 @@
-import { Color } from "three/src/math/Color";
+import { AmbientLight } from "three/src/lights/AmbientLight";
 import { MathUtils } from "three/src/math/MathUtils";
-import { PointLight } from "three/src/lights/PointLight";
 
 import { noop } from "@personalidol/framework/src/noop";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { EntityLightPoint } from "@personalidol/personalidol-mapentities/src/EntityLightPoint.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 
+import type { EntityLightAmbient } from "./EntityLightAmbient.type";
 import type { EntityView } from "./EntityView.interface";
 
-export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityView {
+export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -19,8 +18,7 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityVi
     isPreloading: false,
   });
 
-  const _color = new Color(parseInt(entity.color, 16));
-  const _pointLight = new PointLight(_color, entity.intensity, 512);
+  const _ambientLight = new AmbientLight(0xffffff, entity.light);
 
   function dispose(): void {
     state.isDisposed = true;
@@ -29,15 +27,10 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityVi
   function mount(): void {
     state.isMounted = true;
 
-    scene.add(_pointLight);
+    scene.add(_ambientLight);
   }
 
   function preload(): void {
-    _pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-    _pointLight.decay = entity.decay;
-    _pointLight.castShadow = false;
-    _pointLight.shadow.camera.far = 512;
-
     state.isPreloading = false;
     state.isPreloaded = true;
   }
@@ -45,7 +38,7 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityVi
   function unmount(): void {
     state.isMounted = false;
 
-    scene.remove(_pointLight);
+    scene.remove(_ambientLight);
   }
 
   return Object.freeze({
@@ -55,10 +48,10 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityVi
     isExpectingTargets: false,
     isScene: false,
     isView: true,
-    name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
+    name: `AmbientLightView(${entity.light})`,
     needsUpdates: false,
+    object3D: _ambientLight,
     state: state,
-    object3D: _pointLight,
 
     dispose: dispose,
     mount: mount,

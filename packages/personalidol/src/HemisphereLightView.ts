@@ -5,9 +5,9 @@ import { noop } from "@personalidol/framework/src/noop";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { EntityLightHemisphere } from "@personalidol/personalidol-mapentities/src/EntityLightHemisphere.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 
+import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
 import type { EntityView } from "./EntityView.interface";
 
 export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere): EntityView {

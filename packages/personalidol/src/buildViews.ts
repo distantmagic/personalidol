@@ -1,5 +1,6 @@
-import { isTargeting } from "@personalidol/personalidol-mapentities/src/isTargeting";
 import { name } from "@personalidol/framework/src/name";
+
+import { isTargeting } from "./isTargeting";
 
 import { createViewBuildingPlan } from "./createViewBuildingPlan";
 import { isEntityView } from "./isEntityView";
@@ -7,14 +8,14 @@ import { isEntityView } from "./isEntityView";
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
-import type { EntityAny } from "@personalidol/personalidol-mapentities/src/EntityAny.type";
-import type { EntityLookup } from "@personalidol/personalidol-mapentities/src/EntityLookup.type";
-// import type { TargetedEntity } from "@personalidol/personalidol-mapentities/src/TargetedEntity.type";
-// import type { TargetingEntity } from "@personalidol/personalidol-mapentities/src/TargetingEntity.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
+import type { EntityAny } from "./EntityAny.type";
+import type { EntityLookup } from "./EntityLookup.type";
 import type { EntityLookupCallback } from "./EntityLookupCallback.type";
 import type { EntityLookupTable } from "./EntityLookupTable.type";
+// import type { TargetedEntity } from "./TargetedEntity.type";
+// import type { TargetingEntity } from "./TargetingEntity.type";
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
 
 function _createEntityView<K extends keyof EntityLookup>(

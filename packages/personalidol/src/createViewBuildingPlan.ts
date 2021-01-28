@@ -1,13 +1,12 @@
 import toposort from "toposort";
 
-import { isTarget } from "@personalidol/personalidol-mapentities/src/isTarget";
-import { isTargetedBy } from "@personalidol/personalidol-mapentities/src/isTargetedBy";
-import { isTargeting } from "@personalidol/personalidol-mapentities/src/isTargeting";
+import { isTarget } from "./isTarget";
+import { isTargetedBy } from "./isTargetedBy";
+import { isTargeting } from "./isTargeting";
 
-import type { EntityAny } from "@personalidol/personalidol-mapentities/src/EntityAny.type";
-import type { TargetedEntity } from "@personalidol/personalidol-mapentities/src/TargetedEntity.type";
-import type { TargetingEntity } from "@personalidol/personalidol-mapentities/src/TargetingEntity.type";
-
+import type { EntityAny } from "./EntityAny.type";
+import type { TargetedEntity } from "./TargetedEntity.type";
+import type { TargetingEntity } from "./TargetingEntity.type";
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
 
 function _findTargetedEntitiesByEntity(

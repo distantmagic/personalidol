@@ -50,6 +50,7 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     _vecTmpA.setFromMatrixPosition(object.matrixWorld);
     _vecTmpA.applyMatrix4(viewProjectionMatrix);
 
+    object.isRendered = true;
     object.state.distanceToCameraSquared = _getDistanceToSquared(camera, object);
     object.state.translateX = _vecTmpA.x * _widthHalf + _widthHalf;
     object.state.translateY = _vecTmpA.y * _heightHalf + _heightHalf;
@@ -89,7 +90,7 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     const sorted = css2DObjects.sort(_sortObjectsByDistance);
     const zMax = sorted.length;
 
-    for (i = 0; i < zMax; i ++) {
+    for (i = 0; i < zMax; i++) {
       sorted[i].state.zIndex = zMax - i;
     }
   }

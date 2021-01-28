@@ -1,5 +1,6 @@
-import type { EntityAny } from "@personalidol/personalidol-mapentities/src/EntityAny.type";
 import type { View } from "@personalidol/framework/src/View.interface";
+
+import type { EntityAny } from "./EntityAny.type";
 
 export interface EntityView extends View {
   entity: EntityAny;

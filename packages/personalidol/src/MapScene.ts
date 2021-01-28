@@ -6,8 +6,6 @@ import { Scene } from "three/src/scenes/Scene";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
-import { AmbientLightView } from "@personalidol/personalidol-views/src/AmbientLightView";
-import { buildViews } from "@personalidol/personalidol-views/src/buildViews";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
@@ -16,23 +14,26 @@ import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
-import { HemisphereLightView } from "@personalidol/personalidol-views/src/HemisphereLightView";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
-import { MD2ModelView } from "@personalidol/personalidol-views/src/MD2ModelView";
 import { mount as fMount } from "@personalidol/framework/src/mount";
-import { PlayerView } from "@personalidol/personalidol-views/src/PlayerView";
-import { PointLightView } from "@personalidol/personalidol-views/src/PointLightView";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
-import { resolveScriptedBlockController } from "@personalidol/personalidol-views/src/resolveScriptedBlockController";
-import { ScriptedBlockView } from "@personalidol/personalidol-views/src/ScriptedBlockView";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
-import { SpotlightLightView } from "@personalidol/personalidol-views/src/SpotlightLightView";
-import { TargetView } from "@personalidol/personalidol-views/src/TargetView";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
-import { WorldspawnGeometryView } from "@personalidol/personalidol-views/src/WorldspawnGeometryView";
+
+import { AmbientLightView } from "./AmbientLightView";
+import { buildViews } from "./buildViews";
+import { HemisphereLightView } from "./HemisphereLightView";
+import { MD2ModelView } from "./MD2ModelView";
+import { PlayerView } from "./PlayerView";
+import { PointLightView } from "./PointLightView";
+import { resolveScriptedBlockController } from "./resolveScriptedBlockController";
+import { ScriptedBlockView } from "./ScriptedBlockView";
+import { SpotlightLightView } from "./SpotlightLightView";
+import { TargetView } from "./TargetView";
+import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
@@ -40,20 +41,6 @@ import type { Texture as ITexture } from "three/src/textures/Texture";
 import type { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer.interface";
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
-import type { EntityFuncGroup } from "@personalidol/personalidol-mapentities/src/EntityFuncGroup.type";
-import type { EntityGLTFModel } from "@personalidol/personalidol-mapentities/src/EntityGLTFModel.type";
-import type { EntityLightAmbient } from "@personalidol/personalidol-mapentities/src/EntityLightAmbient.type";
-import type { EntityLightHemisphere } from "@personalidol/personalidol-mapentities/src/EntityLightHemisphere.type";
-import type { EntityLightPoint } from "@personalidol/personalidol-mapentities/src/EntityLightPoint.type";
-import type { EntityLightSpotlight } from "@personalidol/personalidol-mapentities/src/EntityLightSpotlight.type";
-import type { EntityLookupTable } from "@personalidol/personalidol-views/src/EntityLookupTable.type";
-import type { EntityMD2Model } from "@personalidol/personalidol-mapentities/src/EntityMD2Model.type";
-import type { EntityPlayer } from "@personalidol/personalidol-mapentities/src/EntityPlayer.type";
-import type { EntityScriptedBlock } from "@personalidol/personalidol-mapentities/src/EntityScriptedBlock.type";
-import type { EntitySounds } from "@personalidol/personalidol-mapentities/src/EntitySounds.type";
-import type { EntitySparkParticles } from "@personalidol/personalidol-mapentities/src/EntitySparkParticles.type";
-import type { EntityTarget } from "@personalidol/personalidol-mapentities/src/EntityTarget.type";
-import type { EntityWorldspawn } from "@personalidol/personalidol-mapentities/src/EntityWorldspawn.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
@@ -61,6 +48,21 @@ import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
+
+import type { EntityFuncGroup } from "./EntityFuncGroup.type";
+import type { EntityGLTFModel } from "./EntityGLTFModel.type";
+import type { EntityLightAmbient } from "./EntityLightAmbient.type";
+import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
+import type { EntityLightPoint } from "./EntityLightPoint.type";
+import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
+import type { EntityLookupTable } from "./EntityLookupTable.type";
+import type { EntityMD2Model } from "./EntityMD2Model.type";
+import type { EntityPlayer } from "./EntityPlayer.type";
+import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
+import type { EntitySounds } from "./EntitySounds.type";
+import type { EntitySparkParticles } from "./EntitySparkParticles.type";
+import type { EntityTarget } from "./EntityTarget.type";
+import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 
 const CAMERA_ZOOM_INITIAL = 401;
 const CAMERA_ZOOM_MAX = 1;
@@ -103,6 +105,7 @@ export function MapScene(
   views: Set<View>,
   dimensionsState: Uint32Array,
   inputState: Int32Array,
+  domMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
@@ -161,7 +164,7 @@ export function MapScene(
     },
 
     model_md2(entity: EntityMD2Model): View {
-      return MD2ModelView(_scene, entity, md2MessagePort, texturesMessagePort, _rpcLookupTable);
+      return MD2ModelView(_scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
     },
 
     player(entity: EntityPlayer): View {
