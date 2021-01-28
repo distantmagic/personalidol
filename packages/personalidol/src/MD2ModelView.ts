@@ -99,6 +99,7 @@ export function MD2ModelView(
   rpcLookupTable: RPCLookupTable
 ): View {
   const id: string = MathUtils.generateUUID();
+  const name: string = `MD2ModelView("${entity.model_name}",${entity.skin})`;
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -176,11 +177,15 @@ export function MD2ModelView(
 
     // Object label
 
-    const label = new CSS2DObject(domMessagePort, "pi-object-label");
+    const label = new CSS2DObject(domMessagePort, "pi-object-label", {
+      label: name,
+    });
 
-    label.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    _mesh.add(label);
 
-    scene.add(label);
+    _unmountables.add(function () {
+      _mesh.remove(label);
+    });
 
     // Animations
 
@@ -242,7 +247,7 @@ export function MD2ModelView(
     id: id,
     isScene: false,
     isView: true,
-    name: `MD2ModelView("${entity.model_name}",${entity.skin})`,
+    name: name,
     needsUpdates: true,
     object3D: _mesh,
     state: state,

@@ -44,8 +44,6 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     _heightHalf = _height / 2;
     _width = width;
     _widthHalf = _width / 2;
-
-    console.log(width, height);
   }
 
   function _renderObject(object: CSS2DObject, scene: Scene, camera: Camera) {
@@ -82,6 +80,17 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     });
 
     return result;
+  }
+
+  function _objectToRenderMessage(object: CSS2DObject): MessageDOMUIRender {
+    return {
+      element: object.element,
+      id: object.uuid,
+      props: {
+        objectProps: object.props,
+        rendererState: object.state,
+      },
+    };
   }
 
   function _sortObjectsByDistance(a: CSS2DObject, b: CSS2DObject) {
@@ -124,18 +133,9 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
 
     _zOrder(css2DObjects, scene);
 
-    for (let object of css2DObjects) {
-      domMessagePort.postMessage({
-        render: <MessageDOMUIRender>{
-          element: object.element,
-          id: object.uuid,
-          props: {
-            objectProps: object.props,
-            rendererState: object.state,
-          },
-        }
-      });
-    }
+    domMessagePort.postMessage({
+      renderBatch: css2DObjects.map(_objectToRenderMessage),
+    });
   }
 
   return renderer;

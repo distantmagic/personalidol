@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
@@ -17,16 +17,27 @@ const _css = `
   }
 
   #label {
-    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #eee;
+    font-family: Mukta;
+    font-size: 1rem;
     left: 0;
+    line-height: 1;
+    padding: 1ch;
     position: absolute;
     top: 0;
     will-change: transform, z-index;
   }
 `;
 
+type LabelProps = DOMElementProps & {
+  label: string;
+};
+
 export class ObjectLabelDOMElementView extends DOMElementView {
-  objectProps: DOMElementProps = {};
+  objectProps: LabelProps = {
+    label: "",
+  };
   rendererState: CSS2DObjectState = {
     distanceToCameraSquared: 0,
     translateX: 0,
@@ -64,17 +75,15 @@ export class ObjectLabelDOMElementView extends DOMElementView {
     }
 
     return (
-      <Fragment>
-        <style>{`
-          #label {
-            transform: translate(-50%, -50%) translate(${this.rendererState.translateX}px, ${this.rendererState.translateY}px);
-            z-index: ${this.rendererState.zIndex};
-          }
-        `}</style>
-        <div id="label">
-          LABEL
-        </div>
-      </Fragment>
+      <div
+        id="label"
+        style={{
+          transform: `translate(-50%, -100%) translate(${this.rendererState.translateX}px, ${this.rendererState.translateY}px)`,
+          zIndex: this.rendererState.zIndex,
+        }}
+      >
+        {this.objectProps.label}
+      </div>
     );
   }
 }

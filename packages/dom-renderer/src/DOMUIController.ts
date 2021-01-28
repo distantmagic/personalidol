@@ -59,6 +59,7 @@ export function DOMUIController(
   const _uiMessageRouter = createRouter({
     dispose: dispose,
     render: render,
+    renderBatch: renderBatch,
   });
 
   function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender): RenderedElement {
@@ -136,6 +137,10 @@ export function DOMUIController(
 
     renderedElement.domElementView.props = message.props;
     renderedElement.domElementView.propsLastUpdate = tickTimerState.currentTick;
+  }
+
+  function renderBatch(message: Array<MessageDOMUIRender>): void {
+    message.forEach(render);
   }
 
   function registerMessagePort(messagePort: MessagePort) {
