@@ -46,6 +46,8 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     this.shadow.appendChild(this.rootElement);
   }
 
+  abstract beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
+
   connectedCallback() {
     const styleSheetDirector: null | IDirector = this.styleSheetDirector;
 
@@ -104,6 +106,8 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
         styleSheet.update(delta, elapsedTime, tickTimerState);
       }
     }
+
+    this.beforeRender(delta, elapsedTime, tickTimerState);
 
     // Render view only after CSS stylesheet is attached to reduce visual
     // flashes.

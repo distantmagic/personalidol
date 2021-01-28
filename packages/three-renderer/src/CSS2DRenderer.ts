@@ -7,9 +7,12 @@ import { isCSS2DObject } from "./isCSS2DObject";
 import type { Camera } from "three/src/cameras/Camera";
 import type { Scene } from "three/src/scenes/Scene";
 
+import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
+
 import type { CSS2DObject } from "./CSS2DObject.interface";
 import type { CSS2DRenderer as ICSS2DRenderer } from "./CSS2DRenderer.interface";
 
+const _vec = new Vector3();
 const _vecTmpA = new Vector3();
 const _vecTmpB = new Vector3();
 
@@ -41,20 +44,22 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     _heightHalf = _height / 2;
     _width = width;
     _widthHalf = _width / 2;
+
+    console.log(width, height);
   }
 
   function _renderObject(object: CSS2DObject, scene: Scene, camera: Camera) {
     // @ts-ignore
     object.onBeforeRender(renderer, scene, camera);
 
-    _vecTmpA.setFromMatrixPosition(object.matrixWorld);
-    _vecTmpA.applyMatrix4(viewProjectionMatrix);
+    _vec.setFromMatrixPosition(object.matrixWorld);
+    _vec.applyMatrix4(viewProjectionMatrix);
 
     object.isRendered = true;
     object.state.distanceToCameraSquared = _getDistanceToSquared(camera, object);
-    object.state.translateX = _vecTmpA.x * _widthHalf + _widthHalf;
-    object.state.translateY = _vecTmpA.y * _heightHalf + _heightHalf;
-    object.state.visible = object.visible && _vecTmpA.z >= -1 && _vecTmpA.z <= 1;
+    object.state.translateX = _vec.x * _widthHalf + _widthHalf;
+    object.state.translateY = -1 * _vec.y * _heightHalf + _heightHalf;
+    object.state.visible = object.visible && _vec.z >= -1 && _vec.z <= 1;
 
     // @ts-ignore
     object.onAfterRender(renderer, scene, camera);
@@ -118,6 +123,19 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     }
 
     _zOrder(css2DObjects, scene);
+
+    for (let object of css2DObjects) {
+      domMessagePort.postMessage({
+        render: <MessageDOMUIRender>{
+          element: object.element,
+          id: object.uuid,
+          props: {
+            objectProps: object.props,
+            rendererState: object.state,
+          },
+        }
+      });
+    }
   }
 
   return renderer;

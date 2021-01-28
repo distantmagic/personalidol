@@ -62,9 +62,7 @@ export class FatalErrorDOMElementView extends DOMElementView {
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
-  update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    super.update(delta, elapsedTime, tickTimerState);
-
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
     if (this.propsLastUpdate < this.viewLastUpdate) {
       return;
     }

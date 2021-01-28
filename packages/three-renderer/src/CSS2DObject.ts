@@ -23,7 +23,7 @@ export class CSS2DObject extends Object3D implements ICSS2DObject {
   public isRendered: boolean = false;
   public props: DOMElementProps;
 
-  constructor(domMessagePort: MessagePort, element: string, props: DOMElementProps) {
+  constructor(domMessagePort: MessagePort, element: string, props: DOMElementProps = {}) {
     super();
 
     let self: ICSS2DObject = this;

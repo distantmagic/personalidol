@@ -20,6 +20,8 @@ export interface DOMElementView extends HTMLElement, MainLoopUpdatable {
   uiMessagePort: null | MessagePort;
   viewLastUpdate: number;
 
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
+
   /**
    * Init has to be used, because HTMLElement constructor does not take
    * arguments.

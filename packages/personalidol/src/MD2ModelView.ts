@@ -131,8 +131,6 @@ export function MD2ModelView(
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
-    console.log(CSS2DObject);
-
     const { load: geometry } = await sendRPCMessage(rpcLookupTable, md2MessagePort, {
       load: {
         model_name: entity.model_name,
@@ -175,6 +173,14 @@ export function MD2ModelView(
     _mesh.castShadow = false;
     _mesh.receiveShadow = false;
     _mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+
+    // Object label
+
+    const label = new CSS2DObject(domMessagePort, "pi-object-label");
+
+    label.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+
+    scene.add(label);
 
     // Animations
 
