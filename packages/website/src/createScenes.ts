@@ -1,10 +1,11 @@
 import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
+import { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer";
 import { Director } from "@personalidol/loading-manager/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
-import { Renderer } from "@personalidol/three-renderer/src/Renderer";
+import { RendererDimensionsManager } from "@personalidol/three-renderer/src/RendererDimensionsManager";
 import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
 import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
 import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
@@ -46,16 +47,23 @@ export function createScenes(
   webGLRenderer.shadowMap.autoUpdate = false;
 
   const effectComposer = new EffectComposer(webGLRenderer);
+  const css2DRenderer = CSS2DRenderer(domMessagePort);
 
-  const renderer = Renderer(dimensionsState, effectComposer, webGLRenderer);
+  const rendererDimensionsManager = RendererDimensionsManager(dimensionsState);
+
+  rendererDimensionsManager.state.renderers.add(css2DRenderer);
+  rendererDimensionsManager.state.renderers.add(effectComposer);
+  rendererDimensionsManager.state.renderers.add(webGLRenderer);
+
   const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
-  const sceneTransition = SceneTransition(logger, webGLRenderer, currentSceneDirector.state, loadingSceneDirector.state);
+  const sceneTransition = SceneTransition(logger, currentSceneDirector.state, loadingSceneDirector.state);
   const viewBagSceneObserver = ViewBagSceneObserver(currentSceneDirector.state);
 
   const uiMessageResponder = UIMessageResponder(
     logger,
     effectComposer,
+    css2DRenderer,
     currentSceneDirector.state,
     eventBus,
     dimensionsState,
@@ -88,7 +96,7 @@ export function createScenes(
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(uiMessageResponder);
   serviceManager.services.add(loadingSceneDirector);
-  serviceManager.services.add(renderer);
+  serviceManager.services.add(rendererDimensionsManager);
   serviceManager.services.add(sceneTransition);
 
   mainLoop.updatables.add(serviceManager);
@@ -97,5 +105,5 @@ export function createScenes(
   mainLoop.updatables.add(loadingSceneDirector);
   mainLoop.updatables.add(uiMessageResponder);
   mainLoop.updatables.add(sceneTransition);
-  mainLoop.updatables.add(renderer);
+  mainLoop.updatables.add(rendererDimensionsManager);
 }

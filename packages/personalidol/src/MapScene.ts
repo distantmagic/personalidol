@@ -37,6 +37,7 @@ import { WorldspawnGeometryView } from "@personalidol/personalidol-views/src/Wor
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
+import type { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer.interface";
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EntityFuncGroup } from "@personalidol/personalidol-mapentities/src/EntityFuncGroup.type";
@@ -97,6 +98,7 @@ let _cameraZoomAmount = 0;
 export function MapScene(
   logger: Logger,
   effectComposer: EffectComposer,
+  css2DRenderer: CSS2DRenderer,
   eventBus: EventBus,
   views: Set<View>,
   dimensionsState: Uint32Array,
@@ -277,6 +279,7 @@ export function MapScene(
     }
 
     effectComposer.render(delta);
+    css2DRenderer.render(_scene, _camera, false);
   }
 
   function _onCameraUpdate(): void {

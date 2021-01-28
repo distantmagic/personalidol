@@ -1,7 +1,4 @@
-// import { Clock } from "three/src/core/Clock";
 import { MathUtils } from "three/src/math/MathUtils";
-
-import { Clock } from "./Clock";
 
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
 import type { MainLoopStatsHook } from "./MainLoopStatsHook.interface";
@@ -38,19 +35,22 @@ export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler:
   });
   const updatables = new Set<MainLoopUpdatable>();
 
-  const _clock = Clock();
   let _continue: boolean = false;
   let _delta: number = 0;
   let _elapsedTime: number = 0;
   let _frameId: null | TickType = null;
+  let _previousTime: number = 0;
 
   function start(): void {
     if (_continue) {
       throw new Error("Main loop is alread started.");
     }
 
-    _clock.start();
     _continue = true;
+
+    _elapsedTime = 0;
+    _previousTime = performance.now();
+
     _frameId = frameScheduler.requestFrame(tick);
   }
 
@@ -59,7 +59,6 @@ export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler:
       throw new Error("Main loop is alread stopped.");
     }
 
-    _clock.stop();
     _continue = false;
 
     if (null !== _frameId) {
@@ -69,9 +68,10 @@ export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler:
     _frameId = null;
   }
 
-  function tick(): void {
-    _delta = _clock.getDelta();
-    _elapsedTime = _clock.getElapsedTime();
+  function tick(now: number): void {
+    _previousTime = _elapsedTime;
+    _elapsedTime = now / 1000;
+    _delta = _elapsedTime - _previousTime;
 
     tickTimerState.currentTick += 1;
     tickTimerState.elapsedTime = _elapsedTime;

@@ -4,7 +4,6 @@ import { mountMount } from "@personalidol/framework/src/mountMount";
 import { mountUnmount } from "@personalidol/framework/src/mountUnmount";
 
 import type { Logger } from "loglevel";
-import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
@@ -12,7 +11,7 @@ import type { DirectorState } from "./DirectorState.type";
 import type { SceneTransition as ISceneTransition } from "./SceneTransition.interface";
 import type { SceneTransitionState } from "./SceneTransitionState.type";
 
-export function SceneTransition(logger: Logger, renderer: WebGLRenderer, sceneDirectorState: DirectorState, loadingScreenDirectorState: DirectorState): ISceneTransition {
+export function SceneTransition(logger: Logger, sceneDirectorState: DirectorState, loadingScreenDirectorState: DirectorState): ISceneTransition {
   const state: SceneTransitionState = Object.seal({
     lastUpdateCurrentTick: -1,
     lastUpdateNextTick: -1,
@@ -36,8 +35,6 @@ export function SceneTransition(logger: Logger, renderer: WebGLRenderer, sceneDi
         if (loadingScreen.state.isMounted) {
           mountUnmount(logger, loadingScreen);
         }
-
-        renderer.clear();
       }
 
       if (!scene.state.isMounted) {

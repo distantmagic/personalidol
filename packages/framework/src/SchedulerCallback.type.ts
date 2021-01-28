@@ -1,1 +1,1 @@
-export type SchedulerCallback = () => void;
+export type SchedulerCallback = (timestamp: number) => void;

@@ -8,6 +8,7 @@ import { MapScene } from "./MapScene";
 
 import type { Logger } from "loglevel";
 
+import type { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer.interface";
 import type { DirectorState } from "@personalidol/loading-manager/src/DirectorState.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
@@ -18,6 +19,7 @@ import type { UIMessageResponder as IUIMessageResponder } from "./UIMessageRespo
 export function UIMessageResponder(
   logger: Logger,
   effectComposer: EffectComposer,
+  css2DRenderer: CSS2DRenderer,
   directorState: DirectorState,
   eventBus: EventBus,
   dimensionsState: Uint32Array,
@@ -51,6 +53,7 @@ export function UIMessageResponder(
     const mapScene = MapScene(
       logger,
       effectComposer,
+      css2DRenderer,
       eventBus,
       viewBag.views,
       dimensionsState,

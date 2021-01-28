@@ -1,8 +1,9 @@
 import type { DisposableGeneric } from "@personalidol/framework/src/DisposableGeneric.interface";
 
 import type { Pass } from "./Pass.interface";
+import type { ResizeableRenderer } from "../ResizeableRenderer.interface";
 
-export interface EffectComposer extends DisposableGeneric {
+export interface EffectComposer extends DisposableGeneric, ResizeableRenderer {
   addPass(pass: Pass): void;
 
   isLastEnabledPass(passIndex: number): boolean;
@@ -12,8 +13,6 @@ export interface EffectComposer extends DisposableGeneric {
   render(deltaTime: number): void;
 
   setPixelRatio(pixelRatio: number): void;
-
-  setSize(width: number, height: number): void;
 
   swapBuffers(): void;
 }

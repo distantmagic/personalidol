@@ -6,5 +6,5 @@ export interface MainLoop extends Service {
   tickTimerState: TickTimerState;
   updatables: Set<MainLoopUpdatable>;
 
-  tick(): void;
+  tick(delta: number): void;
 }
