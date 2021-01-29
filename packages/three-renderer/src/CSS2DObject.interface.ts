@@ -6,9 +6,10 @@ import type { CSS2DObjectState } from "./CSS2DObjectState.type";
 
 export interface CSS2DObject extends Object3D {
   readonly element: string;
-  readonly isCSS2DObject: true;
   readonly state: CSS2DObjectState;
+  readonly type: "CSS2DObject";
 
+  isDirty: boolean;
   isDisposed: boolean;
   isRendered: boolean;
   props: DOMElementProps;

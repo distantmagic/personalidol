@@ -7,6 +7,8 @@ import type { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObj
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+const FADE_OUT_DISTANCE: number = 2500;
+
 const _css = `
   :host {
     all: initial;
@@ -17,16 +19,28 @@ const _css = `
   }
 
   #label {
-    background-color: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    backface-visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
     color: #eee;
+    display: flex;
     font-family: Mukta;
     font-size: 1rem;
+    height: 2rem;
+    justify-content: center;
     left: 0;
-    line-height: 1;
-    padding: 1ch;
+    line-height: 0.5rem;
+    opacity: var(--label-opacity);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     position: absolute;
     top: 0;
+    transform:
+      translate(-50%, -100%)
+      translate(var(--label-translate-x), var(--label-translate-y))
+    ;
     will-change: transform, z-index;
+    z-index: var(--label-z-index);
   }
 `;
 
@@ -74,12 +88,19 @@ export class ObjectLabelDOMElementView extends DOMElementView {
       return null;
     }
 
+    const opacity: number = this.rendererState.distanceToCameraSquared < (FADE_OUT_DISTANCE * FADE_OUT_DISTANCE)
+      ? 1
+      : 0.3
+    ;
+
     return (
       <div
         id="label"
         style={{
-          transform: `translate(-50%, -100%) translate(${this.rendererState.translateX}px, ${this.rendererState.translateY}px)`,
-          zIndex: this.rendererState.zIndex,
+          '--label-translate-x': `${this.rendererState.translateX}px`,
+          '--label-translate-y': `${this.rendererState.translateY}px`,
+          '--label-opacity': opacity,
+          '--label-z-index': this.rendererState.zIndex,
         }}
       >
         {this.objectProps.label}

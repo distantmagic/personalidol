@@ -40,9 +40,6 @@
     "type": "git",
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
-  "scripts": {
-    "build_mustache": "node ./scripts/build_mustache.js"
-  },
   "sideEffects": false,
   "version": "0.0.4"
 }

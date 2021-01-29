@@ -7,7 +7,6 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
 
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
-import { CSS2DObject } from "@personalidol/three-renderer/src/CSS2DObject";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
@@ -15,6 +14,8 @@ import { mount as fMount } from "@personalidol/framework/src/mount";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+
+import { supportObjectLabel } from "./supportObjectLabel";
 
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
 import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
@@ -177,15 +178,7 @@ export function MD2ModelView(
 
     // Object label
 
-    const label = new CSS2DObject(domMessagePort, "pi-object-label", {
-      label: name,
-    });
-
-    _mesh.add(label);
-
-    _unmountables.add(function () {
-      _mesh.remove(label);
-    });
+    supportObjectLabel(domMessagePort, _mesh, entity, _mountables, _unmountables, _disposables);
 
     // Animations
 

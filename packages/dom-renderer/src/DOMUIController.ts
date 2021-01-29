@@ -52,6 +52,8 @@ export function DOMUIController(
   domElementsLookup: DOMElementsLookup
 ): IDOMUIController {
   const internalDOMMessageChannel: MessageChannel = createMessageChannel();
+  let _delta: number = 0;
+  let _elapsedTime: number = 0;
   let _isRootElementCleared: boolean = false;
 
   const _renderedElements: Array<RenderedElement> = [];
@@ -137,6 +139,7 @@ export function DOMUIController(
 
     renderedElement.domElementView.props = message.props;
     renderedElement.domElementView.propsLastUpdate = tickTimerState.currentTick;
+    renderedElement.domElementView.update(_delta, _elapsedTime, tickTimerState);
   }
 
   function renderBatch(message: Array<MessageDOMUIRender>): void {
@@ -156,8 +159,11 @@ export function DOMUIController(
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
+    _delta = delta;
+    _elapsedTime = elapsedTime;
+
     for (let renderedElement of _renderedElements) {
-      renderedElement.domElementView.update(delta, elapsedTime, tickTimerState);
+      renderedElement.domElementView.update(_delta, _elapsedTime, tickTimerState);
     }
   }
 

@@ -23,6 +23,12 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
   let _widthHalf: number = 0;
   let i: number = 0;
 
+  let _previousDistanceToCameraSquared: number = 0;
+  let _previousIsRendered: boolean = false;
+  let _previousTranslateX: number = 0;
+  let _previousTranslateY: number = 0;
+  let _previousVisible: boolean = false;
+
   const viewMatrix = new Matrix4();
   const viewProjectionMatrix = new Matrix4();
 
@@ -32,20 +38,6 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     setSize: setSize,
   });
 
-  function getSize() {
-    return {
-      width: _width,
-      height: _height,
-    };
-  }
-
-  function setSize(width: number, height: number) {
-    _height = height;
-    _heightHalf = _height / 2;
-    _width = width;
-    _widthHalf = _width / 2;
-  }
-
   function _renderObject(object: CSS2DObject, scene: Scene, camera: Camera) {
     // @ts-ignore
     object.onBeforeRender(renderer, scene, camera);
@@ -53,11 +45,37 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     _vec.setFromMatrixPosition(object.matrixWorld);
     _vec.applyMatrix4(viewProjectionMatrix);
 
+    _previousDistanceToCameraSquared = object.state.distanceToCameraSquared;
+    _previousIsRendered = object.isRendered;
+    _previousTranslateX = object.state.translateX;
+    _previousTranslateY = object.state.translateY;
+    _previousVisible = object.state.visible;
+
     object.isRendered = true;
     object.state.distanceToCameraSquared = _getDistanceToSquared(camera, object);
     object.state.translateX = _vec.x * _widthHalf + _widthHalf;
     object.state.translateY = -1 * _vec.y * _heightHalf + _heightHalf;
-    object.state.visible = object.visible && _vec.z >= -1 && _vec.z <= 1;
+
+    // prettier-ignore
+    if ( object.state.translateX < 0
+      || object.state.translateY < 0
+      || object.state.translateX > _width
+      || object.state.translateY > _height
+    ) {
+      object.state.visible = false;
+    } else {
+      object.state.visible = object.visible && _vec.z >= -1 && _vec.z <= 1;
+    }
+
+    // prettier-ignore
+    object.isDirty = (
+      (!object.state.visible && !_previousVisible)
+      || _previousDistanceToCameraSquared !== object.state.distanceToCameraSquared
+      || _previousIsRendered !== object.isRendered
+      || _previousTranslateX !== object.state.translateX
+      || _previousTranslateY !== object.state.translateY
+      || _previousVisible !== object.state.visible
+    );
 
     // @ts-ignore
     object.onAfterRender(renderer, scene, camera);
@@ -82,17 +100,6 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     return result;
   }
 
-  function _objectToRenderMessage(object: CSS2DObject): MessageDOMUIRender {
-    return {
-      element: object.element,
-      id: object.uuid,
-      props: {
-        objectProps: object.props,
-        rendererState: object.state,
-      },
-    };
-  }
-
   function _sortObjectsByDistance(a: CSS2DObject, b: CSS2DObject) {
     const distanceA = a.state.distanceToCameraSquared;
     const distanceB = b.state.distanceToCameraSquared;
@@ -107,6 +114,20 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     for (i = 0; i < zMax; i++) {
       sorted[i].state.zIndex = zMax - i;
     }
+  }
+
+  function getSize() {
+    return {
+      width: _width,
+      height: _height,
+    };
+  }
+
+  function setSize(width: number, height: number) {
+    _height = height;
+    _heightHalf = _height / 2;
+    _width = width;
+    _widthHalf = _width / 2;
   }
 
   /**
@@ -133,8 +154,28 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
 
     _zOrder(css2DObjects, scene);
 
+    const renderBatch: Array<MessageDOMUIRender> = [];
+
+    for (let object of css2DObjects) {
+      if (object.isDirty) {
+        renderBatch.push(<MessageDOMUIRender>{
+          element: object.element,
+          id: object.uuid,
+          props: {
+            objectProps: object.props,
+            rendererState: object.state,
+          },
+        });
+        object.isDirty = false;
+      }
+    }
+
+    if (renderBatch.length < 1) {
+      return;
+    }
+
     domMessagePort.postMessage({
-      renderBatch: css2DObjects.map(_objectToRenderMessage),
+      renderBatch: renderBatch,
     });
   }
 

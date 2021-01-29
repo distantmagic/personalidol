@@ -9,7 +9,6 @@ import type { CSS2DObject as ICSS2DObject } from "./CSS2DObject.interface";
 import type { CSS2DObjectState } from "./CSS2DObjectState.type";
 
 export class CSS2DObject extends Object3D implements ICSS2DObject {
-  public readonly isCSS2DObject: true = true;
   public readonly element: string;
   public readonly state: CSS2DObjectState = {
     distanceToCameraSquared: 0,
@@ -18,7 +17,9 @@ export class CSS2DObject extends Object3D implements ICSS2DObject {
     visible: false,
     zIndex: 0,
   };
+  public readonly type: "CSS2DObject" = "CSS2DObject";
 
+  public isDirty: boolean = false;
   public isDisposed: boolean = false;
   public isRendered: boolean = false;
   public props: DOMElementProps;

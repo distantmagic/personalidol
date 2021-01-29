@@ -8,7 +8,7 @@ const path = require("path");
   const templateBuffer = await fs.readFile(templatePath);
   const template = templateBuffer.toString("utf-8");
   const rendered = Mustache.render(template, {
-    __CACHE_BUST: process.env.CACHE_BUST,
+    __CACHE_BUST: Date.now(),
   });
 
   await fs.writeFile(outputPath, rendered, "utf-8");
