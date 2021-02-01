@@ -11,6 +11,7 @@ import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageD
 
 import type { CSS2DObject } from "./CSS2DObject.interface";
 import type { CSS2DRenderer as ICSS2DRenderer } from "./CSS2DRenderer.interface";
+import type { CSS2DRendererInfo } from "./CSS2DRendererInfo.type";
 
 const _vec = new Vector3();
 const _vecTmpA = new Vector3();
@@ -33,6 +34,12 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
   const viewProjectionMatrix = new Matrix4();
 
   const renderer: ICSS2DRenderer = Object.freeze({
+    info: <CSS2DRendererInfo>Object.seal({
+      render: Object.seal({
+        elements: 0,
+      }),
+    }),
+
     getSize: getSize,
     render: render,
     setSize: setSize,
@@ -182,6 +189,8 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
 
     _zOrder(css2DObjects, scene);
     _reportRenderBatch(css2DObjects);
+
+    renderer.info.render.elements = css2DObjects.length;
   }
 
   return renderer;

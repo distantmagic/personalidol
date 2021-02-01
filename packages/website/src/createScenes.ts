@@ -1,6 +1,7 @@
 import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
 import { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer";
+import { CSS2DRendererStatsHook } from "@personalidol/three-renderer/src/CSS2DRendererStatsHook";
 import { Director } from "@personalidol/loading-manager/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
@@ -67,8 +68,10 @@ export function createScenes(
   rendererDimensionsManager.state.renderers.add(effectComposer);
   rendererDimensionsManager.state.renderers.add(webGLRenderer);
 
+  const css2DRendererStatsHook = CSS2DRendererStatsHook(css2DRenderer);
   const webGLRendererStatsHook = WebGLRendererStatsHook(webGLRenderer);
 
+  statsReporter.hooks.add(css2DRendererStatsHook);
   statsReporter.hooks.add(webGLRendererStatsHook);
 
   const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
@@ -123,5 +126,6 @@ export function createScenes(
   mainLoop.updatables.add(uiMessageResponder);
   mainLoop.updatables.add(sceneTransition);
   mainLoop.updatables.add(rendererDimensionsManager);
+  mainLoop.updatables.add(css2DRendererStatsHook);
   mainLoop.updatables.add(webGLRendererStatsHook);
 }
