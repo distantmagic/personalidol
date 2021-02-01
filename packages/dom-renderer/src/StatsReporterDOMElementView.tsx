@@ -31,6 +31,18 @@ const _css = `
   }
 `;
 
+function isStatsReport(report: number | string | StatsReport): report is StatsReport {
+  if ("string" === typeof report || "number" === typeof report) {
+    return false;
+  }
+
+  if ("object" !== typeof report) {
+    throw new Error("Totally not a stats report.");
+  }
+
+  return "string" === typeof report.debugName;
+}
+
 export class StatsReporterDOMElementView extends DOMElementView implements IStatsReporterDOMElementView {
   public statsReports: Array<StatsReport> = [];
 
@@ -63,18 +75,28 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
   render() {
     return (
       <div id="stats">
-        {this.statsReports.map(this.renderStatHookReport)}
+        {this.statsReports.map((statsReport: StatsReport) => {
+          return this.renderStatHookReport(statsReport);
+        })}
       </div>
     );
   }
 
-  renderStatHookReport(statsReport: StatsReport) {
+  renderStatHookReport(statsReport: StatsReport, prefix: string = "") {
     return (
       <Fragment>
-        {Object.entries(statsReport).map(function ([entry, value]) {
+        {Object.entries(statsReport).map(([entry, value]) => {
+          if ("debugName" === entry) {
+            return null;
+          }
+
+          if (isStatsReport(value)) {
+            return this.renderStatHookReport(value, `${statsReport.debugName}.`);
+          }
+
           return (
             <div key={statsReport.debugName}>
-              {statsReport.debugName}({entry}): {value}
+              {prefix}{statsReport.debugName}.{entry}: {value}
             </div>
           );
         })}

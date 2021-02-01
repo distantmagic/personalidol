@@ -4,6 +4,7 @@ import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
 
 import type { Object3D } from "three/src/core/Object3D";
 
+// import type { CSS2DObject as ICSS2DObject } from "@personalidol/three-renderer/src/CSS2DObject.interface";
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";

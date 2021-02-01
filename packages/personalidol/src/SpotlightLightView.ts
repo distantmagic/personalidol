@@ -2,7 +2,7 @@ import { Color } from "three/src/math/Color";
 import { MathUtils } from "three/src/math/MathUtils";
 import { SpotLight } from "three/src/lights/SpotLight";
 
-import { noop } from "@personalidol/framework/src/noop";
+import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
 
 import type { Scene } from "three/src/scenes/Scene";
 
@@ -23,6 +23,29 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
 
   const _color = new Color(parseInt(entity.color, 16));
   const _spotLight = new SpotLight(_color, entity.intensity);
+
+  let _userSettingsLastApplied: number = -1;
+
+  function _applyUserSettings(): void {
+    if (_userSettingsLastApplied >= userSettings.lastUpdate) {
+      return;
+    }
+
+    _spotLight.castShadow = userSettings.useShadows;
+
+    if (_spotLight.shadow.mapSize.height !== userSettings.shadowMapSize) {
+      disposeWebGLRenderTarget(_spotLight.shadow.map);
+
+      // Force shadow map to be recreated.
+      // @ts-ignore
+      _spotLight.shadow.map = null;
+    }
+
+    _spotLight.shadow.mapSize.height = userSettings.shadowMapSize;
+    _spotLight.shadow.mapSize.width = userSettings.shadowMapSize;
+
+    _userSettingsLastApplied = userSettings.lastUpdate;
+  }
 
   function _getTarget(): View {
     if (targetedViews.size > 1) {
@@ -57,9 +80,10 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     _spotLight.decay = entity.decay;
     _spotLight.distance = 2 * distanceToTarget;
     _spotLight.penumbra = 0.6;
-    _spotLight.castShadow = userSettings.useShadows;
     _spotLight.visible = true;
     _spotLight.shadow.camera.far = _spotLight.distance;
+
+    _applyUserSettings();
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -79,7 +103,7 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     isScene: false,
     isView: true,
     name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,
-    needsUpdates: false,
+    needsUpdates: true,
     object3D: _spotLight,
     state: state,
 
@@ -87,6 +111,6 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     mount: mount,
     preload: preload,
     unmount: unmount,
-    update: noop,
+    update: _applyUserSettings,
   });
 }

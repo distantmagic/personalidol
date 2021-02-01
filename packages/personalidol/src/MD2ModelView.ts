@@ -120,6 +120,11 @@ export function MD2ModelView(
 
   let _animationMixer: null | IAnimationMixer = null;
 
+  function _applyUserSettings() {
+    _mesh.castShadow = userSettings.useShadows;
+    _mesh.receiveShadow = userSettings.useShadows;
+  }
+
   function dispose(): void {
     state.isDisposed = true;
 
@@ -174,9 +179,9 @@ export function MD2ModelView(
     // Update morph targets after swapping both geometry and material.
     _mesh.updateMorphTargets();
 
-    _mesh.castShadow = userSettings.useShadows;
-    _mesh.receiveShadow = userSettings.useShadows;
     _mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+
+    _applyUserSettings();
 
     // Object label
 
@@ -227,6 +232,7 @@ export function MD2ModelView(
       throw new Error("AnimationMixer should be prepared during 'preload' phase.");
     }
 
+    _applyUserSettings();
     _animationMixer.update(delta);
   }
 

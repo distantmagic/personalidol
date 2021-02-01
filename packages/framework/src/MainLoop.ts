@@ -76,8 +76,8 @@ export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler:
     tickTimerState.currentTick += 1;
     tickTimerState.elapsedTime = _elapsedTime;
 
-    statsHook.tick(_delta);
     updatables.forEach(_updateUpdatable);
+    statsHook.update(_delta, _elapsedTime, tickTimerState);
 
     // something might have changed withing the update callback
     if (_continue) {

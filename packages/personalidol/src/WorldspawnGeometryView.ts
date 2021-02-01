@@ -11,7 +11,6 @@ import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { mount as fMount } from "@personalidol/framework/src/mount";
-import { noop } from "@personalidol/framework/src/noop";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
 import type { Box3 } from "three/src/math/Box3";
@@ -51,6 +50,11 @@ export function WorldspawnGeometryView(
   const _mesh: IMesh = createEmptyMesh();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
+
+  function _applyUserSettings() {
+    _mesh.castShadow = userSettings.useShadows;
+    _mesh.receiveShadow = userSettings.useShadows;
+  }
 
   function dispose(): void {
     state.isDisposed = true;
@@ -118,10 +122,9 @@ export function WorldspawnGeometryView(
     bufferGeometry.translate(-1 * _geometryOffset.x, -1 * _geometryOffset.y, -1 * _geometryOffset.z);
 
     _mesh.position.set(_geometryOffset.x, _geometryOffset.y, _geometryOffset.z);
-
-    _mesh.castShadow = userSettings.useShadows;
-    _mesh.receiveShadow = userSettings.useShadows;
     _mesh.matrixAutoUpdate = matrixAutoUpdate;
+
+    _applyUserSettings();
 
     if (!matrixAutoUpdate) {
       // This one update is necessary to set offsets correctly.
@@ -151,7 +154,7 @@ export function WorldspawnGeometryView(
     isScene: false,
     isView: true,
     name: `WorldspawnGeometryView`,
-    needsUpdates: false,
+    needsUpdates: true,
     object3D: _mesh,
     state: state,
 
@@ -159,6 +162,6 @@ export function WorldspawnGeometryView(
     mount: mount,
     preload: preload,
     unmount: unmount,
-    update: noop,
+    update: _applyUserSettings,
   });
 }

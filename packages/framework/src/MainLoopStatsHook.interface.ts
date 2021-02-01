@@ -1,5 +1,5 @@
-import { Nameable } from "./Nameable.interface";
+import { StatsHook } from "./StatsHook.interface";
 
-export interface MainLoopStatsHook extends Nameable {
-  tick(timestamp: number): void;
+export interface MainLoopStatsHook extends StatsHook {
+  readonly isMainLoopStatsHook: true;
 }

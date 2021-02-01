@@ -2,7 +2,7 @@ import { Color } from "three/src/math/Color";
 import { MathUtils } from "three/src/math/MathUtils";
 import { PointLight } from "three/src/lights/PointLight";
 
-import { noop } from "@personalidol/framework/src/noop";
+import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
 
 import type { Scene } from "three/src/scenes/Scene";
 
@@ -23,6 +23,29 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
   const _color = new Color(parseInt(entity.color, 16));
   const _pointLight = new PointLight(_color, entity.intensity, 1024);
 
+  let _userSettingsLastApplied: number = -1;
+
+  function _applyUserSettings(): void {
+    if (_userSettingsLastApplied >= userSettings.lastUpdate) {
+      return;
+    }
+
+    _pointLight.castShadow = userSettings.useShadows;
+
+    if (_pointLight.shadow.mapSize.height !== userSettings.shadowMapSize) {
+      disposeWebGLRenderTarget(_pointLight.shadow.map);
+
+      // Force shadow map to be recreated.
+      // @ts-ignore
+      _pointLight.shadow.map = null;
+    }
+
+    _pointLight.shadow.mapSize.height = userSettings.shadowMapSize;
+    _pointLight.shadow.mapSize.width = userSettings.shadowMapSize;
+
+    _userSettingsLastApplied = userSettings.lastUpdate;
+  }
+
   function dispose(): void {
     state.isDisposed = true;
   }
@@ -36,8 +59,9 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
   function preload(): void {
     _pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
     _pointLight.decay = entity.decay;
-    _pointLight.castShadow = userSettings.useShadows;
     _pointLight.shadow.camera.far = 1024;
+
+    _applyUserSettings();
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -65,6 +89,6 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
     mount: mount,
     preload: preload,
     unmount: unmount,
-    update: noop,
+    update: _applyUserSettings,
   });
 }

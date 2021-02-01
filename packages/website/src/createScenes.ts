@@ -9,15 +9,18 @@ import { RendererDimensionsManager } from "@personalidol/three-renderer/src/Rend
 import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
 import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
 import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
+import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 
 import type { Logger } from "loglevel";
 
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
+import type { StatsReporter } from "@personalidol/framework/src/StatsReporter.interface";
 import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
 
 export function createScenes(
+  threadDebugName: string,
   devicePixelRatio: number,
   eventBus: EventBus,
   mainLoop: MainLoop,
@@ -26,6 +29,7 @@ export function createScenes(
   dimensionsState: Uint32Array,
   inputState: Int32Array,
   logger: Logger,
+  statsReporter: StatsReporter,
   domMessagePort: MessagePort,
   fontPreloadMessagePort: MessagePort,
   md2MessagePort: MessagePort,
@@ -42,6 +46,8 @@ export function createScenes(
   });
 
   const userSettings: UserSettings = {
+    lastUpdate: 0,
+    shadowMapSize: 2048,
     useDynamicLighting: true,
     useShadows: true,
   };
@@ -60,6 +66,10 @@ export function createScenes(
   rendererDimensionsManager.state.renderers.add(css2DRenderer);
   rendererDimensionsManager.state.renderers.add(effectComposer);
   rendererDimensionsManager.state.renderers.add(webGLRenderer);
+
+  const webGLRendererStatsHook = WebGLRendererStatsHook("renderer_webgl", webGLRenderer);
+
+  statsReporter.hooks.add(webGLRendererStatsHook);
 
   const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
@@ -113,4 +123,5 @@ export function createScenes(
   mainLoop.updatables.add(uiMessageResponder);
   mainLoop.updatables.add(sceneTransition);
   mainLoop.updatables.add(rendererDimensionsManager);
+  mainLoop.updatables.add(webGLRendererStatsHook);
 }

@@ -8,6 +8,7 @@ import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
+import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 
 import type { AtlasService as IAtlasService } from "@personalidol/texture-loader/src/AtlasService.interface";
 import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
@@ -42,15 +43,24 @@ function _safeStartService() {
     throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
 
-  _mainLoop = MainLoop(MainLoopStatsHook(self.name, _statsMessagePort), RequestAnimationFrameScheduler());
+  const mainLoopStatsHook = MainLoopStatsHook("main_loop");
+
+  _mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
   _serviceManager = ServiceManager(logger);
 
   _mainLoop.updatables.add(_serviceManager);
 
   _atlasService = AtlasService(_canvas, _context2d, _progressMessagePort, _texturesMessagePort);
 
+  const statsReporter = StatsReporter(self.name, _statsMessagePort);
+
+  statsReporter.hooks.add(mainLoopStatsHook);
+
   _mainLoop.updatables.add(_atlasService);
+  _mainLoop.updatables.add(statsReporter);
+
   _serviceManager.services.add(_atlasService);
+  _serviceManager.services.add(statsReporter);
 
   _isBootstrapped = true;
 

@@ -20,16 +20,19 @@ import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
+import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
 import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultInput";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
+import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 import workers from "./workers.json";
 
+const THREAD_DEBUG_NAME: string = "main_thread";
 const canvas = getHTMLElementById(window.document, "canvas");
 
 if (!(canvas instanceof HTMLCanvasElement)) {
@@ -37,7 +40,7 @@ if (!(canvas instanceof HTMLCanvasElement)) {
 }
 
 const devicePixelRatio = Math.min(1.5, window.devicePixelRatio);
-const logger = Loglevel.getLogger("main_thread");
+const logger = Loglevel.getLogger(THREAD_DEBUG_NAME);
 const supportCache = createSupportCache();
 
 logger.setLevel(__LOG_LEVEL);
@@ -60,8 +63,21 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const inputState = Input.createEmptyState(useSharedBuffers);
 
   const eventBus = EventBus();
-  const mainLoopToStatsMessageChanngel = createMessageChannel();
-  const mainLoop = MainLoop(MainLoopStatsHook("main_thread", mainLoopToStatsMessageChanngel.port2), RequestAnimationFrameScheduler());
+  const statsMessageChanngel = createMessageChannel();
+
+  const mainLoopStatsHook = MainLoopStatsHook("main_loop");
+  const mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
+  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsMessageChanngel.port2);
+
+  statsReporter.hooks.add(mainLoopStatsHook);
+
+  // This is an unofficial Chrome JS extension so it's not typed by default.
+  if ((globalThis.performance as any).memory) {
+    const performanceStatsHook = PerformanceStatsHook("performance");
+
+    mainLoop.updatables.add(performanceStatsHook);
+    statsReporter.hooks.add(performanceStatsHook);
+  }
 
   const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
@@ -74,10 +90,12 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
   serviceManager.services.add(touchObserver);
   serviceManager.services.add(PreventDefaultInput(canvas));
+  serviceManager.services.add(statsReporter);
 
   mainLoop.updatables.add(htmlElementResizeObserver);
   mainLoop.updatables.add(mouseObserver);
   mainLoop.updatables.add(touchObserver);
+  mainLoop.updatables.add(statsReporter);
   mainLoop.updatables.add(serviceManager);
 
   mainLoop.start();
@@ -145,7 +163,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const statsCollector = StatsCollector(statsToDOMRendererMessageChannel.port2);
 
   domUIController.registerMessagePort(statsToDOMRendererMessageChannel.port1);
-  statsCollector.registerMessagePort(mainLoopToStatsMessageChanngel.port1);
+  statsCollector.registerMessagePort(statsMessageChanngel.port1);
   statsCollector.registerMessagePort(statsMessageChannel.port1);
 
   serviceManager.services.add(statsCollector);
@@ -461,6 +479,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
     // prettier-ignore
     createScenes(
+      THREAD_DEBUG_NAME,
       devicePixelRatio,
       eventBus,
       mainLoop,
@@ -469,6 +488,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       dimensionsState,
       inputState,
       logger,
+      statsReporter,
       domRendererMessageChannel.port2,
       fontPreloadMessageChannel.port2,
       md2MessageChannel.port2,

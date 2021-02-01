@@ -140,7 +140,7 @@ export class MainMenuDOMElementView extends DOMElementView {
     evt.preventDefault();
 
     must(this.uiMessagePort).postMessage({
-      navigateToMap: "map-mountain-caravan",
+      navigateToMap: "map-gates",
     });
   }
 

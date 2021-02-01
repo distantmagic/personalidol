@@ -10,6 +10,7 @@ import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
+import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 
 import { createScenes } from "./createScenes";
 
@@ -70,11 +71,20 @@ function _createScenesSafe(): void {
     throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
 
-  _mainLoop = MainLoop(MainLoopStatsHook(self.name, statsMessagePort), RequestAnimationFrameScheduler());
+  const mainLoopStatsHook = MainLoopStatsHook("main_loop");
+  const statsReporter = StatsReporter(self.name, statsMessagePort);
+
+  statsReporter.hooks.add(mainLoopStatsHook);
+
+  _mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
+  _mainLoop.updatables.add(statsReporter);
+
   _serviceManager = ServiceManager(logger);
+  _serviceManager.services.add(statsReporter);
 
   // prettier-ignore
   createScenes(
+    self.name,
     _devicePixelRatio,
     eventBus,
     _mainLoop,
@@ -83,6 +93,7 @@ function _createScenesSafe(): void {
     _dimensionsState,
     _inputState,
     logger,
+    statsReporter,
     domMessagePort,
     fontPreloadMessagePort,
     md2MessagePort,
