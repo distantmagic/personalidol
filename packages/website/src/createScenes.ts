@@ -67,7 +67,7 @@ export function createScenes(
   rendererDimensionsManager.state.renderers.add(effectComposer);
   rendererDimensionsManager.state.renderers.add(webGLRenderer);
 
-  const webGLRendererStatsHook = WebGLRendererStatsHook("renderer_webgl", webGLRenderer);
+  const webGLRendererStatsHook = WebGLRendererStatsHook(webGLRenderer);
 
   statsReporter.hooks.add(webGLRendererStatsHook);
 

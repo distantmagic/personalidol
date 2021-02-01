@@ -4,11 +4,11 @@ import type { StatsHook } from "./StatsHook.interface";
 import type { PerformanceMemory } from "./PerformanceMemory.type";
 import type { PerformanceStatsReport } from "./PerformanceStatsReport.type";
 
-// const memory: any = (performance as any).memory;
+const DEBUG_NAME: "performance" = "performance";
 
-export function PerformanceStatsHook(debugName: string): StatsHook {
+export function PerformanceStatsHook(): StatsHook {
   const statsReport: PerformanceStatsReport = {
-    debugName: debugName,
+    debugName: DEBUG_NAME,
     jsHeapSizeLimit: 0,
     totalJSHeapSize: 0,
     usedJSHeapSize: 0,
@@ -30,7 +30,7 @@ export function PerformanceStatsHook(debugName: string): StatsHook {
     id: MathUtils.generateUUID(),
     isPerformanceStatsHook: true,
     isStatsHook: true,
-    name: `PerformanceStatsHook("${debugName}")`,
+    name: `PerformanceStatsHook("${DEBUG_NAME}")`,
     statsReport: statsReport,
 
     reset: reset,

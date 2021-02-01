@@ -65,7 +65,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const eventBus = EventBus();
   const statsMessageChanngel = createMessageChannel();
 
-  const mainLoopStatsHook = MainLoopStatsHook("main_loop");
+  const mainLoopStatsHook = MainLoopStatsHook();
   const mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
   const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsMessageChanngel.port2);
 
@@ -73,7 +73,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   // This is an unofficial Chrome JS extension so it's not typed by default.
   if ((globalThis.performance as any).memory) {
-    const performanceStatsHook = PerformanceStatsHook("performance");
+    const performanceStatsHook = PerformanceStatsHook();
 
     mainLoop.updatables.add(performanceStatsHook);
     statsReporter.hooks.add(performanceStatsHook);

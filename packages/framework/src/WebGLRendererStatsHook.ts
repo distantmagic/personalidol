@@ -5,11 +5,11 @@ import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { StatsHook } from "./StatsHook.interface";
 import type { WebGLRendererStatsReport } from "./WebGLRendererStatsReport.type";
 
-// const memory: any = (performance as any).memory;
+const DEBUG_NAME: "renderer_webgl" = "renderer_webgl";
 
-export function WebGLRendererStatsHook(debugName: string, renderer: WebGLRenderer): StatsHook {
+export function WebGLRendererStatsHook(renderer: WebGLRenderer): StatsHook {
   const statsReport: WebGLRendererStatsReport = {
-    debugName: debugName,
+    debugName: DEBUG_NAME,
     memoryGeometries: 0,
     memoryTextures: 0,
     programs: 0,
@@ -37,7 +37,7 @@ export function WebGLRendererStatsHook(debugName: string, renderer: WebGLRendere
     id: MathUtils.generateUUID(),
     isWebGLRendererStatsHook: true,
     isStatsHook: true,
-    name: `WebGLRendererStatsHook("${debugName}")`,
+    name: `WebGLRendererStatsHook("${DEBUG_NAME}")`,
     statsReport: statsReport,
 
     reset: reset,

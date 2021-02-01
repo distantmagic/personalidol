@@ -43,7 +43,7 @@ function _safeStartService() {
     throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
 
-  const mainLoopStatsHook = MainLoopStatsHook("main_loop");
+  const mainLoopStatsHook = MainLoopStatsHook();
 
   _mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
   _serviceManager = ServiceManager(logger);

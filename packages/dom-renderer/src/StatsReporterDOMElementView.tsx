@@ -1,4 +1,6 @@
-import { Fragment, h } from "preact";
+import { h } from "preact";
+
+import { isStatsReport } from "@personalidol/framework/src/isStatsReport";
 
 import { DOMElementView } from "./DOMElementView";
 import { ReplaceableStyleSheet } from "./ReplaceableStyleSheet";
@@ -7,6 +9,8 @@ import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
+
+type FlattenedStatsReport = [string, number | string];
 
 const _css = `
   :host {
@@ -31,25 +35,41 @@ const _css = `
   }
 `;
 
-function isStatsReport(report: number | string | StatsReport): report is StatsReport {
-  if ("string" === typeof report || "number" === typeof report) {
-    return false;
-  }
+function* _flattenStatsReport(statsReport: StatsReport, prefix: string = ""): Generator<FlattenedStatsReport> {
+  for (let [key, value] of Object.entries(statsReport)) {
+    if ("debugName" === key) {
+      continue;
+    }
 
-  if ("object" !== typeof report) {
-    throw new Error("Totally not a stats report.");
-  }
+    if (isStatsReport(value)) {
+      yield* _flattenStatsReport(value, `${prefix}${statsReport.debugName}.`);
+      continue;
+    }
 
-  return "string" === typeof report.debugName;
+    yield [
+      `${prefix}${statsReport.debugName}.${key}`,
+      value,
+    ];
+  }
+}
+
+function* _flattenStatsReports(statsReports: Array<StatsReport>): Generator<FlattenedStatsReport> {
+  for (let statsReport of statsReports) {
+    yield* _flattenStatsReport(statsReport);
+  }
+}
+
+function _sortCompareReports(a: FlattenedStatsReport, b: FlattenedStatsReport): number {
+  return a[0].localeCompare(b[0]);
 }
 
 export class StatsReporterDOMElementView extends DOMElementView implements IStatsReporterDOMElementView {
-  public statsReports: Array<StatsReport> = [];
+  public statsReportsFlattened: Array<FlattenedStatsReport> = [];
 
   constructor() {
     super();
 
-    this.renderStatHookReport = this.renderStatHookReport.bind(this);
+    this.renderStatsReportFlattened = this.renderStatsReportFlattened.bind(this);
 
     this.nameable.name = "StatsReporterDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
@@ -63,9 +83,9 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
     const statsReports = this.props.statsReports;
 
     if (Array.isArray(statsReports)) {
-      this.statsReports = statsReports;
+      this.statsReportsFlattened = Array.from(_flattenStatsReports(statsReports)).sort(_sortCompareReports);
     } else {
-      this.statsReports = [];
+      this.statsReportsFlattened = [];
     }
 
     this.needsRender = true;
@@ -75,32 +95,16 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
   render() {
     return (
       <div id="stats">
-        {this.statsReports.map((statsReport: StatsReport) => {
-          return this.renderStatHookReport(statsReport);
-        })}
+        {this.statsReportsFlattened.map(this.renderStatsReportFlattened)}
       </div>
     );
   }
 
-  renderStatHookReport(statsReport: StatsReport, prefix: string = "") {
+  renderStatsReportFlattened([key, value]: FlattenedStatsReport) {
     return (
-      <Fragment>
-        {Object.entries(statsReport).map(([entry, value]) => {
-          if ("debugName" === entry) {
-            return null;
-          }
-
-          if (isStatsReport(value)) {
-            return this.renderStatHookReport(value, `${statsReport.debugName}.`);
-          }
-
-          return (
-            <div key={statsReport.debugName}>
-              {prefix}{statsReport.debugName}.{entry}: {value}
-            </div>
-          );
-        })}
-      </Fragment>
+      <div key={key}>
+        {key}: {value}
+      </div>
     );
   }
 }

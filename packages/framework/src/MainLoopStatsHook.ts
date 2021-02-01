@@ -3,12 +3,14 @@ import { MathUtils } from "three/src/math/MathUtils";
 import type { MainLoopStatsHook as IMainLoopStatsHook } from "./MainLoopStatsHook.interface";
 import type { MainLoopStatsReport } from "./MainLoopStatsReport.type";
 
-export function MainLoopStatsHook(debugName: string): IMainLoopStatsHook {
+const DEBUG_NAME: "main_loop" = "main_loop";
+
+export function MainLoopStatsHook(): IMainLoopStatsHook {
   const statsReport: MainLoopStatsReport = {
     currentInterval: 0,
     currentIntervalDuration: 0,
     currentIntervalTicks: 0,
-    debugName: debugName,
+    debugName: DEBUG_NAME,
   };
 
   function reset(): void {
@@ -26,7 +28,7 @@ export function MainLoopStatsHook(debugName: string): IMainLoopStatsHook {
     id: MathUtils.generateUUID(),
     isMainLoopStatsHook: true,
     isStatsHook: true,
-    name: `MainLoopStatsHook("${debugName}")`,
+    name: `MainLoopStatsHook("${DEBUG_NAME}")`,
     statsReport: statsReport,
 
     reset: reset,

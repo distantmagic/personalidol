@@ -102,6 +102,32 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     return result;
   }
 
+  function _reportRenderBatch(css2DObjects: Array<CSS2DObject>) {
+    const renderBatch: Array<MessageDOMUIRender> = [];
+
+    for (let object of css2DObjects) {
+      if (object.isDirty) {
+        renderBatch.push(<MessageDOMUIRender>{
+          element: object.element,
+          id: object.uuid,
+          props: {
+            objectProps: object.props,
+            rendererState: object.state,
+          },
+        });
+        object.isDirty = false;
+      }
+    }
+
+    if (renderBatch.length < 1) {
+      return;
+    }
+
+    domMessagePort.postMessage({
+      renderBatch: renderBatch,
+    });
+  }
+
   function _sortObjectsByDistance(a: CSS2DObject, b: CSS2DObject) {
     const distanceA = a.state.distanceToCameraSquared;
     const distanceB = b.state.distanceToCameraSquared;
@@ -155,30 +181,7 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     }
 
     _zOrder(css2DObjects, scene);
-
-    const renderBatch: Array<MessageDOMUIRender> = [];
-
-    for (let object of css2DObjects) {
-      if (object.isDirty) {
-        renderBatch.push(<MessageDOMUIRender>{
-          element: object.element,
-          id: object.uuid,
-          props: {
-            objectProps: object.props,
-            rendererState: object.state,
-          },
-        });
-        object.isDirty = false;
-      }
-    }
-
-    if (renderBatch.length < 1) {
-      return;
-    }
-
-    domMessagePort.postMessage({
-      renderBatch: renderBatch,
-    });
+    _reportRenderBatch(css2DObjects);
   }
 
   return renderer;

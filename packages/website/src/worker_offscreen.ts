@@ -71,7 +71,7 @@ function _createScenesSafe(): void {
     throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
 
-  const mainLoopStatsHook = MainLoopStatsHook("main_loop");
+  const mainLoopStatsHook = MainLoopStatsHook();
   const statsReporter = StatsReporter(self.name, statsMessagePort);
 
   statsReporter.hooks.add(mainLoopStatsHook);
