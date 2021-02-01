@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { MathUtils } from "three/src/math/MathUtils";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
@@ -7,6 +8,7 @@ import type { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObj
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+const OPACITY_DAMP = 10;
 const FADE_OUT_DISTANCE_SQUARED: number = 4000;
 
 const _css = `
@@ -49,16 +51,21 @@ type LabelProps = DOMElementProps & {
 };
 
 export class ObjectLabelDOMElementView extends DOMElementView {
-  objectProps: LabelProps = {
+  public objectProps: LabelProps = {
     label: "",
   };
-  rendererState: CSS2DObjectState = {
+  public rendererState: CSS2DObjectState = {
     cameraFar: 0,
     distanceToCameraSquared: 0,
     translateX: 0,
     translateY: 0,
     visible: false,
     zIndex: 0,
+  };
+
+  private _opacity = {
+    current: 1,
+    target: 1,
   };
 
   constructor() {
@@ -84,15 +91,22 @@ export class ObjectLabelDOMElementView extends DOMElementView {
     this.viewLastUpdate = tickTimerState.currentTick;
   }
 
-  render() {
+  render(delta: number) {
     if (!this.rendererState.visible) {
       return null;
     }
 
-    const opacity: number = this.rendererState.distanceToCameraSquared < ((this.rendererState.cameraFar * this.rendererState.cameraFar) - FADE_OUT_DISTANCE_SQUARED)
+    this._opacity.target = this.rendererState.distanceToCameraSquared < ((this.rendererState.cameraFar * this.rendererState.cameraFar) - FADE_OUT_DISTANCE_SQUARED)
       ? 1
       : 0.3
     ;
+
+    this._opacity.current = MathUtils.damp(
+      this._opacity.current,
+      this._opacity.target,
+      OPACITY_DAMP,
+      delta
+    );
 
     return (
       <div
@@ -100,7 +114,7 @@ export class ObjectLabelDOMElementView extends DOMElementView {
         style={{
           '--label-translate-x': `${this.rendererState.translateX}px`,
           '--label-translate-y': `${this.rendererState.translateY}px`,
-          '--label-opacity': opacity,
+          '--label-opacity': this._opacity.current,
           '--label-z-index': this.rendererState.zIndex,
         }}
       >

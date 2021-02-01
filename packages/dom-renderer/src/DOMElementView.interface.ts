@@ -28,7 +28,7 @@ export interface DOMElementView extends HTMLElement, MainLoopUpdatable {
    */
   init(logger: Logger, domMessagePort: MessagePort, uiMessagePort: MessagePort, tickTimerState: TickTimerState): void;
 
-  render(): null | VNode<any>;
+  render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any>;
 
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
 }

@@ -1,4 +1,4 @@
-import { h, render } from 'preact';
+import { render } from 'preact';
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { Director } from "@personalidol/loading-manager/src/Director";
@@ -82,7 +82,7 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     this.uiMessagePort = uiMessagePort;
   }
 
-  render(): null | VNode<any> {
+  render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any> {
     return null;
   }
 
@@ -112,9 +112,7 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     // Render view only after CSS stylesheet is attached to reduce visual
     // flashes.
     if (this.needsRender && styleSheet && styleSheet.state.isMounted) {
-      render((
-        <this.render />
-      ), this.rootElement);
+      render(this.render(delta, elapsedTime, tickTimerState), this.rootElement);
       this.needsRender = false;
     }
   }

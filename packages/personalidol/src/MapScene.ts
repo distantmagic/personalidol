@@ -65,6 +65,7 @@ import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 import type { UserSettings } from "./UserSettings.type";
 
+const CAMERA_DAMP = 10;
 const CAMERA_ZOOM_INITIAL = 401;
 const CAMERA_ZOOM_MAX = 1;
 const CAMERA_ZOOM_MIN = 1401;
@@ -295,9 +296,9 @@ export function MapScene(
       _cameraSkipDamping = false;
     } else {
       _camera.position.set(
-        MathUtils.damp(_camera.position.x, _playerPosition.x + _cameraZoomAmount, 10, delta),
-        MathUtils.damp(_camera.position.y, _playerPosition.y + _cameraZoomAmount, 10, delta),
-        MathUtils.damp(_camera.position.z, _playerPosition.z + _cameraZoomAmount, 10, delta),
+        MathUtils.damp(_camera.position.x, _playerPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta),
+        MathUtils.damp(_camera.position.y, _playerPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta),
+        MathUtils.damp(_camera.position.z, _playerPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta),
       );
     }
 
