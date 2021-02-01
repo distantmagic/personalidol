@@ -1,6 +1,6 @@
 import { Mesh } from "three/src/objects/Mesh";
 import { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
-import { PlaneBufferGeometry } from "three/src/geometries/PlaneBufferGeometry";
+import { PlaneGeometry } from "three/src/geometries/PlaneGeometry";
 
 import type { BufferGeometry } from "three/src/core/BufferGeometry";
 import type { Camera } from "three/src/cameras/Camera";
@@ -27,7 +27,7 @@ export class FullScreenQuad implements DisposableGeneric {
 
   constructor(material: Material | Material[]) {
     this._camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    this._geometry = new PlaneBufferGeometry(2, 2);
+    this._geometry = new PlaneGeometry(2, 2);
     this._mesh = new Mesh(this._geometry, material);
   }
 

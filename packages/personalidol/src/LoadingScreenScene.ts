@@ -1,5 +1,5 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
-import { BoxBufferGeometry } from "three/src/geometries/BoxBufferGeometry";
+import { BoxGeometry } from "three/src/geometries/BoxGeometry";
 import { Color } from "three/src/math/Color";
 import { MathUtils } from "three/src/math/MathUtils";
 import { Mesh } from "three/src/objects/Mesh";
@@ -60,7 +60,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   _spotLight.shadow.camera.near = 0.1;
   _spotLight.shadow.camera.far = 100;
 
-  const _boxGeometry = new BoxBufferGeometry();
+  const _boxGeometry = new BoxGeometry();
   const _boxMaterial = new MeshStandardMaterial({
     color: 0x333333,
     flatShading: true,
