@@ -15,6 +15,7 @@ import type { Logger } from "loglevel";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
+import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
 
 export function createScenes(
   devicePixelRatio: number,
@@ -40,11 +41,16 @@ export function createScenes(
     canvas: canvas,
   });
 
+  const userSettings: UserSettings = {
+    useDynamicLighting: true,
+    useShadows: true,
+  };
+
   // webGLRenderer.gammaOutput = true;
   // webGLRenderer.gammaFactor = 2.2;
   webGLRenderer.setPixelRatio(devicePixelRatio);
-  webGLRenderer.shadowMap.enabled = false;
-  webGLRenderer.shadowMap.autoUpdate = false;
+  webGLRenderer.shadowMap.enabled = userSettings.useShadows;
+  webGLRenderer.shadowMap.autoUpdate = userSettings.useShadows;
 
   const effectComposer = new EffectComposer(webGLRenderer);
   const css2DRenderer = CSS2DRenderer(domMessagePort);
@@ -62,6 +68,7 @@ export function createScenes(
 
   const uiMessageResponder = UIMessageResponder(
     logger,
+    userSettings,
     effectComposer,
     css2DRenderer,
     currentSceneDirector.state,

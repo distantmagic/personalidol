@@ -23,10 +23,12 @@ import type { DisposableCallback } from "@personalidol/framework/src/DisposableC
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
+import type { UserSettings } from "./UserSettings.type";
 import type { WorldspawnGeometryView as IWorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
 
 export function ScriptedBlockView(
   logger: Logger,
+  userSettings: UserSettings,
   scene: Scene,
   entity: EntityScriptedBlock,
   domMessagePort: MessagePort,
@@ -42,7 +44,7 @@ export function ScriptedBlockView(
     isPreloading: false,
   });
 
-  const _worldspawnGeometryView: IWorldspawnGeometryView = WorldspawnGeometryView(logger, scene, entity, worldspawnTexture, true);
+  const _worldspawnGeometryView: IWorldspawnGeometryView = WorldspawnGeometryView(logger, userSettings, scene, entity, worldspawnTexture, true);
   const _controller: ScriptedBlockController = resolveScriptedBlockController(entity, _worldspawnGeometryView, targetedViews);
 
   const _disposables: Set<DisposableCallback> = new Set();

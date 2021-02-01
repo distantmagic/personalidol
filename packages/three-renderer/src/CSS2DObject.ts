@@ -11,6 +11,7 @@ import type { CSS2DObjectState } from "./CSS2DObjectState.type";
 export class CSS2DObject extends Object3D implements ICSS2DObject {
   public readonly element: string;
   public readonly state: CSS2DObjectState = {
+    cameraFar: 0,
     distanceToCameraSquared: 0,
     translateX: 0,
     translateY: 0,

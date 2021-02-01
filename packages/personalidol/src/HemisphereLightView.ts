@@ -18,7 +18,8 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
     isPreloading: false,
   });
 
-  const _hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, entity.light);
+  // const _hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, entity.light);
+  const _hemisphereLight = new HemisphereLight(0xffffff, 0x000000, entity.light);
 
   function dispose(): void {
     state.isDisposed = true;

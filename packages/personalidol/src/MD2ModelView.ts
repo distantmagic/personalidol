@@ -33,6 +33,7 @@ import type { UnmountableCallback } from "@personalidol/framework/src/Unmountabl
 import type { View } from "@personalidol/framework/src/View.interface";
 
 import type { EntityMD2Model } from "./EntityMD2Model.type";
+import type { UserSettings } from "./UserSettings.type";
 
 type AnimationClipsCached = {
   animations: Array<IAnimationClip>;
@@ -92,6 +93,7 @@ function _morphPositionToBufferAttribute(morphPosition: MD2LoaderMorphPosition) 
 }
 
 export function MD2ModelView(
+  userSettings: UserSettings,
   scene: Scene,
   entity: EntityMD2Model,
   domMessagePort: MessagePort,
@@ -172,8 +174,8 @@ export function MD2ModelView(
     // Update morph targets after swapping both geometry and material.
     _mesh.updateMorphTargets();
 
-    _mesh.castShadow = false;
-    _mesh.receiveShadow = false;
+    _mesh.castShadow = userSettings.useShadows;
+    _mesh.receiveShadow = userSettings.useShadows;
     _mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
 
     // Object label

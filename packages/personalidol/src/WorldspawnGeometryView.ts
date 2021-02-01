@@ -26,11 +26,19 @@ import type { MountableCallback } from "@personalidol/framework/src/MountableCal
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
+import type { UserSettings } from "./UserSettings.type";
 import type { WorldspawnGeometryView as IWorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
 
 const _geometryOffset = new Vector3();
 
-export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geometry, worldspawnTexture: ITexture, matrixAutoUpdate: boolean = false): IWorldspawnGeometryView {
+export function WorldspawnGeometryView(
+  logger: Logger,
+  userSettings: UserSettings,
+  scene: Scene,
+  entity: Geometry,
+  worldspawnTexture: ITexture,
+  matrixAutoUpdate: boolean = false
+): IWorldspawnGeometryView {
   const id: string = MathUtils.generateUUID();
   const state: MountState = Object.seal({
     isDisposed: false,
@@ -111,7 +119,8 @@ export function WorldspawnGeometryView(logger: Logger, scene: Scene, entity: Geo
 
     _mesh.position.set(_geometryOffset.x, _geometryOffset.y, _geometryOffset.z);
 
-    _mesh.receiveShadow = false;
+    _mesh.castShadow = userSettings.useShadows;
+    _mesh.receiveShadow = userSettings.useShadows;
     _mesh.matrixAutoUpdate = matrixAutoUpdate;
 
     if (!matrixAutoUpdate) {

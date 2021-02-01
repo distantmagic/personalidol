@@ -15,9 +15,11 @@ import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { ViewBag as IViewBag } from "@personalidol/loading-manager/src/ViewBag.interface";
 
 import type { UIMessageResponder as IUIMessageResponder } from "./UIMessageResponder.interface";
+import type { UserSettings } from "./UserSettings.type";
 
 export function UIMessageResponder(
   logger: Logger,
+  userSettings: UserSettings,
   effectComposer: EffectComposer,
   css2DRenderer: CSS2DRenderer,
   directorState: DirectorState,
@@ -52,6 +54,7 @@ export function UIMessageResponder(
     // prettier-ignore
     const mapScene = MapScene(
       logger,
+      userSettings,
       effectComposer,
       css2DRenderer,
       eventBus,

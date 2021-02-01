@@ -7,7 +7,7 @@ import type { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObj
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-const FADE_OUT_DISTANCE: number = 2500;
+const FADE_OUT_DISTANCE_SQUARED: number = 4000;
 
 const _css = `
   :host {
@@ -53,6 +53,7 @@ export class ObjectLabelDOMElementView extends DOMElementView {
     label: "",
   };
   rendererState: CSS2DObjectState = {
+    cameraFar: 0,
     distanceToCameraSquared: 0,
     translateX: 0,
     translateY: 0,
@@ -88,7 +89,7 @@ export class ObjectLabelDOMElementView extends DOMElementView {
       return null;
     }
 
-    const opacity: number = this.rendererState.distanceToCameraSquared < (FADE_OUT_DISTANCE * FADE_OUT_DISTANCE)
+    const opacity: number = this.rendererState.distanceToCameraSquared < ((this.rendererState.cameraFar * this.rendererState.cameraFar) - FADE_OUT_DISTANCE_SQUARED)
       ? 1
       : 0.3
     ;

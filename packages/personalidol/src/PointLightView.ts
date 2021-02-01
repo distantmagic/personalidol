@@ -10,8 +10,9 @@ import type { MountState } from "@personalidol/framework/src/MountState.type";
 
 import type { EntityLightPoint } from "./EntityLightPoint.type";
 import type { EntityView } from "./EntityView.interface";
+import type { UserSettings } from "./UserSettings.type";
 
-export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityView {
+export function PointLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightPoint): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -20,7 +21,7 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityVi
   });
 
   const _color = new Color(parseInt(entity.color, 16));
-  const _pointLight = new PointLight(_color, entity.intensity, 512);
+  const _pointLight = new PointLight(_color, entity.intensity, 1024);
 
   function dispose(): void {
     state.isDisposed = true;
@@ -35,8 +36,8 @@ export function PointLightView(scene: Scene, entity: EntityLightPoint): EntityVi
   function preload(): void {
     _pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
     _pointLight.decay = entity.decay;
-    _pointLight.castShadow = false;
-    _pointLight.shadow.camera.far = 512;
+    _pointLight.castShadow = userSettings.useShadows;
+    _pointLight.shadow.camera.far = 1024;
 
     state.isPreloading = false;
     state.isPreloaded = true;

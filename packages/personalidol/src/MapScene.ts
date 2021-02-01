@@ -63,6 +63,7 @@ import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
+import type { UserSettings } from "./UserSettings.type";
 
 const CAMERA_ZOOM_INITIAL = 401;
 const CAMERA_ZOOM_MAX = 1;
@@ -71,7 +72,7 @@ const CAMERA_ZOOM_STEP = 50;
 
 const _camera = new PerspectiveCamera();
 
-_camera.far = 3000;
+_camera.far = 4000;
 _camera.near = 1;
 
 const _cameraDirection = new Vector3();
@@ -99,6 +100,7 @@ let _cameraZoomAmount = 0;
 
 export function MapScene(
   logger: Logger,
+  userSettings: UserSettings,
   effectComposer: EffectComposer,
   css2DRenderer: CSS2DRenderer,
   eventBus: EventBus,
@@ -137,11 +139,11 @@ export function MapScene(
     },
 
     light_point(entity: EntityLightPoint): View {
-      return PointLightView(_scene, entity);
+      return PointLightView(userSettings, _scene, entity);
     },
 
-    light_spotlight(entity: EntityLightSpotlight): View {
-      return SpotlightLightView(_scene, entity);
+    light_spotlight(entity: EntityLightSpotlight, worldspawnTexture: ITexture, targetedViews: Set<View>): View {
+      return SpotlightLightView(userSettings, _scene, entity, targetedViews);
     },
 
     model_gltf(entity: EntityGLTFModel): View {
@@ -164,7 +166,7 @@ export function MapScene(
     },
 
     model_md2(entity: EntityMD2Model): View {
-      return MD2ModelView(_scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
+      return MD2ModelView(userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
     },
 
     player(entity: EntityPlayer): View {
@@ -175,7 +177,7 @@ export function MapScene(
     },
 
     scripted_block(entity: EntityScriptedBlock, worldspawnTexture: ITexture, targetedViews: Set<View>): View {
-      return ScriptedBlockView(logger, _scene, entity, domMessagePort, worldspawnTexture, views, targetedViews, resolveScriptedBlockController);
+      return ScriptedBlockView(logger, userSettings, _scene, entity, domMessagePort, worldspawnTexture, views, targetedViews, resolveScriptedBlockController);
     },
 
     sounds(entity: EntitySounds): View {
@@ -191,7 +193,7 @@ export function MapScene(
     },
 
     worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): View {
-      return WorldspawnGeometryView(logger, _scene, entity, worldspawnTexture);
+      return WorldspawnGeometryView(logger, userSettings, _scene, entity, worldspawnTexture);
     },
   };
 
@@ -233,11 +235,6 @@ export function MapScene(
       unmarshal: { entities, textureAtlas },
     } = await sendRPCMessage(_rpcLookupTable, quakeMapsMessagePort, {
       unmarshal: {
-        discardOccluding: {
-          x: _cameraDirection.x,
-          y: _cameraDirection.y,
-          z: _cameraDirection.z,
-        },
         filename: mapFilename,
         rpc: MathUtils.generateUUID(),
       },

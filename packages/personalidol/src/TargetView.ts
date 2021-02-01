@@ -1,16 +1,11 @@
-import { BoxBufferGeometry } from "three/src/geometries/BoxBufferGeometry";
 import { MathUtils } from "three/src/math/MathUtils";
-import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
+import { Object3D } from "three/src/core/Object3D";
 
-import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
-import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
-import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { noop } from "@personalidol/framework/src/noop";
 
+import type { Object3D as IObject3D } from "three/src/core/Object3D";
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 
 import type { EntityTarget } from "./EntityTarget.type";
@@ -27,41 +22,29 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     isPreloading: false,
   });
 
-  const _boxMesh = createEmptyMesh();
-  const _disposables: Set<DisposableCallback> = new Set();
+  const base: IObject3D = new Object3D();
 
   function dispose(): void {
     state.isDisposed = true;
-
-    fDispose(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    scene.add(_boxMesh);
+    scene.add(base);
   }
 
   function preload(): void {
     state.isPreloading = false;
     state.isPreloaded = true;
 
-    const _boxGeometry = new BoxBufferGeometry(10, 10, 10);
-    const _boxMaterial = new MeshBasicMaterial();
-
-    _boxMesh.geometry = _boxGeometry;
-    _boxMesh.material = _boxMaterial;
-
-    _disposables.add(disposableGeneric(_boxGeometry));
-    _disposables.add(disposableMaterial(_boxMaterial));
-
-    _boxMesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    base.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
   }
 
   function unmount(): void {
     state.isMounted = false;
 
-    scene.remove(_boxMesh);
+    scene.remove(base);
   }
 
   return Object.freeze({
@@ -73,7 +56,7 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     isView: true,
     name: `TargetView(${entity.properties.targetname})`,
     needsUpdates: false,
-    object3D: _boxMesh,
+    object3D: base,
     state: state,
 
     dispose: dispose,
