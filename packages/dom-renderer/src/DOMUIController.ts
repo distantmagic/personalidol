@@ -94,6 +94,8 @@ export function DOMUIController(
     logger.info(`REMOVE(${name(renderedElement.renderingContext)})`);
 
     renderedElement.domElementView.remove();
+    renderedElement.isAppended = false;
+
     delete _renderedElementsLookup[id];
     _renderedElements.splice(_renderedElements.indexOf(renderedElement), 1);
   }
