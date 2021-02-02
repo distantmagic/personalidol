@@ -4,6 +4,10 @@
   "bugs": {
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
+  "dependencies": {
+    "@personalidol/framework": "^0.0.4",
+    "three": "^0.125.2"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "esbuild": "^0.8.39",

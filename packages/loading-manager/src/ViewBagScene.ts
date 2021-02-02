@@ -57,10 +57,10 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    // It's important to update the scene first and then update the included
-    // views to preserve the hierarchy.
-    scene.update(delta, elapsedTime, tickTimerState);
+    // It's usually better to update views first, because scene renders
+    // everyhting in the end.
     viewBag.update(delta, elapsedTime, tickTimerState);
+    scene.update(delta, elapsedTime, tickTimerState);
   }
 
   function updatePreloadingState(): void {

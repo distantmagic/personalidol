@@ -15,7 +15,8 @@ import { requestTexture } from "@personalidol/texture-loader/src/requestTexture"
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
-import { supportObjectLabel } from "./supportObjectLabel";
+import { useObject3DUserSettings } from "./useObject3DUserSettings";
+import { useObjectLabel } from "./useObjectLabel";
 
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
 import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
@@ -121,8 +122,7 @@ export function MD2ModelView(
   let _animationMixer: null | IAnimationMixer = null;
 
   function _applyUserSettings() {
-    _mesh.castShadow = userSettings.useShadows;
-    _mesh.receiveShadow = userSettings.useShadows;
+    useObject3DUserSettings(userSettings, _mesh);
   }
 
   function dispose(): void {
@@ -185,7 +185,7 @@ export function MD2ModelView(
 
     // Object label
 
-    supportObjectLabel(domMessagePort, _mesh, entity, _mountables, _unmountables, _disposables);
+    useObjectLabel(domMessagePort, _mesh, entity, _mountables, _unmountables, _disposables);
 
     // Animations
 

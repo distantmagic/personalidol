@@ -134,11 +134,11 @@ export function MapScene(
     },
 
     light_ambient(entity: EntityLightAmbient): View {
-      return AmbientLightView(_scene, entity);
+      return AmbientLightView(userSettings, _scene, entity);
     },
 
     light_hemisphere(entity: EntityLightHemisphere): View {
-      return HemisphereLightView(_scene, entity);
+      return HemisphereLightView(userSettings, _scene, entity);
     },
 
     light_point(entity: EntityLightPoint): View {

@@ -11,7 +11,7 @@ import type { UnmountableCallback } from "@personalidol/framework/src/Unmountabl
 
 import type { EntityAny } from "./EntityAny.type";
 
-export function supportObjectLabel(
+export function useObjectLabel(
   domMessagePort: MessagePort,
   parent: Object3D,
   entity: EntityAny,

@@ -11,6 +11,7 @@ import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransiti
 import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
 import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
+import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
 
 import type { Logger } from "loglevel";
 
@@ -40,6 +41,8 @@ export function createScenes(
   texturesMessagePort: MessagePort,
   uiMessagePort: MessagePort
 ): void {
+  const rendererDimensionsManager = RendererDimensionsManager(dimensionsState);
+
   const webGLRenderer = new WebGLRenderer({
     alpha: false,
     antialias: false,
@@ -53,16 +56,10 @@ export function createScenes(
     useShadows: true,
   };
 
-  // webGLRenderer.gammaOutput = true;
-  // webGLRenderer.gammaFactor = 2.2;
   webGLRenderer.setPixelRatio(devicePixelRatio);
-  webGLRenderer.shadowMap.enabled = userSettings.useShadows;
-  webGLRenderer.shadowMap.autoUpdate = userSettings.useShadows;
 
   const effectComposer = new EffectComposer(webGLRenderer);
   const css2DRenderer = CSS2DRenderer(domMessagePort);
-
-  const rendererDimensionsManager = RendererDimensionsManager(dimensionsState);
 
   rendererDimensionsManager.state.renderers.add(css2DRenderer);
   rendererDimensionsManager.state.renderers.add(effectComposer);
@@ -73,6 +70,8 @@ export function createScenes(
 
   statsReporter.hooks.add(css2DRendererStatsHook);
   statsReporter.hooks.add(webGLRendererStatsHook);
+
+  const webGLRendererUserSettingsManager = WebGLRendererUserSettingsManager(userSettings, webGLRenderer);
 
   const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
@@ -116,6 +115,7 @@ export function createScenes(
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(uiMessageResponder);
   serviceManager.services.add(loadingSceneDirector);
+  serviceManager.services.add(webGLRendererUserSettingsManager);
   serviceManager.services.add(rendererDimensionsManager);
   serviceManager.services.add(sceneTransition);
 
@@ -125,6 +125,7 @@ export function createScenes(
   mainLoop.updatables.add(loadingSceneDirector);
   mainLoop.updatables.add(uiMessageResponder);
   mainLoop.updatables.add(sceneTransition);
+  mainLoop.updatables.add(webGLRendererUserSettingsManager);
   mainLoop.updatables.add(rendererDimensionsManager);
   mainLoop.updatables.add(css2DRendererStatsHook);
   mainLoop.updatables.add(webGLRendererStatsHook);

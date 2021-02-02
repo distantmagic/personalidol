@@ -13,6 +13,8 @@ import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
+import { useObject3DUserSettings } from "./useObject3DUserSettings";
+
 import type { Box3 } from "three/src/math/Box3";
 import type { Logger } from "loglevel";
 import type { Mesh as IMesh } from "three/src/objects/Mesh";
@@ -52,8 +54,7 @@ export function WorldspawnGeometryView(
   const _unmountables: Set<UnmountableCallback> = new Set();
 
   function _applyUserSettings() {
-    _mesh.castShadow = userSettings.useShadows;
-    _mesh.receiveShadow = userSettings.useShadows;
+    useObject3DUserSettings(userSettings, _mesh);
   }
 
   function dispose(): void {

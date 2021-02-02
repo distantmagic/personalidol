@@ -1,8 +1,10 @@
 import { Color } from "three/src/math/Color";
+import { Group } from "three/src/objects/Group";
 import { MathUtils } from "three/src/math/MathUtils";
 import { PointLight } from "three/src/lights/PointLight";
 
-import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+import { useLightShadowUserSettings } from "./useLightShadowUserSettings";
+import { useObject3DUserSettings } from "./useObject3DUserSettings";
 
 import type { Scene } from "three/src/scenes/Scene";
 
@@ -21,29 +23,27 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
   });
 
   const _color = new Color(parseInt(entity.color, 16));
+  const _group = new Group();
   const _pointLight = new PointLight(_color, entity.intensity, 1024);
 
-  let _userSettingsLastApplied: number = -1;
+  _group.add(_pointLight);
+
+  let _groupHasLight: boolean = true;
 
   function _applyUserSettings(): void {
-    if (_userSettingsLastApplied >= userSettings.lastUpdate) {
-      return;
+    useObject3DUserSettings(userSettings, _pointLight);
+    useLightShadowUserSettings(userSettings, _pointLight.shadow);
+    _pointLight.visible = userSettings.useDynamicLighting;
+
+    if (userSettings.useDynamicLighting && !_groupHasLight) {
+      _groupHasLight = true;
+      _group.add(_pointLight);
     }
 
-    _pointLight.castShadow = userSettings.useShadows;
-
-    if (_pointLight.shadow.mapSize.height !== userSettings.shadowMapSize) {
-      disposeWebGLRenderTarget(_pointLight.shadow.map);
-
-      // Force shadow map to be recreated.
-      // @ts-ignore
-      _pointLight.shadow.map = null;
+    if (!userSettings.useDynamicLighting && _groupHasLight) {
+      _groupHasLight = false;
+      _group.remove(_pointLight);
     }
-
-    _pointLight.shadow.mapSize.height = userSettings.shadowMapSize;
-    _pointLight.shadow.mapSize.width = userSettings.shadowMapSize;
-
-    _userSettingsLastApplied = userSettings.lastUpdate;
   }
 
   function dispose(): void {
@@ -53,7 +53,7 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
   function mount(): void {
     state.isMounted = true;
 
-    scene.add(_pointLight);
+    scene.add(_group);
   }
 
   function preload(): void {
@@ -70,7 +70,7 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
   function unmount(): void {
     state.isMounted = false;
 
-    scene.remove(_pointLight);
+    scene.remove(_group);
   }
 
   return Object.freeze({

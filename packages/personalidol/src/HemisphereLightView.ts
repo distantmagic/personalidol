@@ -1,16 +1,15 @@
 import { HemisphereLight } from "three/src/lights/HemisphereLight";
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { noop } from "@personalidol/framework/src/noop";
-
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 
 import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
 import type { EntityView } from "./EntityView.interface";
+import type { UserSettings } from "./UserSettings.type";
 
-export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere): EntityView {
+export function HemisphereLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightHemisphere): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -42,6 +41,14 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
     scene.remove(_hemisphereLight);
   }
 
+  function update(): void {
+    if (userSettings.useDynamicLighting) {
+      _hemisphereLight.intensity = entity.light;
+    } else {
+      _hemisphereLight.intensity = 1;
+    }
+  }
+
   return Object.freeze({
     entity: entity,
     id: MathUtils.generateUUID(),
@@ -50,7 +57,7 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
     isScene: false,
     isView: true,
     name: `HemisphereLightView(${entity.light})`,
-    needsUpdates: false,
+    needsUpdates: true,
     object3D: _hemisphereLight,
     state: state,
 
@@ -58,6 +65,6 @@ export function HemisphereLightView(scene: Scene, entity: EntityLightHemisphere)
     mount: mount,
     preload: preload,
     unmount: unmount,
-    update: noop,
+    update: update,
   });
 }

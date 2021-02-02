@@ -15,6 +15,7 @@
     "@personalidol/texture-loader": "^0.0.4",
     "@personalidol/three-modules": "^0.0.4",
     "@personalidol/three-renderer": "^0.0.4",
+    "@personalidol/user-settings": "^0.0.4",
     "loglevel": "^1.7.1",
     "three": "^0.125.2"
   },

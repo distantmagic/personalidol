@@ -5,7 +5,7 @@ import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 
-import { supportObjectLabel } from "./supportObjectLabel";
+import { useObjectLabel } from "./useObjectLabel";
 import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 
 import type { Logger } from "loglevel";
@@ -66,7 +66,7 @@ export function ScriptedBlockView(
   function preload(): void {
     views.add(_worldspawnGeometryView);
 
-    supportObjectLabel(domMessagePort, _worldspawnGeometryView.object3D, entity, _mountables, _unmountables, _disposables);
+    useObjectLabel(domMessagePort, _worldspawnGeometryView.object3D, entity, _mountables, _unmountables, _disposables);
 
     state.isPreloading = false;
     state.isPreloaded = true;

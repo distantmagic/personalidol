@@ -1,8 +1,10 @@
 import { Color } from "three/src/math/Color";
+import { Group } from "three/src/objects/Group";
 import { MathUtils } from "three/src/math/MathUtils";
 import { SpotLight } from "three/src/lights/SpotLight";
 
-import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+import { useLightShadowUserSettings } from "./useLightShadowUserSettings";
+import { useObject3DUserSettings } from "./useObject3DUserSettings";
 
 import type { Scene } from "three/src/scenes/Scene";
 
@@ -22,29 +24,27 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
   });
 
   const _color = new Color(parseInt(entity.color, 16));
+  const _group = new Group();
   const _spotLight = new SpotLight(_color, entity.intensity);
 
-  let _userSettingsLastApplied: number = -1;
+  _group.add(_spotLight);
+
+  let _groupHasLight: boolean = true;
 
   function _applyUserSettings(): void {
-    if (_userSettingsLastApplied >= userSettings.lastUpdate) {
-      return;
+    useObject3DUserSettings(userSettings, _spotLight);
+    useLightShadowUserSettings(userSettings, _spotLight.shadow);
+    _spotLight.visible = userSettings.useDynamicLighting;
+
+    if (userSettings.useDynamicLighting && !_groupHasLight) {
+      _groupHasLight = true;
+      _group.add(_spotLight);
     }
 
-    _spotLight.castShadow = userSettings.useShadows;
-
-    if (_spotLight.shadow.mapSize.height !== userSettings.shadowMapSize) {
-      disposeWebGLRenderTarget(_spotLight.shadow.map);
-
-      // Force shadow map to be recreated.
-      // @ts-ignore
-      _spotLight.shadow.map = null;
+    if (!userSettings.useDynamicLighting && _groupHasLight) {
+      _groupHasLight = false;
+      _group.remove(_spotLight);
     }
-
-    _spotLight.shadow.mapSize.height = userSettings.shadowMapSize;
-    _spotLight.shadow.mapSize.width = userSettings.shadowMapSize;
-
-    _userSettingsLastApplied = userSettings.lastUpdate;
   }
 
   function _getTarget(): View {
@@ -66,7 +66,7 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
   function mount(): void {
     state.isMounted = true;
 
-    scene.add(_spotLight);
+    scene.add(_group);
   }
 
   function preload(): void {
@@ -92,7 +92,7 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
   function unmount(): void {
     state.isMounted = false;
 
-    scene.remove(_spotLight);
+    scene.remove(_group);
   }
 
   return Object.freeze({

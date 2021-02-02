@@ -1,16 +1,15 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { noop } from "@personalidol/framework/src/noop";
-
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 
 import type { EntityLightAmbient } from "./EntityLightAmbient.type";
 import type { EntityView } from "./EntityView.interface";
+import type { UserSettings } from "./UserSettings.type";
 
-export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): EntityView {
+export function AmbientLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightAmbient): EntityView {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -41,6 +40,14 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): Enti
     scene.remove(_ambientLight);
   }
 
+  function update(): void {
+    if (userSettings.useDynamicLighting) {
+      _ambientLight.intensity = entity.light;
+    } else {
+      _ambientLight.intensity = 1;
+    }
+  }
+
   return Object.freeze({
     entity: entity,
     id: MathUtils.generateUUID(),
@@ -49,7 +56,7 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): Enti
     isScene: false,
     isView: true,
     name: `AmbientLightView(${entity.light})`,
-    needsUpdates: false,
+    needsUpdates: true,
     object3D: _ambientLight,
     state: state,
 
@@ -57,6 +64,6 @@ export function AmbientLightView(scene: Scene, entity: EntityLightAmbient): Enti
     mount: mount,
     preload: preload,
     unmount: unmount,
-    update: noop,
+    update: update,
   });
 }
