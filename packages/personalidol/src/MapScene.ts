@@ -275,8 +275,8 @@ export function MapScene(
       _pointerVector.x = getPrimaryPointerStretchVectorX(inputState);
       _pointerVector.y = getPrimaryPointerStretchVectorY(inputState);
       _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
-      _playerPosition.x += 1600 * _pointerVector.y * delta;
-      _playerPosition.z += 1600 * _pointerVector.x * delta;
+      _playerPosition.x += 1000 * _pointerVector.y * delta;
+      _playerPosition.z += 1000 * _pointerVector.x * delta;
     }
 
     _updateCamera(delta);
