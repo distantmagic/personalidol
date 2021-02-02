@@ -1,10 +1,11 @@
 import { h } from "preact";
 
-import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
+import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
+import type { DOMElementRenderingContext } from "@personalidol/dom-renderer/src/DOMElementRenderingContext.interface";
+import type { DOMElementRenderingContextState } from "@personalidol/dom-renderer/src/DOMElementRenderingContextState.type";
 import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 const _css = `
   :host {
@@ -54,27 +55,25 @@ const _css = `
   }
 `;
 
-export class FatalErrorDOMElementView extends DOMElementView {
-  constructor() {
-    super();
+export function FatalErrorDOMElementView(
+  id: string,
+  shadow: ShadowRoot,
+): DOMElementRenderingContext {
+  const name: string = "FatalErrorDOMElementView";
+  const state: DOMElementRenderingContextState = Object.seal({
+    needsRender: false,
+    styleSheet: ReplaceableStyleSheet(shadow, _css, name),
+  });
 
-    this.nameable.name = "FatalErrorDOMElementView";
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
+  let _progressError: null | ProgressError = null;
+
+  function beforeRender(props: DOMElementProps) {
+    _progressError = props.progressError;
+    state.needsRender = true;
   }
 
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    if (this.propsLastUpdate < this.viewLastUpdate) {
-      return;
-    }
-
-    this.needsRender = true;
-    this.viewLastUpdate = tickTimerState.currentTick;
-  }
-
-  render() {
-    const progressError: undefined | ProgressError = this.props.progressError;
-
-    if (!progressError) {
+  function render() {
+    if (!_progressError) {
       return null;
     }
 
@@ -103,22 +102,32 @@ export class FatalErrorDOMElementView extends DOMElementView {
         </p>
         <div id="error-report">
           <span id="item-resource-type">
-            resource_type: {progressError.item.resourceType}
+            resource_type: {_progressError.item.resourceType}
           </span>
           <span id="item-resource-uri">
-            resource_uri: {progressError.item.resourceUri}
+            resource_uri: {_progressError.item.resourceUri}
           </span>
           <span id="item-id">
-            resource_id: {progressError.item.id}
+            resource_id: {_progressError.item.id}
           </span>
           <span id="error-message">
-            resource_error_message: {progressError.error.message}
+            resource_error_message: {_progressError.error.message}
           </span>
           <span id="error-stack">
-            resource_error_stack: {progressError.error.stack}
+            resource_error_stack: {_progressError.error.stack}
           </span>
         </div>
       </main>
     );
   }
+
+  return Object.freeze({
+    id: id,
+    isPure: true,
+    name: name,
+    state: state,
+
+    beforeRender: beforeRender,
+    render: render,
+  });
 }

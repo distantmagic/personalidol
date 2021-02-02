@@ -1,42 +1,21 @@
-import { render } from 'preact';
-import { MathUtils } from "three/src/math/MathUtils";
+import { render } from "preact";
 
-import { Director } from "@personalidol/loading-manager/src/Director";
-import { mountMount } from "@personalidol/framework/src/mountMount";
-
-import type { Logger } from "loglevel";
-import type { VNode } from "preact";
-
-import type { Director as IDirector } from "@personalidol/loading-manager/src/Director.interface";
-import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { DOMElementProps } from "./DOMElementProps.type";
+import type { DOMElementRenderingContext } from "./DOMElementRenderingContext.interface";
 import type { DOMElementView as IDOMElementView } from "./DOMElementView.interface";
-import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
 
-export abstract class DOMElementView extends HTMLElement implements IDOMElementView {
-  public domMessagePort: null | MessagePort = null;
-  public logger: null | Logger = null;
-  public nameable: Nameable = {
-    id: MathUtils.generateUUID(),
-    name: "DOMElementView",
-  };
-  public needsRender: boolean = true;
+export class DOMElementView extends HTMLElement implements IDOMElementView {
   public props: DOMElementProps = {};
-  public propsLastUpdate: number = -1;
-  public rootElement: HTMLDivElement;
+  public propsLastUpdate: number = 0;
+  public renderingContext: null | DOMElementRenderingContext = null;
+  public rootElement: HTMLElement;
   public shadow: ShadowRoot;
-  public styleSheet: null | IReplaceableStyleSheet = null;
-  public styleSheetDirector: null | IDirector = null;
-  public tickTimerState: null | TickTimerState = null;
-  public uiMessagePort: null | MessagePort = null;
-  public viewLastUpdate: number = -1;
+  public viewLastUpdate: number = 0;
 
   constructor() {
     super();
-
-    this.render = this.render.bind(this);
 
     this.shadow = this.attachShadow({
       mode: "open",
@@ -46,74 +25,45 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     this.shadow.appendChild(this.rootElement);
   }
 
-  abstract beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
-
   connectedCallback() {
-    const styleSheetDirector: null | IDirector = this.styleSheetDirector;
+    const renderingContext = this.renderingContext;
 
-    this.needsRender = true;
-
-    if (styleSheetDirector) {
-      styleSheetDirector.start();
+    if (renderingContext) {
+      this._beforeRender(renderingContext);
     }
   }
 
   disconnectedCallback() {
-    const styleSheetDirector: null | IDirector = this.styleSheetDirector;
-
-    if (styleSheetDirector) {
-      styleSheetDirector.stop();
-    }
-
-    this.needsRender = false;
     render(null, this.rootElement);
   }
 
-  init(
-    logger: Logger,
-    domMessagePort: MessagePort,
-    uiMessagePort: MessagePort,
-    tickTimerState: TickTimerState,
-  ): void {
-    this.domMessagePort = domMessagePort;
-    this.logger = logger;
-    this.styleSheetDirector = Director(logger, tickTimerState, "DOMElementView");
-    this.tickTimerState = tickTimerState;
-    this.uiMessagePort = uiMessagePort;
-  }
-
-  render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any> {
-    return null;
-  }
-
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    const logger: null | Logger = this.logger;
-    const styleSheet: null | IReplaceableStyleSheet = this.styleSheet;
-    const styleSheetDirector: null | IDirector = this.styleSheetDirector;
+    const renderingContext = this.renderingContext;
 
-    if (styleSheetDirector) {
-      if (styleSheet && styleSheetDirector.state.current !== styleSheet && !styleSheetDirector.state.isTransitioning) {
-        styleSheetDirector.state.next = styleSheet;
-      }
-
-      styleSheetDirector.update(delta, elapsedTime, tickTimerState);
-
-      if (logger && styleSheet && styleSheet.state.isPreloaded) {
-        if (!styleSheet.state.isMounted) {
-          mountMount(logger, styleSheet);
-        }
-
-        styleSheet.update(delta, elapsedTime, tickTimerState);
-      }
+    if (!renderingContext) {
+      return;
     }
 
-    this.beforeRender(delta, elapsedTime, tickTimerState);
+    this._beforeRender(renderingContext);
 
-    // Render view only after CSS stylesheet is attached to reduce visual
-    // flashes.
-    if (this.needsRender && styleSheet && styleSheet.state.isMounted) {
-      render(this.render(delta, elapsedTime, tickTimerState), this.rootElement);
-      this.needsRender = false;
+    if (!renderingContext.state.needsRender) {
+      return;
     }
+
+    renderingContext.state.needsRender = false;
+    this.viewLastUpdate = tickTimerState.currentTick;
+
+    render(
+      renderingContext.render(delta, elapsedTime, tickTimerState),
+      this.rootElement
+    );
+  }
+
+  _beforeRender(renderingContext: DOMElementRenderingContext) {
+    if (renderingContext.isPure && this.propsLastUpdate < this.viewLastUpdate) {
+      return;
+    }
+
+    renderingContext.beforeRender(this.props, this.propsLastUpdate, this.viewLastUpdate);
   }
 }

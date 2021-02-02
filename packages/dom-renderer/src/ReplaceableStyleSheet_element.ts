@@ -5,7 +5,7 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
 import type { ReplaceableStyleSheetState } from "./ReplaceableStyleSheetState.type";
 
-export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: string): IReplaceableStyleSheet {
+export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: string, debugName: string): IReplaceableStyleSheet {
   const id = MathUtils.generateUUID();
   const styleElement = document.createElement("style");
   const state: ReplaceableStyleSheetState = Object.seal({
@@ -43,7 +43,7 @@ export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: strin
     id: id,
     isScene: true,
     isView: false,
-    name: "ReplaceableStyleSheet_element",
+    name: `ReplaceableStyleSheet_element(${debugName})`,
     state: state,
 
     dispose: dispose,

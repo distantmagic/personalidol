@@ -1,10 +1,12 @@
 import { h } from "preact";
 
-import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
+import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
+import type { DOMElementRenderingContext } from "@personalidol/dom-renderer/src/DOMElementRenderingContext.interface";
+import type { DOMElementRenderingContextState } from "@personalidol/dom-renderer/src/DOMElementRenderingContextState.type";
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+// import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 const _css = `
   #comment,
@@ -67,27 +69,25 @@ const _css = `
   }
 `;
 
-export class LoadingScreenDOMElementView extends DOMElementView {
-  constructor() {
-    super();
+export function LoadingScreenDOMElementView(
+  id: string,
+  shadow: ShadowRoot,
+): DOMElementRenderingContext {
+  const name: string = "LoadingScreenDOMElementView";
+  const state: DOMElementRenderingContextState = Object.seal({
+    needsRender: false,
+    styleSheet: ReplaceableStyleSheet(shadow, _css, name),
+  });
 
-    this.nameable.name = "LoadingScreenDOMElementView";
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
+  let _progressManagerProgress: null | ProgressManagerProgress = null;
+
+  function beforeRender(props: DOMElementProps) {
+    _progressManagerProgress = props.progressManagerProgress;
+    state.needsRender = true;
   }
 
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    if (this.propsLastUpdate < this.viewLastUpdate) {
-      return;
-    }
-
-    this.needsRender = true;
-    this.viewLastUpdate = tickTimerState.currentTick;
-  }
-
-  render() {
-    const progressManagerProgress: undefined | ProgressManagerProgress = this.props.progressManagerProgress;
-
-    if (!progressManagerProgress) {
+  function render() {
+    if (!_progressManagerProgress) {
       return (
         <main id="loading-progress">
           <div id="comment">
@@ -97,13 +97,13 @@ export class LoadingScreenDOMElementView extends DOMElementView {
       );
     }
 
-    const progress = Math.round(progressManagerProgress.progress * 100);
+    const progress = Math.round(_progressManagerProgress.progress * 100);
     const progressPercentage: string = `${progress}%`;
 
     return (
       <main id="loading-progress">
         <div id="comment">
-          Loading {progressManagerProgress.comment} ...
+          Loading {_progressManagerProgress.comment} ...
         </div>
         <div id="progress-value"></div>
         <div id="progress-indicator">
@@ -117,4 +117,14 @@ export class LoadingScreenDOMElementView extends DOMElementView {
       </main>
     );
   }
+
+  return Object.freeze({
+    id: id,
+    isPure: true,
+    name: name,
+    state: state,
+
+    beforeRender: beforeRender,
+    render: render,
+  });
 }

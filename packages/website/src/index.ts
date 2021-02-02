@@ -4,8 +4,8 @@ import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createMessageChannel } from "@personalidol/framework/src/createMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
-import { domElementsLookup as personalidolDOMElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
-import { domElementsLookup } from "@personalidol/dom-renderer/src/domElementsLookup";
+import { DOMElementRenderingContextResolver as BaseDOMElementRenderingContextResolver } from "@personalidol/dom-renderer/src/DOMElementRenderingContextResolver";
+import { DOMElementRenderingContextResolver as PersonalIdolDOMElementRenderingContextResolver } from "@personalidol/personalidol/src/DOMElementRenderingContextResolver";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
@@ -146,10 +146,13 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const domRendererMessageChannel = createMessageChannel();
   const uiMessageChannel = createMessageChannel();
-  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, {
-    ...domElementsLookup,
-    ...personalidolDOMElementsLookup,
-  });
+  const domUIController = DOMUIController(
+    logger,
+    mainLoop.tickTimerState,
+    uiMessageChannel.port1,
+    uiRoot,
+    PersonalIdolDOMElementRenderingContextResolver(BaseDOMElementRenderingContextResolver())
+  );
 
   domUIController.registerMessagePort(domRendererMessageChannel.port1);
 

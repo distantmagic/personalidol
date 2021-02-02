@@ -2,13 +2,13 @@ import { h } from "preact";
 
 import { isStatsReport } from "@personalidol/framework/src/isStatsReport";
 
-import { DOMElementView } from "./DOMElementView";
 import { ReplaceableStyleSheet } from "./ReplaceableStyleSheet";
 
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
+import type { DOMElementProps } from "./DOMElementProps.type";
+import type { DOMElementRenderingContext } from "./DOMElementRenderingContext.interface";
+import type { DOMElementRenderingContextState } from "./DOMElementRenderingContextState.type";
 
 type FlattenedStatsReport = [string, number | string];
 
@@ -63,48 +63,53 @@ function _sortCompareReports(a: FlattenedStatsReport, b: FlattenedStatsReport): 
   return a[0].localeCompare(b[0]);
 }
 
-export class StatsReporterDOMElementView extends DOMElementView implements IStatsReporterDOMElementView {
-  public statsReportsFlattened: Array<FlattenedStatsReport> = [];
+function _renderStatsReportFlattened([key, value]: FlattenedStatsReport) {
+  return (
+    <div key={key}>
+      {key}: {value}
+    </div>
+  );
+}
 
-  constructor() {
-    super();
+export function StatsReporterDOMElementView(
+  id: string,
+  shadow: ShadowRoot
+): DOMElementRenderingContext {
+  const name: string = "StatsReporterDOMElementView";
+  const state: DOMElementRenderingContextState = Object.seal({
+    needsRender: false,
+    styleSheet: ReplaceableStyleSheet(shadow, _css, name),
+  });
 
-    this.renderStatsReportFlattened = this.renderStatsReportFlattened.bind(this);
+  let _statsReportsFlattened: Array<FlattenedStatsReport> = [];
 
-    this.nameable.name = "StatsReporterDOMElementView";
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
-  }
-
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    if (this.propsLastUpdate < this.viewLastUpdate) {
-      return;
-    }
-
-    const statsReports = this.props.statsReports;
+  function beforeRender(props: DOMElementProps, propsLastUpdate: number, viewLastUpdate: number) {
+    const statsReports = props.statsReports;
 
     if (Array.isArray(statsReports)) {
-      this.statsReportsFlattened = Array.from(_flattenStatsReports(statsReports)).sort(_sortCompareReports);
+      _statsReportsFlattened = Array.from(_flattenStatsReports(statsReports)).sort(_sortCompareReports);
+      state.needsRender = true;
     } else {
-      this.statsReportsFlattened = [];
+      state.needsRender = 0 !== _statsReportsFlattened.length;
+      _statsReportsFlattened = [];
     }
-
-    this.needsRender = true;
-    this.viewLastUpdate = tickTimerState.currentTick;
   }
 
-  render() {
+  function render() {
     return (
       <div id="stats">
-        {this.statsReportsFlattened.map(this.renderStatsReportFlattened)}
+        {_statsReportsFlattened.map(_renderStatsReportFlattened)}
       </div>
     );
   }
 
-  renderStatsReportFlattened([key, value]: FlattenedStatsReport) {
-    return (
-      <div key={key}>
-        {key}: {value}
-      </div>
-    );
-  }
+  return Object.freeze({
+    id: id,
+    isPure: true,
+    name: name,
+    state: state,
+
+    beforeRender: beforeRender,
+    render: render,
+  });
 }
