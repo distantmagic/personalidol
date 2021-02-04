@@ -23,7 +23,7 @@ export interface DOMElementView extends HTMLElement, MainLoopUpdatable {
    * Init has to be used, because HTMLElement constructor does not take
    * arguments.
    */
-  init(logger: Logger, domMessagePort: MessagePort, uiMessagePort: MessagePort, tickTimerState: TickTimerState): void;
+  init(logger: Logger, domMessagePort: MessagePort, uiMessagePort: MessagePort): void;
 
   render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any>;
 

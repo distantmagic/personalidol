@@ -2,9 +2,12 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createMessageChannel } from "@personalidol/framework/src/createMessageChannel";
 import { createRouter } from "@personalidol/framework/src/createRouter";
-// import { name } from "@personalidol/framework/src/name";
+import { mountDispose } from "@personalidol/framework/src/mountDispose";
+import { mountMount } from "@personalidol/framework/src/mountMount";
+import { mountPreload } from "@personalidol/framework/src/mountPreload";
 
 import { clearHTMLElement } from "./clearHTMLElement";
+import { DOMRenderedElement } from "./DOMRenderedElement";
 
 import type { Logger } from "loglevel";
 
@@ -12,18 +15,10 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementView } from "./DOMElementView.interface";
+import type { DOMRenderedElement as IDOMRenderedElement } from "./DOMRenderedElement.interface";
 import type { DOMUIController as IDOMUIController } from "./DOMUIController.interface";
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
-
-type RenderedElement = {
-  domElementView: DOMElementView;
-  isAppended: boolean;
-};
-
-type RenderedElementsLookup = {
-  [key: string]: RenderedElement;
-};
 
 const _definedCustomElements: Array<string> = [];
 
@@ -41,7 +36,7 @@ async function _defineCustomElement(logger: Logger, name: string, element: typeo
 
   await customElements.whenDefined(name);
 
-  logger.info(`REGISTER_CUSTOM_ELEMENT("${name}")`);
+  logger.info(`DEFINE("${name}")`);
 }
 
 export function DOMUIController(
@@ -56,15 +51,15 @@ export function DOMUIController(
   let _elapsedTime: number = 0;
   let _isRootElementCleared: boolean = false;
 
-  const _renderedElements: Array<RenderedElement> = [];
-  const _renderedElementsLookup: RenderedElementsLookup = {};
+  const _renderedElements: Set<IDOMRenderedElement> = new Set();
+  const _renderedElementsLookup: Map<string, IDOMRenderedElement> = new Map();
   const _uiMessageRouter = createRouter({
     dispose: dispose,
     render: render,
     renderBatch: renderBatch,
   });
 
-  function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender): RenderedElement {
+  function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender): IDOMRenderedElement {
     const DOMElementConstructor = customElements.get(message.element);
 
     if (!DOMElementConstructor) {
@@ -72,36 +67,31 @@ export function DOMUIController(
     }
 
     const domElementView: DOMElementView = new DOMElementConstructor();
+    const renderedElement: IDOMRenderedElement = DOMRenderedElement(
+      logger,
+      message.id,
+      message.element,
+      uiRootElement,
+      domElementView,
+      tickTimerState,
+      internalDOMMessageChannel.port2,
+      uiMessagePort
+    );
 
-    domElementView.init(logger, internalDOMMessageChannel.port2, uiMessagePort, tickTimerState);
+    mountPreload(logger, renderedElement);
 
-    const renderedElement: RenderedElement = {
-      domElementView: domElementView,
-      isAppended: false,
-    };
-
-    _renderedElementsLookup[message.id] = renderedElement;
-    _renderedElements.push(renderedElement);
+    _renderedElementsLookup.set(message.id, renderedElement);
+    _renderedElements.add(renderedElement);
 
     return renderedElement;
   }
 
-  function _definedCustomElementByName(elementName: string): void {
-    if (_isCustomElementDefined(elementName)) {
-      return;
-    }
-
-    const ElementConstructor = domElementsLookup[elementName];
-
-    if (!ElementConstructor) {
-      throw new Error(`Custom element is not available: "${elementName}"`);
-    }
-
-    _defineCustomElement(logger, elementName, ElementConstructor);
+  function _defineCustomElementByName(elementName: string): void {
+    _defineCustomElement(logger, elementName, _getCustomElementConstructor(elementName));
   }
 
   function _disposeElementById(id: string): void {
-    let renderedElement: undefined | RenderedElement = _renderedElementsLookup[id];
+    let renderedElement: undefined | IDOMRenderedElement = _renderedElementsLookup.get(id);
 
     if (!renderedElement) {
       throw new Error(`Element is not rendered and can't be disposed: "${id}"`);
@@ -109,11 +99,34 @@ export function DOMUIController(
       return;
     }
 
-    // logger.info(`REMOVE(${name(renderedElement.domElementView.nameable)})`);
-    renderedElement.domElementView.remove();
+    mountDispose(logger, renderedElement);
 
-    delete _renderedElementsLookup[id];
-    _renderedElements.splice(_renderedElements.indexOf(renderedElement), 1);
+    _renderedElementsLookup.delete(id);
+    _renderedElements.delete(renderedElement);
+  }
+
+  function _getCustomElementConstructor(elementName: string): typeof HTMLElement {
+    const ElementConstructor = domElementsLookup[elementName];
+
+    if (!ElementConstructor) {
+      throw new Error(`Custom element is not available: "${elementName}"`);
+    }
+
+    return ElementConstructor;
+  }
+
+  function _updateRenderedElement(renderedElement: IDOMRenderedElement) {
+    if (!renderedElement.state.isPreloaded) {
+      return;
+    }
+
+    if (renderedElement.state.isPreloaded && !renderedElement.state.isMounted) {
+      mountMount(logger, renderedElement);
+    }
+
+    if (renderedElement.state.isMounted) {
+      renderedElement.update(_delta, _elapsedTime, tickTimerState);
+    }
   }
 
   function dispose(message: MessageDOMUIDispose): void {
@@ -121,29 +134,24 @@ export function DOMUIController(
   }
 
   function render(message: MessageDOMUIRender): void {
-    _definedCustomElementByName(message.element);
-
-    let renderedElement: undefined | RenderedElement = _renderedElementsLookup[message.id];
-
     if (!_isRootElementCleared) {
       clearHTMLElement(uiRootElement);
       _isRootElementCleared = true;
     }
 
+    if (!_isCustomElementDefined(message.element)) {
+      _defineCustomElementByName(message.element);
+    }
+
+    let renderedElement: undefined | IDOMRenderedElement = _renderedElementsLookup.get(message.id);
+
     if (!renderedElement) {
       renderedElement = _createDOMUIElementByRenderMessage(message);
     }
 
-    renderedElement.domElementView.props = message.props;
-    renderedElement.domElementView.propsLastUpdate = tickTimerState.currentTick;
+    renderedElement.updateProps(message.props);
 
-    if (!renderedElement.isAppended) {
-      renderedElement.isAppended = true;
-      // logger.info(`APPEND(${name(renderedElement.domElementView.nameable)})`);
-      uiRootElement.appendChild(renderedElement.domElementView);
-    }
-
-    renderedElement.domElementView.update(_delta, _elapsedTime, tickTimerState);
+    _updateRenderedElement(renderedElement);
   }
 
   function renderBatch(message: Array<MessageDOMUIRender>): void {
@@ -166,9 +174,7 @@ export function DOMUIController(
     _delta = delta;
     _elapsedTime = elapsedTime;
 
-    for (let renderedElement of _renderedElements) {
-      renderedElement.domElementView.update(_delta, _elapsedTime, tickTimerState);
-    }
+    _renderedElements.forEach(_updateRenderedElement);
   }
 
   return Object.freeze({

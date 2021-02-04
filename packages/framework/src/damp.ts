@@ -2,7 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 let _damped: number = 0;
 
-export function damp( x : number, y : number, lambda : number, dt : number ) : number {
+export function damp(x: number, y: number, lambda: number, dt: number): number {
   if (x === y) {
     return x;
   }

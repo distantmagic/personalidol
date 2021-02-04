@@ -1,13 +1,9 @@
 import { render } from 'preact';
 // import { MathUtils } from "three/src/math/MathUtils";
 
-import { Director } from "@personalidol/loading-manager/src/Director";
-import { mountMount } from "@personalidol/framework/src/mountMount";
-
 import type { Logger } from "loglevel";
 import type { VNode } from "preact";
 
-import type { Director as IDirector } from "@personalidol/loading-manager/src/Director.interface";
 // import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
@@ -24,7 +20,6 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
   public rootElement: HTMLDivElement;
   public shadow: ShadowRoot;
   public styleSheet: null | IReplaceableStyleSheet = null;
-  public styleSheetDirector: null | IDirector = null;
   public uiMessagePort: null | MessagePort = null;
   public viewLastUpdate: number = -1;
 
@@ -46,22 +41,10 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
   abstract beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
 
   connectedCallback() {
-    const styleSheetDirector: null | IDirector = this.styleSheetDirector;
-
     this.needsRender = true;
-
-    if (styleSheetDirector) {
-      styleSheetDirector.start();
-    }
   }
 
   disconnectedCallback() {
-    const styleSheetDirector: null | IDirector = this.styleSheetDirector;
-
-    if (styleSheetDirector) {
-      styleSheetDirector.stop();
-    }
-
     this.needsRender = false;
     render(null, this.rootElement);
   }
@@ -70,7 +53,6 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     logger: Logger,
     domMessagePort: MessagePort,
     uiMessagePort: MessagePort,
-    tickTimerState: TickTimerState,
   ): void {
     if (this._isInitialized) {
       throw new Error("DOM element is already initialized");
@@ -80,7 +62,6 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
 
     this.domMessagePort = domMessagePort;
     this.logger = logger;
-    this.styleSheetDirector = Director(logger, tickTimerState, "DOMElementView");
     this.uiMessagePort = uiMessagePort;
   }
 
@@ -89,33 +70,12 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
   }
 
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    const logger: null | Logger = this.logger;
-    const styleSheet: null | IReplaceableStyleSheet = this.styleSheet;
-    const styleSheetDirector: null | IDirector = this.styleSheetDirector;
-
-    if (styleSheetDirector) {
-      if (styleSheet && styleSheetDirector.state.current !== styleSheet && !styleSheetDirector.state.isTransitioning) {
-        styleSheetDirector.state.next = styleSheet;
-      }
-
-      styleSheetDirector.update(delta, elapsedTime, tickTimerState);
-
-      if (logger && styleSheet && styleSheet.state.isPreloaded) {
-        if (!styleSheet.state.isMounted) {
-          mountMount(logger, styleSheet);
-        }
-
-        styleSheet.update(delta, elapsedTime, tickTimerState);
-      }
-    }
-
     this.beforeRender(delta, elapsedTime, tickTimerState);
 
-    // Render view only after CSS stylesheet is attached to reduce visual
-    // flashes.
-    if (this.needsRender && styleSheet && styleSheet.state.isMounted) {
+    if (this.needsRender) {
       render(this.render(delta, elapsedTime, tickTimerState), this.rootElement);
       this.needsRender = false;
+      this.viewLastUpdate = tickTimerState.currentTick;
     }
   }
 }
