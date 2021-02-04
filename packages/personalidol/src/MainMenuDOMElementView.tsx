@@ -123,7 +123,7 @@ export class MainMenuDOMElementView extends DOMElementView {
 
     this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
 
-    this.nameable.name = "MainMenuDOMElementView";
+    // this.nameable.name = "MainMenuDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 

@@ -7,6 +7,7 @@ import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { damp } from "@personalidol/framework/src/damp";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
@@ -296,9 +297,9 @@ export function MapScene(
       _cameraSkipDamping = false;
     } else {
       _camera.position.set(
-        MathUtils.damp(_camera.position.x, _playerPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta),
-        MathUtils.damp(_camera.position.y, _playerPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta),
-        MathUtils.damp(_camera.position.z, _playerPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta),
+        damp(_camera.position.x, _playerPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta),
+        damp(_camera.position.y, _playerPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta),
+        damp(_camera.position.z, _playerPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta),
       );
     }
 

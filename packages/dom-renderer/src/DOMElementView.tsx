@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { MathUtils } from "three/src/math/MathUtils";
+// import { MathUtils } from "three/src/math/MathUtils";
 
 import { Director } from "@personalidol/loading-manager/src/Director";
 import { mountMount } from "@personalidol/framework/src/mountMount";
@@ -8,7 +8,7 @@ import type { Logger } from "loglevel";
 import type { VNode } from "preact";
 
 import type { Director as IDirector } from "@personalidol/loading-manager/src/Director.interface";
-import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
+// import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { DOMElementProps } from "./DOMElementProps.type";
@@ -18,10 +18,6 @@ import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./Replacea
 export abstract class DOMElementView extends HTMLElement implements IDOMElementView {
   public domMessagePort: null | MessagePort = null;
   public logger: null | Logger = null;
-  public nameable: Nameable = {
-    id: MathUtils.generateUUID(),
-    name: "DOMElementView",
-  };
   public needsRender: boolean = true;
   public props: DOMElementProps = {};
   public propsLastUpdate: number = -1;
@@ -29,9 +25,10 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
   public shadow: ShadowRoot;
   public styleSheet: null | IReplaceableStyleSheet = null;
   public styleSheetDirector: null | IDirector = null;
-  public tickTimerState: null | TickTimerState = null;
   public uiMessagePort: null | MessagePort = null;
   public viewLastUpdate: number = -1;
+
+  private _isInitialized: boolean = false;
 
   constructor() {
     super();
@@ -75,10 +72,15 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     uiMessagePort: MessagePort,
     tickTimerState: TickTimerState,
   ): void {
+    if (this._isInitialized) {
+      throw new Error("DOM element is already initialized");
+    }
+
+    this._isInitialized = true;
+
     this.domMessagePort = domMessagePort;
     this.logger = logger;
     this.styleSheetDirector = Director(logger, tickTimerState, "DOMElementView");
-    this.tickTimerState = tickTimerState;
     this.uiMessagePort = uiMessagePort;
   }
 

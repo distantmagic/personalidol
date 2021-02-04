@@ -180,6 +180,7 @@ export function MD2ModelView(
     _mesh.updateMorphTargets();
 
     _mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    _mesh.rotation.set(0, 0, 0);
 
     _applyUserSettings();
 

@@ -71,7 +71,7 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
 
     this.renderStatsReportFlattened = this.renderStatsReportFlattened.bind(this);
 
-    this.nameable.name = "StatsReporterDOMElementView";
+    // this.nameable.name = "StatsReporterDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 

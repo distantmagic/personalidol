@@ -1,6 +1,6 @@
 import { h } from "preact";
-import { MathUtils } from "three/src/math/MathUtils";
 
+import { damp } from "@personalidol/framework/src/damp";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
@@ -71,7 +71,7 @@ export class ObjectLabelDOMElementView extends DOMElementView {
   constructor() {
     super();
 
-    this.nameable.name = "ObjectLabelDOMElementView";
+    // this.nameable.name = "ObjectLabelDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
@@ -101,7 +101,7 @@ export class ObjectLabelDOMElementView extends DOMElementView {
       : 0.3
     ;
 
-    this._opacity.current = MathUtils.damp(
+    this._opacity.current = damp(
       this._opacity.current,
       this._opacity.target,
       OPACITY_DAMP,

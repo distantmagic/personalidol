@@ -2,7 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createMessageChannel } from "@personalidol/framework/src/createMessageChannel";
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { name } from "@personalidol/framework/src/name";
+// import { name } from "@personalidol/framework/src/name";
 
 import { clearHTMLElement } from "./clearHTMLElement";
 
@@ -18,7 +18,7 @@ import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
 type RenderedElement = {
   domElementView: DOMElementView;
-  id: string;
+  isAppended: boolean;
 };
 
 type RenderedElementsLookup = {
@@ -76,14 +76,12 @@ export function DOMUIController(
     domElementView.init(logger, internalDOMMessageChannel.port2, uiMessagePort, tickTimerState);
 
     const renderedElement: RenderedElement = {
-      id: message.id,
       domElementView: domElementView,
+      isAppended: false,
     };
 
     _renderedElementsLookup[message.id] = renderedElement;
     _renderedElements.push(renderedElement);
-
-    logger.info(`MOUNT.DOM(${name(domElementView.nameable)})`);
 
     return renderedElement;
   }
@@ -111,9 +109,9 @@ export function DOMUIController(
       return;
     }
 
-    logger.info(`DISPOSE.DOM(${name(renderedElement.domElementView.nameable)})`);
-
+    // logger.info(`REMOVE(${name(renderedElement.domElementView.nameable)})`);
     renderedElement.domElementView.remove();
+
     delete _renderedElementsLookup[id];
     _renderedElements.splice(_renderedElements.indexOf(renderedElement), 1);
   }
@@ -134,11 +132,17 @@ export function DOMUIController(
 
     if (!renderedElement) {
       renderedElement = _createDOMUIElementByRenderMessage(message);
-      uiRootElement.appendChild(renderedElement.domElementView);
     }
 
     renderedElement.domElementView.props = message.props;
     renderedElement.domElementView.propsLastUpdate = tickTimerState.currentTick;
+
+    if (!renderedElement.isAppended) {
+      renderedElement.isAppended = true;
+      // logger.info(`APPEND(${name(renderedElement.domElementView.nameable)})`);
+      uiRootElement.appendChild(renderedElement.domElementView);
+    }
+
     renderedElement.domElementView.update(_delta, _elapsedTime, tickTimerState);
   }
 
