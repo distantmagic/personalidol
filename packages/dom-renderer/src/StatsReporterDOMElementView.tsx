@@ -46,10 +46,7 @@ function* _flattenStatsReport(statsReport: StatsReport, prefix: string = ""): Ge
       continue;
     }
 
-    yield [
-      `${prefix}${statsReport.debugName}.${key}`,
-      value,
-    ];
+    yield [`${prefix}${statsReport.debugName}.${key}`, value];
   }
 }
 
@@ -93,11 +90,7 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
   }
 
   render() {
-    return (
-      <div id="stats">
-        {this.statsReportsFlattened.map(this.renderStatsReportFlattened)}
-      </div>
-    );
+    return <div id="stats">{this.statsReportsFlattened.map(this.renderStatsReportFlattened)}</div>;
   }
 
   renderStatsReportFlattened([key, value]: FlattenedStatsReport) {

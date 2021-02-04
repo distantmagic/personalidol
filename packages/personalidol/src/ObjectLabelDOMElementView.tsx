@@ -96,26 +96,18 @@ export class ObjectLabelDOMElementView extends DOMElementView {
       return null;
     }
 
-    this._opacity.target = this.rendererState.distanceToCameraSquared < ((this.rendererState.cameraFar * this.rendererState.cameraFar) - FADE_OUT_DISTANCE_SQUARED)
-      ? 1
-      : 0.3
-    ;
+    this._opacity.target = this.rendererState.distanceToCameraSquared < this.rendererState.cameraFar * this.rendererState.cameraFar - FADE_OUT_DISTANCE_SQUARED ? 1 : 0.3;
 
-    this._opacity.current = damp(
-      this._opacity.current,
-      this._opacity.target,
-      OPACITY_DAMP,
-      delta
-    );
+    this._opacity.current = damp(this._opacity.current, this._opacity.target, OPACITY_DAMP, delta);
 
     return (
       <div
         id="label"
         style={{
-          '--label-translate-x': `${this.rendererState.translateX}px`,
-          '--label-translate-y': `${this.rendererState.translateY}px`,
-          '--label-opacity': this._opacity.current,
-          '--label-z-index': this.rendererState.zIndex,
+          "--label-translate-x": `${this.rendererState.translateX}px`,
+          "--label-translate-y": `${this.rendererState.translateY}px`,
+          "--label-opacity": this._opacity.current,
+          "--label-z-index": this.rendererState.zIndex,
         }}
       >
         {this.objectProps.label}

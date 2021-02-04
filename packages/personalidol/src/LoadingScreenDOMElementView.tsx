@@ -90,9 +90,7 @@ export class LoadingScreenDOMElementView extends DOMElementView {
     if (!progressManagerProgress) {
       return (
         <main id="loading-progress">
-          <div id="comment">
-            Loading ...
-          </div>
+          <div id="comment">Loading ...</div>
         </main>
       );
     }
@@ -102,17 +100,17 @@ export class LoadingScreenDOMElementView extends DOMElementView {
 
     return (
       <main id="loading-progress">
-        <div id="comment">
-          Loading {progressManagerProgress.comment} ...
-        </div>
+        <div id="comment">Loading {progressManagerProgress.comment} ...</div>
         <div id="progress-value"></div>
         <div id="progress-indicator">
           <div
             id="progress-bar"
             style={{
-              width: progressPercentage
+              width: progressPercentage,
             }}
-          >{progressPercentage}</div>
+          >
+            {progressPercentage}
+          </div>
         </div>
       </main>
     );

@@ -1,4 +1,4 @@
-import { render } from 'preact';
+import { render } from "preact";
 // import { MathUtils } from "three/src/math/MathUtils";
 
 import type { Logger } from "loglevel";
@@ -49,11 +49,7 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     render(null, this.rootElement);
   }
 
-  init(
-    logger: Logger,
-    domMessagePort: MessagePort,
-    uiMessagePort: MessagePort,
-  ): void {
+  init(logger: Logger, domMessagePort: MessagePort, uiMessagePort: MessagePort): void {
     if (this._isInitialized) {
       throw new Error("DOM element is already initialized");
     }

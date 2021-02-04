@@ -152,9 +152,7 @@ export class MainMenuDOMElementView extends DOMElementView {
           <h2>You shall not be judged</h2>
           <nav>
             <button disabled>Continue</button>
-            <button onClick={this.onButtonNewGameClick}>
-              New Game
-            </button>
+            <button onClick={this.onButtonNewGameClick}>New Game</button>
             <button disabled>Load Game</button>
             <button disabled>Options</button>
             <button disabled>Credits</button>
