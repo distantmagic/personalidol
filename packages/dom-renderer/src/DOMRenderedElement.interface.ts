@@ -3,8 +3,6 @@ import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
 
 import type { DOMElementProps } from "./DOMElementProps.type";
 
-export interface DOMRenderedElement extends Mountable, Nameable {
+export interface DOMRenderedElement extends DOMElementProps, Mountable, Nameable {
   isDOMRenderedElement: true;
-
-  updateProps(props: DOMElementProps): void;
 }

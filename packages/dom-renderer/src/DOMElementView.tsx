@@ -1,7 +1,6 @@
 import { render } from "preact";
 // import { MathUtils } from "three/src/math/MathUtils";
 
-import type { Logger } from "loglevel";
 import type { VNode } from "preact";
 
 // import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
@@ -13,22 +12,19 @@ import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./Replacea
 
 export abstract class DOMElementView extends HTMLElement implements IDOMElementView {
   public domMessagePort: null | MessagePort = null;
-  public logger: null | Logger = null;
-  public needsRender: boolean = true;
   public props: DOMElementProps = {};
-  public propsLastUpdate: number = -1;
+  public propsLastUpdate: number = 0;
   public rootElement: HTMLDivElement;
   public shadow: ShadowRoot;
   public styleSheet: null | IReplaceableStyleSheet = null;
   public uiMessagePort: null | MessagePort = null;
-  public viewLastUpdate: number = -1;
-
-  private _isInitialized: boolean = false;
+  public viewLastUpdate: number = 0;
 
   constructor() {
     super();
 
     this.render = this.render.bind(this);
+    this.updateProps = this.updateProps.bind(this);
 
     this.shadow = this.attachShadow({
       mode: "open",
@@ -38,27 +34,8 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     this.shadow.appendChild(this.rootElement);
   }
 
-  abstract beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
-
-  connectedCallback() {
-    this.needsRender = true;
-  }
-
-  disconnectedCallback() {
-    this.needsRender = false;
-    render(null, this.rootElement);
-  }
-
-  init(logger: Logger, domMessagePort: MessagePort, uiMessagePort: MessagePort): void {
-    if (this._isInitialized) {
-      throw new Error("DOM element is already initialized");
-    }
-
-    this._isInitialized = true;
-
-    this.domMessagePort = domMessagePort;
-    this.logger = logger;
-    this.uiMessagePort = uiMessagePort;
+  needsRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): boolean {
+    return this.viewLastUpdate < this.propsLastUpdate;
   }
 
   render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any> {
@@ -66,12 +43,14 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
   }
 
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    this.beforeRender(delta, elapsedTime, tickTimerState);
-
-    if (this.needsRender) {
-      render(this.render(delta, elapsedTime, tickTimerState), this.rootElement);
-      this.needsRender = false;
+    if (this.needsRender(delta, elapsedTime, tickTimerState)) {
       this.viewLastUpdate = tickTimerState.currentTick;
+      render(this.render(delta, elapsedTime, tickTimerState), this.rootElement);
     }
+  }
+
+  updateProps(props: DOMElementProps, tickTimerState: TickTimerState): void {
+    this.props = props;
+    this.propsLastUpdate = tickTimerState.currentTick;
   }
 }

@@ -149,7 +149,7 @@ export function DOMUIController(
       renderedElement = _createDOMUIElementByRenderMessage(message);
     }
 
-    renderedElement.updateProps(message.props);
+    renderedElement.updateProps(message.props, tickTimerState);
 
     _updateRenderedElement(renderedElement);
   }

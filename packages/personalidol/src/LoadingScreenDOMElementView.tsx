@@ -4,7 +4,6 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 const _css = `
   #comment,
@@ -73,15 +72,6 @@ export class LoadingScreenDOMElementView extends DOMElementView {
 
     // this.nameable.name = "LoadingScreenDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
-  }
-
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    if (this.propsLastUpdate < this.viewLastUpdate) {
-      return;
-    }
-
-    this.needsRender = true;
-    this.viewLastUpdate = tickTimerState.currentTick;
   }
 
   render() {

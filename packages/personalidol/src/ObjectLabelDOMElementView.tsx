@@ -75,29 +75,12 @@ export class ObjectLabelDOMElementView extends DOMElementView {
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    if (this.propsLastUpdate < this.viewLastUpdate) {
-      return;
-    }
-
-    if (!this.props.objectProps || !this.props.rendererState) {
-      return;
-    }
-
-    this.objectProps = this.props.objectProps;
-    this.rendererState = this.props.rendererState;
-
-    this.needsRender = true;
-    this.viewLastUpdate = tickTimerState.currentTick;
-  }
-
   render(delta: number) {
     if (!this.rendererState.visible) {
       return null;
     }
 
     this._opacity.target = this.rendererState.distanceToCameraSquared < this.rendererState.cameraFar * this.rendererState.cameraFar - FADE_OUT_DISTANCE_SQUARED ? 1 : 0.3;
-
     this._opacity.current = damp(this._opacity.current, this._opacity.target, OPACITY_DAMP, delta);
 
     return (
@@ -113,5 +96,12 @@ export class ObjectLabelDOMElementView extends DOMElementView {
         {this.objectProps.label}
       </div>
     );
+  }
+
+  updateProps(props: DOMElementProps, tickTimerState: TickTimerState): void {
+    super.updateProps(props, tickTimerState);
+
+    this.objectProps = props.objectProps;
+    this.rendererState = props.rendererState;
   }
 }

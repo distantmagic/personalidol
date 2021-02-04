@@ -4,8 +4,6 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-
 const _css = `
   :host {
     all: initial;
@@ -125,15 +123,6 @@ export class MainMenuDOMElementView extends DOMElementView {
 
     // this.nameable.name = "MainMenuDOMElementView";
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
-  }
-
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    if (this.propsLastUpdate < this.viewLastUpdate) {
-      return;
-    }
-
-    this.needsRender = true;
-    this.viewLastUpdate = tickTimerState.currentTick;
   }
 
   onButtonNewGameClick(evt: MouseEvent) {

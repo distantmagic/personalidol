@@ -9,7 +9,6 @@ import type { Director as IDirector } from "@personalidol/loading-manager/src/Di
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementView } from "./DOMElementView.interface";
 import type { DOMRenderedElement as IDOMRenderedElement } from "./DOMRenderedElement.interface";
 import type { ReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
@@ -54,7 +53,8 @@ export function DOMRenderedElement(
   function preload() {
     state.isPreloading = true;
 
-    domElementView.init(logger, domMessagePort, uiMessagePort);
+    domElementView.domMessagePort = domMessagePort;
+    domElementView.uiMessagePort = uiMessagePort;
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -87,11 +87,6 @@ export function DOMRenderedElement(
     domElementView.update(delta, elapsedTime, tickTimerState);
   }
 
-  function updateProps(props: DOMElementProps) {
-    domElementView.props = props;
-    domElementView.propsLastUpdate = tickTimerState.currentTick;
-  }
-
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isDOMRenderedElement: true,
@@ -103,6 +98,6 @@ export function DOMRenderedElement(
     preload: preload,
     unmount: unmount,
     update: update,
-    updateProps: updateProps,
+    updateProps: domElementView.updateProps,
   });
 }

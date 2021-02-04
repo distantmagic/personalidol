@@ -8,6 +8,7 @@ import { ReplaceableStyleSheet } from "./ReplaceableStyleSheet";
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+import type { DOMElementProps } from "./DOMElementProps.type";
 import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
 
 type FlattenedStatsReport = [string, number | string];
@@ -72,23 +73,6 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    if (this.propsLastUpdate < this.viewLastUpdate) {
-      return;
-    }
-
-    const statsReports = this.props.statsReports;
-
-    if (Array.isArray(statsReports)) {
-      this.statsReportsFlattened = Array.from(_flattenStatsReports(statsReports)).sort(_sortCompareReports);
-    } else {
-      this.statsReportsFlattened = [];
-    }
-
-    this.needsRender = true;
-    this.viewLastUpdate = tickTimerState.currentTick;
-  }
-
   render() {
     return <div id="stats">{this.statsReportsFlattened.map(this.renderStatsReportFlattened)}</div>;
   }
@@ -99,5 +83,17 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
         {key}: {value}
       </div>
     );
+  }
+
+  updateProps(props: DOMElementProps, tickTimerState: TickTimerState) {
+    super.updateProps(props, tickTimerState);
+
+    const statsReports = props.statsReports;
+
+    if (Array.isArray(statsReports)) {
+      this.statsReportsFlattened = Array.from(_flattenStatsReports(statsReports)).sort(_sortCompareReports);
+    } else {
+      this.statsReportsFlattened = [];
+    }
   }
 }
