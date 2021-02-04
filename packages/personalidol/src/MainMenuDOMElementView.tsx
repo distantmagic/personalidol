@@ -1,10 +1,10 @@
 import { h } from "preact";
 
-import { noop } from "@personalidol/framework/src/noop";
+import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
+import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
-import type { DOMElementRenderingContext } from "@personalidol/dom-renderer/src/DOMElementRenderingContext.interface";
-import type { DOMElementRenderingContextState } from "@personalidol/dom-renderer/src/DOMElementRenderingContextState.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 const _css = `
   :host {
@@ -15,8 +15,8 @@ const _css = `
     box-sizing: border-box;
   }
 
-  #main-menu,
-  #main-menu:before {
+  .main-menu,
+  .main-menu:before {
     bottom: 0;
     left: 0;
     position: absolute;
@@ -24,7 +24,7 @@ const _css = `
     top: 0;
   }
 
-  #main-menu {
+  .main-menu {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.4);
     color: white;
@@ -35,7 +35,7 @@ const _css = `
     pointer-events: auto;
   }
 
-  #main-menu__content {
+  .main-menu__content {
     align-items: stretch;
     display: flex;
     flex-direction: column;
@@ -117,58 +117,50 @@ const _css = `
   }
 `;
 
-export function MainMenuDOMElementView(
-  id: string,
-  shadow: ShadowRoot,
-  uiMessagePort: MessagePort,
-): DOMElementRenderingContext {
-  const name: string = "MainMenuDOMElementView";
-  const state: DOMElementRenderingContextState = Object.seal({
-    needsRender: true,
-    styleSheet: ReplaceableStyleSheet(shadow, _css, name),
-  });
+export class MainMenuDOMElementView extends DOMElementView {
+  constructor() {
+    super();
 
-  function onButtonNewGameClick(evt: MouseEvent) {
+    this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
+
+    this.nameable.name = "MainMenuDOMElementView";
+    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
+  }
+
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
+    if (this.propsLastUpdate < this.viewLastUpdate) {
+      return;
+    }
+
+    this.needsRender = true;
+    this.viewLastUpdate = tickTimerState.currentTick;
+  }
+
+  onButtonNewGameClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    uiMessagePort.postMessage({
+    must(this.uiMessagePort).postMessage({
       navigateToMap: "map-gates",
     });
   }
 
-  function onButtonOptionsClick(evt: MouseEvent) {
-    evt.preventDefault();
-
-    console.log('options');
-  }
-
-  function render() {
+  render() {
     return (
-      <div id="main-menu">
-        <div id="main-menu__content">
+      <div class="main-menu">
+        <div class="main-menu__content">
           <h1>Personal Idol</h1>
           <h2>You shall not be judged</h2>
           <nav>
             <button disabled>Continue</button>
-            <button onClick={onButtonNewGameClick}>
+            <button onClick={this.onButtonNewGameClick}>
               New Game
             </button>
             <button disabled>Load Game</button>
-            <button onClick={onButtonOptionsClick}>Options</button>
+            <button disabled>Options</button>
             <button disabled>Credits</button>
           </nav>
         </div>
       </div>
     );
   }
-
-  return Object.freeze({
-    id: id,
-    isPure: true,
-    name: name,
-    state: state,
-
-    beforeRender: noop,
-    render: render,
-  });
 }

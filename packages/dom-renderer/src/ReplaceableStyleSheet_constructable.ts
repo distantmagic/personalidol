@@ -26,15 +26,13 @@ function _createStyleSheet(css: string): CSSStyleSheet {
   return styleSheet;
 }
 
-export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css: string, debugName: string): IReplaceableStyleSheet {
+export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css: string): IReplaceableStyleSheet {
   const state: ReplaceableStyleSheetState = Object.seal({
     isDisposed: false,
     isMounted: false,
     isPreloaded: false,
     isPreloading: false,
   });
-
-  let _styleSheet: null | CSSStyleSheet = null;
 
   function dispose() {
     state.isDisposed = true;
@@ -44,12 +42,10 @@ export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css:
     state.isMounted = true;
 
     // @ts-ignore
-    shadowRoot.adoptedStyleSheets = [_styleSheet];
+    shadowRoot.adoptedStyleSheets = [_createStyleSheet(css)];
   }
 
-  function preload() {
-    _styleSheet = _createStyleSheet(css);
-
+  async function preload() {
     state.isPreloading = false;
     state.isPreloaded = true;
   }
@@ -67,7 +63,7 @@ export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css:
     id: MathUtils.generateUUID(),
     isScene: true,
     isView: false,
-    name: `ReplaceableStyleSheet_constructable(${debugName})`,
+    name: "ReplaceableStyleSheet_constructable",
     state: state,
 
     dispose: dispose,

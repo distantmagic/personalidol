@@ -1,12 +1,12 @@
 import { h } from "preact";
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import type { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObjectState.type";
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
-import type { DOMElementRenderingContext } from "@personalidol/dom-renderer/src/DOMElementRenderingContext.interface";
-import type { DOMElementRenderingContextState } from "@personalidol/dom-renderer/src/DOMElementRenderingContextState.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 const OPACITY_DAMP = 10;
 const FADE_OUT_DISTANCE_SQUARED: number = 4000;
@@ -50,22 +50,11 @@ type LabelProps = DOMElementProps & {
   label: string;
 };
 
-export function ObjectLabelDOMElementView(
-  id: string,
-  shadow: ShadowRoot,
-  uiMessagePort: MessagePort,
-): DOMElementRenderingContext {
-  const name: string = "ObjectLabelDOMElementView";
-  const state: DOMElementRenderingContextState = Object.seal({
-    needsRender: true,
-    styleSheet: ReplaceableStyleSheet(shadow, _css, name),
-  });
-
-  let _objectProps: LabelProps = {
+export class ObjectLabelDOMElementView extends DOMElementView {
+  public objectProps: LabelProps = {
     label: "",
   };
-
-  let _rendererState: CSS2DObjectState = {
+  public rendererState: CSS2DObjectState = {
     cameraFar: 0,
     distanceToCameraSquared: 0,
     translateX: 0,
@@ -74,35 +63,47 @@ export function ObjectLabelDOMElementView(
     zIndex: 0,
   };
 
-  const _opacity = {
+  private _opacity = {
     current: 1,
     target: 1,
   };
 
-  function beforeRender(props: DOMElementProps) {
-    if (!props.objectProps || !props.rendererState) {
+  constructor() {
+    super();
+
+    this.nameable.name = "ObjectLabelDOMElementView";
+    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
+  }
+
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
+    if (this.propsLastUpdate < this.viewLastUpdate) {
       return;
     }
 
-    _objectProps = props.objectProps;
-    _rendererState = props.rendererState;
+    if (!this.props.objectProps || !this.props.rendererState) {
+      return;
+    }
 
-    state.needsRender = true;
+    this.objectProps = this.props.objectProps;
+    this.rendererState = this.props.rendererState;
+
+    this.needsRender = true;
+    this.viewLastUpdate = tickTimerState.currentTick;
   }
 
-  function render(delta: number) {
-    if (!_rendererState.visible) {
+  render(delta: number) {
+    if (!this.rendererState.visible) {
       return null;
     }
 
-    _opacity.target = _rendererState.distanceToCameraSquared < ((_rendererState.cameraFar * _rendererState.cameraFar) - FADE_OUT_DISTANCE_SQUARED)
+    this._opacity.target = this.rendererState.distanceToCameraSquared < ((this.rendererState.cameraFar * this.rendererState.cameraFar) - FADE_OUT_DISTANCE_SQUARED)
       ? 1
       : 0.3
     ;
 
-    _opacity.current = MathUtils.damp(
-      _opacity.current,
-      _opacity.target,
+    this._opacity.current = MathUtils.damp(
+      this._opacity.current,
+      this._opacity.target,
       OPACITY_DAMP,
       delta
     );
@@ -111,24 +112,14 @@ export function ObjectLabelDOMElementView(
       <div
         id="label"
         style={{
-          '--label-translate-x': `${_rendererState.translateX}px`,
-          '--label-translate-y': `${_rendererState.translateY}px`,
-          '--label-opacity': _opacity.current,
-          '--label-z-index': _rendererState.zIndex,
+          '--label-translate-x': `${this.rendererState.translateX}px`,
+          '--label-translate-y': `${this.rendererState.translateY}px`,
+          '--label-opacity': this._opacity.current,
+          '--label-z-index': this.rendererState.zIndex,
         }}
       >
-        {_objectProps.label}
+        {this.objectProps.label}
       </div>
     );
   }
-
-  return Object.freeze({
-    id: id,
-    isPure: true,
-    name: name,
-    state: state,
-
-    beforeRender: beforeRender,
-    render: render,
-  });
 }
