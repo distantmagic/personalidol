@@ -40,7 +40,7 @@ if (!(canvas instanceof HTMLCanvasElement)) {
   throw new Error("Canvas is not an instance of HTMLCanvasElement");
 }
 
-const devicePixelRatio = Math.min(1.5, window.devicePixelRatio);
+const devicePixelRatio = window.devicePixelRatio;
 const logger = Loglevel.getLogger(THREAD_DEBUG_NAME);
 const supportCache = createSupportCache();
 
@@ -54,7 +54,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 // Depending on browser feature support, some workers will be started or not.
 // Checking for features is asynchronous.
 (async function () {
-  logger.info(`BUILD_ID(${__BUILD_ID})`);
+  logger.info(`BUILD_ID("${__BUILD_ID}")`);
 
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
@@ -108,7 +108,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     throw new Error("Service worker is not supported.");
   }
 
-  ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js?${__CACHE_BUST}`).install();
+  await ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js?${__CACHE_BUST}`).install();
 
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,

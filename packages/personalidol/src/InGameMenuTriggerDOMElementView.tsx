@@ -4,6 +4,8 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 // import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
+import { preloadedContent } from "./preloadedContent";
+
 const _css = `
   :host {
     all: initial;
@@ -16,7 +18,7 @@ const _css = `
   #ingame-menu-trigger {
     -webkit-tap-highlight-color: transparent;
     background-color: transparent;
-    background-image: url('${__ASSETS_BASE_PATH}/website/icon-cogs.png?${__CACHE_BUST}');
+    background-image: url('${preloadedContent["assets_website_icon-cogs"]}');
     background-position: center;
     background-repeat: no-repeat;
     border: none;
