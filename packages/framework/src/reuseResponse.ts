@@ -1,3 +1,4 @@
+import type { ReusedResponse } from "./ReusedResponse.type";
 import type { ReusedResponsesCache } from "./ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "./ReusedResponsesUsage.type";
 
@@ -25,7 +26,7 @@ export function reuseResponse<T, A, K extends string = string>(
   key: K,
   argument: A,
   requestFactory: (arg: A) => Promise<T>
-): Promise<{ data: T; isLast: boolean }> {
+): Promise<ReusedResponse<T>> {
   if (!cache.has(key)) {
     cache.set(key, requestFactory(argument));
     usage.set(key, 0);
@@ -41,7 +42,7 @@ export function reuseResponse<T, A, K extends string = string>(
       usage.delete(key);
     }
 
-    return {
+    return <ReusedResponse<T>>{
       data: data,
       isLast: isLast,
     };

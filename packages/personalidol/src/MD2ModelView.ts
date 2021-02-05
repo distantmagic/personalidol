@@ -3,6 +3,7 @@ import { AnimationMixer } from "three/src/animation/AnimationMixer";
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { Float32BufferAttribute } from "three/src/core/BufferAttribute";
+import { Group } from "three/src/objects/Group";
 import { MathUtils } from "three/src/math/MathUtils";
 import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
 
@@ -20,13 +21,14 @@ import { useObjectLabel } from "./useObjectLabel";
 
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
 import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
+import type { Group as IGroup } from "three/src/objects/Group";
 import type { Mesh as IMesh } from "three/src/objects/Mesh";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
-// import type { MD2LoaderMorphNormal } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphNormal.type";
 import type { MD2LoaderMorphPosition } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphPosition.type";
+import type { MD2LoaderParsedGeometryWithParts } from "@personalidol/three-modules/src/loaders/MD2LoaderParsedGeometryWithParts.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
@@ -115,8 +117,9 @@ export function MD2ModelView(
 
   const _animationOffset: number = _globalAnimationOffset;
   const _disposables: Set<DisposableCallback> = new Set();
-  const _mountables: Set<MountableCallback> = new Set();
+  const _labelContainer: IGroup = new Group();
   const _mesh: IMesh = createEmptyMesh();
+  const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
 
   let _animationMixer: null | IAnimationMixer = null;
@@ -140,7 +143,11 @@ export function MD2ModelView(
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
-    const { load: geometry } = await sendRPCMessage(rpcLookupTable, md2MessagePort, {
+    const {
+      load: geometry,
+    }: {
+      load: MD2LoaderParsedGeometryWithParts;
+    } = await sendRPCMessage(rpcLookupTable, md2MessagePort, {
       load: {
         model_name: entity.model_name,
         rpc: MathUtils.generateUUID(),
@@ -179,14 +186,21 @@ export function MD2ModelView(
     // Update morph targets after swapping both geometry and material.
     _mesh.updateMorphTargets();
 
+    _mesh.rotation.set(0, entity.angle, 0);
     _mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-    _mesh.rotation.set(0, 0, 0);
-
-    _applyUserSettings();
 
     // Object label
 
-    useObjectLabel(domMessagePort, _mesh, entity, _mountables, _unmountables, _disposables);
+    _mesh.add(_labelContainer);
+
+    // Only use standing animation to offset the bounding box.
+    _labelContainer.position.set(0, geometry.boundingBoxes.stand.max.y + 5, 0);
+
+    useObjectLabel(domMessagePort, _labelContainer, entity, _mountables, _unmountables, _disposables);
+
+    // User settings
+
+    _applyUserSettings();
 
     // Animations
 

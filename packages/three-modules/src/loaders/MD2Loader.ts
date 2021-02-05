@@ -1,24 +1,10 @@
+import { Box3 } from "three/src/math/Box3";
 import { FileLoader } from "three/src/loaders/FileLoader";
 import { Loader } from "three/src/loaders/Loader";
 import { Vector3 } from "three/src/math/Vector3";
 
-import type { MD2LoaderMorphNormal } from "./MD2LoaderMorphNormal.type";
-import type { MD2LoaderMorphPosition } from "./MD2LoaderMorphPosition.type";
-
-type ParsedGeometry = {
-  frames: Array<{
-    name: string;
-    normals: Array<number> | Float32Array;
-    vertices: Array<number> | Float32Array;
-  }>;
-  morphNormals: Array<MD2LoaderMorphNormal>;
-  morphPositions: Array<MD2LoaderMorphPosition>;
-  normals: Float32Array;
-  uvs: Float32Array;
-  vertices: Float32Array;
-
-  transferables: Array<Transferable>;
-};
+import type { MD2LoaderParsedGeometry } from "./MD2LoaderParsedGeometry.type";
+import type { MD2LoaderParsedGeometryFrame } from "./MD2LoaderParsedGeometryFrame.type";
 
 const headerNames: [
   "ident",
@@ -223,8 +209,10 @@ const normalData = [
   [-0.688191, -0.587785, -0.425325],
 ];
 
+const _vector = new Vector3();
+
 export class MD2Loader extends Loader {
-  load(url: string, onLoad: (geometry: ParsedGeometry) => void, onProgress?: (event: ProgressEvent) => void, onError?: (event: ErrorEvent) => void): void {
+  load(url: string, onLoad: (geometry: MD2LoaderParsedGeometry) => void, onProgress?: (event: ProgressEvent) => void, onError?: (event: ErrorEvent) => void): void {
     const scope = this;
     const loader = new FileLoader(scope.manager);
 
@@ -253,9 +241,13 @@ export class MD2Loader extends Loader {
     );
   }
 
-  parse(buffer: ArrayBuffer): ParsedGeometry {
+  parse(buffer: ArrayBuffer): MD2LoaderParsedGeometry {
+    const boundingBox = new Box3();
     const data = new DataView(buffer);
     const transferables: Array<Transferable> = [];
+
+    boundingBox.min.set(Infinity, Infinity, Infinity);
+    boundingBox.max.set(-Infinity, -Infinity, -Infinity);
 
     // http://tfc.duke.free.fr/coding/md2-specs-en.html
 
@@ -309,18 +301,14 @@ export class MD2Loader extends Loader {
       throw new Error("Corrupted MD2 file");
     }
 
-    //
-
-    // var geometry = new BufferGeometry();
-
     // uvs
 
-    var uvsTemp = [];
-    var offset = header.offset_st;
+    const uvsTemp = [];
+    let offset = header.offset_st;
 
     for (let i = 0, l = header.num_st; i < l; i++) {
-      var u = data.getInt16(offset + 0, true);
-      var v = data.getInt16(offset + 2, true);
+      const u = data.getInt16(offset + 0, true);
+      const v = data.getInt16(offset + 2, true);
 
       uvsTemp.push(u / header.skinwidth, 1 - v / header.skinheight);
 
@@ -331,8 +319,8 @@ export class MD2Loader extends Loader {
 
     offset = header.offset_tris;
 
-    var vertexIndices = [];
-    var uvIndices = [];
+    const vertexIndices = [];
+    const uvIndices = [];
 
     for (let i = 0, l = header.num_tris; i < l; i++) {
       vertexIndices.push(data.getUint16(offset + 0, true), data.getUint16(offset + 2, true), data.getUint16(offset + 4, true));
@@ -344,15 +332,11 @@ export class MD2Loader extends Loader {
 
     // frames
 
-    var translation = new Vector3();
-    var scale = new Vector3();
-    var string = [];
+    const translation = new Vector3();
+    const scale = new Vector3();
+    const string = [];
 
-    var frames: Array<{
-      name: string;
-      normals: Array<number> | Float32Array;
-      vertices: Array<number> | Float32Array;
-    }> = [];
+    const frames: Array<MD2LoaderParsedGeometryFrame> = [];
 
     offset = header.offset_frames;
 
@@ -364,7 +348,7 @@ export class MD2Loader extends Loader {
       offset += 24;
 
       for (let j = 0; j < 16; j++) {
-        var character = data.getUint8(offset + j);
+        const character = data.getUint8(offset + j);
         if (character === 0) break;
 
         string[j] = character;
@@ -405,8 +389,8 @@ export class MD2Loader extends Loader {
     const normals: Array<number> = [];
     const uvs: Array<number> = [];
 
-    var verticesTemp = frames[0].vertices;
-    var normalsTemp = frames[0].normals;
+    const verticesTemp = frames[0].vertices;
+    const normalsTemp = frames[0].normals;
 
     for (let i = 0, l = vertexIndices.length; i < l; i++) {
       const vertexIndex = vertexIndices[i];
@@ -459,6 +443,11 @@ export class MD2Loader extends Loader {
           const y = frame.vertices[stride + 1];
           const z = frame.vertices[stride + 2];
 
+          if (frame.name.startsWith("stand")) {
+            _vector.set(x, y, z);
+            boundingBox.expandByPoint(_vector);
+          }
+
           positions.push(x, y, z);
         }
 
@@ -508,7 +497,21 @@ export class MD2Loader extends Loader {
     transferables.push(uvsTypedArray.buffer);
 
     // prettier-ignore
-    return {
+    return <MD2LoaderParsedGeometry>{
+      boundingBoxes: {
+        stand: {
+          min: {
+            x: boundingBox.min.x,
+            y: boundingBox.min.y,
+            z: boundingBox.min.z,
+          },
+          max: {
+            x: boundingBox.max.x,
+            y: boundingBox.max.y,
+            z: boundingBox.max.z,
+          }
+        }
+      },
       frames: frames,
       morphNormals: morphNormals,
       morphPositions: morphPositions,

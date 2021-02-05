@@ -13,10 +13,32 @@ import type { TextureDimensionsResolver } from "@personalidol/quakemaps/src/Text
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
 
 import type { EntityAny } from "./EntityAny.type";
+import type { EntityFuncGroup } from "./EntityFuncGroup.type";
+import type { EntityGLTFModel } from "./EntityGLTFModel.type";
+import type { EntityLightAmbient } from "./EntityLightAmbient.type";
+import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
+import type { EntityLightPoint } from "./EntityLightPoint.type";
+import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
+import type { EntityMD2Model } from "./EntityMD2Model.type";
+import type { EntityPlayer } from "./EntityPlayer.type";
+import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
+import type { EntitySounds } from "./EntitySounds.type";
+import type { EntitySparkParticles } from "./EntitySparkParticles.type";
+import type { EntityTarget } from "./EntityTarget.type";
+import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 
 const SCENERY_INDOORS = 0;
 const SCENERY_OUTDOORS = 1;
 const _transferablesEmpty: [] = [];
+
+function _getEntityAngle(filename: string, entity: EntitySketch): number {
+  if ("string" !== typeof entity.properties.angle) {
+    throw new UnmarshalException(filename, 0, "Entity does not have an angle property but it was expected.");
+  }
+
+  // Adjust the angle for a different axis orientation.
+  return Number(entity.properties.angle) - Math.PI / 2;
+}
 
 function _getEntityOrigin(filename: string, entity: EntitySketch): Vector3Simple {
   if ("string" !== typeof entity.properties.origin) {
@@ -62,7 +84,7 @@ export function* buildEntities(
           // Do not discard occluding faces on `func_group` since they may be
           // rotating, animating, etc.
           default:
-            yield {
+            yield <EntityFuncGroup>{
               classname: entityClassName,
               id: MathUtils.generateUUID(),
               properties: entity.properties,
@@ -73,7 +95,7 @@ export function* buildEntities(
         break;
       case "light_point":
       case "light_spotlight":
-        yield {
+        yield <EntityLightPoint | EntityLightSpotlight>{
           classname: entityClassName,
           color: entity.properties.color,
           decay: Number(entity.properties.decay),
@@ -85,8 +107,8 @@ export function* buildEntities(
         };
         break;
       case "model_gltf":
-        yield {
-          angle: Number(entity.properties.angle),
+        yield <EntityGLTFModel>{
+          angle: _getEntityAngle(filename, entity),
           classname: entityClassName,
           id: MathUtils.generateUUID(),
           model_name: entity.properties.model_name,
@@ -99,8 +121,8 @@ export function* buildEntities(
 
         break;
       case "model_md2":
-        yield {
-          angle: Number(entity.properties.angle),
+        yield <EntityMD2Model>{
+          angle: _getEntityAngle(filename, entity),
           classname: entityClassName,
           id: MathUtils.generateUUID(),
           model_name: entity.properties.model_name,
@@ -111,7 +133,7 @@ export function* buildEntities(
         };
         break;
       case "player":
-        yield {
+        yield <EntityPlayer>{
           classname: entityClassName,
           id: MathUtils.generateUUID(),
           origin: _getEntityOrigin(filename, entity),
@@ -120,7 +142,7 @@ export function* buildEntities(
         };
         break;
       case "scripted_block":
-        yield {
+        yield <EntityScriptedBlock>{
           classname: entityClassName,
           controller: entity.properties.controller,
           id: MathUtils.generateUUID(),
@@ -131,7 +153,7 @@ export function* buildEntities(
         };
         break;
       case "spark_particles":
-        yield {
+        yield <EntitySparkParticles>{
           classname: entityClassName,
           id: MathUtils.generateUUID(),
           origin: _getEntityOrigin(filename, entity),
@@ -140,7 +162,7 @@ export function* buildEntities(
         };
         break;
       case "target":
-        yield {
+        yield <EntityTarget>{
           classname: entityClassName,
           id: MathUtils.generateUUID(),
           origin: _getEntityOrigin(filename, entity),
@@ -161,7 +183,7 @@ export function* buildEntities(
 
           switch (sceneryType) {
             case SCENERY_INDOORS:
-              yield {
+              yield <EntityLightAmbient>{
                 classname: "light_ambient",
                 id: MathUtils.generateUUID(),
                 light: Number(entity.properties.light),
@@ -170,7 +192,7 @@ export function* buildEntities(
               };
               break;
             case SCENERY_OUTDOORS:
-              yield {
+              yield <EntityLightHemisphere>{
                 classname: "light_hemisphere",
                 id: MathUtils.generateUUID(),
                 light: Number(entity.properties.light),
@@ -183,7 +205,7 @@ export function* buildEntities(
           }
         }
         if (entity.properties.hasOwnProperty("sounds")) {
-          yield {
+          yield <EntitySounds>{
             classname: "sounds",
             id: MathUtils.generateUUID(),
             properties: entity.properties,
@@ -216,7 +238,7 @@ export function* buildEntities(
   // it takes a long time to parse a map file, in the meantime the main
   // thread can load models, etc
 
-  yield {
+  yield <EntityWorldspawn>{
     classname: "worldspawn",
     id: MathUtils.generateUUID(),
     properties: worldProperties,
