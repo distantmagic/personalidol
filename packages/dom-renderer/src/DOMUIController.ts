@@ -1,7 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { createMessageChannel } from "@personalidol/framework/src/createMessageChannel";
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { mountDispose } from "@personalidol/framework/src/mountDispose";
 import { mountMount } from "@personalidol/framework/src/mountMount";
 import { mountPreload } from "@personalidol/framework/src/mountPreload";
@@ -46,7 +46,7 @@ export function DOMUIController(
   uiRootElement: HTMLElement,
   domElementsLookup: DOMElementsLookup
 ): IDOMUIController {
-  const internalDOMMessageChannel: MessageChannel = createMessageChannel();
+  const internalDOMMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _delta: number = 0;
   let _elapsedTime: number = 0;
   let _isRootElementCleared: boolean = false;

@@ -457,7 +457,7 @@ export class MD2Loader extends Loader {
         };
 
         morphPositions.push(positionAttribute);
-        transferables.push(positionAttribute.positions.buffer);
+        // transferables.push(positionAttribute.positions.buffer);
       }
 
       if (frame.normals.length > 0) {
@@ -480,7 +480,7 @@ export class MD2Loader extends Loader {
         };
 
         morphNormals.push(normalAttribute);
-        transferables.push(normalAttribute.normals.buffer);
+        // transferables.push(normalAttribute.normals.buffer);
       }
     }
 

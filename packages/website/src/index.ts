@@ -1,7 +1,8 @@
 import Loglevel from "loglevel";
 
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
-import { createMessageChannel } from "@personalidol/framework/src/createMessageChannel";
+import { createMultiThreadMessageChannel } from "@personalidol/framework/src/createMultiThreadMessageChannel";
+import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { domElementsLookup as personalidolDOMElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
@@ -63,7 +64,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const inputState = Input.createEmptyState(useSharedBuffers);
 
   const eventBus = EventBus();
-  const statsMessageChanngel = createMessageChannel();
+  const statsMessageChanngel = createMultiThreadMessageChannel();
 
   const mainLoopStatsHook = MainLoopStatsHook();
   const mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
@@ -114,7 +115,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // so it's possible to render loading screen or do something else with that
   // information.
 
-  const progressMessageChannel = createMessageChannel();
+  const progressMessageChannel = createMultiThreadMessageChannel();
   const progressWorker = new Worker(`${__STATIC_BASE_PATH}${workers.progress.url}?${__CACHE_BUST}`, {
     credentials: "same-origin",
     name: workers.progress.name,
@@ -144,22 +145,19 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   // DOMUiController handles DOM rendering using reconciliated routes.
 
-  const domRendererMessageChannel = createMessageChannel();
-  const uiMessageChannel = createMessageChannel();
+  const uiMessageChannel = createMultiThreadMessageChannel();
   const domUIController = DOMUIController(logger, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, {
     ...domElementsLookup,
     ...personalidolDOMElementsLookup,
   });
-
-  domUIController.registerMessagePort(domRendererMessageChannel.port1);
 
   mainLoop.updatables.add(domUIController);
   serviceManager.services.add(domUIController);
 
   // Stats collector reports debug stats like FPS, memory usage, etc.
 
-  const statsMessageChannel = createMessageChannel();
-  const statsToDOMRendererMessageChannel = createMessageChannel();
+  const statsMessageChannel = createMultiThreadMessageChannel();
+  const statsToDOMRendererMessageChannel = createMultiThreadMessageChannel();
   const statsCollector = StatsCollector(statsToDOMRendererMessageChannel.port2);
 
   domUIController.registerMessagePort(statsToDOMRendererMessageChannel.port1);
@@ -175,8 +173,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // it's ready. Thanks to that, there should be no UI twitching while fonts
   // are being loaded.
 
-  const fontPreloadMessageChannel = createMessageChannel();
-  const fontPreloadToProgressMessageChannel = createMessageChannel();
+  const fontPreloadMessageChannel = createMultiThreadMessageChannel();
+  const fontPreloadToProgressMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(fontPreloadToProgressMessageChannel.port1, false);
 
@@ -196,8 +194,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     throw new Error("Unable to get detached canvas 2D context.");
   }
 
-  const texturesMessageChannel = createMessageChannel();
-  const texturesToProgressMessageChannel = createMessageChannel();
+  const texturesMessageChannel = createMultiThreadMessageChannel();
+  const texturesToProgressMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(texturesToProgressMessageChannel.port1, false);
 
@@ -243,10 +241,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // Atlas canvas is used to speed up texture atlas creation.
 
   const atlasCanvas = document.createElement("canvas");
-  const atlasMessageChannel = createMessageChannel();
-  const atlasToTextureMessageChannel = createMessageChannel();
-  const atlasToProgressMessageChannel = createMessageChannel();
-  const atlasToStatsMessageChannel = createMessageChannel();
+  const atlasMessageChannel = createMultiThreadMessageChannel();
+  const atlasToTextureMessageChannel = createMultiThreadMessageChannel();
+  const atlasToProgressMessageChannel = createMultiThreadMessageChannel();
+  const atlasToStatsMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(atlasToProgressMessageChannel.port1, false);
   addTextureMessagePort(atlasToTextureMessageChannel.port1);
@@ -312,8 +310,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // worker then the message channel can be used in the main thread. It is an
   // overhead, but unifies how messages are handled in each case.
 
-  const quakeMapsMessageChannel = createMessageChannel();
-  const quakeMapsToProgressMessageChannel = createMessageChannel();
+  const quakeMapsMessageChannel = createMultiThreadMessageChannel();
+  const quakeMapsToProgressMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(quakeMapsToProgressMessageChannel.port1, false);
 
@@ -336,8 +334,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // browser thread or the offscreen canvas thread. Loading MD2 models cause
   // rendering to stutter.
 
-  const md2MessageChannel = createMessageChannel();
-  const md2ToProgressMessageChannel = createMessageChannel();
+  const md2MessageChannel = createMultiThreadMessageChannel();
+  const md2ToProgressMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(md2ToProgressMessageChannel.port1, false);
 
@@ -420,6 +418,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       }
     })();
 
+    const domRendererMessageChannel = createMultiThreadMessageChannel();
+
+    domUIController.registerMessagePort(domRendererMessageChannel.port1);
+
     // prettier-ignore
     offscreenWorker.postMessage(
       {
@@ -476,6 +478,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         throw err;
       }
     })();
+
+    const domRendererMessageChannel = createSingleThreadMessageChannel();
+
+    domUIController.registerMessagePort(domRendererMessageChannel.port1);
 
     // prettier-ignore
     createScenes(
