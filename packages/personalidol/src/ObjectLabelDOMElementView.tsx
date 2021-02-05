@@ -32,17 +32,17 @@ const _css = `
     justify-content: center;
     left: 0;
     line-height: 0.5rem;
-    opacity: var(--label-opacity);
+    opacity: var(--opacity);
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     position: absolute;
     top: 0;
     transform:
       translate(-50%, -100%)
-      translate(var(--label-translate-x), var(--label-translate-y))
+      translate(var(--translate-x), var(--translate-y))
     ;
     will-change: transform, z-index;
-    z-index: var(--label-z-index);
+    z-index: var(--z-index);
   }
 `;
 
@@ -87,10 +87,10 @@ export class ObjectLabelDOMElementView extends DOMElementView {
       <div
         id="label"
         style={{
-          "--label-translate-x": `${this.rendererState.translateX}px`,
-          "--label-translate-y": `${this.rendererState.translateY}px`,
-          "--label-opacity": this._opacity.current,
-          "--label-z-index": this.rendererState.zIndex,
+          "--translate-x": `${this.rendererState.translateX}px`,
+          "--translate-y": `${this.rendererState.translateY}px`,
+          "--opacity": this._opacity.current,
+          "--z-index": this.rendererState.zIndex,
         }}
       >
         {this.objectProps.label}

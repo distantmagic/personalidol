@@ -9,6 +9,7 @@ import type { ReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
 
 export interface DOMElementView extends DOMUpdatesProps, HTMLElement, MainLoopUpdatable {
   domMessagePort: null | MessagePort;
+  inputState: Int32Array;
   props: DOMElementProps;
   propsLastUpdate: number;
   styleSheet: null | ReplaceableStyleSheet;

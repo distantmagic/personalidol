@@ -1,6 +1,8 @@
 import { render } from "preact";
 // import { MathUtils } from "three/src/math/MathUtils";
 
+import { Input } from "@personalidol/framework/src/Input";
+
 import type { VNode } from "preact";
 
 // import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
@@ -10,7 +12,10 @@ import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementView as IDOMElementView } from "./DOMElementView.interface";
 import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
 
+let _inputStatePlaceholder: null | Int32Array = null;
+
 export abstract class DOMElementView extends HTMLElement implements IDOMElementView {
+  public inputState: Int32Array;
   public domMessagePort: null | MessagePort = null;
   public props: DOMElementProps = {};
   public propsLastUpdate: number = 0;
@@ -23,9 +28,14 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
   constructor() {
     super();
 
+    if (!_inputStatePlaceholder) {
+      _inputStatePlaceholder = Input.createEmptyState(false);
+    }
+
     this.render = this.render.bind(this);
     this.updateProps = this.updateProps.bind(this);
 
+    this.inputState = _inputStatePlaceholder;
     this.shadow = this.attachShadow({
       mode: "open",
     });

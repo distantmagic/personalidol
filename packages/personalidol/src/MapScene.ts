@@ -125,6 +125,7 @@ export function MapScene(
     isPreloading: false,
   });
 
+  const _domMousePointerLayerElementId: string = MathUtils.generateUUID();
   const _domInGameMenuTriggerElementId: string = MathUtils.generateUUID();
   let _cameraSkipDamping: boolean = true;
 
@@ -222,6 +223,20 @@ export function MapScene(
     effectComposer.addPass(renderPass);
     _unmountables.add(unmountPass(effectComposer, renderPass));
     _disposables.add(disposableGeneric(renderPass));
+
+    domMessagePort.postMessage({
+      render: <MessageDOMUIRender>{
+        id: _domMousePointerLayerElementId,
+        element: "pi-mouse-pointer-layer",
+        props: {},
+      },
+    });
+
+    _unmountables.add(function () {
+      domMessagePort.postMessage({
+        dispose: <MessageDOMUIDispose>[_domMousePointerLayerElementId],
+      });
+    });
 
     domMessagePort.postMessage({
       render: <MessageDOMUIRender>{

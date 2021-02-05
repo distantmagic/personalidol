@@ -14,9 +14,24 @@ const _css = `
   }
 
   #ingame-menu-trigger {
-    bottom: 1.6rem;
-    left: 1.6rem;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    background-image: url('${__ASSETS_BASE_PATH}/website/icon-cogs.png?${__CACHE_BUST}');
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    color: transparent;
+    cursor: pointer;
+    height: 40px;
+    outline: none;
     position: absolute;
+    right: 1.6rem;
+    top: 1.6rem;
+    width: 64px;
+  }
+
+  #ingame-menu-trigger:pressed {
+    color: transparent;
   }
 `;
 
@@ -40,10 +55,6 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView {
   }
 
   render() {
-    return (
-      <button id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick}>
-        Menu
-      </button>
-    );
+    return <button id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick} />;
   }
 }

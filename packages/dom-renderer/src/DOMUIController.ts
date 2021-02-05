@@ -41,6 +41,7 @@ async function _defineCustomElement(logger: Logger, name: string, element: typeo
 
 export function DOMUIController(
   logger: Logger,
+  inputState: Int32Array,
   tickTimerState: TickTimerState,
   uiMessagePort: MessagePort,
   uiRootElement: HTMLElement,
@@ -71,6 +72,7 @@ export function DOMUIController(
       logger,
       message.id,
       message.element,
+      inputState,
       uiRootElement,
       domElementView,
       tickTimerState,

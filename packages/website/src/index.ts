@@ -146,7 +146,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const uiMessageChannel = createMultiThreadMessageChannel();
-  const domUIController = DOMUIController(logger, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, {
+  const domUIController = DOMUIController(logger, inputState, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, {
     ...domElementsLookup,
     ...personalidolDOMElementsLookup,
   });

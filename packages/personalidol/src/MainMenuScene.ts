@@ -25,14 +25,14 @@ const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
 
   // {
   //   family: "Almendra",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-bold.ttf`,
+  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-bold.ttf?${__CACHE_BUST}`,
   //   descriptors: {
   //     weight: "700",
   //   }
   // },
   // {
   //   family: "Almendra",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-bolditalic.ttf`,
+  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-bolditalic.ttf?${__CACHE_BUST}`,
   //   descriptors: {
   //     weight: "700",
   //     style: "italic",
@@ -40,7 +40,7 @@ const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // },
   // {
   //   family: "Almendra",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-italic.ttf`,
+  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-italic.ttf?${__CACHE_BUST}`,
   //   descriptors: {
   //     weight: "400",
   //     style: "italic",
@@ -48,7 +48,7 @@ const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // },
   {
     family: "Almendra",
-    source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-regular.ttf`,
+    source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-regular.ttf?${__CACHE_BUST}`,
     descriptors: {
       weight: "400",
     },
@@ -58,42 +58,42 @@ const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
 
   // {
   //   family: "Mukta",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-extrabold.ttf`,
+  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-extrabold.ttf?${__CACHE_BUST}`,
   //   descriptors: {
   //     weight: "800",
   //   }
   // },
   // {
   //   family: "Mukta",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-extralight.ttf`,
+  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-extralight.ttf?${__CACHE_BUST}`,
   //   descriptors: {
   //     weight: "200",
   //   }
   // },
   {
     family: "Mukta",
-    source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-light.ttf`,
+    source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-light.ttf?${__CACHE_BUST}`,
     descriptors: {
       weight: "300",
     },
   },
   {
     family: "Mukta",
-    source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-medium.ttf`,
+    source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-medium.ttf?${__CACHE_BUST}`,
     descriptors: {
       weight: "500",
     },
   },
   // {
   //   family: "Mukta",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-regular.ttf`,
+  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-regular.ttf?${__CACHE_BUST}`,
   //   descriptors: {
   //     weight: "400",
   //   },
   // },
   // {
   //   family: "Mukta",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-semibold.ttf`,
+  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-semibold.ttf?${__CACHE_BUST}`,
   //   descriptors: {
   //     weight: "800",
   //   }

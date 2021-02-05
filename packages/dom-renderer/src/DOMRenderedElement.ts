@@ -17,6 +17,7 @@ export function DOMRenderedElement(
   logger: Logger,
   id: string,
   element: string,
+  inputState: Int32Array,
   uiRootElement: HTMLElement,
   domElementView: DOMElementView,
   tickTimerState: TickTimerState,
@@ -54,6 +55,7 @@ export function DOMRenderedElement(
     state.isPreloading = true;
 
     domElementView.domMessagePort = domMessagePort;
+    domElementView.inputState = inputState;
     domElementView.uiMessagePort = uiMessagePort;
 
     state.isPreloading = false;

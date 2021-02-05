@@ -5,7 +5,7 @@
   "display": "standalone",
   "name": "Personal Idol",
   "orientation": "any",
-  "scope": "/",
-  "start_url": "/",
+  "scope": "/g/personalidol/",
+  "start_url": "/g/personalidol/index.html",
   "theme_color": "#000000"
 }
