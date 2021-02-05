@@ -3,6 +3,8 @@ import { Group } from "three/src/objects/Group";
 import { MathUtils } from "three/src/math/MathUtils";
 import { PointLight } from "three/src/lights/PointLight";
 
+import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+
 import { useLightShadowUserSettings } from "./useLightShadowUserSettings";
 import { useObject3DUserSettings } from "./useObject3DUserSettings";
 
@@ -48,6 +50,8 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
 
   function dispose(): void {
     state.isDisposed = true;
+
+    disposeWebGLRenderTarget(_pointLight.shadow.map);
   }
 
   function mount(): void {

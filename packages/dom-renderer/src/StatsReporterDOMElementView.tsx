@@ -30,7 +30,7 @@ const _css = `
     grid-gap: 0.5ch;
     line-height: 1;
     left: 0;
-    padding: 1ch;
+    padding: 1.6rem;
     position: absolute;
     top: 0;
   }

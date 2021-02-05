@@ -43,6 +43,8 @@ import type { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRender
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
+import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
@@ -123,6 +125,7 @@ export function MapScene(
     isPreloading: false,
   });
 
+  const _domInGameMenuTriggerElementId: string = MathUtils.generateUUID();
   let _cameraSkipDamping: boolean = true;
 
   _camera.position.set(100, 100, 100);
@@ -219,6 +222,20 @@ export function MapScene(
     effectComposer.addPass(renderPass);
     _unmountables.add(unmountPass(effectComposer, renderPass));
     _disposables.add(disposableGeneric(renderPass));
+
+    domMessagePort.postMessage({
+      render: <MessageDOMUIRender>{
+        id: _domInGameMenuTriggerElementId,
+        element: "pi-ingame-menu-trigger",
+        props: {},
+      },
+    });
+
+    _unmountables.add(function () {
+      domMessagePort.postMessage({
+        dispose: <MessageDOMUIDispose>[_domInGameMenuTriggerElementId],
+      });
+    });
 
     _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
   }

@@ -3,6 +3,8 @@ import { Group } from "three/src/objects/Group";
 import { MathUtils } from "three/src/math/MathUtils";
 import { SpotLight } from "three/src/lights/SpotLight";
 
+import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+
 import { useLightShadowUserSettings } from "./useLightShadowUserSettings";
 import { useObject3DUserSettings } from "./useObject3DUserSettings";
 
@@ -34,6 +36,7 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
   function _applyUserSettings(): void {
     useObject3DUserSettings(userSettings, _spotLight);
     useLightShadowUserSettings(userSettings, _spotLight.shadow);
+
     _spotLight.visible = userSettings.useDynamicLighting;
 
     if (userSettings.useDynamicLighting && !_groupHasLight) {
@@ -60,7 +63,9 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
   }
 
   function dispose(): void {
-    state.isDisposed = false;
+    state.isDisposed = true;
+
+    disposeWebGLRenderTarget(_spotLight.shadow.map);
   }
 
   function mount(): void {
