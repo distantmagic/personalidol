@@ -5,7 +5,6 @@ export type WebGLRendererStatsReport = StatsReport & {
   memoryTextures: number;
   programs: number;
   renderCalls: number;
-  renderFrame: number;
   renderLines: number;
   renderPoints: number;
   renderTriangles: number;

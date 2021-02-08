@@ -10,6 +10,7 @@ import { isPrimaryTouchPressed } from "./isPrimaryTouchPressed";
 
 import type { StatsHook } from "./StatsHook.interface";
 import type { StatsReport } from "./StatsReport.type";
+import type { TickTimerState } from "./TickTimerState.type";
 
 const DEBUG_NAME: "input" = "input";
 
@@ -19,6 +20,7 @@ export function InputStatsHook(inputState: Int32Array): StatsHook {
     isPrimaryMouseButtonPressed: false,
     isPrimaryPointerInitiatedByRootElement: false,
     isPrimaryTouchPressed: false,
+    lastUpdate: 0,
     primaryPointerClientX: 0,
     primaryPointerClientY: 0,
     primaryPointerStretchVectorX: 0,
@@ -27,10 +29,11 @@ export function InputStatsHook(inputState: Int32Array): StatsHook {
 
   function reset(): void {}
 
-  function update(delta: number): void {
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     statsReport.isPrimaryMouseButtonPressed = isPrimaryMouseButtonPressed(inputState);
     statsReport.isPrimaryPointerInitiatedByRootElement = isPrimaryPointerInitiatedByRootElement(inputState);
     statsReport.isPrimaryTouchPressed = isPrimaryTouchPressed(inputState);
+    statsReport.lastUpdate = tickTimerState.currentTick;
     statsReport.primaryPointerClientX = getPrimaryPointerClientX(inputState);
     statsReport.primaryPointerClientY = getPrimaryPointerClientY(inputState);
     statsReport.primaryPointerStretchVectorX = getPrimaryPointerStretchVectorX(inputState);

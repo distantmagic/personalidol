@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import type { MainLoopStatsHook as IMainLoopStatsHook } from "./MainLoopStatsHook.interface";
 import type { MainLoopStatsReport } from "./MainLoopStatsReport.type";
+import type { TickTimerState } from "./TickTimerState.type";
 
 const DEBUG_NAME: "main_loop" = "main_loop";
 
@@ -11,6 +12,7 @@ export function MainLoopStatsHook(): IMainLoopStatsHook {
     currentIntervalDuration: 0,
     currentIntervalTicks: 0,
     debugName: DEBUG_NAME,
+    lastUpdate: 0,
   };
 
   function reset(): void {
@@ -19,9 +21,10 @@ export function MainLoopStatsHook(): IMainLoopStatsHook {
     statsReport.currentIntervalTicks = 0;
   }
 
-  function update(delta: number): void {
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     statsReport.currentIntervalDuration += delta;
     statsReport.currentIntervalTicks += 1;
+    statsReport.lastUpdate = tickTimerState.currentTick;
   }
 
   return Object.freeze({

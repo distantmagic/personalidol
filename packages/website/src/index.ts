@@ -168,7 +168,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // Stats collector reports debug stats like FPS, memory usage, etc.
 
   const statsMessageChannel = createMultiThreadMessageChannel();
-  const statsToDOMRendererMessageChannel = createMultiThreadMessageChannel();
+  const statsToDOMRendererMessageChannel = createSingleThreadMessageChannel();
   const statsCollector = StatsCollector(statsToDOMRendererMessageChannel.port2);
 
   domUIController.registerMessagePort(statsToDOMRendererMessageChannel.port1);

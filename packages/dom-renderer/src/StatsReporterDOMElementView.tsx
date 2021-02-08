@@ -39,7 +39,7 @@ const _css = `
 
 function* _flattenStatsReport(statsReport: StatsReport, prefix: string = ""): Generator<FlattenedStatsReport> {
   for (let [key, value] of Object.entries(statsReport)) {
-    if ("debugName" === key) {
+    if ("debugName" === key || "lastUpdate" === key) {
       continue;
     }
 

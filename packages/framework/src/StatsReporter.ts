@@ -3,6 +3,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 import type { StatsHook } from "./StatsHook.interface";
 import type { StatsReport } from "./StatsReport.type";
 import type { StatsReporter as IStatsReporter } from "./StatsReporter.interface";
+import type { TickTimerState } from "./TickTimerState.type";
 
 type HooksStatuses = WeakMap<StatsHook, ReportStatus>;
 
@@ -36,17 +37,18 @@ export function StatsReporter(debugName: string, statsMessagePort: MessagePort):
   const _hooksStatuses: HooksStatuses = new WeakMap();
   const _statsReport: StatsReport = {
     debugName: debugName,
-    reportIntervalSeconds: 0,
+    lastUpdate: 0,
   };
 
   function start() {}
 
   function stop() {}
 
-  function update(delta: number, elapsedTime: number) {
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
     for (let hook of hooks) {
       if (_shouldReport(_hooksStatuses, hook, elapsedTime)) {
         _statsReport[hook.statsReport.debugName] = Object.assign({}, hook.statsReport);
+        _statsReport.lastUpdate = tickTimerState.currentTick;
         hook.reset();
       }
     }
