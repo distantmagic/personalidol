@@ -5,6 +5,7 @@ import { createMultiThreadMessageChannel } from "@personalidol/framework/src/cre
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
+import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 import { domElementsLookup as personalidolDOMElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
 import { domElementsLookup } from "@personalidol/dom-renderer/src/domElementsLookup";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
@@ -14,6 +15,7 @@ import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadSe
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
 import { Input } from "@personalidol/framework/src/Input";
+import { InputIndices } from "@personalidol/framework/src/InputIndices.enum";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
@@ -387,8 +389,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
         return WorkerService(offscreenWorker, workers.offscreen.name, function () {
           // prettier-ignore
-          if ( _lastNotificationTick < dimensionsState[Dimensions.code.LAST_UPDATE]
-            || _lastNotificationTick < inputState[Input.code.LAST_UPDATE]
+          if ( _lastNotificationTick < dimensionsState[DimensionsIndices.LAST_UPDATE]
+            || _lastNotificationTick < inputState[InputIndices.LAST_UPDATE]
           ) {
             offscreenWorker.postMessage(updateMessage);
             _lastNotificationTick = mainLoop.tickTimerState.currentTick;

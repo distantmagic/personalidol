@@ -1,30 +1,16 @@
-import type { TypedArrayMap } from "./TypedArrayMap.type";
+import { DimensionsIndices } from "./DimensionsIndices.enum";
 
-let index = 0;
-
-const code: TypedArrayMap = {};
-
-code["LAST_UPDATE"] = index++;
-code["D_HEIGHT"] = index++;
-code["D_WIDTH"] = index++;
-code["P_BOTTOM"] = index++;
-code["P_LEFT"] = index++;
-code["P_RIGHT"] = index++;
-code["P_TOP"] = index++;
+const UINT32_BYTES: 4 = 4;
 
 function createEmptyState(usesSharedBuffer: boolean): Uint32Array {
-  const itemsLength = Object.keys(code).length;
-
   if (usesSharedBuffer) {
     // Uint32Array takes 4 bytes per value.
-    return new Uint32Array(new SharedArrayBuffer(itemsLength * 4));
+    return new Uint32Array(new SharedArrayBuffer(DimensionsIndices.__TOTAL * UINT32_BYTES));
   }
 
-  return new Uint32Array(itemsLength);
+  return new Uint32Array(DimensionsIndices.__TOTAL);
 }
 
 export const Dimensions = Object.freeze({
-  code: Object.freeze(code),
-
   createEmptyState: createEmptyState,
 });

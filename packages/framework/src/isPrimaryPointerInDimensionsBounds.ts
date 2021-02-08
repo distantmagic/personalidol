@@ -1,6 +1,6 @@
 import { isMousePointerInDimensionsBounds } from "./isMousePointerInDimensionsBounds";
-import { isPromaryTouchInDimensionsBounds } from "./isPromaryTouchInDimensionsBounds";
+import { isPrimaryTouchInDimensionsBounds } from "./isPrimaryTouchInDimensionsBounds";
 
 export function isPrimaryPointerInDimensionsBounds(dimensionsState: Uint32Array, inputState: Int32Array): boolean {
-  return isPromaryTouchInDimensionsBounds(dimensionsState, inputState) || isMousePointerInDimensionsBounds(dimensionsState, inputState);
+  return isPrimaryTouchInDimensionsBounds(dimensionsState, inputState) || isMousePointerInDimensionsBounds(dimensionsState, inputState);
 }

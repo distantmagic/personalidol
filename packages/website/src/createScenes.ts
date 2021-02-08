@@ -51,7 +51,7 @@ export function createScenes(
 
   const userSettings: UserSettings = {
     lastUpdate: 0,
-    shadowMapSize: 512,
+    shadowMapSize: 4096,
     useDynamicLighting: true,
     useShadows: true,
   };

@@ -1,5 +1,5 @@
-import { Input } from "./Input";
+import { InputIndices } from "./InputIndices.enum";
 
 export function isMousePointerInDimensionsBounds(dimensionsState: Uint32Array, inputState: Int32Array): boolean {
-  return inputState[Input.code.M_IN_BOUNDS] > 0;
+  return inputState[InputIndices.M_IN_BOUNDS] > 0;
 }

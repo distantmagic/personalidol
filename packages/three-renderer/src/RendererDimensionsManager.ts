@@ -1,6 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { Dimensions } from "@personalidol/framework/src/Dimensions";
+import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 
 import type { ResizeableRenderer } from "@personalidol/three-modules/src/ResizeableRenderer.interface";
 
@@ -18,7 +18,7 @@ export function RendererDimensionsManager(dimensionsState: Uint32Array): IRender
   let _renderersLastUpdate: number = 0;
 
   function _updateRendererDimensions(renderer: ResizeableRenderer) {
-    renderer.setSize(dimensionsState[Dimensions.code.D_WIDTH], dimensionsState[Dimensions.code.D_HEIGHT]);
+    renderer.setSize(dimensionsState[DimensionsIndices.D_WIDTH], dimensionsState[DimensionsIndices.D_HEIGHT]);
   }
 
   function start(): void {
@@ -42,11 +42,11 @@ export function RendererDimensionsManager(dimensionsState: Uint32Array): IRender
       return;
     }
 
-    _dimensionsLastUpdate = dimensionsState[Dimensions.code.LAST_UPDATE];
+    _dimensionsLastUpdate = dimensionsState[DimensionsIndices.LAST_UPDATE];
 
     if (_dimensionsLastUpdate > _renderersLastUpdate) {
       state.renderers.forEach(_updateRendererDimensions);
-      _renderersLastUpdate = dimensionsState[Dimensions.code.LAST_UPDATE];
+      _renderersLastUpdate = dimensionsState[DimensionsIndices.LAST_UPDATE];
     }
   }
 

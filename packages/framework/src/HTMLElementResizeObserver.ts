@@ -2,7 +2,7 @@
 
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { Dimensions } from "./Dimensions";
+import { DimensionsIndices } from "./DimensionsIndices.enum";
 
 import type { HTMLElementResizeObserver as IHTMLElementResizeObserver } from "./HTMLElementResizeObserver.interface";
 import type { TickTimerState } from "./TickTimerState.type";
@@ -30,14 +30,14 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
     // when element uses vh / wv units
     const { bottom, left, right, top } = htmlElement.getBoundingClientRect();
 
-    dimensionsState[Dimensions.code.P_BOTTOM] = bottom;
-    dimensionsState[Dimensions.code.P_LEFT] = left;
-    dimensionsState[Dimensions.code.P_RIGHT] = right;
-    dimensionsState[Dimensions.code.P_TOP] = top;
-    dimensionsState[Dimensions.code.D_HEIGHT] = bottom - top;
-    dimensionsState[Dimensions.code.D_WIDTH] = right - left;
+    dimensionsState[DimensionsIndices.P_BOTTOM] = bottom;
+    dimensionsState[DimensionsIndices.P_LEFT] = left;
+    dimensionsState[DimensionsIndices.P_RIGHT] = right;
+    dimensionsState[DimensionsIndices.P_TOP] = top;
+    dimensionsState[DimensionsIndices.D_HEIGHT] = bottom - top;
+    dimensionsState[DimensionsIndices.D_WIDTH] = right - left;
 
-    dimensionsState[Dimensions.code.LAST_UPDATE] = tickTimerState.currentTick;
+    dimensionsState[DimensionsIndices.LAST_UPDATE] = tickTimerState.currentTick;
 
     _needsUpdating = false;
   }

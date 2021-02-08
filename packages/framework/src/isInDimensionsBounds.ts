@@ -1,10 +1,10 @@
-import { Dimensions } from "./Dimensions";
+import { DimensionsIndices } from "./DimensionsIndices.enum";
 
 export function isInDimensionsBounds(dimensionsState: Uint32Array, clientX: number, clientY: number): boolean {
   // prettier-ignore
-  return clientX > dimensionsState[Dimensions.code.P_LEFT]
-    && clientY > dimensionsState[Dimensions.code.P_TOP]
-    && clientX < dimensionsState[Dimensions.code.P_RIGHT]
-    && clientY < dimensionsState[Dimensions.code.P_BOTTOM]
+  return clientX > dimensionsState[DimensionsIndices.P_LEFT]
+    && clientY > dimensionsState[DimensionsIndices.P_TOP]
+    && clientX < dimensionsState[DimensionsIndices.P_RIGHT]
+    && clientY < dimensionsState[DimensionsIndices.P_BOTTOM]
   ;
 }

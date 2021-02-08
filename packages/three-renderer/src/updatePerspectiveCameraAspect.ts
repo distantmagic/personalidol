@@ -1,9 +1,9 @@
-import { Dimensions } from "@personalidol/framework/src/Dimensions";
+import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 
 import type { PerspectiveCamera } from "three";
 
 export function updatePerspectiveCameraAspect(camera: PerspectiveCamera, dimensionsState: Uint32Array): void {
-  const aspect = dimensionsState[Dimensions.code.D_WIDTH] / dimensionsState[Dimensions.code.D_HEIGHT];
+  const aspect = dimensionsState[DimensionsIndices.D_WIDTH] / dimensionsState[DimensionsIndices.D_HEIGHT];
 
   if (camera.aspect === aspect) {
     return;
