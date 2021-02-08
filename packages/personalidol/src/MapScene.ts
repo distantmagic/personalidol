@@ -48,7 +48,6 @@ import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageD
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
-import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
@@ -66,6 +65,7 @@ import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
+import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 const CAMERA_DAMP = 10;
@@ -116,8 +116,9 @@ export function MapScene(
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
+  mapName: string,
   mapFilename: string
-): IScene {
+): IMapScene {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -345,7 +346,9 @@ export function MapScene(
   }
 
   return Object.freeze({
+    currentMap: mapName,
     id: MathUtils.generateUUID(),
+    isMapScene: true,
     isScene: true,
     isView: false,
     name: `Map(${mapFilename})`,

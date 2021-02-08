@@ -17,8 +17,9 @@ import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageD
 import type { MessageFontPreload } from "@personalidol/dom-renderer/src/MessageFontPreload.type";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
-import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
+
+import type { MainMenuScene as IMainMenuScene } from "./MainMenuScene.interface";
 
 const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // Almendra
@@ -108,7 +109,7 @@ const _fontMessageRouter = createRouter({
   preloadedFont: handleRPCResponse(_rpcLookupTable),
 });
 
-export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontPreloadMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
+export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontPreloadMessagePort: MessagePort, progressMessagePort: MessagePort): IMainMenuScene {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -184,6 +185,7 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMainMenuScene: true,
     isScene: true,
     isView: false,
     name: `MainMenu`,

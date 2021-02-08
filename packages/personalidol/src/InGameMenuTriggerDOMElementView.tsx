@@ -48,7 +48,7 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView {
   render() {
     return (
       <button id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick}>
-        settings
+        menu
       </button>
     );
   }

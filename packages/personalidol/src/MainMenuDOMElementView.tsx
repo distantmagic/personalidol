@@ -129,7 +129,7 @@ export class MainMenuDOMElementView extends DOMElementView {
     evt.preventDefault();
 
     must(this.uiMessagePort).postMessage({
-      navigateToMap: "map-gates",
+      currentMap: "map-gates",
     });
   }
 

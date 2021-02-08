@@ -5,10 +5,9 @@ import { CSS2DRendererStatsHook } from "@personalidol/three-renderer/src/CSS2DRe
 import { Director } from "@personalidol/loading-manager/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
-import { MainMenuScene } from "@personalidol/personalidol/src/MainMenuScene";
 import { RendererDimensionsManager } from "@personalidol/three-renderer/src/RendererDimensionsManager";
 import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
-import { UIMessageResponder } from "@personalidol/personalidol/src/UIMessageResponder";
+import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
 import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
@@ -19,6 +18,7 @@ import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 import type { StatsReporter } from "@personalidol/framework/src/StatsReporter.interface";
+import type { UIState } from "@personalidol/personalidol/src/UIState.type";
 import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
 
 export function createScenes(
@@ -78,7 +78,11 @@ export function createScenes(
   const sceneTransition = SceneTransition(logger, currentSceneDirector.state, loadingSceneDirector.state);
   const viewBagSceneObserver = ViewBagSceneObserver(currentSceneDirector.state);
 
-  const uiMessageResponder = UIMessageResponder(
+  const uiState: UIState = {
+    currentMap: null,
+  };
+
+  const uiStateController = UIStateController(
     logger,
     userSettings,
     effectComposer,
@@ -88,19 +92,13 @@ export function createScenes(
     dimensionsState,
     inputState,
     domMessagePort,
+    fontPreloadMessagePort,
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
     texturesMessagePort,
-    uiMessagePort
-  );
-
-  // prettier-ignore
-  currentSceneDirector.state.next = MainMenuScene(
-    logger,
-    domMessagePort,
-    fontPreloadMessagePort,
-    progressMessagePort,
+    uiMessagePort,
+    uiState
   );
 
   // prettier-ignore
@@ -113,7 +111,7 @@ export function createScenes(
 
   serviceManager.services.add(viewBagSceneObserver);
   serviceManager.services.add(currentSceneDirector);
-  serviceManager.services.add(uiMessageResponder);
+  serviceManager.services.add(uiStateController);
   serviceManager.services.add(loadingSceneDirector);
   serviceManager.services.add(webGLRendererUserSettingsManager);
   serviceManager.services.add(rendererDimensionsManager);
@@ -123,7 +121,7 @@ export function createScenes(
   mainLoop.updatables.add(viewBagSceneObserver);
   mainLoop.updatables.add(currentSceneDirector);
   mainLoop.updatables.add(loadingSceneDirector);
-  mainLoop.updatables.add(uiMessageResponder);
+  mainLoop.updatables.add(uiStateController);
   mainLoop.updatables.add(sceneTransition);
   mainLoop.updatables.add(webGLRendererUserSettingsManager);
   mainLoop.updatables.add(rendererDimensionsManager);
