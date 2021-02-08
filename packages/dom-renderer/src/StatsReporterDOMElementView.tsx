@@ -11,11 +11,12 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { DOMElementProps } from "./DOMElementProps.type";
 import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
 
-type FlattenedStatsReport = [string, number | string];
+type FlattenedStatsReport = [string, boolean | number | string];
 
 const _css = `
   :host {
     all: initial;
+    pointer-events: none;
   }
 
   *, * * {
@@ -80,7 +81,7 @@ export class StatsReporterDOMElementView extends DOMElementView implements IStat
   renderStatsReportFlattened([key, value]: FlattenedStatsReport) {
     return (
       <div key={key}>
-        {key}: {value}
+        {key}: {String(value)}
       </div>
     );
   }

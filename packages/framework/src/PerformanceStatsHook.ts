@@ -32,6 +32,7 @@ export function PerformanceStatsHook(): StatsHook {
     isStatsHook: true,
     name: `PerformanceStatsHook("${DEBUG_NAME}")`,
     statsReport: statsReport,
+    statsReportIntervalSeconds: 1,
 
     reset: reset,
     update: update,

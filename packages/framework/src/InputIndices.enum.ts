@@ -12,6 +12,8 @@ export const enum InputIndices {
   M_DOWN_INITIAL_CLIENT_X,
   M_DOWN_INITIAL_CLIENT_Y,
   M_IN_BOUNDS,
+  M_INITIATED_BY_ROOT_ELEMENT,
+  M_LAST_USED,
   M_RELATIVE_X,
   M_RELATIVE_Y,
   M_STRETCH_VECTOR_X,
@@ -20,6 +22,8 @@ export const enum InputIndices {
   M_VECTOR_Y,
 
   // Total active touch points
+  T_INITIATED_BY_ROOT_ELEMENT,
+  T_LAST_USED,
   T_TOTAL,
 
   // Touch point 1

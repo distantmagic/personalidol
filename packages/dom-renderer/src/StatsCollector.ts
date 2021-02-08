@@ -7,8 +7,6 @@ import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 import type { StatsCollector as IStatsCollector } from "./StatsCollector.interface";
 
-const INTERVAL_S: number = 1;
-
 type StatsHooksReports = {
   [key: string]: StatsReport;
 };
@@ -22,24 +20,6 @@ export function StatsCollector(domMessagePort: MessagePort): IStatsCollector {
     },
   });
 
-  let _currentIntervalDuration: number = 0;
-
-  function _reportInterval() {
-    domMessagePort.postMessage({
-      render: <MessageDOMUIRender>{
-        id: _domStatsReporterElementId,
-        element: "pi-stats-reporter",
-        props: {
-          statsReports: Object.values(_statsReports),
-        },
-      },
-    });
-  }
-
-  function _resetInterval() {
-    _currentIntervalDuration = 0;
-  }
-
   function registerMessagePort(messagePort: MessagePort) {
     messagePort.onmessage = _statsRouter;
   }
@@ -49,12 +29,15 @@ export function StatsCollector(domMessagePort: MessagePort): IStatsCollector {
   function stop() {}
 
   function update(delta: number) {
-    _currentIntervalDuration += delta;
-
-    if (_currentIntervalDuration >= INTERVAL_S) {
-      _reportInterval();
-      _resetInterval();
-    }
+    domMessagePort.postMessage({
+      render: <MessageDOMUIRender>{
+        id: _domStatsReporterElementId,
+        element: "pi-stats-reporter",
+        props: {
+          statsReports: Object.values(_statsReports),
+        },
+      },
+    });
   }
 
   return Object.freeze({

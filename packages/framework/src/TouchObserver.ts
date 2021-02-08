@@ -16,14 +16,14 @@ import type { TouchObserver as ITouchObserver } from "./TouchObserver.interface"
 export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, inputState: Int32Array, tickTimerState: TickTimerState): ITouchObserver {
   function start(): void {
     htmlElement.addEventListener("touchcancel", _onTouchChange, passiveEventListener);
-    htmlElement.addEventListener("touchend", _onTouchChange, passiveEventListener);
+    htmlElement.addEventListener("touchend", _onTouchEnd, passiveEventListener);
     htmlElement.addEventListener("touchmove", _onTouchChange, passiveEventListener);
     htmlElement.addEventListener("touchstart", _onTouchStart, passiveEventListener);
   }
 
   function stop(): void {
     htmlElement.removeEventListener("touchcancel", _onTouchChange);
-    htmlElement.removeEventListener("touchend", _onTouchChange);
+    htmlElement.removeEventListener("touchend", _onTouchEnd);
     htmlElement.removeEventListener("touchmove", _onTouchChange);
     htmlElement.removeEventListener("touchstart", _onTouchStart);
   }
@@ -35,6 +35,7 @@ export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
   }
 
   function _onTouchChange(evt: TouchEvent): void {
+    inputState[InputIndices.T_LAST_USED] = tickTimerState.currentTick;
     inputState[InputIndices.T_TOTAL] = evt.touches.length;
 
     for (let i = 0; i < evt.touches.length && i < Input.range.touches_total; i += 1) {
@@ -56,7 +57,15 @@ export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
     _updateDimensionsRelativeCoords();
   }
 
+  function _onTouchEnd(evt: TouchEvent): void {
+    inputState[InputIndices.T_INITIATED_BY_ROOT_ELEMENT] = 0;
+
+    _onTouchChange(evt);
+  }
+
   function _onTouchStart(evt: TouchEvent): void {
+    inputState[InputIndices.T_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
+
     for (let i = 0; i < evt.touches.length && i < Input.range.touches_total; i += 1) {
       inputState[Input.touches[i].DOWN_INITIAL_CLIENT_X] = evt.touches[i].clientX;
       inputState[Input.touches[i].DOWN_INITIAL_CLIENT_Y] = evt.touches[i].clientY;
@@ -79,6 +88,7 @@ export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isTouchObserver: true,
     name: "TouchObserver",
 
     start: start,

@@ -4,8 +4,6 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 // import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
-import { preloadedContent } from "./preloadedContent";
-
 const _css = `
   :host {
     all: initial;
@@ -17,19 +15,10 @@ const _css = `
 
   #ingame-menu-trigger {
     -webkit-tap-highlight-color: transparent;
-    background-color: transparent;
-    background-image: url('${preloadedContent["assets_website_icon-cogs"]}');
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
-    color: transparent;
     cursor: pointer;
-    height: 40px;
-    outline: none;
     position: absolute;
     right: 1.6rem;
     top: 1.6rem;
-    width: 64px;
   }
 
   #ingame-menu-trigger:pressed {
@@ -57,6 +46,10 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView {
   }
 
   render() {
-    return <button id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick} />;
+    return (
+      <button id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick}>
+        settings
+      </button>
+    );
   }
 }

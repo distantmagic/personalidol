@@ -16,9 +16,11 @@ import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementBy
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
 import { Input } from "@personalidol/framework/src/Input";
 import { InputIndices } from "@personalidol/framework/src/InputIndices.enum";
+import { InputStatsHook } from "@personalidol/framework/src/InputStatsHook";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
+import { KeyboardObserver } from "@personalidol/framework/src/KeyboardObserver";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
@@ -64,14 +66,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const useSharedBuffers = await isSharedArrayBufferSupported(supportCache);
   const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
   const inputState = Input.createEmptyState(useSharedBuffers);
+  const inputStatsHook = InputStatsHook(inputState);
 
   const eventBus = EventBus();
-  const statsMessageChanngel = createMultiThreadMessageChannel();
+  const statsReporterMessageChannel = createSingleThreadMessageChannel();
 
   const mainLoopStatsHook = MainLoopStatsHook();
   const mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
-  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsMessageChanngel.port2);
+  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsReporterMessageChannel.port2);
 
+  statsReporter.hooks.add(inputStatsHook);
   statsReporter.hooks.add(mainLoopStatsHook);
 
   // This is an unofficial Chrome JS extension so it's not typed by default.
@@ -84,11 +88,14 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
+  const keyboardObserver = KeyboardObserver(canvas, inputState, mainLoop.tickTimerState);
   const mouseObserver = MouseObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
-  const serviceManager = ServiceManager(logger);
   const touchObserver = TouchObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
 
+  const serviceManager = ServiceManager(logger);
+
   serviceManager.services.add(htmlElementResizeObserver);
+  serviceManager.services.add(keyboardObserver);
   serviceManager.services.add(mouseObserver);
   serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
   serviceManager.services.add(touchObserver);
@@ -96,8 +103,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(statsReporter);
 
   mainLoop.updatables.add(htmlElementResizeObserver);
+  mainLoop.updatables.add(keyboardObserver);
   mainLoop.updatables.add(mouseObserver);
   mainLoop.updatables.add(touchObserver);
+  mainLoop.updatables.add(inputStatsHook);
   mainLoop.updatables.add(statsReporter);
   mainLoop.updatables.add(serviceManager);
 
@@ -163,7 +172,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const statsCollector = StatsCollector(statsToDOMRendererMessageChannel.port2);
 
   domUIController.registerMessagePort(statsToDOMRendererMessageChannel.port1);
-  statsCollector.registerMessagePort(statsMessageChanngel.port1);
+  statsCollector.registerMessagePort(statsReporterMessageChannel.port1);
   statsCollector.registerMessagePort(statsMessageChannel.port1);
 
   serviceManager.services.add(statsCollector);

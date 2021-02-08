@@ -17,13 +17,13 @@ export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
   function start(): void {
     document.addEventListener("mousedown", _onMouseDown, passiveEventListener);
     document.addEventListener("mousemove", _onMouseChange, passiveEventListener);
-    document.addEventListener("mouseup", _onMouseChange, passiveEventListener);
+    document.addEventListener("mouseup", _onMouseUp, passiveEventListener);
   }
 
   function stop(): void {
     document.removeEventListener("mousedown", _onMouseDown);
     document.removeEventListener("mousemove", _onMouseChange);
-    document.removeEventListener("mouseup", _onMouseChange);
+    document.removeEventListener("mouseup", _onMouseUp);
   }
 
   function update(): void {
@@ -33,6 +33,7 @@ export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
   }
 
   function _onMouseChange(evt: MouseEvent): void {
+    inputState[InputIndices.M_LAST_USED] = tickTimerState.currentTick;
     inputState[InputIndices.M_BUTTON_L] = evt.buttons & MouseButtons.Primary;
     inputState[InputIndices.M_BUTTON_R] = evt.buttons & MouseButtons.Secondary;
     inputState[InputIndices.M_BUTTON_M] = evt.buttons & MouseButtons.Middle;
@@ -60,8 +61,15 @@ export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
   }
 
   function _onMouseDown(evt: MouseEvent): void {
+    inputState[InputIndices.M_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
     inputState[InputIndices.M_DOWN_INITIAL_CLIENT_X] = evt.clientX;
     inputState[InputIndices.M_DOWN_INITIAL_CLIENT_Y] = evt.clientY;
+
+    _onMouseChange(evt);
+  }
+
+  function _onMouseUp(evt: MouseEvent): void {
+    inputState[InputIndices.M_INITIATED_BY_ROOT_ELEMENT] = 0;
 
     _onMouseChange(evt);
   }
@@ -78,6 +86,7 @@ export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMouseObserver: true,
     name: "MouseObserver",
 
     start: start,

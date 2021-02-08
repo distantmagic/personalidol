@@ -25,6 +25,7 @@ export function CSS2DRendererStatsHook(renderer: CSS2DRenderer): StatsHook {
     isStatsHook: true,
     name: `CSS2DRendererStatsHook("${DEBUG_NAME}")`,
     statsReport: statsReport,
+    statsReportIntervalSeconds: 0,
 
     reset: reset,
     update: update,

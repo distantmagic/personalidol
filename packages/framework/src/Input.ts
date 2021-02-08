@@ -67,7 +67,7 @@ export const Input = Object.freeze({
     mouse_min: InputIndices.M_BUTTON_L,
     mouse_max: InputIndices.M_VECTOR_Y,
 
-    touches_min: InputIndices.T_TOTAL,
+    touches_min: InputIndices.T_INITIATED_BY_ROOT_ELEMENT,
     touches_max: InputIndices.T2_VECTOR_Y,
     touches_total: touches.length,
 

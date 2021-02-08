@@ -39,6 +39,7 @@ export function WebGLRendererStatsHook(renderer: WebGLRenderer): StatsHook {
     isStatsHook: true,
     name: `WebGLRendererStatsHook("${DEBUG_NAME}")`,
     statsReport: statsReport,
+    statsReportIntervalSeconds: 0,
 
     reset: reset,
     update: update,

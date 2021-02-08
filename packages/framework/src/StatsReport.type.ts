@@ -1,5 +1,5 @@
 export type StatsReport = {
-  [key: string]: number | string | StatsReport;
+  [key: string]: boolean | number | string | StatsReport;
 } & {
   debugName: string;
 };

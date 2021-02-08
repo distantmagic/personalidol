@@ -30,6 +30,7 @@ export function MainLoopStatsHook(): IMainLoopStatsHook {
     isStatsHook: true,
     name: `MainLoopStatsHook("${DEBUG_NAME}")`,
     statsReport: statsReport,
+    statsReportIntervalSeconds: 1,
 
     reset: reset,
     update: update,

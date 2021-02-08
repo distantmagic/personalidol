@@ -1,15 +1,9 @@
-import { Input } from "./Input";
-import { isPrimaryMouseButtonPressed } from "./isPrimaryMouseButtonPressed";
-import { isPrimaryTouchPressed } from "./isPrimaryTouchPressed";
+import { InputIndices } from "./InputIndices.enum";
 
 export function getPrimaryPointerClientX(inputState: Int32Array): number {
-  if (isPrimaryTouchPressed(inputState)) {
-    return inputState[Input.code.T0_CLIENT_X];
+  if (inputState[InputIndices.M_LAST_USED] > inputState[InputIndices.T_LAST_USED]) {
+    return inputState[InputIndices.M_CLIENT_X];
   }
 
-  if (isPrimaryMouseButtonPressed(inputState)) {
-    return inputState[Input.code.M_CLIENT_X];
-  }
-
-  throw new Error("Neither mouse button nor touch point is pressed.");
+  return inputState[InputIndices.T0_CLIENT_X];
 }
