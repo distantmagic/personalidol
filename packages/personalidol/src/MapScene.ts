@@ -7,15 +7,16 @@ import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { damp } from "@personalidol/framework/src/damp";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
+import { damp } from "@personalidol/framework/src/damp";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
+import { isPrimaryPointerInitiatedByRootElement } from "@personalidol/framework/src/isPrimaryPointerInitiatedByRootElement";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
@@ -46,8 +47,8 @@ import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
-import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
+import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
@@ -66,6 +67,7 @@ import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 import type { MapScene as IMapScene } from "./MapScene.interface";
+import type { UIState } from "./UIState.type";
 import type { UserSettings } from "./UserSettings.type";
 
 const CAMERA_DAMP = 10;
@@ -116,12 +118,14 @@ export function MapScene(
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
+  uiState: UIState,
   mapName: string,
   mapFilename: string
 ): IMapScene {
-  const state: MountState = Object.seal({
+  const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -242,7 +246,7 @@ export function MapScene(
     domMessagePort.postMessage({
       render: <MessageDOMUIRender>{
         id: _domInGameMenuTriggerElementId,
-        element: "pi-ingame-menu-trigger",
+        element: "pi-in-game-menu-trigger",
         props: {},
       },
     });
@@ -254,6 +258,10 @@ export function MapScene(
     });
 
     _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
+  }
+
+  function pause(): void {
+    state.isPaused = true;
   }
 
   async function preload(): Promise<void> {
@@ -302,10 +310,14 @@ export function MapScene(
     fUnmount(_unmountables);
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   function update(delta: number, elapsedTime: number): void {
     updateStoreCameraAspect(_camera, dimensionsState);
 
-    if (isPrimaryPointerPressed(inputState)) {
+    if (!state.isPaused && isPrimaryPointerPressed(inputState) && isPrimaryPointerInitiatedByRootElement(inputState)) {
       _pointerVector.x = getPrimaryPointerStretchVectorX(inputState);
       _pointerVector.y = getPrimaryPointerStretchVectorY(inputState);
       _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
@@ -340,6 +352,10 @@ export function MapScene(
   }
 
   function _onPointerZoomRequest(zoomAmount: number): void {
+    if (state.isPaused) {
+      return;
+    }
+
     _cameraZoomAmount += zoomAmount < 0 ? -1 * CAMERA_ZOOM_STEP : CAMERA_ZOOM_STEP;
     _cameraZoomAmount = Math.max(CAMERA_ZOOM_MAX, _cameraZoomAmount);
     _cameraZoomAmount = Math.min(CAMERA_ZOOM_MIN, _cameraZoomAmount);
@@ -350,14 +366,15 @@ export function MapScene(
     id: MathUtils.generateUUID(),
     isMapScene: true,
     isScene: true,
-    isView: false,
     name: `Map(${mapFilename})`,
     state: state,
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
   });
 }

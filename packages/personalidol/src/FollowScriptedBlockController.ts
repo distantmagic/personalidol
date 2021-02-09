@@ -3,6 +3,7 @@ import { Vector3 } from "three/src/math/Vector3";
 
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
+import type { PauseableState } from "@personalidol/framework/src/PauseableState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
 import type { ScriptedBlockController } from "./ScriptedBlockController.interface";
@@ -13,6 +14,10 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
     throw new Error(`Can follow more than one target. Got: "${targetedViews.size}"`);
   }
 
+  const state: PauseableState = {
+    isPaused: false,
+  };
+
   const _direction: IVector3 = new Vector3();
   let _followed: null | View = null;
   let _velocity: number = 100;
@@ -21,9 +26,21 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
     _followed = view;
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   function update(delta: number) {
     if (!_followed) {
       throw new Error("Target supposed to be followed does not exist.");
+    }
+
+    if (state.isPaused) {
+      return;
     }
 
     const _frameDistance: number = _velocity * delta;
@@ -40,11 +57,14 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    name: "FollowScriptedBlockController",
     isExpectingTargets: true,
     isScriptedBlockController: true,
+    name: "FollowScriptedBlockController",
     needsUpdates: true,
+    state: state,
 
+    pause: pause,
+    unpause: unpause,
     update: update,
   });
 }

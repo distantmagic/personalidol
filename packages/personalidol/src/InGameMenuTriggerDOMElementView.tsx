@@ -1,8 +1,10 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-// import { must } from "@personalidol/framework/src/must";
+import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
+
+import { DOMZIndex } from "./DOMZIndex.enum";
 
 const _css = `
   :host {
@@ -19,6 +21,7 @@ const _css = `
     position: absolute;
     right: 1.6rem;
     top: 1.6rem;
+    z-index: ${DOMZIndex.InGameMenuTrigger};
   }
 
   #ingame-menu-trigger:pressed {
@@ -35,14 +38,20 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView {
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    must(this.uiMessagePort).postMessage({
+      isInGameMenuOpened: false,
+    });
+  }
+
   onInGameMenuTriggerClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    console.log("click");
-
-    // must(this.uiMessagePort).postMessage({
-    //   navigateToMap: "map-gates",
-    // });
+    must(this.uiMessagePort).postMessage({
+      isInGameMenuOpened: true,
+    });
   }
 
   render() {

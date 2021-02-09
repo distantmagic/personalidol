@@ -22,16 +22,17 @@ import type { DisposableCallback } from "@personalidol/framework/src/DisposableC
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
-import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
+import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
-  const state: MountState = Object.seal({
+  const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -177,6 +178,10 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     });
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   function preload(): void {
     state.isPreloaded = true;
   }
@@ -190,6 +195,10 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     _unmountFatalErrorScreen();
 
     fUnmount(_unmountables);
+  }
+
+  function unpause(): void {
+    state.isPaused = false;
   }
 
   function update(delta: number): void {
@@ -207,14 +216,15 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isScene: true,
-    isView: false,
     name: "LoadingScreen",
     state: state,
 
     dispose: dispose,
-    preload: preload,
     mount: mount,
+    pause: pause,
+    preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
   });
 }

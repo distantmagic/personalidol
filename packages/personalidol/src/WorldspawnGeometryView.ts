@@ -24,8 +24,8 @@ import type { Texture as ITexture } from "three/src/textures/Texture";
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { Geometry } from "@personalidol/quakemaps/src/Geometry.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
-import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
+import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { UserSettings } from "./UserSettings.type";
 import type { WorldspawnGeometryView as IWorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
@@ -41,9 +41,10 @@ export function WorldspawnGeometryView(
   matrixAutoUpdate: boolean = false
 ): IWorldspawnGeometryView {
   const id: string = MathUtils.generateUUID();
-  const state: MountState = Object.seal({
+  const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -67,6 +68,10 @@ export function WorldspawnGeometryView(
     state.isMounted = true;
 
     fMount(_mountables);
+  }
+
+  function pause(): void {
+    state.isPaused = true;
   }
 
   function preload(): void {
@@ -150,6 +155,10 @@ export function WorldspawnGeometryView(
     fUnmount(_unmountables);
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   return Object.freeze({
     id: id,
     isScene: false,
@@ -161,8 +170,10 @@ export function WorldspawnGeometryView(
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: _applyUserSettings,
   });
 }

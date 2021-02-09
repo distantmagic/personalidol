@@ -18,7 +18,7 @@ export function KeyboardObserver(htmlElement: HTMLElement, inputState: Int32Arra
   function update(): void {}
 
   function _onKeyDown(evt: KeyboardEvent): void {
-    console.log(evt.which);
+    // console.log(evt.which);
   }
 
   return Object.freeze({

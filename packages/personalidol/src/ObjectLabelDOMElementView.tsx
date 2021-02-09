@@ -14,6 +14,7 @@ const FADE_OUT_DISTANCE_SQUARED: number = 4000;
 const _css = `
   :host {
     all: initial;
+    pointer-events: none;
   }
 
   *, * * {

@@ -10,17 +10,18 @@ import { useObject3DUserSettings } from "./useObject3DUserSettings";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
+import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 export function SpotlightLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightSpotlight, targetedViews: Set<View>): EntityView {
-  const state: MountState = Object.seal({
+  const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -74,6 +75,10 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     scene.add(_group);
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   function preload(): void {
     const target: View = _getTarget();
 
@@ -100,6 +105,10 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     scene.remove(_group);
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   return Object.freeze({
     entity: entity,
     id: MathUtils.generateUUID(),
@@ -114,8 +123,10 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: _applyUserSettings,
   });
 }

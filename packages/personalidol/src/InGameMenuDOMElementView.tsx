@@ -22,7 +22,7 @@ const _css = `
     position: absolute;
     right: 0;
     top: 0;
-    z-index: ${DOMZIndex.MainMenu};
+    z-index: ${DOMZIndex.InGameMenu};
   }
 
   #main-menu {
@@ -118,29 +118,40 @@ const _css = `
   }
 `;
 
-export class MainMenuDOMElementView extends DOMElementView {
+export class InGameMenuDOMElementView extends DOMElementView {
   constructor() {
     super();
 
-    this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
+    this.onButtonExitClick = this.onButtonExitClick.bind(this);
     this.onButtonOptionsClick = this.onButtonOptionsClick.bind(this);
+    this.onButtonReturnToGameClick = this.onButtonReturnToGameClick.bind(this);
 
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    must(this.uiMessagePort).postMessage({
+      isScenePaused: true,
+    });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
     must(this.uiMessagePort).postMessage({
+      isInGameMenuOpened: false,
       isOptionsScreenOpened: false,
+      isScenePaused: false,
     });
   }
 
-  onButtonNewGameClick(evt: MouseEvent) {
+  onButtonExitClick(evt: MouseEvent) {
     evt.preventDefault();
 
     must(this.uiMessagePort).postMessage({
-      currentMap: "map-gates",
+      currentMap: null,
     });
   }
 
@@ -152,6 +163,14 @@ export class MainMenuDOMElementView extends DOMElementView {
     });
   }
 
+  onButtonReturnToGameClick(evt: MouseEvent) {
+    evt.preventDefault();
+
+    must(this.uiMessagePort).postMessage({
+      isInGameMenuOpened: false,
+    });
+  }
+
   render() {
     return (
       <div id="main-menu">
@@ -159,11 +178,11 @@ export class MainMenuDOMElementView extends DOMElementView {
           <h1>Personal Idol</h1>
           <h2>You shall not be judged</h2>
           <nav>
-            <button disabled>Continue</button>
-            <button onClick={this.onButtonNewGameClick}>New Game</button>
+            <button onClick={this.onButtonReturnToGameClick}>Return to game</button>
             <button disabled>Load Game</button>
             <button onClick={this.onButtonOptionsClick}>Options</button>
             <button disabled>Credits</button>
+            <button onClick={this.onButtonExitClick}>Exit</button>
           </nav>
         </div>
       </div>

@@ -3,16 +3,17 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { EntityLightAmbient } from "./EntityLightAmbient.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 export function AmbientLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightAmbient): EntityView {
-  const state: MountState = Object.seal({
+  const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -29,6 +30,10 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
     scene.add(_ambientLight);
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   function preload(): void {
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -38,6 +43,10 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
     state.isMounted = false;
 
     scene.remove(_ambientLight);
+  }
+
+  function unpause(): void {
+    state.isPaused = false;
   }
 
   function update(): void {
@@ -62,8 +71,10 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
   });
 }

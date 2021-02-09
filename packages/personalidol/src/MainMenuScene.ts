@@ -15,8 +15,8 @@ import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontP
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MessageFontPreload } from "@personalidol/dom-renderer/src/MessageFontPreload.type";
-import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
+import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 import type { MainMenuScene as IMainMenuScene } from "./MainMenuScene.interface";
@@ -110,9 +110,10 @@ const _fontMessageRouter = createRouter({
 });
 
 export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontPreloadMessagePort: MessagePort, progressMessagePort: MessagePort): IMainMenuScene {
-  const state: MountState = Object.seal({
+  const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -145,6 +146,10 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
     });
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
@@ -172,6 +177,10 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
     fUnmount(_unmountables);
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   function update(delta: number): void {}
 
   async function _preloadFont(fontParameters: FontPreloadParameters) {
@@ -187,14 +196,15 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
     id: MathUtils.generateUUID(),
     isMainMenuScene: true,
     isScene: true,
-    isView: false,
     name: `MainMenu`,
     state: state,
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
   });
 }

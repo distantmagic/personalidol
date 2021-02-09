@@ -12,8 +12,8 @@ import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
-import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
+import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
 import type { EntityView } from "./EntityView.interface";
@@ -37,9 +37,10 @@ export function ScriptedBlockView(
   targetedViews: Set<View>,
   resolveScriptedBlockController: ScriptedBlockControllerResolveCallback
 ): EntityView {
-  const state: MountState = Object.seal({
+  const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -63,6 +64,11 @@ export function ScriptedBlockView(
     fMount(_mountables);
   }
 
+  function pause(): void {
+    state.isPaused = true;
+    _controller.pause();
+  }
+
   function preload(): void {
     views.add(_worldspawnGeometryView);
 
@@ -76,6 +82,11 @@ export function ScriptedBlockView(
     state.isMounted = false;
 
     fUnmount(_unmountables);
+  }
+
+  function unpause(): void {
+    state.isPaused = false;
+    _controller.unpause();
   }
 
   return Object.freeze({
@@ -92,8 +103,10 @@ export function ScriptedBlockView(
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: _controller.update,
   });
 }

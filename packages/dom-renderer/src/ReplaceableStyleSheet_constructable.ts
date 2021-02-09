@@ -30,6 +30,7 @@ export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css:
   const state: ReplaceableStyleSheetState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -45,6 +46,10 @@ export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css:
     shadowRoot.adoptedStyleSheets = [_createStyleSheet(css)];
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   async function preload() {
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -57,19 +62,24 @@ export function ReplaceableStyleSheet_constructable(shadowRoot: ShadowRoot, css:
     shadowRoot.adoptedStyleSheets = [];
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {}
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isScene: true,
-    isView: false,
     name: "ReplaceableStyleSheet_constructable",
     state: state,
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
   });
 }

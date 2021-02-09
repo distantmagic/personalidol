@@ -3,16 +3,17 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 export function HemisphereLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightHemisphere): EntityView {
-  const state: MountState = Object.seal({
+  const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -30,6 +31,10 @@ export function HemisphereLightView(userSettings: UserSettings, scene: Scene, en
     scene.add(_hemisphereLight);
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   function preload(): void {
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -39,6 +44,10 @@ export function HemisphereLightView(userSettings: UserSettings, scene: Scene, en
     state.isMounted = false;
 
     scene.remove(_hemisphereLight);
+  }
+
+  function unpause(): void {
+    state.isPaused = false;
   }
 
   function update(): void {
@@ -63,8 +72,10 @@ export function HemisphereLightView(userSettings: UserSettings, scene: Scene, en
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
   });
 }

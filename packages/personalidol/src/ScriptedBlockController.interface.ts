@@ -1,7 +1,7 @@
 import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpdatable.interface";
-import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
+import type { Pauseable } from "@personalidol/framework/src/Pauseable.interface";
 
-export interface ScriptedBlockController extends MainLoopUpdatable, Nameable {
+export interface ScriptedBlockController extends MainLoopUpdatable, Pauseable {
   readonly isExpectingTargets: boolean;
   readonly isScriptedBlockController: true;
   readonly needsUpdates: boolean;

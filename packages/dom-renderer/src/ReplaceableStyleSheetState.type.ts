@@ -1,3 +1,3 @@
-import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 
-export type ReplaceableStyleSheetState = MountState & {};
+export type ReplaceableStyleSheetState = SceneState & {};

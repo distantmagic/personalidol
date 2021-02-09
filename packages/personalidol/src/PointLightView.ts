@@ -10,16 +10,17 @@ import { useObject3DUserSettings } from "./useObject3DUserSettings";
 
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { EntityLightPoint } from "./EntityLightPoint.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 export function PointLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightPoint): EntityView {
-  const state: MountState = Object.seal({
+  const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -60,6 +61,10 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
     scene.add(_group);
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   function preload(): void {
     _pointLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
     _pointLight.decay = entity.decay;
@@ -77,6 +82,10 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
     scene.remove(_group);
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   return Object.freeze({
     entity: entity,
     id: MathUtils.generateUUID(),
@@ -91,8 +100,10 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: _applyUserSettings,
   });
 }

@@ -30,10 +30,10 @@ import type { DisposableCallback } from "@personalidol/framework/src/DisposableC
 import type { MD2LoaderMorphPosition } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphPosition.type";
 import type { MD2LoaderParsedGeometryWithParts } from "@personalidol/three-modules/src/loaders/MD2LoaderParsedGeometryWithParts.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
-import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
+import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { UserSettings } from "./UserSettings.type";
@@ -106,9 +106,10 @@ export function MD2ModelView(
 ): View {
   const id: string = MathUtils.generateUUID();
   const name: string = `MD2ModelView("${entity.model_name}",${entity.skin})`;
-  const state: MountState = Object.seal({
+  const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -138,6 +139,10 @@ export function MD2ModelView(
     state.isMounted = true;
 
     fMount(_mountables);
+  }
+
+  function pause(): void {
+    state.isPaused = true;
   }
 
   async function preload(): Promise<void> {
@@ -242,13 +247,20 @@ export function MD2ModelView(
     fUnmount(_unmountables);
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   function update(delta: number) {
     if (_animationMixer === null) {
       throw new Error("AnimationMixer should be prepared during 'preload' phase.");
     }
 
     _applyUserSettings();
-    _animationMixer.update(delta);
+
+    if (!state.isPaused) {
+      _animationMixer.update(delta);
+    }
   }
 
   async function _loadTexture(textureUrl: string): Promise<ITexture> {
@@ -270,8 +282,10 @@ export function MD2ModelView(
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
   });
 }

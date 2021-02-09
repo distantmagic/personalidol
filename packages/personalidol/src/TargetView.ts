@@ -6,7 +6,7 @@ import { noop } from "@personalidol/framework/src/noop";
 import type { Object3D as IObject3D } from "three/src/core/Object3D";
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityView } from "./EntityView.interface";
@@ -15,9 +15,10 @@ import type { EntityView } from "./EntityView.interface";
 // so the view is barebone.
 
 export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
-  const state: MountState = Object.seal({
+  const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -34,6 +35,10 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     scene.add(base);
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   function preload(): void {
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -45,6 +50,10 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     state.isMounted = false;
 
     scene.remove(base);
+  }
+
+  function unpause(): void {
+    state.isPaused = false;
   }
 
   return Object.freeze({
@@ -61,8 +70,10 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: noop,
   });
 }

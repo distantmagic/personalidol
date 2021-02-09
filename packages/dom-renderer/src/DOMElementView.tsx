@@ -15,8 +15,9 @@ import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./Replacea
 let _inputStatePlaceholder: null | Int32Array = null;
 
 export abstract class DOMElementView extends HTMLElement implements IDOMElementView {
-  public inputState: Int32Array;
   public domMessagePort: null | MessagePort = null;
+  public inputState: Int32Array;
+  public needsRender: boolean = true;
   public props: DOMElementProps = {};
   public propsLastUpdate: number = 0;
   public rootElement: HTMLDivElement;
@@ -44,16 +45,25 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
     this.shadow.appendChild(this.rootElement);
   }
 
-  needsRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): boolean {
-    return this.viewLastUpdate < this.propsLastUpdate;
+  adoptedCallback() {}
+
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    this.needsRender = this.viewLastUpdate < this.propsLastUpdate;
   }
+
+  connectedCallback() {}
+
+  disconnectedCallback() {}
 
   render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any> {
     return null;
   }
 
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    if (this.needsRender(delta, elapsedTime, tickTimerState)) {
+    this.beforeRender(delta, elapsedTime, tickTimerState);
+
+    if (this.needsRender) {
+      this.needsRender = false;
       this.viewLastUpdate = tickTimerState.currentTick;
       render(this.render(delta, elapsedTime, tickTimerState), this.rootElement);
     }

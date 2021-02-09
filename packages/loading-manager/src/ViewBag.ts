@@ -4,19 +4,22 @@ import { mountDispose } from "@personalidol/framework/src/mountDispose";
 import { mountMount } from "@personalidol/framework/src/mountMount";
 import { mountPreload } from "@personalidol/framework/src/mountPreload";
 import { mountUnmount } from "@personalidol/framework/src/mountUnmount";
+import { scenePause } from "@personalidol/framework/src/scenePause";
+import { sceneUnpause } from "@personalidol/framework/src/sceneUnpause";
 
 import type { Logger } from "loglevel";
 
-import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
 import type { ViewBag as IViewBag } from "./ViewBag.interface";
+import type { ViewBagState } from "./ViewBagState.type";
 
 export function ViewBag(logger: Logger): IViewBag {
-  const state: MountState = Object.seal({
+  const state: ViewBagState = Object.seal({
     isDisposed: false,
     isMounted: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -38,8 +41,12 @@ export function ViewBag(logger: Logger): IViewBag {
 
   function mount(): void {
     views.forEach(_mountView);
-
     state.isMounted = true;
+  }
+
+  function pause(): void {
+    state.isPaused = true;
+    views.forEach(_pauseView);
   }
 
   function preload(): void {
@@ -49,8 +56,12 @@ export function ViewBag(logger: Logger): IViewBag {
 
   function unmount(): void {
     views.forEach(_unmountView);
-
     state.isMounted = false;
+  }
+
+  function unpause(): void {
+    state.isPaused = false;
+    views.forEach(_unpauseView);
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
@@ -83,6 +94,10 @@ export function ViewBag(logger: Logger): IViewBag {
     mountMount(logger, view);
   }
 
+  function _pauseView(view: View): void {
+    scenePause(logger, view);
+  }
+
   function _preloadView(view: View): void {
     mountPreload(logger, view);
 
@@ -95,6 +110,10 @@ export function ViewBag(logger: Logger): IViewBag {
     mountUnmount(logger, view);
   }
 
+  function _unpauseView(view: View): void {
+    sceneUnpause(logger, view);
+  }
+
   return Object.freeze({
     id: MathUtils.generateUUID(),
     name: "ViewBag",
@@ -103,8 +122,10 @@ export function ViewBag(logger: Logger): IViewBag {
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
     updatePreloadingState: updatePreloadingState,
   });

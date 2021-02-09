@@ -1,6 +1,9 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { DOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle";
+import { scenePause } from "@personalidol/framework/src/scenePause";
+import { sceneUnpause } from "@personalidol/framework/src/sceneUnpause";
 import { ViewBag } from "@personalidol/loading-manager/src/ViewBag";
 import { ViewBagScene } from "@personalidol/loading-manager/src/ViewBagScene";
 
@@ -12,8 +15,10 @@ import type { Logger } from "loglevel";
 
 import type { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer.interface";
 import type { DirectorState } from "@personalidol/loading-manager/src/DirectorState.type";
+import type { DOMElementViewHandle as IDOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle.interface";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { Scene } from "@personalidol/framework/src/Scene.interface";
 import type { ViewBag as IViewBag } from "@personalidol/loading-manager/src/ViewBag.interface";
 
 import type { UIState } from "./UIState.type";
@@ -40,11 +45,19 @@ export function UIStateController(
 ): IUIStateController {
   const _domMessageRouter = createRouter({
     currentMap: _onCurrentMapMessage,
+    isInGameMenuOpened: _onIsInGameMenuOpenedMessage,
+    isOptionsScreenOpened: _onIsOptionsScreenOpenedMessage,
+    isScenePaused: _onIsScenePausedMessage,
   });
+
+  let _currentScene: null | Scene = null;
 
   let _dirtyCurrentMap: null | string = null;
 
-  let _uiStateCurrentMap: null | string = null;
+  let _uiStateCurrentMap: null | string = uiState.currentMap;
+
+  let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle(domMessagePort, "pi-in-game-menu");
+  let _optionsScreenHandle: IDOMElementViewHandle = DOMElementViewHandle(domMessagePort, "pi-options");
 
   function start() {
     uiMessagePort.onmessage = _domMessageRouter;
@@ -55,25 +68,36 @@ export function UIStateController(
   }
 
   function update(delta: number, elapsedTime: number): void {
+    _inGameMenuHandle.enable(uiState.isInGameMenuOpened);
+    _optionsScreenHandle.enable(uiState.isOptionsScreenOpened);
+
     if (directorState.isTransitioning) {
+      // Don't do anything with the director if a scene is loading.
       return;
     }
 
     _uiStateCurrentMap = uiState.currentMap;
 
-    if (!_uiStateCurrentMap) {
+    if (!_uiStateCurrentMap && !isMainMenuScene(directorState.current)) {
       // Default to the main menu in any case.
       _transitionToMainMenuScene();
       return;
     }
 
-    if (_uiStateCurrentMap === _dirtyCurrentMap) {
+    if (_uiStateCurrentMap && _uiStateCurrentMap !== _dirtyCurrentMap) {
+      _transitionToaMapScene(_uiStateCurrentMap);
       return;
     }
 
-    if (_uiStateCurrentMap !== _dirtyCurrentMap) {
-      _transitionToaMapScene(_uiStateCurrentMap);
-      return;
+    _currentScene = directorState.current;
+
+    if (_currentScene && _currentScene.state.isPaused !== uiState.isScenePaused) {
+      if (!uiState.isScenePaused) {
+        sceneUnpause(logger, _currentScene);
+      }
+      if (uiState.isScenePaused) {
+        scenePause(logger, _currentScene);
+      }
     }
   }
 
@@ -81,9 +105,21 @@ export function UIStateController(
     uiState.currentMap = mapName;
   }
 
+  function _onIsInGameMenuOpenedMessage(isInGameMenuOpened: boolean): void {
+    uiState.isInGameMenuOpened = isInGameMenuOpened;
+  }
+
+  function _onIsOptionsScreenOpenedMessage(isOptionsScreenOpened: boolean): void {
+    uiState.isOptionsScreenOpened = isOptionsScreenOpened;
+  }
+
+  function _onIsScenePausedMessage(isScenePaused: boolean): void {
+    uiState.isScenePaused = isScenePaused;
+  }
+
   function _transitionToMainMenuScene(): void {
     if (isMainMenuScene(directorState.current)) {
-      return;
+      throw new Error("Already at the main menu.");
     }
 
     // prettier-ignore
@@ -116,6 +152,7 @@ export function UIStateController(
       progressMessagePort,
       quakeMapsMessagePort,
       texturesMessagePort,
+      uiState,
       targetMap,
       `${__ASSETS_BASE_PATH}/maps/${targetMap}.map?${__CACHE_BUST}`,
     );

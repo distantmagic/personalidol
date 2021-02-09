@@ -10,13 +10,14 @@ import type { ReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
 export interface DOMElementView extends DOMUpdatesProps, HTMLElement, MainLoopUpdatable {
   domMessagePort: null | MessagePort;
   inputState: Int32Array;
+  needsRender: boolean;
   props: DOMElementProps;
   propsLastUpdate: number;
   styleSheet: null | ReplaceableStyleSheet;
   uiMessagePort: null | MessagePort;
   viewLastUpdate: number;
 
-  needsRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): boolean;
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
 
   render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any>;
 }

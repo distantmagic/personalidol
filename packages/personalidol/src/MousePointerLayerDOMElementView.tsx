@@ -5,6 +5,8 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 // import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
+import { DOMZIndex } from "./DOMZIndex.enum";
+
 const _css = `
   :host,
   #mouse-pointer-layer,
@@ -26,7 +28,7 @@ const _css = `
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 100;
+    z-index: ${DOMZIndex.MousePointerLayer};
   }
 
   #pointer {
@@ -46,8 +48,8 @@ export class MousePointerLayerDOMElementView extends DOMElementView {
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
-  needsRender(): true {
-    return true;
+  beforeRender(): void {
+    this.needsRender = true;
   }
 
   render() {

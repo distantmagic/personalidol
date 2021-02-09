@@ -11,6 +11,7 @@ export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: strin
   const state: ReplaceableStyleSheetState = Object.seal({
     isMounted: false,
     isDisposed: false,
+    isPaused: false,
     isPreloaded: false,
     isPreloading: false,
   });
@@ -22,6 +23,10 @@ export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: strin
   function mount() {
     state.isMounted = true;
     shadowRoot.appendChild(styleElement);
+  }
+
+  function pause(): void {
+    state.isPaused = true;
   }
 
   function preload() {
@@ -37,19 +42,24 @@ export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: strin
     shadowRoot.removeChild(styleElement);
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {}
 
   return Object.freeze({
     id: id,
     isScene: true,
-    isView: false,
     name: "ReplaceableStyleSheet_element",
     state: state,
 
     dispose: dispose,
     mount: mount,
+    pause: pause,
     preload: preload,
     unmount: unmount,
+    unpause: unpause,
     update: update,
   });
 }
