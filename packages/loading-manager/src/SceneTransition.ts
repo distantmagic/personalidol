@@ -1,7 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { mountMount } from "@personalidol/framework/src/mountMount";
-import { mountUnmount } from "@personalidol/framework/src/mountUnmount";
+import { mount } from "@personalidol/framework/src/mount";
+import { unmount } from "@personalidol/framework/src/unmount";
 
 import type { Logger } from "loglevel";
 
@@ -33,12 +33,12 @@ export function SceneTransition(logger: Logger, sceneDirectorState: DirectorStat
     if (scene) {
       if (loadingScreen) {
         if (loadingScreen.state.isMounted) {
-          mountUnmount(logger, loadingScreen);
+          unmount(logger, loadingScreen);
         }
       }
 
       if (!scene.state.isMounted) {
-        mountMount(logger, scene);
+        mount(logger, scene);
       }
 
       scene.update(delta, elapsedTime, tickTimerState);
@@ -51,7 +51,7 @@ export function SceneTransition(logger: Logger, sceneDirectorState: DirectorStat
     }
 
     if (!loadingScreen.state.isMounted) {
-      mountMount(logger, loadingScreen);
+      mount(logger, loadingScreen);
     }
 
     loadingScreen.update(delta, elapsedTime, tickTimerState);

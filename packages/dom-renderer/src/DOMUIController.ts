@@ -2,9 +2,9 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
-import { mountDispose } from "@personalidol/framework/src/mountDispose";
-import { mountMount } from "@personalidol/framework/src/mountMount";
-import { mountPreload } from "@personalidol/framework/src/mountPreload";
+import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { mount } from "@personalidol/framework/src/mount";
+import { preload } from "@personalidol/framework/src/preload";
 
 import { clearHTMLElement } from "./clearHTMLElement";
 import { DOMRenderedElement } from "./DOMRenderedElement";
@@ -80,7 +80,7 @@ export function DOMUIController(
       uiMessagePort
     );
 
-    mountPreload(logger, renderedElement);
+    preload(logger, renderedElement);
 
     _renderedElementsLookup.set(message.id, renderedElement);
     _renderedElements.add(renderedElement);
@@ -101,7 +101,7 @@ export function DOMUIController(
       return;
     }
 
-    mountDispose(logger, renderedElement);
+    fDispose(logger, renderedElement);
 
     _renderedElementsLookup.delete(id);
     _renderedElements.delete(renderedElement);
@@ -123,7 +123,7 @@ export function DOMUIController(
     }
 
     if (renderedElement.state.isPreloaded && !renderedElement.state.isMounted) {
-      mountMount(logger, renderedElement);
+      mount(logger, renderedElement);
     }
 
     if (renderedElement.state.isMounted) {

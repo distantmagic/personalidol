@@ -1,12 +1,12 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { mountDispose } from "@personalidol/framework/src/mountDispose";
-import { mountMount } from "@personalidol/framework/src/mountMount";
-import { mountPreload } from "@personalidol/framework/src/mountPreload";
-import { mountUnmount } from "@personalidol/framework/src/mountUnmount";
+import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { mount as fMount } from "@personalidol/framework/src/mount";
 import { name } from "@personalidol/framework/src/name";
-import { scenePause } from "@personalidol/framework/src/scenePause";
-import { sceneUnpause } from "@personalidol/framework/src/sceneUnpause";
+import { pause as fPause } from "@personalidol/framework/src/pause";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
+import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
 
 import type { Logger } from "loglevel";
 
@@ -31,15 +31,15 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
   });
 
   function dispose(): void {
-    mountDispose(logger, scene);
-    mountDispose(logger, viewBag);
+    fDispose(logger, scene);
+    fDispose(logger, viewBag);
 
     state.isDisposed = true;
   }
 
   function mount(): void {
-    mountMount(logger, scene);
-    mountMount(logger, viewBag);
+    fMount(logger, scene);
+    fMount(logger, viewBag);
 
     state.isMounted = true;
   }
@@ -47,21 +47,21 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
   function pause(): void {
     state.isPaused = true;
 
-    scenePause(logger, scene);
-    scenePause(logger, viewBag);
+    fPause(logger, scene);
+    fPause(logger, viewBag);
   }
 
   function preload(): void {
     // Order here is important. View bag needs to be preloaded only after
     // the scene.preload method is called, since it's the place to add
     // views to a ViewBag.
-    mountPreload(logger, scene);
+    fPreload(logger, scene);
     updatePreloadingState();
   }
 
   function unmount(): void {
-    mountUnmount(logger, scene);
-    mountUnmount(logger, viewBag);
+    fUnmount(logger, scene);
+    fUnmount(logger, viewBag);
 
     state.isMounted = false;
   }
@@ -69,8 +69,8 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
   function unpause(): void {
     state.isPaused = false;
 
-    sceneUnpause(logger, scene);
-    sceneUnpause(logger, viewBag);
+    fUnpause(logger, scene);
+    fUnpause(logger, viewBag);
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
@@ -83,7 +83,7 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
   function updatePreloadingState(): void {
     if (scene.state.isPreloaded && !viewBag.state.isPreloading && !viewBag.state.isPreloaded) {
       // ViewBag can be preloaded now since the scene is ready.
-      mountPreload(logger, viewBag);
+      fPreload(logger, viewBag);
     }
 
     if (viewBag.state.isPreloading && !scene.state.isPreloaded) {

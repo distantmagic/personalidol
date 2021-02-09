@@ -4,7 +4,7 @@ import type { Logger } from "loglevel";
 
 import type { Pauseable } from "./Pauseable.interface";
 
-export function scenePause(logger: Logger, pauseable: Pauseable): void {
+export function pause(logger: Logger, pauseable: Pauseable): void {
   if (pauseable.state.isPaused) {
     throw new Error(`Scene is already paused: "${name(pauseable)}"`);
   }

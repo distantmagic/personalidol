@@ -1,7 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { mountDispose } from "@personalidol/framework/src/mountDispose";
-import { mountPreload } from "@personalidol/framework/src/mountPreload";
+import { dispose } from "@personalidol/framework/src/dispose";
+import { preload } from "@personalidol/framework/src/preload";
 
 import type { Logger } from "loglevel";
 
@@ -90,7 +90,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, directo
 
     // 1,0,0
     if (next && !transitioning && !current) {
-      mountPreload(logger, next);
+      preload(logger, next);
 
       state.next = null;
       state.isTransitioning = true;
@@ -104,7 +104,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, directo
 
     // 1,0,1
     if (next && !transitioning && current) {
-      mountDispose(logger, current);
+      dispose(logger, current);
 
       state.current = null;
       state.isTransitioning = true;

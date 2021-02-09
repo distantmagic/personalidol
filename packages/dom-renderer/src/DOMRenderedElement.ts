@@ -1,7 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { Director } from "@personalidol/loading-manager/src/Director";
-import { mountMount } from "@personalidol/framework/src/mountMount";
+import { mount as fMount } from "@personalidol/framework/src/mount";
 
 import type { Logger } from "loglevel";
 
@@ -76,7 +76,7 @@ export function DOMRenderedElement(
     _styleSheetDirector.update(delta, elapsedTime, tickTimerState);
 
     if (styleSheet.state.isPreloaded && !styleSheet.state.isMounted) {
-      mountMount(logger, styleSheet);
+      fMount(logger, styleSheet);
     }
 
     if (!styleSheet.state.isMounted) {

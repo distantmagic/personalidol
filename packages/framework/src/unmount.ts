@@ -1,8 +1,18 @@
-import { invoke } from "./invoke";
+import { name } from "./name";
 
-import type { UnmountableCallback } from "./UnmountableCallback.type";
+import type { Logger } from "loglevel";
 
-export function unmount(unmountables: Set<UnmountableCallback>): void {
-  unmountables.forEach(invoke);
-  unmountables.clear();
+import type { Mountable } from "./Mountable.interface";
+
+export function unmount(logger: Logger, mount: Mountable): void {
+  if (!mount.state.isMounted) {
+    throw new Error(`Mount is already unmounted: "${name(mount)}"`);
+  }
+
+  logger.info(`UNMOUNT(${name(mount)})`);
+  mount.unmount();
+
+  if (mount.state.isMounted) {
+    throw new Error(`Mount must go into 'unmounted' state immediately after calling '.unmount': "${name(mount)}"`);
+  }
 }

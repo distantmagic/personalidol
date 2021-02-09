@@ -1,7 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
@@ -123,7 +123,7 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
   function dispose(): void {
     state.isDisposed = true;
 
-    fDispose(_disposables);
+    disposeAll(_disposables);
   }
 
   function mount(): void {
@@ -174,7 +174,7 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
 
     fontPreloadMessagePort.onmessage = null;
 
-    fUnmount(_unmountables);
+    unmountAll(_unmountables);
   }
 
   function unpause(): void {

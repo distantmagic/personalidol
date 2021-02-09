@@ -1,9 +1,9 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { name } from "@personalidol/framework/src/name";
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
-import { mount as fMount } from "@personalidol/framework/src/mount";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { mountAll } from "@personalidol/framework/src/mountAll";
+import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
 import { useObjectLabel } from "./useObjectLabel";
 import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
@@ -55,13 +55,13 @@ export function ScriptedBlockView(
   function dispose(): void {
     state.isDisposed = true;
 
-    fDispose(_disposables);
+    disposeAll(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    fMount(_mountables);
+    mountAll(_mountables);
   }
 
   function pause(): void {
@@ -81,7 +81,7 @@ export function ScriptedBlockView(
   function unmount(): void {
     state.isMounted = false;
 
-    fUnmount(_unmountables);
+    unmountAll(_unmountables);
   }
 
   function unpause(): void {

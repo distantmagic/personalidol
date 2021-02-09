@@ -7,7 +7,7 @@ import { UniformsUtils } from "three/src/renderers/shaders/UniformsUtils";
 
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { dispose } from "@personalidol/framework/src/dispose";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
 
 import { FullScreenQuad } from "./FullScreenQuad";
 import { Pass } from "./Pass";
@@ -51,7 +51,7 @@ export class GlitchPass extends Pass {
   }
 
   dispose(): void {
-    dispose(this._disposables);
+    disposeAll(this._disposables);
   }
 
   render(renderer: WebGLRenderer, renderToScreen: boolean, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {

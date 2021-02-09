@@ -9,9 +9,9 @@ import { attachAtlasSamplerToStandardShader } from "@personalidol/texture-loader
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
-import { mount as fMount } from "@personalidol/framework/src/mount";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { mountAll } from "@personalidol/framework/src/mountAll";
+import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
 import { useObject3DUserSettings } from "./useObject3DUserSettings";
 
@@ -61,13 +61,13 @@ export function WorldspawnGeometryView(
   function dispose(): void {
     state.isDisposed = true;
 
-    fDispose(_disposables);
+    disposeAll(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    fMount(_mountables);
+    mountAll(_mountables);
   }
 
   function pause(): void {
@@ -152,7 +152,7 @@ export function WorldspawnGeometryView(
   function unmount(): void {
     state.isMounted = false;
 
-    fUnmount(_unmountables);
+    unmountAll(_unmountables);
   }
 
   function unpause(): void {

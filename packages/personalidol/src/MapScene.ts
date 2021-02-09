@@ -11,17 +11,17 @@ import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLooku
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { damp } from "@personalidol/framework/src/damp";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPrimaryPointerInitiatedByRootElement } from "@personalidol/framework/src/isPrimaryPointerInitiatedByRootElement";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
-import { mount as fMount } from "@personalidol/framework/src/mount";
+import { mountAll } from "@personalidol/framework/src/mountAll";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
@@ -213,13 +213,13 @@ export function MapScene(
   function dispose(): void {
     state.isDisposed = true;
 
-    fDispose(_disposables);
+    disposeAll(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    fMount(_mountables);
+    mountAll(_mountables);
 
     eventBus.POINTER_ZOOM_REQUEST.add(_onPointerZoomRequest);
 
@@ -307,7 +307,7 @@ export function MapScene(
 
     eventBus.POINTER_ZOOM_REQUEST.delete(_onPointerZoomRequest);
 
-    fUnmount(_unmountables);
+    unmountAll(_unmountables);
   }
 
   function unpause(): void {

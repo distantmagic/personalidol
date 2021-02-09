@@ -2,8 +2,8 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { DOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle";
-import { scenePause } from "@personalidol/framework/src/scenePause";
-import { sceneUnpause } from "@personalidol/framework/src/sceneUnpause";
+import { pause } from "@personalidol/framework/src/pause";
+import { unpause } from "@personalidol/framework/src/unpause";
 import { ViewBag } from "@personalidol/loading-manager/src/ViewBag";
 import { ViewBagScene } from "@personalidol/loading-manager/src/ViewBagScene";
 
@@ -93,10 +93,10 @@ export function UIStateController(
 
     if (_currentScene && _currentScene.state.isPaused !== uiState.isScenePaused) {
       if (!uiState.isScenePaused) {
-        sceneUnpause(logger, _currentScene);
+        unpause(logger, _currentScene);
       }
       if (uiState.isScenePaused) {
-        scenePause(logger, _currentScene);
+        pause(logger, _currentScene);
       }
     }
   }

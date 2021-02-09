@@ -4,7 +4,7 @@ import type { Logger } from "loglevel";
 
 import type { Mountable } from "./Mountable.interface";
 
-export function mountPreload(logger: Logger, mount: Mountable): void {
+export function preload(logger: Logger, mount: Mountable): void {
   if (mount.state.isPreloaded) {
     throw new Error(`Mount is already preloaded: "${name(mount)}"`);
   }

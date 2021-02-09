@@ -11,10 +11,10 @@ import { SpotLight } from "three/src/lights/SpotLight";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
@@ -151,7 +151,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   function dispose(): void {
     state.isDisposed = true;
 
-    fDispose(_disposables);
+    disposeAll(_disposables);
   }
 
   function mount(): void {
@@ -194,7 +194,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     _unmountLoadingScreen();
     _unmountFatalErrorScreen();
 
-    fUnmount(_unmountables);
+    unmountAll(_unmountables);
   }
 
   function unpause(): void {

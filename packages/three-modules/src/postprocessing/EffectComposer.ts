@@ -4,7 +4,7 @@ import { Vector2 } from "three/src/math/Vector2";
 import { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
-import { dispose } from "@personalidol/framework/src/dispose";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
 
 import { Pass } from "./Pass";
 import { ShaderPass } from "./ShaderPass";
@@ -77,7 +77,7 @@ export class EffectComposer implements IEffectComposer {
   }
 
   dispose(): void {
-    dispose(this._disposables);
+    disposeAll(this._disposables);
   }
 
   swapBuffers() {

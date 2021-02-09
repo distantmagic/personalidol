@@ -1,11 +1,11 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { mountDispose } from "@personalidol/framework/src/mountDispose";
-import { mountMount } from "@personalidol/framework/src/mountMount";
-import { mountPreload } from "@personalidol/framework/src/mountPreload";
-import { mountUnmount } from "@personalidol/framework/src/mountUnmount";
-import { scenePause } from "@personalidol/framework/src/scenePause";
-import { sceneUnpause } from "@personalidol/framework/src/sceneUnpause";
+import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { mount as fMount } from "@personalidol/framework/src/mount";
+import { pause as fPause } from "@personalidol/framework/src/pause";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
+import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
 
 import type { Logger } from "loglevel";
 
@@ -87,19 +87,19 @@ export function ViewBag(logger: Logger): IViewBag {
   }
 
   function _disposeView(view: View): void {
-    mountDispose(logger, view);
+    fDispose(logger, view);
   }
 
   function _mountView(view: View): void {
-    mountMount(logger, view);
+    fMount(logger, view);
   }
 
   function _pauseView(view: View): void {
-    scenePause(logger, view);
+    fPause(logger, view);
   }
 
   function _preloadView(view: View): void {
-    mountPreload(logger, view);
+    fPreload(logger, view);
 
     if (view.needsUpdates) {
       _updatableViews.add(view);
@@ -107,11 +107,11 @@ export function ViewBag(logger: Logger): IViewBag {
   }
 
   function _unmountView(view: View): void {
-    mountUnmount(logger, view);
+    fUnmount(logger, view);
   }
 
   function _unpauseView(view: View): void {
-    sceneUnpause(logger, view);
+    fUnpause(logger, view);
   }
 
   return Object.freeze({
