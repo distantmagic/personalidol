@@ -325,13 +325,15 @@ export function MapScene(
       _playerPosition.z += 1000 * _pointerVector.x * delta;
     }
 
-    _updateCamera(delta);
+    if (!state.isPaused) {
+      _updateCameraPosition(delta);
+    }
 
     effectComposer.render(delta);
     css2DRenderer.render(_scene, _camera, false);
   }
 
-  function _updateCamera(delta: number): void {
+  function _updateCameraPosition(delta: number): void {
     // prettier-ignore
     if (_cameraSkipDamping) {
       _camera.position.set(

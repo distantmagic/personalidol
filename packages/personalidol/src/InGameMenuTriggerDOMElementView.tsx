@@ -21,6 +21,8 @@ const _css = `
     position: absolute;
     right: 1.6rem;
     top: 1.6rem;
+    -webkit-user-select: none;
+    user-select: none;
     z-index: ${DOMZIndex.InGameMenuTrigger};
   }
 

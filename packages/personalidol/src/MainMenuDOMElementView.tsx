@@ -22,6 +22,8 @@ const _css = `
     position: absolute;
     right: 0;
     top: 0;
+    -webkit-user-select: none;
+    user-select: none;
     z-index: ${DOMZIndex.MainMenu};
   }
 
