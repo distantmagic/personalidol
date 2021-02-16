@@ -24,6 +24,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   public styleSheet: null | IReplaceableStyleSheet = null;
   public uiMessagePort: null | MessagePort = null;
   public userSettings: null | U = null;
+  public userSettingsLastAcknowledgedVersion: number = 0;
   public viewLastUpdate: number = 0;
 
   constructor() {
@@ -49,6 +50,15 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
 
   beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     this.needsRender = this.viewLastUpdate < this.propsLastUpdate;
+
+    const userSettings = this.userSettings;
+
+    if (!userSettings || this.needsRender) {
+      return;
+    }
+
+    this.needsRender = this.userSettingsLastAcknowledgedVersion < userSettings.version;
+    this.userSettingsLastAcknowledgedVersion = userSettings.version;
   }
 
   connectedCallback() {}

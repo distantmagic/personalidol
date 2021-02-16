@@ -44,6 +44,12 @@ const _css = `
     transform: translateX(-50%) translateY(-50%);
     width: calc(100% - 3.2rem);
   }
+
+  #options__form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 0.6rem;
+  }
 `;
 
 export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
@@ -51,6 +57,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     super();
 
     this.onOverlayClick = this.onOverlayClick.bind(this);
+    this.onUseDynamicLightingOptionClick = this.onUseDynamicLightingOptionClick.bind(this);
+    this.onUseShadowsOptionClick = this.onUseShadowsOptionClick.bind(this);
 
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
@@ -61,6 +69,25 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     must(this.uiMessagePort).postMessage({
       isOptionsScreenOpened: false,
     });
+  }
+
+  onUseDynamicLightingOptionClick() {
+    const userSettings = must(this.userSettings);
+
+    userSettings.useDynamicLighting = !userSettings.useDynamicLighting;
+
+    if (!userSettings.useDynamicLighting) {
+      userSettings.useShadows = false;
+    }
+
+    userSettings.version += 1;
+  }
+
+  onUseShadowsOptionClick() {
+    const userSettings = must(this.userSettings);
+
+    userSettings.useShadows = !userSettings.useShadows;
+    userSettings.version += 1;
   }
 
   onOverlayClick(evt: MouseEvent) {
@@ -76,9 +103,23 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   }
 
   render(delta: number) {
+    const userSettings: UserSettings = must(this.userSettings);
+
     return (
       <div id="options" onClick={this.onOverlayClick}>
-        <div id="options__content"></div>
+        <div id="options__content">
+          <form id="options__form">
+            <label>shadowMapSize: {String(userSettings.shadowMapSize)}</label>
+            <label>
+              useDynamicLighting:
+              <input checked={userSettings.useDynamicLighting} onClick={this.onUseDynamicLightingOptionClick} type="checkbox" />
+            </label>
+            <label>
+              useShadows:
+              <input checked={userSettings.useShadows} disabled={!userSettings.useDynamicLighting} onClick={this.onUseShadowsOptionClick} type="checkbox" />
+            </label>
+          </form>
+        </div>
       </div>
     );
   }

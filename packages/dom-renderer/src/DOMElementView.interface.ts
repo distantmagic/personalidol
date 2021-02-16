@@ -17,6 +17,7 @@ export interface DOMElementView<U extends UserSettings> extends DOMUpdatesProps,
   styleSheet: null | ReplaceableStyleSheet;
   uiMessagePort: null | MessagePort;
   userSettings: null | U;
+  userSettingsLastAcknowledgedVersion: number;
   viewLastUpdate: number;
 
   beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
