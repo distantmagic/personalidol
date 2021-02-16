@@ -44,7 +44,7 @@ const _css = `
   }
 `;
 
-export class OptionsDOMElementView extends DOMElementView {
+export class UserSettingsDOMElementView extends DOMElementView {
   constructor() {
     super();
 

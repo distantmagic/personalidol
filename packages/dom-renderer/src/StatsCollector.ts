@@ -4,6 +4,7 @@ import { createRouter } from "@personalidol/framework/src/createRouter";
 
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
 
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 import type { StatsCollector as IStatsCollector } from "./StatsCollector.interface";
 
@@ -30,7 +31,7 @@ export function StatsCollector(domMessagePort: MessagePort): IStatsCollector {
 
   function update(delta: number) {
     domMessagePort.postMessage({
-      render: <MessageDOMUIRender>{
+      render: <MessageDOMUIRender<DOMElementsLookup>>{
         id: _domStatsReporterElementId,
         element: "pi-stats-reporter",
         props: {

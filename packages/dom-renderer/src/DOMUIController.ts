@@ -8,6 +8,7 @@ import { preload } from "@personalidol/framework/src/preload";
 
 import { clearHTMLElement } from "./clearHTMLElement";
 import { DOMRenderedElement } from "./DOMRenderedElement";
+import { isHTMLElementConstructor } from "./isHTMLElementConstructor";
 
 import type { Logger } from "loglevel";
 
@@ -22,12 +23,12 @@ import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
 const _definedCustomElements: Array<string> = [];
 
-function _isCustomElementDefined(name: string): boolean {
+function _isCustomElementDefined<T extends DOMElementsLookup>(name: string & keyof T): boolean {
   return _definedCustomElements.includes(name);
 }
 
-async function _defineCustomElement(logger: Logger, name: string, element: typeof HTMLElement): Promise<void> {
-  if (_isCustomElementDefined(name)) {
+async function _defineCustomElement<T extends DOMElementsLookup>(logger: Logger, name: string & keyof T, element: typeof HTMLElement): Promise<void> {
+  if (_isCustomElementDefined<T>(name)) {
     throw new Error(`Custom element is already defined: "${name}"`);
   }
 
@@ -39,28 +40,28 @@ async function _defineCustomElement(logger: Logger, name: string, element: typeo
   logger.info(`DEFINE("${name}")`);
 }
 
-export function DOMUIController(
+export function DOMUIController<T extends DOMElementsLookup>(
   logger: Logger,
   inputState: Int32Array,
   tickTimerState: TickTimerState,
   uiMessagePort: MessagePort,
   uiRootElement: HTMLElement,
-  domElementsLookup: DOMElementsLookup
-): IDOMUIController {
+  domElementsLookup: T
+): IDOMUIController<T> {
   const internalDOMMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _delta: number = 0;
   let _elapsedTime: number = 0;
   let _isRootElementCleared: boolean = false;
 
-  const _renderedElements: Set<IDOMRenderedElement> = new Set();
-  const _renderedElementsLookup: Map<string, IDOMRenderedElement> = new Map();
+  const _renderedElements: Set<IDOMRenderedElement<T>> = new Set();
+  const _renderedElementsLookup: Map<string, IDOMRenderedElement<T>> = new Map();
   const _uiMessageRouter = createRouter({
     dispose: dispose,
     render: render,
     renderBatch: renderBatch,
   });
 
-  function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender): IDOMRenderedElement {
+  function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender<T>): IDOMRenderedElement<T> {
     const DOMElementConstructor = customElements.get(message.element);
 
     if (!DOMElementConstructor) {
@@ -68,7 +69,7 @@ export function DOMUIController(
     }
 
     const domElementView: DOMElementView = new DOMElementConstructor();
-    const renderedElement: IDOMRenderedElement = DOMRenderedElement(
+    const renderedElement: IDOMRenderedElement<T> = DOMRenderedElement<T>(
       logger,
       message.id,
       message.element,
@@ -88,12 +89,18 @@ export function DOMUIController(
     return renderedElement;
   }
 
-  function _defineCustomElementByName(elementName: string): void {
-    _defineCustomElement(logger, elementName, _getCustomElementConstructor(elementName));
+  function _defineCustomElementByName(elementName: string & keyof T): void {
+    const Constructor = _getCustomElementConstructor(elementName);
+
+    if (!isHTMLElementConstructor(Constructor)) {
+      throw new Error("Object is not a HTMLElement constructor.");
+    }
+
+    _defineCustomElement<T>(logger, elementName, Constructor);
   }
 
   function _disposeElementById(id: string): void {
-    let renderedElement: undefined | IDOMRenderedElement = _renderedElementsLookup.get(id);
+    let renderedElement: undefined | IDOMRenderedElement<T> = _renderedElementsLookup.get(id);
 
     if (!renderedElement) {
       throw new Error(`Element is not rendered and can't be disposed: "${id}"`);
@@ -107,7 +114,7 @@ export function DOMUIController(
     _renderedElements.delete(renderedElement);
   }
 
-  function _getCustomElementConstructor(elementName: string): typeof HTMLElement {
+  function _getCustomElementConstructor<N extends string & keyof T>(elementName: N): T[N] {
     const ElementConstructor = domElementsLookup[elementName];
 
     if (!ElementConstructor) {
@@ -117,7 +124,7 @@ export function DOMUIController(
     return ElementConstructor;
   }
 
-  function _updateRenderedElement(renderedElement: IDOMRenderedElement) {
+  function _updateRenderedElement(renderedElement: IDOMRenderedElement<T>) {
     if (!renderedElement.state.isPreloaded) {
       return;
     }
@@ -135,17 +142,17 @@ export function DOMUIController(
     message.forEach(_disposeElementById);
   }
 
-  function render(message: MessageDOMUIRender): void {
+  function render(message: MessageDOMUIRender<T>): void {
     if (!_isRootElementCleared) {
       clearHTMLElement(uiRootElement);
       _isRootElementCleared = true;
     }
 
-    if (!_isCustomElementDefined(message.element)) {
+    if (!_isCustomElementDefined<T>(message.element)) {
       _defineCustomElementByName(message.element);
     }
 
-    let renderedElement: undefined | IDOMRenderedElement = _renderedElementsLookup.get(message.id);
+    let renderedElement: undefined | IDOMRenderedElement<T> = _renderedElementsLookup.get(message.id);
 
     if (!renderedElement) {
       renderedElement = _createDOMUIElementByRenderMessage(message);
@@ -156,7 +163,7 @@ export function DOMUIController(
     _updateRenderedElement(renderedElement);
   }
 
-  function renderBatch(message: Array<MessageDOMUIRender>): void {
+  function renderBatch(message: Array<MessageDOMUIRender<T>>): void {
     message.forEach(render);
   }
 

@@ -16,7 +16,7 @@ import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/get
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
-import { isPrimaryPointerInitiatedByRootElement } from "@personalidol/framework/src/isPrimaryPointerInitiatedByRootElement";
+import { isPointerInitiatedByRootElement } from "@personalidol/framework/src/isPointerInitiatedByRootElement";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 import { mountAll } from "@personalidol/framework/src/mountAll";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
@@ -52,6 +52,7 @@ import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { EntityFuncGroup } from "./EntityFuncGroup.type";
 import type { EntityGLTFModel } from "./EntityGLTFModel.type";
 import type { EntityLightAmbient } from "./EntityLightAmbient.type";
@@ -230,7 +231,7 @@ export function MapScene(
     _disposables.add(disposableGeneric(renderPass));
 
     domMessagePort.postMessage({
-      render: <MessageDOMUIRender>{
+      render: <MessageDOMUIRender<DOMElementsLookup>>{
         id: _domMousePointerLayerElementId,
         element: "pi-mouse-pointer-layer",
         props: {},
@@ -244,7 +245,7 @@ export function MapScene(
     });
 
     domMessagePort.postMessage({
-      render: <MessageDOMUIRender>{
+      render: <MessageDOMUIRender<DOMElementsLookup>>{
         id: _domInGameMenuTriggerElementId,
         element: "pi-in-game-menu-trigger",
         props: {},
@@ -317,7 +318,7 @@ export function MapScene(
   function update(delta: number, elapsedTime: number): void {
     updateStoreCameraAspect(_camera, dimensionsState);
 
-    if (!state.isPaused && isPrimaryPointerPressed(inputState) && isPrimaryPointerInitiatedByRootElement(inputState)) {
+    if (!state.isPaused && isPrimaryPointerPressed(inputState) && isPointerInitiatedByRootElement(inputState)) {
       _pointerVector.x = getPrimaryPointerStretchVectorX(inputState);
       _pointerVector.y = getPrimaryPointerStretchVectorY(inputState);
       _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);

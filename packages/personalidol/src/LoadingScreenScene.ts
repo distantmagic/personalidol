@@ -28,6 +28,8 @@ import type { Scene as IScene } from "@personalidol/framework/src/Scene.interfac
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
+
 export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
@@ -92,7 +94,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
       _unmountLoadingScreen();
 
       domMessagePort.postMessage({
-        render: <MessageDOMUIRender>{
+        render: <MessageDOMUIRender<DOMElementsLookup>>{
           id: _domFatalErrorElementId,
           element: "pi-fatal-error",
           props: {
@@ -113,7 +115,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
       }
 
       domMessagePort.postMessage({
-        render: <MessageDOMUIRender>{
+        render: <MessageDOMUIRender<DOMElementsLookup>>{
           id: _domLoadingScreenElementId,
           element: "pi-loading-screen",
           props: {

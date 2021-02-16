@@ -18,6 +18,8 @@ const _css = `
   #ingame-menu-trigger {
     -webkit-tap-highlight-color: transparent;
     cursor: pointer;
+    height: 3.2rem;
+    width: 4.8rem;
     position: absolute;
     right: 1.6rem;
     top: 1.6rem;

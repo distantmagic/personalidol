@@ -16,18 +16,12 @@ bootstrap: node_modules
 .PHONY: build
 build: bootstrap
 	$(call FOREACH,build)
-	$(MAKE) -C docs build
 
 .PHONY: clean
 clean: node_modules
 	$(call FOREACH,clean)
-	$(MAKE) -C docs clean
 	yarn run lerna clean --yes
 	rm -rf node_modules
-
-.PHONY: docs
-docs:
-	$(MAKE) -C docs build
 
 .PHONY: link
 link: bootstrap node_modules

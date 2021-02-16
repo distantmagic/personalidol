@@ -1,6 +1,8 @@
 import { MathUtils } from "three/src/math/MathUtils";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { onlyOne } from "@personalidol/framework/src/onlyOne";
+
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { PauseableState } from "@personalidol/framework/src/PauseableState.type";
@@ -19,12 +21,8 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
   };
 
   const _direction: IVector3 = new Vector3();
-  let _followed: null | View = null;
+  let _followed: View = onlyOne(targetedViews, "Target supposed to be followed does not exist.");
   let _velocity: number = 100;
-
-  for (let view of targetedViews) {
-    _followed = view;
-  }
 
   function pause(): void {
     state.isPaused = true;
@@ -35,10 +33,6 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
   }
 
   function update(delta: number) {
-    if (!_followed) {
-      throw new Error("Target supposed to be followed does not exist.");
-    }
-
     if (state.isPaused) {
       return;
     }

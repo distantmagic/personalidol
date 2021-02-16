@@ -34,6 +34,7 @@ export function MouseWheelObserver(htmlElement: HTMLElement, eventBus: EventBus,
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMouseWheelObserver: true,
     name: "MouseWheelObserver",
 
     start: start,

@@ -11,7 +11,7 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { Director as IDirector } from "./Director.interface";
 import type { DirectorState } from "./DirectorState.type";
 
-export function Director(logger: Logger, tickTimerState: TickTimerState, directorDebugName: string): IDirector {
+export function Director(logger: Logger, tickTimerState: TickTimerState, debugName: string): IDirector {
   let transitioning: null | Scene = null;
 
   const state: DirectorState = Object.seal({
@@ -128,7 +128,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, directo
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    name: `Director(${directorDebugName})`,
+    name: `Director(${debugName})`,
     state: state,
 
     start: start,

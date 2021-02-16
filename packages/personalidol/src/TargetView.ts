@@ -63,7 +63,7 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     isExpectingTargets: false,
     isScene: false,
     isView: true,
-    name: `TargetView(${entity.properties.targetname})`,
+    name: `TargetView("${entity.properties.targetname}")`,
     needsUpdates: false,
     object3D: base,
     state: state,

@@ -8,6 +8,8 @@ import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreen
 import { RendererDimensionsManager } from "@personalidol/three-renderer/src/RendererDimensionsManager";
 import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
 import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
+import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
+import { UserSettingsSync } from "@personalidol/framework/src/UserSettingsSync";
 import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
@@ -19,7 +21,6 @@ import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 import type { StatsReporter } from "@personalidol/framework/src/StatsReporter.interface";
 import type { UIState } from "@personalidol/personalidol/src/UIState.type";
-import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
 
 export function createScenes(
   threadDebugName: string,
@@ -39,8 +40,12 @@ export function createScenes(
   quakeMapsMessagePort: MessagePort,
   statsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
-  uiMessagePort: MessagePort
+  uiMessagePort: MessagePort,
+  userSettingsMessagePort: MessagePort
 ): void {
+  const userSettings = UserSettings.createEmptyState();
+  const userSettingsSync = UserSettingsSync(userSettings, userSettingsMessagePort, threadDebugName);
+
   const rendererDimensionsManager = RendererDimensionsManager(dimensionsState);
 
   const webGLRenderer = new WebGLRenderer({
@@ -48,13 +53,6 @@ export function createScenes(
     antialias: false,
     canvas: canvas,
   });
-
-  const userSettings: UserSettings = {
-    lastUpdate: 0,
-    shadowMapSize: 512,
-    useDynamicLighting: true,
-    useShadows: true,
-  };
 
   webGLRenderer.setPixelRatio(devicePixelRatio);
 
@@ -119,6 +117,7 @@ export function createScenes(
   serviceManager.services.add(webGLRendererUserSettingsManager);
   serviceManager.services.add(rendererDimensionsManager);
   serviceManager.services.add(sceneTransition);
+  serviceManager.services.add(userSettingsSync);
 
   mainLoop.updatables.add(serviceManager);
   mainLoop.updatables.add(viewBagSceneObserver);
@@ -130,4 +129,5 @@ export function createScenes(
   mainLoop.updatables.add(rendererDimensionsManager);
   mainLoop.updatables.add(css2DRendererStatsHook);
   mainLoop.updatables.add(webGLRendererStatsHook);
+  mainLoop.updatables.add(userSettingsSync);
 }

@@ -21,6 +21,7 @@ import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
 import type { ViewBag as IViewBag } from "@personalidol/loading-manager/src/ViewBag.interface";
 
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { UIState } from "./UIState.type";
 import type { UIStateController as IUIStateController } from "./UIStateController.interface";
 import type { UserSettings } from "./UserSettings.type";
@@ -56,8 +57,8 @@ export function UIStateController(
 
   let _uiStateCurrentMap: null | string = uiState.currentMap;
 
-  let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle(domMessagePort, "pi-in-game-menu");
-  let _optionsScreenHandle: IDOMElementViewHandle = DOMElementViewHandle(domMessagePort, "pi-options");
+  let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu");
+  let _userSettingsScreenHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-user-settings");
 
   function start() {
     uiMessagePort.onmessage = _domMessageRouter;
@@ -69,7 +70,7 @@ export function UIStateController(
 
   function update(delta: number, elapsedTime: number): void {
     _inGameMenuHandle.enable(uiState.isInGameMenuOpened);
-    _optionsScreenHandle.enable(uiState.isOptionsScreenOpened);
+    _userSettingsScreenHandle.enable(uiState.isOptionsScreenOpened);
 
     if (directorState.isTransitioning) {
       // Don't do anything with the director if a scene is loading.

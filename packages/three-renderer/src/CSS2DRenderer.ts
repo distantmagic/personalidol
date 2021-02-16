@@ -7,6 +7,7 @@ import { isCSS2DObject } from "./isCSS2DObject";
 import type { Camera } from "three/src/cameras/Camera";
 import type { Scene } from "three/src/scenes/Scene";
 
+import type { DOMElementsLookup } from "@personalidol/dom-renderer/src/DOMElementsLookup.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 
 import type { CSS2DObject } from "./CSS2DObject.interface";
@@ -110,11 +111,11 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
   }
 
   function _reportRenderBatch(css2DObjects: Array<CSS2DObject>) {
-    const renderBatch: Array<MessageDOMUIRender> = [];
+    const renderBatch: Array<MessageDOMUIRender<DOMElementsLookup>> = [];
 
     for (let object of css2DObjects) {
       if (object.isDirty) {
-        renderBatch.push(<MessageDOMUIRender>{
+        renderBatch.push(<MessageDOMUIRender<DOMElementsLookup>>{
           element: object.element,
           id: object.uuid,
           props: {

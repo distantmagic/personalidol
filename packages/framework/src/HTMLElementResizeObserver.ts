@@ -48,6 +48,7 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isHTMLElementResizeObserver: true,
     name: "HTMLElementResizeObserver",
 
     start: start,

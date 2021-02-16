@@ -4,6 +4,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { SpotLight } from "three/src/lights/SpotLight";
 
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+import { onlyOne } from "@personalidol/framework/src/onlyOne";
 
 import { useLightShadowUserSettings } from "./useLightShadowUserSettings";
 import { useObject3DUserSettings } from "./useObject3DUserSettings";
@@ -29,6 +30,7 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
   const _color = new Color(parseInt(entity.color, 16));
   const _group = new Group();
   const _spotLight = new SpotLight(_color, entity.intensity);
+  const _target: View = onlyOne(targetedViews, `SpotLight must have exactly 1 target, got: "${targetedViews.size}"`);
 
   _group.add(_spotLight);
 
@@ -51,18 +53,6 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     }
   }
 
-  function _getTarget(): View {
-    if (targetedViews.size > 1) {
-      throw new Error(`SpotLight can have at most 1 target, got: "${targetedViews.size}"`);
-    }
-
-    for (let target of targetedViews) {
-      return target;
-    }
-
-    throw new Error(`SpotLight expects exactly one target.`);
-  }
-
   function dispose(): void {
     state.isDisposed = true;
 
@@ -80,10 +70,8 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
   }
 
   function preload(): void {
-    const target: View = _getTarget();
-
     _spotLight.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-    _spotLight.target = target.object3D;
+    _spotLight.target = _target.object3D;
 
     const distanceToTarget: number = _spotLight.position.distanceTo(_spotLight.target.position);
 

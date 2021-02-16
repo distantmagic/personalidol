@@ -91,6 +91,7 @@ export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler:
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMainLoop: true,
     name: "MainLoop",
     tickTimerState: tickTimerState,
     updatables: updatables,

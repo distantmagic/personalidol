@@ -48,6 +48,7 @@ let quakeMapsMessagePort: null | MessagePort = null;
 let statsMessagePort: null | MessagePort = null;
 let texturesMessagePort: null | MessagePort = null;
 let uiMessagePort: null | MessagePort = null;
+let userSettingsMessagePort: null | MessagePort = null;
 
 function _createScenesSafe(): void {
   if (
@@ -62,7 +63,8 @@ function _createScenesSafe(): void {
     quakeMapsMessagePort === null ||
     statsMessagePort === null ||
     texturesMessagePort === null ||
-    uiMessagePort === null
+    uiMessagePort === null ||
+    userSettingsMessagePort === null
   ) {
     return;
   }
@@ -102,6 +104,7 @@ function _createScenesSafe(): void {
     statsMessagePort,
     texturesMessagePort,
     uiMessagePort,
+    userSettingsMessagePort,
   );
 
   _isBootstrapped = true;
@@ -220,6 +223,11 @@ self.onmessage = createRouter({
 
   uiMessagePort(port: MessagePort): void {
     uiMessagePort = port;
+    _createScenesSafe();
+  },
+
+  userSettingsMessagePort(port: MessagePort): void {
+    userSettingsMessagePort = port;
     _createScenesSafe();
   },
 

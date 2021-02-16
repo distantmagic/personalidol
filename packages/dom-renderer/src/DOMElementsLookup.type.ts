@@ -1,3 +1,5 @@
+import type { StatsReporterDOMElementView } from "./StatsReporterDOMElementView";
+
 export type DOMElementsLookup = {
-  [key: string]: typeof HTMLElement;
+  "pi-stats-reporter": typeof StatsReporterDOMElementView;
 };

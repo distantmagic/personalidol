@@ -43,6 +43,7 @@ export function WorkerService(worker: Worker, workerName: string, updater: null 
 
   return {
     id: MathUtils.generateUUID(),
+    isWorkerService: true,
     name: `WorkerService(${workerName})`,
 
     ready: ready,

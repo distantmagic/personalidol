@@ -4,8 +4,8 @@ import { getPrimaryPointerClientX } from "./getPrimaryPointerClientX";
 import { getPrimaryPointerClientY } from "./getPrimaryPointerClientY";
 import { getPrimaryPointerStretchVectorX } from "./getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "./getPrimaryPointerStretchVectorY";
+import { isPointerInitiatedByRootElement } from "./isPointerInitiatedByRootElement";
 import { isPrimaryMouseButtonPressed } from "./isPrimaryMouseButtonPressed";
-import { isPrimaryPointerInitiatedByRootElement } from "./isPrimaryPointerInitiatedByRootElement";
 import { isPrimaryTouchPressed } from "./isPrimaryTouchPressed";
 
 import type { StatsHook } from "./StatsHook.interface";
@@ -17,8 +17,8 @@ const DEBUG_NAME: "input" = "input";
 export function InputStatsHook(inputState: Int32Array): StatsHook {
   const statsReport: StatsReport = {
     debugName: DEBUG_NAME,
+    isPointerInitiatedByRootElement: false,
     isPrimaryMouseButtonPressed: false,
-    isPrimaryPointerInitiatedByRootElement: false,
     isPrimaryTouchPressed: false,
     lastUpdate: 0,
     primaryPointerClientX: 0,
@@ -30,8 +30,8 @@ export function InputStatsHook(inputState: Int32Array): StatsHook {
   function reset(): void {}
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    statsReport.isPointerInitiatedByRootElement = isPointerInitiatedByRootElement(inputState);
     statsReport.isPrimaryMouseButtonPressed = isPrimaryMouseButtonPressed(inputState);
-    statsReport.isPrimaryPointerInitiatedByRootElement = isPrimaryPointerInitiatedByRootElement(inputState);
     statsReport.isPrimaryTouchPressed = isPrimaryTouchPressed(inputState);
     statsReport.lastUpdate = tickTimerState.currentTick;
     statsReport.primaryPointerClientX = getPrimaryPointerClientX(inputState);

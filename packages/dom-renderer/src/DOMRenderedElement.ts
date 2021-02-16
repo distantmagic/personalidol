@@ -9,21 +9,22 @@ import type { Director as IDirector } from "@personalidol/loading-manager/src/Di
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementView } from "./DOMElementView.interface";
 import type { DOMRenderedElement as IDOMRenderedElement } from "./DOMRenderedElement.interface";
 import type { ReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
 
-export function DOMRenderedElement(
+export function DOMRenderedElement<T extends DOMElementsLookup>(
   logger: Logger,
   id: string,
-  element: string,
+  element: keyof T,
   inputState: Int32Array,
   uiRootElement: HTMLElement,
   domElementView: DOMElementView,
   tickTimerState: TickTimerState,
   domMessagePort: MessagePort,
   uiMessagePort: MessagePort
-): IDOMRenderedElement {
+): IDOMRenderedElement<T> {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,

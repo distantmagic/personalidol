@@ -19,6 +19,7 @@ import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { MainMenuScene as IMainMenuScene } from "./MainMenuScene.interface";
 
 const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
@@ -132,7 +133,7 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
 
     domMessagePort.postMessage({
-      render: <MessageDOMUIRender>{
+      render: <MessageDOMUIRender<DOMElementsLookup>>{
         id: _domMainMenuElementId,
         element: "pi-main-menu",
         props: {},

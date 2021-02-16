@@ -1,11 +1,11 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-// import type { DOMElementProps } from "./DOMElementProps.type";
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementViewHandle as IDOMElementViewHandle } from "./DOMElementViewHandle.interface";
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
-export function DOMElementViewHandle(domMessagePort: MessagePort, elementName: string): IDOMElementViewHandle {
+export function DOMElementViewHandle<T extends DOMElementsLookup>(domMessagePort: MessagePort, elementName: keyof T): IDOMElementViewHandle {
   let _domElementId: null | string = null;
 
   function enable(isEnabled: boolean) {
@@ -27,7 +27,7 @@ export function DOMElementViewHandle(domMessagePort: MessagePort, elementName: s
     }
 
     domMessagePort.postMessage({
-      render: <MessageDOMUIRender>{
+      render: <MessageDOMUIRender<T>>{
         element: elementName,
         id: _domElementId,
         props: {},

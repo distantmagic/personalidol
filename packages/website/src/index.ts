@@ -6,8 +6,7 @@ import { createSingleThreadMessageChannel } from "@personalidol/framework/src/cr
 import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
-import { domElementsLookup as personalidolDOMElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
-import { domElementsLookup } from "@personalidol/dom-renderer/src/domElementsLookup";
+import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
@@ -33,6 +32,8 @@ import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWo
 import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
+import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
+import { UserSettingsSync } from "@personalidol/framework/src/UserSettingsSync";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 import workers from "./workers.json";
@@ -92,6 +93,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const mouseObserver = MouseObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
   const touchObserver = TouchObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
 
+  const userSettings = UserSettings.createEmptyState();
+  const userSettingsMessageChannel = createMultiThreadMessageChannel();
+  const userSettingsSync = UserSettingsSync(userSettings, userSettingsMessageChannel.port1, THREAD_DEBUG_NAME);
+
   const serviceManager = ServiceManager(logger);
 
   serviceManager.services.add(htmlElementResizeObserver);
@@ -100,6 +105,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
   serviceManager.services.add(touchObserver);
   serviceManager.services.add(PreventDefaultInput(canvas));
+  serviceManager.services.add(userSettingsSync);
   serviceManager.services.add(statsReporter);
 
   mainLoop.updatables.add(htmlElementResizeObserver);
@@ -107,6 +113,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   mainLoop.updatables.add(mouseObserver);
   mainLoop.updatables.add(touchObserver);
   mainLoop.updatables.add(inputStatsHook);
+  mainLoop.updatables.add(userSettingsSync);
   mainLoop.updatables.add(statsReporter);
   mainLoop.updatables.add(serviceManager);
 
@@ -157,10 +164,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const uiMessageChannel = createMultiThreadMessageChannel();
-  const domUIController = DOMUIController(logger, inputState, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, {
-    ...domElementsLookup,
-    ...personalidolDOMElementsLookup,
-  });
+  const domUIController = DOMUIController(logger, inputState, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, domElementsLookup);
 
   mainLoop.updatables.add(domUIController);
   serviceManager.services.add(domUIController);
@@ -446,6 +450,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         statsMessagePort: statsMessageChannel.port2,
         texturesMessagePort: texturesMessageChannel.port2,
         uiMessagePort: uiMessageChannel.port2,
+        userSettingsMessagePort: userSettingsMessageChannel.port2,
       },
       [
         domRendererMessageChannel.port2,
@@ -456,7 +461,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         progressMessageChannel.port2,
         quakeMapsMessageChannel.port2,
         texturesMessageChannel.port2,
-        uiMessageChannel.port2
+        uiMessageChannel.port2,
+        userSettingsMessageChannel.port2,
       ]
     );
 
@@ -514,6 +520,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       statsMessageChannel.port2,
       texturesMessageChannel.port2,
       uiMessageChannel.port2,
+      userSettingsMessageChannel.port2,
     );
   }
 })();
