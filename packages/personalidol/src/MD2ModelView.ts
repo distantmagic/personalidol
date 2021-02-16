@@ -16,7 +16,7 @@ import { requestTexture } from "@personalidol/texture-loader/src/requestTexture"
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
-import { useObject3DUserSettings } from "./useObject3DUserSettings";
+import { UserSettingsManager } from "./UserSettingsManager";
 import { useObjectLabel } from "./useObjectLabel";
 
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
@@ -31,6 +31,7 @@ import type { MD2LoaderMorphPosition } from "@personalidol/three-modules/src/loa
 import type { MD2LoaderParsedGeometryWithParts } from "@personalidol/three-modules/src/loaders/MD2LoaderParsedGeometryWithParts.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 import type { ViewState } from "@personalidol/framework/src/ViewState.type";
@@ -122,12 +123,9 @@ export function MD2ModelView(
   const _mesh: IMesh = createEmptyMesh();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
+  const _userSettingsManager = UserSettingsManager(userSettings, _mesh);
 
   let _animationMixer: null | IAnimationMixer = null;
-
-  function _applyUserSettings() {
-    useObject3DUserSettings(userSettings, _mesh);
-  }
 
   function dispose(): void {
     state.isDisposed = true;
@@ -203,10 +201,6 @@ export function MD2ModelView(
 
     useObjectLabel(domMessagePort, _labelContainer, entity, _mountables, _unmountables, _disposables);
 
-    // User settings
-
-    _applyUserSettings();
-
     // Animations
 
     _animationMixer = new AnimationMixer(_mesh);
@@ -218,6 +212,10 @@ export function MD2ModelView(
     });
 
     const animationAction = _animationMixer.clipAction(animations[0]);
+
+    // User settings
+
+    _userSettingsManager.preload();
 
     _mountables.add(function () {
       // Update animationoffset so identical models standing next to each other
@@ -251,12 +249,12 @@ export function MD2ModelView(
     state.isPaused = false;
   }
 
-  function update(delta: number) {
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
     if (_animationMixer === null) {
       throw new Error("AnimationMixer should be prepared during 'preload' phase.");
     }
 
-    _applyUserSettings();
+    _userSettingsManager.update(delta, elapsedTime, tickTimerState);
 
     if (!state.isPaused) {
       _animationMixer.update(delta);

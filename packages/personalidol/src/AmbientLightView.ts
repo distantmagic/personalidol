@@ -1,6 +1,8 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { UserSettingsManager } from "./UserSettingsManager";
+
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { ViewState } from "@personalidol/framework/src/ViewState.type";
@@ -19,6 +21,7 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
   });
 
   const _ambientLight = new AmbientLight(0xffffff, entity.light);
+  const _userSettingsManager = UserSettingsManager(userSettings, _ambientLight);
 
   function dispose(): void {
     state.isDisposed = true;
@@ -35,6 +38,10 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
   }
 
   function preload(): void {
+    state.isPreloading = true;
+
+    _userSettingsManager.preload();
+
     state.isPreloading = false;
     state.isPreloaded = true;
   }
@@ -47,14 +54,6 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
 
   function unpause(): void {
     state.isPaused = false;
-  }
-
-  function update(): void {
-    if (userSettings.useDynamicLighting) {
-      _ambientLight.intensity = entity.light;
-    } else {
-      _ambientLight.intensity = 1;
-    }
   }
 
   return Object.freeze({
@@ -75,6 +74,6 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
     preload: preload,
     unmount: unmount,
     unpause: unpause,
-    update: update,
+    update: _userSettingsManager.update,
   });
 }

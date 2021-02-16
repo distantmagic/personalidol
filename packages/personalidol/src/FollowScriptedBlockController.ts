@@ -16,9 +16,9 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
     throw new Error(`Can follow more than one target. Got: "${targetedViews.size}"`);
   }
 
-  const state: PauseableState = {
+  const state: PauseableState = Object.seal({
     isPaused: false,
-  };
+  });
 
   const _direction: IVector3 = new Vector3();
   let _followed: View = onlyOne(targetedViews, "Target supposed to be followed does not exist.");

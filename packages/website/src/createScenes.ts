@@ -12,7 +12,6 @@ import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { UserSettingsSync } from "@personalidol/framework/src/UserSettingsSync";
 import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
-import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
 
 import type { Logger } from "loglevel";
 
@@ -55,6 +54,8 @@ export function createScenes(
   });
 
   webGLRenderer.setPixelRatio(devicePixelRatio);
+  webGLRenderer.shadowMap.enabled = true;
+  webGLRenderer.shadowMap.autoUpdate = true;
 
   const effectComposer = new EffectComposer(webGLRenderer);
   const css2DRenderer = CSS2DRenderer(domMessagePort);
@@ -68,8 +69,6 @@ export function createScenes(
 
   statsReporter.hooks.add(css2DRendererStatsHook);
   statsReporter.hooks.add(webGLRendererStatsHook);
-
-  const webGLRendererUserSettingsManager = WebGLRendererUserSettingsManager(userSettings, webGLRenderer);
 
   const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
@@ -102,32 +101,24 @@ export function createScenes(
     uiState
   );
 
-  // prettier-ignore
-  loadingSceneDirector.state.next = LoadingScreenScene(
-    effectComposer,
-    dimensionsState,
-    domMessagePort,
-    progressMessagePort
-  );
+  loadingSceneDirector.state.next = LoadingScreenScene(userSettings, effectComposer, dimensionsState, domMessagePort, progressMessagePort);
 
+  serviceManager.services.add(userSettingsSync);
   serviceManager.services.add(viewBagSceneObserver);
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(uiStateController);
   serviceManager.services.add(loadingSceneDirector);
-  serviceManager.services.add(webGLRendererUserSettingsManager);
   serviceManager.services.add(rendererDimensionsManager);
   serviceManager.services.add(sceneTransition);
-  serviceManager.services.add(userSettingsSync);
 
+  mainLoop.updatables.add(userSettingsSync);
   mainLoop.updatables.add(serviceManager);
   mainLoop.updatables.add(viewBagSceneObserver);
   mainLoop.updatables.add(currentSceneDirector);
   mainLoop.updatables.add(loadingSceneDirector);
   mainLoop.updatables.add(uiStateController);
   mainLoop.updatables.add(sceneTransition);
-  mainLoop.updatables.add(webGLRendererUserSettingsManager);
   mainLoop.updatables.add(rendererDimensionsManager);
   mainLoop.updatables.add(css2DRendererStatsHook);
   mainLoop.updatables.add(webGLRendererStatsHook);
-  mainLoop.updatables.add(userSettingsSync);
 }

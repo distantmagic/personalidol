@@ -13,7 +13,7 @@ import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { mountAll } from "@personalidol/framework/src/mountAll";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
-import { useObject3DUserSettings } from "./useObject3DUserSettings";
+import { UserSettingsManager } from "./UserSettingsManager";
 
 import type { Box3 } from "three/src/math/Box3";
 import type { Logger } from "loglevel";
@@ -53,10 +53,7 @@ export function WorldspawnGeometryView(
   const _mesh: IMesh = createEmptyMesh();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
-
-  function _applyUserSettings() {
-    useObject3DUserSettings(userSettings, _mesh);
-  }
+  const _userSettingsManager = UserSettingsManager(userSettings, _mesh);
 
   function dispose(): void {
     state.isDisposed = true;
@@ -130,7 +127,8 @@ export function WorldspawnGeometryView(
     _mesh.position.set(_geometryOffset.x, _geometryOffset.y, _geometryOffset.z);
     _mesh.matrixAutoUpdate = matrixAutoUpdate;
 
-    _applyUserSettings();
+    // Apply user settings before updating mesh matrix.
+    _userSettingsManager.preload();
 
     if (!matrixAutoUpdate) {
       // This one update is necessary to set offsets correctly.
@@ -174,6 +172,6 @@ export function WorldspawnGeometryView(
     preload: preload,
     unmount: unmount,
     unpause: unpause,
-    update: _applyUserSettings,
+    update: _userSettingsManager.update,
   });
 }

@@ -6,9 +6,9 @@ import type { ScriptedBlockController } from "./ScriptedBlockController.interfac
 import type { WorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
 
 export function RotateScriptedBlockController(blockView: WorldspawnGeometryView): ScriptedBlockController {
-  const state: PauseableState = {
+  const state: PauseableState = Object.seal({
     isPaused: false,
-  };
+  });
 
   function pause(): void {
     state.isPaused = true;

@@ -18,6 +18,8 @@ import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
+import { UserSettingsManager } from "./UserSettingsManager";
+
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
@@ -26,11 +28,19 @@ import type { ProgressError } from "@personalidol/loading-manager/src/ProgressEr
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
+import type { UserSettings } from "./UserSettings.type";
 
-export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsState: Uint32Array, domMessagePort: MessagePort, progressMessagePort: MessagePort): IScene {
+export function LoadingScreenScene(
+  userSettings: UserSettings,
+  effectComposer: EffectComposer,
+  dimensionsState: Uint32Array,
+  domMessagePort: MessagePort,
+  progressMessagePort: MessagePort
+): IScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -43,6 +53,7 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   let _domLoadingScreenElementId: null | string = null;
 
   const _ambientLight = new AmbientLight(0xffffff, 0.1);
+  const _ambientLightUserSettingsManager = UserSettingsManager(userSettings, _ambientLight);
   const _camera = new PerspectiveCamera();
 
   _camera.lookAt(0, 0, 0);
@@ -53,11 +64,12 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   const _unmountables: Set<UnmountableCallback> = new Set();
   const _scene = new Scene();
   const _spotLight = new SpotLight(0xffffff);
+  const _spotLightUserSettingsManager = UserSettingsManager(userSettings, _spotLight);
 
   _spotLight.angle = Math.PI / 5;
-  _spotLight.castShadow = true;
   _spotLight.decay = 1;
   _spotLight.distance = 16;
+  _spotLight.intensity = 1;
   _spotLight.penumbra = 1;
   _spotLight.position.y = 8;
   _spotLight.shadow.camera.near = 0.1;
@@ -69,10 +81,9 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     flatShading: true,
   });
   const _boxMesh = new Mesh(_boxGeometry, _boxMaterial);
+  const _boxMeshUserSettingsManager = UserSettingsManager(userSettings, _spotLight);
 
   _boxMesh.position.y = 4;
-  _boxMesh.castShadow = true;
-  _boxMesh.receiveShadow = true;
 
   _disposables.add(disposableGeneric(_boxGeometry));
   _disposables.add(disposableMaterial(_boxMaterial));
@@ -167,8 +178,6 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     _unmountables.add(unmountPass(effectComposer, renderPass));
     _disposables.add(disposableGeneric(renderPass));
 
-    _spotLight.intensity = 0;
-
     _scene.add(_ambientLight);
     _scene.add(_boxMesh);
     _scene.add(_spotLight);
@@ -185,6 +194,10 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
   }
 
   function preload(): void {
+    _ambientLightUserSettingsManager.preload();
+    _boxMeshUserSettingsManager.preload();
+    _spotLightUserSettingsManager.preload();
+
     state.isPreloaded = true;
   }
 
@@ -203,14 +216,15 @@ export function LoadingScreenScene(effectComposer: EffectComposer, dimensionsSta
     state.isPaused = false;
   }
 
-  function update(delta: number): void {
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     updateStoreCameraAspect(_camera, dimensionsState);
-    _spotLight.intensity = Math.min(2, _spotLight.intensity + 2 * delta);
 
-    if (_spotLight.intensity > 0.4) {
-      _boxMesh.rotation.x += delta;
-      _boxMesh.rotation.z += delta;
-    }
+    _ambientLightUserSettingsManager.update(delta, elapsedTime, tickTimerState);
+    _boxMeshUserSettingsManager.update(delta, elapsedTime, tickTimerState);
+    _spotLightUserSettingsManager.update(delta, elapsedTime, tickTimerState);
+
+    _boxMesh.rotation.x += delta;
+    _boxMesh.rotation.z += delta;
 
     effectComposer.render(delta);
   }

@@ -31,7 +31,6 @@ const _css = `
 
   #main-menu {
     align-items: flex-start;
-    background-color: black;
     color: white;
     display: grid;
     font-size: 1.6rem;

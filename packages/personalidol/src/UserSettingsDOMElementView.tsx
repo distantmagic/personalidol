@@ -75,11 +75,6 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     const userSettings = must(this.userSettings);
 
     userSettings.useDynamicLighting = !userSettings.useDynamicLighting;
-
-    if (!userSettings.useDynamicLighting) {
-      userSettings.useShadows = false;
-    }
-
     userSettings.version += 1;
   }
 
