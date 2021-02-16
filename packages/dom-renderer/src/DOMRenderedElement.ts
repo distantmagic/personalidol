@@ -8,23 +8,25 @@ import type { Logger } from "loglevel";
 import type { Director as IDirector } from "@personalidol/loading-manager/src/Director.interface";
 import type { MountState } from "@personalidol/framework/src/MountState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementView } from "./DOMElementView.interface";
 import type { DOMRenderedElement as IDOMRenderedElement } from "./DOMRenderedElement.interface";
 import type { ReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
 
-export function DOMRenderedElement<T extends DOMElementsLookup>(
+export function DOMRenderedElement<T extends DOMElementsLookup, U extends UserSettings>(
   logger: Logger,
   id: string,
   element: keyof T,
   inputState: Int32Array,
   uiRootElement: HTMLElement,
-  domElementView: DOMElementView,
+  domElementView: DOMElementView<U>,
   tickTimerState: TickTimerState,
+  userSettings: U,
   domMessagePort: MessagePort,
   uiMessagePort: MessagePort
-): IDOMRenderedElement<T> {
+): IDOMRenderedElement<T, U> {
   const state: MountState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -58,6 +60,7 @@ export function DOMRenderedElement<T extends DOMElementsLookup>(
     domElementView.domMessagePort = domMessagePort;
     domElementView.inputState = inputState;
     domElementView.uiMessagePort = uiMessagePort;
+    domElementView.userSettings = userSettings;
 
     state.isPreloading = false;
     state.isPreloaded = true;

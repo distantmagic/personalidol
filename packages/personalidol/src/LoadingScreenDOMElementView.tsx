@@ -5,6 +5,8 @@ import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/Replaceabl
 
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 
+import type { UserSettings } from "./UserSettings.type";
+
 const _css = `
   #comment,
   #progress-value,
@@ -66,7 +68,7 @@ const _css = `
   }
 `;
 
-export class LoadingScreenDOMElementView extends DOMElementView {
+export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
   constructor() {
     super();
 

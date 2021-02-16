@@ -7,6 +7,7 @@ import { ReplaceableStyleSheet } from "./ReplaceableStyleSheet";
 
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 import type { DOMElementProps } from "./DOMElementProps.type";
 import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
@@ -62,7 +63,7 @@ function _sortCompareReports(a: FlattenedStatsReport, b: FlattenedStatsReport): 
   return a[0].localeCompare(b[0]);
 }
 
-export class StatsReporterDOMElementView extends DOMElementView implements IStatsReporterDOMElementView {
+export class StatsReporterDOMElementView extends DOMElementView<UserSettings> implements IStatsReporterDOMElementView {
   public statsReportsFlattened: Array<FlattenedStatsReport> = [];
 
   constructor() {

@@ -6,6 +6,8 @@ import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/Replaceabl
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 
+import type { UserSettings } from "./UserSettings.type";
+
 const _css = `
   :host {
     all: initial;
@@ -120,7 +122,7 @@ const _css = `
   }
 `;
 
-export class MainMenuDOMElementView extends DOMElementView {
+export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
   constructor() {
     super();
 

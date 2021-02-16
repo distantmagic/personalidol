@@ -8,6 +8,8 @@ import type { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObj
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+import type { UserSettings } from "./UserSettings.type";
+
 const OPACITY_DAMP = 10;
 const FADE_OUT_DISTANCE_SQUARED: number = 4000;
 
@@ -51,7 +53,7 @@ type LabelProps = DOMElementProps & {
   label: string;
 };
 
-export class ObjectLabelDOMElementView extends DOMElementView {
+export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   public objectProps: LabelProps = {
     label: "",
   };

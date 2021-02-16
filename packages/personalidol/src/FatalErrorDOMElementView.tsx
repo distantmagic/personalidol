@@ -5,6 +5,8 @@ import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/Replaceabl
 
 import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
 
+import type { UserSettings } from "./UserSettings.type";
+
 const _css = `
   :host {
     all: initial;
@@ -53,7 +55,7 @@ const _css = `
   }
 `;
 
-export class FatalErrorDOMElementView extends DOMElementView {
+export class FatalErrorDOMElementView extends DOMElementView<UserSettings> {
   constructor() {
     super();
 

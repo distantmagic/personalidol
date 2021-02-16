@@ -8,11 +8,13 @@ import { preload } from "@personalidol/framework/src/preload";
 
 import { clearHTMLElement } from "./clearHTMLElement";
 import { DOMRenderedElement } from "./DOMRenderedElement";
+import { isDOMElementViewConstructor } from "./isDOMElementViewConstructor";
 import { isHTMLElementConstructor } from "./isHTMLElementConstructor";
 
 import type { Logger } from "loglevel";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementView } from "./DOMElementView.interface";
@@ -40,36 +42,37 @@ async function _defineCustomElement<T extends DOMElementsLookup>(logger: Logger,
   logger.info(`DEFINE("${name}")`);
 }
 
-export function DOMUIController<T extends DOMElementsLookup>(
+export function DOMUIController<T extends DOMElementsLookup, U extends UserSettings>(
   logger: Logger,
   inputState: Int32Array,
   tickTimerState: TickTimerState,
   uiMessagePort: MessagePort,
   uiRootElement: HTMLElement,
+  userSettings: U,
   domElementsLookup: T
-): IDOMUIController<T> {
+): IDOMUIController<T, U> {
   const internalDOMMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _delta: number = 0;
   let _elapsedTime: number = 0;
   let _isRootElementCleared: boolean = false;
 
-  const _renderedElements: Set<IDOMRenderedElement<T>> = new Set();
-  const _renderedElementsLookup: Map<string, IDOMRenderedElement<T>> = new Map();
+  const _renderedElements: Set<IDOMRenderedElement<T, U>> = new Set();
+  const _renderedElementsLookup: Map<string, IDOMRenderedElement<T, U>> = new Map();
   const _uiMessageRouter = createRouter({
     dispose: dispose,
     render: render,
     renderBatch: renderBatch,
   });
 
-  function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender<T>): IDOMRenderedElement<T> {
-    const DOMElementConstructor = customElements.get(message.element);
+  function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender<T>): IDOMRenderedElement<T, U> {
+    const DOMElementViewConstructor: HTMLElement = customElements.get(message.element);
 
-    if (!DOMElementConstructor) {
-      throw new Error(`Custom element is not registered: "${message.element}"`);
+    if (!isDOMElementViewConstructor(DOMElementViewConstructor)) {
+      throw new Error("Object is not a DOMElementView constructor.");
     }
 
-    const domElementView: DOMElementView = new DOMElementConstructor();
-    const renderedElement: IDOMRenderedElement<T> = DOMRenderedElement<T>(
+    const domElementView: DOMElementView<U> = new DOMElementViewConstructor<U>();
+    const renderedElement: IDOMRenderedElement<T, U> = DOMRenderedElement<T, U>(
       logger,
       message.id,
       message.element,
@@ -77,6 +80,7 @@ export function DOMUIController<T extends DOMElementsLookup>(
       uiRootElement,
       domElementView,
       tickTimerState,
+      userSettings,
       internalDOMMessageChannel.port2,
       uiMessagePort
     );
@@ -100,7 +104,7 @@ export function DOMUIController<T extends DOMElementsLookup>(
   }
 
   function _disposeElementById(id: string): void {
-    let renderedElement: undefined | IDOMRenderedElement<T> = _renderedElementsLookup.get(id);
+    let renderedElement: undefined | IDOMRenderedElement<T, U> = _renderedElementsLookup.get(id);
 
     if (!renderedElement) {
       throw new Error(`Element is not rendered and can't be disposed: "${id}"`);
@@ -124,7 +128,7 @@ export function DOMUIController<T extends DOMElementsLookup>(
     return ElementConstructor;
   }
 
-  function _updateRenderedElement(renderedElement: IDOMRenderedElement<T>) {
+  function _updateRenderedElement(renderedElement: IDOMRenderedElement<T, U>) {
     if (!renderedElement.state.isPreloaded) {
       return;
     }
@@ -152,7 +156,7 @@ export function DOMUIController<T extends DOMElementsLookup>(
       _defineCustomElementByName(message.element);
     }
 
-    let renderedElement: undefined | IDOMRenderedElement<T> = _renderedElementsLookup.get(message.id);
+    let renderedElement: undefined | IDOMRenderedElement<T, U> = _renderedElementsLookup.get(message.id);
 
     if (!renderedElement) {
       renderedElement = _createDOMUIElementByRenderMessage(message);

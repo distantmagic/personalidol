@@ -1,12 +1,11 @@
 import { render } from "preact";
-// import { MathUtils } from "three/src/math/MathUtils";
 
 import { Input } from "@personalidol/framework/src/Input";
 
 import type { VNode } from "preact";
 
-// import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementView as IDOMElementView } from "./DOMElementView.interface";
@@ -14,7 +13,7 @@ import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./Replacea
 
 let _inputStatePlaceholder: null | Int32Array = null;
 
-export abstract class DOMElementView extends HTMLElement implements IDOMElementView {
+export abstract class DOMElementView<U extends UserSettings> extends HTMLElement implements IDOMElementView<U> {
   public domMessagePort: null | MessagePort = null;
   public inputState: Int32Array;
   public needsRender: boolean = true;
@@ -24,6 +23,7 @@ export abstract class DOMElementView extends HTMLElement implements IDOMElementV
   public shadow: ShadowRoot;
   public styleSheet: null | IReplaceableStyleSheet = null;
   public uiMessagePort: null | MessagePort = null;
+  public userSettings: null | U = null;
   public viewLastUpdate: number = 0;
 
   constructor() {

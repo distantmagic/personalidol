@@ -9,6 +9,8 @@ import { DOMZIndex } from "./DOMZIndex.enum";
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+import type { UserSettings } from "./UserSettings.type";
+
 const _css = `
   :host {
     all: initial;
@@ -44,7 +46,7 @@ const _css = `
   }
 `;
 
-export class UserSettingsDOMElementView extends DOMElementView {
+export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   constructor() {
     super();
 

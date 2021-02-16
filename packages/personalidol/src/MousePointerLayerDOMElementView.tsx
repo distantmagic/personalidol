@@ -7,6 +7,8 @@ import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/Replaceabl
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 
+import type { UserSettings } from "./UserSettings.type";
+
 const _css = `
   :host,
   #mouse-pointer-layer,
@@ -41,7 +43,7 @@ const _css = `
   }
 `;
 
-export class MousePointerLayerDOMElementView extends DOMElementView {
+export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings> {
   constructor() {
     super();
 
