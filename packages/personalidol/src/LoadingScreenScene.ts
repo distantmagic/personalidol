@@ -18,7 +18,9 @@ import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
 
-import { UserSettingsManager } from "./UserSettingsManager";
+import { BackgroundLightUserSettingsManager } from "./BackgroundLightUserSettingsManager";
+import { MeshUserSettingsManager } from "./MeshUserSettingsManager";
+import { ShadowLightUserSettingsManager } from "./ShadowLightUserSettingsManager";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
@@ -53,7 +55,7 @@ export function LoadingScreenScene(
   let _domLoadingScreenElementId: null | string = null;
 
   const _ambientLight = new AmbientLight(0xffffff, 0.1);
-  const _ambientLightUserSettingsManager = UserSettingsManager(userSettings, _ambientLight);
+  const _ambientLightUserSettingsManager = BackgroundLightUserSettingsManager(userSettings, _ambientLight);
   const _camera = new PerspectiveCamera();
 
   _camera.lookAt(0, 0, 0);
@@ -64,7 +66,7 @@ export function LoadingScreenScene(
   const _unmountables: Set<UnmountableCallback> = new Set();
   const _scene = new Scene();
   const _spotLight = new SpotLight(0xffffff);
-  const _spotLightUserSettingsManager = UserSettingsManager(userSettings, _spotLight);
+  const _spotLightUserSettingsManager = ShadowLightUserSettingsManager(userSettings, _spotLight);
 
   _spotLight.angle = Math.PI / 5;
   _spotLight.decay = 1;
@@ -81,7 +83,7 @@ export function LoadingScreenScene(
     flatShading: true,
   });
   const _boxMesh = new Mesh(_boxGeometry, _boxMaterial);
-  const _boxMeshUserSettingsManager = UserSettingsManager(userSettings, _spotLight);
+  const _boxMeshUserSettingsManager = MeshUserSettingsManager(userSettings, _boxMesh);
 
   _boxMesh.position.y = 4;
 

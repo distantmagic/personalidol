@@ -1,7 +1,7 @@
 import { HemisphereLight } from "three/src/lights/HemisphereLight";
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { UserSettingsManager } from "./UserSettingsManager";
+import { BackgroundLightUserSettingsManager } from "./BackgroundLightUserSettingsManager";
 
 import type { Scene } from "three/src/scenes/Scene";
 
@@ -22,7 +22,7 @@ export function HemisphereLightView(userSettings: UserSettings, scene: Scene, en
 
   // const _hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, entity.light);
   const _hemisphereLight = new HemisphereLight(0xffffff, 0x000000, entity.light);
-  const _userSettingsManager = UserSettingsManager(userSettings, _hemisphereLight);
+  const _userSettingsManager = BackgroundLightUserSettingsManager(userSettings, _hemisphereLight);
 
   function dispose(): void {
     state.isDisposed = true;

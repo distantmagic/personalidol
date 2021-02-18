@@ -13,7 +13,7 @@ import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { mountAll } from "@personalidol/framework/src/mountAll";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
-import { UserSettingsManager } from "./UserSettingsManager";
+import { MeshUserSettingsManager } from "./MeshUserSettingsManager";
 
 import type { Box3 } from "three/src/math/Box3";
 import type { Logger } from "loglevel";
@@ -53,7 +53,7 @@ export function WorldspawnGeometryView(
   const _mesh: IMesh = createEmptyMesh();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
-  const _userSettingsManager = UserSettingsManager(userSettings, _mesh);
+  const _userSettingsManager = MeshUserSettingsManager(userSettings, _mesh);
 
   function dispose(): void {
     state.isDisposed = true;

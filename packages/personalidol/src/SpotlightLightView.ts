@@ -5,7 +5,7 @@ import { SpotLight } from "three/src/lights/SpotLight";
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
 import { onlyOne } from "@personalidol/framework/src/onlyOne";
 
-import { UserSettingsManager } from "./UserSettingsManager";
+import { ShadowLightUserSettingsManager } from "./ShadowLightUserSettingsManager";
 
 import type { Scene } from "three/src/scenes/Scene";
 
@@ -28,7 +28,7 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
   const _color = new Color(parseInt(entity.color, 16));
   const _spotLight = new SpotLight(_color, entity.intensity);
   const _target: View = onlyOne(targetedViews, `SpotLight must have exactly 1 target, got: "${targetedViews.size}"`);
-  const _userSettingsManager = UserSettingsManager(userSettings, _spotLight);
+  const _userSettingsManager = ShadowLightUserSettingsManager(userSettings, _spotLight);
 
   function dispose(): void {
     state.isDisposed = true;

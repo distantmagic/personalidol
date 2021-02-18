@@ -4,7 +4,7 @@ import { PointLight } from "three/src/lights/PointLight";
 
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
 
-import { UserSettingsManager } from "./UserSettingsManager";
+import { ShadowLightUserSettingsManager } from "./ShadowLightUserSettingsManager";
 
 import type { Scene } from "three/src/scenes/Scene";
 
@@ -25,7 +25,7 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
 
   const _color = new Color(parseInt(entity.color, 16));
   const _pointLight = new PointLight(_color, entity.intensity, 1024);
-  const _userSetingsManager = UserSettingsManager(userSettings, _pointLight);
+  const _userSetingsManager = ShadowLightUserSettingsManager(userSettings, _pointLight);
 
   function dispose(): void {
     state.isDisposed = true;

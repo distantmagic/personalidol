@@ -1,7 +1,7 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { UserSettingsManager } from "./UserSettingsManager";
+import { BackgroundLightUserSettingsManager } from "./BackgroundLightUserSettingsManager";
 
 import type { Scene } from "three/src/scenes/Scene";
 
@@ -21,7 +21,7 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
   });
 
   const _ambientLight = new AmbientLight(0xffffff, entity.light);
-  const _userSettingsManager = UserSettingsManager(userSettings, _ambientLight);
+  const _userSettingsManager = BackgroundLightUserSettingsManager(userSettings, _ambientLight);
 
   function dispose(): void {
     state.isDisposed = true;

@@ -16,7 +16,7 @@ import { requestTexture } from "@personalidol/texture-loader/src/requestTexture"
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
-import { UserSettingsManager } from "./UserSettingsManager";
+import { MeshUserSettingsManager } from "./MeshUserSettingsManager";
 import { useObjectLabel } from "./useObjectLabel";
 
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
@@ -123,7 +123,7 @@ export function MD2ModelView(
   const _mesh: IMesh = createEmptyMesh();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
-  const _userSettingsManager = UserSettingsManager(userSettings, _mesh);
+  const _userSettingsManager = MeshUserSettingsManager(userSettings, _mesh);
 
   let _animationMixer: null | IAnimationMixer = null;
 
