@@ -1,3 +1,7 @@
+import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+
+import { createSettingsHandle } from "./createSettingsHandle";
+
 import type { PointLight } from "three/src/lights/PointLight";
 import type { SpotLight } from "three/src/lights/SpotLight";
 
@@ -7,25 +11,27 @@ import type { UserSettingsManager as IUserSettingsManager } from "./UserSettings
 type SupportedLights = PointLight | SpotLight;
 
 export function ShadowLightUserSettingsManager(userSettings: UserSettings, light: SupportedLights): IUserSettingsManager {
-  let _lastAppliedVersion: number = -1;
-  let _useShadows: boolean = false;
+  const applySettings = createSettingsHandle(userSettings, function () {
+    light.visible = userSettings.useDynamicLighting;
+    light.castShadow = userSettings.useShadows;
 
-  function _applySettings(): void {
-    if (userSettings.version <= _lastAppliedVersion) {
+    if (light.shadow.mapSize.height === userSettings.shadowMapSize && light.shadow.mapSize.width === userSettings.shadowMapSize) {
       return;
     }
 
-    _lastAppliedVersion = userSettings.version;
-    _useShadows = userSettings.useDynamicLighting && userSettings.useShadows;
+    light.shadow.mapSize.height = userSettings.shadowMapSize;
+    light.shadow.mapSize.width = userSettings.shadowMapSize;
 
-    light.visible = userSettings.useDynamicLighting;
-    light.castShadow = _useShadows;
-  }
+    disposeWebGLRenderTarget(light.shadow.map);
+
+    // @ts-ignore
+    light.shadow.map = null;
+  });
 
   return Object.freeze({
     isUserSettingsManager: true,
 
-    preload: _applySettings,
-    update: _applySettings,
+    preload: applySettings,
+    update: applySettings,
   });
 }

@@ -1,3 +1,5 @@
+import { createSettingsHandle } from "./createSettingsHandle";
+
 import type { AmbientLight } from "three/src/lights/AmbientLight";
 import type { HemisphereLight } from "three/src/lights/HemisphereLight";
 
@@ -10,15 +12,8 @@ const _lightDefaultIntensity: WeakMap<SupportedLights, number> = new WeakMap();
 
 export function BackgroundLightUserSettingsManager(userSettings: UserSettings, light: SupportedLights): IUserSettingsManager {
   let _defaultLightIntensity: undefined | number = 0;
-  let _lastAppliedVersion: number = -1;
 
-  function _applySettings(): void {
-    if (userSettings.version <= _lastAppliedVersion) {
-      return;
-    }
-
-    _lastAppliedVersion = userSettings.version;
-
+  const applySettings = createSettingsHandle(userSettings, function () {
     if (!_lightDefaultIntensity.has(light)) {
       _lightDefaultIntensity.set(light, light.intensity);
     }
@@ -34,12 +29,12 @@ export function BackgroundLightUserSettingsManager(userSettings: UserSettings, l
     } else {
       light.intensity = 1;
     }
-  }
+  });
 
   return Object.freeze({
     isUserSettingsManager: true,
 
-    preload: _applySettings,
-    update: _applySettings,
+    preload: applySettings,
+    update: applySettings,
   });
 }

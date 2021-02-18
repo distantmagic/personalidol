@@ -6,6 +6,8 @@ import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/Replaceabl
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 
+import type { JSX } from "preact";
+
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
@@ -37,7 +39,7 @@ const _css = `
     color: black;
     left: 50%;
     max-height: calc(100% - 6.4rem);
-    max-width: 80ch;
+    max-width: 120ch;
     padding: 3.2rem 1.6rem;
     position: absolute;
     top: 50%;
@@ -47,8 +49,24 @@ const _css = `
 
   #options__form {
     display: grid;
+    grid-row-gap: 1rem;
     grid-template-columns: 1fr;
-    grid-row-gap: 0.6rem;
+  }
+
+  label {
+    align-items: flex-start;
+    display: grid;
+    grid-column-gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  dl {
+    margin: 0;
+  }
+
+  dd {
+    font-weight: lighter;
+    margin: 0;
   }
 `;
 
@@ -57,6 +75,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     super();
 
     this.onOverlayClick = this.onOverlayClick.bind(this);
+    this.onShadowMapSizeChange = this.onShadowMapSizeChange.bind(this);
     this.onUseDynamicLightingOptionClick = this.onUseDynamicLightingOptionClick.bind(this);
     this.onUseShadowsOptionClick = this.onUseShadowsOptionClick.bind(this);
 
@@ -69,6 +88,23 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     must(this.uiMessagePort).postMessage({
       isOptionsScreenOpened: false,
     });
+  }
+
+  onShadowMapSizeChange(evt: JSX.TargetedEvent<HTMLSelectElement>) {
+    const userSettings = must(this.userSettings);
+    const shadowMapSize = Number(evt.currentTarget.value);
+
+    switch (shadowMapSize) {
+      case 512:
+      case 1024:
+      case 2048:
+      case 4096:
+        userSettings.shadowMapSize = shadowMapSize;
+        userSettings.version += 1;
+        return;
+      default:
+        throw new Error(`Unexpected shadowmap size: "${userSettings.shadowMapSize}"`);
+    }
   }
 
   onUseDynamicLightingOptionClick() {
@@ -104,14 +140,35 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       <div id="options" onClick={this.onOverlayClick}>
         <div id="options__content">
           <form id="options__form">
-            <label>shadowMapSize: {String(userSettings.shadowMapSize)}</label>
             <label>
-              useDynamicLighting:
+              <dl>
+                <dt>Use Multiple Light Sources</dt>
+                <dd></dd>
+              </dl>
+              <span>{userSettings.useDynamicLighting ? "on" : "off"}</span>
               <input checked={userSettings.useDynamicLighting} onClick={this.onUseDynamicLightingOptionClick} type="checkbox" />
             </label>
             <label>
-              useShadows:
-              <input checked={userSettings.useShadows} disabled={!userSettings.useDynamicLighting} onClick={this.onUseShadowsOptionClick} type="checkbox" />
+              <dl>
+                <dt>Use Shadows</dt>
+              </dl>
+              <span>{userSettings.useShadows ? "on" : "off"}</span>
+              <input checked={userSettings.useShadows} onClick={this.onUseShadowsOptionClick} type="checkbox" />
+            </label>
+            <label>
+              <dl>
+                <dt>Shadows Quality</dt>
+                <dd>(shadow map size)</dd>
+              </dl>
+              <span>
+                {userSettings.shadowMapSize}x{userSettings.shadowMapSize}
+              </span>
+              <select onChange={this.onShadowMapSizeChange} value={userSettings.shadowMapSize}>
+                <option value="4096">Ultra (4096x4096)</option>
+                <option value="2048">High (2048x2048)</option>
+                <option value="1024">Medium (1024x1024)</option>
+                <option value="512">Low (512x512)</option>
+              </select>
             </label>
           </form>
         </div>
