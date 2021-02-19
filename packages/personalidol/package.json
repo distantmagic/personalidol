@@ -12,6 +12,7 @@
     "@personalidol/texture-loader": "^0.0.4",
     "@personalidol/three-modules": "^0.0.4",
     "@personalidol/three-renderer": "^0.0.4",
+    "classnames": "^2.2.6",
     "loglevel": "^1.7.1",
     "preact": "^10.5.12",
     "three": "^0.125.2",
@@ -19,6 +20,7 @@
     "tslib": "^2.1.0"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.11",
     "@types/jest": "^26.0.20",
     "@types/jsdom": "^16.2.6",
     "@types/toposort": "^2.0.3",

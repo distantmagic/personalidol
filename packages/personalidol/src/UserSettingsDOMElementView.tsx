@@ -5,8 +5,7 @@ import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import { DOMZIndex } from "./DOMZIndex.enum";
-
-import type { JSX } from "preact";
+import { SliderComponent } from "./SliderComponent";
 
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -39,7 +38,7 @@ const _css = `
     color: black;
     left: 50%;
     max-height: calc(100% - 6.4rem);
-    max-width: 120ch;
+    max-width: 100ch;
     padding: 3.2rem 1.6rem;
     position: absolute;
     top: 50%;
@@ -48,16 +47,11 @@ const _css = `
   }
 
   #options__form {
+    align-items: center;
     display: grid;
+    grid-column-gap: 2rem;
     grid-row-gap: 1rem;
-    grid-template-columns: 1fr;
-  }
-
-  label {
-    align-items: flex-start;
-    display: grid;
-    grid-column-gap: 1rem;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
   }
 
   dl {
@@ -68,7 +62,18 @@ const _css = `
     font-weight: lighter;
     margin: 0;
   }
+
+  ${SliderComponent.css}
 `;
+
+const _booleanEdgeLabels: ["", ""] = ["", ""];
+const _booleanLabels: ["off", "on"] = ["off", "on"];
+const _booleanValues: [false, true] = [false, true];
+
+const _lowHighEdgeLabels: ["low", "high"] = ["low", "high"];
+
+const _shadowMapSizeLabels = ["512", "1024", "2048", "4096"];
+const _shadowMapSizeValues = [512, 1024, 2048, 4096];
 
 export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   constructor() {
@@ -76,8 +81,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
 
     this.onOverlayClick = this.onOverlayClick.bind(this);
     this.onShadowMapSizeChange = this.onShadowMapSizeChange.bind(this);
-    this.onUseDynamicLightingOptionClick = this.onUseDynamicLightingOptionClick.bind(this);
-    this.onUseShadowsOptionClick = this.onUseShadowsOptionClick.bind(this);
+    this.onUseDynamicLightingChange = this.onUseDynamicLightingChange.bind(this);
+    this.onUseShadowsChange = this.onUseShadowsChange.bind(this);
 
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
@@ -90,9 +95,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     });
   }
 
-  onShadowMapSizeChange(evt: JSX.TargetedEvent<HTMLSelectElement>) {
+  onShadowMapSizeChange(shadowMapSize: number) {
     const userSettings = must(this.userSettings);
-    const shadowMapSize = Number(evt.currentTarget.value);
 
     switch (shadowMapSize) {
       case 512:
@@ -103,21 +107,21 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
         userSettings.version += 1;
         return;
       default:
-        throw new Error(`Unexpected shadowmap size: "${userSettings.shadowMapSize}"`);
+        throw new Error(`Unexpected shadowmap size: "${shadowMapSize}"`);
     }
   }
 
-  onUseDynamicLightingOptionClick() {
+  onUseDynamicLightingChange(useDynamicLighting: boolean) {
     const userSettings = must(this.userSettings);
 
-    userSettings.useDynamicLighting = !userSettings.useDynamicLighting;
+    userSettings.useDynamicLighting = useDynamicLighting;
     userSettings.version += 1;
   }
 
-  onUseShadowsOptionClick() {
+  onUseShadowsChange(useShadows: boolean) {
     const userSettings = must(this.userSettings);
 
-    userSettings.useShadows = !userSettings.useShadows;
+    userSettings.useShadows = useShadows;
     userSettings.version += 1;
   }
 
@@ -140,36 +144,38 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       <div id="options" onClick={this.onOverlayClick}>
         <div id="options__content">
           <form id="options__form">
-            <label>
-              <dl>
-                <dt>Use Multiple Light Sources</dt>
-                <dd></dd>
-              </dl>
-              <span>{userSettings.useDynamicLighting ? "on" : "off"}</span>
-              <input checked={userSettings.useDynamicLighting} onClick={this.onUseDynamicLightingOptionClick} type="checkbox" />
-            </label>
-            <label>
-              <dl>
-                <dt>Use Shadows</dt>
-              </dl>
-              <span>{userSettings.useShadows ? "on" : "off"}</span>
-              <input checked={userSettings.useShadows} onClick={this.onUseShadowsOptionClick} type="checkbox" />
-            </label>
-            <label>
-              <dl>
-                <dt>Shadows Quality</dt>
-                <dd>(shadow map size)</dd>
-              </dl>
-              <span>
-                {userSettings.shadowMapSize}x{userSettings.shadowMapSize}
-              </span>
-              <select onChange={this.onShadowMapSizeChange} value={userSettings.shadowMapSize}>
-                <option value="4096">Ultra (4096x4096)</option>
-                <option value="2048">High (2048x2048)</option>
-                <option value="1024">Medium (1024x1024)</option>
-                <option value="512">Low (512x512)</option>
-              </select>
-            </label>
+            <dl>
+              <dt>Use Multiple Light Sources</dt>
+              <dd></dd>
+            </dl>
+            <SliderComponent
+              currentValue={userSettings.useDynamicLighting}
+              edgeLabels={_booleanEdgeLabels}
+              onChange={this.onUseDynamicLightingChange}
+              labels={_booleanLabels}
+              values={_booleanValues}
+            />
+            <dl>
+              <dt>Use Shadows</dt>
+            </dl>
+            <SliderComponent
+              currentValue={userSettings.useShadows}
+              edgeLabels={_booleanEdgeLabels}
+              onChange={this.onUseShadowsChange}
+              labels={_booleanLabels}
+              values={_booleanValues}
+            />
+            <dl>
+              <dt>Shadow Map Size</dt>
+              <dd>bigger values improve shadows quality, but affect performance and memory usage</dd>
+            </dl>
+            <SliderComponent
+              currentValue={userSettings.shadowMapSize}
+              edgeLabels={_lowHighEdgeLabels}
+              labels={_shadowMapSizeLabels}
+              onChange={this.onShadowMapSizeChange}
+              values={_shadowMapSizeValues}
+            />
           </form>
         </div>
       </div>
