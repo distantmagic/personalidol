@@ -83,7 +83,6 @@ export const css = `
     font-kerning: normal;
     line-height: 1;
     margin: 0;
-    padding-left: calc(1.6rem + 1px);
     text-align: center;
   }
 

@@ -29,6 +29,7 @@ const _css = `
     bottom: 0;
     font-family: Mukta, sans-serif;
     left: 0;
+    line-height: 1.7;
     position: absolute;
     right: 0;
     top: 0;
