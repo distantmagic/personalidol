@@ -13,15 +13,21 @@ SliderComponent.css = `
   .pi-slider {
     align-items: center;
     display: grid;
-    grid-column-gap: 1rem;
-    grid-template-columns: 4ch 1fr 4ch;
+    grid-row-gap: 0.4rem;
+    grid-template-areas:
+      "bullets bullets"
+      "label-edge-low label-edge-high"
+    ;
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
   }
 
   .pi-slider-bullets {
     background-color: black;
+    border: 1px solid white;
     border-radius: 1rem;
     display: grid;
-    grid-column-gap: 2px;
+    grid-area: bullets;
     padding: 2px;
   }
 
@@ -43,6 +49,15 @@ SliderComponent.css = `
     background-color: white;
     color: black;
   }
+
+  .pi-slider-edge-label.pi-slider-edge-label--low {
+    grid-area: label-edge-low;
+  }
+
+  .pi-slider-edge-label.pi-slider-edge-label--high {
+    grid-area: label-edge-high;
+    text-align: right;
+  }
 `;
 
 export function SliderComponent<T>(props: Props<T>) {
@@ -52,7 +67,7 @@ export function SliderComponent<T>(props: Props<T>) {
 
   return (
     <div class="pi-slider">
-      <div class="pi-slider-edge-label">{props.edgeLabels[0]}</div>
+      <div class="pi-slider-edge-label pi-slider-edge-label--low">{props.edgeLabels[0]}</div>
       <div
         class="pi-slider-bullets"
         style={{
@@ -66,19 +81,31 @@ export function SliderComponent<T>(props: Props<T>) {
                 "pi-slider-bullet--active": value === props.currentValue,
                 "pi-slider-bullet--inactive": value !== props.currentValue,
               })}
-              draggable={true}
+              draggable={false}
               key={String(value)}
-              onClick={function (evt) {
-                evt.preventDefault();
-                props.onChange(value);
-              }}
+              onClick={
+                props.values.length > 2
+                  ? function (evt) {
+                      evt.preventDefault();
+                      props.onChange(value);
+                    }
+                  : function (evt) {
+                      evt.preventDefault();
+
+                      if (props.currentValue === props.values[0]) {
+                        props.onChange(props.values[1]);
+                      } else {
+                        props.onChange(props.values[0]);
+                      }
+                    }
+              }
             >
               {String(props.labels[index])}
             </div>
           );
         })}
       </div>
-      <div class="pi-slider-edge-label">{props.edgeLabels[1]}</div>
+      <div class="pi-slider-edge-label pi-slider-edge-label--high">{props.edgeLabels[1]}</div>
     </div>
   );
 }

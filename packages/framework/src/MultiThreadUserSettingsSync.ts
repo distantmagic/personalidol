@@ -3,9 +3,9 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { createRouter } from "./createRouter";
 
 import type { UserSettings } from "./UserSettings.type";
-import type { UserSettingsSync as IUserSettingsSync } from "./UserSettingsSync.interface";
+import type { UserSettingsSync } from "./UserSettingsSync.interface";
 
-export function UserSettingsSync(userSettings: UserSettings, userSettingsMessagePort: MessagePort, debugName: string): IUserSettingsSync {
+export function MultiThreadUserSettingsSync(userSettings: UserSettings, userSettingsMessagePort: MessagePort, debugName: string): UserSettingsSync {
   userSettingsMessagePort.onmessage = createRouter({
     updateUserSettings(updatedUserSettings: UserSettings) {
       _lastSyncedVersion = userSettings.version;
@@ -32,8 +32,8 @@ export function UserSettingsSync(userSettings: UserSettings, userSettingsMessage
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    name: `UserSettingsSync(${debugName})`,
     isUserSettingsSync: true,
+    name: `MultiThreadUserSettingsSync(${debugName})`,
 
     start: start,
     stop: stop,

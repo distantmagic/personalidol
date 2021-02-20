@@ -4,6 +4,7 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
+import { ButtonComponent } from "./ButtonComponent";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
 import type { UserSettings } from "./UserSettings.type";
@@ -18,21 +19,14 @@ const _css = `
   }
 
   #ingame-menu-trigger {
-    -webkit-tap-highlight-color: transparent;
-    cursor: pointer;
-    height: 3.2rem;
-    width: 4.8rem;
     position: absolute;
     right: 1.6rem;
     top: 1.6rem;
-    -webkit-user-select: none;
-    user-select: none;
+
     z-index: ${DOMZIndex.InGameMenuTrigger};
   }
 
-  #ingame-menu-trigger:pressed {
-    color: transparent;
-  }
+  ${ButtonComponent.css}
 `;
 
 export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings> {
@@ -52,9 +46,7 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
     });
   }
 
-  onInGameMenuTriggerClick(evt: MouseEvent) {
-    evt.preventDefault();
-
+  onInGameMenuTriggerClick() {
     must(this.uiMessagePort).postMessage({
       isInGameMenuOpened: true,
     });
@@ -62,9 +54,9 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
 
   render() {
     return (
-      <button id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick}>
+      <ButtonComponent id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick}>
         menu
-      </button>
+      </ButtonComponent>
     );
   }
 }

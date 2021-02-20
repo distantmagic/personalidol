@@ -126,6 +126,7 @@ export function UIStateController(
     // prettier-ignore
     directorState.next = MainMenuScene(
       logger,
+      effectComposer,
       domMessagePort,
       fontPreloadMessagePort,
       progressMessagePort,

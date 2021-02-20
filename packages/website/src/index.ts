@@ -19,11 +19,14 @@ import { InputStatsHook } from "@personalidol/framework/src/InputStatsHook";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
+import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
 import { KeyboardObserver } from "@personalidol/framework/src/KeyboardObserver";
+import { LocalStorageUserSettingsSync } from "@personalidol/framework/src/LocalStorageUserSettingsSync";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
+import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
 import { PreventDefaultInput } from "@personalidol/framework/src/PreventDefaultInput";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
@@ -33,7 +36,6 @@ import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
-import { UserSettingsSync } from "@personalidol/framework/src/UserSettingsSync";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 import workers from "./workers.json";
@@ -95,7 +97,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const userSettings = UserSettings.createEmptyState();
   const userSettingsMessageChannel = createMultiThreadMessageChannel();
-  const userSettingsSync = UserSettingsSync(userSettings, userSettingsMessageChannel.port1, THREAD_DEBUG_NAME);
+  const localStorageUserSettingsSync = LocalStorageUserSettingsSync(userSettings, isUserSettingsValid, THREAD_DEBUG_NAME);
+  const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessageChannel.port1, THREAD_DEBUG_NAME);
 
   const serviceManager = ServiceManager(logger);
 
@@ -105,7 +108,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
   serviceManager.services.add(touchObserver);
   serviceManager.services.add(PreventDefaultInput(canvas));
-  serviceManager.services.add(userSettingsSync);
+  serviceManager.services.add(localStorageUserSettingsSync);
+  serviceManager.services.add(multiThreadUserSettingsSync);
   serviceManager.services.add(statsReporter);
 
   mainLoop.updatables.add(htmlElementResizeObserver);
@@ -113,7 +117,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   mainLoop.updatables.add(mouseObserver);
   mainLoop.updatables.add(touchObserver);
   mainLoop.updatables.add(inputStatsHook);
-  mainLoop.updatables.add(userSettingsSync);
+  mainLoop.updatables.add(localStorageUserSettingsSync);
+  mainLoop.updatables.add(multiThreadUserSettingsSync);
   mainLoop.updatables.add(statsReporter);
   mainLoop.updatables.add(serviceManager);
 

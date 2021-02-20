@@ -5,11 +5,11 @@ import { CSS2DRendererStatsHook } from "@personalidol/three-renderer/src/CSS2DRe
 import { Director } from "@personalidol/loading-manager/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
+import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { RendererDimensionsManager } from "@personalidol/three-renderer/src/RendererDimensionsManager";
 import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
 import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
-import { UserSettingsSync } from "@personalidol/framework/src/UserSettingsSync";
 import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 
@@ -43,7 +43,7 @@ export function createScenes(
   userSettingsMessagePort: MessagePort
 ): void {
   const userSettings = UserSettings.createEmptyState();
-  const userSettingsSync = UserSettingsSync(userSettings, userSettingsMessagePort, threadDebugName);
+  const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessagePort, threadDebugName);
 
   const rendererDimensionsManager = RendererDimensionsManager(dimensionsState);
 
@@ -103,7 +103,7 @@ export function createScenes(
 
   loadingSceneDirector.state.next = LoadingScreenScene(userSettings, effectComposer, dimensionsState, domMessagePort, progressMessagePort);
 
-  serviceManager.services.add(userSettingsSync);
+  serviceManager.services.add(multiThreadUserSettingsSync);
   serviceManager.services.add(viewBagSceneObserver);
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(uiStateController);
@@ -111,7 +111,7 @@ export function createScenes(
   serviceManager.services.add(rendererDimensionsManager);
   serviceManager.services.add(sceneTransition);
 
-  mainLoop.updatables.add(userSettingsSync);
+  mainLoop.updatables.add(multiThreadUserSettingsSync);
   mainLoop.updatables.add(serviceManager);
   mainLoop.updatables.add(viewBagSceneObserver);
   mainLoop.updatables.add(currentSceneDirector);

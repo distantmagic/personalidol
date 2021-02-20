@@ -4,6 +4,8 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
+import { ButtonComponent } from "./ButtonComponent";
+import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 import { SliderComponent } from "./SliderComponent";
 
@@ -22,9 +24,8 @@ const _css = `
   }
 
   #options {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.6);
     bottom: 0;
-    display: block;
     font-family: Mukta, sans-serif;
     left: 0;
     position: absolute;
@@ -34,24 +35,13 @@ const _css = `
   }
 
   #options__content {
-    background-color: white;
-    color: black;
-    left: 50%;
-    max-height: calc(100% - 6.4rem);
-    max-width: 100ch;
-    padding: 3.2rem 1.6rem;
-    position: absolute;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    width: calc(100% - 3.2rem);
+    color: white;
   }
 
   #options__form {
     align-items: center;
     display: grid;
-    grid-column-gap: 2rem;
-    grid-row-gap: 1rem;
-    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 3rem;
   }
 
   dl {
@@ -63,6 +53,88 @@ const _css = `
     margin: 0;
   }
 
+  h1 {
+    background-color: black;
+    border-bottom: 1px solid white;
+    display: grid;
+    font-family: Almendra;
+    font-size: 3.2rem;
+    font-variant: small-caps;
+    font-weight: normal;
+    grid-template-columns: 1fr auto;
+    line-height: 1;
+    margin-bottom: 2.4rem;
+    padding-bottom: 0.8rem;
+    position: sticky;
+    top: 0;
+  }
+
+  @media (max-width: ${DOMBreakpoints.MobileMax}px) {
+    #options {
+      align-items: center;
+      background-color: black;
+      justify-content: center;
+      display: grid;
+      overflow-y: auto;
+    }
+
+    #options__content {
+      padding-bottom: 3.2rem;
+      padding-left: 1.6rem;
+      padding-right: 1.6rem;
+      padding-top: 0rem;
+      max-width: 60ch;
+    }
+
+    h1 {
+      padding-top: 1.6rem;
+      margin-top: 1.6rem;
+    }
+  }
+
+  @media (min-width: ${DOMBreakpoints.TabletMin}px) {
+    #options {
+      display: block;
+    }
+
+    #options__content {
+      background-color: black;
+      bottom: 0;
+      left: calc(400px + 1.6rem);
+      overflow-y: auto;
+      padding-bottom: 6.4rem;
+      padding-left: 4.8rem;
+      padding-right: 4.8rem;
+      padding-top: 0;
+      position: absolute;
+      top: 0;
+      width: calc(100% - 400px - 3.2rem);
+    }
+
+    h1 {
+      margin-top: 4.8rem;
+      padding-top: 1.6rem;
+    }
+  }
+
+  @media (max-width: ${DOMBreakpoints.TabletMax}px) {
+    #options__form {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: ${DOMBreakpoints.DesktopMin}px) {
+    #options__content {
+      max-width: 1024px;
+    }
+
+    #options__form {
+      grid-column-gap: 2rem;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  ${ButtonComponent.css}
   ${SliderComponent.css}
 `;
 
@@ -79,12 +151,20 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   constructor() {
     super();
 
+    this.close = this.close.bind(this);
     this.onOverlayClick = this.onOverlayClick.bind(this);
     this.onShadowMapSizeChange = this.onShadowMapSizeChange.bind(this);
+    this.onShowStatsReporterChange = this.onShowStatsReporterChange.bind(this);
     this.onUseDynamicLightingChange = this.onUseDynamicLightingChange.bind(this);
     this.onUseShadowsChange = this.onUseShadowsChange.bind(this);
 
     this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
+  }
+
+  close() {
+    must(this.uiMessagePort).postMessage({
+      isOptionsScreenOpened: false,
+    });
   }
 
   disconnectedCallback() {
@@ -111,6 +191,13 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     }
   }
 
+  onShowStatsReporterChange(showStatsReporter: boolean) {
+    const userSettings = must(this.userSettings);
+
+    userSettings.showStatsReporter = showStatsReporter;
+    userSettings.version += 1;
+  }
+
   onUseDynamicLightingChange(useDynamicLighting: boolean) {
     const userSettings = must(this.userSettings);
 
@@ -132,9 +219,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       return;
     }
 
-    must(this.uiMessagePort).postMessage({
-      isOptionsScreenOpened: false,
-    });
+    this.close();
   }
 
   render(delta: number) {
@@ -143,10 +228,16 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     return (
       <div id="options" onClick={this.onOverlayClick}>
         <div id="options__content">
+          <h1>
+            Options
+            <ButtonComponent onClick={this.close}>done</ButtonComponent>
+          </h1>
           <form id="options__form">
             <dl>
               <dt>Use Multiple Light Sources</dt>
-              <dd></dd>
+              <dd>
+                Can greatly affect performance. If you disable multiple light sources, background light will have more intensity and everything will be uniformly highlighted.
+              </dd>
             </dl>
             <SliderComponent
               currentValue={userSettings.useDynamicLighting}
@@ -157,6 +248,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             />
             <dl>
               <dt>Use Shadows</dt>
+              <dd>If you are not using multiple light sources you can disable this option as well since it will provide almost no visual enhancements without dynamic lighting.</dd>
             </dl>
             <SliderComponent
               currentValue={userSettings.useShadows}
@@ -167,7 +259,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             />
             <dl>
               <dt>Shadow Map Size</dt>
-              <dd>bigger values improve shadows quality, but affect performance and memory usage</dd>
+              <dd>Bigger values improve shadows quality, but affect performance and memory usage.</dd>
             </dl>
             <SliderComponent
               currentValue={userSettings.shadowMapSize}
@@ -175,6 +267,19 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               labels={_shadowMapSizeLabels}
               onChange={this.onShadowMapSizeChange}
               values={_shadowMapSizeValues}
+            />
+            <dl>
+              <dt>Show Rendering Stats</dt>
+              <dd>
+                Primarily used for debugging, but you can check your actual framerate and memory usage if you want to fine-tune your settings and you know what you are doing.
+              </dd>
+            </dl>
+            <SliderComponent
+              currentValue={userSettings.showStatsReporter}
+              edgeLabels={_booleanEdgeLabels}
+              onChange={this.onShowStatsReporterChange}
+              labels={_booleanLabels}
+              values={_booleanValues}
             />
           </form>
         </div>

@@ -1,4 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
+import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
+import { Scene } from "three/src/scenes/Scene";
 
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
@@ -6,11 +8,14 @@ import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
+import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
+import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 
 import type { Logger } from "loglevel";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
+import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontPreloadParameters.type";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
@@ -106,11 +111,20 @@ const _disposables: Set<DisposableCallback> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _unmountables: Set<UnmountableCallback> = new Set();
 
+const _camera = new PerspectiveCamera();
+const _scene = new Scene();
+
 const _fontMessageRouter = createRouter({
   preloadedFont: handleRPCResponse(_rpcLookupTable),
 });
 
-export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontPreloadMessagePort: MessagePort, progressMessagePort: MessagePort): IMainMenuScene {
+export function MainMenuScene(
+  logger: Logger,
+  effectComposer: EffectComposer,
+  domMessagePort: MessagePort,
+  fontPreloadMessagePort: MessagePort,
+  progressMessagePort: MessagePort
+): IMainMenuScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -129,6 +143,11 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
 
   function mount(): void {
     state.isMounted = true;
+
+    const renderPass = new RenderPass(_scene, _camera);
+
+    effectComposer.addPass(renderPass);
+    _unmountables.add(unmountPass(effectComposer, renderPass));
 
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
 
@@ -182,7 +201,9 @@ export function MainMenuScene(logger: Logger, domMessagePort: MessagePort, fontP
     state.isPaused = false;
   }
 
-  function update(delta: number): void {}
+  function update(delta: number): void {
+    effectComposer.render(delta);
+  }
 
   async function _preloadFont(fontParameters: FontPreloadParameters) {
     await sendRPCMessage(_rpcLookupTable, fontPreloadMessagePort, <MessageFontPreload>{

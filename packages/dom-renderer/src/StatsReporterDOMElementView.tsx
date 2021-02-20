@@ -1,6 +1,7 @@
 import { h } from "preact";
 
 import { isStatsReport } from "@personalidol/framework/src/isStatsReport";
+import { must } from "@personalidol/framework/src/must";
 
 import { DOMElementView } from "./DOMElementView";
 import { ReplaceableStyleSheet } from "./ReplaceableStyleSheet";
@@ -32,9 +33,16 @@ const _css = `
     grid-gap: 0.5ch;
     line-height: 1;
     left: 0;
+    opacity: 0.4;
     padding: 1.6rem;
     position: absolute;
     top: 0;
+    text-shadow:
+      -1px -1px 0 black,
+      1px -1px 0 black,
+      -1px 1px 0 black,
+      1px 1px 0 black
+    ;
   }
 `;
 
@@ -64,6 +72,7 @@ function _sortCompareReports(a: FlattenedStatsReport, b: FlattenedStatsReport): 
 }
 
 export class StatsReporterDOMElementView extends DOMElementView<UserSettings> implements IStatsReporterDOMElementView {
+  public static zIndex: number = 0;
   public statsReportsFlattened: Array<FlattenedStatsReport> = [];
 
   constructor() {
@@ -76,7 +85,20 @@ export class StatsReporterDOMElementView extends DOMElementView<UserSettings> im
   }
 
   render() {
-    return <div id="stats">{this.statsReportsFlattened.map(this.renderStatsReportFlattened)}</div>;
+    if (!must(this.userSettings).showStatsReporter) {
+      return null;
+    }
+
+    return (
+      <div
+        id="stats"
+        style={{
+          "z-index": StatsReporterDOMElementView.zIndex,
+        }}
+      >
+        {this.statsReportsFlattened.map(this.renderStatsReportFlattened)}
+      </div>
+    );
   }
 
   renderStatsReportFlattened([key, value]: FlattenedStatsReport) {

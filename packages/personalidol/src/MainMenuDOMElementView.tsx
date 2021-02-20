@@ -4,11 +4,12 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
+import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
 import type { UserSettings } from "./UserSettings.type";
 
-const _css = `
+export const css = `
   :host {
     all: initial;
   }
@@ -17,24 +18,18 @@ const _css = `
     box-sizing: border-box;
   }
 
-  #main-menu,
-  #main-menu:before {
+  #main-menu {
     bottom: 0;
-    left: 0;
     position: absolute;
     right: 0;
     top: 0;
     -webkit-user-select: none;
     user-select: none;
     z-index: ${DOMZIndex.MainMenu};
-  }
-
-  #main-menu {
     align-items: flex-start;
     color: white;
     display: grid;
     font-size: 1.6rem;
-    justify-content: center;
     height: 100%;
     pointer-events: auto;
   }
@@ -44,10 +39,34 @@ const _css = `
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 1.6rem;
     height: 100%;
     overflow-y: auto;
-    padding: 1.6rem;
     position: relative;
+  }
+
+  @media (max-width: ${DOMBreakpoints.MobileMax}px) {
+    #main-menu {
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      left: 0;
+    }
+
+    #main-menu__content {
+      width: 100%;
+    }
+  }
+
+  @media (min-width: ${DOMBreakpoints.TabletMin}px) {
+    #main-menu {
+      justify-content: flex-start;
+      left: 1.6rem;
+    }
+
+    #main-menu__content {
+      background-color: rgba(0, 0, 0, 0.8);
+      width: 400px;
+    }
   }
 
   h1,
@@ -58,29 +77,24 @@ const _css = `
 
   h1,
   h2 {
+    font-family: "Almendra", sans-serif;
+    -webkit-font-kerning: normal;
+    font-kerning: normal;
     line-height: 1;
     margin: 0;
     text-align: center;
   }
 
   h1 {
-    font-family: "Almendra", sans-serif;
     font-size: 3.2rem;
     font-weight: normal;
-    font-variant: small-caps;
+    letter-spacing: -0.1ch;
     margin: 0;
-  }
-
-  h2,
-  nav button {
-    font-family: "Mukta", sans-serif;
   }
 
   h2 {
     font-size: 1.4rem;
     font-variant: small-caps;
-    font-weight: 500;
-    letter-spacing: 0.05  ch;
     text-transform: lowercase;
     word-spacing: 0.6ch;
   }
@@ -98,7 +112,8 @@ const _css = `
     font-family: "Mukta", sans-serif;
     font-size: 1.4rem;
     font-variant: small-caps;
-    font-weight: 300;
+    line-height: 1;
+    padding: 0.8rem 0;
     text-align: center;
     text-transform: lowercase;
     width: 100%;
@@ -110,6 +125,7 @@ const _css = `
 
   button:enabled {
     color: white;
+    cursor: pointer;
   }
 
   button:enabled:hover {
@@ -128,7 +144,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
     this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
     this.onButtonOptionsClick = this.onButtonOptionsClick.bind(this);
 
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
+    this.styleSheet = ReplaceableStyleSheet(this.shadow, css);
   }
 
   disconnectedCallback() {
