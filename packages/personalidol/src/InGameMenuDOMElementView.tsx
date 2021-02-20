@@ -6,6 +6,7 @@ import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/Replaceabl
 
 import { css } from "./MainMenuDOMElementView";
 
+import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
 export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
@@ -13,7 +14,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
     super();
 
     this.onButtonExitClick = this.onButtonExitClick.bind(this);
-    this.onButtonOptionsClick = this.onButtonOptionsClick.bind(this);
+    this.onButtonUserSettingsClick = this.onButtonUserSettingsClick.bind(this);
     this.onButtonReturnToGameClick = this.onButtonReturnToGameClick.bind(this);
 
     this.styleSheet = ReplaceableStyleSheet(this.shadow, css);
@@ -22,43 +23,53 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
   connectedCallback() {
     super.connectedCallback();
 
-    must(this.uiMessagePort).postMessage({
+    const message: MessageUIStateChange = {
       isScenePaused: true,
-    });
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    must(this.uiMessagePort).postMessage({
+    const message: MessageUIStateChange = {
       isInGameMenuOpened: false,
-      isOptionsScreenOpened: false,
+      isUserSettingsScreenOpened: false,
       isScenePaused: false,
-    });
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   onButtonExitClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    must(this.uiMessagePort).postMessage({
+    const message: MessageUIStateChange = {
       currentMap: null,
-    });
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
-  onButtonOptionsClick(evt: MouseEvent) {
+  onButtonUserSettingsClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    must(this.uiMessagePort).postMessage({
-      isOptionsScreenOpened: true,
-    });
+    const message: MessageUIStateChange = {
+      isUserSettingsScreenOpened: true,
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   onButtonReturnToGameClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    must(this.uiMessagePort).postMessage({
+    const message: MessageUIStateChange = {
       isInGameMenuOpened: false,
-    });
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   render() {
@@ -70,7 +81,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
           <nav>
             <button onClick={this.onButtonReturnToGameClick}>Return to game</button>
             <button disabled>Load Game</button>
-            <button onClick={this.onButtonOptionsClick}>Options</button>
+            <button onClick={this.onButtonUserSettingsClick}>Options</button>
             <button disabled>Credits</button>
             <button onClick={this.onButtonExitClick}>Exit</button>
           </nav>

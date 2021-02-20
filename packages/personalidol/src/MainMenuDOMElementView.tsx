@@ -7,6 +7,7 @@ import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/Replaceabl
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
+import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
 export const css = `
@@ -82,6 +83,7 @@ export const css = `
     font-kerning: normal;
     line-height: 1;
     margin: 0;
+    padding-left: calc(1.6rem + 1px);
     text-align: center;
   }
 
@@ -112,8 +114,9 @@ export const css = `
     font-family: "Mukta", sans-serif;
     font-size: 1.4rem;
     font-variant: small-caps;
+    font-weight: 300;
     line-height: 1;
-    padding: 0.8rem 0;
+    padding: 0.8rem 1.6rem;
     text-align: center;
     text-transform: lowercase;
     width: 100%;
@@ -142,7 +145,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
     super();
 
     this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
-    this.onButtonOptionsClick = this.onButtonOptionsClick.bind(this);
+    this.onButtonUserSettingsClick = this.onButtonUserSettingsClick.bind(this);
 
     this.styleSheet = ReplaceableStyleSheet(this.shadow, css);
   }
@@ -150,25 +153,31 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    must(this.uiMessagePort).postMessage({
-      isOptionsScreenOpened: false,
-    });
+    const message: MessageUIStateChange = {
+      isUserSettingsScreenOpened: false,
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   onButtonNewGameClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    must(this.uiMessagePort).postMessage({
+    const message: MessageUIStateChange = {
       currentMap: "map-gates",
-    });
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
-  onButtonOptionsClick(evt: MouseEvent) {
+  onButtonUserSettingsClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    must(this.uiMessagePort).postMessage({
-      isOptionsScreenOpened: true,
-    });
+    const message: MessageUIStateChange = {
+      isUserSettingsScreenOpened: true,
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   render() {
@@ -181,7 +190,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
             <button disabled>Continue</button>
             <button onClick={this.onButtonNewGameClick}>New Game</button>
             <button disabled>Load Game</button>
-            <button onClick={this.onButtonOptionsClick}>Options</button>
+            <button onClick={this.onButtonUserSettingsClick}>Options</button>
             <button disabled>Credits</button>
           </nav>
         </div>

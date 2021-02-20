@@ -12,6 +12,7 @@ import { SliderComponent } from "./SliderComponent";
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
@@ -162,17 +163,17 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   }
 
   close() {
-    must(this.uiMessagePort).postMessage({
-      isOptionsScreenOpened: false,
-    });
+    const message: MessageUIStateChange = {
+      isUserSettingsScreenOpened: false,
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    must(this.uiMessagePort).postMessage({
-      isOptionsScreenOpened: false,
-    });
+    this.close();
   }
 
   onShadowMapSizeChange(shadowMapSize: number) {

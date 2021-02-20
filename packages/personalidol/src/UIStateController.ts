@@ -47,8 +47,8 @@ export function UIStateController(
   const _domMessageRouter = createRouter({
     currentMap: _onCurrentMapMessage,
     isInGameMenuOpened: _onIsInGameMenuOpenedMessage,
-    isOptionsScreenOpened: _onIsOptionsScreenOpenedMessage,
     isScenePaused: _onIsScenePausedMessage,
+    isUserSettingsScreenOpened: _onIsUserSettingsScreenOpenedMessage,
   });
 
   let _currentScene: null | Scene = null;
@@ -70,7 +70,7 @@ export function UIStateController(
 
   function update(delta: number, elapsedTime: number): void {
     _inGameMenuHandle.enable(uiState.isInGameMenuOpened);
-    _userSettingsScreenHandle.enable(uiState.isOptionsScreenOpened);
+    _userSettingsScreenHandle.enable(uiState.isUserSettingsScreenOpened);
 
     if (directorState.isTransitioning) {
       // Don't do anything with the director if a scene is loading.
@@ -110,8 +110,8 @@ export function UIStateController(
     uiState.isInGameMenuOpened = isInGameMenuOpened;
   }
 
-  function _onIsOptionsScreenOpenedMessage(isOptionsScreenOpened: boolean): void {
-    uiState.isOptionsScreenOpened = isOptionsScreenOpened;
+  function _onIsUserSettingsScreenOpenedMessage(isUserSettingsScreenOpened: boolean): void {
+    uiState.isUserSettingsScreenOpened = isUserSettingsScreenOpened;
   }
 
   function _onIsScenePausedMessage(isScenePaused: boolean): void {

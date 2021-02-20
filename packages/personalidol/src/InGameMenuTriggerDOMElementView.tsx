@@ -7,6 +7,7 @@ import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/Replaceabl
 import { ButtonComponent } from "./ButtonComponent";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
+import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
@@ -41,15 +42,19 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    must(this.uiMessagePort).postMessage({
+    const message: MessageUIStateChange = {
       isInGameMenuOpened: false,
-    });
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   onInGameMenuTriggerClick() {
-    must(this.uiMessagePort).postMessage({
+    const message: MessageUIStateChange = {
       isInGameMenuOpened: true,
-    });
+    };
+
+    must(this.uiMessagePort).postMessage(message);
   }
 
   render() {
