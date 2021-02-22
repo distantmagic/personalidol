@@ -1,6 +1,9 @@
-import { render } from "preact";
+import { Fragment, h, render } from "preact";
 
 import { Input } from "@personalidol/framework/src/Input";
+
+import { Events } from "./Events.enum";
+import { isReplaceableStyleSheet_element } from "./isReplaceableStyleSheet_element";
 
 import type { VNode } from "preact";
 
@@ -19,7 +22,6 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   public needsRender: boolean = true;
   public props: DOMElementProps = {};
   public propsLastUpdate: number = 0;
-  public rootElement: HTMLDivElement;
   public shadow: ShadowRoot;
   public styleSheet: null | IReplaceableStyleSheet = null;
   public uiMessagePort: null | MessagePort = null;
@@ -34,6 +36,8 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
       _inputStatePlaceholder = Input.createEmptyState(false);
     }
 
+    this._onShadowElementConnected = this._onShadowElementConnected.bind(this);
+    this._onShadowElementDisconnected = this._onShadowElementDisconnected.bind(this);
     this.render = this.render.bind(this);
     this.updateProps = this.updateProps.bind(this);
 
@@ -41,9 +45,6 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
     this.shadow = this.attachShadow({
       mode: "open",
     });
-
-    this.rootElement = document.createElement("div");
-    this.shadow.appendChild(this.rootElement);
   }
 
   adoptedCallback() {}
@@ -61,9 +62,27 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
     this.userSettingsLastAcknowledgedVersion = userSettings.version;
   }
 
-  connectedCallback() {}
+  connectedCallback() {
+    this.shadow.addEventListener(Events.elementConnected, this._onShadowElementConnected);
+    this.shadow.addEventListener(Events.elementDisconnected, this._onShadowElementDisconnected);
+    this.dispatchEvent(
+      new CustomEvent(Events.elementConnected, {
+        detail: this,
+        bubbles: true,
+      })
+    );
+  }
 
-  disconnectedCallback() {}
+  disconnectedCallback() {
+    this.shadow.removeEventListener(Events.elementConnected, this._onShadowElementConnected);
+    this.shadow.removeEventListener(Events.elementDisconnected, this._onShadowElementDisconnected);
+    this.dispatchEvent(
+      new CustomEvent(Events.elementDisconnected, {
+        detail: this,
+        bubbles: true,
+      })
+    );
+  }
 
   render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any> {
     return null;
@@ -72,15 +91,50 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     this.beforeRender(delta, elapsedTime, tickTimerState);
 
-    if (this.needsRender) {
-      this.needsRender = false;
-      this.viewLastUpdate = tickTimerState.currentTick;
-      render(this.render(delta, elapsedTime, tickTimerState), this.rootElement);
+    if (!this.needsRender) {
+      return;
     }
+
+    this.needsRender = false;
+    this.viewLastUpdate = tickTimerState.currentTick;
+
+    const renderedElements = this.render(delta, elapsedTime, tickTimerState);
+    const styleSheet = this.styleSheet;
+
+    if (!styleSheet || !isReplaceableStyleSheet_element(styleSheet)) {
+      render(renderedElements, this.shadow);
+      return;
+    }
+
+    render(
+      <Fragment>
+        <style>{styleSheet.css}</style>
+        {renderedElements}
+      </Fragment>,
+      this.shadow
+    );
   }
 
   updateProps(props: DOMElementProps, tickTimerState: TickTimerState): void {
     this.props = props;
     this.propsLastUpdate = tickTimerState.currentTick;
+  }
+
+  private _onShadowElementConnected(evt: any) {
+    this.dispatchEvent(
+      new CustomEvent(Events.elementConnected, {
+        detail: evt.detail,
+        bubbles: true,
+      })
+    );
+  }
+
+  private _onShadowElementDisconnected(evt: any) {
+    this.dispatchEvent(
+      new CustomEvent(Events.elementDisconnected, {
+        detail: evt.detail,
+        bubbles: true,
+      })
+    );
   }
 }

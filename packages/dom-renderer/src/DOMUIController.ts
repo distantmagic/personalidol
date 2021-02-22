@@ -8,6 +8,8 @@ import { preload } from "@personalidol/framework/src/preload";
 
 import { clearHTMLElement } from "./clearHTMLElement";
 import { DOMRenderedElement } from "./DOMRenderedElement";
+import { Events } from "./Events.enum";
+import { isDOMElementView } from "./isDOMElementView";
 import { isDOMElementViewConstructor } from "./isDOMElementViewConstructor";
 import { isHTMLElementConstructor } from "./isHTMLElementConstructor";
 
@@ -24,6 +26,9 @@ import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
 const _definedCustomElements: Array<string> = [];
+const _evtOnce = {
+  once: true,
+};
 
 function _isCustomElementDefined<T extends DOMElementsLookup>(name: string & keyof T): boolean {
   return _definedCustomElements.includes(name);
@@ -64,20 +69,28 @@ export function DOMUIController<T extends DOMElementsLookup, U extends UserSetti
     renderBatch: renderBatch,
   });
 
-  function _createDOMUIElementByRenderMessage(message: MessageDOMUIRender<T>): IDOMRenderedElement<T, U> {
-    const DOMElementViewConstructor: HTMLElement = customElements.get(message.element);
+  function _createDOMElementViewBy(elementName: string & keyof T): DOMElementView<U> {
+    const DOMElementViewConstructor: HTMLElement = customElements.get(elementName);
 
     if (!isDOMElementViewConstructor(DOMElementViewConstructor)) {
       throw new Error("Object is not a DOMElementView constructor.");
     }
 
-    const domElementView: DOMElementView<U> = new DOMElementViewConstructor<U>();
+    return new DOMElementViewConstructor<U>();
+  }
+
+  function _createDOMRenderedElementByRenderMessage(message: MessageDOMUIRender<T>): IDOMRenderedElement<T, U> {
+    const domElementView: DOMElementView<U> = _createDOMElementViewBy(message.element);
+
+    return _createDOMRenderedElementByView(message.id, message.element, domElementView);
+  }
+
+  function _createDOMRenderedElementByView(id: string, elementName: string & keyof T, domElementView: DOMElementView<U>): IDOMRenderedElement<T, U> {
     const renderedElement: IDOMRenderedElement<T, U> = DOMRenderedElement<T, U>(
       logger,
-      message.id,
-      message.element,
+      id,
+      elementName,
       inputState,
-      uiRootElement,
       domElementView,
       tickTimerState,
       userSettings,
@@ -87,7 +100,7 @@ export function DOMUIController<T extends DOMElementsLookup, U extends UserSetti
 
     preload(logger, renderedElement);
 
-    _renderedElementsLookup.set(message.id, renderedElement);
+    _renderedElementsLookup.set(id, renderedElement);
     _renderedElements.add(renderedElement);
 
     return renderedElement;
@@ -112,10 +125,17 @@ export function DOMUIController<T extends DOMElementsLookup, U extends UserSetti
       return;
     }
 
-    fDispose(logger, renderedElement);
+    uiRootElement.removeChild(renderedElement.domElementView);
+  }
 
-    _renderedElementsLookup.delete(id);
-    _renderedElements.delete(renderedElement);
+  function _findDOMRenderedElementByView(domElementView: DOMElementView<U>): null | IDOMRenderedElement<T, U> {
+    for (let renderedElement of _renderedElements) {
+      if (renderedElement.domElementView === domElementView) {
+        return renderedElement;
+      }
+    }
+
+    return null;
   }
 
   function _getCustomElementConstructor<N extends string & keyof T>(elementName: N): T[N] {
@@ -128,6 +148,41 @@ export function DOMUIController<T extends DOMElementsLookup, U extends UserSetti
     return ElementConstructor;
   }
 
+  function _onElementConnected(evt: any) {
+    const target = evt.detail;
+
+    if (!isDOMElementView<U>(target)) {
+      throw new Error(`Received event, but element is not a DOMElementView: "${Events.elementConnected}"`);
+    }
+
+    const renderedElement: null | IDOMRenderedElement<T, U> = _findDOMRenderedElementByView(target);
+
+    if (null === renderedElement) {
+      _createDOMRenderedElementByView(MathUtils.generateUUID(), target.tagName.toLowerCase() as string & keyof T, target);
+    }
+
+    target.addEventListener(Events.elementDisconnected, _onElementDisconnected, _evtOnce);
+  }
+
+  function _onElementDisconnected(evt: any) {
+    const target = evt.detail;
+
+    if (!isDOMElementView<U>(target)) {
+      throw new Error(`Received event, but element is not a DOMElementView: "${Events.elementDisconnected}"`);
+    }
+
+    const renderedElement: null | IDOMRenderedElement<T, U> = _findDOMRenderedElementByView(target);
+
+    if (null === renderedElement) {
+      console.error("Unable to find rendered element by view.", target);
+      throw new Error("Unable to find rendered element by view.");
+    }
+
+    fDispose(logger, renderedElement);
+    _renderedElementsLookup.delete(renderedElement.id);
+    _renderedElements.delete(renderedElement);
+  }
+
   function _updateRenderedElement(renderedElement: IDOMRenderedElement<T, U>) {
     if (!renderedElement.state.isPreloaded) {
       return;
@@ -135,6 +190,10 @@ export function DOMUIController<T extends DOMElementsLookup, U extends UserSetti
 
     if (renderedElement.state.isPreloaded && !renderedElement.state.isMounted) {
       mount(logger, renderedElement);
+    }
+
+    if (!renderedElement.domElementView.isConnected) {
+      uiRootElement.appendChild(renderedElement.domElementView);
     }
 
     if (renderedElement.state.isMounted) {
@@ -152,14 +211,10 @@ export function DOMUIController<T extends DOMElementsLookup, U extends UserSetti
       _isRootElementCleared = true;
     }
 
-    if (!_isCustomElementDefined<T>(message.element)) {
-      _defineCustomElementByName(message.element);
-    }
-
     let renderedElement: undefined | IDOMRenderedElement<T, U> = _renderedElementsLookup.get(message.id);
 
     if (!renderedElement) {
-      renderedElement = _createDOMUIElementByRenderMessage(message);
+      renderedElement = _createDOMRenderedElementByRenderMessage(message);
     }
 
     renderedElement.updateProps(message.props, tickTimerState);
@@ -176,11 +231,19 @@ export function DOMUIController<T extends DOMElementsLookup, U extends UserSetti
   }
 
   function start() {
+    for (let customElementName of Object.keys(domElementsLookup)) {
+      if (!_isCustomElementDefined<T>(customElementName as string & keyof T)) {
+        _defineCustomElementByName(customElementName as string & keyof T);
+      }
+    }
+
     internalDOMMessageChannel.port1.onmessage = _uiMessageRouter;
+    uiRootElement.addEventListener(Events.elementConnected, _onElementConnected);
   }
 
   function stop() {
     internalDOMMessageChannel.port1.onmessage = null;
+    uiRootElement.removeEventListener(Events.elementConnected, _onElementConnected);
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {

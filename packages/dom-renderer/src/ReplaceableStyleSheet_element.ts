@@ -2,12 +2,10 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
+import type { ReplaceableStyleSheet_element as IReplaceableStyleSheet_element } from "./ReplaceableStyleSheet_element.interface";
 import type { ReplaceableStyleSheetState } from "./ReplaceableStyleSheetState.type";
 
-export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: string): IReplaceableStyleSheet {
-  const id = MathUtils.generateUUID();
-  const styleElement = document.createElement("style");
+export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: string): IReplaceableStyleSheet_element {
   const state: ReplaceableStyleSheetState = Object.seal({
     isMounted: false,
     isDisposed: false,
@@ -22,7 +20,6 @@ export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: strin
 
   function mount() {
     state.isMounted = true;
-    shadowRoot.appendChild(styleElement);
   }
 
   function pause(): void {
@@ -30,16 +27,12 @@ export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: strin
   }
 
   function preload() {
-    styleElement.setAttribute("id", id);
-    styleElement.textContent = css;
-
     state.isPreloading = false;
     state.isPreloaded = true;
   }
 
   function unmount() {
     state.isMounted = false;
-    shadowRoot.removeChild(styleElement);
   }
 
   function unpause(): void {
@@ -49,7 +42,9 @@ export function ReplaceableStyleSheet_element(shadowRoot: ShadowRoot, css: strin
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {}
 
   return Object.freeze({
-    id: id,
+    css: css,
+    id: MathUtils.generateUUID(),
+    isReplaceableStyleSheet_element: true,
     isScene: true,
     name: "ReplaceableStyleSheet_element",
     state: state,

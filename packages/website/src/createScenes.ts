@@ -12,6 +12,7 @@ import { UIStateController } from "@personalidol/personalidol/src/UIStateControl
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
+import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
 
 import type { Logger } from "loglevel";
 
@@ -42,7 +43,7 @@ export function createScenes(
   uiMessagePort: MessagePort,
   userSettingsMessagePort: MessagePort
 ): void {
-  const userSettings = UserSettings.createEmptyState();
+  const userSettings = UserSettings.createEmptyState(devicePixelRatio);
   const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessagePort, threadDebugName);
 
   const rendererDimensionsManager = RendererDimensionsManager(dimensionsState);
@@ -53,7 +54,6 @@ export function createScenes(
     canvas: canvas,
   });
 
-  webGLRenderer.setPixelRatio(devicePixelRatio);
   webGLRenderer.shadowMap.enabled = true;
   webGLRenderer.shadowMap.autoUpdate = true;
 
@@ -66,6 +66,7 @@ export function createScenes(
 
   const css2DRendererStatsHook = CSS2DRendererStatsHook(css2DRenderer);
   const webGLRendererStatsHook = WebGLRendererStatsHook(webGLRenderer);
+  const webGLRendererUserSettingsManager = WebGLRendererUserSettingsManager(userSettings, webGLRenderer);
 
   statsReporter.hooks.add(css2DRendererStatsHook);
   statsReporter.hooks.add(webGLRendererStatsHook);
@@ -112,6 +113,7 @@ export function createScenes(
   serviceManager.services.add(sceneTransition);
 
   mainLoop.updatables.add(multiThreadUserSettingsSync);
+  mainLoop.updatables.add(webGLRendererUserSettingsManager);
   mainLoop.updatables.add(serviceManager);
   mainLoop.updatables.add(viewBagSceneObserver);
   mainLoop.updatables.add(currentSceneDirector);

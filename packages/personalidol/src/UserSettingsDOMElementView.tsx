@@ -4,7 +4,6 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
-import { ButtonComponent } from "./ButtonComponent";
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 import { SliderComponent } from "./SliderComponent";
@@ -102,7 +101,7 @@ const _css = `
     #options__content {
       background-color: black;
       bottom: 0;
-      left: calc(400px + 1.6rem);
+      left: calc(400px + 3.2rem);
       overflow-y: auto;
       padding-bottom: 6.4rem;
       padding-left: 4.8rem;
@@ -110,7 +109,7 @@ const _css = `
       padding-top: 0;
       position: absolute;
       top: 0;
-      width: calc(100% - 400px - 3.2rem);
+      width: calc(100% - 400px - 4.8rem);
     }
 
     h1 {
@@ -136,7 +135,6 @@ const _css = `
     }
   }
 
-  ${ButtonComponent.css}
   ${SliderComponent.css}
 `;
 
@@ -145,6 +143,9 @@ const _booleanLabels: ["off", "on"] = ["off", "on"];
 const _booleanValues: [false, true] = [false, true];
 
 const _lowHighEdgeLabels: ["low", "high"] = ["low", "high"];
+
+const _pixelRatioLabels = ["25%", "50%", "75%", "100%"];
+const _pixelRatioValues = [0.25, 0.5, 0.75, 1];
 
 const _shadowMapSizeLabels = ["512", "1024", "2048", "4096"];
 const _shadowMapSizeValues = [512, 1024, 2048, 4096];
@@ -155,6 +156,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
 
     this.close = this.close.bind(this);
     this.onOverlayClick = this.onOverlayClick.bind(this);
+    this.onPixelRatioChange = this.onPixelRatioChange.bind(this);
     this.onShadowMapSizeChange = this.onShadowMapSizeChange.bind(this);
     this.onShowStatsReporterChange = this.onShowStatsReporterChange.bind(this);
     this.onUseDynamicLightingChange = this.onUseDynamicLightingChange.bind(this);
@@ -175,6 +177,13 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     super.disconnectedCallback();
 
     this.close();
+  }
+
+  onPixelRatioChange(pixelRatio: number) {
+    const userSettings = must(this.userSettings);
+
+    userSettings.pixelRatio = pixelRatio;
+    userSettings.version += 1;
   }
 
   onShadowMapSizeChange(shadowMapSize: number) {
@@ -232,9 +241,23 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
         <div id="options__content">
           <h1>
             Options
-            <ButtonComponent onClick={this.close}>done</ButtonComponent>
+            <pi-button onClick={this.close}>done</pi-button>
           </h1>
           <form id="options__form">
+            <dl>
+              <dt>Rendering Resolution</dt>
+              <dd>
+                Your device pixel ratio is {userSettings.devicePixelRatio} (which means {userSettings.devicePixelRatio} physical pixel per rendered pixel). You can reduce the ratio
+                to decrease the rendering resolution, which makes everyting more blurry, but increases the performance.
+              </dd>
+            </dl>
+            <SliderComponent
+              currentValue={userSettings.pixelRatio}
+              edgeLabels={_booleanEdgeLabels}
+              onChange={this.onPixelRatioChange}
+              labels={_pixelRatioLabels}
+              values={_pixelRatioValues}
+            />
             <dl>
               <dt>Use Multiple Light Sources</dt>
               <dd>

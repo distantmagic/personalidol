@@ -61,7 +61,7 @@ export const css = `
   @media (min-width: ${DOMBreakpoints.TabletMin}px) {
     #main-menu {
       justify-content: flex-start;
-      left: 1.6rem;
+      left: 3.2rem;
     }
 
     #main-menu__content {

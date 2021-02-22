@@ -95,7 +95,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const mouseObserver = MouseObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
   const touchObserver = TouchObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
 
-  const userSettings = UserSettings.createEmptyState();
+  const userSettings = UserSettings.createEmptyState(devicePixelRatio);
   const userSettingsMessageChannel = createMultiThreadMessageChannel();
   const localStorageUserSettingsSync = LocalStorageUserSettingsSync(userSettings, isUserSettingsValid, THREAD_DEBUG_NAME);
   const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessageChannel.port1, THREAD_DEBUG_NAME);

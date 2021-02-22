@@ -4,7 +4,6 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
-import { ButtonComponent } from "./ButtonComponent";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
@@ -23,11 +22,8 @@ const _css = `
     position: absolute;
     right: 1.6rem;
     top: 1.6rem;
-
     z-index: ${DOMZIndex.InGameMenuTrigger};
   }
-
-  ${ButtonComponent.css}
 `;
 
 export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings> {
@@ -59,9 +55,9 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
 
   render() {
     return (
-      <ButtonComponent id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick}>
+      <pi-button id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick}>
         menu
-      </ButtonComponent>
+      </pi-button>
     );
   }
 }

@@ -20,7 +20,6 @@ export function DOMRenderedElement<T extends DOMElementsLookup, U extends UserSe
   id: string,
   element: keyof T,
   inputState: Int32Array,
-  uiRootElement: HTMLElement,
   domElementView: DOMElementView<U>,
   tickTimerState: TickTimerState,
   userSettings: U,
@@ -44,14 +43,12 @@ export function DOMRenderedElement<T extends DOMElementsLookup, U extends UserSe
     state.isMounted = true;
 
     _styleSheetDirector.start();
-    uiRootElement.appendChild(domElementView);
   }
 
   function unmount() {
     state.isMounted = false;
 
     _styleSheetDirector.stop();
-    uiRootElement.removeChild(domElementView);
   }
 
   function preload() {
@@ -70,6 +67,9 @@ export function DOMRenderedElement<T extends DOMElementsLookup, U extends UserSe
     const styleSheet: null | ReplaceableStyleSheet = domElementView.styleSheet;
 
     if (!styleSheet) {
+      // If there is no stylesheet, just update the element.
+      domElementView.update(delta, elapsedTime, tickTimerState);
+
       return;
     }
 
@@ -94,6 +94,7 @@ export function DOMRenderedElement<T extends DOMElementsLookup, U extends UserSe
   }
 
   return Object.freeze({
+    domElementView: domElementView,
     id: MathUtils.generateUUID(),
     isDOMRenderedElement: true,
     name: `DOMRenderedElement("${element}")`,

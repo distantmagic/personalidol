@@ -14,6 +14,14 @@ export function isUserSettingsValid(userSettings: any): userSettings is UserSett
     return false;
   }
 
+  if ("number" !== typeof userSettings.devicePixelRatio) {
+    return false;
+  }
+
+  if ("number" !== typeof userSettings.pixelRatio) {
+    return false;
+  }
+
   if ("boolean" !== typeof userSettings.showStatsReporter) {
     return false;
   }

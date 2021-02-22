@@ -1,5 +1,6 @@
 import { domElementsLookup as baseDomElementsLookup } from "@personalidol/dom-renderer/src/domElementsLookup";
 
+import { ButtonDOMElementView } from "./ButtonDOMElementView";
 import { DOMZIndex } from "./DOMZIndex.enum";
 import { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
@@ -17,6 +18,7 @@ baseDomElementsLookup["pi-stats-reporter"].zIndex = DOMZIndex.StatsReporter;
 export const domElementsLookup: DOMElementsLookup = {
   ...baseDomElementsLookup,
 
+  "pi-button": ButtonDOMElementView,
   "pi-fatal-error": FatalErrorDOMElementView,
   "pi-in-game-menu": InGameMenuDOMElementView,
   "pi-in-game-menu-trigger": InGameMenuTriggerDOMElementView,
