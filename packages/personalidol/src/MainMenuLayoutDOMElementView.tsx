@@ -33,13 +33,11 @@ const _css = `
   }
 
   #main-menu__content {
-    align-items: stretch;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1.6rem;
+    align-items: center;
+    display: grid;
     height: 100%;
     overflow-y: auto;
+    padding: 1.6rem;
     position: relative;
   }
 
@@ -65,6 +63,10 @@ const _css = `
       background-color: rgba(0, 0, 0, 0.8);
       width: 400px;
     }
+  }
+
+  header {
+    align-self: flex-end;
   }
 
   h1,

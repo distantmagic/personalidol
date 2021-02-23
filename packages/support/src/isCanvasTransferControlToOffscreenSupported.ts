@@ -1,10 +1,7 @@
-import { _getSetCache } from "./_getSetCache";
+let _isTested: boolean = false;
+let _isSupported: boolean = false;
 
-import type { SupportCache } from "./SupportCache.type";
-
-export const CACHE_KEY = Symbol("canvas.transferControlToOffscreen");
-
-function _check(): boolean {
+function _test(): boolean {
   if (!globalThis.HTMLCanvasElement) {
     return false;
   }
@@ -12,6 +9,13 @@ function _check(): boolean {
   return "function" === typeof HTMLCanvasElement.prototype.transferControlToOffscreen;
 }
 
-export function isCanvasTransferControlToOffscreenSupported(supportCache: SupportCache): Promise<boolean> {
-  return _getSetCache(supportCache, CACHE_KEY, _check);
+export function isCanvasTransferControlToOffscreenSupported(): boolean {
+  if (_isTested) {
+    return _isSupported;
+  }
+
+  _isSupported = _test();
+  _isTested = true;
+
+  return _isSupported;
 }

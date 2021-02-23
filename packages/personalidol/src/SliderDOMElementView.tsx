@@ -29,6 +29,10 @@ const _css = `
     padding-right: 1.6rem;
   }
 
+  .pi-slider.pi-slider--disabled {
+    opacity: 0.3;
+  }
+
   .pi-slider-bullets {
     background-color: black;
     border: 1px solid white;
@@ -52,6 +56,10 @@ const _css = `
     vertical-align: center;
   }
 
+  .pi-slider-bullet.pi-slider-bullet--disabled {
+    cursor: not-allowed;
+  }
+
   .pi-slider-bullet.pi-slider-bullet--active {
     background-color: white;
     color: black;
@@ -72,10 +80,15 @@ const _css = `
 `;
 
 export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implements SliderDOMElementProps<T> {
+  static get observedAttributes() {
+    return ["disabled"];
+  }
+
   public css: string = _css;
 
   private _currentValue: null | T = null;
   private _edgeLabels: null | [string, string] = null;
+  private _isDisabled: boolean = false;
   private _labels: null | ReadonlyArray<string> = null;
   private _values: null | ReadonlyArray<T> = null;
 
@@ -83,7 +96,8 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
     super();
 
     this.onToggle = this.onToggle.bind(this);
-    this.renderBullet = this.renderBullet.bind(this);
+    this.renderBulletDisabled = this.renderBulletDisabled.bind(this);
+    this.renderBulletEnabled = this.renderBulletEnabled.bind(this);
   }
 
   get currentValue(): T {
@@ -122,6 +136,13 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
     this._values = values;
   }
 
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    super.attributeChangedCallback(name, oldValue, newValue);
+
+    this.needsRender = true;
+    this._isDisabled = "string" === typeof newValue;
+  }
+
   dispatchChange(value: T) {
     this.dispatchEvent(
       new CustomEvent("change", {
@@ -141,7 +162,22 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
     }
   }
 
-  renderBullet(value: T, index: number) {
+  renderBulletDisabled(value: T, index: number) {
+    return (
+      <div
+        class={classnames("pi-slider-bullet pi-slider-bullet--disabled", {
+          "pi-slider-bullet--active": value === this.currentValue,
+          "pi-slider-bullet--inactive": value !== this.currentValue,
+        })}
+        draggable={false}
+        key={String(value)}
+      >
+        {String(this.labels[index])}
+      </div>
+    );
+  }
+
+  renderBulletEnabled(value: T, index: number) {
     const self: this = this;
 
     return (
@@ -172,7 +208,11 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
     }
 
     return (
-      <div class="pi-slider">
+      <div
+        class={classnames("pi-slider", {
+          "pi-slider--disabled": this._isDisabled,
+        })}
+      >
         <div class="pi-slider-edge-label pi-slider-edge-label--low">{this.edgeLabels[0]}</div>
         <div
           class="pi-slider-bullets"
@@ -180,7 +220,7 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
             "grid-template-columns": `repeat(${this.values.length}, 1fr)`,
           }}
         >
-          {this.values.map(this.renderBullet)}
+          {this.values.map(this._isDisabled ? this.renderBulletDisabled : this.renderBulletEnabled)}
         </div>
         <div class="pi-slider-edge-label pi-slider-edge-label--high">{this.edgeLabels[1]}</div>
       </div>

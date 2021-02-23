@@ -274,7 +274,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   statsCollector.registerMessagePort(atlasToStatsMessageChannel.port1);
 
   const addAtlasMessagePort = await (async function () {
-    if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
+    if (userSettings.useOffscreenCanvas && isCanvasTransferControlToOffscreenSupported()) {
       logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad atlas service to a worker thread");
 
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
@@ -310,7 +310,11 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         );
       };
     } else {
-      logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
+      if (isCanvasTransferControlToOffscreenSupported()) {
+        logger.info("SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread by user decision");
+      } else {
+        logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
+      }
 
       const atlasCanvasContext2D = atlasCanvas.getContext("2d");
 
@@ -379,7 +383,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // If browser supports the offscreen canvas, then we can offload everything
   // there. If not, then we continue in the main thread.
 
-  if (await isCanvasTransferControlToOffscreenSupported(supportCache)) {
+  if (userSettings.useOffscreenCanvas && isCanvasTransferControlToOffscreenSupported()) {
     logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad 3D canvas to a worker thread");
 
     const offscreenWorker = new Worker(`${__STATIC_BASE_PATH}${workers.offscreen.url}?${__CACHE_BUST}`, {
@@ -488,7 +492,11 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     mainLoop.updatables.add(offscreenWorkerService);
     serviceManager.services.add(offscreenWorkerService);
   } else {
-    logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
+    if (isCanvasTransferControlToOffscreenSupported()) {
+      logger.info("SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread by user decision");
+    } else {
+      logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
+    }
 
     /**
      * This extra var is a hack to make esbuild leave the dynamic import as-is.

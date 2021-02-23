@@ -11,6 +11,7 @@ import { MainMenuDOMElementView } from "./MainMenuDOMElementView";
 import { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementView";
 import { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
+import { ReloadButtonDOMElementView } from "./ReloadButtonDOMElementView";
 import { SliderDOMElementView } from "./SliderDOMElementView";
 import { UserSettingsDOMElementView } from "./UserSettingsDOMElementView";
 
@@ -31,6 +32,7 @@ export const domElementsLookup: DOMElementsLookup = {
   "pi-main-menu-layout": MainMenuLayoutDOMElementView,
   "pi-mouse-pointer-layer": MousePointerLayerDOMElementView,
   "pi-object-label": ObjectLabelDOMElementView,
+  "pi-reload-button": ReloadButtonDOMElementView,
   "pi-slider": SliderDOMElementView,
   "pi-user-settings": UserSettingsDOMElementView,
 };

@@ -1,6 +1,7 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
+import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
@@ -10,6 +11,8 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
+
+const isOffscreenCanvasSupported = isCanvasTransferControlToOffscreenSupported();
 
 const _css = `
   :host {
@@ -36,19 +39,29 @@ const _css = `
     color: white;
   }
 
-  #options__form {
+  .options__form {
     align-items: center;
     display: grid;
     grid-row-gap: 3rem;
   }
 
+  .option__warning {
+    color: yellow;
+  }
+
   dl {
+    display: grid;
+    grid-gap: 0.8rem;
     margin: 0;
   }
 
   dd {
     font-weight: lighter;
     margin: 0;
+  }
+
+  dt {
+    margin-bottom: -0.8rem;
   }
 
   h1 {
@@ -62,10 +75,18 @@ const _css = `
     font-weight: normal;
     grid-template-columns: 1fr auto;
     line-height: 1;
-    margin-bottom: 2.4rem;
-    padding-bottom: 0.8rem;
+    margin: 0;
+    padding-bottom: 1.6rem;
     position: sticky;
     top: 0;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin: 0;
+    padding-bottom: 1.6rem;
+    padding-top: 3.2rem;
   }
 
   @media (max-width: ${DOMBreakpoints.MobileMax}px) {
@@ -117,7 +138,7 @@ const _css = `
   }
 
   @media (max-width: ${DOMBreakpoints.TabletMax}px) {
-    #options__form {
+    .options__form {
       grid-template-columns: 1fr;
     }
   }
@@ -127,7 +148,7 @@ const _css = `
       max-width: 1024px;
     }
 
-    #options__form {
+    .options__form {
       grid-column-gap: 2rem;
       grid-template-columns: 1fr 1fr;
     }
@@ -150,6 +171,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
   public userSettingsLastAcknowledgedVersion: number = -1;
 
+  private _isUseOffscreenCanvasChanged: boolean = false;
+
   constructor() {
     super();
 
@@ -159,6 +182,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this.onShadowMapSizeChange = this.onShadowMapSizeChange.bind(this);
     this.onShowStatsReporterChange = this.onShowStatsReporterChange.bind(this);
     this.onUseDynamicLightingChange = this.onUseDynamicLightingChange.bind(this);
+    this.onUseOffscreenCanvasChanged = this.onUseOffscreenCanvasChanged.bind(this);
     this.onUseShadowsChange = this.onUseShadowsChange.bind(this);
   }
 
@@ -221,6 +245,16 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this.userSettings.version += 1;
   }
 
+  onUseOffscreenCanvasChanged(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onUseOffscreenCanvasChanged'.");
+    }
+
+    this._isUseOffscreenCanvasChanged = true;
+    this.userSettings.useOffscreenCanvas = Boolean(evt.detail);
+    this.userSettings.version += 1;
+  }
+
   onUseShadowsChange(evt: Event) {
     if (!isCustomEvent(evt)) {
       throw new Error("Expected custom event with:: 'onUseShadowsChange'.");
@@ -259,7 +293,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             Options
             <pi-button onClick={this.close}>done</pi-button>
           </h1>
-          <form id="options__form">
+          <h2>Graphics</h2>
+          <form class="options__form">
             <dl>
               <dt>Rendering Resolution</dt>
               <dd>
@@ -323,6 +358,34 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               values={_booleanValues}
             />
           </form>
+          {isOffscreenCanvasSupported && (
+            <Fragment>
+              <h2>Experimental</h2>
+              <form class="options__form">
+                <dl>
+                  <dt>Use Offscreen Canvas</dt>
+                  <dd>
+                    This one is tricky. On faster devices it provides even better and snappier experience but on slower devices it can degrade the overall performance and introduce
+                    some graphical glitches. Overall you can safely turn this on and see if it makes a difference for you.
+                  </dd>
+                  {this._isUseOffscreenCanvasChanged && (
+                    <Fragment>
+                      <dd class="option__warning">Required game reload to work.</dd>
+                      <pi-reload-button />
+                    </Fragment>
+                  )}
+                </dl>
+                <pi-slider
+                  currentValue={this.userSettings.useOffscreenCanvas}
+                  disabled={!isOffscreenCanvasSupported}
+                  edgeLabels={_booleanEdgeLabels}
+                  labels={_booleanLabels}
+                  onChange={this.onUseOffscreenCanvasChanged}
+                  values={_booleanValues}
+                />
+              </form>
+            </Fragment>
+          )}
         </div>
       </div>
     );

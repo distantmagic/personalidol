@@ -7,6 +7,7 @@ function createEmptyState(pixelRatio: number): IUserSettings {
     shadowMapSize: 512,
     showStatsReporter: false,
     useDynamicLighting: true,
+    useOffscreenCanvas: false,
     useShadows: true,
     version: 0,
   };

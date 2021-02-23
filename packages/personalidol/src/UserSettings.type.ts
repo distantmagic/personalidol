@@ -5,5 +5,6 @@ export type UserSettings = BaseUserSettings & {
   pixelRatio: number;
   shadowMapSize: 512 | 1024 | 2048 | 4096;
   useDynamicLighting: boolean;
+  useOffscreenCanvas: boolean;
   useShadows: boolean;
 };
