@@ -344,19 +344,6 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               onChange={this.onShadowMapSizeChange}
               values={_shadowMapSizeValues}
             />
-            <dl>
-              <dt>Show Rendering Stats</dt>
-              <dd>
-                Primarily used for debugging, but you can check your actual framerate and memory usage if you want to fine-tune your settings and you know what you are doing.
-              </dd>
-            </dl>
-            <pi-slider
-              currentValue={this.userSettings.showStatsReporter}
-              edgeLabels={_booleanEdgeLabels}
-              labels={_booleanLabels}
-              onChange={this.onShowStatsReporterChange}
-              values={_booleanValues}
-            />
           </form>
           {isOffscreenCanvasSupported && (
             <Fragment>
@@ -366,11 +353,12 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
                   <dt>Use Offscreen Canvas</dt>
                   <dd>
                     This one is tricky. On faster devices it provides even better and snappier experience but on slower devices it can degrade the overall performance and introduce
-                    some graphical glitches. Overall you can safely turn this on and see if it makes a difference for you.
+                    some graphical glitches. To sum it up, faster devices benefit even more, slower devices are beaten up even more. Overall you can safely turn this on and see if
+                    it makes a difference for you.
                   </dd>
                   {this._isUseOffscreenCanvasChanged && (
                     <Fragment>
-                      <dd class="option__warning">Required game reload to work.</dd>
+                      <dd class="option__warning">Required game reload to take effect.</dd>
                       <pi-reload-button />
                     </Fragment>
                   )}
@@ -386,6 +374,22 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               </form>
             </Fragment>
           )}
+          <h2>Utilities &amp; Development</h2>
+          <form class="options__form">
+            <dl>
+              <dt>Show Rendering Stats</dt>
+              <dd>
+                Primarily used for debugging, but you can check your actual framerate and memory usage if you want to fine-tune your settings and you know what you are doing.
+              </dd>
+            </dl>
+            <pi-slider
+              currentValue={this.userSettings.showStatsReporter}
+              edgeLabels={_booleanEdgeLabels}
+              labels={_booleanLabels}
+              onChange={this.onShowStatsReporterChange}
+              values={_booleanValues}
+            />
+          </form>
         </div>
       </div>
     );

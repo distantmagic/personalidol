@@ -130,6 +130,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     // Pick up any element that was created by a view.
 
     initializeDOMElementView(target, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+    _updateRenderedElement(target);
 
     _domElementViews.add(target);
     target.addEventListener(Events.elementDisconnected, _onElementDisconnected, _evtOnce);

@@ -311,7 +311,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       };
     } else {
       if (isCanvasTransferControlToOffscreenSupported()) {
-        logger.info("SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread by user decision");
+        logger.info("SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread by user override");
       } else {
         logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
       }
@@ -493,7 +493,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     serviceManager.services.add(offscreenWorkerService);
   } else {
     if (isCanvasTransferControlToOffscreenSupported()) {
-      logger.info("SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread by user decision");
+      logger.info("SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread by user override");
     } else {
       logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
     }
