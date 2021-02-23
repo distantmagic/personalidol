@@ -1,7 +1,6 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
 
@@ -56,12 +55,7 @@ const _css = `
 `;
 
 export class FatalErrorDOMElementView extends DOMElementView<UserSettings> {
-  constructor() {
-    super();
-
-    // this.nameable.name = "FatalErrorDOMElementView";
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
-  }
+  public css: string = _css;
 
   render() {
     const progressError: undefined | ProgressError = this.props.progressError;

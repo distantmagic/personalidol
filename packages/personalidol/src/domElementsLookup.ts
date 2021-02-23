@@ -9,6 +9,7 @@ import { LoadingScreenDOMElementView } from "./LoadingScreenDOMElementView";
 import { MainMenuDOMElementView } from "./MainMenuDOMElementView";
 import { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
+import { SliderDOMElementView } from "./SliderDOMElementView";
 import { UserSettingsDOMElementView } from "./UserSettingsDOMElementView";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
@@ -26,5 +27,6 @@ export const domElementsLookup: DOMElementsLookup = {
   "pi-main-menu": MainMenuDOMElementView,
   "pi-mouse-pointer-layer": MousePointerLayerDOMElementView,
   "pi-object-label": ObjectLabelDOMElementView,
+  "pi-slider": SliderDOMElementView,
   "pi-user-settings": UserSettingsDOMElementView,
 };

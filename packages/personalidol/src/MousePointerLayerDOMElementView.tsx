@@ -3,7 +3,6 @@ import { h } from "preact";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 // import { Input } from "@personalidol/framework/src/Input";
 // import { must } from "@personalidol/framework/src/must";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 
@@ -44,11 +43,7 @@ const _css = `
 `;
 
 export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings> {
-  constructor() {
-    super();
-
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
-  }
+  public css: string = _css;
 
   beforeRender(): void {
     this.needsRender = true;

@@ -1,7 +1,6 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 
@@ -69,12 +68,7 @@ const _css = `
 `;
 
 export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
-  constructor() {
-    super();
-
-    // this.nameable.name = "LoadingScreenDOMElementView";
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
-  }
+  public css: string = _css;
 
   render() {
     const progressManagerProgress: undefined | ProgressManagerProgress = this.props.progressManagerProgress;

@@ -1,10 +1,8 @@
 import { h } from "preact";
 
 import { isStatsReport } from "@personalidol/framework/src/isStatsReport";
-import { must } from "@personalidol/framework/src/must";
 
 import { DOMElementView } from "./DOMElementView";
-import { ReplaceableStyleSheet } from "./ReplaceableStyleSheet";
 
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -73,22 +71,16 @@ function _sortCompareReports(a: FlattenedStatsReport, b: FlattenedStatsReport): 
 
 export class StatsReporterDOMElementView extends DOMElementView<UserSettings> implements IStatsReporterDOMElementView {
   public static zIndex: number = 0;
+  public css: string = _css;
   public statsReportsFlattened: Array<FlattenedStatsReport> = [];
 
   constructor() {
     super();
 
     this.renderStatsReportFlattened = this.renderStatsReportFlattened.bind(this);
-
-    // this.nameable.name = "StatsReporterDOMElementView";
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
   render() {
-    if (!must(this.userSettings).showStatsReporter) {
-      return null;
-    }
-
     return (
       <div
         id="stats"

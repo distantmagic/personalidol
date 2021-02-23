@@ -6,17 +6,16 @@ import type { UserSettings } from "@personalidol/framework/src/UserSettings.type
 
 import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMUpdatesProps } from "./DOMUpdatesProps.interface";
-import type { ReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
 
 export interface DOMElementView<U extends UserSettings> extends DOMUpdatesProps, HTMLElement, MainLoopUpdatable {
-  domMessagePort: null | MessagePort;
+  css: string;
+  domMessagePort: MessagePort;
   inputState: Int32Array;
   needsRender: boolean;
   props: DOMElementProps;
   propsLastUpdate: number;
-  styleSheet: null | ReplaceableStyleSheet;
-  uiMessagePort: null | MessagePort;
-  userSettings: null | U;
+  uiMessagePort: MessagePort;
+  userSettings: U;
   userSettingsLastAcknowledgedVersion: number;
   viewLastUpdate: number;
 

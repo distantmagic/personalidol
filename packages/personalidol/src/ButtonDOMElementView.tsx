@@ -1,7 +1,6 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import type { UserSettings } from "./UserSettings.type";
 
@@ -29,11 +28,7 @@ const _css = `
 `;
 
 export class ButtonDOMElementView extends DOMElementView<UserSettings> {
-  constructor() {
-    super();
-
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
-  }
+  public css: string = _css;
 
   render(delta: number) {
     return (

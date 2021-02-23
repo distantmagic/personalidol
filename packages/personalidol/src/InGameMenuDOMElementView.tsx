@@ -1,8 +1,6 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { must } from "@personalidol/framework/src/must";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import { css } from "./MainMenuDOMElementView";
 
@@ -10,14 +8,14 @@ import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
 export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
+  public css: string = css;
+
   constructor() {
     super();
 
     this.onButtonExitClick = this.onButtonExitClick.bind(this);
     this.onButtonUserSettingsClick = this.onButtonUserSettingsClick.bind(this);
     this.onButtonReturnToGameClick = this.onButtonReturnToGameClick.bind(this);
-
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, css);
   }
 
   connectedCallback() {
@@ -27,7 +25,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       isScenePaused: true,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   disconnectedCallback() {
@@ -39,7 +37,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       isScenePaused: false,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   onButtonExitClick(evt: MouseEvent) {
@@ -49,7 +47,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       currentMap: null,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   onButtonUserSettingsClick(evt: MouseEvent) {
@@ -59,7 +57,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       isUserSettingsScreenOpened: true,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   onButtonReturnToGameClick(evt: MouseEvent) {
@@ -69,7 +67,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       isInGameMenuOpened: false,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   render() {

@@ -1,12 +1,9 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { must } from "@personalidol/framework/src/must";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
-import { SliderComponent } from "./SliderComponent";
 
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -55,6 +52,7 @@ const _css = `
   }
 
   h1 {
+    align-items: center;
     background-color: black;
     border-bottom: 1px solid white;
     display: grid;
@@ -134,8 +132,6 @@ const _css = `
       grid-template-columns: 1fr 1fr;
     }
   }
-
-  ${SliderComponent.css}
 `;
 
 const _booleanEdgeLabels: ["", ""] = ["", ""];
@@ -151,6 +147,8 @@ const _shadowMapSizeLabels = ["512", "1024", "2048", "4096"];
 const _shadowMapSizeValues = [512, 1024, 2048, 4096];
 
 export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
+  public css: string = _css;
+
   constructor() {
     super();
 
@@ -161,8 +159,6 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this.onShowStatsReporterChange = this.onShowStatsReporterChange.bind(this);
     this.onUseDynamicLightingChange = this.onUseDynamicLightingChange.bind(this);
     this.onUseShadowsChange = this.onUseShadowsChange.bind(this);
-
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
   close() {
@@ -170,7 +166,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       isUserSettingsScreenOpened: false,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   disconnectedCallback() {
@@ -179,48 +175,43 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this.close();
   }
 
-  onPixelRatioChange(pixelRatio: number) {
-    const userSettings = must(this.userSettings);
-
-    userSettings.pixelRatio = pixelRatio;
-    userSettings.version += 1;
+  // pixelRatio: number
+  onPixelRatioChange(evt: any) {
+    this.userSettings.pixelRatio = evt.detail;
+    this.userSettings.version += 1;
   }
 
-  onShadowMapSizeChange(shadowMapSize: number) {
-    const userSettings = must(this.userSettings);
-
-    switch (shadowMapSize) {
+  // shadowMapSize: number
+  onShadowMapSizeChange(evt: any) {
+    switch (evt.detail) {
       case 512:
       case 1024:
       case 2048:
       case 4096:
-        userSettings.shadowMapSize = shadowMapSize;
-        userSettings.version += 1;
+        this.userSettings.shadowMapSize = evt.detail;
+        this.userSettings.version += 1;
         return;
       default:
-        throw new Error(`Unexpected shadowmap size: "${shadowMapSize}"`);
+        throw new Error(`Unexpected shadowmap size: "${evt.detail}"`);
     }
   }
 
-  onShowStatsReporterChange(showStatsReporter: boolean) {
-    const userSettings = must(this.userSettings);
-
-    userSettings.showStatsReporter = showStatsReporter;
-    userSettings.version += 1;
+  // showStatsReporter: boolean
+  onShowStatsReporterChange(evt: any) {
+    this.userSettings.showStatsReporter = evt.detail;
+    this.userSettings.version += 1;
   }
 
-  onUseDynamicLightingChange(useDynamicLighting: boolean) {
-    const userSettings = must(this.userSettings);
-
-    userSettings.useDynamicLighting = useDynamicLighting;
-    userSettings.version += 1;
+  // useDynamicLighting: boolean
+  onUseDynamicLightingChange(evt: any) {
+    this.userSettings.useDynamicLighting = evt.detail;
+    this.userSettings.version += 1;
   }
 
-  onUseShadowsChange(useShadows: boolean) {
-    const userSettings = must(this.userSettings);
-
-    userSettings.useShadows = useShadows;
-    userSettings.version += 1;
+  // useShadows: boolean
+  onUseShadowsChange(evt: any) {
+    this.userSettings.useShadows = evt.detail;
+    this.userSettings.version += 1;
   }
 
   onOverlayClick(evt: MouseEvent) {
@@ -234,8 +225,6 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   }
 
   render(delta: number) {
-    const userSettings: UserSettings = must(this.userSettings);
-
     return (
       <div id="options" onClick={this.onOverlayClick}>
         <div id="options__content">
@@ -247,15 +236,15 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dl>
               <dt>Rendering Resolution</dt>
               <dd>
-                Your device pixel ratio is {userSettings.devicePixelRatio} (which means {userSettings.devicePixelRatio} physical pixel per rendered pixel). You can reduce the ratio
-                to decrease the rendering resolution, which makes everyting more blurry, but increases the performance.
+                Your device pixel ratio is {this.userSettings.devicePixelRatio} (which means {this.userSettings.devicePixelRatio} physical pixel per rendered pixel). You can reduce
+                the ratio to decrease the rendering resolution, which makes everyting more blurry, but increases the performance.
               </dd>
             </dl>
-            <SliderComponent
-              currentValue={userSettings.pixelRatio}
-              edgeLabels={_booleanEdgeLabels}
-              onChange={this.onPixelRatioChange}
+            <pi-slider
+              currentValue={this.userSettings.pixelRatio}
+              edgeLabels={_lowHighEdgeLabels}
               labels={_pixelRatioLabels}
+              onChange={this.onPixelRatioChange}
               values={_pixelRatioValues}
             />
             <dl>
@@ -264,30 +253,30 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
                 Can greatly affect performance. If you disable multiple light sources, background light will have more intensity and everything will be uniformly highlighted.
               </dd>
             </dl>
-            <SliderComponent
-              currentValue={userSettings.useDynamicLighting}
+            <pi-slider
+              currentValue={this.userSettings.useDynamicLighting}
               edgeLabels={_booleanEdgeLabels}
-              onChange={this.onUseDynamicLightingChange}
               labels={_booleanLabels}
+              onChange={this.onUseDynamicLightingChange}
               values={_booleanValues}
             />
             <dl>
               <dt>Use Shadows</dt>
               <dd>If you are not using multiple light sources you can disable this option as well since it will provide almost no visual enhancements without dynamic lighting.</dd>
             </dl>
-            <SliderComponent
-              currentValue={userSettings.useShadows}
+            <pi-slider
+              currentValue={this.userSettings.useShadows}
               edgeLabels={_booleanEdgeLabels}
-              onChange={this.onUseShadowsChange}
               labels={_booleanLabels}
+              onChange={this.onUseShadowsChange}
               values={_booleanValues}
             />
             <dl>
               <dt>Shadow Map Size</dt>
               <dd>Bigger values improve shadows quality, but affect performance and memory usage.</dd>
             </dl>
-            <SliderComponent
-              currentValue={userSettings.shadowMapSize}
+            <pi-slider
+              currentValue={this.userSettings.shadowMapSize}
               edgeLabels={_lowHighEdgeLabels}
               labels={_shadowMapSizeLabels}
               onChange={this.onShadowMapSizeChange}
@@ -299,11 +288,11 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
                 Primarily used for debugging, but you can check your actual framerate and memory usage if you want to fine-tune your settings and you know what you are doing.
               </dd>
             </dl>
-            <SliderComponent
-              currentValue={userSettings.showStatsReporter}
+            <pi-slider
+              currentValue={this.userSettings.showStatsReporter}
               edgeLabels={_booleanEdgeLabels}
-              onChange={this.onShowStatsReporterChange}
               labels={_booleanLabels}
+              onChange={this.onShowStatsReporterChange}
               values={_booleanValues}
             />
           </form>

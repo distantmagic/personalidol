@@ -1,16 +1,16 @@
+import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
-
-import { createSettingsHandle } from "./createSettingsHandle";
 
 import type { PointLight } from "three/src/lights/PointLight";
 import type { SpotLight } from "three/src/lights/SpotLight";
 
+import type { UserSettingsManager } from "@personalidol/framework/src/UserSettingsManager.interface";
+
 import type { UserSettings } from "./UserSettings.type";
-import type { UserSettingsManager as IUserSettingsManager } from "./UserSettingsManager.interface";
 
 type SupportedLights = PointLight | SpotLight;
 
-export function ShadowLightUserSettingsManager(userSettings: UserSettings, light: SupportedLights): IUserSettingsManager {
+export function ShadowLightUserSettingsManager(userSettings: UserSettings, light: SupportedLights): UserSettingsManager {
   const applySettings = createSettingsHandle(userSettings, function () {
     light.visible = userSettings.useDynamicLighting;
     light.castShadow = userSettings.useShadows;

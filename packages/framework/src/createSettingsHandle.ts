@@ -1,4 +1,4 @@
-import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
+import type { GenericCallback } from "./GenericCallback.type";
 
 import type { UserSettings } from "./UserSettings.type";
 

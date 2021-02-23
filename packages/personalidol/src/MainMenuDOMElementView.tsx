@@ -1,8 +1,6 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { must } from "@personalidol/framework/src/must";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
@@ -140,13 +138,13 @@ export const css = `
 `;
 
 export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
+  public css: string = css;
+
   constructor() {
     super();
 
     this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
     this.onButtonUserSettingsClick = this.onButtonUserSettingsClick.bind(this);
-
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, css);
   }
 
   disconnectedCallback() {
@@ -156,7 +154,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
       isUserSettingsScreenOpened: false,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   onButtonNewGameClick(evt: MouseEvent) {
@@ -166,7 +164,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
       currentMap: "map-gates",
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   onButtonUserSettingsClick(evt: MouseEvent) {
@@ -176,7 +174,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
       isUserSettingsScreenOpened: true,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   render() {

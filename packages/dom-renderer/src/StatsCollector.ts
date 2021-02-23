@@ -3,8 +3,10 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
+import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
+import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 import type { StatsCollector as IStatsCollector } from "./StatsCollector.interface";
 
@@ -12,8 +14,7 @@ type StatsHooksReports = {
   [key: string]: StatsReport;
 };
 
-export function StatsCollector(domMessagePort: MessagePort): IStatsCollector {
-  const _domStatsReporterElementId: string = MathUtils.generateUUID();
+export function StatsCollector(userSettings: UserSettings, domMessagePort: MessagePort): IStatsCollector {
   const _statsReports: StatsHooksReports = {};
   const _statsRouter = createRouter({
     statsReport: function (statsReport: StatsReport) {
@@ -21,15 +22,31 @@ export function StatsCollector(domMessagePort: MessagePort): IStatsCollector {
     },
   });
 
+  let _domStatsReporterElementId: null | string;
+
   function registerMessagePort(messagePort: MessagePort) {
     messagePort.onmessage = _statsRouter;
   }
 
   function start() {}
 
-  function stop() {}
+  function stop() {
+    if (!_domStatsReporterElementId) {
+      return;
+    }
+
+    domMessagePort.postMessage({
+      dispose: <MessageDOMUIDispose>[_domStatsReporterElementId],
+    });
+
+    _domStatsReporterElementId = null;
+  }
 
   function update(delta: number) {
+    if (!_domStatsReporterElementId) {
+      _domStatsReporterElementId = MathUtils.generateUUID();
+    }
+
     domMessagePort.postMessage({
       render: <MessageDOMUIRender<DOMElementsLookup>>{
         id: _domStatsReporterElementId,

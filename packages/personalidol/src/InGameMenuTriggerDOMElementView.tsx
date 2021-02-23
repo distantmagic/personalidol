@@ -1,8 +1,6 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { must } from "@personalidol/framework/src/must";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 
@@ -27,12 +25,12 @@ const _css = `
 `;
 
 export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings> {
+  public css: string = _css;
+
   constructor() {
     super();
 
     this.onInGameMenuTriggerClick = this.onInGameMenuTriggerClick.bind(this);
-
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
   }
 
   disconnectedCallback() {
@@ -42,7 +40,7 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
       isInGameMenuOpened: false,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   onInGameMenuTriggerClick() {
@@ -50,7 +48,7 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
       isInGameMenuOpened: true,
     };
 
-    must(this.uiMessagePort).postMessage(message);
+    this.uiMessagePort.postMessage(message);
   }
 
   render() {

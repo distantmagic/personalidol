@@ -2,7 +2,6 @@ import { h } from "preact";
 
 import { damp } from "@personalidol/framework/src/damp";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { ReplaceableStyleSheet } from "@personalidol/dom-renderer/src/ReplaceableStyleSheet";
 
 import type { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObjectState.type";
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
@@ -54,6 +53,8 @@ type LabelProps = DOMElementProps & {
 };
 
 export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
+  public css: string = _css;
+
   public objectProps: LabelProps = {
     label: "",
   };
@@ -70,13 +71,6 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
     current: 1,
     target: 1,
   };
-
-  constructor() {
-    super();
-
-    // this.nameable.name = "ObjectLabelDOMElementView";
-    this.styleSheet = ReplaceableStyleSheet(this.shadow, _css);
-  }
 
   render(delta: number) {
     if (!this.rendererState.visible) {

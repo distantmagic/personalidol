@@ -33,6 +33,7 @@ import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/Requ
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
+import { StatsCollectorUserSettingsManager } from "@personalidol/dom-renderer/src/StatsCollectorUserSettingsManager";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
@@ -171,6 +172,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const uiMessageChannel = createMultiThreadMessageChannel();
   const domUIController = DOMUIController(logger, inputState, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, userSettings, domElementsLookup);
 
+  domUIController.preload();
+
   mainLoop.updatables.add(domUIController);
   serviceManager.services.add(domUIController);
 
@@ -178,14 +181,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const statsMessageChannel = createMultiThreadMessageChannel();
   const statsToDOMRendererMessageChannel = createSingleThreadMessageChannel();
-  const statsCollector = StatsCollector(statsToDOMRendererMessageChannel.port2);
+  const statsCollector = StatsCollector(userSettings, statsToDOMRendererMessageChannel.port2);
 
   domUIController.registerMessagePort(statsToDOMRendererMessageChannel.port1);
   statsCollector.registerMessagePort(statsReporterMessageChannel.port1);
   statsCollector.registerMessagePort(statsMessageChannel.port1);
 
-  serviceManager.services.add(statsCollector);
-  mainLoop.updatables.add(statsCollector);
+  const statsCollectorUserSettingsManager = StatsCollectorUserSettingsManager(userSettings, statsCollector);
+
+  serviceManager.services.add(statsCollectorUserSettingsManager);
+  mainLoop.updatables.add(statsCollectorUserSettingsManager);
 
   // FontPreloadService does exactly what its name says. Thanks to this
   // service it is possible for worker threads to request font face to be

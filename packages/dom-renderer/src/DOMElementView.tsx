@@ -1,9 +1,10 @@
 import { Fragment, h, render } from "preact";
 
-import { Input } from "@personalidol/framework/src/Input";
+import { isConstructableCSSStyleSheetSupported } from "@personalidol/support/src/isConstructableCSSStyleSheetSupported";
+import { must } from "@personalidol/framework/src/must";
 
+import { createConstructableStylesheet } from "./createConstructableStylesheet";
 import { Events } from "./Events.enum";
-import { isReplaceableStyleSheet_element } from "./isReplaceableStyleSheet_element";
 
 import type { VNode } from "preact";
 
@@ -12,36 +13,61 @@ import type { UserSettings } from "@personalidol/framework/src/UserSettings.type
 
 import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementView as IDOMElementView } from "./DOMElementView.interface";
-import type { ReplaceableStyleSheet as IReplaceableStyleSheet } from "./ReplaceableStyleSheet.interface";
-
-let _inputStatePlaceholder: null | Int32Array = null;
 
 export abstract class DOMElementView<U extends UserSettings> extends HTMLElement implements IDOMElementView<U> {
-  public domMessagePort: null | MessagePort = null;
-  public inputState: Int32Array;
+  public css: string = "";
   public needsRender: boolean = true;
   public props: DOMElementProps = {};
   public propsLastUpdate: number = 0;
   public shadow: ShadowRoot;
-  public styleSheet: null | IReplaceableStyleSheet = null;
-  public uiMessagePort: null | MessagePort = null;
-  public userSettings: null | U = null;
-  public userSettingsLastAcknowledgedVersion: number = 0;
+  public userSettingsLastAcknowledgedVersion: number = -1;
   public viewLastUpdate: number = 0;
+
+  private _domMessagePort: null | MessagePort = null;
+  private _inputState: null | Int32Array = null;
+  private _uiMessagePort: null | MessagePort = null;
+  private _userSettings: null | U = null;
+
+  get domMessagePort(): MessagePort {
+    return must(this._domMessagePort, "domMessagePort is not set but it was expected to be.");
+  }
+
+  set domMessagePort(domMessagePort: MessagePort) {
+    this._domMessagePort = domMessagePort;
+  }
+
+  get inputState(): Int32Array {
+    return must(this._inputState, "inputState is not set but it was expected to be.");
+  }
+
+  set inputState(inputState: Int32Array) {
+    this._inputState = inputState;
+  }
+
+  get uiMessagePort(): MessagePort {
+    return must(this._uiMessagePort, "uiMessagePort is not set but it was expected to be.");
+  }
+
+  set uiMessagePort(uiMessagePort: MessagePort) {
+    this._uiMessagePort = uiMessagePort;
+  }
+
+  get userSettings(): U {
+    return must(this._userSettings, "userSettings is not set but it was expected to be.");
+  }
+
+  set userSettings(userSettings: U) {
+    this._userSettings = userSettings;
+  }
 
   constructor() {
     super();
-
-    if (!_inputStatePlaceholder) {
-      _inputStatePlaceholder = Input.createEmptyState(false);
-    }
 
     this._onShadowElementConnected = this._onShadowElementConnected.bind(this);
     this._onShadowElementDisconnected = this._onShadowElementDisconnected.bind(this);
     this.render = this.render.bind(this);
     this.updateProps = this.updateProps.bind(this);
 
-    this.inputState = _inputStatePlaceholder;
     this.shadow = this.attachShadow({
       mode: "open",
     });
@@ -50,11 +76,19 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   adoptedCallback() {}
 
   beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    if (this.needsRender) {
+      return;
+    }
+
     this.needsRender = this.viewLastUpdate < this.propsLastUpdate;
+
+    if (this.needsRender) {
+      return;
+    }
 
     const userSettings = this.userSettings;
 
-    if (!userSettings || this.needsRender) {
+    if (!userSettings) {
       return;
     }
 
@@ -63,6 +97,11 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   }
 
   connectedCallback() {
+    if (isConstructableCSSStyleSheetSupported()) {
+      // @ts-ignore
+      this.shadow.adoptedStyleSheets = [createConstructableStylesheet(this.css)];
+    }
+
     this.shadow.addEventListener(Events.elementConnected, this._onShadowElementConnected);
     this.shadow.addEventListener(Events.elementDisconnected, this._onShadowElementDisconnected);
     this.dispatchEvent(
@@ -99,16 +138,15 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
     this.viewLastUpdate = tickTimerState.currentTick;
 
     const renderedElements = this.render(delta, elapsedTime, tickTimerState);
-    const styleSheet = this.styleSheet;
 
-    if (!styleSheet || !isReplaceableStyleSheet_element(styleSheet)) {
+    if (!this.css || isConstructableCSSStyleSheetSupported()) {
       render(renderedElements, this.shadow);
       return;
     }
 
     render(
       <Fragment>
-        <style>{styleSheet.css}</style>
+        <style>{this.css}</style>
         {renderedElements}
       </Fragment>,
       this.shadow

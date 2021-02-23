@@ -1,5 +1,6 @@
 import type { DOMElementsLookup as BaseDOMElementsLookup } from "@personalidol/dom-renderer/src/DOMElementsLookup.type";
 
+import type { ButtonDOMElementView } from "./ButtonDOMElementView";
 import type { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import type { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import type { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
@@ -7,13 +8,15 @@ import type { LoadingScreenDOMElementView } from "./LoadingScreenDOMElementView"
 import type { MainMenuDOMElementView } from "./MainMenuDOMElementView";
 import type { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import type { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
-import type { ButtonDOMElementView } from "./ButtonDOMElementView";
+import type { SliderDOMElementProps } from "./SliderDOMElementProps.interface";
+import type { SliderDOMElementView } from "./SliderDOMElementView";
 import type { UserSettingsDOMElementView } from "./UserSettingsDOMElementView";
 
 declare global {
   namespace preact.JSX {
     interface IntrinsicElements {
       "pi-button": HTMLAttributes<ButtonDOMElementView>;
+      "pi-slider": HTMLAttributes<SliderDOMElementView<any>> & SliderDOMElementProps<any>;
     }
   }
 }
@@ -27,5 +30,6 @@ export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-main-menu": typeof MainMenuDOMElementView;
   "pi-mouse-pointer-layer": typeof MousePointerLayerDOMElementView;
   "pi-object-label": typeof ObjectLabelDOMElementView;
+  "pi-slider": typeof SliderDOMElementView;
   "pi-user-settings": typeof UserSettingsDOMElementView;
 };

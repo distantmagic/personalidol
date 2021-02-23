@@ -6,6 +6,11 @@ function _test(): boolean {
     return false;
   }
 
+  // @ts-ignore
+  if ("function" !== typeof globalThis.CSSStyleSheet.prototype.replaceSync) {
+    return false;
+  }
+
   try {
     const _testSheet = new globalThis.CSSStyleSheet();
 
