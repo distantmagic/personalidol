@@ -68,16 +68,8 @@ const _css = `
   }
 
   h1,
-  h2,
-  nav {
-    position: relative;
-  }
-
-  h1,
   h2 {
     font-family: "Almendra", sans-serif;
-    -webkit-font-kerning: normal;
-    font-kerning: normal;
     line-height: 1;
     margin: 0;
     text-align: center;
@@ -103,37 +95,6 @@ const _css = `
     padding-top: 3.2rem;
     width: 100%;
   }
-
-  button {
-    background-color: transparent;
-    border: 1px solid transparent;
-    font-family: "Mukta", sans-serif;
-    font-size: 1.4rem;
-    font-variant: small-caps;
-    font-weight: 300;
-    line-height: 1;
-    padding: 0.8rem 1.6rem;
-    text-align: center;
-    text-transform: lowercase;
-    width: 100%;
-  }
-
-  button:disabled {
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  button:enabled {
-    color: white;
-    cursor: pointer;
-  }
-
-  button:enabled:hover {
-    border-color: white;
-  }
-
-  button:focus {
-    outline: none;
-  }
 `;
 
 export class MainMenuLayoutDOMElementView extends DOMElementView<UserSettings> {
@@ -143,8 +104,10 @@ export class MainMenuLayoutDOMElementView extends DOMElementView<UserSettings> {
     return (
       <div id="main-menu">
         <div id="main-menu__content">
-          <h1>Personal Idol</h1>
-          <h2>You shall not be judged</h2>
+          <header>
+            <h1>Personal Idol</h1>
+            <h2>You shall not be judged</h2>
+          </header>
           <nav>
             <slot />
           </nav>

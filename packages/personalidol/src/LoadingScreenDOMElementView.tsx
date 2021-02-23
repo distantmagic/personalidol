@@ -7,6 +7,14 @@ import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/
 import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
+  :host {
+    all: initial;
+  }
+
+  *, * * {
+    box-sizing: border-box;
+  }
+
   #comment,
   #progress-value,
   #progress-indicator {

@@ -38,10 +38,11 @@ const _css = `
     padding-right: 0.5rem;
     position: absolute;
     top: 0;
-    transform:
-      translate(-50%, -100%)
-      translate(var(--translate-x), var(--translate-y))
-    ;
+    transform: translate3D(
+      calc(-50% + var(--translate-x)),
+      calc(-100% + var(--translate-y)),
+      0
+    );
     will-change: transform, z-index;
     z-index: var(--z-index);
   }

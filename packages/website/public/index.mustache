@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>Website</title>
+    <title>Personal Idol</title>
     <style>
       ::selection {
         background-color: white;
@@ -19,17 +19,23 @@
         user-select: none;
       }
 
+      body,
+      #canvas-root,
+      #game-root,
+      #ui-root {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+
       body {
         -moz-osx-font-smoothing: grayscale;
         -webkit-font-smoothing: antialiased;
         background-color: black;
-        bottom: 0;
-        left: 0;
         margin: 0;
         overflow: hidden;
-        position: absolute;
-        right: 0;
-        top: 0;
       }
 
       #canvas {
@@ -38,34 +44,11 @@
         will-change: height, width;
       }
 
-      #canvas-root {
-        bottom: 0;
-        left: 0;
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-
-      #game-root {
-        bottom: 0;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-      }
-
       #ui-root {
-        bottom: 0;
+        -webkit-font-kerning: normal;
         font-kerning: normal;
-        left: 0;
+        font-kerning: normal;
         pointer-events: none;
-        position: absolute;
-        right: 0;
-        top: 0;
-      }
-
-      #ui-root *, #ui-root * * {
-        box-sizing: border-box;
       }
     </style>
   </head>
