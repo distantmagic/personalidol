@@ -6,7 +6,8 @@ function _test(): boolean {
     return false;
   }
 
-  // @ts-ignore
+  // @ts-ignore this is a chrome-only feature at this point and as such it is
+  // not typed
   if ("function" !== typeof globalThis.CSSStyleSheet.prototype.replaceSync) {
     return false;
   }
@@ -14,7 +15,7 @@ function _test(): boolean {
   try {
     const _testSheet = new globalThis.CSSStyleSheet();
 
-    // @ts-ignore
+    // @ts-ignore same as above
     _testSheet.replaceSync("a{}");
   } catch (e) {
     return false;

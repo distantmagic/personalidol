@@ -6,7 +6,9 @@ import { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import { LoadingScreenDOMElementView } from "./LoadingScreenDOMElementView";
+import { MainMenuButtonDOMElementView } from "./MainMenuButtonDOMElementView";
 import { MainMenuDOMElementView } from "./MainMenuDOMElementView";
+import { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementView";
 import { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
 import { SliderDOMElementView } from "./SliderDOMElementView";
@@ -25,6 +27,8 @@ export const domElementsLookup: DOMElementsLookup = {
   "pi-in-game-menu-trigger": InGameMenuTriggerDOMElementView,
   "pi-loading-screen": LoadingScreenDOMElementView,
   "pi-main-menu": MainMenuDOMElementView,
+  "pi-main-menu-button": MainMenuButtonDOMElementView,
+  "pi-main-menu-layout": MainMenuLayoutDOMElementView,
   "pi-mouse-pointer-layer": MousePointerLayerDOMElementView,
   "pi-object-label": ObjectLabelDOMElementView,
   "pi-slider": SliderDOMElementView,

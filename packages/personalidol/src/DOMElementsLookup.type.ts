@@ -5,7 +5,9 @@ import type { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import type { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import type { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import type { LoadingScreenDOMElementView } from "./LoadingScreenDOMElementView";
+import type { MainMenuButtonDOMElementView } from "./MainMenuButtonDOMElementView";
 import type { MainMenuDOMElementView } from "./MainMenuDOMElementView";
+import type { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementView";
 import type { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import type { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
 import type { SliderDOMElementProps } from "./SliderDOMElementProps.interface";
@@ -16,6 +18,8 @@ declare global {
   namespace preact.JSX {
     interface IntrinsicElements {
       "pi-button": HTMLAttributes<ButtonDOMElementView>;
+      "pi-main-menu-button": HTMLAttributes<MainMenuButtonDOMElementView>;
+      "pi-main-menu-layout": HTMLAttributes<MainMenuLayoutDOMElementView>;
       "pi-slider": HTMLAttributes<SliderDOMElementView<any>> & SliderDOMElementProps<any>;
     }
   }
@@ -28,6 +32,8 @@ export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-in-game-menu-trigger": typeof InGameMenuTriggerDOMElementView;
   "pi-loading-screen": typeof LoadingScreenDOMElementView;
   "pi-main-menu": typeof MainMenuDOMElementView;
+  "pi-main-menu-button": typeof MainMenuButtonDOMElementView;
+  "pi-main-menu-layout": typeof MainMenuLayoutDOMElementView;
   "pi-mouse-pointer-layer": typeof MousePointerLayerDOMElementView;
   "pi-object-label": typeof ObjectLabelDOMElementView;
   "pi-slider": typeof SliderDOMElementView;

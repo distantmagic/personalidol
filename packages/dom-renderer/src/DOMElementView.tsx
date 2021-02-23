@@ -11,17 +11,12 @@ import type { VNode } from "preact";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
-import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementView as IDOMElementView } from "./DOMElementView.interface";
 
 export abstract class DOMElementView<U extends UserSettings> extends HTMLElement implements IDOMElementView<U> {
   public css: string = "";
   public needsRender: boolean = true;
-  public props: DOMElementProps = {};
-  public propsLastUpdate: number = 0;
   public shadow: ShadowRoot;
-  public userSettingsLastAcknowledgedVersion: number = -1;
-  public viewLastUpdate: number = 0;
 
   private _domMessagePort: null | MessagePort = null;
   private _inputState: null | Int32Array = null;
@@ -33,6 +28,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   }
 
   set domMessagePort(domMessagePort: MessagePort) {
+    this.needsRender = true;
     this._domMessagePort = domMessagePort;
   }
 
@@ -41,6 +37,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   }
 
   set inputState(inputState: Int32Array) {
+    this.needsRender = true;
     this._inputState = inputState;
   }
 
@@ -49,6 +46,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   }
 
   set uiMessagePort(uiMessagePort: MessagePort) {
+    this.needsRender = true;
     this._uiMessagePort = uiMessagePort;
   }
 
@@ -57,68 +55,48 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   }
 
   set userSettings(userSettings: U) {
+    this.needsRender = true;
     this._userSettings = userSettings;
   }
 
   constructor() {
     super();
 
-    this._onShadowElementConnected = this._onShadowElementConnected.bind(this);
-    this._onShadowElementDisconnected = this._onShadowElementDisconnected.bind(this);
     this.render = this.render.bind(this);
-    this.updateProps = this.updateProps.bind(this);
 
     this.shadow = this.attachShadow({
-      mode: "open",
+      mode: "closed",
     });
   }
 
   adoptedCallback() {}
 
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    if (this.needsRender) {
-      return;
-    }
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {}
 
-    this.needsRender = this.viewLastUpdate < this.propsLastUpdate;
-
-    if (this.needsRender) {
-      return;
-    }
-
-    const userSettings = this.userSettings;
-
-    if (!userSettings) {
-      return;
-    }
-
-    this.needsRender = this.userSettingsLastAcknowledgedVersion < userSettings.version;
-    this.userSettingsLastAcknowledgedVersion = userSettings.version;
-  }
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {}
 
   connectedCallback() {
     if (isConstructableCSSStyleSheetSupported()) {
-      // @ts-ignore
+      // @ts-ignore this is a chrome-only feature at this point and as such it
+      // is not typed
       this.shadow.adoptedStyleSheets = [createConstructableStylesheet(this.css)];
     }
 
-    this.shadow.addEventListener(Events.elementConnected, this._onShadowElementConnected);
-    this.shadow.addEventListener(Events.elementDisconnected, this._onShadowElementDisconnected);
     this.dispatchEvent(
       new CustomEvent(Events.elementConnected, {
         detail: this,
         bubbles: true,
+        composed: true,
       })
     );
   }
 
   disconnectedCallback() {
-    this.shadow.removeEventListener(Events.elementConnected, this._onShadowElementConnected);
-    this.shadow.removeEventListener(Events.elementDisconnected, this._onShadowElementDisconnected);
     this.dispatchEvent(
       new CustomEvent(Events.elementDisconnected, {
         detail: this,
         bubbles: true,
+        composed: true,
       })
     );
   }
@@ -135,7 +113,6 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
     }
 
     this.needsRender = false;
-    this.viewLastUpdate = tickTimerState.currentTick;
 
     const renderedElements = this.render(delta, elapsedTime, tickTimerState);
 
@@ -150,29 +127,6 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
         {renderedElements}
       </Fragment>,
       this.shadow
-    );
-  }
-
-  updateProps(props: DOMElementProps, tickTimerState: TickTimerState): void {
-    this.props = props;
-    this.propsLastUpdate = tickTimerState.currentTick;
-  }
-
-  private _onShadowElementConnected(evt: any) {
-    this.dispatchEvent(
-      new CustomEvent(Events.elementConnected, {
-        detail: evt.detail,
-        bubbles: true,
-      })
-    );
-  }
-
-  private _onShadowElementDisconnected(evt: any) {
-    this.dispatchEvent(
-      new CustomEvent(Events.elementDisconnected, {
-        detail: evt.detail,
-        bubbles: true,
-      })
     );
   }
 }

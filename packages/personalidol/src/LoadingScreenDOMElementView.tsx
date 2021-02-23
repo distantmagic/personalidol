@@ -70,10 +70,21 @@ const _css = `
 export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
-  render() {
-    const progressManagerProgress: undefined | ProgressManagerProgress = this.props.progressManagerProgress;
+  private _progressPercentage: string = "0%";
+  private _progressManagerProgress: null | ProgressManagerProgress = null;
 
-    if (!progressManagerProgress) {
+  set progressManagerProgress(progressManagerProgress: ProgressManagerProgress) {
+    this.needsRender = true;
+
+    this._progressManagerProgress = progressManagerProgress;
+
+    const progress = Math.round(progressManagerProgress.progress * 100);
+
+    this._progressPercentage = `${progress}%`;
+  }
+
+  render() {
+    if (!this._progressManagerProgress) {
       return (
         <main id="loading-progress">
           <div id="comment">Loading ...</div>
@@ -81,21 +92,18 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
       );
     }
 
-    const progress = Math.round(progressManagerProgress.progress * 100);
-    const progressPercentage: string = `${progress}%`;
-
     return (
       <main id="loading-progress">
-        <div id="comment">Loading {progressManagerProgress.comment} ...</div>
+        <div id="comment">Loading {this._progressManagerProgress.comment} ...</div>
         <div id="progress-value"></div>
         <div id="progress-indicator">
           <div
             id="progress-bar"
             style={{
-              width: progressPercentage,
+              width: this._progressPercentage,
             }}
           >
-            {progressPercentage}
+            {this._progressPercentage}
           </div>
         </div>
       </main>

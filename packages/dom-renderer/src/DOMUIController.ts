@@ -2,9 +2,11 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
+import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 
 import { clearHTMLElement } from "./clearHTMLElement";
 import { Events } from "./Events.enum";
+import { initializeDOMElementView } from "./initializeDOMElementView";
 import { isDOMElementView } from "./isDOMElementView";
 import { isDOMElementViewConstructor } from "./isDOMElementViewConstructor";
 import { isHTMLElementConstructor } from "./isHTMLElementConstructor";
@@ -14,6 +16,7 @@ import type { Logger } from "loglevel";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
+import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementView } from "./DOMElementView.interface";
 import type { DOMUIController as IDOMUIController } from "./DOMUIController.interface";
@@ -56,8 +59,8 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   let _elapsedTime: number = 0;
   let _isRootElementCleared: boolean = false;
 
-  const _renderedElements: Set<DOMElementView<U>> = new Set();
-  const _renderedElementsLookup: Map<string, DOMElementView<U>> = new Map();
+  const _domElementViews: Set<DOMElementView<U>> = new Set();
+  const _managedDOMElementViewsLookup: Map<string, DOMElementView<U>> = new Map();
   const _uiMessageRouter = createRouter({
     dispose: dispose,
     render: render,
@@ -73,13 +76,17 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     const domElementView = new DOMElementViewConstructor<U>();
 
-    _initializeDOMElementView(domElementView);
+    initializeDOMElementView(domElementView, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
 
     return domElementView;
   }
 
   function _defineCustomElementByName(elementName: string & keyof L): void {
-    const Constructor = _getCustomElementConstructor(elementName);
+    const Constructor = domElementsLookup[elementName];
+
+    if (!Constructor) {
+      throw new Error(`Custom element is not available: "${elementName}"`);
+    }
 
     if (!isHTMLElementConstructor(Constructor)) {
       throw new Error("Object is not a HTMLElement constructor.");
@@ -89,70 +96,80 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   }
 
   function _disposeElementById(id: string): void {
-    let renderedElement: undefined | DOMElementView<U> = _renderedElementsLookup.get(id);
+    let domElementView: undefined | DOMElementView<U> = _managedDOMElementViewsLookup.get(id);
 
-    if (!renderedElement) {
+    if (!domElementView) {
       throw new Error(`Element is not rendered and can't be disposed: "${id}"`);
 
       return;
     }
 
-    uiRootElement.removeChild(renderedElement);
+    uiRootElement.removeChild(domElementView);
 
-    _renderedElements.delete(renderedElement);
-    _renderedElementsLookup.delete(id);
+    _domElementViews.delete(domElementView);
+    _managedDOMElementViewsLookup.delete(id);
   }
 
-  function _getCustomElementConstructor<N extends string & keyof L>(elementName: N): L[N] {
-    const ElementConstructor = domElementsLookup[elementName];
-
-    if (!ElementConstructor) {
-      throw new Error(`Custom element is not available: "${elementName}"`);
-    }
-
-    return ElementConstructor;
-  }
-
-  function _initializeDOMElementView(domElementView: DOMElementView<U>) {
-    domElementView.domMessagePort = internalDOMMessageChannel.port2;
-    domElementView.inputState = inputState;
-    domElementView.uiMessagePort = uiMessagePort;
-    domElementView.userSettings = userSettings;
-  }
-
-  function _onElementConnected(evt: any) {
+  function _onElementConnected(evt: Event) {
     evt.stopPropagation();
+
+    if (!isCustomEvent(evt)) {
+      throw new Error(`Expected custom event for: "${Events.elementConnected}"`);
+    }
 
     const target = evt.detail;
 
     if (!isDOMElementView<U>(target)) {
-      throw new Error(`Received event, but element is not a DOMElementView: "${Events.elementConnected}"`);
+      throw new Error(`Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementConnected}"`);
     }
 
-    if (!_renderedElements.has(target)) {
-      _initializeDOMElementView(target);
-      _renderedElements.add(target);
+    if (_domElementViews.has(target)) {
+      return;
     }
 
+    // Pick up any element that was created by a view.
+
+    initializeDOMElementView(target, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+
+    _domElementViews.add(target);
     target.addEventListener(Events.elementDisconnected, _onElementDisconnected, _evtOnce);
   }
 
-  function _onElementDisconnected(evt: any) {
+  function _onElementDisconnected(evt: Event) {
     evt.stopPropagation();
+
+    if (!isCustomEvent(evt)) {
+      throw new Error(`Expected custom event for: "${Events.elementDisconnected}"`);
+    }
 
     const target = evt.detail;
 
     if (!isDOMElementView<U>(target)) {
-      throw new Error(`Received event, but element is not a DOMElementView: "${Events.elementDisconnected}"`);
+      throw new Error(`Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementDisconnected}"`);
     }
 
-    if (!_renderedElements.delete(target)) {
-      throw new Error("Element was disconnected, but has never been registered as connected.");
+    if (!_domElementViews.delete(target)) {
+      throw new Error(`Element was disconnected, but has never been registered as connected: "${target.tagName}"`);
     }
   }
 
-  function _updateRenderedElement(renderedElement: DOMElementView<U>) {
-    renderedElement.update(_delta, _elapsedTime, tickTimerState);
+  function _updateRenderedElementProps(domElementView: DOMElementView<U>, props: DOMElementProps) {
+    for (let prop in props) {
+      if (props.hasOwnProperty(prop)) {
+        if (prop in domElementView) {
+          // @ts-ignore we know that element has this property
+          domElementView[prop] = props[prop];
+        } else {
+          throw new Error(`Element does not have a property defined: "${domElementView.tagName}.${prop}"`);
+        }
+      }
+    }
+  }
+
+  function _updateRenderedElement(domElementView: DOMElementView<U>) {
+    if (domElementView.isConnected) {
+      domElementView.update(_delta, _elapsedTime, tickTimerState);
+    }
   }
 
   function dispose(message: MessageDOMUIDispose): void {
@@ -173,20 +190,19 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
       _isRootElementCleared = true;
     }
 
-    let renderedElement: undefined | DOMElementView<U> = _renderedElementsLookup.get(message.id);
+    let domElementView: undefined | DOMElementView<U> = _managedDOMElementViewsLookup.get(message.id);
 
-    if (!renderedElement) {
-      renderedElement = _createDOMElementViewByRenderMessage(message);
+    if (!domElementView) {
+      domElementView = _createDOMElementViewByRenderMessage(message);
 
-      _renderedElements.add(renderedElement);
-      _renderedElementsLookup.set(message.id, renderedElement);
+      _domElementViews.add(domElementView);
+      _managedDOMElementViewsLookup.set(message.id, domElementView);
 
-      uiRootElement.appendChild(renderedElement);
+      uiRootElement.appendChild(domElementView);
     }
 
-    renderedElement.updateProps(message.props, tickTimerState);
-
-    _updateRenderedElement(renderedElement);
+    _updateRenderedElementProps(domElementView, message.props);
+    _updateRenderedElement(domElementView);
   }
 
   function renderBatch(message: Array<MessageDOMUIRender<L>>): void {
@@ -211,7 +227,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     _delta = delta;
     _elapsedTime = elapsedTime;
 
-    _renderedElements.forEach(_updateRenderedElement);
+    _domElementViews.forEach(_updateRenderedElement);
   }
 
   return Object.freeze({

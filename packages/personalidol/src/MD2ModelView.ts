@@ -61,7 +61,7 @@ function _clearCachedAnimations(entity: EntityMD2Model): void {
   }
 }
 
-function _getSetCachedAnimations(entity: EntityMD2Model, geometry: any): Array<IAnimationClip> {
+function _getSetCachedAnimations(entity: EntityMD2Model, geometry: MD2LoaderParsedGeometryWithParts): Array<IAnimationClip> {
   const cachedAnimations: undefined | AnimationClipsCached = _animationClipsCache.get(entity.model_name);
 
   if (cachedAnimations) {
@@ -70,6 +70,7 @@ function _getSetCachedAnimations(entity: EntityMD2Model, geometry: any): Array<I
     return cachedAnimations.animations;
   }
 
+  // @ts-ignore morph targets are incorrectly typed in THREE
   const animations = AnimationClip.CreateClipsFromMorphTargetSequences(geometry.frames, 10, false);
 
   _animationClipsCache.set(entity.model_name, {

@@ -5,10 +5,8 @@ import { isStatsReport } from "@personalidol/framework/src/isStatsReport";
 import { DOMElementView } from "./DOMElementView";
 
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
-import type { DOMElementProps } from "./DOMElementProps.type";
 import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
 
 type FlattenedStatsReport = [string, boolean | number | string];
@@ -74,6 +72,16 @@ export class StatsReporterDOMElementView extends DOMElementView<UserSettings> im
   public css: string = _css;
   public statsReportsFlattened: Array<FlattenedStatsReport> = [];
 
+  set statsReports(statsReports: Array<StatsReport>) {
+    this.needsRender = true;
+
+    if (Array.isArray(statsReports)) {
+      this.statsReportsFlattened = Array.from(_flattenStatsReports(statsReports)).sort(_sortCompareReports);
+    } else {
+      this.statsReportsFlattened = [];
+    }
+  }
+
   constructor() {
     super();
 
@@ -99,17 +107,5 @@ export class StatsReporterDOMElementView extends DOMElementView<UserSettings> im
         {key}: {String(value)}
       </div>
     );
-  }
-
-  updateProps(props: DOMElementProps, tickTimerState: TickTimerState) {
-    super.updateProps(props, tickTimerState);
-
-    const statsReports = props.statsReports;
-
-    if (Array.isArray(statsReports)) {
-      this.statsReportsFlattened = Array.from(_flattenStatsReports(statsReports)).sort(_sortCompareReports);
-    } else {
-      this.statsReportsFlattened = [];
-    }
   }
 }

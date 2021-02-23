@@ -57,8 +57,14 @@ const _css = `
 export class FatalErrorDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
+  private _progressError: null | ProgressError = null;
+
+  set progressError(progressError: ProgressError) {
+    this._progressError = progressError;
+  }
+
   render() {
-    const progressError: undefined | ProgressError = this.props.progressError;
+    const progressError: null | ProgressError = this._progressError;
 
     if (!progressError) {
       return null;

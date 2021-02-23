@@ -3,7 +3,6 @@
 import Loglevel from "loglevel";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
-import { broadcastMessage } from "@personalidol/framework/src/broadcastMessage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { ProgressManager } from "@personalidol/loading-manager/src/ProgressManager";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
@@ -28,6 +27,12 @@ let _lastProgressBroadcast: number = 0;
 
 serviceManager.services.add(progressManager);
 
+function _broadcastMessage(messagePorts: Array<MessagePort>, message: { progress: ProgressManagerProgress } | { error: ProgressError }): void {
+  for (let i = 0; i < messagePorts.length; i += 1) {
+    messagePorts[i].postMessage(message);
+  }
+}
+
 function _refreshNotifyProgress(): void {
   progressManager.update();
 
@@ -43,7 +48,7 @@ function _refreshNotifyProgress(): void {
     progress: progressManager.state.progress,
   };
 
-  broadcastMessage(messagePorts, {
+  _broadcastMessage(messagePorts, {
     progress: progress,
   });
 }
@@ -55,7 +60,7 @@ const progressMessagesRouter = {
   },
 
   error(messagePort: MessagePort, error: ProgressError) {
-    broadcastMessage(messagePorts, {
+    _broadcastMessage(messagePorts, {
       error: error,
     });
   },

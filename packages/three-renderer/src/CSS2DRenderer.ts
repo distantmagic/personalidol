@@ -25,6 +25,7 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
   let _widthHalf: number = 0;
   let i: number = 0;
 
+  let _cameraFar: number = 0;
   let _previousDistanceToCameraSquared: number = 0;
   let _previousIsRendered: boolean = false;
   let _previousTranslateX: number = 0;
@@ -47,9 +48,6 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
   });
 
   function _renderObject(object: CSS2DObject, scene: Scene, camera: Camera) {
-    // @ts-ignore
-    object.onBeforeRender(renderer, scene, camera);
-
     _vec.setFromMatrixPosition(object.matrixWorld);
     _vec.applyMatrix4(viewProjectionMatrix);
 
@@ -61,8 +59,12 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
 
     object.isRendered = true;
     object.state.distanceToCameraSquared = _getDistanceToSquared(camera, object);
-    // @ts-ignore
-    object.state.cameraFar = camera.far || 0;
+
+    // @ts-ignore this is safe and does not require to import all possible
+    // cameras to typecheck
+    _cameraFar = camera.far || 0;
+
+    object.state.cameraFar = _cameraFar;
     object.state.translateX = _vec.x * _widthHalf + _widthHalf;
     object.state.translateY = -1 * _vec.y * _heightHalf + _heightHalf;
 
@@ -86,9 +88,6 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
       || _previousTranslateY !== object.state.translateY
       || _previousVisible !== object.state.visible
     );
-
-    // @ts-ignore
-    object.onAfterRender(renderer, scene, camera);
   }
 
   function _getDistanceToSquared(object1: Object3D, object2: Object3D): number {

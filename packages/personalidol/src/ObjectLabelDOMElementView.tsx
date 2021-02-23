@@ -5,7 +5,6 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
 import type { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObjectState.type";
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { UserSettings } from "./UserSettings.type";
 
@@ -55,10 +54,11 @@ type LabelProps = DOMElementProps & {
 export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
-  public objectProps: LabelProps = {
+  public _objectProps: LabelProps = {
     label: "",
   };
-  public rendererState: CSS2DObjectState = {
+
+  public _rendererState: CSS2DObjectState = {
     cameraFar: 0,
     distanceToCameraSquared: 0,
     translateX: 0,
@@ -67,38 +67,39 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
     zIndex: 0,
   };
 
-  private _opacity = {
-    current: 1,
-    target: 1,
-  };
+  private _currentOpacity: number = 1;
+  private _targetOpacity: number = 1;
+
+  set objectProps(objectProps: LabelProps) {
+    this.needsRender = true;
+    this._objectProps = objectProps;
+  }
+
+  set rendererState(rendererState: CSS2DObjectState) {
+    this.needsRender = true;
+    this._rendererState = rendererState;
+  }
 
   render(delta: number) {
-    if (!this.rendererState.visible) {
+    if (!this._rendererState.visible) {
       return null;
     }
 
-    this._opacity.target = this.rendererState.distanceToCameraSquared < this.rendererState.cameraFar * this.rendererState.cameraFar - FADE_OUT_DISTANCE_SQUARED ? 1 : 0.3;
-    this._opacity.current = damp(this._opacity.current, this._opacity.target, OPACITY_DAMP, delta);
+    this._targetOpacity = this._rendererState.distanceToCameraSquared < this._rendererState.cameraFar * this._rendererState.cameraFar - FADE_OUT_DISTANCE_SQUARED ? 1 : 0.3;
+    this._currentOpacity = damp(this._currentOpacity, this._targetOpacity, OPACITY_DAMP, delta);
 
     return (
       <div
         id="label"
         style={{
-          "--translate-x": `${this.rendererState.translateX}px`,
-          "--translate-y": `${this.rendererState.translateY}px`,
-          "--opacity": this._opacity.current,
-          "--z-index": this.rendererState.zIndex,
+          "--translate-x": `${this._rendererState.translateX}px`,
+          "--translate-y": `${this._rendererState.translateY}px`,
+          "--opacity": this._currentOpacity,
+          "--z-index": this._rendererState.zIndex,
         }}
       >
-        {this.objectProps.label}
+        {this._objectProps.label}
       </div>
     );
-  }
-
-  updateProps(props: DOMElementProps, tickTimerState: TickTimerState): void {
-    super.updateProps(props, tickTimerState);
-
-    this.objectProps = props.objectProps;
-    this.rendererState = props.rendererState;
   }
 }

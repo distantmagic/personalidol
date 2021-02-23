@@ -4,14 +4,14 @@ import { updateCameraAspect } from "./updateCameraAspect";
 
 import type { Camera } from "three";
 
-const _DIMENSIONS_LAST_UPDATE = Symbol("_DIMENSIONS_LAST_UPDATE");
+const _cameraLastUpdate: WeakMap<Camera, number> = new WeakMap();
 
 export function updateStoreCameraAspect(camera: Camera, dimensionsState: Uint32Array): void {
-  const cameraUserData: any = camera.userData as any;
+  const cameraLastUpdate = _cameraLastUpdate.get(camera);
   const dimensionsLastUpdate = dimensionsState[DimensionsIndices.LAST_UPDATE];
 
-  if (!cameraUserData.hasOwnProperty(_DIMENSIONS_LAST_UPDATE) || dimensionsLastUpdate > cameraUserData[_DIMENSIONS_LAST_UPDATE]) {
+  if (!cameraLastUpdate || dimensionsLastUpdate > cameraLastUpdate) {
     updateCameraAspect(camera, dimensionsState);
-    cameraUserData[_DIMENSIONS_LAST_UPDATE] = dimensionsLastUpdate;
+    _cameraLastUpdate.set(camera, dimensionsLastUpdate);
   }
 }

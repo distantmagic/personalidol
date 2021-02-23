@@ -1,11 +1,11 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
+import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
-import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
@@ -148,6 +148,7 @@ const _shadowMapSizeValues = [512, 1024, 2048, 4096];
 
 export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
+  public userSettingsLastAcknowledgedVersion: number = -1;
 
   constructor() {
     super();
@@ -175,14 +176,20 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this.close();
   }
 
-  // pixelRatio: number
-  onPixelRatioChange(evt: any) {
-    this.userSettings.pixelRatio = evt.detail;
+  onPixelRatioChange(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onPixelRatioChange'.");
+    }
+
+    this.userSettings.pixelRatio = Number(evt.detail);
     this.userSettings.version += 1;
   }
 
-  // shadowMapSize: number
-  onShadowMapSizeChange(evt: any) {
+  onShadowMapSizeChange(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onShadowMapSizeChange'.");
+    }
+
     switch (evt.detail) {
       case 512:
       case 1024:
@@ -196,21 +203,30 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     }
   }
 
-  // showStatsReporter: boolean
-  onShowStatsReporterChange(evt: any) {
-    this.userSettings.showStatsReporter = evt.detail;
+  onShowStatsReporterChange(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onShowStatsReporterChange'.");
+    }
+
+    this.userSettings.showStatsReporter = Boolean(evt.detail);
     this.userSettings.version += 1;
   }
 
-  // useDynamicLighting: boolean
-  onUseDynamicLightingChange(evt: any) {
-    this.userSettings.useDynamicLighting = evt.detail;
+  onUseDynamicLightingChange(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onUseDynamicLightingChange'.");
+    }
+
+    this.userSettings.useDynamicLighting = Boolean(evt.detail);
     this.userSettings.version += 1;
   }
 
-  // useShadows: boolean
-  onUseShadowsChange(evt: any) {
-    this.userSettings.useShadows = evt.detail;
+  onUseShadowsChange(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onUseShadowsChange'.");
+    }
+
+    this.userSettings.useShadows = Boolean(evt.detail);
     this.userSettings.version += 1;
   }
 
@@ -222,6 +238,17 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     }
 
     this.close();
+  }
+
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    super.beforeRender(delta, elapsedTime, tickTimerState);
+
+    if (this.needsRender) {
+      return;
+    }
+
+    this.needsRender = this.userSettingsLastAcknowledgedVersion < this.userSettings.version;
+    this.userSettingsLastAcknowledgedVersion = this.userSettings.version;
   }
 
   render(delta: number) {
@@ -299,9 +326,5 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
         </div>
       </div>
     );
-  }
-
-  updateProps(props: DOMElementProps, tickTimerState: TickTimerState): void {
-    super.updateProps(props, tickTimerState);
   }
 }

@@ -11,7 +11,8 @@ export function createConstructableStylesheet(css: string): CSSStyleSheet {
 
   const styleSheet = new globalThis.CSSStyleSheet();
 
-  // @ts-ignore
+  // @ts-ignore this is a Chrome only feature at this point and as such it is
+  // not typed
   styleSheet.replaceSync(css);
 
   _styleSheetsCache[css] = styleSheet;

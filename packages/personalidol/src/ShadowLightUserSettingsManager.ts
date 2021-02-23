@@ -24,7 +24,8 @@ export function ShadowLightUserSettingsManager(userSettings: UserSettings, light
 
     disposeWebGLRenderTarget(light.shadow.map);
 
-    // @ts-ignore
+    // @ts-ignore this is incorrectly typed in THREE, shadow map can be null
+    // and will be recreated before the next render
     light.shadow.map = null;
   });
 

@@ -91,6 +91,7 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
   }
 
   set currentValue(currentValue: T) {
+    this.needsRender = true;
     this._currentValue = currentValue;
   }
 
@@ -99,6 +100,7 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
   }
 
   set edgeLabels(edgeLabels: [string, string]) {
+    this.needsRender = true;
     this._edgeLabels = edgeLabels;
   }
 
@@ -107,6 +109,7 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
   }
 
   set labels(labels: ReadonlyArray<string>) {
+    this.needsRender = true;
     this._labels = labels;
   }
 
@@ -115,6 +118,7 @@ export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implem
   }
 
   set values(values: ReadonlyArray<T>) {
+    this.needsRender = true;
     this._values = values;
   }
 
