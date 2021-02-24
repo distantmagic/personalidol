@@ -1,5 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { StatsHook } from "@personalidol/framework/src/StatsHook.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
@@ -9,6 +10,9 @@ import type { CSS2DRendererStatsReport } from "./CSS2DRendererStatsReport.type";
 const DEBUG_NAME: "renderer_css2d" = "renderer_css2d";
 
 export function CSS2DRendererStatsHook(renderer: CSS2DRenderer): StatsHook {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
   const statsReport: CSS2DRendererStatsReport = {
     debugName: DEBUG_NAME,
     lastUpdate: 0,
@@ -31,6 +35,7 @@ export function CSS2DRendererStatsHook(renderer: CSS2DRenderer): StatsHook {
     isCSS2DRendererStatsHook: true,
     isStatsHook: true,
     name: `CSS2DRendererStatsHook("${DEBUG_NAME}")`,
+    state: state,
     statsReport: statsReport,
     statsReportIntervalSeconds: 0,
 

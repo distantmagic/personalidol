@@ -1,6 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import type { MainLoopUpdateCallback } from "./MainLoopUpdateCallback.type";
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 
 import type { WorkerService as IWorkerService } from "./WorkerService.interface";
 
@@ -19,6 +20,10 @@ const _messageStop = Object.freeze({
 function _noop(): void {}
 
 export function WorkerService(worker: Worker, workerName: string, updater: null | MainLoopUpdateCallback = null): IWorkerService {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   function ready(): Promise<void> {
     return new Promise(function (resolve, reject) {
       function onMessage(evt: MessageEvent) {
@@ -45,6 +50,7 @@ export function WorkerService(worker: Worker, workerName: string, updater: null 
     id: MathUtils.generateUUID(),
     isWorkerService: true,
     name: `WorkerService(${workerName})`,
+    state: state,
 
     ready: ready,
     start: start,

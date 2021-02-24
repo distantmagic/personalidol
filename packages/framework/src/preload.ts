@@ -2,9 +2,9 @@ import { name } from "./name";
 
 import type { Logger } from "loglevel";
 
-import type { Mountable } from "./Mountable.interface";
+import type { Preloadable } from "./Preloadable.interface";
 
-export function preload(logger: Logger, mount: Mountable): void {
+export function preload(logger: Logger, mount: Preloadable): void {
   if (mount.state.isPreloaded) {
     throw new Error(`Mount is already preloaded: "${name(mount)}"`);
   }

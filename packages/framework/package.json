@@ -5,6 +5,7 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
+    "i18next": "^19.8.9",
     "loglevel": "^1.7.1",
     "three": "^0.125.2"
   },

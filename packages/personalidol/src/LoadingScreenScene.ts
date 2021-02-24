@@ -49,6 +49,7 @@ export function LoadingScreenScene(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   let _domFatalErrorElementId: null | string = null;

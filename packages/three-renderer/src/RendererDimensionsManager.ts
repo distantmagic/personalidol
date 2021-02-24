@@ -9,6 +9,7 @@ import type { RendererDimensionsManagerState } from "./RendererDimensionsManager
 
 export function RendererDimensionsManager(dimensionsState: Uint32Array): IRendererDimensionsManager {
   const state: RendererDimensionsManagerState = Object.seal({
+    needsUpdates: true,
     renderers: new Set(),
     renderersNeedingUpdate: new Set(),
   });

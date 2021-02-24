@@ -28,6 +28,7 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): I
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   function dispose(): void {

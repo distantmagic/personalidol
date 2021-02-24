@@ -21,6 +21,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
     lastUpdateCurrentTick: -1,
     lastUpdateNextTick: -1,
     lastUpdateTransitioningTick: -1,
+    needsUpdates: true,
     next: null,
 
     get transitioning(): null | Scene {

@@ -2,10 +2,15 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "./createRouter";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { UserSettings } from "./UserSettings.type";
 import type { UserSettingsSync } from "./UserSettingsSync.interface";
 
 export function MultiThreadUserSettingsSync(userSettings: UserSettings, userSettingsMessagePort: MessagePort, debugName: string): UserSettingsSync {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   userSettingsMessagePort.onmessage = createRouter({
     updateUserSettings(updatedUserSettings: UserSettings) {
       _lastSyncedVersion = userSettings.version;
@@ -34,6 +39,7 @@ export function MultiThreadUserSettingsSync(userSettings: UserSettings, userSett
     id: MathUtils.generateUUID(),
     isUserSettingsSync: true,
     name: `MultiThreadUserSettingsSync(${debugName})`,
+    state: state,
 
     start: start,
     stop: stop,

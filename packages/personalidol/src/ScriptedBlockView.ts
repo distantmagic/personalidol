@@ -43,6 +43,7 @@ export function ScriptedBlockView(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   const _worldspawnGeometryView: IWorldspawnGeometryView = WorldspawnGeometryView(logger, userSettings, scene, entity, worldspawnTexture, true);
@@ -97,7 +98,6 @@ export function ScriptedBlockView(
     isScene: false,
     isView: true,
     name: `ScriptedBlockView("${entity.controller}", ${name(_worldspawnGeometryView)})`,
-    needsUpdates: _controller.needsUpdates,
     object3D: _worldspawnGeometryView.object3D,
     state: state,
 

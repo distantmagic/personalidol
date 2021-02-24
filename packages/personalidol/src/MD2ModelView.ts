@@ -114,6 +114,7 @@ export function MD2ModelView(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   _globalAnimationOffset += 0.3;
@@ -275,7 +276,6 @@ export function MD2ModelView(
     isScene: false,
     isView: true,
     name: name,
-    needsUpdates: true,
     object3D: _mesh,
     state: state,
 

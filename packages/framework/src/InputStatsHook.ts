@@ -8,6 +8,7 @@ import { isPointerInitiatedByRootElement } from "./isPointerInitiatedByRootEleme
 import { isPrimaryMouseButtonPressed } from "./isPrimaryMouseButtonPressed";
 import { isPrimaryTouchPressed } from "./isPrimaryTouchPressed";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { StatsHook } from "./StatsHook.interface";
 import type { StatsReport } from "./StatsReport.type";
 import type { TickTimerState } from "./TickTimerState.type";
@@ -15,6 +16,9 @@ import type { TickTimerState } from "./TickTimerState.type";
 const DEBUG_NAME: "input" = "input";
 
 export function InputStatsHook(inputState: Int32Array): StatsHook {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
   const statsReport: StatsReport = {
     debugName: DEBUG_NAME,
     isPointerInitiatedByRootElement: false,
@@ -45,6 +49,7 @@ export function InputStatsHook(inputState: Int32Array): StatsHook {
     isPerformanceStatsHook: true,
     isStatsHook: true,
     name: `InputStatsHook("${DEBUG_NAME}")`,
+    state: state,
     statsReport: statsReport,
     statsReportIntervalSeconds: 0,
 

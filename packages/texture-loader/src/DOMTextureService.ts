@@ -11,6 +11,7 @@ import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import { keyFromTextureRequest } from "./keyFromTextureRequest";
 
+import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
 
@@ -37,6 +38,10 @@ const _messagesRouter = {
 };
 
 export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRenderingContext2D, progressMessagePort: MessagePort): IDOMTextureService {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   function registerMessagePort(messagePort: MessagePort) {
     attachMultiRouter(messagePort, _messagesRouter);
   }
@@ -95,6 +100,7 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   return Object.freeze({
     id: MathUtils.generateUUID(),
     name: "DOMTextureService",
+    state: state,
 
     registerMessagePort: registerMessagePort,
     start: start,

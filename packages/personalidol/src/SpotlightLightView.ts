@@ -23,6 +23,7 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   const _color = new Color(parseInt(entity.color, 16));
@@ -82,7 +83,6 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     isScene: false,
     isView: true,
     name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,
-    needsUpdates: true,
     object3D: _spotLight,
     state: state,
 

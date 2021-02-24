@@ -10,10 +10,15 @@ import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { MouseButtons } from "./MouseButtons.enum";
 import { passiveEventListener } from "./passiveEventListener";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { MouseObserver as IMouseObserver } from "./MouseObserver.interface";
 import type { TickTimerState } from "./TickTimerState.type";
 
 export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, inputState: Int32Array, tickTimerState: TickTimerState): IMouseObserver {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   function start(): void {
     document.addEventListener("mousedown", _onMouseDown, passiveEventListener);
     document.addEventListener("mousemove", _onMouseChange, passiveEventListener);
@@ -88,6 +93,7 @@ export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
     id: MathUtils.generateUUID(),
     isMouseObserver: true,
     name: "MouseObserver",
+    state: state,
 
     start: start,
     stop: stop,

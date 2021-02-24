@@ -20,13 +20,14 @@ import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementView } from "./DOMElementView.interface";
 import type { DOMUIController as IDOMUIController } from "./DOMUIController.interface";
+import type { DOMUIControllerState } from "./DOMUIControllerState.type";
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
 const _definedCustomElements: Array<string> = [];
-const _evtOnce = {
+const _evtOnce = Object.freeze({
   once: true,
-};
+});
 
 function _initializeDOMElementView<U extends UserSettings>(
   domElementView: DOMElementView<U>,
@@ -70,6 +71,11 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   userSettings: U,
   domElementsLookup: L
 ): IDOMUIController<L, U> {
+  const state: DOMUIControllerState = Object.seal({
+    isPreloaded: false,
+    isPreloading: false,
+    needsUpdates: true,
+  });
   const internalDOMMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _delta: number = 0;
   let _elapsedTime: number = 0;
@@ -97,7 +103,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     return domElementView;
   }
 
-  function _defineCustomElementByName(elementName: string & keyof L): void {
+  function _defineCustomElementByName(elementName: string & keyof L): Promise<void> {
     const Constructor = domElementsLookup[elementName];
 
     if (!Constructor) {
@@ -108,7 +114,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
       throw new Error("Object is not a HTMLElement constructor.");
     }
 
-    _defineCustomElement<L>(logger, elementName, Constructor);
+    return _defineCustomElement<L>(logger, elementName, Constructor);
   }
 
   function _disposeElementById(id: string): void {
@@ -193,12 +199,17 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     message.forEach(_disposeElementById);
   }
 
-  function preload() {
+  async function preload() {
+    state.isPreloading = true;
+
     for (let customElementName of Object.keys(domElementsLookup)) {
       if (!_isCustomElementDefined<L>(customElementName as string & keyof L)) {
-        _defineCustomElementByName(customElementName as string & keyof L);
+        await _defineCustomElementByName(customElementName as string & keyof L);
       }
     }
+
+    state.isPreloading = false;
+    state.isPreloaded = true;
   }
 
   function render(message: MessageDOMUIRender<L>): void {
@@ -250,6 +261,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   return Object.freeze({
     id: MathUtils.generateUUID(),
     name: "DOMUIController",
+    state: state,
 
     dispose: dispose,
     preload: preload,

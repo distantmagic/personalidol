@@ -1,13 +1,13 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import type { PauseableState } from "@personalidol/framework/src/PauseableState.type";
-
 import type { ScriptedBlockController } from "./ScriptedBlockController.interface";
+import type { ScriptedBlockControllerState } from "./ScriptedBlockControllerState.type";
 import type { WorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
 
 export function RotateScriptedBlockController(blockView: WorldspawnGeometryView): ScriptedBlockController {
-  const state: PauseableState = Object.seal({
+  const state: ScriptedBlockControllerState = Object.seal({
     isPaused: false,
+    needsUpdates: true,
   });
 
   function pause(): void {
@@ -31,7 +31,6 @@ export function RotateScriptedBlockController(blockView: WorldspawnGeometryView)
     isExpectingTargets: false,
     isScriptedBlockController: true,
     name: "RotateScriptedBlockController",
-    needsUpdates: true,
     state: state,
 
     pause: pause,

@@ -16,6 +16,7 @@ export function SceneTransition(logger: Logger, sceneDirectorState: DirectorStat
     lastUpdateCurrentTick: -1,
     lastUpdateNextTick: -1,
     lastUpdateTransitioningTick: -1,
+    needsUpdates: true,
   });
 
   function start(): void {}

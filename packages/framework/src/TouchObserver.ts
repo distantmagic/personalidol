@@ -10,10 +10,15 @@ import { InputIndices } from "./InputIndices.enum";
 import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { passiveEventListener } from "./passiveEventListener";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { TouchObserver as ITouchObserver } from "./TouchObserver.interface";
 
 export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, inputState: Int32Array, tickTimerState: TickTimerState): ITouchObserver {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   function start(): void {
     htmlElement.addEventListener("touchcancel", _onTouchChange, passiveEventListener);
     htmlElement.addEventListener("touchend", _onTouchEnd, passiveEventListener);
@@ -90,6 +95,7 @@ export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
     id: MathUtils.generateUUID(),
     isTouchObserver: true,
     name: "TouchObserver",
+    state: state,
 
     start: start,
     stop: stop,

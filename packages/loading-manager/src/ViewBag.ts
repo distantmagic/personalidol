@@ -22,6 +22,7 @@ export function ViewBag(logger: Logger): IViewBag {
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   const views: Set<View> = new Set();
@@ -66,7 +67,11 @@ export function ViewBag(logger: Logger): IViewBag {
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     for (_view of _updatableViews) {
-      _view.update(delta, elapsedTime, tickTimerState);
+      if (_view.state.needsUpdates) {
+        _view.update(delta, elapsedTime, tickTimerState);
+      } else {
+        _updatableViews.delete(_view);
+      }
     }
   }
 
@@ -101,7 +106,7 @@ export function ViewBag(logger: Logger): IViewBag {
   function _preloadView(view: View): void {
     fPreload(logger, view);
 
-    if (view.needsUpdates) {
+    if (view.state.needsUpdates) {
       _updatableViews.add(view);
     }
   }

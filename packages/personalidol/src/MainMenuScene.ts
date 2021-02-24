@@ -131,6 +131,7 @@ export function MainMenuScene(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   const _domMainMenuElementId: string = MathUtils.generateUUID();

@@ -21,6 +21,7 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   const _color = new Color(parseInt(entity.color, 16));
@@ -72,7 +73,6 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
     isScene: false,
     isView: true,
     name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
-    needsUpdates: false,
     state: state,
     object3D: _pointLight,
 

@@ -1,5 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { PerformanceMemory } from "./PerformanceMemory.type";
 import type { PerformanceStatsReport } from "./PerformanceStatsReport.type";
 import type { StatsHook } from "./StatsHook.interface";
@@ -8,6 +9,10 @@ import type { TickTimerState } from "./TickTimerState.type";
 const DEBUG_NAME: "performance" = "performance";
 
 export function PerformanceStatsHook(): StatsHook {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   const statsReport: PerformanceStatsReport = {
     debugName: DEBUG_NAME,
     jsHeapSizeLimit: 0,
@@ -34,6 +39,7 @@ export function PerformanceStatsHook(): StatsHook {
     isPerformanceStatsHook: true,
     isStatsHook: true,
     name: `PerformanceStatsHook("${DEBUG_NAME}")`,
+    state: state,
     statsReport: statsReport,
     statsReportIntervalSeconds: 1,
 

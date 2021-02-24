@@ -4,9 +4,14 @@ import { MathUtils } from "three/src/math/MathUtils";
 // import { passiveEventListener } from "./passiveEventListener";
 
 import type { KeyboardObserver as IKeyboardObserver } from "./KeyboardObserver.interface";
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 
 export function KeyboardObserver(htmlElement: HTMLElement, inputState: Int32Array, tickTimerState: TickTimerState): IKeyboardObserver {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   function start(): void {
     document.addEventListener("keydown", _onKeyDown);
   }
@@ -25,6 +30,7 @@ export function KeyboardObserver(htmlElement: HTMLElement, inputState: Int32Arra
     id: MathUtils.generateUUID(),
     isKeyboardObserver: true,
     name: "KeyboardObserver",
+    state: state,
 
     start: start,
     stop: stop,

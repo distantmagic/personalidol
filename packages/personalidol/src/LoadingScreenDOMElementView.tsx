@@ -99,7 +99,7 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
   }
 
   createComment(comment: ProgressManagerComment) {
-    return this.i18next.t(`resource_type_${comment.resourceType}_count`, {
+    return this.i18next.t(`ui:resource_type_${comment.resourceType}_count`, {
       count: comment.resourceQuantity,
     });
   }
@@ -108,7 +108,7 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
     if (!this._progressManagerProgress) {
       return (
         <main id="loading-progress">
-          <div id="comment">{this.i18next.t("loading")} ...</div>
+          <div id="comment">{this.i18next.t("ui:loading")} ...</div>
         </main>
       );
     }
@@ -116,7 +116,7 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
     return (
       <main id="loading-progress">
         <div id="comment">
-          {this.i18next.t("loading")} {this._progressManagerProgress.comment.map(this.createComment).join(", ")} ...
+          {this.i18next.t("ui:loading")} {this._progressManagerProgress.comment.map(this.createComment).join(", ")} ...
         </div>
         <div id="progress-value"></div>
         <div id="progress-indicator">

@@ -5,10 +5,13 @@ import type { Service } from "@personalidol/framework/src/Service.interface";
 import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
+import type { DOMUIControllerState } from "./DOMUIControllerState.type";
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
 export interface DOMUIController<L extends DOMElementsLookup, U extends UserSettings> extends MainLoopUpdatable, Preloadable, RegistersMessagePort, Service {
+  readonly state: DOMUIControllerState;
+
   dispose(message: MessageDOMUIDispose): void;
 
   render(message: MessageDOMUIRender<L>): void;

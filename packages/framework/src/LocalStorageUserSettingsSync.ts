@@ -1,5 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { IsUserSettingsValidCallback } from "./IsUserSettingsValidCallback.type";
 import type { UserSettings } from "./UserSettings.type";
 import type { UserSettingsSync } from "./UserSettingsSync.interface";
@@ -15,6 +16,9 @@ function _storeUserSettings<U extends UserSettings>(userSettings: U): void {
 }
 
 export function LocalStorageUserSettingsSync<U extends UserSettings>(userSettings: U, isUserSettingsValid: IsUserSettingsValidCallback<U>, debugName: string): UserSettingsSync {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
   let _lastSyncedVersion: number = userSettings.version;
 
   function start(): void {
@@ -57,6 +61,7 @@ export function LocalStorageUserSettingsSync<U extends UserSettings>(userSetting
     id: MathUtils.generateUUID(),
     isUserSettingsSync: true,
     name: `LocalStorageUserSettingsSync(${debugName})`,
+    state: state,
 
     start: start,
     stop: stop,

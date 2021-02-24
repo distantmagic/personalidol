@@ -57,6 +57,7 @@ export function ProgressManager(): IProgressManager {
   const state: ProgressManagerState = Object.seal({
     comment: [],
     expectsAtLeast: 0,
+    needsUpdates: true,
     progress: 0,
     version: 0,
   });

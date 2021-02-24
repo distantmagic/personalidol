@@ -107,8 +107,8 @@ export class MainMenuLayoutDOMElementView extends DOMElementView<UserSettings> {
       <div id="main-menu">
         <div id="main-menu__content">
           <header>
-            <h1>{this.i18next.t("personal_idol")}</h1>
-            <h2>{this.i18next.t("you_shall_not_be_judged")}</h2>
+            <h1>{this.i18next.t("ui:personal_idol")}</h1>
+            <h2>{this.i18next.t("ui:you_shall_not_be_judged")}</h2>
           </header>
           <nav>
             <slot />

@@ -18,6 +18,7 @@ export function HemisphereLightView(userSettings: UserSettings, scene: Scene, en
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   // const _hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, entity.light);
@@ -65,7 +66,6 @@ export function HemisphereLightView(userSettings: UserSettings, scene: Scene, en
     isScene: false,
     isView: true,
     name: `HemisphereLightView(${entity.light})`,
-    needsUpdates: true,
     object3D: _hemisphereLight,
     state: state,
 

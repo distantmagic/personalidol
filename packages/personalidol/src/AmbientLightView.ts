@@ -18,6 +18,7 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   const _ambientLight = new AmbientLight(0xffffff, entity.light);
@@ -64,7 +65,6 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
     isScene: false,
     isView: true,
     name: `AmbientLightView(${entity.light})`,
-    needsUpdates: true,
     object3D: _ambientLight,
     state: state,
 

@@ -9,6 +9,7 @@ import { Events } from "./Events.enum";
 import type { i18n } from "i18next";
 import type { VNode } from "preact";
 
+import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
@@ -18,10 +19,14 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   public css: string = "";
   public needsRender: boolean = true;
   public shadow: ShadowRoot;
+  public state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
 
   private _domMessagePort: null | MessagePort = null;
   private _i18next: null | i18n = null;
   private _inputState: null | Int32Array = null;
+  private _lastRenderedLanguage: string = "";
   private _uiMessagePort: null | MessagePort = null;
   private _userSettings: null | U = null;
 
@@ -84,7 +89,13 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {}
 
-  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {}
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    if (this.needsRender) {
+      return;
+    }
+
+    this.needsRender = this._lastRenderedLanguage !== this.i18next.language;
+  }
 
   connectedCallback() {
     if (isConstructableCSSStyleSheetSupported()) {
@@ -123,6 +134,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
       return;
     }
 
+    this._lastRenderedLanguage = this.i18next.language;
     this.needsRender = false;
 
     const renderedElements = this.render(delta, elapsedTime, tickTimerState);

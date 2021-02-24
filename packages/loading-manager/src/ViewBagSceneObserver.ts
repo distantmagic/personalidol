@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { isViewBagScene } from "./isViewBagScene";
 
+import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
 
 import type { DirectorState } from "./DirectorState.type";
@@ -15,6 +16,10 @@ import type { ViewBagSceneObserver as IViewBagSceneObserver } from "./ViewBagSce
  * mitigate that in every place `ViewBagScene` is used.
  */
 export function ViewBagSceneObserver(directorState: DirectorState): IViewBagSceneObserver {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   function start() {}
 
   function stop() {}
@@ -40,6 +45,7 @@ export function ViewBagSceneObserver(directorState: DirectorState): IViewBagScen
   return Object.freeze({
     id: MathUtils.generateUUID(),
     name: "ViewBagSceneObserver",
+    state: state,
 
     start: start,
     stop: stop,

@@ -18,6 +18,7 @@ import type { DirectorState } from "@personalidol/loading-manager/src/DirectorSt
 import type { DOMElementViewHandle as IDOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle.interface";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
 import type { ViewBag as IViewBag } from "@personalidol/loading-manager/src/ViewBag.interface";
 
@@ -44,6 +45,10 @@ export function UIStateController(
   uiMessagePort: MessagePort,
   uiState: UIState
 ): IUIStateController {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   const _domMessageRouter = createRouter({
     currentMap: _onCurrentMapMessage,
     isInGameMenuOpened: _onIsInGameMenuOpenedMessage,
@@ -168,6 +173,7 @@ export function UIStateController(
   return Object.seal({
     id: MathUtils.generateUUID(),
     name: "UIStateController",
+    state: state,
 
     start: start,
     stop: stop,

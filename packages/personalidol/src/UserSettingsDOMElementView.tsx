@@ -283,21 +283,21 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   }
 
   render(delta: number) {
-    const _booleanLabels: [string, string] = [this.i18next.t("user_settings_label_off"), this.i18next.t("user_settings_label_on")];
-    const _lowHighEdgeLabels: [string, string] = [this.i18next.t("user_settings_label_low"), this.i18next.t("user_settings_label_high")];
+    const _booleanLabels: [string, string] = [this.i18next.t("ui:user_settings_label_off"), this.i18next.t("ui:user_settings_label_on")];
+    const _lowHighEdgeLabels: [string, string] = [this.i18next.t("ui:user_settings_label_low"), this.i18next.t("ui:user_settings_label_high")];
 
     return (
       <div id="options" onClick={this.onOverlayClick}>
         <div id="options__content">
           <h1>
-            {this.i18next.t("user_settings_options")}
-            <pi-button onClick={this.close}>{this.i18next.t("user_settings_done").toLocaleLowerCase()}</pi-button>
+            {this.i18next.t("ui:user_settings_options")}
+            <pi-button onClick={this.close}>{this.i18next.t("ui:user_settings_done").toLocaleLowerCase()}</pi-button>
           </h1>
-          <h2>{this.i18next.t("user_settings_graphics")}</h2>
+          <h2>{this.i18next.t("ui:user_settings_graphics")}</h2>
           <form class="options__form">
             <dl>
-              <dt>{this.i18next.t("user_settings_rendering_resolution")}</dt>
-              <dd>{this.i18next.t("user_settings_rendering_resolution_description")}</dd>
+              <dt>{this.i18next.t("ui:user_settings_rendering_resolution")}</dt>
+              <dd>{this.i18next.t("ui:user_settings_rendering_resolution_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.pixelRatio}
@@ -307,8 +307,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               values={_pixelRatioValues}
             />
             <dl>
-              <dt>{this.i18next.t("user_settings_use_multiple_light_sources")}</dt>
-              <dd>{this.i18next.t("user_settings_use_multiple_light_sources_description")}</dd>
+              <dt>{this.i18next.t("ui:user_settings_use_multiple_light_sources")}</dt>
+              <dd>{this.i18next.t("ui:user_settings_use_multiple_light_sources_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.useDynamicLighting}
@@ -318,8 +318,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               values={_booleanValues}
             />
             <dl>
-              <dt>{this.i18next.t("user_settings_use_shadows")}</dt>
-              <dd>{this.i18next.t("user_settings_use_shadows_description")}</dd>
+              <dt>{this.i18next.t("ui:user_settings_use_shadows")}</dt>
+              <dd>{this.i18next.t("ui:user_settings_use_shadows_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.useShadows}
@@ -329,8 +329,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               values={_booleanValues}
             />
             <dl>
-              <dt>{this.i18next.t("user_settings_shadow_map_size")}</dt>
-              <dd>{this.i18next.t("user_settings_shadow_map_size_description")}</dd>
+              <dt>{this.i18next.t("ui:user_settings_shadow_map_size")}</dt>
+              <dd>{this.i18next.t("ui:user_settings_shadow_map_size_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.shadowMapSize}
@@ -342,14 +342,14 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
           </form>
           {isOffscreenCanvasSupported && (
             <Fragment>
-              <h2>{this.i18next.t("user_settings_experimental")}</h2>
+              <h2>{this.i18next.t("ui:user_settings_experimental")}</h2>
               <form class="options__form">
                 <dl>
-                  <dt>{this.i18next.t("user_settings_use_offscreen_canvas")}</dt>
-                  <dd>{this.i18next.t("user_settings_use_offscreen_canvas_description")}</dd>
+                  <dt>{this.i18next.t("ui:user_settings_use_offscreen_canvas")}</dt>
+                  <dd>{this.i18next.t("ui:user_settings_use_offscreen_canvas_description")}</dd>
                   {this._isUseOffscreenCanvasChanged && (
                     <Fragment>
-                      <dd class="option__warning">{this.i18next.t("user_settings_required_reload_to_take_effect")}</dd>
+                      <dd class="option__warning">{this.i18next.t("ui:user_settings_required_reload_to_take_effect")}</dd>
                       <pi-reload-button />
                     </Fragment>
                   )}
@@ -365,11 +365,11 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               </form>
             </Fragment>
           )}
-          <h2>{this.i18next.t("user_settings_utilities")}</h2>
+          <h2>{this.i18next.t("ui:user_settings_utilities")}</h2>
           <form class="options__form">
             <dl>
-              <dt>{this.i18next.t("user_settings_show_rendering_stats")}</dt>
-              <dd>{this.i18next.t("user_settings_show_rendering_stats_description")}</dd>
+              <dt>{this.i18next.t("ui:user_settings_show_rendering_stats")}</dt>
+              <dd>{this.i18next.t("ui:user_settings_show_rendering_stats_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.showStatsReporter}

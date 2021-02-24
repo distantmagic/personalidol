@@ -68,11 +68,11 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
   render() {
     return (
       <pi-main-menu-layout>
-        <pi-main-menu-button onClick={this.onButtonReturnToGameClick}>{this.i18next.t("menu_return_to_game")}</pi-main-menu-button>
-        <pi-main-menu-button disabled>{this.i18next.t("menu_load_game")}</pi-main-menu-button>
-        <pi-main-menu-button onClick={this.onButtonUserSettingsClick}>{this.i18next.t("menu_options")}</pi-main-menu-button>
-        <pi-main-menu-button disabled>{this.i18next.t("menu_credits")}</pi-main-menu-button>
-        <pi-main-menu-button onClick={this.onButtonExitClick}>{this.i18next.t("menu_exit")}</pi-main-menu-button>
+        <pi-main-menu-button onClick={this.onButtonReturnToGameClick}>{this.i18next.t("ui:menu_return_to_game")}</pi-main-menu-button>
+        <pi-main-menu-button disabled>{this.i18next.t("ui:menu_load_game")}</pi-main-menu-button>
+        <pi-main-menu-button onClick={this.onButtonUserSettingsClick}>{this.i18next.t("ui:menu_options")}</pi-main-menu-button>
+        <pi-main-menu-button disabled>{this.i18next.t("ui:menu_credits")}</pi-main-menu-button>
+        <pi-main-menu-button onClick={this.onButtonExitClick}>{this.i18next.t("ui:menu_exit")}</pi-main-menu-button>
       </pi-main-menu-layout>
     );
   }

@@ -22,6 +22,8 @@ const _css = `
   }
 
   #label {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     align-items: center;
     backface-visibility: hidden;
     background-color: rgba(0, 0, 0, 0.8);
@@ -33,18 +35,11 @@ const _css = `
     justify-content: center;
     left: 0;
     line-height: 0.5rem;
-    opacity: var(--opacity);
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     position: absolute;
     top: 0;
-    transform: translate3D(
-      calc(-50% + var(--translate-x)),
-      calc(-100% + var(--translate-y)),
-      0
-    );
-    will-change: transform, z-index;
-    z-index: var(--z-index);
+    will-change: opacity, transform, z-index;
   }
 `;
 
@@ -55,28 +50,38 @@ type LabelProps = DOMElementProps & {
 export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
-  public _objectProps: LabelProps = {
+  public _objectProps: LabelProps = Object.seal({
     label: "",
-  };
+  });
 
-  public _rendererState: CSS2DObjectState = {
+  public _rendererState: CSS2DObjectState = Object.seal({
     cameraFar: 0,
     distanceToCameraSquared: 0,
     translateX: 0,
     translateY: 0,
     visible: false,
     zIndex: 0,
-  };
+  });
 
   private _currentOpacity: number = 1;
+  private _objectLabelTranslated: string = "";
   private _targetOpacity: number = 1;
 
   set objectProps(objectProps: LabelProps) {
+    if (objectProps.label === this._objectProps.label) {
+      return;
+    }
+
     this.needsRender = true;
+    this._objectLabelTranslated = this.i18next.t(objectProps.label);
     this._objectProps = objectProps;
   }
 
   set rendererState(rendererState: CSS2DObjectState) {
+    if (!rendererState.visible && this._rendererState.visible === rendererState.visible) {
+      return;
+    }
+
     this.needsRender = true;
     this._rendererState = rendererState;
   }
@@ -93,13 +98,19 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
       <div
         id="label"
         style={{
-          "--translate-x": `${this._rendererState.translateX}px`,
-          "--translate-y": `${this._rendererState.translateY}px`,
-          "--opacity": this._currentOpacity,
-          "--z-index": this._rendererState.zIndex,
+          opacity: this._currentOpacity,
+          transform: `
+            translate3D(-50%, -100%, 0)
+            translate3D(
+              ${this._rendererState.translateX}px,
+              ${this._rendererState.translateY}px,
+              0
+            )
+          `,
+          "z-index": this._rendererState.zIndex,
         }}
       >
-        {this._objectProps.label}
+        {this._objectLabelTranslated}
       </div>
     );
   }

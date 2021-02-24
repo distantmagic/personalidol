@@ -15,6 +15,7 @@ import { isImageBitmap } from "./isImageBitmap";
 import { isImageData } from "./isImageData";
 import { requestTexture } from "./requestTexture";
 
+import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
@@ -122,6 +123,10 @@ function _onImageBitmap({ imageBitmap }: ImageBitmapResponse): ImageBitmap {
 }
 
 export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, context2D: Context2D, progressMessagePort: MessagePort, texturesMessagePort: MessagePort): IAtlasService {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   function registerMessagePort(messagePort: MessagePort) {
     attachMultiRouter(messagePort, _messagesRouter);
   }
@@ -278,6 +283,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   return Object.freeze({
     id: MathUtils.generateUUID(),
     name: "AtlasService",
+    state: state,
 
     registerMessagePort: registerMessagePort,
     start: start,

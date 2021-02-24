@@ -129,6 +129,7 @@ export function MapScene(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   const _domMousePointerLayerElementId: string = MathUtils.generateUUID();
@@ -369,7 +370,7 @@ export function MapScene(
     id: MathUtils.generateUUID(),
     isMapScene: true,
     isScene: true,
-    name: `Map(${mapFilename})`,
+    name: `Map("${mapFilename}")`,
     state: state,
 
     dispose: dispose,

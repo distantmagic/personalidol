@@ -54,6 +54,10 @@ export function createScenes(
     canvas: canvas,
   });
 
+  // This should be enabled regardless of `userSettings.useShadows`. If shadows
+  // are disabled, all individual shadows maps and shadow emitting lights
+  // are turned off. Leaving this renderer option as enabled makes re-enabling
+  // shadow maps much easier and does not perceivably affect performance.
   webGLRenderer.shadowMap.enabled = true;
   webGLRenderer.shadowMap.autoUpdate = true;
 

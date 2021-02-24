@@ -5,10 +5,10 @@ import { onlyOne } from "@personalidol/framework/src/onlyOne";
 
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
-import type { PauseableState } from "@personalidol/framework/src/PauseableState.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
 import type { ScriptedBlockController } from "./ScriptedBlockController.interface";
+import type { ScriptedBlockControllerState } from "./ScriptedBlockControllerState.type";
 import type { WorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
 
 export function FollowScriptedBlockController(blockView: WorldspawnGeometryView, targetedViews: Set<View>): ScriptedBlockController {
@@ -16,8 +16,9 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
     throw new Error(`Can follow more than one target. Got: "${targetedViews.size}"`);
   }
 
-  const state: PauseableState = Object.seal({
+  const state: ScriptedBlockControllerState = Object.seal({
     isPaused: false,
+    needsUpdates: true,
   });
 
   const _direction: IVector3 = new Vector3();
@@ -54,7 +55,6 @@ export function FollowScriptedBlockController(blockView: WorldspawnGeometryView,
     isExpectingTargets: true,
     isScriptedBlockController: true,
     name: "FollowScriptedBlockController",
-    needsUpdates: true,
     state: state,
 
     pause: pause,

@@ -21,6 +21,7 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: false,
   });
 
   const base: IObject3D = new Object3D();
@@ -64,7 +65,6 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     isScene: false,
     isView: true,
     name: `TargetView("${entity.properties.targetname}")`,
-    needsUpdates: false,
     object3D: base,
     state: state,
 

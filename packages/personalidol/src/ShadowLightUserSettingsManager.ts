@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
 
@@ -5,12 +7,19 @@ import type { PointLight } from "three/src/lights/PointLight";
 import type { SpotLight } from "three/src/lights/SpotLight";
 
 import type { UserSettingsManager } from "@personalidol/framework/src/UserSettingsManager.interface";
+import type { UserSettingsManagerState } from "@personalidol/framework/src/UserSettingsManagerState.type";
 
 import type { UserSettings } from "./UserSettings.type";
 
 type SupportedLights = PointLight | SpotLight;
 
 export function ShadowLightUserSettingsManager(userSettings: UserSettings, light: SupportedLights): UserSettingsManager {
+  const state: UserSettingsManagerState = Object.seal({
+    isPreloaded: false,
+    isPreloading: false,
+    needsUpdates: true,
+  });
+
   const applySettings = createSettingsHandle(userSettings, function () {
     light.visible = userSettings.useDynamicLighting;
     light.castShadow = userSettings.useShadows;
@@ -29,10 +38,22 @@ export function ShadowLightUserSettingsManager(userSettings: UserSettings, light
     light.shadow.map = null;
   });
 
-  return Object.freeze({
-    isUserSettingsManager: true,
+  function preload(): void {
+    state.isPreloading = true;
 
-    preload: applySettings,
+    applySettings();
+
+    state.isPreloading = false;
+    state.isPreloaded = true;
+  }
+
+  return Object.freeze({
+    id: MathUtils.generateUUID(),
+    isUserSettingsManager: true,
+    name: "ShadowLightUserSettingsManager",
+    state: state,
+
+    preload: preload,
     update: applySettings,
   });
 }

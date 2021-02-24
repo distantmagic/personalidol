@@ -4,10 +4,15 @@ import { name } from "./name";
 
 import type { Logger } from "loglevel";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { Service } from "./Service.interface";
 import type { ServiceManager as IServiceManager } from "./ServiceManager.interface";
 
 export function ServiceManager(logger: Logger): IServiceManager {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   const services = new Set<Service>();
   const _startedServices = new WeakSet<Service>();
   let _isStarted = false;
@@ -63,6 +68,7 @@ export function ServiceManager(logger: Logger): IServiceManager {
     id: MathUtils.generateUUID(),
     name: "ServiceManager",
     services: services,
+    state: state,
 
     start: start,
     stop: stop,

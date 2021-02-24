@@ -18,6 +18,7 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: false,
   });
 
   const object3D: IObject3D = new Object3D();
@@ -55,7 +56,6 @@ export function PlayerView(scene: Scene, entity: EntityPlayer): EntityView {
     isScene: false,
     isView: true,
     name: `PlayerView`,
-    needsUpdates: false,
     object3D: object3D,
     state: state,
 

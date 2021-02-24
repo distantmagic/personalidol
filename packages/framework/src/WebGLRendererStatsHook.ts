@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { StatsHook } from "./StatsHook.interface";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { WebGLRendererStatsReport } from "./WebGLRendererStatsReport.type";
@@ -9,6 +10,10 @@ import type { WebGLRendererStatsReport } from "./WebGLRendererStatsReport.type";
 const DEBUG_NAME: "renderer_webgl" = "renderer_webgl";
 
 export function WebGLRendererStatsHook(renderer: WebGLRenderer): StatsHook {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   const statsReport: WebGLRendererStatsReport = {
     debugName: DEBUG_NAME,
     lastUpdate: 0,
@@ -39,6 +44,7 @@ export function WebGLRendererStatsHook(renderer: WebGLRenderer): StatsHook {
     isWebGLRendererStatsHook: true,
     isStatsHook: true,
     name: `WebGLRendererStatsHook("${DEBUG_NAME}")`,
+    state: state,
     statsReport: statsReport,
     statsReportIntervalSeconds: 0,
 

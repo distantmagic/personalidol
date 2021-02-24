@@ -47,6 +47,7 @@ export function WorldspawnGeometryView(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    needsUpdates: true,
   });
 
   const _disposables: Set<DisposableCallback> = new Set();
@@ -162,7 +163,6 @@ export function WorldspawnGeometryView(
     isScene: false,
     isView: true,
     name: `WorldspawnGeometryView`,
-    needsUpdates: true,
     object3D: _mesh,
     state: state,
 

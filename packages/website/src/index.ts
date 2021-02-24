@@ -16,6 +16,7 @@ import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLEleme
 import { Input } from "@personalidol/framework/src/Input";
 import { InputIndices } from "@personalidol/framework/src/InputIndices.enum";
 import { InputStatsHook } from "@personalidol/framework/src/InputStatsHook";
+import { InternationalizationService } from "@personalidol/framework/src/InternationalizationService";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
@@ -28,6 +29,7 @@ import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
+import { preload } from "@personalidol/framework/src/preload";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
@@ -38,8 +40,14 @@ import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
-import workers from "./workers.json";
+// This is a workaround for i18n typing strongly tied to the module.
+// It resolves typing issues, but requires to really keep exactly the same
+// version across modules (which is ok).
+import type { i18n as DOMi18n } from "@personalidol/dom-renderer/node_modules/i18next/index";
+import type { i18n as Frameworki18n } from "@personalidol/framework/node_modules/i18next/index";
+
 import { init_i18next } from "./init_i18next";
+import workers from "./workers.json";
 
 const THREAD_DEBUG_NAME: string = "main_thread";
 const canvas = getHTMLElementById(window.document, "canvas");
@@ -65,8 +73,14 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   logger.info(`BUILD_ID("${__BUILD_ID}")`);
 
   const i18next = await init_i18next();
+  const internationalizationService = InternationalizationService(i18next as Frameworki18n);
 
-  await i18next.changeLanguage("pl");
+  preload(logger, internationalizationService);
+
+  // setTimeout(async function () {
+  //   await i18next.loadNamespaces("characters");
+  //   await i18next.changeLanguage("pl");
+  // }, 5000);
 
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
@@ -107,6 +121,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const serviceManager = ServiceManager(logger);
 
+  serviceManager.services.add(internationalizationService);
   serviceManager.services.add(htmlElementResizeObserver);
   serviceManager.services.add(keyboardObserver);
   serviceManager.services.add(mouseObserver);
@@ -173,9 +188,19 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const uiMessageChannel = createMultiThreadMessageChannel();
-  const domUIController = DOMUIController(logger, i18next, inputState, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, userSettings, domElementsLookup);
 
-  domUIController.preload();
+  const domUIController = DOMUIController(
+    logger,
+    internationalizationService.i18next as DOMi18n,
+    inputState,
+    mainLoop.tickTimerState,
+    uiMessageChannel.port1,
+    uiRoot,
+    userSettings,
+    domElementsLookup
+  );
+
+  preload(logger, domUIController);
 
   mainLoop.updatables.add(domUIController);
   serviceManager.services.add(domUIController);
@@ -279,7 +304,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   statsCollector.registerMessagePort(atlasToStatsMessageChannel.port1);
 
   const addAtlasMessagePort = await (async function () {
-    if (userSettings.useOffscreenCanvas && isCanvasTransferControlToOffscreenSupported()) {
+    // "userSettings.useOffscreenCanvas" does not relate to the atlas canvas,
+    // because it's a utility worker, not the primary rendering thread.
+    if (isCanvasTransferControlToOffscreenSupported()) {
       logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad atlas service to a worker thread");
 
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
@@ -315,11 +342,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         );
       };
     } else {
-      if (isCanvasTransferControlToOffscreenSupported()) {
-        logger.info("SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread by user override");
-      } else {
-        logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
-      }
+      logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
 
       const atlasCanvasContext2D = atlasCanvas.getContext("2d");
 
@@ -498,7 +521,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     serviceManager.services.add(offscreenWorkerService);
   } else {
     if (isCanvasTransferControlToOffscreenSupported()) {
-      logger.info("SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread by user override");
+      logger.info("DISABLED(SUPPORTED(canvas.transferControlToOffscreen)) // starting 3D canvas in the main thread");
     } else {
       logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
     }

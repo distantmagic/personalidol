@@ -86,7 +86,11 @@ export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler:
   }
 
   function _updateUpdatable(updatable: MainLoopUpdatable): void {
-    updatable.update(_delta, _elapsedTime, tickTimerState);
+    if (updatable.state.needsUpdates) {
+      updatable.update(_delta, _elapsedTime, tickTimerState);
+    } else {
+      updatables.delete(updatable);
+    }
   }
 
   return Object.freeze({

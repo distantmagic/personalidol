@@ -1,18 +1,24 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
-import { noop } from "@personalidol/framework/src/noop";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
+import type { UserSettingsManagerState } from "@personalidol/framework/src/UserSettingsManagerState.type";
 
 import type { StatsCollector } from "./StatsCollector.interface";
 import type { StatsCollectorUserSettingsManager as IStatsCollectorUserSettingsManager } from "./StatsCollectorUserSettingsManager.interface";
 
 export function StatsCollectorUserSettingsManager(userSettings: UserSettings, statsCollector: StatsCollector): IStatsCollectorUserSettingsManager {
+  const state: UserSettingsManagerState = Object.seal({
+    isPreloaded: false,
+    isPreloading: false,
+    needsUpdates: true,
+  });
+
   let _isCollectorStarted: boolean = false;
 
-  const applySetings = createSettingsHandle(userSettings, function () {
+  const applySettings = createSettingsHandle(userSettings, function () {
     if (!userSettings.showStatsReporter && _isCollectorStarted) {
       stop();
       return;
@@ -22,6 +28,13 @@ export function StatsCollectorUserSettingsManager(userSettings: UserSettings, st
       start();
     }
   });
+
+  function preload(): void {
+    state.isPreloading = true;
+
+    state.isPreloading = false;
+    state.isPreloaded = true;
+  }
 
   function start(): void {
     _isCollectorStarted = true;
@@ -34,7 +47,7 @@ export function StatsCollectorUserSettingsManager(userSettings: UserSettings, st
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    applySetings();
+    applySettings();
 
     if (userSettings.showStatsReporter && _isCollectorStarted) {
       statsCollector.update(delta, elapsedTime, tickTimerState);
@@ -45,8 +58,9 @@ export function StatsCollectorUserSettingsManager(userSettings: UserSettings, st
     id: MathUtils.generateUUID(),
     isUserSettingsManager: true,
     name: "StatsCollectorUserSettingsManager",
+    state: state,
 
-    preload: noop,
+    preload: preload,
     start: start,
     stop: stop,
     update: update,

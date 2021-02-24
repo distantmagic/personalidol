@@ -1,5 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { StatsHook } from "./StatsHook.interface";
 import type { StatsReport } from "./StatsReport.type";
 import type { StatsReporter as IStatsReporter } from "./StatsReporter.interface";
@@ -32,6 +33,10 @@ function _shouldReport(hooksStatuses: HooksStatuses, hook: StatsHook, elapsedTim
 }
 
 export function StatsReporter(debugName: string, statsMessagePort: MessagePort): IStatsReporter {
+  const state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
+
   const hooks: Set<StatsHook> = new Set();
 
   const _hooksStatuses: HooksStatuses = new WeakMap();
@@ -63,6 +68,7 @@ export function StatsReporter(debugName: string, statsMessagePort: MessagePort):
     id: MathUtils.generateUUID(),
     isStatsReporter: true,
     name: "StatsReporter",
+    state: state,
 
     start: start,
     stop: stop,
