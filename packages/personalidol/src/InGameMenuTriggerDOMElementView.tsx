@@ -54,7 +54,7 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
   render() {
     return (
       <pi-button id="ingame-menu-trigger" onClick={this.onInGameMenuTriggerClick}>
-        menu
+        {this.i18next.t("trigger_menu").toLocaleLowerCase()}
       </pi-button>
     );
   }

@@ -1,0 +1,69 @@
+---
+personal_idol: Personal Idol
+you_shall_not_be_judged: You Shall Not Be Judged
+
+menu_continue: Continue
+menu_credits: Credits
+menu_exit: Exit
+menu_load_game: Load Game
+menu_new_game: New Game
+menu_options: Options
+menu_return_to_game: Return to game
+
+loading: Loading
+
+reload_button_reload_now: Reload now
+
+resource_type_atlas_count: atlas
+resource_type_atlas_count_plural: "{{count}} atlases"
+resource_type_font_count: font
+resource_type_font_count_plural: "{{count}} fonts"
+resource_type_map_count: map
+resource_type_map_count_plural: "{{count}} maps"
+resource_type_model_count: model
+resource_type_model_count_plural: "{{count}} models"
+resource_type_texture_count: texture
+resource_type_texture_count_plural: "{{count}} textures"
+
+trigger_menu: Menu
+
+user_settings_done: Done
+user_settings_experimental: Experimental
+user_settings_graphics: Graphics
+user_settings_label_high: high
+user_settings_label_low: low
+user_settings_label_off: "off"
+user_settings_label_on: "on"
+user_settings_options: Options
+user_settings_rendering_resolution: Rendering Resolution
+user_settings_rendering_resolution_description: >
+  You can reduce the rendering pixel ratio to decrease the rendering
+  resolution, which makes everyting more blurry, but increases the performance.
+user_settings_required_reload_to_take_effect: Required game reload to take effect.
+user_settings_shadow_map_size: Shadow Map Size
+user_settings_shadow_map_size_description: >
+  Bigger values improve shadows quality, but affect performance and memory
+  usage.
+user_settings_show_rendering_stats: Show Rendering Stats
+user_settings_show_rendering_stats_description: >
+  Primarily used for debugging, but you can check your actual framerate and
+  memory usage if you want to fine-tune your settings and you know what you are
+  doing.
+user_settings_use_multiple_light_sources: Use Multiple Light Sources
+user_settings_use_multiple_light_sources_description: >
+  Can greatly affect performance. If you disable multiple light sources,
+  background light will have more intensity and everything will be uniformly
+  highlighted.
+user_settings_use_offscreen_canvas: Use Offscreen Canvas
+user_settings_use_offscreen_canvas_description: >
+  This one is tricky. On faster devices it provides even better and snappier
+  experience but on slower devices it can degrade the overall performance and
+  introduce some graphical glitches. To sum it up, faster devices benefit even
+  more, slower devices are beaten up even more. Overall you can safely turn
+  this on and see if it makes a difference for you.
+user_settings_use_shadows: Use Shadows
+user_settings_use_shadows_description: >
+  If you are not using multiple light sources you can disable this option as
+  well since it will provide almost no visual enhancements without dynamic
+  lighting.
+user_settings_utilities: Utilities & Development

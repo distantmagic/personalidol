@@ -6,6 +6,7 @@ import { must } from "@personalidol/framework/src/must";
 import { createConstructableStylesheet } from "./createConstructableStylesheet";
 import { Events } from "./Events.enum";
 
+import type { i18n } from "i18next";
 import type { VNode } from "preact";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -19,6 +20,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   public shadow: ShadowRoot;
 
   private _domMessagePort: null | MessagePort = null;
+  private _i18next: null | i18n = null;
   private _inputState: null | Int32Array = null;
   private _uiMessagePort: null | MessagePort = null;
   private _userSettings: null | U = null;
@@ -30,6 +32,15 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   set domMessagePort(domMessagePort: MessagePort) {
     this.needsRender = true;
     this._domMessagePort = domMessagePort;
+  }
+
+  get i18next(): i18n {
+    return must(this._i18next, "i18next is not set but it was expected to be.");
+  }
+
+  set i18next(i18next: i18n) {
+    this.needsRender = true;
+    this._i18next = i18next;
   }
 
   get inputState(): Int32Array {

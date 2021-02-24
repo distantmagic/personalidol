@@ -15,11 +15,16 @@
     "@personalidol/texture-loader": "^0.0.4",
     "@personalidol/three-modules": "^0.0.4",
     "@personalidol/three-renderer": "^0.0.4",
+    "i18next": "^19.8.9",
+    "i18next-http-backend": "^1.1.0",
+    "i18next-intervalplural-postprocessor": "^3.0.0",
+    "js-yaml": "^4.0.0",
     "loglevel": "^1.7.1",
     "three": "^0.125.2"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
+    "@types/js-yaml": "^4.0.0",
     "autoprefixer": "^10.2.4",
     "cssnano": "^4.1.10",
     "esbuild": "^0.8.46",

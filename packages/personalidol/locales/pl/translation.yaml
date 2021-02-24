@@ -1,0 +1,73 @@
+---
+personal_idol: Personal Idol
+you_shall_not_be_judged: Nie będziesz osądzony
+
+menu_continue: Kontynuuj
+menu_credits: Autorzy
+menu_exit: Wyjdź z gry
+menu_load_game: Wczytaj Grę
+menu_new_game: Nowa Gra
+menu_options: Opcje
+menu_return_to_game: Wróć do gry
+
+loading: Wczytuję
+
+reload_button_reload_now: Przeładuj grę teraz
+
+resource_type_atlas_count_0: atlas tekstur
+resource_type_atlas_count_1: "{{count}} atlasy tekstur"
+resource_type_atlas_count_2: "{{count}} atlasów tekstur"
+resource_type_font_count_0: czcionka
+resource_type_font_count_1: "{{count}} czcionki"
+resource_type_font_count_2: "{{count}} czcionek"
+resource_type_map_count_0: mapa
+resource_type_map_count_1: "{{count}} mapy"
+resource_type_map_count_2: "{{count}} map"
+resource_type_model_count_0: model
+resource_type_model_count_1: "{{count}} modele"
+resource_type_model_count_2: "{{count}} modeli"
+resource_type_texture_count_0: tekstura
+resource_type_texture_count_1: "{{count}} tekstury"
+resource_type_texture_count_2: "{{count}} tekstur"
+
+trigger_menu: Menu
+
+user_settings_done: Gotowe
+user_settings_experimental: Eksperymentalne
+user_settings_graphics: Grafika
+user_settings_label_high: wysoka jakość
+user_settings_label_low: niska jakość
+user_settings_label_off: wyłączony
+user_settings_label_on: włączony
+user_settings_options: Opcje
+user_settings_rendering_resolution: Rozdzielczość renderowania
+user_settings_rendering_resolution_description: >
+  Możesz zmniejszyć rozdzielczość renderowania. Obraz będzie niższej jakości,
+  ale zwiększy się wydajność.
+user_settings_required_reload_to_take_effect: >
+  Wymagany restart gry, żeby zaaplikować zmiany.
+user_settings_shadow_map_size: Rozmiar mapy cieni
+user_settings_shadow_map_size_description: >
+  Większe wartości poprawiają jakość cieni, ale negatywnie wpływają na
+  wydajność i użycie pamięci.
+user_settings_show_rendering_stats: Pokaż statystyki renderowania
+user_settings_show_rendering_stats_description: >
+  Statystyki są głównie używane do debugowania, ale możesz sprawdzić w nich
+  FPS, zużycie pamięci i inne parametry silnika gry.
+user_settings_use_multiple_light_sources: Wiele źródeł światła
+user_settings_use_multiple_light_sources_description: >
+  Mocno wpływa na wydajność. Jeżeli wyłączysz wiele źródeł światła, będzie
+  widoczne tylko światło tła, a wszystkie elemenenty sceny będą równomiernie
+  oświetlone.
+user_settings_use_offscreen_canvas: OffscreenCanvas
+user_settings_use_offscreen_canvas_description: >
+  Na szybszych urządzeniach OffscreenCanvas zwiększa wydajność i poprawia
+  reaktywność interfejsu, ale na wolniejszych jeszcze bardziej pogarsza
+  wydajność. Podsumowując, lepsze urządzenia korzystają na tej opcji jeszcze
+  bardziej, wolniejsze jeszcze więcej tracą. Możesz ją bezpiecznie włączyć i
+  sprawdzić, czy przynosi efekt na twoim urządzeniu.
+user_settings_use_shadows: Cienie
+user_settings_use_shadows_description: >
+  Jeżeli nie używasz wielu świateł, możesz też wyłączyć tę opcję. Jeżeli
+  używasz wielu świateł, wyłączenie cieni bardzo poprawia wydajność.
+user_settings_utilities: Narzędzia

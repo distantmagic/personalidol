@@ -2,6 +2,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
+import type { ProgressManagerComment } from "@personalidol/loading-manager/src/ProgressManagerComment.type";
 import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
 
 import type { UserSettings } from "./UserSettings.type";
@@ -81,6 +82,12 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
   private _progressPercentage: string = "0%";
   private _progressManagerProgress: null | ProgressManagerProgress = null;
 
+  constructor() {
+    super();
+
+    this.createComment = this.createComment.bind(this);
+  }
+
   set progressManagerProgress(progressManagerProgress: ProgressManagerProgress) {
     this.needsRender = true;
 
@@ -91,18 +98,26 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
     this._progressPercentage = `${progress}%`;
   }
 
+  createComment(comment: ProgressManagerComment) {
+    return this.i18next.t(`resource_type_${comment.resourceType}_count`, {
+      count: comment.resourceQuantity,
+    });
+  }
+
   render() {
     if (!this._progressManagerProgress) {
       return (
         <main id="loading-progress">
-          <div id="comment">Loading ...</div>
+          <div id="comment">{this.i18next.t("loading")} ...</div>
         </main>
       );
     }
 
     return (
       <main id="loading-progress">
-        <div id="comment">Loading {this._progressManagerProgress.comment} ...</div>
+        <div id="comment">
+          {this.i18next.t("loading")} {this._progressManagerProgress.comment.map(this.createComment).join(", ")} ...
+        </div>
         <div id="progress-value"></div>
         <div id="progress-indicator">
           <div

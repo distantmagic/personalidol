@@ -39,6 +39,7 @@ import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 import workers from "./workers.json";
+import { init_i18next } from "./init_i18next";
 
 const THREAD_DEBUG_NAME: string = "main_thread";
 const canvas = getHTMLElementById(window.document, "canvas");
@@ -62,6 +63,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 // Checking for features is asynchronous.
 (async function () {
   logger.info(`BUILD_ID("${__BUILD_ID}")`);
+
+  const i18next = await init_i18next();
+
+  await i18next.changeLanguage("pl");
 
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
@@ -168,7 +173,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const uiMessageChannel = createMultiThreadMessageChannel();
-  const domUIController = DOMUIController(logger, inputState, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, userSettings, domElementsLookup);
+  const domUIController = DOMUIController(logger, i18next, inputState, mainLoop.tickTimerState, uiMessageChannel.port1, uiRoot, userSettings, domElementsLookup);
 
   domUIController.preload();
 

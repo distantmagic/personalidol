@@ -4,6 +4,7 @@ include ../../Makefile_packages.mk
 
 ASSETS_BASE_PATH ?= /g/personalidol/assets
 NODE_ENV ?= production
+LOCALES_LOAD_PATH ?= /g/personalidol/locales/{{lng}}/{{ns}}.yaml
 SERVICE_WORKER_BASE_PATH ?= /g/personalidol
 STATIC_BASE_PATH ?= /g/personalidol
 
@@ -21,6 +22,7 @@ public/index.js: node_modules/.bin/esbuild scripts/build_public.sh tsc $(SOURCES
 	ASSETS_BASE_PATH=${ASSETS_BASE_PATH} \
 	BUILD_ID=$(BUILD_ID) \
 	CACHE_BUST=$(CACHE_BUST) \
+	LOCALES_LOAD_PATH=$(LOCALES_LOAD_PATH) \
 	NODE_ENV=${NODE_ENV} \
 	SERVICE_WORKER_BASE_PATH=${SERVICE_WORKER_BASE_PATH} \
 	STATIC_BASE_PATH=${STATIC_BASE_PATH} \

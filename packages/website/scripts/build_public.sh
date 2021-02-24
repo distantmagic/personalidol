@@ -7,6 +7,7 @@ yarn run esbuild \
     --define:__ASSETS_BASE_PATH=\"${ASSETS_BASE_PATH}\" \
     --define:__BUILD_ID=\"${BUILD_ID}\" \
     --define:__CACHE_BUST=\"${CACHE_BUST}\" \
+    --define:__LOCALES_LOAD_PATH=\"${LOCALES_LOAD_PATH}\" \
     --define:__LOG_LEVEL=\"info\" \
     --define:__SERVICE_WORKER_BASE_PATH=\"${SERVICE_WORKER_BASE_PATH}\" \
     --define:__STATIC_BASE_PATH=\"${STATIC_BASE_PATH}\" \

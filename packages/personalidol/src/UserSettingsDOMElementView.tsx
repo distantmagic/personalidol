@@ -156,10 +156,7 @@ const _css = `
 `;
 
 const _booleanEdgeLabels: ["", ""] = ["", ""];
-const _booleanLabels: ["off", "on"] = ["off", "on"];
 const _booleanValues: [false, true] = [false, true];
-
-const _lowHighEdgeLabels: ["low", "high"] = ["low", "high"];
 
 const _pixelRatioLabels = ["25%", "50%", "75%", "100%"];
 const _pixelRatioValues = [0.25, 0.5, 0.75, 1];
@@ -286,21 +283,21 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   }
 
   render(delta: number) {
+    const _booleanLabels: [string, string] = [this.i18next.t("user_settings_label_off"), this.i18next.t("user_settings_label_on")];
+    const _lowHighEdgeLabels: [string, string] = [this.i18next.t("user_settings_label_low"), this.i18next.t("user_settings_label_high")];
+
     return (
       <div id="options" onClick={this.onOverlayClick}>
         <div id="options__content">
           <h1>
-            Options
-            <pi-button onClick={this.close}>done</pi-button>
+            {this.i18next.t("user_settings_options")}
+            <pi-button onClick={this.close}>{this.i18next.t("user_settings_done").toLocaleLowerCase()}</pi-button>
           </h1>
-          <h2>Graphics</h2>
+          <h2>{this.i18next.t("user_settings_graphics")}</h2>
           <form class="options__form">
             <dl>
-              <dt>Rendering Resolution</dt>
-              <dd>
-                Your device pixel ratio is {this.userSettings.devicePixelRatio} (which means {this.userSettings.devicePixelRatio} physical pixel per rendered pixel). You can reduce
-                the ratio to decrease the rendering resolution, which makes everyting more blurry, but increases the performance.
-              </dd>
+              <dt>{this.i18next.t("user_settings_rendering_resolution")}</dt>
+              <dd>{this.i18next.t("user_settings_rendering_resolution_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.pixelRatio}
@@ -310,10 +307,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               values={_pixelRatioValues}
             />
             <dl>
-              <dt>Use Multiple Light Sources</dt>
-              <dd>
-                Can greatly affect performance. If you disable multiple light sources, background light will have more intensity and everything will be uniformly highlighted.
-              </dd>
+              <dt>{this.i18next.t("user_settings_use_multiple_light_sources")}</dt>
+              <dd>{this.i18next.t("user_settings_use_multiple_light_sources_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.useDynamicLighting}
@@ -323,8 +318,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               values={_booleanValues}
             />
             <dl>
-              <dt>Use Shadows</dt>
-              <dd>If you are not using multiple light sources you can disable this option as well since it will provide almost no visual enhancements without dynamic lighting.</dd>
+              <dt>{this.i18next.t("user_settings_use_shadows")}</dt>
+              <dd>{this.i18next.t("user_settings_use_shadows_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.useShadows}
@@ -334,8 +329,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               values={_booleanValues}
             />
             <dl>
-              <dt>Shadow Map Size</dt>
-              <dd>Bigger values improve shadows quality, but affect performance and memory usage.</dd>
+              <dt>{this.i18next.t("user_settings_shadow_map_size")}</dt>
+              <dd>{this.i18next.t("user_settings_shadow_map_size_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.shadowMapSize}
@@ -347,18 +342,14 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
           </form>
           {isOffscreenCanvasSupported && (
             <Fragment>
-              <h2>Experimental</h2>
+              <h2>{this.i18next.t("user_settings_experimental")}</h2>
               <form class="options__form">
                 <dl>
-                  <dt>Use Offscreen Canvas</dt>
-                  <dd>
-                    This one is tricky. On faster devices it provides even better and snappier experience but on slower devices it can degrade the overall performance and introduce
-                    some graphical glitches. To sum it up, faster devices benefit even more, slower devices are beaten up even more. Overall you can safely turn this on and see if
-                    it makes a difference for you.
-                  </dd>
+                  <dt>{this.i18next.t("user_settings_use_offscreen_canvas")}</dt>
+                  <dd>{this.i18next.t("user_settings_use_offscreen_canvas_description")}</dd>
                   {this._isUseOffscreenCanvasChanged && (
                     <Fragment>
-                      <dd class="option__warning">Required game reload to take effect.</dd>
+                      <dd class="option__warning">{this.i18next.t("user_settings_required_reload_to_take_effect")}</dd>
                       <pi-reload-button />
                     </Fragment>
                   )}
@@ -374,13 +365,11 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
               </form>
             </Fragment>
           )}
-          <h2>Utilities &amp; Development</h2>
+          <h2>{this.i18next.t("user_settings_utilities")}</h2>
           <form class="options__form">
             <dl>
-              <dt>Show Rendering Stats</dt>
-              <dd>
-                Primarily used for debugging, but you can check your actual framerate and memory usage if you want to fine-tune your settings and you know what you are doing.
-              </dd>
+              <dt>{this.i18next.t("user_settings_show_rendering_stats")}</dt>
+              <dd>{this.i18next.t("user_settings_show_rendering_stats_description")}</dd>
             </dl>
             <pi-slider
               currentValue={this.userSettings.showStatsReporter}

@@ -36,11 +36,11 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
   render() {
     return (
       <pi-main-menu-layout>
-        <pi-main-menu-button disabled>Continue</pi-main-menu-button>
-        <pi-main-menu-button onClick={this.onButtonNewGameClick}>New Game</pi-main-menu-button>
-        <pi-main-menu-button disabled>Load Game</pi-main-menu-button>
-        <pi-main-menu-button onClick={this.onButtonUserSettingsClick}>Options</pi-main-menu-button>
-        <pi-main-menu-button disabled>Credits</pi-main-menu-button>
+        <pi-main-menu-button disabled>{this.i18next.t("menu_continue")}</pi-main-menu-button>
+        <pi-main-menu-button onClick={this.onButtonNewGameClick}>{this.i18next.t("menu_new_game")}</pi-main-menu-button>
+        <pi-main-menu-button disabled>{this.i18next.t("menu_load_game")}</pi-main-menu-button>
+        <pi-main-menu-button onClick={this.onButtonUserSettingsClick}>{this.i18next.t("menu_options")}</pi-main-menu-button>
+        <pi-main-menu-button disabled>{this.i18next.t("menu_credits")}</pi-main-menu-button>
       </pi-main-menu-layout>
     );
   }

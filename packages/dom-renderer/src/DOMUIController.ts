@@ -6,11 +6,11 @@ import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 
 import { clearHTMLElement } from "./clearHTMLElement";
 import { Events } from "./Events.enum";
-import { initializeDOMElementView } from "./initializeDOMElementView";
 import { isDOMElementView } from "./isDOMElementView";
 import { isDOMElementViewConstructor } from "./isDOMElementViewConstructor";
 import { isHTMLElementConstructor } from "./isHTMLElementConstructor";
 
+import type { i18n } from "i18next";
 import type { Logger } from "loglevel";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -27,6 +27,21 @@ const _definedCustomElements: Array<string> = [];
 const _evtOnce = {
   once: true,
 };
+
+function _initializeDOMElementView<U extends UserSettings>(
+  domElementView: DOMElementView<U>,
+  i18next: i18n,
+  userSettings: U,
+  inputState: Int32Array,
+  domMessagePort: MessagePort,
+  uiMessagePort: MessagePort
+) {
+  domElementView.domMessagePort = domMessagePort;
+  domElementView.i18next = i18next;
+  domElementView.inputState = inputState;
+  domElementView.uiMessagePort = uiMessagePort;
+  domElementView.userSettings = userSettings;
+}
 
 function _isCustomElementDefined<L extends DOMElementsLookup>(name: string & keyof L): boolean {
   return _definedCustomElements.includes(name);
@@ -47,6 +62,7 @@ async function _defineCustomElement<L extends DOMElementsLookup>(logger: Logger,
 
 export function DOMUIController<L extends DOMElementsLookup, U extends UserSettings>(
   logger: Logger,
+  i18next: i18n,
   inputState: Int32Array,
   tickTimerState: TickTimerState,
   uiMessagePort: MessagePort,
@@ -76,7 +92,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     const domElementView = new DOMElementViewConstructor<U>();
 
-    initializeDOMElementView(domElementView, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+    _initializeDOMElementView(domElementView, i18next, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
 
     return domElementView;
   }
@@ -129,7 +145,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     // Pick up any element that was created by a view.
 
-    initializeDOMElementView(target, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+    _initializeDOMElementView(target, i18next, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
     _updateRenderedElement(target);
 
     _domElementViews.add(target);
