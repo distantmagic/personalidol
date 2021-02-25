@@ -13,7 +13,7 @@ import { isHTMLElementConstructor } from "./isHTMLElementConstructor";
 import type { i18n } from "i18next";
 import type { Logger } from "loglevel";
 
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 import type { DOMElementProps } from "./DOMElementProps.type";
@@ -65,7 +65,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   logger: Logger,
   i18next: i18n,
   inputState: Int32Array,
-  tickTimerState: TickTimerState,
+  mainLoop: MainLoop,
   uiMessagePort: MessagePort,
   uiRootElement: HTMLElement,
   userSettings: U,
@@ -74,11 +74,8 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   const state: DOMUIControllerState = Object.seal({
     isPreloaded: false,
     isPreloading: false,
-    needsUpdates: true,
   });
   const internalDOMMessageChannel: MessageChannel = createSingleThreadMessageChannel();
-  let _delta: number = 0;
-  let _elapsedTime: number = 0;
   let _isRootElementCleared: boolean = false;
 
   const _domElementViews: Set<DOMElementView<U>> = new Set();
@@ -152,9 +149,9 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     // Pick up any element that was created by a view.
 
     _initializeDOMElementView(target, i18next, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+    _registerDOMElementView(target);
     _updateRenderedElement(target);
 
-    _domElementViews.add(target);
     target.addEventListener(Events.elementDisconnected, _onElementDisconnected, _evtOnce);
   }
 
@@ -171,8 +168,24 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
       throw new Error(`Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementDisconnected}"`);
     }
 
+    if (mainLoop.updatables.has(target)) {
+      // Element may remove itself from the update loop.
+      mainLoop.updatables.delete(target);
+    }
+
     if (!_domElementViews.delete(target)) {
       throw new Error(`Element was disconnected, but has never been registered as connected: "${target.tagName}"`);
+    }
+  }
+
+  function _registerDOMElementView(domElementView: DOMElementView<U>) {
+    _domElementViews.add(domElementView);
+    mainLoop.updatables.add(domElementView);
+  }
+
+  function _updateRenderedElement(domElementView: DOMElementView<U>) {
+    if (domElementView.state.needsUpdates) {
+      domElementView.update(mainLoop.tickTimerState.delta, mainLoop.tickTimerState.elapsedTime, mainLoop.tickTimerState);
     }
   }
 
@@ -189,12 +202,6 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     }
   }
 
-  function _updateRenderedElement(domElementView: DOMElementView<U>) {
-    if (domElementView.isConnected) {
-      domElementView.update(_delta, _elapsedTime, tickTimerState);
-    }
-  }
-
   function dispose(message: MessageDOMUIDispose): void {
     message.forEach(_disposeElementById);
   }
@@ -202,11 +209,15 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   async function preload() {
     state.isPreloading = true;
 
+    const preloading = [];
+
     for (let customElementName of Object.keys(domElementsLookup)) {
       if (!_isCustomElementDefined<L>(customElementName as string & keyof L)) {
-        await _defineCustomElementByName(customElementName as string & keyof L);
+        preloading.push(_defineCustomElementByName(customElementName as string & keyof L));
       }
     }
+
+    await Promise.all(preloading);
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -223,13 +234,18 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     if (!domElementView) {
       domElementView = _createDOMElementViewByRenderMessage(message);
 
-      _domElementViews.add(domElementView);
-      _managedDOMElementViewsLookup.set(message.id, domElementView);
+      _registerDOMElementView(domElementView);
 
+      _managedDOMElementViewsLookup.set(message.id, domElementView);
       uiRootElement.appendChild(domElementView);
     }
 
     _updateRenderedElementProps(domElementView, message.props);
+
+    if (!domElementView.state.needsUpdates) {
+      throw new Error(`DOMElementView requested no more updates, but render message was received: "${domElementView.tagName}"`);
+    }
+
     _updateRenderedElement(domElementView);
   }
 
@@ -251,13 +267,6 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     uiRootElement.removeEventListener(Events.elementConnected, _onElementConnected);
   }
 
-  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    _delta = delta;
-    _elapsedTime = elapsedTime;
-
-    _domElementViews.forEach(_updateRenderedElement);
-  }
-
   return Object.freeze({
     id: MathUtils.generateUUID(),
     name: "DOMUIController",
@@ -269,6 +278,5 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     render: render,
     start: start,
     stop: stop,
-    update: update,
   });
 }

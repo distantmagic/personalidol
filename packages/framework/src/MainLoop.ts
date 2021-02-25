@@ -1,5 +1,10 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { isNameable } from "./isNameable";
+import { name } from "./name";
+
+import type { Logger } from "loglevel";
+
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
 import type { MainLoopStatsHook } from "./MainLoopStatsHook.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
@@ -28,9 +33,10 @@ import type { TickTimerState } from "./TickTimerState.type";
  * @see MouseObserevr
  * @see TouchObserver
  */
-export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler: Scheduler<TickType>): IMainLoop {
+export function MainLoop<TickType>(logger: Logger, statsHook: MainLoopStatsHook, frameScheduler: Scheduler<TickType>): IMainLoop {
   const tickTimerState: TickTimerState = Object.seal({
     currentTick: 0,
+    delta: 0,
     elapsedTime: 0,
   });
   const updatables = new Set<MainLoopUpdatable>();
@@ -74,6 +80,7 @@ export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler:
     _delta = _elapsedTime - _previousTime;
 
     tickTimerState.currentTick += 1;
+    tickTimerState.delta = _delta;
     tickTimerState.elapsedTime = _elapsedTime;
 
     updatables.forEach(_updateUpdatable);
@@ -90,6 +97,12 @@ export function MainLoop<TickType>(statsHook: MainLoopStatsHook, frameScheduler:
       updatable.update(_delta, _elapsedTime, tickTimerState);
     } else {
       updatables.delete(updatable);
+
+      if (!isNameable(updatable)) {
+        return;
+      }
+
+      logger.info(`REMOVED(MAIN_LOOP(${name(updatable)}))`);
     }
   }
 

@@ -16,8 +16,10 @@
     "@personalidol/three-modules": "^0.0.4",
     "@personalidol/three-renderer": "^0.0.4",
     "i18next": "^19.8.9",
+    "i18next-chained-backend": "^2.0.1",
     "i18next-http-backend": "^1.1.0",
     "i18next-intervalplural-postprocessor": "^3.0.0",
+    "i18next-localstorage-backend": "^3.1.2",
     "js-yaml": "^4.0.0",
     "loglevel": "^1.7.1",
     "three": "^0.125.2"

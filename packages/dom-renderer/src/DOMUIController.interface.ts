@@ -1,4 +1,3 @@
-import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpdatable.interface";
 import type { Preloadable } from "@personalidol/framework/src/Preloadable.interface";
 import type { RegistersMessagePort } from "@personalidol/framework/src/RegistersMessagePort.interface";
 import type { Service } from "@personalidol/framework/src/Service.interface";
@@ -9,7 +8,7 @@ import type { DOMUIControllerState } from "./DOMUIControllerState.type";
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
-export interface DOMUIController<L extends DOMElementsLookup, U extends UserSettings> extends MainLoopUpdatable, Preloadable, RegistersMessagePort, Service {
+export interface DOMUIController<L extends DOMElementsLookup, U extends UserSettings> extends Preloadable, RegistersMessagePort, Service {
   readonly state: DOMUIControllerState;
 
   dispose(message: MessageDOMUIDispose): void;

@@ -29,7 +29,7 @@ import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
-import { preload } from "@personalidol/framework/src/preload";
+import { Preloader } from "@personalidol/framework/src/Preloader";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
@@ -72,16 +72,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 (async function () {
   logger.info(`BUILD_ID("${__BUILD_ID}")`);
 
-  const i18next = await init_i18next();
-  const internationalizationService = InternationalizationService(i18next as Frameworki18n);
-
-  preload(logger, internationalizationService);
-
-  // setTimeout(async function () {
-  //   await i18next.loadNamespaces("characters");
-  //   await i18next.changeLanguage("pl");
-  // }, 5000);
-
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
 
@@ -89,12 +79,13 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
   const inputState = Input.createEmptyState(useSharedBuffers);
   const inputStatsHook = InputStatsHook(inputState);
+  const preloader = Preloader(logger);
 
   const eventBus = EventBus();
   const statsReporterMessageChannel = createSingleThreadMessageChannel();
 
   const mainLoopStatsHook = MainLoopStatsHook();
-  const mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
+  const mainLoop = MainLoop(logger, mainLoopStatsHook, RequestAnimationFrameScheduler());
   const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsReporterMessageChannel.port2);
 
   statsReporter.hooks.add(inputStatsHook);
@@ -121,7 +112,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const serviceManager = ServiceManager(logger);
 
-  serviceManager.services.add(internationalizationService);
   serviceManager.services.add(htmlElementResizeObserver);
   serviceManager.services.add(keyboardObserver);
   serviceManager.services.add(mouseObserver);
@@ -131,6 +121,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(multiThreadUserSettingsSync);
   serviceManager.services.add(statsReporter);
 
+  mainLoop.updatables.add(preloader);
   mainLoop.updatables.add(htmlElementResizeObserver);
   mainLoop.updatables.add(keyboardObserver);
   mainLoop.updatables.add(mouseObserver);
@@ -151,6 +142,14 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   }
 
   await ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js?${__CACHE_BUST}`).install();
+
+  // Preload translations and the internationalization service.
+
+  const i18next = init_i18next();
+  const internationalizationService = InternationalizationService(i18next as Frameworki18n);
+
+  preloader.preloadables.add(internationalizationService);
+  serviceManager.services.add(internationalizationService);
 
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,
@@ -193,16 +192,14 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     logger,
     internationalizationService.i18next as DOMi18n,
     inputState,
-    mainLoop.tickTimerState,
+    mainLoop,
     uiMessageChannel.port1,
     uiRoot,
     userSettings,
     domElementsLookup
   );
 
-  preload(logger, domUIController);
-
-  mainLoop.updatables.add(domUIController);
+  preloader.preloadables.add(domUIController);
   serviceManager.services.add(domUIController);
 
   // Stats collector reports debug stats like FPS, memory usage, etc.
@@ -407,6 +404,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     },
     [md2MessageChannel.port1, md2ToProgressMessageChannel.port2]
   );
+
+  // Make sure that everything that needs preloading is preloaded.
+
+  await preloader.wait();
 
   // If browser supports the offscreen canvas, then we can offload everything
   // there. If not, then we continue in the main thread.

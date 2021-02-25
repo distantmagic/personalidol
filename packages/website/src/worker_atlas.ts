@@ -45,7 +45,7 @@ function _safeStartService() {
 
   const mainLoopStatsHook = MainLoopStatsHook();
 
-  _mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
+  _mainLoop = MainLoop(logger, mainLoopStatsHook, RequestAnimationFrameScheduler());
   _serviceManager = ServiceManager(logger);
 
   _mainLoop.updatables.add(_serviceManager);

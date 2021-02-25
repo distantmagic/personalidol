@@ -128,6 +128,10 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   }
 
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    if (!this.isConnected) {
+      return;
+    }
+
     this.beforeRender(delta, elapsedTime, tickTimerState);
 
     if (!this.needsRender) {

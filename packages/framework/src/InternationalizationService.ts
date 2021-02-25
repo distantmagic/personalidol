@@ -11,8 +11,18 @@ export function InternationalizationService(i18next: i18n): IInternationalizatio
     isPreloading: false,
   });
 
-  function preload(): void {
+  function _waitForInitialization(): Promise<void> {
+    return new Promise(function (resolve) {
+      i18next.on("initialized", resolve);
+    });
+  }
+
+  async function preload(): Promise<void> {
     state.isPreloading = true;
+
+    if (!i18next.isInitialized) {
+      await _waitForInitialization();
+    }
 
     state.isPreloading = false;
     state.isPreloaded = true;

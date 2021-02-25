@@ -1,13 +1,15 @@
-import Backend from "i18next-http-backend";
+import ChainedBackend from "i18next-chained-backend";
+import HTTPBackend from "i18next-http-backend";
 import i18next from "i18next";
 import intervalPlural from "i18next-intervalplural-postprocessor";
+import LocalStorageBackend from "i18next-localstorage-backend";
 import YAML from "js-yaml";
 
 import type { i18n } from "i18next";
 
-export async function init_i18next(): Promise<i18n> {
-  await i18next
-    .use(Backend)
+export function init_i18next(): i18n {
+  i18next
+    .use(ChainedBackend)
     .use(intervalPlural)
     .init({
       debug: "info" === __LOG_LEVEL,
@@ -18,10 +20,17 @@ export async function init_i18next(): Promise<i18n> {
       supportedLngs: ["en", "pl"],
 
       backend: {
-        loadPath: `${__LOCALES_LOAD_PATH}?${__CACHE_BUST}`,
-        parse: function (data: string) {
-          return YAML.load(data);
-        },
+        backends: [LocalStorageBackend, HTTPBackend],
+        backendOptions: [
+          {
+            defaultVersion: __BUILD_ID,
+            store: window.sessionStorage,
+          },
+          {
+            loadPath: `${__LOCALES_LOAD_PATH}?${__CACHE_BUST}`,
+            parse: YAML.load,
+          },
+        ],
       },
     });
 

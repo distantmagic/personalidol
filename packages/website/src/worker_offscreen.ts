@@ -78,7 +78,7 @@ function _createScenesSafe(): void {
 
   statsReporter.hooks.add(mainLoopStatsHook);
 
-  _mainLoop = MainLoop(mainLoopStatsHook, RequestAnimationFrameScheduler());
+  _mainLoop = MainLoop(logger, mainLoopStatsHook, RequestAnimationFrameScheduler());
   _mainLoop.updatables.add(statsReporter);
 
   _serviceManager = ServiceManager(logger);
