@@ -17,6 +17,7 @@ import type { DOMElementView as IDOMElementView } from "./DOMElementView.interfa
 
 export abstract class DOMElementView<U extends UserSettings> extends HTMLElement implements IDOMElementView<U> {
   public css: string = "";
+  public lastRenderedLanguage: string = "";
   public needsRender: boolean = true;
   public shadow: ShadowRoot;
   public state: MainLoopUpdatableState = Object.seal({
@@ -26,7 +27,6 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   private _domMessagePort: null | MessagePort = null;
   private _i18next: null | i18n = null;
   private _inputState: null | Int32Array = null;
-  private _lastRenderedLanguage: string = "";
   private _uiMessagePort: null | MessagePort = null;
   private _userSettings: null | U = null;
 
@@ -94,7 +94,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
       return;
     }
 
-    this.needsRender = this._lastRenderedLanguage !== this.i18next.language;
+    this.needsRender = this.lastRenderedLanguage !== this.i18next.language;
   }
 
   connectedCallback() {
@@ -138,7 +138,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
       return;
     }
 
-    this._lastRenderedLanguage = this.i18next.language;
+    this.lastRenderedLanguage = this.i18next.language;
     this.needsRender = false;
 
     const renderedElements = this.render(delta, elapsedTime, tickTimerState);

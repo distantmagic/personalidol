@@ -102,14 +102,12 @@ async function _onMapContentLoaded(
     expectAtLeast: expectedItemsToLoad,
   });
 
-  console.log("WORKER_QUAKEMAPS", 0);
   const { createTextureAtlas: textureAtlas } = await sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
     createTextureAtlas: {
       textureUrls: textureUrls,
       rpc: MathUtils.generateUUID(),
     },
   });
-  console.log("WORKER_QUAKEMAPS", 1);
 
   function _resolveTextureDimensions(textureName: string): AtlasTextureDimension {
     if (!textureAtlas.textureDimensions.hasOwnProperty(textureName)) {

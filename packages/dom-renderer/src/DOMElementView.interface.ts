@@ -10,6 +10,7 @@ export interface DOMElementView<U extends UserSettings> extends HTMLElement, Mai
   domMessagePort: MessagePort;
   i18next: i18n;
   inputState: Int32Array;
+  lastRenderedLanguage: string;
   needsRender: boolean;
   uiMessagePort: MessagePort;
   userSettings: U;

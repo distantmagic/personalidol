@@ -64,7 +64,6 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   });
 
   private _currentOpacity: number = 1;
-  private _objectLabelTranslated: string = "";
   private _targetOpacity: number = 1;
 
   set objectProps(objectProps: LabelProps) {
@@ -73,7 +72,6 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
     }
 
     this.needsRender = true;
-    this._objectLabelTranslated = this.i18next.t(objectProps.label);
     this._objectProps = objectProps;
   }
 
@@ -106,7 +104,7 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
           "z-index": this._rendererState.zIndex,
         }}
       >
-        {this._objectLabelTranslated}
+        {this.i18next.t(this._objectProps.label)}
       </div>
     );
   }
