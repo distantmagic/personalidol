@@ -77,10 +77,13 @@ const _css = `
 `;
 
 export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
+  static get observedAttributes() {
+    return ["comment", "progress"];
+  }
   public css: string = _css;
 
+  private _progressComment: string = "";
   private _progressPercentage: string = "0%";
-  private _progressManagerProgress: null | ProgressManagerProgress = null;
 
   constructor() {
     super();
@@ -88,14 +91,26 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
     this.createComment = this.createComment.bind(this);
   }
 
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    super.attributeChangedCallback(name, oldValue, newValue);
+
+    this.needsRender = true;
+
+    switch (name) {
+      case "comment":
+        this._progressComment = this.i18next.t(newValue);
+        break;
+      case "progress":
+        this._progressPercentage = `${Math.round(parseFloat(newValue) * 100)}%`;
+        break;
+    }
+  }
+
   set progressManagerProgress(progressManagerProgress: ProgressManagerProgress) {
     this.needsRender = true;
 
-    this._progressManagerProgress = progressManagerProgress;
-
-    const progress = Math.round(progressManagerProgress.progress * 100);
-
-    this._progressPercentage = `${progress}%`;
+    this._progressComment = progressManagerProgress.comment.map(this.createComment).join(", ");
+    this._progressPercentage = `${Math.round(progressManagerProgress.progress * 100)}%`;
   }
 
   createComment(comment: ProgressManagerComment) {
@@ -105,7 +120,7 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
   }
 
   render() {
-    if (!this._progressManagerProgress) {
+    if (!this._progressComment || !this._progressPercentage) {
       return (
         <main id="loading-progress">
           <div id="comment">{this.i18next.t("ui:loading")} ...</div>
@@ -116,9 +131,9 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
     return (
       <main id="loading-progress">
         <div id="comment">
-          {this.i18next.t("ui:loading")} {this._progressManagerProgress.comment.map(this.createComment).join(", ")} ...
+          {this.i18next.t("ui:loading")} {this._progressComment} ...
         </div>
-        <div id="progress-value"></div>
+        <div id="progress-value">{this._progressPercentage}</div>
         <div id="progress-indicator">
           <div
             id="progress-bar"

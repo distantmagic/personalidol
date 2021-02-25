@@ -48,19 +48,6 @@ function _isCustomElementDefined<L extends DOMElementsLookup>(name: string & key
   return _definedCustomElements.includes(name);
 }
 
-async function _defineCustomElement<L extends DOMElementsLookup>(logger: Logger, name: string & keyof L, element: typeof HTMLElement): Promise<void> {
-  if (_isCustomElementDefined<L>(name)) {
-    throw new Error(`Custom element is already defined: "${name}"`);
-  }
-
-  customElements.define(name, element);
-  _definedCustomElements.push(name);
-
-  await customElements.whenDefined(name);
-
-  logger.info(`DEFINE("${name}")`);
-}
-
 export function DOMUIController<L extends DOMElementsLookup, U extends UserSettings>(
   logger: Logger,
   i18next: i18n,
@@ -100,6 +87,32 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     return domElementView;
   }
 
+  async function _defineCustomElement(logger: Logger, uiRootElement: HTMLElement, name: string & keyof L, element: typeof HTMLElement): Promise<void> {
+    if (_isCustomElementDefined<L>(name)) {
+      throw new Error(`Custom element is already defined: "${name}"`);
+    }
+
+    customElements.define(name, element);
+    _definedCustomElements.push(name);
+
+    await customElements.whenDefined(name);
+
+    for (let element of uiRootElement.querySelectorAll(name)) {
+      if (element instanceof HTMLElement) {
+        customElements.upgrade(element);
+
+        if (isDOMElementView<U>(element)) {
+          logger.info(`UPGRADE("${name}")`);
+          _initializeDOMElementView(element, i18next, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+          _registerDOMElementView(element);
+          _updateRenderedElement(element);
+        }
+      }
+    }
+
+    logger.info(`DEFINE("${name}")`);
+  }
+
   function _defineCustomElementByName(elementName: string & keyof L): Promise<void> {
     const Constructor = domElementsLookup[elementName];
 
@@ -111,7 +124,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
       throw new Error("Object is not a HTMLElement constructor.");
     }
 
-    return _defineCustomElement<L>(logger, elementName, Constructor);
+    return _defineCustomElement(logger, uiRootElement, elementName, Constructor);
   }
 
   function _disposeElementById(id: string): void {

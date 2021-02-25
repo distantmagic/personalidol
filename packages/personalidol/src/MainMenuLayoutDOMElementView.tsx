@@ -37,7 +37,6 @@ const _css = `
     display: grid;
     height: 100%;
     overflow-y: auto;
-    padding: 1.6rem;
     position: relative;
   }
 
@@ -64,6 +63,7 @@ const _css = `
 
     #main-menu__content {
       background-color: rgba(0, 0, 0, 0.8);
+      padding: 1.6rem;
       width: 400px;
     }
   }

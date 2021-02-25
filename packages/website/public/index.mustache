@@ -44,6 +44,24 @@
         will-change: height, width;
       }
 
+      .ui-placeholder.ui-placeholder--loading {
+        bottom: 2.4rem;
+        color: white;
+        font-family: sans-serif;
+        font-size: 1rem;
+        font-variant: small-caps;
+        letter-spacing: 0.1ch;
+        left: 1.6rem;
+        line-height: 1rem;
+        position: absolute;
+        text-align: center;
+        text-transform: lowercase;
+      }
+
+      .ui-placeholder-label.ui-placeholder-label--disabled {
+        display: none;
+      }
+
       #ui-root {
         -webkit-font-kerning: normal;
         font-kerning: normal;
@@ -58,38 +76,46 @@
         <canvas id="canvas"></canvas>
       </div>
       <div id="ui-root">
-        <!-- Initial styles before first game engine render. -->
-        <div id="ui-placeholder" style="
-          bottom: 2.4rem;
-          color: white;
-          font-family: sans-serif;
-          font-size: 1rem;
-          font-variant: small-caps;
-          letter-spacing: 0.1ch;
-          left: 1.6rem;
-          line-height: 1rem;
-          position: absolute;
-          text-align: center;
-          text-transform: lowercase;
-        ">
-          <div id="ui-placeholder-label" style="opacity: 0;">
+        <pi-loading-screen class="ui-placeholder ui-placeholder--loading" id="ui-placeholder">
+          <div class="ui-placeholder-label ui-placeholder-label--disabled" id="ui-placeholder-label">
             Loading ...
           </div>
           <noscript>
             You need to enable JavaScript in your browser to use this
             application.
           </noscript>
-        </div>
+        </pi-loading-screen>
       </div>
     </div>
     <script>(function () {
-      document.getElementById("ui-placeholder-label").style.opacity = "1";
+      const _uiPlaceholder = document.getElementById("ui-placeholder");
+      const _uiPlaceholderLabel = document.getElementById("ui-placeholder-label");
+      const _uiRoot = document.getElementById("ui-root");
+
+      let _domControllerReady = false;
+
+      _uiPlaceholderLabel.classList.remove("ui-placeholder-label--disabled");
+
       if (navigator.serviceWorker) {
-        document.getElementById("ui-placeholder-label").textContent = "Loading game engine ...";
+        _uiPlaceholderLabel.textContent = "Loading game engine ...";
       } else {
         document.body.style.backgroundColor = "darkred";
-        document.getElementById("ui-placeholder-label").textContent = "Error: this app needs to be run under SSL.";
+        _uiPlaceholderLabel.textContent = "Error: this app needs to be run under SSL.";
       }
+
+      _uiRoot.addEventListener("loading", function (evt) {
+        if (evt.detail.isDOMControllerReady) {
+          _domControllerReady = true;
+          _uiPlaceholder.classList.remove("ui-placeholder--loading");
+        }
+
+        if (!_domControllerReady) {
+          return;
+        }
+
+        _uiPlaceholder.setAttribute("comment", evt.detail.comment);
+        _uiPlaceholder.setAttribute("progress", evt.detail.step / evt.detail.totalSteps);
+      });
     }());</script>
     <script src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}" type="module"></script>
   </body>

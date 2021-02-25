@@ -53,6 +53,8 @@ import workers from "./workers.json";
 
 const THREAD_DEBUG_NAME: string = "main_thread";
 const canvas = getHTMLElementById(window.document, "canvas");
+const totalLoadingSteps: number = 10;
+let currentLoadingStep: number = 1;
 
 if (!(canvas instanceof HTMLCanvasElement)) {
   throw new Error("Canvas is not an instance of HTMLCanvasElement");
@@ -73,6 +75,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 // Checking for features is asynchronous.
 (async function () {
   logger.info(`BUILD_ID("${__BUILD_ID}")`);
+
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_service_worker",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
 
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
@@ -145,6 +157,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   await ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js?${__CACHE_BUST}`).install();
 
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_progress_service",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
+
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,
   // so it's possible to render loading screen or do something else with that
@@ -160,6 +182,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const progressWorkerService = WorkerService(progressWorker, workers.progress.name);
 
   await progressWorkerService.ready();
+
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_translations",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
 
   mainLoop.updatables.add(progressWorkerService);
   serviceManager.services.add(progressWorkerService);
@@ -198,6 +230,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   await preloader.wait();
 
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_dom_controller",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
+
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const uiMessageChannel = createMultiThreadMessageChannel();
@@ -215,6 +257,19 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   preloader.preloadables.add(domUIController);
   serviceManager.services.add(domUIController);
+
+  await preloader.wait();
+
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_textures_service",
+        isDOMControllerReady: true,
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
 
   // Stats collector reports debug stats like FPS, memory usage, etc.
 
@@ -273,6 +328,19 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         type: "module",
       });
 
+      const texturesWorkerService = WorkerService(texturesWorker, workers.textures.name);
+      await texturesWorkerService.ready();
+
+      uiRoot.dispatchEvent(
+        new CustomEvent("loading", {
+          detail: {
+            comment: "ui:loading_atlas_service",
+            step: currentLoadingStep++,
+            totalSteps: totalLoadingSteps,
+          },
+        })
+      );
+
       texturesWorker.postMessage(
         {
           progressMessagePort: texturesToProgressMessageChannel.port2,
@@ -292,6 +360,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       logger.info("NO_SUPPORT(createImageBitmap) // starting texture service in the main thread");
 
       const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D, texturesToProgressMessageChannel.port2);
+
+      uiRoot.dispatchEvent(
+        new CustomEvent("loading", {
+          detail: {
+            comment: "ui:loading_atlas_service",
+            step: currentLoadingStep++,
+            totalSteps: totalLoadingSteps,
+          },
+        })
+      );
 
       mainLoop.updatables.add(textureService);
       serviceManager.services.add(textureService);
@@ -338,8 +416,17 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       );
 
       const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
-
       await atlasWorkerService.ready();
+
+      uiRoot.dispatchEvent(
+        new CustomEvent("loading", {
+          detail: {
+            comment: "ui:loading_maps_service",
+            step: currentLoadingStep++,
+            totalSteps: totalLoadingSteps,
+          },
+        })
+      );
 
       mainLoop.updatables.add(atlasWorkerService);
       serviceManager.services.add(atlasWorkerService);
@@ -362,6 +449,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       }
 
       const atlasService = AtlasService(atlasCanvas, atlasCanvasContext2D, atlasToProgressMessageChannel.port2, atlasToTextureMessageChannel.port2);
+
+      uiRoot.dispatchEvent(
+        new CustomEvent("loading", {
+          detail: {
+            comment: "ui:loading_maps_service",
+            step: currentLoadingStep++,
+            totalSteps: totalLoadingSteps,
+          },
+        })
+      );
 
       serviceManager.services.add(atlasService);
 
@@ -386,6 +483,19 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     type: "module",
   });
 
+  const quakeMapsWorkerService = WorkerService(quakeMapsWorker, workers.quakemaps.name);
+  await quakeMapsWorkerService.ready();
+
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_md2_service",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
+
   quakeMapsWorker.postMessage(
     {
       atlasMessagePort: atlasMessageChannel.port2,
@@ -409,6 +519,19 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     name: workers.md2.name,
     type: "module",
   });
+
+  const md2WorkerService = WorkerService(md2Worker, workers.md2.name);
+  await md2WorkerService.ready();
+
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_renderer_service",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
 
   md2Worker.postMessage(
     {
@@ -533,6 +656,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
     await offscreenWorkerService.ready();
 
+    uiRoot.dispatchEvent(
+      new CustomEvent("loading", {
+        detail: {
+          comment: "ui:loading_scenes",
+          step: currentLoadingStep++,
+          totalSteps: totalLoadingSteps,
+        },
+      })
+    );
+
     mainLoop.updatables.add(offscreenWorkerService);
     serviceManager.services.add(offscreenWorkerService);
   } else {
@@ -555,6 +688,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         throw err;
       }
     })();
+
+    uiRoot.dispatchEvent(
+      new CustomEvent("loading", {
+        detail: {
+          comment: "ui:loading_scenes",
+          step: currentLoadingStep++,
+          totalSteps: totalLoadingSteps,
+        },
+      })
+    );
 
     const domRendererMessageChannel = createSingleThreadMessageChannel();
 

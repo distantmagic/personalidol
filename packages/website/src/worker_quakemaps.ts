@@ -19,6 +19,7 @@ import type { Vector3 as IVector3 } from "three";
 import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
 import type { EntityAny } from "@personalidol/personalidol/src/EntityAny.type";
 import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
+import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
@@ -179,5 +180,11 @@ self.onmessage = createRouter({
     }
 
     _progressMessagePort = port;
+  },
+
+  ready(): void {
+    self.postMessage(<MessageWorkerReady>{
+      ready: true,
+    });
   },
 });

@@ -11,6 +11,7 @@ import { keyFromTextureRequest } from "@personalidol/texture-loader/src/keyFromT
 import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
+import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
 import type { TextureRequest } from "@personalidol/texture-loader/src/TextureRequest.type";
@@ -78,6 +79,12 @@ self.onmessage = createRouter({
     }
 
     _progressMessagePort = port;
+  },
+
+  ready(): void {
+    self.postMessage(<MessageWorkerReady>{
+      ready: true,
+    });
   },
 
   texturesMessagePort(port: MessagePort): void {

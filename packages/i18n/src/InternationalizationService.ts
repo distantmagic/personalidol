@@ -46,7 +46,7 @@ export function InternationalizationService(i18next: i18n, progressMessagePort: 
 
   function _waitForInitialization(): Promise<void> {
     return new Promise(function (resolve) {
-      i18next.on("initialized", resolve);
+      i18next.on("loaded", resolve);
     });
   }
 

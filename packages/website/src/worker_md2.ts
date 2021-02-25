@@ -15,6 +15,7 @@ import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 import type { MD2GeometryParts } from "@personalidol/three-modules/src/loaders/MD2GeometryParts.type";
 import type { MD2LoaderParsedGeometry } from "@personalidol/three-modules/src/loaders/MD2LoaderParsedGeometry.type";
 import type { MD2LoaderParsedGeometryWithParts } from "@personalidol/three-modules/src/loaders/MD2LoaderParsedGeometryWithParts.type";
+import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { ReusedResponse } from "@personalidol/framework/src/ReusedResponse.type";
 import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
@@ -103,5 +104,11 @@ self.onmessage = createRouter({
     }
 
     _progressMessagePort = port;
+  },
+
+  ready(): void {
+    self.postMessage(<MessageWorkerReady>{
+      ready: true,
+    });
   },
 });

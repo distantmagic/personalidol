@@ -12,6 +12,16 @@ menu_options: Opcje
 menu_return_to_game: Wróć do gry
 
 loading: ładuję
+loading_atlas_service: Atlas Service
+loading_dom_controller: DOMController
+loading_maps_service: Maps Service
+loading_md2_service: MD2 Service
+loading_progress_service: Progress Service
+loading_renderer_service: Renderer Service
+loading_scenes: Scenes
+loading_service_worker: Service Worker
+loading_textures_service: Textures Service
+loading_translations: Translations
 
 reload_button_reload_now: Przeładuj grę
 
