@@ -16,7 +16,7 @@ import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLEleme
 import { Input } from "@personalidol/framework/src/Input";
 import { InputIndices } from "@personalidol/framework/src/InputIndices.enum";
 import { InputStatsHook } from "@personalidol/framework/src/InputStatsHook";
-import { InternationalizationService } from "@personalidol/framework/src/InternationalizationService";
+import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
@@ -145,23 +145,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   await ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js?${__CACHE_BUST}`).install();
 
-  // Preload translations and the internationalization service.
-
-  const i18next = init_i18next();
-  const internationalizationService = InternationalizationService(i18next as Frameworki18n);
-
-  preloader.preloadables.add(internationalizationService);
-  serviceManager.services.add(internationalizationService);
-
-  // Listen to user settings to adjust the language.
-
-  const languageUserSettingsManager = LanguageUserSettingsManager(userSettings, i18next as PersonalIdoli18n);
-
-  preloader.preloadables.add(languageUserSettingsManager);
-  mainLoop.updatables.add(languageUserSettingsManager);
-
-  await preloader.wait();
-
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,
   // so it's possible to render loading screen or do something else with that
@@ -194,6 +177,26 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   }
 
   addProgressMessagePort(progressMessageChannel.port1, true);
+
+  // Preload translations and the internationalization service.
+
+  const i18next = init_i18next();
+  const internationalizationService = InternationalizationService(i18next as Frameworki18n, progressMessageChannel.port1);
+  const internationalizationMessageChannel = createMultiThreadMessageChannel();
+
+  internationalizationService.registerMessagePort(internationalizationMessageChannel.port1);
+
+  preloader.preloadables.add(internationalizationService);
+  serviceManager.services.add(internationalizationService);
+
+  // Listen to user settings to adjust the language.
+
+  const languageUserSettingsManager = LanguageUserSettingsManager(userSettings, i18next as PersonalIdoli18n);
+
+  preloader.preloadables.add(languageUserSettingsManager);
+  mainLoop.updatables.add(languageUserSettingsManager);
+
+  await preloader.wait();
 
   // DOMUiController handles DOM rendering using reconciliated routes.
 
@@ -495,6 +498,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
         devicePixelRatio: devicePixelRatio,
         domMessagePort: domRendererMessageChannel.port2,
         fontPreloadMessagePort: fontPreloadMessageChannel.port2,
+        internationalizationMessagePort: internationalizationMessageChannel.port2,
         md2MessagePort: md2MessageChannel.port2,
         progressMessagePort: progressMessageChannel.port2,
         quakeMapsMessagePort: quakeMapsMessageChannel.port2,
@@ -506,6 +510,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       [
         domRendererMessageChannel.port2,
         fontPreloadMessageChannel.port2,
+        internationalizationMessageChannel.port2,
         md2MessageChannel.port2,
         offscreenCanvas,
         statsMessageChannel.port2,
@@ -569,6 +574,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       statsReporter,
       domRendererMessageChannel.port2,
       fontPreloadMessageChannel.port2,
+      internationalizationMessageChannel.port2,
       md2MessageChannel.port2,
       progressMessageChannel.port2,
       quakeMapsMessageChannel.port2,

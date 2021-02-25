@@ -25,6 +25,8 @@ resource_type_model_count: model
 resource_type_model_count_plural: "{{count}} models"
 resource_type_texture_count: texture
 resource_type_texture_count_plural: "{{count}} textures"
+resource_type_translation_count: translation
+resource_type_translation_count_plural: "{{count}} translations"
 
 trigger_menu: Menu
 

@@ -1,13 +1,22 @@
+import Loglevel from "loglevel";
+
 import { MainLoop } from "./MainLoop";
+import { MainLoopStatsHook } from "./MainLoopStatsHook";
 import { SetTimeoutScheduler } from "./SetTimeoutScheduler";
 
 test("loops until canceled", async function () {
-  const mainLoop = MainLoop(SetTimeoutScheduler());
+  const logger = Loglevel.getLogger("test");
+  const mainLoopStatsHook = MainLoopStatsHook();
+  const mainLoop = MainLoop(logger, mainLoopStatsHook, SetTimeoutScheduler());
 
   let ticks = 0;
 
   await new Promise<void>(function (resolve) {
     mainLoop.updatables.add({
+      state: {
+        needsUpdates: true,
+      },
+
       update(delta: number): void {
         ticks += 1;
 

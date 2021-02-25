@@ -132,7 +132,6 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   function _processAtlasQueue() {
     for (let request of _pendingRequests) {
       _pendingRequests.delete(request);
-      console.log("ATLAS_PROCESS", request);
       _processAtlasRequest(request);
       break;
     }

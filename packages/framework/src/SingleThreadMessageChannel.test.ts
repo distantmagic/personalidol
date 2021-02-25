@@ -1,5 +1,6 @@
 import { SingleThreadMessageChannel } from "./SingleThreadMessageChannel";
 
+// @ts-ignore
 globalThis.MessageEvent = class MessageEvent {
   data: any;
 

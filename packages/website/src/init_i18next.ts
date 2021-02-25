@@ -15,7 +15,7 @@ export function init_i18next(): i18n {
       debug: "info" === __LOG_LEVEL,
       fallbackLng: "en",
       lng: "en",
-      ns: ["ui", "characters"],
+      ns: ["ui"],
       defaultNS: "__NOT_USED",
       supportedLngs: ["en", "pl"],
 

@@ -1,3 +1,4 @@
+import { Clock } from "three/src/core/Clock";
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { isNameable } from "./isNameable";
@@ -34,6 +35,7 @@ import type { TickTimerState } from "./TickTimerState.type";
  * @see TouchObserver
  */
 export function MainLoop<TickType>(logger: Logger, statsHook: MainLoopStatsHook, frameScheduler: Scheduler<TickType>): IMainLoop {
+  const clock = new Clock(false);
   const tickTimerState: TickTimerState = Object.seal({
     currentTick: 0,
     delta: 0,
@@ -42,21 +44,16 @@ export function MainLoop<TickType>(logger: Logger, statsHook: MainLoopStatsHook,
   const updatables = new Set<MainLoopUpdatable>();
 
   let _continue: boolean = false;
-  let _delta: number = 0;
-  let _elapsedTime: number = 0;
   let _frameId: null | TickType = null;
-  let _previousTime: number = 0;
 
   function start(): void {
     if (_continue) {
       throw new Error("Main loop is alread started.");
     }
 
+    clock.start();
+
     _continue = true;
-
-    _elapsedTime = 0;
-    _previousTime = performance.now();
-
     _frameId = frameScheduler.requestFrame(tick);
   }
 
@@ -65,26 +62,23 @@ export function MainLoop<TickType>(logger: Logger, statsHook: MainLoopStatsHook,
       throw new Error("Main loop is alread stopped.");
     }
 
-    _continue = false;
+    clock.stop();
 
     if (null !== _frameId) {
       frameScheduler.cancelFrame(_frameId);
     }
 
+    _continue = false;
     _frameId = null;
   }
 
   function tick(now: number): void {
-    _previousTime = _elapsedTime;
-    _elapsedTime = now / 1000;
-    _delta = _elapsedTime - _previousTime;
-
     tickTimerState.currentTick += 1;
-    tickTimerState.delta = _delta;
-    tickTimerState.elapsedTime = _elapsedTime;
+    tickTimerState.delta = clock.getDelta();
+    tickTimerState.elapsedTime = clock.getElapsedTime();
 
     updatables.forEach(_updateUpdatable);
-    statsHook.update(_delta, _elapsedTime, tickTimerState);
+    statsHook.update(tickTimerState.delta, tickTimerState.elapsedTime, tickTimerState);
 
     // something might have changed withing the update callback
     if (_continue) {
@@ -94,7 +88,7 @@ export function MainLoop<TickType>(logger: Logger, statsHook: MainLoopStatsHook,
 
   function _updateUpdatable(updatable: MainLoopUpdatable): void {
     if (updatable.state.needsUpdates) {
-      updatable.update(_delta, _elapsedTime, tickTimerState);
+      updatable.update(tickTimerState.delta, tickTimerState.elapsedTime, tickTimerState);
     } else {
       updatables.delete(updatable);
 

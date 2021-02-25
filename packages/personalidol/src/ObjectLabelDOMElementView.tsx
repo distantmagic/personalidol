@@ -5,6 +5,7 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
 import type { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObjectState.type";
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { UserSettings } from "./UserSettings.type";
 
@@ -50,10 +51,6 @@ type LabelProps = DOMElementProps & {
 export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
-  public _objectProps: LabelProps = Object.seal({
-    label: "",
-  });
-
   public _rendererState: CSS2DObjectState = Object.seal({
     cameraFar: 0,
     distanceToCameraSquared: 0,
@@ -63,16 +60,26 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
     zIndex: 0,
   });
 
+  private _currentLabel: string = "";
+  private _currentLabelTranslated: string = "";
   private _currentOpacity: number = 1;
   private _targetOpacity: number = 1;
 
   set objectProps(objectProps: LabelProps) {
-    if (objectProps.label === this._objectProps.label) {
+    if (objectProps.label === this._currentLabel) {
       return;
     }
 
+    this._currentLabel = objectProps.label;
     this.needsRender = true;
-    this._objectProps = objectProps;
+  }
+
+  beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
+    super.beforeRender(delta, elapsedTime, tickTimerState);
+
+    if (this.lastRenderedLanguage !== this.i18next.language) {
+      this._currentLabelTranslated = this.i18next.t(this._currentLabel);
+    }
   }
 
   set rendererState(rendererState: CSS2DObjectState) {
@@ -104,7 +111,7 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
           "z-index": this._rendererState.zIndex,
         }}
       >
-        {this.i18next.t(this._objectProps.label)}
+        {this._currentLabelTranslated}
       </div>
     );
   }

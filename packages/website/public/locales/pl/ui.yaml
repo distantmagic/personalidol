@@ -18,22 +18,21 @@ reload_button_reload_now: Przeładuj grę
 resource_type_atlas_count_0: atlas
 resource_type_atlas_count_1: "{{count}} atlasy"
 resource_type_atlas_count_2: "{{count}} atlasów"
-
 resource_type_font_count_0: czczionka
 resource_type_font_count_1: "{{count}} czczionki"
 resource_type_font_count_2: "{{count}} czczionek"
-
 resource_type_map_count_0: mapa
 resource_type_map_count_1: "{{count}} mapy"
 resource_type_map_count_2: "{{count}} map"
-
 resource_type_model_count_0: model
 resource_type_model_count_1: "{{count}} modele"
 resource_type_model_count_2: "{{count}} modeli"
-
 resource_type_texture_count_0: tekstura
 resource_type_texture_count_1: "{{count}} tekstury"
 resource_type_texture_count_2: "{{count}} tekstur"
+resource_type_translation_count_0: tłumaczenie
+resource_type_translation_count_1: "{{count}} tłumaczenia"
+resource_type_translation_count_2: "{{count}} tłumaczeń"
 
 trigger_menu: Menu
 

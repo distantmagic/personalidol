@@ -42,6 +42,7 @@ let _serviceManager: null | IServiceManager = null;
 let _shouldNotifyReady: boolean = false;
 let domMessagePort: null | MessagePort = null;
 let fontPreloadMessagePort: null | MessagePort = null;
+let internationalizationMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
 let progressMessagePort: null | MessagePort = null;
 let quakeMapsMessagePort: null | MessagePort = null;
@@ -58,6 +59,7 @@ function _createScenesSafe(): void {
     _inputState === null ||
     domMessagePort === null ||
     fontPreloadMessagePort === null ||
+    internationalizationMessagePort === null ||
     md2MessagePort === null ||
     progressMessagePort === null ||
     quakeMapsMessagePort === null ||
@@ -98,6 +100,7 @@ function _createScenesSafe(): void {
     statsReporter,
     domMessagePort,
     fontPreloadMessagePort,
+    internationalizationMessagePort,
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
@@ -176,6 +179,11 @@ self.onmessage = createRouter({
     }
 
     _inputState.set(input);
+  },
+
+  internationalizationMessagePort(port: MessagePort): void {
+    internationalizationMessagePort = port;
+    _createScenesSafe();
   },
 
   md2MessagePort(port: MessagePort): void {

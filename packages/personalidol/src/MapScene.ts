@@ -12,6 +12,7 @@ import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loade
 import { damp } from "@personalidol/framework/src/damp";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
 import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
@@ -28,6 +29,7 @@ import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/update
 import { AmbientLightView } from "./AmbientLightView";
 import { buildViews } from "./buildViews";
 import { HemisphereLightView } from "./HemisphereLightView";
+import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
 import { MD2ModelView } from "./MD2ModelView";
 import { PlayerView } from "./PlayerView";
 import { PointLightView } from "./PointLightView";
@@ -96,6 +98,9 @@ const _mountables: Set<MountableCallback> = new Set();
 const _unmountables: Set<UnmountableCallback> = new Set();
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
+const _internationalizationMessageRouter = createRouter({
+  loadedNamespaces: handleRPCResponse(_rpcLookupTable),
+});
 const _md2MessageRouter = createRouter({
   geometry: handleRPCResponse(_rpcLookupTable),
 });
@@ -115,6 +120,7 @@ export function MapScene(
   dimensionsState: Uint32Array,
   inputState: Int32Array,
   domMessagePort: MessagePort,
+  internationalizationMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
@@ -269,6 +275,7 @@ export function MapScene(
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
+    internationalizationMessagePort.onmessage = _internationalizationMessageRouter;
     md2MessagePort.onmessage = _md2MessageRouter;
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
     texturesMessagePort.onmessage = _textureReceiverMessageRouter;
@@ -290,6 +297,27 @@ export function MapScene(
 
     _disposables.add(disposableGeneric(worldspawnTexture));
 
+    const i18Namespaces: Set<string> = new Set();
+
+    for (let entity of entities) {
+      if (isEntityWithObjectLabel(entity)) {
+        const namespace = getI18NextKeyNamespace(entity.properties.label);
+
+        if (namespace) {
+          i18Namespaces.add(namespace);
+        }
+      }
+    }
+
+    if (i18Namespaces.size > 0) {
+      await sendRPCMessage(_rpcLookupTable, internationalizationMessagePort, {
+        loadNamespaces: {
+          namespaces: Array.from(i18Namespaces.values()),
+          rpc: MathUtils.generateUUID(),
+        },
+      });
+    }
+
     for (let view of buildViews(logger, entityLookupTable, worldspawnTexture, entities)) {
       views.add(view);
     }
@@ -297,10 +325,11 @@ export function MapScene(
     state.isPreloading = false;
     state.isPreloaded = true;
 
-    _unmountables.add(function () {
-      md2MessagePort.onmessage = _md2MessageRouter;
-      quakeMapsMessagePort.onmessage = _quakeMapsRouter;
-      texturesMessagePort.onmessage = _textureReceiverMessageRouter;
+    _disposables.add(function () {
+      internationalizationMessagePort.onmessage = null;
+      md2MessagePort.onmessage = null;
+      quakeMapsMessagePort.onmessage = null;
+      texturesMessagePort.onmessage = null;
     });
   }
 
