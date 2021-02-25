@@ -74,19 +74,21 @@ const _css = `
 
   @media (max-width: ${DOMBreakpoints.MobileMax}px) {
     .overlay {
-      align-items: center;
+      align-items: stretch;
       background-color: black;
-      justify-content: center;
+      justify-content: stretch;
       display: grid;
       overflow-y: auto;
     }
 
     .overlay__content {
+      left: 50%;
+      max-width: 60ch;
       padding-bottom: 3.2rem;
       padding-left: 1.6rem;
       padding-right: 1.6rem;
       padding-top: 0rem;
-      max-width: 60ch;
+      transform: translateX(-50%);
     }
   }
 

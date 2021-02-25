@@ -44,11 +44,14 @@ const _css = `
   @media (max-width: ${DOMBreakpoints.MobileMax}px) {
     #main-menu {
       background-color: rgba(0, 0, 0, 0.8);
-      justify-content: center;
+      justify-content: stretch;
       left: 0;
     }
 
     #main-menu__content {
+      left: 50%;
+      max-width: 30ch;
+      transform: translateX(-50%);
       width: 100%;
     }
   }
