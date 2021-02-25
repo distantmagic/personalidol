@@ -9,6 +9,15 @@ import { DOMZIndex } from "./DOMZIndex.enum";
 import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
+  @keyframes spin {
+    0% {
+      transform: rotateY(0deg) rotateZ(0deg);
+    }
+    100% {
+      transform: rotateY(-180deg) rotateZ(180deg);
+    }
+  }
+
   :host {
     all: initial;
   }
@@ -35,22 +44,31 @@ const _css = `
     z-index: 0;
   }
 
-  .overlay__content.overlay__content--is-loading:after,
+  .overlay__content.overlay__content--is-loading:after {
+    animation-direction: normal;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+    animation-name: spin;
+    animation-timing-function: ease-in-out;
+    background-color: black;
+    border: 1px solid white;
+    content: "";
+    height: 3rem;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    width: 3rem;
+    z-index: 2;
+  }
+
   .overlay__content.overlay__content--is-loading:before {
+    background-color: rgba(0, 0, 0, 0.6);
     bottom: 0;
     content: "";
     left: 0;
     position: absolute;
     right: 0;
     top: 0;
-  }
-
-  .overlay__content.overlay__content--is-loading:after {
-    z-index: 2;
-  }
-
-  .overlay__content.overlay__content--is-loading:before {
-    background-color: rgba(0, 0, 0, 0.6);
     z-index: 1;
   }
 
