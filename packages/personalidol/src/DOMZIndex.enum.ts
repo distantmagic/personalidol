@@ -9,7 +9,7 @@ export const enum DOMZIndex {
   // ones.
   InGameMenuTrigger,
   MainMenu,
-  Options,
+  Settings,
   MousePointerLayer,
   StatsReporter,
 }

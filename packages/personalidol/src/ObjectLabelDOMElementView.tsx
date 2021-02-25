@@ -78,10 +78,6 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   }
 
   set rendererState(rendererState: CSS2DObjectState) {
-    if (!rendererState.visible && this._rendererState.visible === rendererState.visible) {
-      return;
-    }
-
     this.needsRender = true;
     this._rendererState = rendererState;
   }

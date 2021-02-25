@@ -3,6 +3,7 @@ import type { UserSettings as IUserSettings } from "./UserSettings.type";
 function createEmptyState(pixelRatio: number): IUserSettings {
   return {
     devicePixelRatio: pixelRatio,
+    language: "en",
     pixelRatio: 1,
     shadowMapSize: 512,
     showStatsReporter: false,

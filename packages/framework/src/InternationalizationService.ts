@@ -28,6 +28,8 @@ export function InternationalizationService(i18next: i18n): IInternationalizatio
     state.isPreloaded = true;
   }
 
+  function registerMessagePort(messagePort: MessagePort): void {}
+
   function start(): void {}
 
   function stop(): void {}
@@ -39,6 +41,7 @@ export function InternationalizationService(i18next: i18n): IInternationalizatio
     state: state,
 
     preload: preload,
+    registerMessagePort: registerMessagePort,
     start: start,
     stop: stop,
   });

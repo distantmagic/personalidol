@@ -83,6 +83,7 @@ export function createScenes(
   const uiState: UIState = {
     currentMap: null,
     isInGameMenuOpened: false,
+    isLanguageSettingsScreenOpened: false,
     isUserSettingsScreenOpened: false,
     isScenePaused: false,
   };

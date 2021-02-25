@@ -5,7 +5,6 @@ import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/suppo
 import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
-import { DOMZIndex } from "./DOMZIndex.enum";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
@@ -21,22 +20,6 @@ const _css = `
 
   *, * * {
     box-sizing: border-box;
-  }
-
-  #options {
-    background-color: rgba(0, 0, 0, 0.6);
-    bottom: 0;
-    font-family: Mukta, sans-serif;
-    left: 0;
-    line-height: 1.7;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: ${DOMZIndex.Options};
-  }
-
-  #options__content {
-    color: white;
   }
 
   .options__form {
@@ -90,22 +73,6 @@ const _css = `
   }
 
   @media (max-width: ${DOMBreakpoints.MobileMax}px) {
-    #options {
-      align-items: center;
-      background-color: black;
-      justify-content: center;
-      display: grid;
-      overflow-y: auto;
-    }
-
-    #options__content {
-      padding-bottom: 3.2rem;
-      padding-left: 1.6rem;
-      padding-right: 1.6rem;
-      padding-top: 0rem;
-      max-width: 60ch;
-    }
-
     h1 {
       padding-top: 1.6rem;
       margin-top: 1.6rem;
@@ -113,24 +80,6 @@ const _css = `
   }
 
   @media (min-width: ${DOMBreakpoints.TabletMin}px) {
-    #options {
-      display: block;
-    }
-
-    #options__content {
-      background-color: black;
-      bottom: 0;
-      left: calc(400px + 3.2rem);
-      overflow-y: auto;
-      padding-bottom: 6.4rem;
-      padding-left: 4.8rem;
-      padding-right: 4.8rem;
-      padding-top: 0;
-      position: absolute;
-      top: 0;
-      width: calc(100% - 400px - 4.8rem);
-    }
-
     h1 {
       margin-top: 4.8rem;
       padding-top: 1.6rem;
@@ -144,10 +93,6 @@ const _css = `
   }
 
   @media (min-width: ${DOMBreakpoints.DesktopMin}px) {
-    #options__content {
-      max-width: 1024px;
-    }
-
     .options__form {
       grid-column-gap: 2rem;
       grid-template-columns: 1fr 1fr;
@@ -287,100 +232,98 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     const _lowHighEdgeLabels: [string, string] = [this.i18next.t("ui:user_settings_label_low"), this.i18next.t("ui:user_settings_label_high")];
 
     return (
-      <div id="options" onClick={this.onOverlayClick}>
-        <div id="options__content">
-          <h1>
-            {this.i18next.t("ui:user_settings_options")}
-            <pi-button onClick={this.close}>{this.i18next.t("ui:user_settings_done").toLocaleLowerCase()}</pi-button>
-          </h1>
-          <h2>{this.i18next.t("ui:user_settings_graphics")}</h2>
-          <form class="options__form">
-            <dl>
-              <dt>{this.i18next.t("ui:user_settings_rendering_resolution")}</dt>
-              <dd>{this.i18next.t("ui:user_settings_rendering_resolution_description")}</dd>
-            </dl>
-            <pi-slider
-              currentValue={this.userSettings.pixelRatio}
-              edgeLabels={_lowHighEdgeLabels}
-              labels={_pixelRatioLabels}
-              onChange={this.onPixelRatioChange}
-              values={_pixelRatioValues}
-            />
-            <dl>
-              <dt>{this.i18next.t("ui:user_settings_use_multiple_light_sources")}</dt>
-              <dd>{this.i18next.t("ui:user_settings_use_multiple_light_sources_description")}</dd>
-            </dl>
-            <pi-slider
-              currentValue={this.userSettings.useDynamicLighting}
-              edgeLabels={_booleanEdgeLabels}
-              labels={_booleanLabels}
-              onChange={this.onUseDynamicLightingChange}
-              values={_booleanValues}
-            />
-            <dl>
-              <dt>{this.i18next.t("ui:user_settings_use_shadows")}</dt>
-              <dd>{this.i18next.t("ui:user_settings_use_shadows_description")}</dd>
-            </dl>
-            <pi-slider
-              currentValue={this.userSettings.useShadows}
-              edgeLabels={_booleanEdgeLabels}
-              labels={_booleanLabels}
-              onChange={this.onUseShadowsChange}
-              values={_booleanValues}
-            />
-            <dl>
-              <dt>{this.i18next.t("ui:user_settings_shadow_map_size")}</dt>
-              <dd>{this.i18next.t("ui:user_settings_shadow_map_size_description")}</dd>
-            </dl>
-            <pi-slider
-              currentValue={this.userSettings.shadowMapSize}
-              edgeLabels={_lowHighEdgeLabels}
-              labels={_shadowMapSizeLabels}
-              onChange={this.onShadowMapSizeChange}
-              values={_shadowMapSizeValues}
-            />
-          </form>
-          {isOffscreenCanvasSupported && (
-            <Fragment>
-              <h2>{this.i18next.t("ui:user_settings_experimental")}</h2>
-              <form class="options__form">
-                <dl>
-                  <dt>{this.i18next.t("ui:user_settings_use_offscreen_canvas")}</dt>
-                  <dd>{this.i18next.t("ui:user_settings_use_offscreen_canvas_description")}</dd>
-                  {this._isUseOffscreenCanvasChanged && (
-                    <Fragment>
-                      <dd class="option__warning">{this.i18next.t("ui:user_settings_required_reload_to_take_effect")}</dd>
-                      <pi-reload-button />
-                    </Fragment>
-                  )}
-                </dl>
-                <pi-slider
-                  currentValue={this.userSettings.useOffscreenCanvas}
-                  disabled={!isOffscreenCanvasSupported}
-                  edgeLabels={_booleanEdgeLabels}
-                  labels={_booleanLabels}
-                  onChange={this.onUseOffscreenCanvasChanged}
-                  values={_booleanValues}
-                />
-              </form>
-            </Fragment>
-          )}
-          <h2>{this.i18next.t("ui:user_settings_utilities")}</h2>
-          <form class="options__form">
-            <dl>
-              <dt>{this.i18next.t("ui:user_settings_show_rendering_stats")}</dt>
-              <dd>{this.i18next.t("ui:user_settings_show_rendering_stats_description")}</dd>
-            </dl>
-            <pi-slider
-              currentValue={this.userSettings.showStatsReporter}
-              edgeLabels={_booleanEdgeLabels}
-              labels={_booleanLabels}
-              onChange={this.onShowStatsReporterChange}
-              values={_booleanValues}
-            />
-          </form>
-        </div>
-      </div>
+      <pi-settings-backdrop onDirectClick={this.close}>
+        <h1>
+          {this.i18next.t("ui:user_settings_options")}
+          <pi-button onClick={this.close}>{this.i18next.t("ui:user_settings_done").toLocaleLowerCase()}</pi-button>
+        </h1>
+        <h2>{this.i18next.t("ui:user_settings_graphics")}</h2>
+        <form class="options__form">
+          <dl>
+            <dt>{this.i18next.t("ui:user_settings_rendering_resolution")}</dt>
+            <dd>{this.i18next.t("ui:user_settings_rendering_resolution_description")}</dd>
+          </dl>
+          <pi-slider
+            currentValue={this.userSettings.pixelRatio}
+            edgeLabels={_lowHighEdgeLabels}
+            labels={_pixelRatioLabels}
+            onChange={this.onPixelRatioChange}
+            values={_pixelRatioValues}
+          />
+          <dl>
+            <dt>{this.i18next.t("ui:user_settings_use_multiple_light_sources")}</dt>
+            <dd>{this.i18next.t("ui:user_settings_use_multiple_light_sources_description")}</dd>
+          </dl>
+          <pi-slider
+            currentValue={this.userSettings.useDynamicLighting}
+            edgeLabels={_booleanEdgeLabels}
+            labels={_booleanLabels}
+            onChange={this.onUseDynamicLightingChange}
+            values={_booleanValues}
+          />
+          <dl>
+            <dt>{this.i18next.t("ui:user_settings_use_shadows")}</dt>
+            <dd>{this.i18next.t("ui:user_settings_use_shadows_description")}</dd>
+          </dl>
+          <pi-slider
+            currentValue={this.userSettings.useShadows}
+            edgeLabels={_booleanEdgeLabels}
+            labels={_booleanLabels}
+            onChange={this.onUseShadowsChange}
+            values={_booleanValues}
+          />
+          <dl>
+            <dt>{this.i18next.t("ui:user_settings_shadow_map_size")}</dt>
+            <dd>{this.i18next.t("ui:user_settings_shadow_map_size_description")}</dd>
+          </dl>
+          <pi-slider
+            currentValue={this.userSettings.shadowMapSize}
+            edgeLabels={_lowHighEdgeLabels}
+            labels={_shadowMapSizeLabels}
+            onChange={this.onShadowMapSizeChange}
+            values={_shadowMapSizeValues}
+          />
+        </form>
+        {isOffscreenCanvasSupported && (
+          <Fragment>
+            <h2>{this.i18next.t("ui:user_settings_experimental")}</h2>
+            <form class="options__form">
+              <dl>
+                <dt>{this.i18next.t("ui:user_settings_use_offscreen_canvas")}</dt>
+                <dd>{this.i18next.t("ui:user_settings_use_offscreen_canvas_description")}</dd>
+                {this._isUseOffscreenCanvasChanged && (
+                  <Fragment>
+                    <dd class="option__warning">{this.i18next.t("ui:user_settings_required_reload_to_take_effect")}</dd>
+                    <pi-reload-button />
+                  </Fragment>
+                )}
+              </dl>
+              <pi-slider
+                currentValue={this.userSettings.useOffscreenCanvas}
+                disabled={!isOffscreenCanvasSupported}
+                edgeLabels={_booleanEdgeLabels}
+                labels={_booleanLabels}
+                onChange={this.onUseOffscreenCanvasChanged}
+                values={_booleanValues}
+              />
+            </form>
+          </Fragment>
+        )}
+        <h2>{this.i18next.t("ui:user_settings_utilities")}</h2>
+        <form class="options__form">
+          <dl>
+            <dt>{this.i18next.t("ui:user_settings_show_rendering_stats")}</dt>
+            <dd>{this.i18next.t("ui:user_settings_show_rendering_stats_description")}</dd>
+          </dl>
+          <pi-slider
+            currentValue={this.userSettings.showStatsReporter}
+            edgeLabels={_booleanEdgeLabels}
+            labels={_booleanLabels}
+            onChange={this.onShowStatsReporterChange}
+            values={_booleanValues}
+          />
+        </form>
+      </pi-settings-backdrop>
     );
   }
 }

@@ -1,3 +1,4 @@
+import classnames from "classnames";
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
@@ -13,7 +14,7 @@ export const css = `
     box-sizing: border-box;
   }
 
-  button {
+  .main-menu-button {
     background-color: transparent;
     border: 1px solid transparent;
     font-family: "Mukta", sans-serif;
@@ -22,48 +23,67 @@ export const css = `
     font-weight: 300;
     line-height: 1;
     padding: 0.8rem 1.6rem;
+    position: relative;
     text-align: center;
     text-transform: lowercase;
     width: 100%;
   }
 
-  button:disabled {
+  .main-menu-button.main-menu-button--active:enabled {
+    border-color: gray;
+  }
+
+  .main-menu-button:disabled {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  button:enabled {
+  .main-menu-button:enabled {
     color: white;
     cursor: pointer;
   }
 
-  button:enabled:hover {
+  .main-menu-button:enabled:hover {
     border-color: white;
   }
 
-  button:focus {
+  .main-menu-button:focus {
     outline: none;
   }
 `;
 
 export class MainMenuButtonDOMElementView extends DOMElementView<UserSettings> {
   static get observedAttributes() {
-    return ["disabled"];
+    return ["active", "disabled"];
   }
 
   public css: string = css;
 
+  private _isActive: boolean = false;
   private _isDisabled: boolean = false;
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     super.attributeChangedCallback(name, oldValue, newValue);
 
     this.needsRender = true;
-    this._isDisabled = "string" === typeof newValue;
+
+    switch (name) {
+      case "active":
+        this._isActive = "true" === newValue;
+        break;
+      case "disabled":
+        this._isDisabled = "true" === newValue;
+        break;
+    }
   }
 
   render() {
     return (
-      <button disabled={this._isDisabled}>
+      <button
+        class={classnames("main-menu-button", {
+          "main-menu-button--active": this._isActive,
+        })}
+        disabled={this._isDisabled}
+      >
         <slot />
       </button>
     );

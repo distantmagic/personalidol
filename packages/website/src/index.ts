@@ -22,6 +22,7 @@ import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreate
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
 import { KeyboardObserver } from "@personalidol/framework/src/KeyboardObserver";
+import { LanguageUserSettingsManager } from "@personalidol/personalidol/src/LanguageUserSettingsManager";
 import { LocalStorageUserSettingsSync } from "@personalidol/framework/src/LocalStorageUserSettingsSync";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
@@ -45,6 +46,7 @@ import { WorkerService } from "@personalidol/framework/src/WorkerService";
 // version across modules (which is ok).
 import type { i18n as DOMi18n } from "@personalidol/dom-renderer/node_modules/i18next/index";
 import type { i18n as Frameworki18n } from "@personalidol/framework/node_modules/i18next/index";
+import type { i18n as PersonalIdoli18n } from "@personalidol/personalidol/node_modules/i18next/index";
 
 import { init_i18next } from "./init_i18next";
 import workers from "./workers.json";
@@ -150,6 +152,15 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   preloader.preloadables.add(internationalizationService);
   serviceManager.services.add(internationalizationService);
+
+  // Listen to user settings to adjust the language.
+
+  const languageUserSettingsManager = LanguageUserSettingsManager(userSettings, i18next as PersonalIdoli18n);
+
+  preloader.preloadables.add(languageUserSettingsManager);
+  mainLoop.updatables.add(languageUserSettingsManager);
+
+  await preloader.wait();
 
   // Progress worker is used to gather information about assets and other
   // resources currently being loaded. It passess the summary information back,

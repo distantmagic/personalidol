@@ -52,6 +52,7 @@ export function UIStateController(
   const _domMessageRouter = createRouter({
     currentMap: _onCurrentMapMessage,
     isInGameMenuOpened: _onIsInGameMenuOpenedMessage,
+    isLanguageSettingsScreenOpened: _onIsLanguageSettingsScreenOpened,
     isScenePaused: _onIsScenePausedMessage,
     isUserSettingsScreenOpened: _onIsUserSettingsScreenOpenedMessage,
   });
@@ -63,6 +64,7 @@ export function UIStateController(
   let _uiStateCurrentMap: null | string = uiState.currentMap;
 
   let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu");
+  let _languageSettingsScreenHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-language-settings");
   let _userSettingsScreenHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-user-settings");
 
   function start() {
@@ -75,6 +77,7 @@ export function UIStateController(
 
   function update(delta: number, elapsedTime: number): void {
     _inGameMenuHandle.enable(uiState.isInGameMenuOpened);
+    _languageSettingsScreenHandle.enable(uiState.isLanguageSettingsScreenOpened);
     _userSettingsScreenHandle.enable(uiState.isUserSettingsScreenOpened);
 
     if (directorState.isTransitioning) {
@@ -113,6 +116,10 @@ export function UIStateController(
 
   function _onIsInGameMenuOpenedMessage(isInGameMenuOpened: boolean): void {
     uiState.isInGameMenuOpened = isInGameMenuOpened;
+  }
+
+  function _onIsLanguageSettingsScreenOpened(isLanguageSettingsScreenOpened: boolean): void {
+    uiState.isLanguageSettingsScreenOpened = isLanguageSettingsScreenOpened;
   }
 
   function _onIsUserSettingsScreenOpenedMessage(isUserSettingsScreenOpened: boolean): void {

@@ -169,7 +169,8 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     }
 
     if (mainLoop.updatables.has(target)) {
-      // Element may remove itself from the update loop.
+      // Element may remove itself from the update loop, so it's fine if it is
+      // no longer in the main loop.
       mainLoop.updatables.delete(target);
     }
 

@@ -5,13 +5,17 @@ import { DOMZIndex } from "./DOMZIndex.enum";
 import { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
+import { LanguageSettingsDOMElementView } from "./LanguageSettingsDOMElementView";
 import { LoadingScreenDOMElementView } from "./LoadingScreenDOMElementView";
 import { MainMenuButtonDOMElementView } from "./MainMenuButtonDOMElementView";
 import { MainMenuDOMElementView } from "./MainMenuDOMElementView";
+import { MainMenuLanguageButtonDOMElementView } from "./MainMenuLanguageButtonDOMElementView";
 import { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementView";
+import { MainMenuUserSettingsButtonDOMElementView } from "./MainMenuUserSettingsButtonDOMElementView";
 import { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
 import { ReloadButtonDOMElementView } from "./ReloadButtonDOMElementView";
+import { SettingsBackdropDOMElementView } from "./SettingsBackdropDOMElementView";
 import { SliderDOMElementView } from "./SliderDOMElementView";
 import { UserSettingsDOMElementView } from "./UserSettingsDOMElementView";
 
@@ -26,13 +30,17 @@ export const domElementsLookup: DOMElementsLookup = {
   "pi-fatal-error": FatalErrorDOMElementView,
   "pi-in-game-menu": InGameMenuDOMElementView,
   "pi-in-game-menu-trigger": InGameMenuTriggerDOMElementView,
+  "pi-language-settings": LanguageSettingsDOMElementView,
   "pi-loading-screen": LoadingScreenDOMElementView,
   "pi-main-menu": MainMenuDOMElementView,
   "pi-main-menu-button": MainMenuButtonDOMElementView,
+  "pi-main-menu-language-button": MainMenuLanguageButtonDOMElementView,
   "pi-main-menu-layout": MainMenuLayoutDOMElementView,
+  "pi-main-menu-user-settings-button": MainMenuUserSettingsButtonDOMElementView,
   "pi-mouse-pointer-layer": MousePointerLayerDOMElementView,
   "pi-object-label": ObjectLabelDOMElementView,
   "pi-reload-button": ReloadButtonDOMElementView,
+  "pi-settings-backdrop": SettingsBackdropDOMElementView,
   "pi-slider": SliderDOMElementView,
   "pi-user-settings": UserSettingsDOMElementView,
 };

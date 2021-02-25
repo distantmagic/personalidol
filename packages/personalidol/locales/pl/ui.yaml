@@ -5,6 +5,7 @@ you_shall_not_be_judged: Nie będziesz osądzony
 menu_continue: Kontynuuj
 menu_credits: Autorzy
 menu_exit: Wyjdź z gry
+menu_language: Język
 menu_load_game: Wczytaj grę
 menu_new_game: Nowa gra
 menu_options: Opcje
@@ -39,6 +40,7 @@ trigger_menu: Menu
 user_settings_done: Wyjdź
 user_settings_experimental: Eksperymentalne
 user_settings_graphics: Grafika
+user_settings_language: Język
 user_settings_label_high: wysoka
 user_settings_label_low: niska
 user_settings_label_off: wyłączone

@@ -10,7 +10,6 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
     super();
 
     this.onButtonNewGameClick = this.onButtonNewGameClick.bind(this);
-    this.onButtonUserSettingsClick = this.onButtonUserSettingsClick.bind(this);
   }
 
   onButtonNewGameClick(evt: MouseEvent) {
@@ -23,23 +22,14 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
     this.uiMessagePort.postMessage(message);
   }
 
-  onButtonUserSettingsClick(evt: MouseEvent) {
-    evt.preventDefault();
-
-    const message: MessageUIStateChange = {
-      isUserSettingsScreenOpened: true,
-    };
-
-    this.uiMessagePort.postMessage(message);
-  }
-
   render() {
     return (
       <pi-main-menu-layout>
         <pi-main-menu-button disabled>{this.i18next.t("ui:menu_continue")}</pi-main-menu-button>
         <pi-main-menu-button onClick={this.onButtonNewGameClick}>{this.i18next.t("ui:menu_new_game")}</pi-main-menu-button>
         <pi-main-menu-button disabled>{this.i18next.t("ui:menu_load_game")}</pi-main-menu-button>
-        <pi-main-menu-button onClick={this.onButtonUserSettingsClick}>{this.i18next.t("ui:menu_options")}</pi-main-menu-button>
+        <pi-main-menu-user-settings-button />
+        <pi-main-menu-language-button />
         <pi-main-menu-button disabled>{this.i18next.t("ui:menu_credits")}</pi-main-menu-button>
       </pi-main-menu-layout>
     );

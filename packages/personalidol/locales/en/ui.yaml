@@ -5,6 +5,7 @@ you_shall_not_be_judged: You Shall Not Be Judged
 menu_continue: Continue
 menu_credits: Credits
 menu_exit: Exit
+menu_language: Language
 menu_load_game: Load Game
 menu_new_game: New Game
 menu_options: Options
@@ -30,6 +31,7 @@ trigger_menu: Menu
 user_settings_done: Done
 user_settings_experimental: Experimental
 user_settings_graphics: Graphics
+user_settings_language: Language
 user_settings_label_high: high
 user_settings_label_low: low
 user_settings_label_off: "off"
@@ -46,9 +48,9 @@ user_settings_shadow_map_size_description: >
   usage.
 user_settings_show_rendering_stats: Show Rendering Stats
 user_settings_show_rendering_stats_description: >
-  Primarily used for debugging, but you can check your actual framerate and
-  memory usage if you want to fine-tune your settings and you know what you are
-  doing.
+  Primarily used by game developers, but you can check your actual framerate
+  and memory usage if you want to fine-tune your settings and you know what you
+  are doing.
 user_settings_use_multiple_light_sources: Use Multiple Light Sources
 user_settings_use_multiple_light_sources_description: >
   Can greatly affect performance. If you disable multiple light sources,
@@ -58,9 +60,8 @@ user_settings_use_offscreen_canvas: Use Offscreen Canvas
 user_settings_use_offscreen_canvas_description: >
   This one is tricky. On faster devices it provides even better and snappier
   experience but on slower devices it can degrade the overall performance and
-  introduce some graphical glitches. To sum it up, faster devices benefit even
-  more, slower devices are beaten up even more. Overall you can safely turn
-  this on and see if it makes a difference for you.
+  introduce some graphical glitches. Overall you can safely turn this on and
+  see if it makes a difference for you.
 user_settings_use_shadows: Use Shadows
 user_settings_use_shadows_description: >
   If you are not using multiple light sources you can disable this option as
