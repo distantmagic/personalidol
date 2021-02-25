@@ -74,7 +74,8 @@ const _css = `
     font-family: "Almendra", sans-serif;
     line-height: 1;
     margin: 0;
-    text-align: center;
+    padding-left: 1.6rem;
+    text-align: left;
   }
 
   h1 {

@@ -16,17 +16,18 @@ const _css = `
 
   svg {
     height: 1.6rem;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 1.86rem;
   }
 
   div {
-    align-items: center;
-    display: flex;
-    justify-content: center;
+    position: relative;
   }
 
   span {
-    margin-left: 0.5ch;
   }
 `;
 

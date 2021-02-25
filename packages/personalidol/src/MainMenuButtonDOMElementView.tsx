@@ -17,15 +17,13 @@ export const css = `
   .main-menu-button {
     background-color: transparent;
     border: 1px solid transparent;
-    font-family: "Mukta", sans-serif;
-    font-size: 1.4rem;
-    font-variant: small-caps;
-    font-weight: 300;
+    font-family: "Mukta";
+    font-size: 1rem;
+    font-weight: 400;
     line-height: 1;
     padding: 0.8rem 1.6rem;
     position: relative;
-    text-align: center;
-    text-transform: lowercase;
+    text-align: left;
     width: 100%;
   }
 

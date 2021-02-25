@@ -25,6 +25,10 @@ artifacts:
     - lib/worker_quakemaps.js.map
     - lib/worker_textures.js
     - lib/worker_textures.js.map
+    - locales/en/characters.yaml
+    - locales/en/ui.yaml
+    - locales/pl/characters.yaml
+    - locales/pl/ui.yaml
     - manifest.json
     - service_worker.js
     - service_worker.js.map
