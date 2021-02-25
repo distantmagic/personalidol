@@ -360,7 +360,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
       const atlasService = AtlasService(atlasCanvas, atlasCanvasContext2D, atlasToProgressMessageChannel.port2, atlasToTextureMessageChannel.port2);
 
-      mainLoop.updatables.add(atlasService);
       serviceManager.services.add(atlasService);
 
       return atlasService.registerMessagePort;

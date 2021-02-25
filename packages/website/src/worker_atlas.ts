@@ -4,16 +4,9 @@ import Loglevel from "loglevel";
 
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { MainLoop } from "@personalidol/framework/src/MainLoop";
-import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
-import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
-import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
-import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 
 import type { AtlasService as IAtlasService } from "@personalidol/texture-loader/src/AtlasService.interface";
-import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
-import type { ServiceManager as IServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -21,10 +14,8 @@ let _atlasService: null | IAtlasService = null;
 let _canvas: null | OffscreenCanvas = null;
 let _context2d: null | OffscreenCanvasRenderingContext2D = null;
 let _isBootstrapped: boolean = false;
-let _mainLoop: null | IMainLoop = null;
 let _notifiedReady: boolean = false;
 let _progressMessagePort: null | MessagePort = null;
-let _serviceManager: null | IServiceManager = null;
 let _shouldNotifyReady: boolean = false;
 let _statsMessagePort: null | MessagePort = null;
 let _texturesMessagePort: null | MessagePort = null;
@@ -43,25 +34,7 @@ function _safeStartService() {
     throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
 
-  const mainLoopStatsHook = MainLoopStatsHook();
-
-  _mainLoop = MainLoop(logger, mainLoopStatsHook, RequestAnimationFrameScheduler());
-  _serviceManager = ServiceManager(logger);
-
-  _mainLoop.updatables.add(_serviceManager);
-
   _atlasService = AtlasService(_canvas, _context2d, _progressMessagePort, _texturesMessagePort);
-
-  const statsReporter = StatsReporter(self.name, _statsMessagePort);
-
-  statsReporter.hooks.add(mainLoopStatsHook);
-
-  _mainLoop.updatables.add(_atlasService);
-  _mainLoop.updatables.add(statsReporter);
-
-  _serviceManager.services.add(_atlasService);
-  _serviceManager.services.add(statsReporter);
-
   _isBootstrapped = true;
 
   if (_shouldNotifyReady) {
@@ -146,20 +119,18 @@ self.onmessage = createRouter({
   },
 
   start(): void {
-    if (null === _mainLoop || null === _serviceManager) {
-      throw new Error("MainLoop and ServiceManager are not ready.");
+    if (null === _atlasService) {
+      throw new Error("AtlasService is not ready.");
     }
 
-    _mainLoop.start();
-    _serviceManager.start();
+    _atlasService.start();
   },
 
   stop(): void {
-    if (null === _mainLoop || null === _serviceManager) {
-      throw new Error("MainLoop and ServiceManager are not ready.");
+    if (null === _atlasService) {
+      throw new Error("AtlasService is not ready.");
     }
 
-    _mainLoop.stop();
-    _serviceManager.stop();
+    _atlasService.stop();
   },
 });

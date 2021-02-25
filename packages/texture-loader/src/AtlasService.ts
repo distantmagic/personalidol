@@ -39,25 +39,11 @@ type CreateAtlasTextureRequest = RPCMessage & {
   textureUrls: ReadonlyArray<string>;
 };
 
-const _atlasQueue: Array<AtlasQueueItem> = [];
+const _pendingRequests: Set<AtlasQueueItem> = new Set();
 const _emptyTransferables: [] = [];
 const _loadingCache: ReusedResponsesCache = createReusedResponsesCache();
 const _loadingUsage: ReusedResponsesUsage = createReusedResponsesUsage();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
-
-const _messagesRouter = {
-  createTextureAtlas(messagePort: MessagePort, { textureUrls, rpc }: CreateAtlasTextureRequest): void {
-    if (textureUrls.length < 1) {
-      throw new Error("Can't create texture atlas from 0 textures.");
-    }
-
-    _atlasQueue.push({
-      messagePort: messagePort,
-      rpc: rpc,
-      textureUrls: textureUrls,
-    });
-  },
-};
 
 const _texturesMessageRouter = createRouter({
   imageBitmap: handleRPCResponse<ImageBitmapResponse, void>(_rpcLookupTable, _onImageBitmap),
@@ -127,6 +113,31 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
     needsUpdates: true,
   });
 
+  const _messagesRouter = {
+    createTextureAtlas(messagePort: MessagePort, { textureUrls, rpc }: CreateAtlasTextureRequest): void {
+      if (textureUrls.length < 1) {
+        throw new Error("Can't create texture atlas from 0 textures.");
+      }
+
+      _pendingRequests.add({
+        messagePort: messagePort,
+        rpc: rpc,
+        textureUrls: textureUrls,
+      });
+
+      _processAtlasQueue();
+    },
+  };
+
+  function _processAtlasQueue() {
+    for (let request of _pendingRequests) {
+      _pendingRequests.delete(request);
+      console.log("ATLAS_PROCESS", request);
+      _processAtlasRequest(request);
+      break;
+    }
+  }
+
   function registerMessagePort(messagePort: MessagePort) {
     attachMultiRouter(messagePort, _messagesRouter);
   }
@@ -137,22 +148,6 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
 
   function stop() {
     texturesMessagePort.onmessage = null;
-  }
-
-  function update() {
-    if (_atlasQueue.length < 1) {
-      return;
-    }
-
-    do {
-      const request = _atlasQueue.shift();
-
-      if (!request) {
-        throw new Error("Unexpected empty processing request in the atlas queue.");
-      }
-
-      _processAtlasQueue(request);
-    } while (_atlasQueue.length > 0);
   }
 
   /**
@@ -250,7 +245,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
     };
   }
 
-  async function _processAtlasQueue(request: AtlasQueueItem): Promise<void> {
+  async function _processAtlasRequest(request: AtlasQueueItem): Promise<void> {
     const requestKey = _keyFromAtlasQueueItem(request);
 
     // prettier-ignore
@@ -274,6 +269,8 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
       },
       isLast ? [imageData.data.buffer] : _emptyTransferables
     );
+
+    _processAtlasQueue();
   }
 
   function _requestTexture(textureUrl: string): Promise<ImageBitmap | ImageData> {
@@ -288,6 +285,5 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
     registerMessagePort: registerMessagePort,
     start: start,
     stop: stop,
-    update: update,
   });
 }
