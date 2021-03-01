@@ -1,5 +1,5 @@
-let _isTested: boolean = false;
 let _isSupported: boolean = false;
+let _isTested: boolean = false;
 
 function _test(): boolean {
   if (!globalThis.HTMLCanvasElement) {

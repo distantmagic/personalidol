@@ -1,5 +1,5 @@
+let _isSupported: boolean = false;
 let _isTested: boolean = false;
-let _isConstructableCSSStyleSheetSupported: boolean = false;
 
 function _test(): boolean {
   if (!ShadowRoot.prototype.hasOwnProperty("adoptedStyleSheets")) {
@@ -26,11 +26,11 @@ function _test(): boolean {
 
 export function isConstructableCSSStyleSheetSupported(): boolean {
   if (_isTested) {
-    return _isConstructableCSSStyleSheetSupported;
+    return _isSupported;
   }
 
-  _isConstructableCSSStyleSheetSupported = _test();
+  _isSupported = _test();
   _isTested = true;
 
-  return _isConstructableCSSStyleSheetSupported;
+  return _isSupported;
 }

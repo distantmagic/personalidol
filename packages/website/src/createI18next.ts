@@ -7,7 +7,7 @@ import YAML from "js-yaml";
 
 import type { i18n } from "i18next";
 
-export function init_i18next(): i18n {
+export function createI18next(): i18n {
   i18next
     .use(ChainedBackend)
     .use(intervalPlural)

@@ -1,14 +1,11 @@
-import { _getSetCache } from "./_getSetCache";
-
-import type { SupportCache } from "./SupportCache.type";
-
-export const CACHE_KEY = Symbol("createImageBitmap");
+let _isSupported: boolean = false;
+let _isTested: boolean = false;
 
 /**
  * Check if the js enviroment is capable of decoding one pixel GIF and use
  * `createImageBitmap` with additional options.
  */
-async function _check(): Promise<boolean> {
+async function _test(): Promise<boolean> {
   if ("function" !== typeof globalThis.createImageBitmap) {
     return false;
   }
@@ -55,6 +52,13 @@ function _onImageBitmapError(err: Error): boolean {
   throw err;
 }
 
-export function isCreateImageBitmapSupported(supportCache: SupportCache): Promise<boolean> {
-  return _getSetCache(supportCache, CACHE_KEY, _check);
+export async function isCreateImageBitmapSupported(): Promise<boolean> {
+  if (_isTested) {
+    return _isSupported;
+  }
+
+  _isSupported = await _test();
+  _isTested = true;
+
+  return _isSupported;
 }

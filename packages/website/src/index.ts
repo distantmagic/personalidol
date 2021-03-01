@@ -1,24 +1,17 @@
 import Loglevel from "loglevel";
 
-import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { createMultiThreadMessageChannel } from "@personalidol/framework/src/createMultiThreadMessageChannel";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
-import { createSupportCache } from "@personalidol/support/src/createSupportCache";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
-import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
-import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
 import { Input } from "@personalidol/framework/src/Input";
-import { InputIndices } from "@personalidol/framework/src/InputIndices.enum";
 import { InputStatsHook } from "@personalidol/framework/src/InputStatsHook";
 import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
-import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
-import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
 import { KeyboardObserver } from "@personalidol/framework/src/KeyboardObserver";
@@ -48,12 +41,15 @@ import type { i18n as DOMi18n } from "@personalidol/dom-renderer/node_modules/i1
 import type { i18n as Frameworki18n } from "@personalidol/framework/node_modules/i18next/index";
 import type { i18n as PersonalIdoli18n } from "@personalidol/personalidol/node_modules/i18next/index";
 
-import { init_i18next } from "./init_i18next";
 import workers from "./workers.json";
+import { createAtlasService } from "./createAtlasService";
+import { createI18next } from "./createI18next";
+import { createRenderingService } from "./createRenderingService";
+import { createTexturesService } from "./createTexturesService";
 
 const THREAD_DEBUG_NAME: string = "main_thread";
 const canvas = getHTMLElementById(window.document, "canvas");
-const totalLoadingSteps: number = 10;
+const totalLoadingSteps: number = 11;
 let currentLoadingStep: number = 1;
 
 if (!(canvas instanceof HTMLCanvasElement)) {
@@ -62,7 +58,6 @@ if (!(canvas instanceof HTMLCanvasElement)) {
 
 const devicePixelRatio = window.devicePixelRatio;
 const logger = Loglevel.getLogger(THREAD_DEBUG_NAME);
-const supportCache = createSupportCache();
 
 logger.setLevel(__LOG_LEVEL);
 
@@ -89,7 +84,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
 
-  const useSharedBuffers = await isSharedArrayBufferSupported(supportCache);
+  const useSharedBuffers = isSharedArrayBufferSupported();
   const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
   const inputState = Input.createEmptyState(useSharedBuffers);
   const inputStatsHook = InputStatsHook(inputState);
@@ -212,7 +207,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   // Preload translations and the internationalization service.
 
-  const i18next = init_i18next();
+  const i18next = createI18next();
   const internationalizationService = InternationalizationService(i18next as Frameworki18n, progressMessageChannel.port1);
   const internationalizationMessageChannel = createMultiThreadMessageChannel();
 
@@ -306,167 +301,56 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // If it's not supported, then we have to use the main thread to
   // generate textures and potentially send them into other workers.
 
-  const textureCanvas = document.createElement("canvas");
-  const textureCanvasContext2D = textureCanvas.getContext("2d");
-
-  if (null === textureCanvasContext2D) {
-    throw new Error("Unable to get detached canvas 2D context.");
-  }
-
   const texturesMessageChannel = createMultiThreadMessageChannel();
   const texturesToProgressMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(texturesToProgressMessageChannel.port1, false);
 
-  const addTextureMessagePort = await (async function () {
-    if (await isCreateImageBitmapSupported(supportCache)) {
-      logger.info("SUPPORTED(createImageBitmap) // offload texture service to a worker thread");
+  const texturesService = await createTexturesService(logger, mainLoop, serviceManager, texturesToProgressMessageChannel.port2);
 
-      const texturesWorker = new Worker(`${__STATIC_BASE_PATH}${workers.textures.url}?${__CACHE_BUST}`, {
-        credentials: "same-origin",
-        name: workers.textures.name,
-        type: "module",
-      });
+  texturesService.registerMessagePort(texturesMessageChannel.port1);
 
-      const texturesWorkerService = WorkerService(texturesWorker, workers.textures.name);
-      await texturesWorkerService.ready();
-
-      uiRoot.dispatchEvent(
-        new CustomEvent("loading", {
-          detail: {
-            comment: "ui:loading_atlas_service",
-            step: currentLoadingStep++,
-            totalSteps: totalLoadingSteps,
-          },
-        })
-      );
-
-      texturesWorker.postMessage(
-        {
-          progressMessagePort: texturesToProgressMessageChannel.port2,
-        },
-        [texturesToProgressMessageChannel.port2]
-      );
-
-      return function (messagePort: MessagePort) {
-        texturesWorker.postMessage(
-          {
-            texturesMessagePort: messagePort,
-          },
-          [messagePort]
-        );
-      };
-    } else {
-      logger.info("NO_SUPPORT(createImageBitmap) // starting texture service in the main thread");
-
-      const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D, texturesToProgressMessageChannel.port2);
-
-      uiRoot.dispatchEvent(
-        new CustomEvent("loading", {
-          detail: {
-            comment: "ui:loading_atlas_service",
-            step: currentLoadingStep++,
-            totalSteps: totalLoadingSteps,
-          },
-        })
-      );
-
-      mainLoop.updatables.add(textureService);
-      serviceManager.services.add(textureService);
-
-      return textureService.registerMessagePort;
-    }
-  })();
-
-  addTextureMessagePort(texturesMessageChannel.port1);
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_atlas_service",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
 
   // Atlas canvas is used to speed up texture atlas creation.
 
-  const atlasCanvas = document.createElement("canvas");
   const atlasMessageChannel = createMultiThreadMessageChannel();
   const atlasToTextureMessageChannel = createMultiThreadMessageChannel();
   const atlasToProgressMessageChannel = createMultiThreadMessageChannel();
   const atlasToStatsMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(atlasToProgressMessageChannel.port1, false);
-  addTextureMessagePort(atlasToTextureMessageChannel.port1);
+  texturesService.registerMessagePort(atlasToTextureMessageChannel.port1);
   statsCollector.registerMessagePort(atlasToStatsMessageChannel.port1);
 
-  const addAtlasMessagePort = await (async function () {
-    // "userSettings.useOffscreenCanvas" does not relate to the atlas canvas,
-    // because it's a utility worker, not the primary rendering thread.
-    if (isCanvasTransferControlToOffscreenSupported()) {
-      logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad atlas service to a worker thread");
+  const atlasService = await createAtlasService(
+    logger,
+    mainLoop,
+    serviceManager,
+    atlasToProgressMessageChannel.port2,
+    atlasToStatsMessageChannel.port2,
+    atlasToTextureMessageChannel.port2
+  );
 
-      const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
-      const atlasWorker = new Worker(`${__STATIC_BASE_PATH}${workers.atlas.url}?${__CACHE_BUST}`, {
-        credentials: "same-origin",
-        name: workers.atlas.name,
-        type: "module",
-      });
+  atlasService.registerMessagePort(atlasMessageChannel.port1);
 
-      atlasWorker.postMessage(
-        {
-          atlasCanvas: offscreenAtlas,
-          progressMessagePort: atlasToProgressMessageChannel.port2,
-          statsMessagePort: atlasToStatsMessageChannel.port2,
-          texturesMessagePort: atlasToTextureMessageChannel.port2,
-        },
-        [atlasToProgressMessageChannel.port2, atlasToStatsMessageChannel.port2, atlasToTextureMessageChannel.port2, offscreenAtlas]
-      );
-
-      const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
-      await atlasWorkerService.ready();
-
-      uiRoot.dispatchEvent(
-        new CustomEvent("loading", {
-          detail: {
-            comment: "ui:loading_maps_service",
-            step: currentLoadingStep++,
-            totalSteps: totalLoadingSteps,
-          },
-        })
-      );
-
-      mainLoop.updatables.add(atlasWorkerService);
-      serviceManager.services.add(atlasWorkerService);
-
-      return function (messagePort: MessagePort) {
-        atlasWorker.postMessage(
-          {
-            atlasMessagePort: messagePort,
-          },
-          [messagePort]
-        );
-      };
-    } else {
-      logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
-
-      const atlasCanvasContext2D = atlasCanvas.getContext("2d");
-
-      if (null === atlasCanvasContext2D) {
-        throw new Error("Unable to get atlas canvas 2D context.");
-      }
-
-      const atlasService = AtlasService(atlasCanvas, atlasCanvasContext2D, atlasToProgressMessageChannel.port2, atlasToTextureMessageChannel.port2);
-
-      uiRoot.dispatchEvent(
-        new CustomEvent("loading", {
-          detail: {
-            comment: "ui:loading_maps_service",
-            step: currentLoadingStep++,
-            totalSteps: totalLoadingSteps,
-          },
-        })
-      );
-
-      serviceManager.services.add(atlasService);
-
-      return atlasService.registerMessagePort;
-    }
-  })();
-
-  addAtlasMessagePort(atlasMessageChannel.port1);
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_maps_service",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
 
   // Workers can share a message channel if necessary. If there is no offscreen
   // worker then the message channel can be used in the main thread. It is an
@@ -523,16 +407,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const md2WorkerService = WorkerService(md2Worker, workers.md2.name);
   await md2WorkerService.ready();
 
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        comment: "ui:loading_renderer_service",
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-      },
-    })
-  );
-
   md2Worker.postMessage(
     {
       md2MessagePort: md2MessageChannel.port1,
@@ -545,186 +419,53 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   await preloader.wait();
 
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_rendering_service",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+      },
+    })
+  );
+
   // If browser supports the offscreen canvas, then we can offload everything
   // there. If not, then we continue in the main thread.
 
-  if (userSettings.useOffscreenCanvas && isCanvasTransferControlToOffscreenSupported()) {
-    logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad 3D canvas to a worker thread");
+  const createScenes = await createRenderingService(
+    logger,
+    mainLoop,
+    serviceManager,
+    canvas,
+    devicePixelRatio,
+    domUIController,
+    dimensionsState,
+    eventBus,
+    inputState,
+    statsReporter,
+    THREAD_DEBUG_NAME,
+    userSettings
+  );
 
-    const offscreenWorker = new Worker(`${__STATIC_BASE_PATH}${workers.offscreen.url}?${__CACHE_BUST}`, {
-      credentials: "same-origin",
-      name: workers.offscreen.name,
-      type: "module",
-    });
-
-    const offscreenCanvas = canvas.transferControlToOffscreen();
-
-    // SharedArrayBuffer was disabled after Spectre / Meltdown attacks.
-    // After some time it got enabled again, so it's a bit messy.
-    // If it's enabled, then we should use it, otherwise the app will be sending
-    // copy of input / dimensions states every frame to the worker.
-    const offscreenWorkerService = (function () {
-      function sharedArrayBufferNotAvailable() {
-        logger.info("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
-
-        offscreenWorker.postMessage({
-          awaitSharedDimensions: false,
-        });
-
-        let _lastNotificationTick = 0;
-        const updateMessage = {
-          dimensionsState: dimensionsState,
-          inputState: inputState,
-        };
-
-        return WorkerService(offscreenWorker, workers.offscreen.name, function () {
-          // prettier-ignore
-          if ( _lastNotificationTick < dimensionsState[DimensionsIndices.LAST_UPDATE]
-            || _lastNotificationTick < inputState[InputIndices.LAST_UPDATE]
-          ) {
-            offscreenWorker.postMessage(updateMessage);
-            _lastNotificationTick = mainLoop.tickTimerState.currentTick;
-          }
-        });
-      }
-
-      if (useSharedBuffers) {
-        try {
-          offscreenWorker.postMessage({
-            awaitSharedDimensions: true,
-            sharedDimensionsState: dimensionsState.buffer,
-            sharedInputState: inputState.buffer,
-          });
-        } catch (err) {
-          // In some cases, `postMessage` will throw when trying to send
-          // SharedArrayBuffer to a worker. In that case we can fallback to
-          // the copy / update strategy.
-          return sharedArrayBufferNotAvailable();
-        }
-
-        logger.info("SUPPORTED(SharedArrayBuffer) // sharing dimensions/input memory array between threads");
-
-        return WorkerService(offscreenWorker, workers.offscreen.name);
-      } else {
-        return sharedArrayBufferNotAvailable();
-      }
-    })();
-
-    const domRendererMessageChannel = createMultiThreadMessageChannel();
-
-    domUIController.registerMessagePort(domRendererMessageChannel.port1);
-
-    // prettier-ignore
-    offscreenWorker.postMessage(
-      {
-        canvas: offscreenCanvas,
-        devicePixelRatio: devicePixelRatio,
-        domMessagePort: domRendererMessageChannel.port2,
-        fontPreloadMessagePort: fontPreloadMessageChannel.port2,
-        internationalizationMessagePort: internationalizationMessageChannel.port2,
-        md2MessagePort: md2MessageChannel.port2,
-        progressMessagePort: progressMessageChannel.port2,
-        quakeMapsMessagePort: quakeMapsMessageChannel.port2,
-        statsMessagePort: statsMessageChannel.port2,
-        texturesMessagePort: texturesMessageChannel.port2,
-        uiMessagePort: uiMessageChannel.port2,
-        userSettingsMessagePort: userSettingsMessageChannel.port2,
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        comment: "ui:loading_scenes",
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
       },
-      [
-        domRendererMessageChannel.port2,
-        fontPreloadMessageChannel.port2,
-        internationalizationMessageChannel.port2,
-        md2MessageChannel.port2,
-        offscreenCanvas,
-        statsMessageChannel.port2,
-        progressMessageChannel.port2,
-        quakeMapsMessageChannel.port2,
-        texturesMessageChannel.port2,
-        uiMessageChannel.port2,
-        userSettingsMessageChannel.port2,
-      ]
-    );
+    })
+  );
 
-    const offscreenWorkerZoomRequestMessage = {
-      pointerZoomRequest: 0,
-    };
-
-    eventBus.POINTER_ZOOM_REQUEST.add(function (zoomAmount: number): void {
-      offscreenWorkerZoomRequestMessage.pointerZoomRequest = zoomAmount;
-      offscreenWorker.postMessage(offscreenWorkerZoomRequestMessage);
-    });
-
-    await offscreenWorkerService.ready();
-
-    uiRoot.dispatchEvent(
-      new CustomEvent("loading", {
-        detail: {
-          comment: "ui:loading_scenes",
-          step: currentLoadingStep++,
-          totalSteps: totalLoadingSteps,
-        },
-      })
-    );
-
-    mainLoop.updatables.add(offscreenWorkerService);
-    serviceManager.services.add(offscreenWorkerService);
-  } else {
-    if (isCanvasTransferControlToOffscreenSupported()) {
-      logger.info("DISABLED(SUPPORTED(canvas.transferControlToOffscreen)) // starting 3D canvas in the main thread");
-    } else {
-      logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
-    }
-
-    /**
-     * This extra var is a hack to make esbuild leave the dynamic import as-is.
-     * @see https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
-     * @see https://github.com/evanw/esbuild/issues/113
-     */
-    const _dynamicImport = `${__STATIC_BASE_PATH}/lib/createScenes.js`;
-    const { createScenes } = await (async function () {
-      try {
-        return await import(_dynamicImport);
-      } catch (err) {
-        throw err;
-      }
-    })();
-
-    uiRoot.dispatchEvent(
-      new CustomEvent("loading", {
-        detail: {
-          comment: "ui:loading_scenes",
-          step: currentLoadingStep++,
-          totalSteps: totalLoadingSteps,
-        },
-      })
-    );
-
-    const domRendererMessageChannel = createSingleThreadMessageChannel();
-
-    domUIController.registerMessagePort(domRendererMessageChannel.port1);
-
-    // prettier-ignore
-    createScenes(
-      THREAD_DEBUG_NAME,
-      devicePixelRatio,
-      eventBus,
-      mainLoop,
-      serviceManager,
-      canvas,
-      dimensionsState,
-      inputState,
-      logger,
-      statsReporter,
-      domRendererMessageChannel.port2,
-      fontPreloadMessageChannel.port2,
-      internationalizationMessageChannel.port2,
-      md2MessageChannel.port2,
-      progressMessageChannel.port2,
-      quakeMapsMessageChannel.port2,
-      statsMessageChannel.port2,
-      texturesMessageChannel.port2,
-      uiMessageChannel.port2,
-      userSettingsMessageChannel.port2,
-    );
-  }
+  await createScenes(
+    fontPreloadMessageChannel.port2,
+    internationalizationMessageChannel.port2,
+    md2MessageChannel.port2,
+    progressMessageChannel.port2,
+    quakeMapsMessageChannel.port2,
+    statsMessageChannel.port2,
+    texturesMessageChannel.port2,
+    uiMessageChannel.port2,
+    userSettingsMessageChannel.port2
+  );
 })();

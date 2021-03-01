@@ -17,7 +17,7 @@ loading_dom_controller: DOMController
 loading_maps_service: Maps Service
 loading_md2_service: MD2 Service
 loading_progress_service: Progress Service
-loading_renderer_service: Renderer Service
+loading_rendering_service: Rendering Service
 loading_scenes: Scenes
 loading_service_worker: Service Worker
 loading_textures_service: Textures Service
