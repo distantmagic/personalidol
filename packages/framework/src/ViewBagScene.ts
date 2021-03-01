@@ -1,21 +1,20 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
-import { mount as fMount } from "@personalidol/framework/src/mount";
-import { name } from "@personalidol/framework/src/name";
-import { pause as fPause } from "@personalidol/framework/src/pause";
-import { preload as fPreload } from "@personalidol/framework/src/preload";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
-import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
+import { dispose as fDispose } from "./dispose";
+import { mount as fMount } from "./mount";
+import { name } from "./name";
+import { pause as fPause } from "./pause";
+import { preload as fPreload } from "./preload";
+import { unmount as fUnmount } from "./unmount";
+import { unpause as fUnpause } from "./unpause";
 
 import type { Logger } from "loglevel";
 
-import type { Scene } from "@personalidol/framework/src/Scene.interface";
-import type { SceneState } from "@personalidol/framework/src/SceneState.type";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-
-import type { ViewBagScene as IViewBagScene } from "./ViewBagScene.interface";
+import type { Scene } from "./Scene.interface";
+import type { SceneState } from "./SceneState.type";
+import type { TickTimerState } from "./TickTimerState.type";
 import type { ViewBag as IViewBag } from "./ViewBag.interface";
+import type { ViewBagScene as IViewBagScene } from "./ViewBagScene.interface";
 
 /**
  * This class preloads scene views after the scene itself is fully preloaded

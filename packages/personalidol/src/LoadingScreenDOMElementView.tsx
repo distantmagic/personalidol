@@ -71,7 +71,6 @@ const _css = `
     background-color: #eeeeee;
     color: transparent;
     display: block;
-    transition: width 0.1s ease-in-out;
     will-change: width;
   }
 `;
@@ -114,7 +113,7 @@ export class LoadingScreenDOMElementView extends DOMElementView<UserSettings> {
   }
 
   createComment(comment: ProgressManagerComment) {
-    return this.i18next.t(`ui:resource_type_${comment.resourceType}_count`, {
+    return this.i18next.t(`ui:resource_type_accusative_${comment.resourceType}_count`, {
       count: comment.resourceQuantity,
     });
   }

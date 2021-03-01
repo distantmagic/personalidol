@@ -4,8 +4,8 @@ import { createRouter } from "@personalidol/framework/src/createRouter";
 import { DOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle";
 import { pause } from "@personalidol/framework/src/pause";
 import { unpause } from "@personalidol/framework/src/unpause";
-import { ViewBag } from "@personalidol/loading-manager/src/ViewBag";
-import { ViewBagScene } from "@personalidol/loading-manager/src/ViewBagScene";
+import { ViewBag } from "@personalidol/framework/src/ViewBag";
+import { ViewBagScene } from "@personalidol/framework/src/ViewBagScene";
 
 import { isMainMenuScene } from "./isMainMenuScene";
 import { MainMenuScene } from "./MainMenuScene";
@@ -14,13 +14,13 @@ import { MapScene } from "./MapScene";
 import type { Logger } from "loglevel";
 
 import type { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer.interface";
-import type { DirectorState } from "@personalidol/loading-manager/src/DirectorState.type";
+import type { DirectorState } from "@personalidol/framework/src/DirectorState.type";
 import type { DOMElementViewHandle as IDOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle.interface";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
-import type { ViewBag as IViewBag } from "@personalidol/loading-manager/src/ViewBag.interface";
+import type { ViewBag as IViewBag } from "@personalidol/framework/src/ViewBag.interface";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { UIState } from "./UIState.type";

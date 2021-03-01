@@ -1,15 +1,14 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { dispose } from "@personalidol/framework/src/dispose";
-import { preload } from "@personalidol/framework/src/preload";
+import { dispose } from "./dispose";
+import { preload } from "./preload";
 
 import type { Logger } from "loglevel";
 
-import type { Scene } from "@personalidol/framework/src/Scene.interface";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-
 import type { Director as IDirector } from "./Director.interface";
 import type { DirectorState } from "./DirectorState.type";
+import type { Scene } from "./Scene.interface";
+import type { TickTimerState } from "./TickTimerState.type";
 
 export function Director(logger: Logger, tickTimerState: TickTimerState, debugName: string): IDirector {
   let transitioning: null | Scene = null;

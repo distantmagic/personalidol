@@ -12,31 +12,31 @@ menu_options: Options
 menu_return_to_game: Return to game
 
 loading: Loading
-loading_atlas_service: Atlas Service
-loading_dom_controller: DOMController
-loading_maps_service: Maps Service
-loading_md2_service: MD2 Service
-loading_progress_service: Progress Service
-loading_rendering_service: Rendering Service
-loading_scenes: Scenes
-loading_service_worker: Service Worker
-loading_textures_service: Textures Service
-loading_translations: Translations
+loading_accusative_atlas_service: Atlas Service
+loading_accusative_dom_controller: DOMController
+loading_accusative_maps_service: Maps Service
+loading_accusative_md2_service: MD2 Service
+loading_accusative_progress_service: Progress Service
+loading_accusative_rendering_service: Rendering Service
+loading_accusative_scenes: Scenes
+loading_accusative_service_worker: Service Worker
+loading_accusative_textures_service: Textures Service
+loading_accusative_translations: Translations
 
 reload_button_reload_now: Reload now
 
-resource_type_atlas_count: atlas
-resource_type_atlas_count_plural: "{{count}} atlases"
-resource_type_font_count: font
-resource_type_font_count_plural: "{{count}} fonts"
-resource_type_map_count: map
-resource_type_map_count_plural: "{{count}} maps"
-resource_type_model_count: model
-resource_type_model_count_plural: "{{count}} models"
-resource_type_texture_count: texture
-resource_type_texture_count_plural: "{{count}} textures"
-resource_type_translation_count: translation
-resource_type_translation_count_plural: "{{count}} translations"
+resource_type_accusative_atlas_count: atlas
+resource_type_accusative_atlas_count_plural: "{{count}} atlases"
+resource_type_accusative_font_count: font
+resource_type_accusative_font_count_plural: "{{count}} fonts"
+resource_type_accusative_map_count: map
+resource_type_accusative_map_count_plural: "{{count}} maps"
+resource_type_accusative_model_count: model
+resource_type_accusative_model_count_plural: "{{count}} models"
+resource_type_accusative_texture_count: texture
+resource_type_accusative_texture_count_plural: "{{count}} textures"
+resource_type_accusative_translation_count: translation
+resource_type_accusative_translation_count_plural: "{{count}} translations"
 
 trigger_menu: Menu
 

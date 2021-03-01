@@ -2,7 +2,7 @@ import Loglevel from "loglevel";
 
 import { Director } from "./Director";
 
-import type { Scene } from "@personalidol/framework/src/Scene.interface";
+import type { Scene } from "./Scene.interface";
 
 test("starts and mounts the new scene", function () {
   const logger = Loglevel.getLogger("test");

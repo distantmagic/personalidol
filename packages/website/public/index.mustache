@@ -88,22 +88,32 @@
       </div>
     </div>
     <script>(function () {
-      const _uiPlaceholder = document.getElementById("ui-placeholder");
       const _uiPlaceholderLabel = document.getElementById("ui-placeholder-label");
+
+      _uiPlaceholderLabel.classList.remove("ui-placeholder-label--disabled");
+
+      if (!navigator.serviceWorker) {
+        document.body.style.backgroundColor = "darkred";
+        _uiPlaceholderLabel.textContent = "Error: this app needs to be run under SSL.";
+
+        return;
+      }
+
+      const _script = document.createElement("script");
+
+      _script.setAttribute("src", "/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}");
+      _script.setAttribute("type", "module");
+
+      document.body.appendChild(_script);
+
+      const _uiPlaceholder = document.getElementById("ui-placeholder");
       const _uiRoot = document.getElementById("ui-root");
 
       let _domControllerReady = false;
 
-      _uiPlaceholderLabel.classList.remove("ui-placeholder-label--disabled");
+      _uiPlaceholderLabel.textContent = "Loading game engine ...";
 
-      if (navigator.serviceWorker) {
-        _uiPlaceholderLabel.textContent = "Loading game engine ...";
-      } else {
-        document.body.style.backgroundColor = "darkred";
-        _uiPlaceholderLabel.textContent = "Error: this app needs to be run under SSL.";
-      }
-
-      _uiRoot.addEventListener("loading", function (evt) {
+      function _onLoadingProgress(evt) {
         if (evt.detail.isDOMControllerReady) {
           _domControllerReady = true;
           _uiPlaceholder.classList.remove("ui-placeholder--loading");
@@ -113,9 +123,11 @@
           return;
         }
 
-        _uiPlaceholder.setAttribute("comment", evt.detail.comment);
+        _uiPlaceholder.setAttribute("comment", `ui:loading_accusative_${evt.detail.type}`);
         _uiPlaceholder.setAttribute("progress", evt.detail.step / evt.detail.totalSteps);
-      });
+      }
+
+      _uiRoot.addEventListener("loading", _onLoadingProgress);
     }());</script>
     <script src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}" type="module"></script>
   </body>

@@ -1,17 +1,16 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
-import { mount as fMount } from "@personalidol/framework/src/mount";
-import { pause as fPause } from "@personalidol/framework/src/pause";
-import { preload as fPreload } from "@personalidol/framework/src/preload";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
-import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
+import { dispose as fDispose } from "./dispose";
+import { mount as fMount } from "./mount";
+import { pause as fPause } from "./pause";
+import { preload as fPreload } from "./preload";
+import { unmount as fUnmount } from "./unmount";
+import { unpause as fUnpause } from "./unpause";
 
 import type { Logger } from "loglevel";
 
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { View } from "@personalidol/framework/src/View.interface";
-
+import type { TickTimerState } from "./TickTimerState.type";
+import type { View } from "./View.interface";
 import type { ViewBag as IViewBag } from "./ViewBag.interface";
 import type { ViewBagState } from "./ViewBagState.type";
 

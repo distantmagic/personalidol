@@ -1,5 +1,5 @@
-import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
-import type { Scene } from "@personalidol/framework/src/Scene.interface";
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
+import type { Scene } from "./Scene.interface";
 
 export type DirectorState = MainLoopUpdatableState & {
   readonly transitioning: null | Scene;

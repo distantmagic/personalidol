@@ -74,9 +74,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_service_worker",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "service_worker",
       },
     })
   );
@@ -155,9 +155,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_progress_service",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "progress_service",
       },
     })
   );
@@ -181,9 +181,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_translations",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "translations",
       },
     })
   );
@@ -228,9 +228,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_dom_controller",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "dom_controller",
       },
     })
   );
@@ -258,9 +258,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_textures_service",
         isDOMControllerReady: true,
         step: currentLoadingStep++,
+        type: "textures_service",
         totalSteps: totalLoadingSteps,
       },
     })
@@ -313,9 +313,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_atlas_service",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "atlas_service",
       },
     })
   );
@@ -345,9 +345,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_maps_service",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "maps_service",
       },
     })
   );
@@ -373,9 +373,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_md2_service",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "md2_service",
       },
     })
   );
@@ -422,9 +422,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_rendering_service",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "rendering_service",
       },
     })
   );
@@ -450,9 +450,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
       detail: {
-        comment: "ui:loading_scenes",
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
+        type: "scenes",
       },
     })
   );

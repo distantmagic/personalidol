@@ -1,6 +1,6 @@
-import type { Mountable } from "@personalidol/framework/src/Mountable.interface";
-import type { Pauseable } from "@personalidol/framework/src/Pauseable.interface";
-import type { View } from "@personalidol/framework/src/View.interface";
+import type { Mountable } from "./Mountable.interface";
+import type { Pauseable } from "./Pauseable.interface";
+import type { View } from "./View.interface";
 
 import type { PollablePreloadingState } from "./PollablePreloadingState.interface";
 import type { ViewBagState } from "./ViewBagState.type";

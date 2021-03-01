@@ -2,15 +2,15 @@ import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
 import { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer";
 import { CSS2DRendererStatsHook } from "@personalidol/three-renderer/src/CSS2DRendererStatsHook";
-import { Director } from "@personalidol/loading-manager/src/Director";
+import { Director } from "@personalidol/framework/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { RendererDimensionsManager } from "@personalidol/three-renderer/src/RendererDimensionsManager";
-import { SceneTransition } from "@personalidol/loading-manager/src/SceneTransition";
+import { SceneTransition } from "@personalidol/framework/src/SceneTransition";
 import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
-import { ViewBagSceneObserver } from "@personalidol/loading-manager/src/ViewBagSceneObserver";
+import { ViewBagSceneObserver } from "@personalidol/framework/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
 

@@ -1,15 +1,14 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { mount } from "@personalidol/framework/src/mount";
-import { unmount } from "@personalidol/framework/src/unmount";
+import { mount } from "./mount";
+import { unmount } from "./unmount";
 
 import type { Logger } from "loglevel";
-
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { DirectorState } from "./DirectorState.type";
 import type { SceneTransition as ISceneTransition } from "./SceneTransition.interface";
 import type { SceneTransitionState } from "./SceneTransitionState.type";
+import type { TickTimerState } from "./TickTimerState.type";
 
 export function SceneTransition(logger: Logger, sceneDirectorState: DirectorState, loadingScreenDirectorState: DirectorState): ISceneTransition {
   const state: SceneTransitionState = Object.seal({

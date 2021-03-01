@@ -2,10 +2,9 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { isViewBagScene } from "./isViewBagScene";
 
-import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
-import type { Scene } from "@personalidol/framework/src/Scene.interface";
-
 import type { DirectorState } from "./DirectorState.type";
+import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
+import type { Scene } from "./Scene.interface";
 import type { ViewBagScene } from "./ViewBagScene.interface";
 import type { ViewBagSceneObserver as IViewBagSceneObserver } from "./ViewBagSceneObserver.interface";
 
