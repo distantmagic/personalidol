@@ -1,9 +1,9 @@
 import { createMultiThreadMessageChannel } from "@personalidol/framework/src/createMultiThreadMessageChannel";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
-import { InputIndices } from "@personalidol/framework/src/InputIndices.enum";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
+import { PointerIndices } from "@personalidol/framework/src/PointerIndices.enum";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 import workers from "./workers.json";
@@ -27,7 +27,7 @@ export async function createRenderingService(
   domUIController: DOMUIController<DOMElementsLookup, UserSettings>,
   dimensionsState: Uint32Array,
   eventBus: EventBus,
-  inputState: Int32Array,
+  pointerState: Int32Array,
   statsReporter: StatsReporter,
   threadDebugName: string,
   userSettings: UserSettings
@@ -62,13 +62,13 @@ export async function createRenderingService(
         let _lastNotificationTick = 0;
         const updateMessage = {
           dimensionsState: dimensionsState,
-          inputState: inputState,
+          pointerState: pointerState,
         };
 
         return WorkerService(offscreenWorker, workers.offscreen.name, function () {
           // prettier-ignore
           if ( _lastNotificationTick < dimensionsState[DimensionsIndices.LAST_UPDATE]
-            || _lastNotificationTick < inputState[InputIndices.LAST_UPDATE]
+            || _lastNotificationTick < pointerState[PointerIndices.LAST_UPDATE]
           ) {
             offscreenWorker.postMessage(updateMessage);
             _lastNotificationTick = mainLoop.tickTimerState.currentTick;
@@ -81,7 +81,7 @@ export async function createRenderingService(
           offscreenWorker.postMessage({
             awaitSharedDimensions: true,
             sharedDimensionsState: dimensionsState.buffer,
-            sharedInputState: inputState.buffer,
+            sharedPointerState: pointerState.buffer,
           });
         } catch (err) {
           // In some cases, `postMessage` will throw when trying to send
@@ -199,7 +199,7 @@ export async function createRenderingService(
         serviceManager,
         canvas,
         dimensionsState,
-        inputState,
+        pointerState,
         logger,
         statsReporter,
         domRendererMessageChannel.port2,

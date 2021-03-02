@@ -1,10 +1,10 @@
-import { Input } from "./Input";
-import { InputIndices } from "./InputIndices.enum";
+import { Pointer } from "./Pointer";
+import { PointerIndices } from "./PointerIndices.enum";
 
-export function getPrimaryPointerStretchVectorY(inputState: Int32Array): number {
-  if (inputState[InputIndices.M_LAST_USED] > inputState[InputIndices.T_LAST_USED]) {
-    return inputState[InputIndices.M_STRETCH_VECTOR_Y] / Input.vector_scale;
+export function getPrimaryPointerStretchVectorY(pointerState: Int32Array): number {
+  if (pointerState[PointerIndices.M_LAST_USED] > pointerState[PointerIndices.T_LAST_USED]) {
+    return pointerState[PointerIndices.M_STRETCH_VECTOR_Y] / Pointer.vector_scale;
   }
 
-  return inputState[InputIndices.T0_STRETCH_VECTOR_Y] / Input.vector_scale;
+  return pointerState[PointerIndices.T0_STRETCH_VECTOR_Y] / Pointer.vector_scale;
 }

@@ -1,4 +1,4 @@
-export const enum InputIndices {
+export const enum PointerIndices {
   LAST_UPDATE,
 
   // Mouse

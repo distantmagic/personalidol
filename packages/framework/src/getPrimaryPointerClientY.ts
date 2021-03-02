@@ -1,9 +1,9 @@
-import { InputIndices } from "./InputIndices.enum";
+import { PointerIndices } from "./PointerIndices.enum";
 
-export function getPrimaryPointerClientY(inputState: Int32Array): number {
-  if (inputState[InputIndices.M_LAST_USED] > inputState[InputIndices.T_LAST_USED]) {
-    return inputState[InputIndices.M_CLIENT_Y];
+export function getPrimaryPointerClientY(pointerState: Int32Array): number {
+  if (pointerState[PointerIndices.M_LAST_USED] > pointerState[PointerIndices.T_LAST_USED]) {
+    return pointerState[PointerIndices.M_CLIENT_Y];
   }
 
-  return inputState[InputIndices.T0_CLIENT_Y];
+  return pointerState[PointerIndices.T0_CLIENT_Y];
 }

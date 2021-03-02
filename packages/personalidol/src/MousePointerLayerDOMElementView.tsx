@@ -1,7 +1,7 @@
 // import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-// import { InputIndices } from "@personalidol/framework/src/InputIndices.enum";
+// import { PointerIndices } from "@personalidol/framework/src/PointerIndices.enum";
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 
@@ -53,8 +53,8 @@ export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings
     //     <div
     //       id="pointer"
     //       style={{
-    //         "--translate-x": `${this.inputState[InputIndices.M_RELATIVE_X]}px`,
-    //         "--translate-y": `${this.inputState[InputIndices.M_RELATIVE_Y]}px`,
+    //         "--translate-x": `${this.inputState[PointerIndices.M_RELATIVE_X]}px`,
+    //         "--translate-y": `${this.inputState[PointerIndices.M_RELATIVE_Y]}px`,
     //       }}
     //     />
     //   </div>

@@ -9,8 +9,6 @@ import { EventBus } from "@personalidol/framework/src/EventBus";
 import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
-import { Input } from "@personalidol/framework/src/Input";
-import { InputStatsHook } from "@personalidol/framework/src/InputStatsHook";
 import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
@@ -23,6 +21,8 @@ import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
+import { Pointer } from "@personalidol/framework/src/Pointer";
+import { PointerStatsHook } from "@personalidol/framework/src/PointerStatsHook";
 import { preload } from "@personalidol/framework/src/preload";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
@@ -86,8 +86,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const useSharedBuffers = isSharedArrayBufferSupported();
   const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
-  const inputState = Input.createEmptyState(useSharedBuffers);
-  const inputStatsHook = InputStatsHook(inputState);
+  const pointerState = Pointer.createEmptyState(useSharedBuffers);
+  const pointerStatsHook = PointerStatsHook(pointerState);
 
   const eventBus = EventBus();
   const statsReporterMessageChannel = createSingleThreadMessageChannel();
@@ -96,7 +96,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const mainLoop = MainLoop(logger, mainLoopStatsHook, RequestAnimationFrameScheduler());
   const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsReporterMessageChannel.port2);
 
-  statsReporter.hooks.add(inputStatsHook);
+  statsReporter.hooks.add(pointerStatsHook);
   statsReporter.hooks.add(mainLoopStatsHook);
 
   // This is an unofficial Chrome JS extension so it's not typed by default.
@@ -109,9 +109,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
-  const keyboardObserver = KeyboardObserver(canvas, inputState, mainLoop.tickTimerState);
-  const mouseObserver = MouseObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
-  const touchObserver = TouchObserver(canvas, dimensionsState, inputState, mainLoop.tickTimerState);
+  const keyboardObserver = KeyboardObserver(canvas, pointerState, mainLoop.tickTimerState);
+  const mouseObserver = MouseObserver(canvas, dimensionsState, pointerState, mainLoop.tickTimerState);
+  const touchObserver = TouchObserver(canvas, dimensionsState, pointerState, mainLoop.tickTimerState);
 
   const userSettings = UserSettings.createEmptyState(devicePixelRatio);
   const userSettingsMessageChannel = createMultiThreadMessageChannel();
@@ -123,7 +123,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(htmlElementResizeObserver);
   serviceManager.services.add(keyboardObserver);
   serviceManager.services.add(mouseObserver);
-  serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, inputState));
+  serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, pointerState));
   serviceManager.services.add(touchObserver);
   serviceManager.services.add(localStorageUserSettingsSync);
   serviceManager.services.add(multiThreadUserSettingsSync);
@@ -133,7 +133,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   mainLoop.updatables.add(keyboardObserver);
   mainLoop.updatables.add(mouseObserver);
   mainLoop.updatables.add(touchObserver);
-  mainLoop.updatables.add(inputStatsHook);
+  mainLoop.updatables.add(pointerStatsHook);
   mainLoop.updatables.add(localStorageUserSettingsSync);
   mainLoop.updatables.add(multiThreadUserSettingsSync);
   mainLoop.updatables.add(statsReporter);
@@ -242,7 +242,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const domUIController = DOMUIController(
     logger,
     internationalizationService.i18next as DOMi18n,
-    inputState,
+    pointerState,
     mainLoop,
     uiMessageChannel.port1,
     uiRoot,
@@ -436,7 +436,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     domUIController,
     dimensionsState,
     eventBus,
-    inputState,
+    pointerState,
     statsReporter,
     THREAD_DEBUG_NAME,
     userSettings

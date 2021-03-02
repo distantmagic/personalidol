@@ -1,13 +1,10 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-// import { InputIndices } from "./InputIndices.enum";
-// import { passiveEventListener } from "./passiveEventListener";
-
 import type { KeyboardObserver as IKeyboardObserver } from "./KeyboardObserver.interface";
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 
-export function KeyboardObserver(htmlElement: HTMLElement, inputState: Int32Array, tickTimerState: TickTimerState): IKeyboardObserver {
+export function KeyboardObserver(htmlElement: HTMLElement, pointerState: Int32Array, tickTimerState: TickTimerState): IKeyboardObserver {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });

@@ -13,9 +13,9 @@ import type { StatsHook } from "./StatsHook.interface";
 import type { StatsReport } from "./StatsReport.type";
 import type { TickTimerState } from "./TickTimerState.type";
 
-const DEBUG_NAME: "input" = "input";
+const DEBUG_NAME: "pointer" = "pointer";
 
-export function InputStatsHook(inputState: Int32Array): StatsHook {
+export function PointerStatsHook(pointerState: Int32Array): StatsHook {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -34,21 +34,21 @@ export function InputStatsHook(inputState: Int32Array): StatsHook {
   function reset(): void {}
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    statsReport.isPointerInitiatedByRootElement = isPointerInitiatedByRootElement(inputState);
-    statsReport.isPrimaryMouseButtonPressed = isPrimaryMouseButtonPressed(inputState);
-    statsReport.isPrimaryTouchPressed = isPrimaryTouchPressed(inputState);
+    statsReport.isPointerInitiatedByRootElement = isPointerInitiatedByRootElement(pointerState);
+    statsReport.isPrimaryMouseButtonPressed = isPrimaryMouseButtonPressed(pointerState);
+    statsReport.isPrimaryTouchPressed = isPrimaryTouchPressed(pointerState);
     statsReport.lastUpdate = tickTimerState.currentTick;
-    statsReport.primaryPointerClientX = getPrimaryPointerClientX(inputState);
-    statsReport.primaryPointerClientY = getPrimaryPointerClientY(inputState);
-    statsReport.primaryPointerStretchVectorX = getPrimaryPointerStretchVectorX(inputState);
-    statsReport.primaryPointerStretchVectorY = getPrimaryPointerStretchVectorY(inputState);
+    statsReport.primaryPointerClientX = getPrimaryPointerClientX(pointerState);
+    statsReport.primaryPointerClientY = getPrimaryPointerClientY(pointerState);
+    statsReport.primaryPointerStretchVectorX = getPrimaryPointerStretchVectorX(pointerState);
+    statsReport.primaryPointerStretchVectorY = getPrimaryPointerStretchVectorY(pointerState);
   }
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isPerformanceStatsHook: true,
     isStatsHook: true,
-    name: `InputStatsHook("${DEBUG_NAME}")`,
+    name: `PointerStatsHook("${DEBUG_NAME}")`,
     state: state,
     statsReport: statsReport,
     statsReportIntervalSeconds: 0,

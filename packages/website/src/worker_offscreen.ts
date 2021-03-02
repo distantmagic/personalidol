@@ -5,9 +5,9 @@ import Loglevel from "loglevel";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { EventBus } from "@personalidol/framework/src/EventBus";
-import { Input } from "@personalidol/framework/src/Input";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
+import { Pointer } from "@personalidol/framework/src/Pointer";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
@@ -34,7 +34,7 @@ const _canvasStyle = {
 let _canvas: null | OffscreenCanvas = null;
 let _devicePixelRatio: null | number = null;
 let _dimensionsState: null | Uint32Array = null;
-let _inputState: null | Int32Array = null;
+let _pointerState: null | Int32Array = null;
 let _isBootstrapped: boolean = false;
 let _mainLoop: null | IMainLoop = null;
 let _notifiedReady: boolean = false;
@@ -56,7 +56,7 @@ function _createScenesSafe(): void {
     _canvas === null ||
     _devicePixelRatio === null ||
     _dimensionsState === null ||
-    _inputState === null ||
+    _pointerState === null ||
     domMessagePort === null ||
     fontPreloadMessagePort === null ||
     internationalizationMessagePort === null ||
@@ -95,7 +95,7 @@ function _createScenesSafe(): void {
     _serviceManager,
     _canvas,
     _dimensionsState,
-    _inputState,
+    _pointerState,
     logger,
     statsReporter,
     domMessagePort,
@@ -138,7 +138,7 @@ self.onmessage = createRouter({
     }
 
     _dimensionsState = Dimensions.createEmptyState(false);
-    _inputState = Input.createEmptyState(false);
+    _pointerState = Pointer.createEmptyState(false);
     _createScenesSafe();
   },
 
@@ -173,12 +173,12 @@ self.onmessage = createRouter({
     _createScenesSafe();
   },
 
-  inputState(input: Int32Array): void {
-    if (!_inputState) {
-      throw new Error("Input state must be set before it's updated.");
+  pointerState(input: Int32Array): void {
+    if (!_pointerState) {
+      throw new Error("Pointer state must be set before it's updated.");
     }
 
-    _inputState.set(input);
+    _pointerState.set(input);
   },
 
   internationalizationMessagePort(port: MessagePort): void {
@@ -211,8 +211,8 @@ self.onmessage = createRouter({
     _dimensionsState = new Uint32Array(dimensions);
   },
 
-  sharedInputState(input: SharedArrayBuffer): void {
-    _inputState = new Int32Array(input);
+  sharedPointerState(input: SharedArrayBuffer): void {
+    _pointerState = new Int32Array(input);
   },
 
   statsMessagePort(port: MessagePort): void {

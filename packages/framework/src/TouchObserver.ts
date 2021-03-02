@@ -5,16 +5,16 @@ import { computePointerStretchVectorY } from "./computePointerStretchVectorY";
 import { computePointerVectorX } from "./computePointerVectorX";
 import { computePointerVectorY } from "./computePointerVectorY";
 import { DimensionsIndices } from "./DimensionsIndices.enum";
-import { Input } from "./Input";
-import { InputIndices } from "./InputIndices.enum";
 import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { passiveEventListener } from "./passiveEventListener";
+import { Pointer } from "./Pointer";
+import { PointerIndices } from "./PointerIndices.enum";
 
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { TouchObserver as ITouchObserver } from "./TouchObserver.interface";
 
-export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, inputState: Int32Array, tickTimerState: TickTimerState): ITouchObserver {
+export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, pointerState: Int32Array, tickTimerState: TickTimerState): ITouchObserver {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -34,28 +34,28 @@ export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
   }
 
   function update(): void {
-    if (dimensionsState[DimensionsIndices.LAST_UPDATE] > inputState[InputIndices.LAST_UPDATE]) {
+    if (dimensionsState[DimensionsIndices.LAST_UPDATE] > pointerState[PointerIndices.LAST_UPDATE]) {
       _updateDimensionsRelativeCoords();
     }
   }
 
   function _onTouchChange(evt: TouchEvent): void {
-    inputState[InputIndices.T_LAST_USED] = tickTimerState.currentTick;
-    inputState[InputIndices.T_TOTAL] = evt.touches.length;
+    pointerState[PointerIndices.T_LAST_USED] = tickTimerState.currentTick;
+    pointerState[PointerIndices.T_TOTAL] = evt.touches.length;
 
-    for (let i = 0; i < evt.touches.length && i < Input.range.touches_total; i += 1) {
-      inputState[Input.touches[i].CLIENT_X] = evt.touches[i].clientX;
-      inputState[Input.touches[i].CLIENT_Y] = evt.touches[i].clientY;
-      inputState[Input.touches[i].PRESSURE] = Math.floor(evt.touches[i].force * 100);
-      inputState[Input.touches[i].STRETCH_VECTOR_X] = computePointerStretchVectorX(
+    for (let i = 0; i < evt.touches.length && i < Pointer.range.touches_total; i += 1) {
+      pointerState[Pointer.touches[i].CLIENT_X] = evt.touches[i].clientX;
+      pointerState[Pointer.touches[i].CLIENT_Y] = evt.touches[i].clientY;
+      pointerState[Pointer.touches[i].PRESSURE] = Math.floor(evt.touches[i].force * 100);
+      pointerState[Pointer.touches[i].STRETCH_VECTOR_X] = computePointerStretchVectorX(
         dimensionsState,
-        inputState[Input.touches[i].DOWN_INITIAL_CLIENT_X],
-        inputState[Input.touches[i].CLIENT_X]
+        pointerState[Pointer.touches[i].DOWN_INITIAL_CLIENT_X],
+        pointerState[Pointer.touches[i].CLIENT_X]
       );
-      inputState[Input.touches[i].STRETCH_VECTOR_Y] = computePointerStretchVectorY(
+      pointerState[Pointer.touches[i].STRETCH_VECTOR_Y] = computePointerStretchVectorY(
         dimensionsState,
-        inputState[Input.touches[i].DOWN_INITIAL_CLIENT_Y],
-        inputState[Input.touches[i].CLIENT_Y]
+        pointerState[Pointer.touches[i].DOWN_INITIAL_CLIENT_Y],
+        pointerState[Pointer.touches[i].CLIENT_Y]
       );
     }
 
@@ -63,32 +63,34 @@ export function TouchObserver(htmlElement: HTMLElement, dimensionsState: Uint32A
   }
 
   function _onTouchEnd(evt: TouchEvent): void {
-    inputState[InputIndices.T_INITIATED_BY_ROOT_ELEMENT] = 0;
+    pointerState[PointerIndices.T_INITIATED_BY_ROOT_ELEMENT] = 0;
 
     _onTouchChange(evt);
   }
 
   function _onTouchStart(evt: TouchEvent): void {
-    inputState[InputIndices.T_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
+    pointerState[PointerIndices.T_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
 
-    for (let i = 0; i < evt.touches.length && i < Input.range.touches_total; i += 1) {
-      inputState[Input.touches[i].DOWN_INITIAL_CLIENT_X] = evt.touches[i].clientX;
-      inputState[Input.touches[i].DOWN_INITIAL_CLIENT_Y] = evt.touches[i].clientY;
+    for (let i = 0; i < evt.touches.length && i < Pointer.range.touches_total; i += 1) {
+      pointerState[Pointer.touches[i].DOWN_INITIAL_CLIENT_X] = evt.touches[i].clientX;
+      pointerState[Pointer.touches[i].DOWN_INITIAL_CLIENT_Y] = evt.touches[i].clientY;
     }
 
     _onTouchChange(evt);
   }
 
   function _updateDimensionsRelativeCoords(): void {
-    for (let i = 0; i < inputState[InputIndices.T_TOTAL] && i < Input.range.touches_total; i += 1) {
-      inputState[Input.touches[i].RELATIVE_X] = inputState[Input.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
-      inputState[Input.touches[i].RELATIVE_Y] = inputState[Input.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
-      inputState[Input.touches[i].VECTOR_X] = computePointerVectorX(dimensionsState, inputState[Input.touches[i].RELATIVE_X]);
-      inputState[Input.touches[i].VECTOR_Y] = computePointerVectorY(dimensionsState, inputState[Input.touches[i].RELATIVE_Y]);
-      inputState[Input.touches[i].IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, inputState[Input.touches[i].CLIENT_X], inputState[Input.touches[i].CLIENT_Y]));
+    for (let i = 0; i < pointerState[PointerIndices.T_TOTAL] && i < Pointer.range.touches_total; i += 1) {
+      pointerState[Pointer.touches[i].RELATIVE_X] = pointerState[Pointer.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
+      pointerState[Pointer.touches[i].RELATIVE_Y] = pointerState[Pointer.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
+      pointerState[Pointer.touches[i].VECTOR_X] = computePointerVectorX(dimensionsState, pointerState[Pointer.touches[i].RELATIVE_X]);
+      pointerState[Pointer.touches[i].VECTOR_Y] = computePointerVectorY(dimensionsState, pointerState[Pointer.touches[i].RELATIVE_Y]);
+      pointerState[Pointer.touches[i].IN_BOUNDS] = Number(
+        isInDimensionsBounds(dimensionsState, pointerState[Pointer.touches[i].CLIENT_X], pointerState[Pointer.touches[i].CLIENT_Y])
+      );
     }
 
-    inputState[InputIndices.LAST_UPDATE] = tickTimerState.currentTick;
+    pointerState[PointerIndices.LAST_UPDATE] = tickTimerState.currentTick;
   }
 
   return Object.freeze({

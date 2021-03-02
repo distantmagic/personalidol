@@ -1,5 +1,5 @@
-import { InputIndices } from "./InputIndices.enum";
+import { PointerIndices } from "./PointerIndices.enum";
 
-export function isPrimaryTouchInDimensionsBounds(dimensionsState: Uint32Array, inputState: Int32Array): boolean {
-  return inputState[InputIndices.T_TOTAL] > 0 && inputState[InputIndices.T0_IN_BOUNDS] > 0;
+export function isPrimaryTouchInDimensionsBounds(dimensionsState: Uint32Array, pointerState: Int32Array): boolean {
+  return pointerState[PointerIndices.T_TOTAL] > 0 && pointerState[PointerIndices.T0_IN_BOUNDS] > 0;
 }

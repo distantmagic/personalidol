@@ -1,4 +1,4 @@
-export type InputTouch = {
+export type PointerTouch = {
   CLIENT_X: number;
   CLIENT_Y: number;
   DOWN_INITIAL_CLIENT_X: number;
