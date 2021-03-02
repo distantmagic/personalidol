@@ -6,7 +6,6 @@ import { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import { LanguageSettingsDOMElementView } from "./LanguageSettingsDOMElementView";
-import { LoadingScreenDOMElementView } from "./LoadingScreenDOMElementView";
 import { MainMenuButtonDOMElementView } from "./MainMenuButtonDOMElementView";
 import { MainMenuDOMElementView } from "./MainMenuDOMElementView";
 import { MainMenuLanguageButtonDOMElementView } from "./MainMenuLanguageButtonDOMElementView";
@@ -32,7 +31,6 @@ export const domElementsLookup: DOMElementsLookup = {
   "pi-in-game-menu": InGameMenuDOMElementView,
   "pi-in-game-menu-trigger": InGameMenuTriggerDOMElementView,
   "pi-language-settings": LanguageSettingsDOMElementView,
-  "pi-loading-screen": LoadingScreenDOMElementView,
   "pi-main-menu": MainMenuDOMElementView,
   "pi-main-menu-button": MainMenuButtonDOMElementView,
   "pi-main-menu-language-button": MainMenuLanguageButtonDOMElementView,

@@ -12,26 +12,32 @@ menu_options: Options
 menu_return_to_game: Return to game
 
 loading: Loading
-
 reload_button_reload_now: Reload now
 
-resource_type_accusative_atlas: atlas
-resource_type_accusative_atlas_service: Atlas Service
-resource_type_accusative_dom_controller: DOMController
-resource_type_accusative_font: font
-resource_type_accusative_map: map
-resource_type_accusative_maps_service: Maps Service
-resource_type_accusative_md2_service: MD2 Service
-resource_type_accusative_model: model
-resource_type_accusative_model_parts: model parts
-resource_type_accusative_progress_service: Progress Service
-resource_type_accusative_rendering_service: Rendering Service
-resource_type_accusative_scenes: Scenes
-resource_type_accusative_service_worker: Service Worker
-resource_type_accusative_texture: texture
-resource_type_accusative_textures_service: Textures Service
-resource_type_accusative_translation: translation
-resource_type_accusative_translations: Translations
+resource_type_accusative_atlas_count: atlas
+resource_type_accusative_atlas_count_plural: "{{count}} atlases"
+resource_type_accusative_atlas_service_count: Atlas Service
+resource_type_accusative_dom_controller_count: DOMController
+resource_type_accusative_font_count: font
+resource_type_accusative_font_count_plural: "{{count}} fonts"
+resource_type_accusative_map_count: map
+resource_type_accusative_map_count_plural: "{{count}} maps"
+resource_type_accusative_maps_service_count: Maps Service
+resource_type_accusative_md2_service_count: MD2 Service
+resource_type_accusative_model_count: model
+resource_type_accusative_model_count_plural: "{{count}} models"
+resource_type_accusative_model_parts_count: model metadata
+resource_type_accusative_model_parts_count_plural: "{{count}} models metadata"
+resource_type_accusative_progress_service_count: Progress Service
+resource_type_accusative_rendering_service_count: Rendering Service
+resource_type_accusative_scenes_count: Scenes
+resource_type_accusative_service_worker_count: Service Worker
+resource_type_accusative_texture_count: texture
+resource_type_accusative_texture_count_plural: "{{count}} textures"
+resource_type_accusative_textures_service_count: Textures Service
+resource_type_accusative_translation_count: translation
+resource_type_accusative_translation_count_plural: "{{count}} translations"
+resource_type_accusative_translations_count: Translations
 
 trigger_menu: Menu
 

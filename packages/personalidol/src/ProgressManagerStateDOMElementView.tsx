@@ -2,10 +2,13 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
-// import type { MessageProgressChange } from "@personalidol/loading-manager/src/MessageProgressChange.type";
 import type { ProgressManagerState } from "@personalidol/loading-manager/src/ProgressManagerState.type";
 
 import type { UserSettings } from "./UserSettings.type";
+
+type Resources = {
+  [key: string]: number;
+};
 
 const _css = `
   :host {
@@ -96,9 +99,9 @@ export class ProgressManagerStateDOMElementView extends DOMElementView<UserSetti
 
   // private _progress: number = 0;
   private _progressPercentage: string = "0%";
+  private _resources: Resources = {};
 
   set progress(progress: number) {
-    // this._progress = progress;
     this._progressPercentage = `${Math.round(100 * progress)}%`;
   }
 
@@ -108,21 +111,58 @@ export class ProgressManagerStateDOMElementView extends DOMElementView<UserSetti
     const loading = Math.max(progressManagerState.messages.length, progressManagerState.expect);
 
     let _loaded: number = 0;
+    let _messageProgress: number = 0;
+
+    this._resources = {};
 
     for (let message of progressManagerState.messages) {
       if (message.total > 0) {
-        _loaded += message.loaded / message.total;
+        _messageProgress = message.loaded / message.total;
+        _loaded += _messageProgress;
+      } else {
+        _messageProgress = 0;
+      }
+      if (_messageProgress < 1) {
+        if (!this._resources.hasOwnProperty(message.type)) {
+          this._resources[message.type] = 0;
+        }
+
+        this._resources[message.type] += 1;
       }
     }
 
     this.progress = _loaded / loading;
   }
 
+  constructor() {
+    super();
+
+    this.renderResources = this.renderResources.bind(this);
+  }
+
+  renderResources(): string {
+    const ret: Array<string> = [];
+
+    for (let resource in this._resources) {
+      if (this._resources.hasOwnProperty(resource)) {
+        ret.push(
+          this.i18next.t(`ui:resource_type_accusative_${resource}_count`, {
+            count: this._resources[resource],
+          })
+        );
+      }
+    }
+
+    return ret.join(", ");
+  }
+
   render() {
     return (
       <main class="progress">
         <div class="progress-message">
-          <div class="progress-comment">{`${this.i18next.t("ui:loading")} ...`}</div>
+          <div class="progress-comment">
+            {`${this.i18next.t("ui:loading")}`} {this.renderResources()} {"..."}
+          </div>
           <div class="progress-value">{this._progressPercentage}</div>
           <div class="progress-indicator">
             <div

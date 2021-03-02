@@ -76,7 +76,7 @@
         <canvas id="canvas"></canvas>
       </div>
       <div id="ui-root">
-        <pi-loading-screen class="ui-placeholder ui-placeholder--loading" id="ui-placeholder">
+        <pi-progress-manager-state class="ui-placeholder ui-placeholder--loading" id="ui-placeholder">
           <div class="ui-placeholder-label ui-placeholder-label--disabled" id="ui-placeholder-label">
             Loading ...
           </div>
@@ -84,7 +84,7 @@
             You need to enable JavaScript in your browser to use this
             application.
           </noscript>
-        </pi-loading-screen>
+        </pi-progress-manager-state>
       </div>
     </div>
     <script>(function () {
@@ -110,6 +110,7 @@
       const _uiRoot = document.getElementById("ui-root");
 
       let _domControllerReady = false;
+      let _version = 0;
 
       _uiPlaceholderLabel.textContent = "Loading game engine ...";
 
@@ -123,8 +124,21 @@
           return;
         }
 
-        _uiPlaceholder.setAttribute("comment", evt.detail.type);
-        _uiPlaceholder.setAttribute("progress", evt.detail.step / evt.detail.totalSteps);
+        _version += 1;
+        _uiPlaceholder.progressManagerState = {
+          errors: [],
+          expect: 1,
+          messages: [
+            {
+              id: "-",
+              loaded: evt.detail.step,
+              total: evt.detail.totalSteps,
+              type: evt.detail.type,
+              uri: "",
+            },
+          ],
+          version: _version,
+        };
       }
 
       _uiRoot.addEventListener("loading", _onLoadingProgress);

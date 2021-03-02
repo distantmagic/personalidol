@@ -5,7 +5,6 @@ import type { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import type { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import type { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import type { LanguageSettingsDOMElementView } from "./LanguageSettingsDOMElementView";
-import type { LoadingScreenDOMElementView } from "./LoadingScreenDOMElementView";
 import type { MainMenuButtonDOMElementProps } from "./MainMenuButtonDOMElementProps.interface";
 import type { MainMenuButtonDOMElementView } from "./MainMenuButtonDOMElementView";
 import type { MainMenuDOMElementView } from "./MainMenuDOMElementView";
@@ -45,7 +44,6 @@ export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-in-game-menu": typeof InGameMenuDOMElementView;
   "pi-in-game-menu-trigger": typeof InGameMenuTriggerDOMElementView;
   "pi-language-settings": typeof LanguageSettingsDOMElementView;
-  "pi-loading-screen": typeof LoadingScreenDOMElementView;
   "pi-main-menu": typeof MainMenuDOMElementView;
   "pi-main-menu-button": typeof MainMenuButtonDOMElementView;
   "pi-main-menu-language-button": typeof MainMenuLanguageButtonDOMElementView;
