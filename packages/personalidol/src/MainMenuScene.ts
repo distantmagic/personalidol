@@ -118,6 +118,8 @@ const _fontMessageRouter = createRouter({
   preloadedFont: handleRPCResponse(_rpcLookupTable),
 });
 
+let _fontsPreloaded: boolean = false;
+
 export function MainMenuScene(
   logger: Logger,
   effectComposer: EffectComposer,
@@ -135,6 +137,12 @@ export function MainMenuScene(
   });
 
   const _domMainMenuElementId: string = MathUtils.generateUUID();
+
+  function _onFontsPreloaded(): void {
+    _fontsPreloaded = true;
+    state.isPreloading = false;
+    state.isPreloaded = true;
+  }
 
   function dispose(): void {
     state.isDisposed = true;
@@ -171,7 +179,14 @@ export function MainMenuScene(
     state.isPaused = true;
   }
 
-  async function preload(): Promise<void> {
+  function preload(): void {
+    if (_fontsPreloaded) {
+      state.isPreloading = false;
+      state.isPreloaded = true;
+
+      return;
+    }
+
     state.isPreloading = true;
 
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
@@ -180,10 +195,7 @@ export function MainMenuScene(
       reset: true,
     });
 
-    await Promise.all(_fonts.map(_preloadFont));
-
-    state.isPreloading = false;
-    state.isPreloaded = true;
+    Promise.all(_fonts.map(_preloadFont)).then(_onFontsPreloaded);
   }
 
   function unmount(): void {

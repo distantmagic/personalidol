@@ -70,6 +70,8 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
       state.lastUpdateCurrentTick = tickTimerState.currentTick;
       state.lastUpdateTransitioningTick = tickTimerState.currentTick;
 
+      update();
+
       return;
     }
 
@@ -99,6 +101,12 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
       state.lastUpdateNextTick = tickTimerState.currentTick;
       state.lastUpdateTransitioningTick = tickTimerState.currentTick;
 
+      if (next.state.isPreloaded) {
+        // Immediately transition to the next state if scene is aleready
+        // preloaded.
+        update();
+      }
+
       return;
     }
 
@@ -111,6 +119,8 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
 
       state.lastUpdateCurrentTick = tickTimerState.currentTick;
       state.lastUpdateTransitioningTick = tickTimerState.currentTick;
+
+      update();
 
       return;
     }
