@@ -1,4 +1,6 @@
-export function preloadImage(textureUrl: string): Promise<HTMLImageElement> {
+import type { Progress } from "@personalidol/loading-manager/src/Progress.interface";
+
+export function preloadImage(progress: Progress, textureUrl: string): Promise<HTMLImageElement> {
   return new Promise(function (resolve, reject) {
     const image = new Image();
 

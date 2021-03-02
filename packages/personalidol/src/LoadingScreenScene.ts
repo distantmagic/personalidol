@@ -26,8 +26,8 @@ import type { DisposableCallback } from "@personalidol/framework/src/DisposableC
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
-import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
-import type { ProgressManagerProgress } from "@personalidol/loading-manager/src/ProgressManagerProgress.type";
+import type { MessageProgressError } from "@personalidol/loading-manager/src/MessageProgressError.type";
+import type { ProgressManagerState } from "@personalidol/loading-manager/src/ProgressManagerState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -92,35 +92,14 @@ export function LoadingScreenScene(
   _disposables.add(disposableMaterial(_boxMaterial));
 
   const _progressRouter = createRouter({
-    error(error: ProgressError): void {
-      _boxMaterial.color = new Color(0xff0000);
-
-      const glitchPass = new GlitchPass();
-
-      effectComposer.addPass(glitchPass);
-      _unmountables.add(unmountPass(effectComposer, glitchPass));
-      _disposables.add(disposableGeneric(glitchPass));
-
-      if (!_domFatalErrorElementId) {
-        _domFatalErrorElementId = MathUtils.generateUUID();
-      }
-
-      _unmountLoadingScreen();
-
-      domMessagePort.postMessage({
-        render: <MessageDOMUIRender<DOMElementsLookup>>{
-          id: _domFatalErrorElementId,
-          element: "pi-fatal-error",
-          props: {
-            progressError: error,
-          },
-        },
-      });
-    },
-
-    progress(progress: ProgressManagerProgress): void {
+    progress(progressState: ProgressManagerState): void {
       if (_domFatalErrorElementId) {
         // There is a fatal error going on.
+        return;
+      }
+
+      if (progressState.errors.length > 0) {
+        _onProgressError(progressState.errors);
         return;
       }
 
@@ -131,14 +110,40 @@ export function LoadingScreenScene(
       domMessagePort.postMessage({
         render: <MessageDOMUIRender<DOMElementsLookup>>{
           id: _domLoadingScreenElementId,
-          element: "pi-loading-screen",
+          element: "pi-progress-manager-state",
           props: {
-            progressManagerProgress: progress,
+            progressManagerState: progressState,
           },
         },
       });
     },
   });
+
+  function _onProgressError(errors: ReadonlyArray<MessageProgressError>): void {
+    _boxMaterial.color = new Color(0xff0000);
+
+    const glitchPass = new GlitchPass();
+
+    effectComposer.addPass(glitchPass);
+    _unmountables.add(unmountPass(effectComposer, glitchPass));
+    _disposables.add(disposableGeneric(glitchPass));
+
+    if (!_domFatalErrorElementId) {
+      _domFatalErrorElementId = MathUtils.generateUUID();
+    }
+
+    _unmountLoadingScreen();
+
+    domMessagePort.postMessage({
+      render: <MessageDOMUIRender<DOMElementsLookup>>{
+        id: _domFatalErrorElementId,
+        element: "pi-fatal-error",
+        props: {
+          errors: errors,
+        },
+      },
+    });
+  }
 
   function _unmountFatalErrorScreen() {
     if (!_domFatalErrorElementId) {

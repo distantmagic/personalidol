@@ -1,19 +1,21 @@
-import type { MainLoopUpdatable } from "@personalidol/framework/src//MainLoopUpdatable.interface";
-import type { Service } from "@personalidol/framework/src//Service.interface";
-
-import type { ProgressManagerItem } from "./ProgressManagerItem.type";
+import type { MessageProgressChange } from "./MessageProgressChange.type";
+import type { MessageProgressDone } from "./MessageProgressDone.type";
+import type { MessageProgressError } from "./MessageProgressError.type";
+import type { MessageProgressStart } from "./MessageProgressStart.type";
 import type { ProgressManagerState } from "./ProgressManagerState.type";
 
-export interface ProgressManager extends MainLoopUpdatable, Service {
+export interface ProgressManager {
   state: ProgressManagerState;
 
-  done(item: ProgressManagerItem): void;
+  done(message: MessageProgressDone): void;
 
-  expectAtLeast(expectAtLeast: number): void;
+  error(message: MessageProgressError): void;
+
+  expect(expect: number): void;
+
+  progress(message: MessageProgressChange): void;
 
   reset(): void;
 
-  update(): void;
-
-  waitFor(item: ProgressManagerItem): void;
+  start(message: MessageProgressStart): void;
 }

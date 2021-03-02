@@ -1,13 +1,11 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
-import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
-import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import { imageDataBufferResponseToImageData } from "./imageDataBufferResponseToImageData";
@@ -22,6 +20,7 @@ import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 
 import type { Atlas } from "./Atlas.type";
+import type { AtlasResponse } from "./AtlasResponse.type";
 import type { AtlasService as IAtlasService } from "./AtlasService.interface";
 import type { AtlasTextureDimension } from "./AtlasTextureDimension.type";
 import type { AtlasTextureDimensions } from "./AtlasTextureDimensions.type";
@@ -246,19 +245,12 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
 
   async function _processAtlasRequest(request: AtlasQueueItem): Promise<void> {
     const requestKey = _keyFromAtlasQueueItem(request);
-
-    // prettier-ignore
-    const { data: response, isLast } = await notifyProgressManager(
-      progressMessagePort,
-      createResourceLoadMessage("atlas", requestKey),
-      reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createTextureAtlas)
-    );
-
+    const { data: response, isLast } = await reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createTextureAtlas);
     const { imageData, textureDimensions } = response;
 
     request.messagePort.postMessage(
       {
-        textureAtlas: <ImageDataBufferResponse>{
+        textureAtlas: <AtlasResponse>{
           imageDataBuffer: imageData.data.buffer,
           imageDataHeight: imageData.height,
           imageDataWidth: imageData.width,

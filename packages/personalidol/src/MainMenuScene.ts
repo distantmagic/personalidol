@@ -180,10 +180,6 @@ export function MainMenuScene(
       reset: true,
     });
 
-    progressMessagePort.postMessage({
-      expectAtLeast: _fonts.length,
-    });
-
     await Promise.all(_fonts.map(_preloadFont));
 
     state.isPreloading = false;

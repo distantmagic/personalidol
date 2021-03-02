@@ -14,6 +14,7 @@ import { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementView";
 import { MainMenuUserSettingsButtonDOMElementView } from "./MainMenuUserSettingsButtonDOMElementView";
 import { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
+import { ProgressManagerStateDOMElementView } from "./ProgressManagerStateDOMElementView";
 import { ReloadButtonDOMElementView } from "./ReloadButtonDOMElementView";
 import { SettingsBackdropDOMElementView } from "./SettingsBackdropDOMElementView";
 import { SliderDOMElementView } from "./SliderDOMElementView";
@@ -39,6 +40,7 @@ export const domElementsLookup: DOMElementsLookup = {
   "pi-main-menu-user-settings-button": MainMenuUserSettingsButtonDOMElementView,
   "pi-mouse-pointer-layer": MousePointerLayerDOMElementView,
   "pi-object-label": ObjectLabelDOMElementView,
+  "pi-progress-manager-state": ProgressManagerStateDOMElementView,
   "pi-reload-button": ReloadButtonDOMElementView,
   "pi-settings-backdrop": SettingsBackdropDOMElementView,
   "pi-slider": SliderDOMElementView,

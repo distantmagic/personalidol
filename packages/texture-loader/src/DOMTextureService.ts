@@ -2,16 +2,16 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { canvas2DDrawImage } from "@personalidol/dom-renderer/src/canvas2DDrawImage";
-import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
-import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
 import { preloadImage } from "@personalidol/dom-renderer/src/preloadImage";
+import { Progress } from "@personalidol/loading-manager/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import { keyFromTextureRequest } from "./keyFromTextureRequest";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
+import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
 import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
 
@@ -67,7 +67,11 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   }
 
   async function _createImageData(request: TextureQueueItem): Promise<ImageData> {
-    const image: HTMLImageElement = await preloadImage(request.textureUrl);
+    const progress: IProgress = Progress(progressMessagePort, "texture");
+
+    progress.start();
+
+    const image: HTMLImageElement = await progress.wait(preloadImage(progress, request.textureUrl));
 
     canvas2DDrawImage(canvas, context2D, image);
 
@@ -76,13 +80,7 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
 
   async function _processTextureQueue(request: TextureQueueItem): Promise<void> {
     const requestKey = keyFromTextureRequest(request);
-
-    // prettier-ignore
-    const { data: imageData, isLast } = await notifyProgressManager(
-      progressMessagePort,
-      createResourceLoadMessage("texture", request.textureUrl),
-      reuseResponse<ImageData, TextureQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createImageData)
-    );
+    const { data: imageData, isLast } = await reuseResponse<ImageData, TextureQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createImageData);
 
     request.messagePort.postMessage(
       {

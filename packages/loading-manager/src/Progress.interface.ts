@@ -1,0 +1,18 @@
+import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
+
+import type { ProgressCallback } from "./ProgressCallback.type";
+import type { ProgressState } from "./ProgressState.type";
+
+export interface Progress extends Nameable {
+  readonly state: ProgressState;
+
+  readonly progress: ProgressCallback;
+
+  done(): void;
+
+  error(err: Error): void;
+
+  start(): void;
+
+  wait<T>(promise: Promise<T>): Promise<T>;
+}

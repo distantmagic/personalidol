@@ -3,10 +3,10 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
-import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
+import { Progress } from "@personalidol/loading-manager/src/Progress";
 
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
+import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
 
 import type { FontPreloadService as IFontPreloadService } from "./FontPreloadService.interface";
 import type { FontPreloadParameters } from "./FontPreloadParameters.type";
@@ -27,14 +27,12 @@ export function FontPreloadService(fontPreloadMessagePort: MessagePort, progress
   }
 
   async function _preloadFont(parameters: FontPreloadParameters & RPCMessage) {
+    const progress: IProgress = Progress(progressMessagePort, "font", parameters.family);
     const fontFace = new FontFace(parameters.family, `url(${parameters.source})`, parameters.descriptors);
 
-    // prettier-ignore
-    await notifyProgressManager(
-      progressMessagePort,
-      createResourceLoadMessage("font", parameters.family),
-      fontFace.load()
-    );
+    progress.start();
+
+    await progress.wait(fontFace.load());
 
     document.fonts.add(fontFace);
 

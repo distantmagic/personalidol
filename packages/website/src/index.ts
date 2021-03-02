@@ -208,9 +208,11 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // Preload translations and the internationalization service.
 
   const i18next = createI18next();
-  const internationalizationService = InternationalizationService(i18next as Frameworki18n, progressMessageChannel.port1);
+  const internationalizationToProgressMessageChannel = createMultiThreadMessageChannel();
+  const internationalizationService = InternationalizationService(i18next as Frameworki18n, internationalizationToProgressMessageChannel.port2);
   const internationalizationMessageChannel = createMultiThreadMessageChannel();
 
+  addProgressMessagePort(internationalizationToProgressMessageChannel.port1, false);
   internationalizationService.registerMessagePort(internationalizationMessageChannel.port1);
 
   preloader.preloadables.add(internationalizationService);

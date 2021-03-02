@@ -1,10 +1,9 @@
-import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
+import type { MessageProgressChange } from "./MessageProgressChange.type";
+import type { MessageProgressError } from "./MessageProgressError.type";
 
-import type { ProgressManagerComment } from "./ProgressManagerComment.type";
-
-export type ProgressManagerState = MainLoopUpdatableState & {
-  comment: Array<ProgressManagerComment>;
-  expectsAtLeast: number;
-  progress: number;
+export type ProgressManagerState = {
+  errors: ReadonlyArray<MessageProgressError>;
+  expect: number;
+  messages: ReadonlyArray<MessageProgressChange>;
   version: number;
 };

@@ -2,7 +2,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
-import type { ProgressError } from "@personalidol/loading-manager/src/ProgressError.type";
+import type { MessageProgressError } from "@personalidol/loading-manager/src/MessageProgressError.type";
 
 import type { UserSettings } from "./UserSettings.type";
 
@@ -48,7 +48,7 @@ const _css = `
     margin-top: 1rem;
   }
 
-  #error-report {
+  .error-report {
     display: grid;
     overflow-wrap: break-word;
   }
@@ -57,19 +57,31 @@ const _css = `
 export class FatalErrorDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
-  private _progressError: null | ProgressError = null;
+  private _errors: ReadonlyArray<MessageProgressError> = [];
 
-  set progressError(progressError: ProgressError) {
-    this._progressError = progressError;
+  set errors(errors: ReadonlyArray<MessageProgressError>) {
+    this.needsRender = true;
+    this._errors = errors;
+  }
+
+  constructor() {
+    super();
+
+    this.renderMessageProgressError = this.renderMessageProgressError.bind(this);
+  }
+
+  renderMessageProgressError(error: MessageProgressError) {
+    return (
+      <div class="error-report">
+        <span>resource_type: {error.type}</span>
+        <span>resource_uri: {error.uri}</span>
+        <span>resource_id: {error.id}</span>
+        <span>resource_error_message: {error.message}</span>
+      </div>
+    );
   }
 
   render() {
-    const progressError: null | ProgressError = this._progressError;
-
-    if (!progressError) {
-      return null;
-    }
-
     return (
       <main>
         <h1>Error</h1>
@@ -83,13 +95,7 @@ export class FatalErrorDOMElementView extends DOMElementView<UserSettings> {
           In the meantime you can try some obvious things like reloading the page, checking internet connection, etc. Again, we are really, really, really sorry and deeply ashamed
           about this. If there is anything that can bring us peace, it is your forgiveness.
         </p>
-        <div id="error-report">
-          <span id="item-resource-type">resource_type: {progressError.item.resourceType}</span>
-          <span id="item-resource-uri">resource_uri: {progressError.item.resourceUri}</span>
-          <span id="item-id">resource_id: {progressError.item.id}</span>
-          <span id="error-message">resource_error_message: {progressError.error.message}</span>
-          <span id="error-stack">resource_error_stack: {progressError.error.stack}</span>
-        </div>
+        {this._errors.map(this.renderMessageProgressError)}
       </main>
     );
   }

@@ -6,20 +6,22 @@ import { Vector3 } from "three/src/math/Vector3";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { buildEntities } from "@personalidol/personalidol/src/buildEntities";
-import { createResourceLoadMessage } from "@personalidol/loading-manager/src/createResourceLoadMessage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
+import { fetchProgress } from "@personalidol/loading-manager/src/fetchProgress";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
-import { notifyProgressManager } from "@personalidol/loading-manager/src/notifyProgressManager";
+import { Progress } from "@personalidol/loading-manager/src/Progress";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
 
 import type { Vector3 as IVector3 } from "three";
 
+import type { AtlasResponse } from "@personalidol/texture-loader/src/AtlasResponse.type";
 import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
 import type { EntityAny } from "@personalidol/personalidol/src/EntityAny.type";
 import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
+import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
@@ -46,6 +48,7 @@ const _atlasMessageRouter = createRouter({
 });
 
 async function _fetchUnmarshalMapContent(
+  progress: IProgress,
   messagePort: MessagePort,
   atlasMessagePort: MessagePort,
   progressMessagePort: MessagePort,
@@ -53,12 +56,12 @@ async function _fetchUnmarshalMapContent(
   rpc: string,
   discardOccluding: null | Vector3Simple = null
 ): Promise<void> {
-  const content: string = await fetch(filename).then(_responseToText);
-
-  return _onMapContentLoaded(messagePort, atlasMessagePort, progressMessagePort, filename, rpc, content, discardOccluding);
+  const content: string = await fetch(filename).then(fetchProgress(progress.progress)).then(_responseToText);
+  return _onMapContentLoaded(progress, messagePort, atlasMessagePort, progressMessagePort, filename, rpc, content, discardOccluding);
 }
 
 async function _onMapContentLoaded(
+  progress: IProgress,
   messagePort: MessagePort,
   atlasMessagePort: MessagePort,
   progressMessagePort: MessagePort,
@@ -69,8 +72,21 @@ async function _onMapContentLoaded(
 ): Promise<void> {
   const discardOccludingVector3: null | IVector3 = discardOccluding ? new Vector3(discardOccluding.x, discardOccluding.y, discardOccluding.z) : null;
   const entities: Array<EntityAny> = [];
-  const entitySketches: Array<EntitySketch> = [];
   const textureUrls: Array<string> = [];
+  const transferables: Array<Transferable> = [];
+  let textureAtlas: null | AtlasResponse = null;
+
+  function _resolveTextureDimensions(textureName: string): AtlasTextureDimension {
+    if (!textureAtlas) {
+      throw new Error(`WORKER(${self.name}) texture atlas is not initialized.`);
+    }
+
+    if (!textureAtlas.textureDimensions.hasOwnProperty(textureName)) {
+      throw new Error(`WORKER(${self.name}) received unexpected texture dimensions resolve request. Texture is not included in the texture atlas: "${textureName}"`);
+    }
+
+    return textureAtlas.textureDimensions[textureName];
+  }
 
   function _resolveTextureUrl(textureName: string): string {
     const textureUrl = `${__ASSETS_BASE_PATH}/${textureName}.png?${__CACHE_BUST}`;
@@ -82,43 +98,39 @@ async function _onMapContentLoaded(
     return textureUrl;
   }
 
-  let expectedItemsToLoad = textureUrls.length;
+  const entitySketches: Array<EntitySketch> = Array.from(unmarshalMap(filename, content, _resolveTextureUrl));
 
-  for (let entitySketch of unmarshalMap(filename, content, _resolveTextureUrl)) {
-    entitySketches.push(entitySketch);
+  // Map is currently loading.
+  let progressExpect: number = 1;
+
+  for (let entitySketch of entitySketches) {
     switch (entitySketch.properties.classname) {
-      case "model_gltf":
-        expectedItemsToLoad += 2;
+      case "worldspawn":
+        // Texture and translation namespace.
+        progressExpect += 2;
         break;
       case "model_md2":
-        expectedItemsToLoad += 2;
-        break;
-      default:
-        expectedItemsToLoad += 1;
+        // Model itself, metadata and texture.
+        progressExpect += 3;
         break;
     }
   }
 
   progressMessagePort.postMessage({
-    expectAtLeast: expectedItemsToLoad,
+    expect: progressExpect,
   });
 
-  const { createTextureAtlas: textureAtlas } = await sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
+  const response: {
+    createTextureAtlas: AtlasResponse;
+  } = await sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
     createTextureAtlas: {
       textureUrls: textureUrls,
       rpc: MathUtils.generateUUID(),
     },
   });
 
-  function _resolveTextureDimensions(textureName: string): AtlasTextureDimension {
-    if (!textureAtlas.textureDimensions.hasOwnProperty(textureName)) {
-      throw new Error(`WORKER(${self.name}) received unexpected texture dimensions resolve request. Texture is not included in the texture atlas: "${textureName}"`);
-    }
-
-    return textureAtlas.textureDimensions[textureName];
-  }
-
-  const transferables = [textureAtlas.imageDataBuffer];
+  textureAtlas = response.createTextureAtlas;
+  transferables.push(textureAtlas.imageDataBuffer);
 
   for (let entity of buildEntities(filename, entitySketches, _resolveTextureDimensions, discardOccludingVector3)) {
     entities.push(entity);
@@ -151,12 +163,16 @@ const quakeMapsMessagesRouter = {
       throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading map.`);
     }
 
-    // prettier-ignore
-    notifyProgressManager(
-      _progressMessagePort,
-      createResourceLoadMessage("map", filename),
-      _fetchUnmarshalMapContent(messagePort, _atlasMessagePort, _progressMessagePort, filename, rpc, discardOccluding)
-    );
+    const progress = Progress(_progressMessagePort, "map");
+
+    progress.start();
+
+    // At least map texture and translation messages.
+    _progressMessagePort.postMessage({
+      expect: 3,
+    });
+
+    progress.wait(_fetchUnmarshalMapContent(progress, messagePort, _atlasMessagePort, _progressMessagePort, filename, rpc, discardOccluding));
   },
 };
 

@@ -10,13 +10,13 @@ function pluckTexture<T>(response: { createImageBitmap: T }): T {
   return response.createImageBitmap;
 }
 
-export function requestTexture<T>(rpcLookupTable: RPCLookupTable, messagePort: MessagePort, textureUrl: string): Promise<T> {
+export function requestTexture<T>(rpcLookupTable: RPCLookupTable, texturesMessagePort: MessagePort, textureUrl: string): Promise<T> {
   const textureRequest: TextureRequest = {
     textureUrl: textureUrl,
     rpc: MathUtils.generateUUID(),
   };
 
-  return sendRPCMessage(rpcLookupTable, messagePort, {
+  return sendRPCMessage(rpcLookupTable, texturesMessagePort, {
     createImageBitmap: textureRequest,
   }).then(pluckTexture);
 }

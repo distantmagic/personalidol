@@ -14,6 +14,8 @@ import type { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementVie
 import type { MainMenuUserSettingsButtonDOMElementView } from "./MainMenuUserSettingsButtonDOMElementView";
 import type { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import type { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
+import type { ProgressManagerStateDOMElementProps } from "./ProgressManagerStateDOMElementProps.type";
+import type { ProgressManagerStateDOMElementView } from "./ProgressManagerStateDOMElementView";
 import type { ReloadButtonDOMElementView } from "./ReloadButtonDOMElementView";
 import type { SettingsBackdropDOMElementProps } from "./SettingsBackdropDOMElementProps.interface";
 import type { SettingsBackdropDOMElementView } from "./SettingsBackdropDOMElementView";
@@ -29,6 +31,7 @@ declare global {
       "pi-main-menu-language-button": HTMLAttributes<MainMenuLanguageButtonDOMElementView>;
       "pi-main-menu-layout": HTMLAttributes<MainMenuLayoutDOMElementView>;
       "pi-main-menu-user-settings-button": HTMLAttributes<MainMenuUserSettingsButtonDOMElementView>;
+      "pi-progress-manager-state": HTMLAttributes<ProgressManagerStateDOMElementView> & ProgressManagerStateDOMElementProps;
       "pi-reload-button": HTMLAttributes<ReloadButtonDOMElementView>;
       "pi-settings-backdrop": HTMLAttributes<SettingsBackdropDOMElementView> & SettingsBackdropDOMElementProps;
       "pi-slider": HTMLAttributes<SliderDOMElementView<any>> & SliderDOMElementProps<any>;
@@ -50,6 +53,7 @@ export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-main-menu-user-settings-button": typeof MainMenuUserSettingsButtonDOMElementView;
   "pi-mouse-pointer-layer": typeof MousePointerLayerDOMElementView;
   "pi-object-label": typeof ObjectLabelDOMElementView;
+  "pi-progress-manager-state": typeof ProgressManagerStateDOMElementView;
   "pi-reload-button": typeof ReloadButtonDOMElementView;
   "pi-settings-backdrop": typeof SettingsBackdropDOMElementView;
   "pi-slider": typeof SliderDOMElementView;

@@ -1,120 +1,81 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import type { MessageProgress } from "./MessageProgress.type";
+import type { MessageProgressChange } from "./MessageProgressChange.type";
+import type { MessageProgressDone } from "./MessageProgressDone.type";
+import type { MessageProgressError } from "./MessageProgressError.type";
+import type { MessageProgressStart } from "./MessageProgressStart.type";
 import type { ProgressManager as IProgressManager } from "./ProgressManager.interface";
-import type { ProgressManagerComment } from "./ProgressManagerComment.type";
-import type { ProgressManagerItem } from "./ProgressManagerItem.type";
 import type { ProgressManagerState } from "./ProgressManagerState.type";
 
-function _isLoaded(itemsLoaded: Set<ProgressManagerItem>, itemToCheck: ProgressManagerItem): boolean {
-  for (let item of itemsLoaded) {
-    if (item.id === itemToCheck.id) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function _createProgressComment(itemsLoaded: Set<ProgressManagerItem>, itemsToLoad: Set<ProgressManagerItem>): Array<ProgressManagerComment> {
-  const resources: {
-    [key: string]: Array<string>;
-  } = {};
-  let comments: Array<ProgressManagerComment> = [];
-
-  for (let item of itemsToLoad) {
-    if (!_isLoaded(itemsLoaded, item)) {
-      if (!resources.hasOwnProperty(item.resourceType)) {
-        resources[item.resourceType] = [];
-      }
-
-      resources[item.resourceType].push(item.resourceUri);
-    }
-  }
-
-  const resourceTypes = Object.keys(resources).sort();
-
-  for (let resourceType of resourceTypes) {
-    comments.push(<ProgressManagerComment>{
-      resourceType: resourceType,
-      resourceQuantity: resources[resourceType].length,
-    });
-  }
-
-  return comments;
-}
-
-function _sumWeights(items: Set<ProgressManagerItem>): number {
-  let _sum = 0;
-
-  for (let item of items) {
-    _sum += item.weight;
-  }
-
-  return _sum;
+function _messageToString(message: MessageProgress): string {
+  return `MessageProgress("${message.type}", "${message.uri}", "${message.id}")`;
 }
 
 export function ProgressManager(): IProgressManager {
   const state: ProgressManagerState = Object.seal({
-    comment: [],
-    expectsAtLeast: 0,
-    needsUpdates: true,
-    progress: 0,
+    expect: 0,
+    errors: [],
+    messages: [],
     version: 0,
   });
 
-  const _itemsLoaded: Set<ProgressManagerItem> = new Set();
-  const _itemsToLoad: Set<ProgressManagerItem> = new Set();
-  let _startProgress: boolean = false;
+  const _currentErrors: Map<string, MessageProgressError> = new Map();
+  const _currentlyLoading: Map<string, MessageProgressChange> = new Map();
 
-  function done(item: ProgressManagerItem) {
-    _itemsLoaded.add(item);
-  }
-
-  function expectAtLeast(expectAtLeast: number) {
-    state.expectsAtLeast = expectAtLeast;
-    _startProgress = true;
-    update();
-  }
-
-  function update() {
-    const itemsToLoadWeights = _sumWeights(_itemsToLoad);
-    const totalWeights = Math.max(state.expectsAtLeast, itemsToLoadWeights);
-
-    if (totalWeights < 1) {
-      return;
-    }
-
-    const itemsLoadedWeights = _sumWeights(_itemsLoaded);
-
-    if (itemsLoadedWeights > itemsToLoadWeights) {
-      throw new Error("There are more items loaded than items that are pending to load.");
-    }
-
-    state.comment = _createProgressComment(_itemsLoaded, _itemsToLoad);
-
-    if (_startProgress) {
-      state.progress = Math.max(state.progress, itemsLoadedWeights / totalWeights);
-    }
-
+  function _updateState(): void {
+    state.errors = Array.from(_currentErrors.values());
+    state.messages = Array.from(_currentlyLoading.values());
     state.version += 1;
   }
 
-  function reset() {
-    _itemsLoaded.clear();
-    _itemsToLoad.clear();
-    _startProgress = false;
-    state.comment = [];
-    state.expectsAtLeast = 0;
-    state.progress = 0;
-    state.version += 1;
+  function done(message: MessageProgressDone): void {
+    if (!_currentlyLoading.has(message.id)) {
+      throw new Error(`Item is done loading, but it has never started: ${_messageToString(message)}`);
+    }
+
+    _currentlyLoading.set(message.id, <MessageProgressChange>message);
+    _updateState();
   }
 
-  function start() {}
+  function error(message: MessageProgressError): void {
+    _currentErrors.set(message.id, message);
+    _updateState();
+  }
 
-  function stop() {}
+  function expect(expect: number): void {
+    state.expect = expect;
+    _updateState();
+  }
 
-  function waitFor(item: ProgressManagerItem) {
-    _itemsToLoad.add(item);
+  function progress(message: MessageProgressChange): void {
+    if (!_currentlyLoading.has(message.id)) {
+      throw new Error(`Item load is progressing, but it has never started: ${_messageToString(message)}`);
+    }
+
+    _currentlyLoading.set(message.id, <MessageProgressChange>message);
+    _updateState();
+  }
+
+  function reset(): void {
+    state.expect = 0;
+    _currentErrors.clear();
+    _currentlyLoading.clear();
+    _updateState();
+  }
+
+  function start(message: MessageProgressStart): void {
+    if (_currentlyLoading.has(message.id)) {
+      throw new Error(`Items is already started: ${_messageToString(message)}`);
+    }
+
+    _currentlyLoading.set(message.id, <MessageProgressChange>{
+      ...message,
+      loaded: 0,
+      total: 1,
+    });
+
+    _updateState();
   }
 
   return Object.freeze({
@@ -123,11 +84,10 @@ export function ProgressManager(): IProgressManager {
     state: state,
 
     done: done,
-    expectAtLeast: expectAtLeast,
+    error: error,
+    expect: expect,
+    progress: progress,
     reset: reset,
     start: start,
-    stop: stop,
-    update: update,
-    waitFor: waitFor,
   });
 }
