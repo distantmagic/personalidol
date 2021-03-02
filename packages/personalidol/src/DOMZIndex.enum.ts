@@ -10,6 +10,6 @@ export const enum DOMZIndex {
   InGameMenuTrigger,
   MainMenu,
   Settings,
-  MousePointerLayer,
   StatsReporter,
+  MousePointerLayer,
 }

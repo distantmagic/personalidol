@@ -1,8 +1,7 @@
-import { h } from "preact";
+// import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-// import { Input } from "@personalidol/framework/src/Input";
-// import { must } from "@personalidol/framework/src/must";
+// import { InputIndices } from "@personalidol/framework/src/InputIndices.enum";
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 
@@ -35,9 +34,7 @@ const _css = `
   #pointer {
     pointer-events: none;
     position: absolute;
-    transform:
-      translate(var(--translate-x), var(--translate-y))
-    ;
+    transform: translate3D(var(--translate-x), var(--translate-y), 0);
     will-change: transform, z-index;
   }
 `;
@@ -50,16 +47,15 @@ export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings
   }
 
   render() {
-    return <div />;
+    return null;
     // return (
     //   <div id="mouse-pointer-layer">
-    //     <img
+    //     <div
     //       id="pointer"
     //       style={{
-    //         "--translate-x": `${this.inputState[Input.code.M_RELATIVE_X]}px`,
-    //         "--translate-y": `${this.inputState[Input.code.M_RELATIVE_Y]}px`,
+    //         "--translate-x": `${this.inputState[InputIndices.M_RELATIVE_X]}px`,
+    //         "--translate-y": `${this.inputState[InputIndices.M_RELATIVE_Y]}px`,
     //       }}
-    //       src={`${__ASSETS_BASE_PATH}/website/icon-observe.png`}
     //     />
     //   </div>
     // );

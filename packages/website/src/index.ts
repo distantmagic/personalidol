@@ -23,7 +23,7 @@ import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
-import { Preloader } from "@personalidol/framework/src/Preloader";
+import { preload } from "@personalidol/framework/src/preload";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
@@ -88,7 +88,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
   const inputState = Input.createEmptyState(useSharedBuffers);
   const inputStatsHook = InputStatsHook(inputState);
-  const preloader = Preloader(logger);
 
   const eventBus = EventBus();
   const statsReporterMessageChannel = createSingleThreadMessageChannel();
@@ -130,7 +129,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(multiThreadUserSettingsSync);
   serviceManager.services.add(statsReporter);
 
-  mainLoop.updatables.add(preloader);
   mainLoop.updatables.add(htmlElementResizeObserver);
   mainLoop.updatables.add(keyboardObserver);
   mainLoop.updatables.add(mouseObserver);
@@ -215,17 +213,17 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   addProgressMessagePort(internationalizationToProgressMessageChannel.port1, false);
   internationalizationService.registerMessagePort(internationalizationMessageChannel.port1);
 
-  preloader.preloadables.add(internationalizationService);
+  await preload(logger, internationalizationService);
+
   serviceManager.services.add(internationalizationService);
 
   // Listen to user settings to adjust the language.
 
   const languageUserSettingsManager = LanguageUserSettingsManager(userSettings, i18next as PersonalIdoli18n);
 
-  preloader.preloadables.add(languageUserSettingsManager);
-  mainLoop.updatables.add(languageUserSettingsManager);
+  await preload(logger, languageUserSettingsManager);
 
-  await preloader.wait();
+  mainLoop.updatables.add(languageUserSettingsManager);
 
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
@@ -252,10 +250,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     domElementsLookup
   );
 
-  preloader.preloadables.add(domUIController);
-  serviceManager.services.add(domUIController);
+  await preload(logger, domUIController);
 
-  await preloader.wait();
+  serviceManager.services.add(domUIController);
 
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
@@ -416,10 +413,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     },
     [md2MessageChannel.port1, md2ToProgressMessageChannel.port2]
   );
-
-  // Make sure that everything that needs preloading is preloaded.
-
-  await preloader.wait();
 
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {

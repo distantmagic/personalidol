@@ -33,10 +33,10 @@ import type { MountableCallback } from "@personalidol/framework/src/MountableCal
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
-import type { View } from "@personalidol/framework/src/View.interface";
 import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
 import type { EntityMD2Model } from "./EntityMD2Model.type";
+import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 type AnimationClipsCached = {
@@ -105,7 +105,7 @@ export function MD2ModelView(
   md2MessagePort: MessagePort,
   texturesMessagePort: MessagePort,
   rpcLookupTable: RPCLookupTable
-): View {
+): EntityView {
   const id: string = MathUtils.generateUUID();
   const name: string = `MD2ModelView("${entity.model_name}",${entity.skin})`;
   const state: ViewState = Object.seal({
@@ -272,7 +272,10 @@ export function MD2ModelView(
   }
 
   return Object.freeze({
+    entity: entity,
     id: id,
+    isEntityView: true,
+    isExpectingTargets: false,
     isScene: false,
     isView: true,
     name: name,

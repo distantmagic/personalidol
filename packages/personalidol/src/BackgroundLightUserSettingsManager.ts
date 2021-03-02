@@ -28,16 +28,16 @@ export function BackgroundLightUserSettingsManager(userSettings: UserSettings, l
       _lightDefaultIntensity.set(light, light.intensity);
     }
 
+    _defaultLightIntensity = _lightDefaultIntensity.get(light);
+
+    if ("number" !== typeof _defaultLightIntensity) {
+      throw new Error("Unable to retrieve default light intensity.");
+    }
+
     if (userSettings.useDynamicLighting) {
-      _defaultLightIntensity = _lightDefaultIntensity.get(light);
-
-      if ("number" !== typeof _defaultLightIntensity) {
-        throw new Error("Unable to retrieve default light intensity.");
-      }
-
       light.intensity = _defaultLightIntensity;
     } else {
-      light.intensity = 1;
+      light.intensity = Math.min(1, Math.max(0.6, _defaultLightIntensity * 2));
     }
   });
 

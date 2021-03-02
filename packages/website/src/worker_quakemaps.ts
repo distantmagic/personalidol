@@ -110,6 +110,7 @@ async function _onMapContentLoaded(
         progressExpect += 2;
         break;
       case "model_md2":
+      case "player":
         // Model itself, metadata and texture.
         progressExpect += 3;
         break;

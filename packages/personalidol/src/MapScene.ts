@@ -75,7 +75,7 @@ import type { UserSettings } from "./UserSettings.type";
 
 const CAMERA_DAMP = 10;
 const CAMERA_ZOOM_INITIAL = 401;
-const CAMERA_ZOOM_MAX = 1;
+const CAMERA_ZOOM_MAX = 0;
 const CAMERA_ZOOM_MIN = 1401;
 const CAMERA_ZOOM_STEP = 50;
 
@@ -194,7 +194,7 @@ export function MapScene(
       _playerPosition.set(entity.origin.x, entity.origin.y, entity.origin.z);
       _cameraSkipDamping = true;
 
-      return PlayerView(_scene, entity);
+      return PlayerView(logger, userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
     },
 
     scripted_block(entity: EntityScriptedBlock, worldspawnTexture: ITexture, targetedViews: Set<View>): View {
