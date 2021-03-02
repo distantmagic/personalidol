@@ -12,6 +12,7 @@ import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLEleme
 import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
+import { Keyboard } from "@personalidol/framework/src/Keyboard";
 import { KeyboardObserver } from "@personalidol/framework/src/KeyboardObserver";
 import { LanguageUserSettingsManager } from "@personalidol/personalidol/src/LanguageUserSettingsManager";
 import { LocalStorageUserSettingsSync } from "@personalidol/framework/src/LocalStorageUserSettingsSync";
@@ -86,6 +87,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const useSharedBuffers = isSharedArrayBufferSupported();
   const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
+  const keyboardState = Keyboard.createEmptyState(useSharedBuffers);
   const pointerState = Pointer.createEmptyState(useSharedBuffers);
   const pointerStatsHook = PointerStatsHook(pointerState);
 
@@ -109,7 +111,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
-  const keyboardObserver = KeyboardObserver(canvas, pointerState, mainLoop.tickTimerState);
+  const keyboardObserver = KeyboardObserver(canvas, keyboardState, mainLoop.tickTimerState);
   const mouseObserver = MouseObserver(canvas, dimensionsState, pointerState, mainLoop.tickTimerState);
   const touchObserver = TouchObserver(canvas, dimensionsState, pointerState, mainLoop.tickTimerState);
 
@@ -436,6 +438,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     domUIController,
     dimensionsState,
     eventBus,
+    keyboardState,
     pointerState,
     statsReporter,
     THREAD_DEBUG_NAME,

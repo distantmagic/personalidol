@@ -3,6 +3,7 @@ import { createSingleThreadMessageChannel } from "@personalidol/framework/src/cr
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
+import { KeyboardIndices } from "@personalidol/framework/src/KeyboardIndices.enum";
 import { PointerIndices } from "@personalidol/framework/src/PointerIndices.enum";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
@@ -27,6 +28,7 @@ export async function createRenderingService(
   domUIController: DOMUIController<DOMElementsLookup, UserSettings>,
   dimensionsState: Uint32Array,
   eventBus: EventBus,
+  keyboardState: Uint32Array,
   pointerState: Int32Array,
   statsReporter: StatsReporter,
   threadDebugName: string,
@@ -62,12 +64,14 @@ export async function createRenderingService(
         let _lastNotificationTick = 0;
         const updateMessage = {
           dimensionsState: dimensionsState,
+          keyboardState: keyboardState,
           pointerState: pointerState,
         };
 
         return WorkerService(offscreenWorker, workers.offscreen.name, function () {
           // prettier-ignore
           if ( _lastNotificationTick < dimensionsState[DimensionsIndices.LAST_UPDATE]
+            || _lastNotificationTick < keyboardState[KeyboardIndices.LAST_UPDATE]
             || _lastNotificationTick < pointerState[PointerIndices.LAST_UPDATE]
           ) {
             offscreenWorker.postMessage(updateMessage);
@@ -81,6 +85,7 @@ export async function createRenderingService(
           offscreenWorker.postMessage({
             awaitSharedDimensions: true,
             sharedDimensionsState: dimensionsState.buffer,
+            sharedKeyboardState: keyboardState.buffer,
             sharedPointerState: pointerState.buffer,
           });
         } catch (err) {
@@ -199,6 +204,7 @@ export async function createRenderingService(
         serviceManager,
         canvas,
         dimensionsState,
+        keyboardState,
         pointerState,
         logger,
         statsReporter,

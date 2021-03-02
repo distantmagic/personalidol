@@ -55,7 +55,7 @@ const touches: ReadonlyArray<PointerTouch> = [
 
 function createEmptyState(usesSharedBuffer: boolean): Int32Array {
   if (usesSharedBuffer) {
-    // Int32Array takes 2 bytes per value.
+    // Int32Array takes 4 bytes per value.
     return new Int32Array(new SharedArrayBuffer(PointerIndices.__TOTAL * 4));
   }
 

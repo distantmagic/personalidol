@@ -34,10 +34,11 @@ const _canvasStyle = {
 let _canvas: null | OffscreenCanvas = null;
 let _devicePixelRatio: null | number = null;
 let _dimensionsState: null | Uint32Array = null;
-let _pointerState: null | Int32Array = null;
 let _isBootstrapped: boolean = false;
+let _keyboardState: null | Uint32Array = null;
 let _mainLoop: null | IMainLoop = null;
 let _notifiedReady: boolean = false;
+let _pointerState: null | Int32Array = null;
 let _serviceManager: null | IServiceManager = null;
 let _shouldNotifyReady: boolean = false;
 let domMessagePort: null | MessagePort = null;
@@ -56,6 +57,7 @@ function _createScenesSafe(): void {
     _canvas === null ||
     _devicePixelRatio === null ||
     _dimensionsState === null ||
+    _keyboardState === null ||
     _pointerState === null ||
     domMessagePort === null ||
     fontPreloadMessagePort === null ||
@@ -95,6 +97,7 @@ function _createScenesSafe(): void {
     _serviceManager,
     _canvas,
     _dimensionsState,
+    _keyboardState,
     _pointerState,
     logger,
     statsReporter,
@@ -173,22 +176,30 @@ self.onmessage = createRouter({
     _createScenesSafe();
   },
 
+  internationalizationMessagePort(port: MessagePort): void {
+    internationalizationMessagePort = port;
+    _createScenesSafe();
+  },
+
+  keyboardState(input: Uint32Array): void {
+    if (!_keyboardState) {
+      throw new Error("Keyboard state must be set before it's updated.");
+    }
+
+    _keyboardState.set(input);
+  },
+
+  md2MessagePort(port: MessagePort): void {
+    md2MessagePort = port;
+    _createScenesSafe();
+  },
+
   pointerState(input: Int32Array): void {
     if (!_pointerState) {
       throw new Error("Pointer state must be set before it's updated.");
     }
 
     _pointerState.set(input);
-  },
-
-  internationalizationMessagePort(port: MessagePort): void {
-    internationalizationMessagePort = port;
-    _createScenesSafe();
-  },
-
-  md2MessagePort(port: MessagePort): void {
-    md2MessagePort = port;
-    _createScenesSafe();
   },
 
   pointerZoomRequest(zoomAmount: number): void {
@@ -209,6 +220,10 @@ self.onmessage = createRouter({
 
   sharedDimensionsState(dimensions: SharedArrayBuffer): void {
     _dimensionsState = new Uint32Array(dimensions);
+  },
+
+  sharedKeyboardState(keyboard: SharedArrayBuffer): void {
+    _keyboardState = new Uint32Array(keyboard);
   },
 
   sharedPointerState(input: SharedArrayBuffer): void {

@@ -30,6 +30,7 @@ export function createScenes(
   serviceManager: ServiceManager,
   canvas: HTMLCanvasElement | OffscreenCanvas,
   dimensionsState: Uint32Array,
+  keyboardState: Uint32Array,
   pointerState: Int32Array,
   logger: Logger,
   statsReporter: StatsReporter,
