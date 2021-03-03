@@ -419,7 +419,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       detail: {
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
-        type: "gltf_service",
+        type: "md2_service",
       },
     })
   );

@@ -85,6 +85,8 @@ export function GLTFModelView(
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
+    const texture: Promise<ITexture> = _loadTexture(`${__ASSETS_BASE_PATH}/models/model-glb-${entity.model_name}/${entity.model_texture}?${__CACHE_BUST}`);
+
     const {
       load: geometry,
     }: {
@@ -114,7 +116,7 @@ export function GLTFModelView(
     const material = new MeshBasicMaterial({
       color: 0xcccccc,
       flatShading: true,
-      map: await _loadTexture(`${__ASSETS_BASE_PATH}/models/model-glb-${entity.model_name}/${entity.model_texture}?${__CACHE_BUST}`),
+      map: await texture,
       morphTargets: false,
     });
 
