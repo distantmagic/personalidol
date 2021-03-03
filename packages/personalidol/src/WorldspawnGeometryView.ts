@@ -76,7 +76,7 @@ export function WorldspawnGeometryView(
   function preload(): void {
     state.isPreloading = true;
 
-    logger.debug(`LOADED_MAP_TRIS("${id}", ${entity.vertices.length / 3})`);
+    logger.debug(`LOADED_MAP_TRIS("${id}", ${entity.position.length / 3})`);
 
     // Geometry
 
@@ -84,10 +84,10 @@ export function WorldspawnGeometryView(
 
     bufferGeometry.setAttribute("atlas_uv_start", new BufferAttribute(entity.atlasUVStart, 2));
     bufferGeometry.setAttribute("atlas_uv_stop", new BufferAttribute(entity.atlasUVStop, 2));
-    bufferGeometry.setAttribute("normal", new BufferAttribute(entity.normals, 3));
-    bufferGeometry.setAttribute("position", new BufferAttribute(entity.vertices, 3));
-    bufferGeometry.setAttribute("uv", new BufferAttribute(entity.uvs, 2));
-    bufferGeometry.setIndex(new BufferAttribute(entity.indices, 1));
+    bufferGeometry.setAttribute("normal", new BufferAttribute(entity.normal, 3));
+    bufferGeometry.setAttribute("position", new BufferAttribute(entity.position, 3));
+    bufferGeometry.setAttribute("uv", new BufferAttribute(entity.uv, 2));
+    bufferGeometry.setIndex(new BufferAttribute(entity.index, 1));
 
     _disposables.add(disposableGeneric(bufferGeometry));
 

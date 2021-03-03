@@ -9,7 +9,7 @@ import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
 
 import type { Brush } from "./Brush.type";
-import type { GeometryAttributes } from "./GeometryAttributes.type";
+import type { Geometry } from "./Geometry.type";
 import type { HalfSpace } from "./HalfSpace.type";
 import type { IntersectingPointsCache } from "./IntersectingPointsCache.type";
 import type { TextureDimensionsResolver } from "./TextureDimensionsResolver.type";
@@ -19,11 +19,7 @@ type UV = [number, number];
 
 const PI_HALF: number = Math.PI / 2;
 
-export function buildGeometryAttributes(
-  brushes: ReadonlyArray<Brush>,
-  resolveTextureDimensions: TextureDimensionsResolver,
-  discardOccluding: null | IVector3 = null
-): GeometryAttributes {
+export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, resolveTextureDimensions: TextureDimensionsResolver, discardOccluding: null | IVector3 = null): Geometry {
   let indexIncrement = 0;
   const indexLookup: {
     [key: string]: number;
@@ -115,10 +111,10 @@ export function buildGeometryAttributes(
   return {
     atlasUVStart: atlasUVStartTypedArray,
     atlasUVStop: atlasUVStopTypedArray,
-    indices: indicesTypedArray,
-    normals: normalsTypedArray,
-    uvs: uvsTypedArray,
-    vertices: verticesTypedArray,
+    index: indicesTypedArray,
+    normal: normalsTypedArray,
+    position: verticesTypedArray,
+    uv: uvsTypedArray,
     transferables: [
       atlasUVStartTypedArray.buffer,
       atlasUVStopTypedArray.buffer,
