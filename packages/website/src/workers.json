@@ -3,6 +3,10 @@
     "name": "Loader(Atlas)",
     "url": "/lib/worker_atlas.js"
   },
+  "gltf": {
+    "name": "Loader(GLTF)",
+    "url": "/lib/worker_gltf.js"
+  },
   "md2": {
     "name": "Loader(MD2)",
     "url": "/lib/worker_md2.js"

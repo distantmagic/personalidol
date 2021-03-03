@@ -22,6 +22,7 @@ import { useObjectLabel } from "./useObjectLabel";
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
 import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
 import type { Group as IGroup } from "three/src/objects/Group";
+import type { Logger } from "loglevel";
 import type { Mesh as IMesh } from "three/src/objects/Mesh";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
@@ -98,6 +99,7 @@ function _morphPositionToBufferAttribute(morphPosition: MD2LoaderMorphPosition) 
 }
 
 export function MD2ModelView(
+  logger: Logger,
   userSettings: UserSettings,
   scene: Scene,
   entity: EntityMD2Model,
@@ -123,11 +125,19 @@ export function MD2ModelView(
   const _disposables: Set<DisposableCallback> = new Set();
   const _labelContainer: IGroup = new Group();
   const _mesh: IMesh = createEmptyMesh();
+  const _meshUserSettingsManager = MeshUserSettingsManager(logger, userSettings, _mesh);
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
-  const _userSettingsManager = MeshUserSettingsManager(userSettings, _mesh);
 
   let _animationMixer: null | IAnimationMixer = null;
+
+  async function _loadTexture(textureUrl: string): Promise<ITexture> {
+    const texture = await requestTexture<ITexture>(rpcLookupTable, texturesMessagePort, textureUrl);
+
+    _disposables.add(disposableGeneric(texture));
+
+    return texture;
+  }
 
   function dispose(): void {
     state.isDisposed = true;
@@ -217,7 +227,7 @@ export function MD2ModelView(
 
     // User settings
 
-    _userSettingsManager.preload();
+    _meshUserSettingsManager.preload();
 
     _mountables.add(function () {
       // Update animationoffset so identical models standing next to each other
@@ -256,19 +266,11 @@ export function MD2ModelView(
       throw new Error("AnimationMixer should be prepared during 'preload' phase.");
     }
 
-    _userSettingsManager.update(delta, elapsedTime, tickTimerState);
+    _meshUserSettingsManager.update(delta, elapsedTime, tickTimerState);
 
     if (!state.isPaused) {
       _animationMixer.update(delta);
     }
-  }
-
-  async function _loadTexture(textureUrl: string): Promise<ITexture> {
-    const texture = await requestTexture<ITexture>(rpcLookupTable, texturesMessagePort, textureUrl);
-
-    _disposables.add(disposableGeneric(texture));
-
-    return texture;
   }
 
   return Object.freeze({

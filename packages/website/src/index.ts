@@ -50,7 +50,7 @@ import { createTexturesService } from "./createTexturesService";
 
 const THREAD_DEBUG_NAME: string = "main_thread";
 const canvas = getHTMLElementById(window.document, "canvas");
-const totalLoadingSteps: number = 11;
+const totalLoadingSteps: number = 12;
 let currentLoadingStep: number = 1;
 
 if (!(canvas instanceof HTMLCanvasElement)) {
@@ -376,7 +376,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       detail: {
         step: currentLoadingStep++,
         totalSteps: totalLoadingSteps,
-        type: "md2_service",
+        type: "gltf_service",
       },
     })
   );
@@ -388,6 +388,40 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
       quakeMapsMessagePort: quakeMapsMessageChannel.port1,
     },
     [atlasMessageChannel.port2, quakeMapsMessageChannel.port1, quakeMapsToProgressMessageChannel.port2]
+  );
+
+  // GLTF loader offloads model loading from the rendering thread.
+
+  const gltfMessageChannel = createMultiThreadMessageChannel();
+  const gltfToProgressMessageChannel = createMultiThreadMessageChannel();
+
+  addProgressMessagePort(gltfToProgressMessageChannel.port1, false);
+
+  const gltfWorker = new Worker(`${__STATIC_BASE_PATH}${workers.gltf.url}?${__CACHE_BUST}`, {
+    credentials: "same-origin",
+    name: workers.gltf.name,
+    type: "module",
+  });
+
+  const gltfWorkerService = WorkerService(gltfWorker, workers.gltf.name);
+  await gltfWorkerService.ready();
+
+  gltfWorker.postMessage(
+    {
+      gltfMessagePort: gltfMessageChannel.port1,
+      progressMessagePort: gltfToProgressMessageChannel.port2,
+    },
+    [gltfMessageChannel.port1, gltfToProgressMessageChannel.port2]
+  );
+
+  uiRoot.dispatchEvent(
+    new CustomEvent("loading", {
+      detail: {
+        step: currentLoadingStep++,
+        totalSteps: totalLoadingSteps,
+        type: "gltf_service",
+      },
+    })
   );
 
   // MD2 worker offloads model loading from the thread whether it's the main
@@ -457,6 +491,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   await createScenes(
     fontPreloadMessageChannel.port2,
+    gltfMessageChannel.port2,
     internationalizationMessageChannel.port2,
     md2MessageChannel.port2,
     progressMessageChannel.port2,

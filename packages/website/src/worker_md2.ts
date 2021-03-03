@@ -37,7 +37,6 @@ const loadingCache: ReusedResponsesCache = createReusedResponsesCache();
 const loadingUsage: ReusedResponsesUsage = createReusedResponsesUsage();
 
 const _md2Loader = new MD2Loader(new LoadingManager());
-const _md2LoadAsync = _md2Loader.loadAsync.bind(_md2Loader);
 let _progressMessagePort: null | MessagePort = null;
 
 function _md2LoadWithProgress(url: string): Promise<MD2LoaderParsedGeometry> {
@@ -45,12 +44,12 @@ function _md2LoadWithProgress(url: string): Promise<MD2LoaderParsedGeometry> {
     throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading MD2 model.`);
   }
 
-  const progress = Progress(_progressMessagePort, "model");
+  const progress = Progress(_progressMessagePort, "model", url);
 
   progress.start();
 
   return progress.wait(
-    _md2LoadAsync(url, function (evt: ProgressEvent) {
+    _md2Loader.loadAsync(url, function (evt: ProgressEvent) {
       progress.progress(evt.loaded, evt.total);
     })
   );
@@ -95,7 +94,7 @@ function _fetchModelParts(partsUrl: string): Promise<MD2GeometryParts> {
     throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading MD2 model.`);
   }
 
-  const progress = Progress(_progressMessagePort, "model_parts");
+  const progress = Progress(_progressMessagePort, "model_parts", partsUrl);
 
   progress.start();
 

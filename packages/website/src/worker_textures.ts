@@ -49,7 +49,7 @@ async function _fetchImageBitmapWithProgress(textureRequest: TextureRequest): Pr
     throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading texture.`);
   }
 
-  const progress = Progress(_progressMessagePort, "texture");
+  const progress = Progress(_progressMessagePort, "texture", textureRequest.textureUrl);
 
   progress.start();
 

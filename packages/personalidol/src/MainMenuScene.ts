@@ -84,13 +84,6 @@ const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
       weight: "300",
     },
   },
-  {
-    family: "Mukta",
-    source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-medium.ttf?${__CACHE_BUST}`,
-    descriptors: {
-      weight: "500",
-    },
-  },
   // {
   //   family: "Mukta",
   //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-regular.ttf?${__CACHE_BUST}`,
@@ -98,6 +91,13 @@ const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   //     weight: "400",
   //   },
   // },
+  {
+    family: "Mukta",
+    source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-medium.ttf?${__CACHE_BUST}`,
+    descriptors: {
+      weight: "500",
+    },
+  },
   // {
   //   family: "Mukta",
   //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-semibold.ttf?${__CACHE_BUST}`,

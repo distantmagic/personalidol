@@ -1,4 +1,3 @@
-declare module "i18next-localstorage-cache" {
-  var Cache: any;
-  export default Cache;
+declare module "@personalidol/three-modules/src/loaders/GLTFLoader" {
+  export var GLTFLoader: any;
 }

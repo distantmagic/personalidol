@@ -28,6 +28,7 @@ import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/update
 
 import { AmbientLightView } from "./AmbientLightView";
 import { buildViews } from "./buildViews";
+import { GLTFModelView } from "./GLTFModelView";
 import { HemisphereLightView } from "./HemisphereLightView";
 import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
 import { MD2ModelView } from "./MD2ModelView";
@@ -101,6 +102,9 @@ const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _internationalizationMessageRouter = createRouter({
   loadedNamespaces: handleRPCResponse(_rpcLookupTable),
 });
+const _gltfMessageRouter = createRouter({
+  geometry: handleRPCResponse(_rpcLookupTable),
+});
 const _md2MessageRouter = createRouter({
   geometry: handleRPCResponse(_rpcLookupTable),
 });
@@ -120,6 +124,7 @@ export function MapScene(
   dimensionsState: Uint32Array,
   inputState: Int32Array,
   domMessagePort: MessagePort,
+  gltfMessagePort: MessagePort,
   internationalizationMessagePort: MessagePort,
   md2MessagePort: MessagePort,
   progressMessagePort: MessagePort,
@@ -168,26 +173,11 @@ export function MapScene(
     },
 
     model_gltf(entity: EntityGLTFModel): View {
-      throw new Error(`Not yet implemented: "${entity.classname}"`);
-      // const model = await loaders.gltf.loadAsync(`/models/model-glb-${entity.model_name}/model.glb`);
-      // const mesh = model.scene.children[0] as Mesh;
-
-      // mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-
-      // _mountables.add(function () {
-      //   _scene.add(mesh);
-      // });
-
-      // _disposables.add(disposableGeneric(mesh.geometry));
-      // _disposables.add(disposableMaterial(mesh.material));
-
-      // _unmountables.add(function () {
-      //   _scene.remove(mesh);
-      // });
+      return GLTFModelView(logger, userSettings, _scene, entity, gltfMessagePort, texturesMessagePort, _rpcLookupTable);
     },
 
     model_md2(entity: EntityMD2Model): View {
-      return MD2ModelView(userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
+      return MD2ModelView(logger, userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
     },
 
     player(entity: EntityPlayer): View {
@@ -275,6 +265,7 @@ export function MapScene(
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
+    gltfMessagePort.onmessage = _gltfMessageRouter;
     internationalizationMessagePort.onmessage = _internationalizationMessageRouter;
     md2MessagePort.onmessage = _md2MessageRouter;
     quakeMapsMessagePort.onmessage = _quakeMapsRouter;
@@ -326,6 +317,7 @@ export function MapScene(
     state.isPreloaded = true;
 
     _disposables.add(function () {
+      gltfMessagePort.onmessage = null;
       internationalizationMessagePort.onmessage = null;
       md2MessagePort.onmessage = null;
       quakeMapsMessagePort.onmessage = null;

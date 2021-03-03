@@ -43,6 +43,7 @@ let _serviceManager: null | IServiceManager = null;
 let _shouldNotifyReady: boolean = false;
 let domMessagePort: null | MessagePort = null;
 let fontPreloadMessagePort: null | MessagePort = null;
+let gltfMessagePort: null | MessagePort = null;
 let internationalizationMessagePort: null | MessagePort = null;
 let md2MessagePort: null | MessagePort = null;
 let progressMessagePort: null | MessagePort = null;
@@ -61,6 +62,7 @@ function _createScenesSafe(): void {
     _pointerState === null ||
     domMessagePort === null ||
     fontPreloadMessagePort === null ||
+    gltfMessagePort === null ||
     internationalizationMessagePort === null ||
     md2MessagePort === null ||
     progressMessagePort === null ||
@@ -103,6 +105,7 @@ function _createScenesSafe(): void {
     statsReporter,
     domMessagePort,
     fontPreloadMessagePort,
+    gltfMessagePort,
     internationalizationMessagePort,
     md2MessagePort,
     progressMessagePort,
@@ -173,6 +176,11 @@ self.onmessage = createRouter({
 
   fontPreloadMessagePort(port: MessagePort): void {
     fontPreloadMessagePort = port;
+    _createScenesSafe();
+  },
+
+  gltfMessagePort(port: MessagePort): void {
+    gltfMessagePort = port;
     _createScenesSafe();
   },
 

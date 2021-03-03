@@ -5,5 +5,5 @@ export type GeometryAttributes = {
   normals: Float32Array;
   uvs: Float32Array;
   vertices: Float32Array;
-  transferables: [ArrayBuffer, ArrayBuffer, ArrayBuffer, ArrayBuffer, ArrayBuffer, ArrayBuffer];
+  transferables: Array<ArrayBuffer>;
 };

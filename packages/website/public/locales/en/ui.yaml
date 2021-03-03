@@ -20,6 +20,7 @@ resource_type_accusative_atlas_service_count: Atlas Service
 resource_type_accusative_dom_controller_count: DOMController
 resource_type_accusative_font_count: font
 resource_type_accusative_font_count_plural: "{{count}} fonts"
+resource_type_accusative_gltf_service_count: GLTF Service
 resource_type_accusative_map_count: map
 resource_type_accusative_map_count_plural: "{{count}} maps"
 resource_type_accusative_maps_service_count: Maps Service

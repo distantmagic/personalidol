@@ -20,7 +20,7 @@ export function KeyboardObserver(htmlElement: HTMLElement, keyboardState: Uint32
   function update(): void {}
 
   function _onKeyDown(evt: KeyboardEvent): void {
-    // console.log(evt.which);
+    console.log(evt.key);
   }
 
   return Object.freeze({

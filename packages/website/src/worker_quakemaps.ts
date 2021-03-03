@@ -105,14 +105,18 @@ async function _onMapContentLoaded(
 
   for (let entitySketch of entitySketches) {
     switch (entitySketch.properties.classname) {
-      case "worldspawn":
-        // Texture and translation namespace.
+      case "model_gltf":
+        // Model itself and texture.
         progressExpect += 2;
         break;
       case "model_md2":
       case "player":
         // Model itself, metadata and texture.
         progressExpect += 3;
+        break;
+      case "worldspawn":
+        // Texture and translation namespace.
+        progressExpect += 2;
         break;
     }
   }
@@ -164,7 +168,7 @@ const quakeMapsMessagesRouter = {
       throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading map.`);
     }
 
-    const progress = Progress(_progressMessagePort, "map");
+    const progress = Progress(_progressMessagePort, "map", filename);
 
     progress.start();
 

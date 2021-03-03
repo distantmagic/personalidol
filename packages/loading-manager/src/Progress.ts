@@ -11,7 +11,7 @@ import type { MessageProgressStart } from "./MessageProgressStart.type";
 import type { Progress as IProgress } from "./Progress.interface";
 import type { ProgressState } from "./ProgressState.type";
 
-export function Progress(progressMessagePort: MessagePort, resourceType: string, resourceUri: string = ""): IProgress {
+export function Progress(progressMessagePort: MessagePort, resourceType: string, resourceUri: string): IProgress {
   const state: ProgressState = Object.seal({
     isFailed: false,
     isFinished: false,

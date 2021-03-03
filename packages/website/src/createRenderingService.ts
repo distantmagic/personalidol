@@ -105,6 +105,7 @@ export async function createRenderingService(
 
     return async function (
       fontPreloadMessagePort: MessagePort,
+      gltfMessagePort: MessagePort,
       internationalizationMessagePort: MessagePort,
       md2MessagePort: MessagePort,
       progressMessagePort: MessagePort,
@@ -121,6 +122,7 @@ export async function createRenderingService(
           devicePixelRatio: devicePixelRatio,
           domMessagePort: domRendererMessageChannel.port2,
           fontPreloadMessagePort: fontPreloadMessagePort,
+          gltfMessagePort: gltfMessagePort,
           internationalizationMessagePort: internationalizationMessagePort,
           md2MessagePort: md2MessagePort,
           progressMessagePort: progressMessagePort,
@@ -133,6 +135,7 @@ export async function createRenderingService(
         [
           domRendererMessageChannel.port2,
           fontPreloadMessagePort,
+          gltfMessagePort,
           internationalizationMessagePort,
           md2MessagePort,
           offscreenCanvas,
@@ -172,6 +175,7 @@ export async function createRenderingService(
 
     return async function (
       fontPreloadMessagePort: MessagePort,
+      gltfMessagePort: MessagePort,
       internationalizationMessagePort: MessagePort,
       md2MessagePort: MessagePort,
       progressMessagePort: MessagePort,
@@ -210,6 +214,7 @@ export async function createRenderingService(
         statsReporter,
         domRendererMessageChannel.port2,
         fontPreloadMessagePort,
+        gltfMessagePort,
         internationalizationMessagePort,
         md2MessagePort,
         progressMessagePort,

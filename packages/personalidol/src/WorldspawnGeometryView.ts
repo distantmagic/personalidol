@@ -54,7 +54,7 @@ export function WorldspawnGeometryView(
   const _mesh: IMesh = createEmptyMesh();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
-  const _userSettingsManager = MeshUserSettingsManager(userSettings, _mesh);
+  const _userSettingsManager = MeshUserSettingsManager(logger, userSettings, _mesh);
 
   function dispose(): void {
     state.isDisposed = true;

@@ -23,6 +23,7 @@ resource_type_accusative_dom_controller_count: DOMController
 resource_type_accusative_font_count_0: czczionkę
 resource_type_accusative_font_count_1: "{{count}} czczionki"
 resource_type_accusative_font_count_2: "{{count}} czczionek"
+resource_type_accusative_gltf_service_count: GLTF Service
 resource_type_accusative_map_count_0: mapę
 resource_type_accusative_map_count_1: "{{count}} mapy"
 resource_type_accusative_map_count_2: "{{count}} map"

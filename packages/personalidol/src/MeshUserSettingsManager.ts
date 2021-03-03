@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
 
+import type { Logger } from "loglevel";
 import type { Mesh } from "three/src/objects/Mesh";
 
 import type { UserSettingsManager } from "@personalidol/framework/src/UserSettingsManager.interface";
@@ -9,12 +10,12 @@ import type { UserSettingsManagerState } from "@personalidol/framework/src/UserS
 
 import type { UserSettings } from "./UserSettings.type";
 
-export function MeshUserSettingsManager(userSettings: UserSettings, mesh: Mesh): UserSettingsManager {
-  const state: UserSettingsManagerState = {
+export function MeshUserSettingsManager(logger: Logger, userSettings: UserSettings, mesh: Mesh): UserSettingsManager {
+  const state: UserSettingsManagerState = Object.seal({
     isPreloaded: false,
     isPreloading: false,
     needsUpdates: true,
-  };
+  });
 
   const applySettings = createSettingsHandle(userSettings, function () {
     mesh.castShadow = userSettings.useShadows;
