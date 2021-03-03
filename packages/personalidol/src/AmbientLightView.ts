@@ -2,7 +2,9 @@ import { AmbientLight } from "three/src/lights/AmbientLight";
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { BackgroundLightUserSettingsManager } from "./BackgroundLightUserSettingsManager";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
 
+import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { ViewState } from "@personalidol/framework/src/ViewState.type";
@@ -11,7 +13,7 @@ import type { EntityLightAmbient } from "./EntityLightAmbient.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function AmbientLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightAmbient): EntityView {
+export function AmbientLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightAmbient): EntityView {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -41,7 +43,7 @@ export function AmbientLightView(userSettings: UserSettings, scene: Scene, entit
   function preload(): void {
     state.isPreloading = true;
 
-    _userSettingsManager.preload();
+    fPreload(logger, _userSettingsManager);
 
     state.isPreloading = false;
     state.isPreloaded = true;

@@ -1,8 +1,11 @@
 import { HemisphereLight } from "three/src/lights/HemisphereLight";
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { preload as fPreload } from "@personalidol/framework/src/preload";
+
 import { BackgroundLightUserSettingsManager } from "./BackgroundLightUserSettingsManager";
 
+import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { ViewState } from "@personalidol/framework/src/ViewState.type";
@@ -11,7 +14,7 @@ import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function HemisphereLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightHemisphere): EntityView {
+export function HemisphereLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightHemisphere): EntityView {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -42,7 +45,7 @@ export function HemisphereLightView(userSettings: UserSettings, scene: Scene, en
   function preload(): void {
     state.isPreloading = true;
 
-    _userSettingsManager.preload();
+    fPreload(logger, _userSettingsManager);
 
     state.isPreloading = false;
     state.isPreloaded = true;

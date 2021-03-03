@@ -11,6 +11,7 @@ import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { mountAll } from "@personalidol/framework/src/mountAll";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
 import { MeshUserSettingsManager } from "./MeshUserSettingsManager";
@@ -52,9 +53,9 @@ export function WorldspawnGeometryView(
 
   const _disposables: Set<DisposableCallback> = new Set();
   const _mesh: IMesh = createEmptyMesh();
+  const _meshUserSettingsManager = MeshUserSettingsManager(logger, userSettings, _mesh);
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
-  const _userSettingsManager = MeshUserSettingsManager(logger, userSettings, _mesh);
 
   function dispose(): void {
     state.isDisposed = true;
@@ -129,7 +130,7 @@ export function WorldspawnGeometryView(
     _mesh.matrixAutoUpdate = matrixAutoUpdate;
 
     // Apply user settings before updating mesh matrix.
-    _userSettingsManager.preload();
+    fPreload(logger, _meshUserSettingsManager);
 
     if (!matrixAutoUpdate) {
       // This one update is necessary to set offsets correctly.
@@ -172,6 +173,6 @@ export function WorldspawnGeometryView(
     preload: preload,
     unmount: unmount,
     unpause: unpause,
-    update: _userSettingsManager.update,
+    update: _meshUserSettingsManager.update,
   });
 }

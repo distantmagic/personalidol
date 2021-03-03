@@ -12,6 +12,7 @@ import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { mountAll } from "@personalidol/framework/src/mountAll";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
@@ -227,7 +228,7 @@ export function MD2ModelView(
 
     // User settings
 
-    _meshUserSettingsManager.preload();
+    fPreload(logger, _meshUserSettingsManager);
 
     _mountables.add(function () {
       // Update animationoffset so identical models standing next to each other

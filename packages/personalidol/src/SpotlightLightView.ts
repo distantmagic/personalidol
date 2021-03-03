@@ -4,9 +4,11 @@ import { SpotLight } from "three/src/lights/SpotLight";
 
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
 import { onlyOne } from "@personalidol/framework/src/onlyOne";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
 
 import { ShadowLightUserSettingsManager } from "./ShadowLightUserSettingsManager";
 
+import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { View } from "@personalidol/framework/src/View.interface";
@@ -16,7 +18,7 @@ import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function SpotlightLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightSpotlight, targetedViews: Set<View>): EntityView {
+export function SpotlightLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightSpotlight, targetedViews: Set<View>): EntityView {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -59,7 +61,7 @@ export function SpotlightLightView(userSettings: UserSettings, scene: Scene, ent
     _spotLight.visible = true;
     _spotLight.shadow.camera.far = _spotLight.distance;
 
-    _userSettingsManager.preload();
+    fPreload(logger, _userSettingsManager);
 
     state.isPreloading = false;
     state.isPreloaded = true;

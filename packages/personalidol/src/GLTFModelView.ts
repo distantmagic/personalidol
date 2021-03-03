@@ -9,6 +9,7 @@ import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { mountAll } from "@personalidol/framework/src/mountAll";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
@@ -125,15 +126,12 @@ export function GLTFModelView(
     _mesh.geometry = bufferGeometry;
     _mesh.material = material;
 
-    // Update morph targets after swapping both geometry and material.
-    _mesh.updateMorphTargets();
-
     _mesh.rotation.set(0, entity.angle, 0);
     _mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
 
     // User settings
 
-    _meshUserSettingsManager.preload();
+    fPreload(logger, _meshUserSettingsManager);
 
     _mountables.add(function () {
       scene.add(_mesh);

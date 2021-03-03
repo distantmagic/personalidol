@@ -157,19 +157,19 @@ export function MapScene(
     },
 
     light_ambient(entity: EntityLightAmbient): View {
-      return AmbientLightView(userSettings, _scene, entity);
+      return AmbientLightView(logger, userSettings, _scene, entity);
     },
 
     light_hemisphere(entity: EntityLightHemisphere): View {
-      return HemisphereLightView(userSettings, _scene, entity);
+      return HemisphereLightView(logger, userSettings, _scene, entity);
     },
 
     light_point(entity: EntityLightPoint): View {
-      return PointLightView(userSettings, _scene, entity);
+      return PointLightView(logger, userSettings, _scene, entity);
     },
 
     light_spotlight(entity: EntityLightSpotlight, worldspawnTexture: ITexture, targetedViews: Set<View>): View {
-      return SpotlightLightView(userSettings, _scene, entity, targetedViews);
+      return SpotlightLightView(logger, userSettings, _scene, entity, targetedViews);
     },
 
     model_gltf(entity: EntityGLTFModel): View {

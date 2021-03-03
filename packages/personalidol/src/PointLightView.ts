@@ -3,9 +3,11 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { PointLight } from "three/src/lights/PointLight";
 
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
 
 import { ShadowLightUserSettingsManager } from "./ShadowLightUserSettingsManager";
 
+import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { ViewState } from "@personalidol/framework/src/ViewState.type";
@@ -14,7 +16,7 @@ import type { EntityLightPoint } from "./EntityLightPoint.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function PointLightView(userSettings: UserSettings, scene: Scene, entity: EntityLightPoint): EntityView {
+export function PointLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightPoint): EntityView {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -49,7 +51,7 @@ export function PointLightView(userSettings: UserSettings, scene: Scene, entity:
     _pointLight.decay = entity.decay;
     _pointLight.shadow.camera.far = 1024;
 
-    _userSetingsManager.preload();
+    fPreload(logger, _userSetingsManager);
 
     state.isPreloading = false;
     state.isPreloaded = true;
