@@ -1,6 +1,6 @@
-import type { EntityAny } from "./EntityAny.type";
+import type { AnyEntity } from "./AnyEntity.type";
 
-export type EntityWithObjectLabel = EntityAny & {
+export type EntityWithObjectLabel = AnyEntity & {
   properties: {
     label: string;
   };

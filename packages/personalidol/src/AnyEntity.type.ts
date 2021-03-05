@@ -13,7 +13,7 @@ import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 
 // prettier-ignore
-export type EntityAny =
+export type AnyEntity =
   | EntityFuncGroup
   | EntityGLTFModel
   | EntityLightAmbient

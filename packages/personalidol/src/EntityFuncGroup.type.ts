@@ -1,8 +1,8 @@
 import type { Geometry } from "@personalidol/quakemaps/src/Geometry.type";
 
-import type { BaseEntity } from "./BaseEntity.type";
+import type { Entity } from "./Entity.type";
 
 export type EntityFuncGroup = Geometry &
-  BaseEntity & {
+  Entity & {
     readonly classname: "func_group";
   };

@@ -1,6 +1,6 @@
-import type { EntityAny } from "./EntityAny.type";
+import type { AnyEntity } from "./AnyEntity.type";
 
-export type TargetingEntity = EntityAny & {
+export type TargetingEntity = AnyEntity & {
   properties: {
     target: string;
   };

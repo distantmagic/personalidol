@@ -10,7 +10,7 @@ import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { View } from "@personalidol/framework/src/View.interface";
 
-import type { EntityAny } from "./EntityAny.type";
+import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityLookup } from "./EntityLookup.type";
 import type { EntityLookupCallback } from "./EntityLookupCallback.type";
 import type { EntityLookupTable } from "./EntityLookupTable.type";
@@ -34,8 +34,8 @@ function _createEntityView<K extends keyof EntityLookup>(
   return (entityLookupTable[entity.classname] as EntityLookupCallback<K>)(entity, worldspawnTexture, targetedViews);
 }
 
-function _findTargetedViews(entityViews: WeakMap<EntityAny, View>, step: ViewBuildingStep): Set<View> {
-  const entity: EntityAny = step.entity;
+function _findTargetedViews(entityViews: WeakMap<AnyEntity, View>, step: ViewBuildingStep): Set<View> {
+  const entity: AnyEntity = step.entity;
   const targetedViews: Set<View> = new Set();
 
   if (!isTargeting(entity)) {
@@ -55,8 +55,8 @@ function _findTargetedViews(entityViews: WeakMap<EntityAny, View>, step: ViewBui
   return targetedViews;
 }
 
-export function* buildViews(logger: Logger, entityLookupTable: EntityLookupTable, worldspawnTexture: ITexture, entities: ReadonlyArray<EntityAny>): Generator<View> {
-  const entityViews: WeakMap<EntityAny, View> = new WeakMap();
+export function* buildViews(logger: Logger, entityLookupTable: EntityLookupTable, worldspawnTexture: ITexture, entities: ReadonlyArray<AnyEntity>): Generator<View> {
+  const entityViews: WeakMap<AnyEntity, View> = new WeakMap();
 
   for (let step of createViewBuildingPlan(entities)) {
     const targetedViews = _findTargetedViews(entityViews, step);

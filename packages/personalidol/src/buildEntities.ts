@@ -12,7 +12,7 @@ import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type
 import type { TextureDimensionsResolver } from "@personalidol/quakemaps/src/TextureDimensionsResolver.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
 
-import type { EntityAny } from "./EntityAny.type";
+import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityFuncGroup } from "./EntityFuncGroup.type";
 import type { EntityGLTFModel } from "./EntityGLTFModel.type";
 import type { EntityLightAmbient } from "./EntityLightAmbient.type";
@@ -59,7 +59,7 @@ export function* buildEntities(
   entitySketches: ReadonlyArray<EntitySketch>,
   resolveTextureDimensions: TextureDimensionsResolver,
   discardOccluding: null | Vector3 = null
-): Generator<EntityAny> {
+): Generator<AnyEntity> {
   // brushes to be merged into the bigger static geometry
   const worldBrushes: Array<EntitySketch> = [];
   let worldProperties: null | EntityProperties = null;

@@ -1,6 +1,6 @@
 import type { EntityProperties } from "@personalidol/quakemaps/src/EntityProperties.type";
 
-export type BaseEntity = {
+export type Entity = {
   readonly id: string;
   readonly classname: string;
   readonly properties: EntityProperties;

@@ -16,9 +16,9 @@ import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
 
 import type { Vector3 as IVector3 } from "three";
 
+import type { AnyEntity } from "@personalidol/personalidol/src/AnyEntity.type";
 import type { AtlasResponse } from "@personalidol/texture-loader/src/AtlasResponse.type";
 import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
-import type { EntityAny } from "@personalidol/personalidol/src/EntityAny.type";
 import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
@@ -71,7 +71,7 @@ async function _onMapContentLoaded(
   discardOccluding: null | Vector3Simple = null
 ): Promise<void> {
   const discardOccludingVector3: null | IVector3 = discardOccluding ? new Vector3(discardOccluding.x, discardOccluding.y, discardOccluding.z) : null;
-  const entities: Array<EntityAny> = [];
+  const entities: Array<AnyEntity> = [];
   const textureUrls: Array<string> = [];
   const transferables: Array<Transferable> = [];
   let textureAtlas: null | AtlasResponse = null;

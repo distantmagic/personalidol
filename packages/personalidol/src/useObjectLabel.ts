@@ -9,12 +9,12 @@ import type { DisposableCallback } from "@personalidol/framework/src/DisposableC
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
-import type { EntityAny } from "./EntityAny.type";
+import type { AnyEntity } from "./AnyEntity.type";
 
 export function useObjectLabel(
   domMessagePort: MessagePort,
   parent: Object3D,
-  entity: EntityAny,
+  entity: AnyEntity,
   mountables: Set<MountableCallback>,
   unmountables: Set<UnmountableCallback>,
   disposables: Set<DisposableCallback>

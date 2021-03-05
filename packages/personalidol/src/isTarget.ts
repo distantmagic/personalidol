@@ -1,6 +1,6 @@
-import type { EntityAny } from "./EntityAny.type";
+import type { AnyEntity } from "./AnyEntity.type";
 import type { TargetedEntity } from "./TargetedEntity.type";
 
-export function isTarget(entity: EntityAny): entity is TargetedEntity {
+export function isTarget(entity: AnyEntity): entity is TargetedEntity {
   return entity.properties.hasOwnProperty("targetname");
 }

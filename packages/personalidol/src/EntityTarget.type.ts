@@ -1,8 +1,8 @@
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
 
-import type { BaseEntity } from "./BaseEntity.type";
+import type { Entity } from "./Entity.type";
 
-export type EntityTarget = BaseEntity & {
+export type EntityTarget = Entity & {
   readonly classname: "target";
   readonly origin: Vector3Simple;
 };

@@ -1,7 +1,7 @@
-import type { EntityAny } from "./EntityAny.type";
+import type { AnyEntity } from "./AnyEntity.type";
 import type { TargetedEntity } from "./TargetedEntity.type";
 
 export type ViewBuildingStep = {
-  entity: EntityAny;
+  entity: AnyEntity;
   targetedEntities: ReadonlyArray<TargetedEntity>;
 };

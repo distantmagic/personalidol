@@ -1,6 +1,6 @@
-import type { BaseEntity } from "./BaseEntity.type";
+import type { Entity } from "./Entity.type";
 
-export type EntityLightHemisphere = BaseEntity & {
+export type EntityLightHemisphere = Entity & {
   readonly classname: "light_hemisphere";
   readonly light: number;
 };

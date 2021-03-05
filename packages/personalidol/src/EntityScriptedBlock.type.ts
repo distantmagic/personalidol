@@ -1,9 +1,9 @@
 import type { Geometry } from "@personalidol/quakemaps/src/Geometry.type";
 
-import type { BaseEntity } from "./BaseEntity.type";
+import type { Entity } from "./Entity.type";
 
 export type EntityScriptedBlock = Geometry &
-  BaseEntity & {
+  Entity & {
     readonly classname: "scripted_block";
     readonly controller: string;
   };

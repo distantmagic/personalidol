@@ -4,7 +4,7 @@ import { isTarget } from "./isTarget";
 import { isTargetedBy } from "./isTargetedBy";
 import { isTargeting } from "./isTargeting";
 
-import type { EntityAny } from "./EntityAny.type";
+import type { AnyEntity } from "./AnyEntity.type";
 import type { TargetedEntity } from "./TargetedEntity.type";
 import type { TargetingEntity } from "./TargetingEntity.type";
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
@@ -33,7 +33,7 @@ function _findTargetedEntitiesByEntity(
   return ret;
 }
 
-export function* createViewBuildingPlan(entities: ReadonlyArray<EntityAny>): Generator<ViewBuildingStep> {
+export function* createViewBuildingPlan(entities: ReadonlyArray<AnyEntity>): Generator<ViewBuildingStep> {
   const targetedEntities: ReadonlyArray<TargetedEntity> = entities.filter(isTarget);
   const targetedEntitiesCache: WeakMap<TargetingEntity, ReadonlyArray<TargetedEntity>> = new WeakMap();
   const dependencies: Array<[TargetedEntity, TargetingEntity]> = [];
@@ -46,7 +46,7 @@ export function* createViewBuildingPlan(entities: ReadonlyArray<EntityAny>): Gen
     }
   }
 
-  for (let entity of toposort.array<EntityAny>(entities, dependencies)) {
+  for (let entity of toposort.array<AnyEntity>(entities, dependencies)) {
     if (isTargeting(entity)) {
       yield {
         entity: entity,

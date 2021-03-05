@@ -15,8 +15,19 @@
 @baseclass color(255 255 40) = Light
 [
     color(string) : "Color HEX" : "0xFFC000"
-    decay(integer) : "Decay" : 2
-    intensity(integer) : "Intensity" : 2
+    decay(integer) : "Decay" : 1
+    intensity(integer) : "Intensity" : 1
+    quality_map(choices) : "When light should be displayed" : 64 =
+    [
+        0  : "0x000"
+        1  : "0x001"
+        2  : "0x010"
+        4  : "0x011"
+        8  : "0x100"
+        16 : "0x101"
+        32 : "0x110"
+        64 : "0x111"
+    ]
 ]
 
 @baseclass size(-16 -16 -24, 16 16 32) color(0 150 255) = ExternalModel
