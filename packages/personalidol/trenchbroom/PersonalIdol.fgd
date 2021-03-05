@@ -19,14 +19,14 @@
     intensity(integer) : "Intensity" : 1
     quality_map(choices) : "When light should be displayed" : 64 =
     [
-        0  : "0x000"
-        1  : "0x001"
-        2  : "0x010"
-        4  : "0x011"
-        8  : "0x100"
-        16 : "0x101"
-        32 : "0x110"
-        64 : "0x111"
+        0 : "b000"
+        1 : "b001"
+        2 : "b010"
+        3 : "b011"
+        4 : "b100"
+        5 : "b101"
+        6 : "b110"
+        7 : "b111"
     ]
 ]
 

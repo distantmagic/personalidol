@@ -43,14 +43,22 @@ resource_type_accusative_translations_count: Translations
 trigger_menu: Menu
 
 user_settings_done: Done
+user_settings_dynamic_light_quality: Light Quality
+user_settings_dynamic_light_quality_description: >
+  You can reduce overall dynamic light quality for better performance. With
+  lower settings less light sources will be rendered in the scene. Disabling
+  this means that every object will be uniformly highlighted and there will
+  be no light sources that cast shadows.
 user_settings_experimental: Experimental
 user_settings_graphics: Graphics
 user_settings_language: Language
-user_settings_label_high: high
-user_settings_label_low: low
 user_settings_label_off: "off"
 user_settings_label_on: "on"
 user_settings_options: Options
+user_settings_quality_none: disabled
+user_settings_quality_low: low
+user_settings_quality_medium: medium
+user_settings_quality_high: high
 user_settings_rendering_resolution: Rendering Resolution
 user_settings_rendering_resolution_description: >
   You can reduce the rendering pixel ratio to decrease the rendering
@@ -65,11 +73,6 @@ user_settings_show_rendering_stats_description: >
   Primarily used by game developers, but you can check your actual framerate
   and memory usage if you want to fine-tune your settings and you know what you
   are doing.
-user_settings_use_multiple_light_sources: Use Multiple Light Sources
-user_settings_use_multiple_light_sources_description: >
-  Can greatly affect performance. If you disable multiple light sources,
-  background light will have more intensity and everything will be uniformly
-  highlighted.
 user_settings_use_offscreen_canvas: Use Offscreen Canvas
 user_settings_use_offscreen_canvas_description: >
   This one is tricky. On faster devices it provides even better and snappier

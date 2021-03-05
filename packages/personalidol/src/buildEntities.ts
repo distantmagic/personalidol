@@ -103,6 +103,7 @@ export function* buildEntities(
           intensity: Number(entity.properties.intensity),
           origin: _getEntityOrigin(filename, entity),
           properties: entity.properties,
+          quality_map: Number(entity.properties.quality_map),
           transferables: _transferablesEmpty,
         };
         break;

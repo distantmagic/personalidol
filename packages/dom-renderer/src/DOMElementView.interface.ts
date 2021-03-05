@@ -1,4 +1,4 @@
-import type { i18n } from "i18next";
+import type { i18n, TFunction } from "i18next";
 import type { VNode } from "preact";
 
 import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpdatable.interface";
@@ -6,6 +6,8 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 export interface DOMElementView<U extends UserSettings> extends HTMLElement, MainLoopUpdatable {
+  readonly t: TFunction;
+
   css: string;
   domMessagePort: MessagePort;
   i18next: i18n;

@@ -146,7 +146,7 @@ export class ProgressManagerStateDOMElementView extends DOMElementView<UserSetti
     for (let resource in this._resources) {
       if (this._resources.hasOwnProperty(resource)) {
         ret.push(
-          this.i18next.t(`ui:resource_type_accusative_${resource}_count`, {
+          this.t(`ui:resource_type_accusative_${resource}_count`, {
             count: this._resources[resource],
           })
         );
@@ -161,7 +161,7 @@ export class ProgressManagerStateDOMElementView extends DOMElementView<UserSetti
       <main class="progress">
         <div class="progress-message">
           <div class="progress-comment">
-            {`${this.i18next.t("ui:loading")}`} {this.renderResources()} {"..."}
+            {`${this.t("ui:loading")}`} {this.renderResources()} {"..."}
           </div>
           <div class="progress-value">{this._progressPercentage}</div>
           <div class="progress-indicator">

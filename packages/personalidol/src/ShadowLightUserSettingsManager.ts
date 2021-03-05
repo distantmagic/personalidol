@@ -9,11 +9,12 @@ import type { SpotLight } from "three/src/lights/SpotLight";
 import type { UserSettingsManager } from "@personalidol/framework/src/UserSettingsManager.interface";
 import type { UserSettingsManagerState } from "@personalidol/framework/src/UserSettingsManagerState.type";
 
+import type { EntityLight } from "./EntityLight.type";
 import type { UserSettings } from "./UserSettings.type";
 
 type SupportedLights = PointLight | SpotLight;
 
-export function ShadowLightUserSettingsManager(userSettings: UserSettings, light: SupportedLights): UserSettingsManager {
+export function ShadowLightUserSettingsManager(userSettings: UserSettings, entity: EntityLight, light: SupportedLights): UserSettingsManager {
   const state: UserSettingsManagerState = Object.seal({
     isPreloaded: false,
     isPreloading: false,
@@ -21,7 +22,8 @@ export function ShadowLightUserSettingsManager(userSettings: UserSettings, light
   });
 
   const applySettings = createSettingsHandle(userSettings, function () {
-    light.visible = userSettings.useDynamicLighting;
+    // This is a binary map. '&' is intended (instead of '&&').
+    light.visible = Boolean(userSettings.dynamicLightQuality & entity.quality_map);
     light.castShadow = userSettings.useShadows;
 
     if (light.shadow.mapSize.height === userSettings.shadowMapSize && light.shadow.mapSize.width === userSettings.shadowMapSize) {

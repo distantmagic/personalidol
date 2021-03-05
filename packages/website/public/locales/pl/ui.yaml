@@ -51,14 +51,20 @@ resource_type_accusative_translations_count: Translations
 trigger_menu: Menu
 
 user_settings_done: Wyjdź
+user_settings_dynamic_light_quality: Jakość światła
+user_settings_dynamic_light_quality_description: >
+  Niższa jakość poprawia wydajność i sprawia, że mniej źródeł światła będzie
+  renderowanych. Wyłączenie oznacza, że wszystkie elementy będą równomiernie
+  oświetlone, a na scene nie będzie źródeł światła, które rzucają cienie.
 user_settings_experimental: Eksperymentalne
 user_settings_graphics: Grafika
 user_settings_language: Język
-user_settings_label_high: wysoka
-user_settings_label_low: niska
 user_settings_label_off: wyłączone
 user_settings_label_on: włączone
 user_settings_options: Opcje
+user_settings_quality_low: niska
+user_settings_quality_medium: średnia
+user_settings_quality_high: wysoka
 user_settings_rendering_resolution: Rozdzielczość renderowania
 user_settings_rendering_resolution_description: >
   Możesz zredukować gęstość pikseli, aby zmniejszyć rozdzielczość renderowania.
@@ -74,11 +80,6 @@ user_settings_show_rendering_stats_description: >
   Ta opcja jest przeznaczona głównie dla programistów gry. Jeśli wiesz jak z
   niej skorzystać, włącz ją, aby sprawdzić liczbę klatek na sekundę i zużycie
   pamięci, i wykalibrować swoje ustawienia.
-user_settings_use_multiple_light_sources: Użyj wielu źródeł światła
-user_settings_use_multiple_light_sources_description: >
-  Ta opcja ma ogromny wpływ na wydajność. Jeżeli wyłączysz wiele źródeł światła,
-  światło w tle będzie bardziej intensywne i wszystkie obiekty będą równomiernie
-  oświetlone.
 user_settings_use_offscreen_canvas: Użyj Offscreen Canvas
 user_settings_use_offscreen_canvas_description: >
   Włączenie Offscreen Canvas na lepszym sprzęcie podkręci wydajność gry, ale na

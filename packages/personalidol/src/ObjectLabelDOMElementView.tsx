@@ -78,7 +78,7 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
     super.beforeRender(delta, elapsedTime, tickTimerState);
 
     if (this.lastRenderedLanguage !== this.i18next.language) {
-      this._currentLabelTranslated = this.i18next.t(this._currentLabel);
+      this._currentLabelTranslated = this.t(this._currentLabel);
     }
   }
 

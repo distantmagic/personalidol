@@ -31,7 +31,7 @@ export function SpotlightLightView(logger: Logger, userSettings: UserSettings, s
   const _color = new Color(parseInt(entity.color, 16));
   const _spotLight = new SpotLight(_color, entity.intensity);
   const _target: View = onlyOne(targetedViews, `SpotLight must have exactly 1 target, got: "${targetedViews.size}"`);
-  const _userSettingsManager = ShadowLightUserSettingsManager(userSettings, _spotLight);
+  const _userSettingsManager = ShadowLightUserSettingsManager(userSettings, entity, _spotLight);
 
   function dispose(): void {
     state.isDisposed = true;

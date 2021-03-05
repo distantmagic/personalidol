@@ -3,8 +3,10 @@ import { Fragment, h } from "preact";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
+import { unary } from "@personalidol/framework/src/unary";
 
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
+import { UserSettingsDynamicLightQualityMap } from "./UserSettingsDynamicLightQualityMap.enum";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
@@ -101,7 +103,19 @@ const _css = `
 `;
 
 const _booleanEdgeLabels: ["", ""] = ["", ""];
+
+const _booleanLabels: [string, string] = ["ui:user_settings_label_off", "ui:user_settings_label_on"];
 const _booleanValues: [false, true] = [false, true];
+
+const _lightQualityLabels = ["ui:user_settings_label_off", "ui:user_settings_quality_low", "ui:user_settings_quality_medium", "ui:user_settings_quality_high"];
+const _lightQualityValues = [
+  UserSettingsDynamicLightQualityMap.None,
+  UserSettingsDynamicLightQualityMap.Low,
+  UserSettingsDynamicLightQualityMap.Medium,
+  UserSettingsDynamicLightQualityMap.High,
+];
+
+const _lowHighEdgeLabels: [string, string] = ["ui:user_settings_quality_low", "ui:user_settings_quality_high"];
 
 const _pixelRatioLabels = ["25%", "50%", "75%", "100%"];
 const _pixelRatioValues = [0.25, 0.5, 0.75, 1];
@@ -114,16 +128,19 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   public userSettingsLastAcknowledgedVersion: number = -1;
 
   private _isUseOffscreenCanvasChanged: boolean = false;
+  private _unaryT: (key: string) => string;
 
   constructor() {
     super();
 
+    this._unaryT = unary(this.t);
+
     this.close = this.close.bind(this);
+    this.onDynamicLightQualityChange = this.onDynamicLightQualityChange.bind(this);
     this.onOverlayClick = this.onOverlayClick.bind(this);
     this.onPixelRatioChange = this.onPixelRatioChange.bind(this);
     this.onShadowMapSizeChange = this.onShadowMapSizeChange.bind(this);
     this.onShowStatsReporterChange = this.onShowStatsReporterChange.bind(this);
-    this.onUseDynamicLightingChange = this.onUseDynamicLightingChange.bind(this);
     this.onUseOffscreenCanvasChanged = this.onUseOffscreenCanvasChanged.bind(this);
     this.onUseShadowsChange = this.onUseShadowsChange.bind(this);
   }
@@ -140,6 +157,24 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     super.disconnectedCallback();
 
     this.close();
+  }
+
+  onDynamicLightQualityChange(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onDynamicLightQualityChange'.");
+    }
+
+    switch (evt.detail) {
+      case UserSettingsDynamicLightQualityMap.None:
+      case UserSettingsDynamicLightQualityMap.Low:
+      case UserSettingsDynamicLightQualityMap.Medium:
+      case UserSettingsDynamicLightQualityMap.High:
+        this.userSettings.dynamicLightQuality = evt.detail;
+        this.userSettings.version += 1;
+        return;
+      default:
+        throw new Error(`Unexpected shadowmap size: "${evt.detail}"`);
+    }
   }
 
   onPixelRatioChange(evt: Event) {
@@ -175,15 +210,6 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     }
 
     this.userSettings.showStatsReporter = Boolean(evt.detail);
-    this.userSettings.version += 1;
-  }
-
-  onUseDynamicLightingChange(evt: Event) {
-    if (!isCustomEvent(evt)) {
-      throw new Error("Expected custom event with:: 'onUseDynamicLightingChange'.");
-    }
-
-    this.userSettings.useDynamicLighting = Boolean(evt.detail);
     this.userSettings.version += 1;
   }
 
@@ -228,57 +254,57 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
   }
 
   render(delta: number) {
-    const _booleanLabels: [string, string] = [this.i18next.t("ui:user_settings_label_off"), this.i18next.t("ui:user_settings_label_on")];
-    const _lowHighEdgeLabels: [string, string] = [this.i18next.t("ui:user_settings_label_low"), this.i18next.t("ui:user_settings_label_high")];
+    const _booleanLabelsTranslated: [string, string] = _booleanLabels.map(this._unaryT) as [string, string];
+    const _lowHighEdgeLabelsTranslated: [string, string] = _lowHighEdgeLabels.map(this._unaryT) as [string, string];
 
     return (
       <pi-settings-backdrop onDirectClick={this.close}>
         <h1>
-          {this.i18next.t("ui:user_settings_options")}
-          <pi-button onClick={this.close}>{this.i18next.t("ui:user_settings_done").toLocaleLowerCase()}</pi-button>
+          {this.t("ui:user_settings_options")}
+          <pi-button onClick={this.close}>{this.t("ui:user_settings_done").toLocaleLowerCase()}</pi-button>
         </h1>
-        <h2>{this.i18next.t("ui:user_settings_graphics")}</h2>
+        <h2>{this.t("ui:user_settings_graphics")}</h2>
         <form class="options__form">
           <dl>
-            <dt>{this.i18next.t("ui:user_settings_rendering_resolution")}</dt>
-            <dd>{this.i18next.t("ui:user_settings_rendering_resolution_description")}</dd>
+            <dt>{this.t("ui:user_settings_rendering_resolution")}</dt>
+            <dd>{this.t("ui:user_settings_rendering_resolution_description")}</dd>
           </dl>
           <pi-slider
             currentValue={this.userSettings.pixelRatio}
-            edgeLabels={_lowHighEdgeLabels}
+            edgeLabels={_lowHighEdgeLabelsTranslated}
             labels={_pixelRatioLabels}
             onChange={this.onPixelRatioChange}
             values={_pixelRatioValues}
           />
           <dl>
-            <dt>{this.i18next.t("ui:user_settings_use_multiple_light_sources")}</dt>
-            <dd>{this.i18next.t("ui:user_settings_use_multiple_light_sources_description")}</dd>
+            <dt>{this.t("ui:user_settings_dynamic_light_quality")}</dt>
+            <dd>{this.t("ui:user_settings_dynamic_light_quality_description")}</dd>
           </dl>
           <pi-slider
-            currentValue={this.userSettings.useDynamicLighting}
+            currentValue={this.userSettings.dynamicLightQuality}
             edgeLabels={_booleanEdgeLabels}
-            labels={_booleanLabels}
-            onChange={this.onUseDynamicLightingChange}
-            values={_booleanValues}
+            labels={_lightQualityLabels.map(this._unaryT)}
+            onChange={this.onDynamicLightQualityChange}
+            values={_lightQualityValues}
           />
           <dl>
-            <dt>{this.i18next.t("ui:user_settings_use_shadows")}</dt>
-            <dd>{this.i18next.t("ui:user_settings_use_shadows_description")}</dd>
+            <dt>{this.t("ui:user_settings_use_shadows")}</dt>
+            <dd>{this.t("ui:user_settings_use_shadows_description")}</dd>
           </dl>
           <pi-slider
             currentValue={this.userSettings.useShadows}
             edgeLabels={_booleanEdgeLabels}
-            labels={_booleanLabels}
+            labels={_booleanLabelsTranslated}
             onChange={this.onUseShadowsChange}
             values={_booleanValues}
           />
           <dl>
-            <dt>{this.i18next.t("ui:user_settings_shadow_map_size")}</dt>
-            <dd>{this.i18next.t("ui:user_settings_shadow_map_size_description")}</dd>
+            <dt>{this.t("ui:user_settings_shadow_map_size")}</dt>
+            <dd>{this.t("ui:user_settings_shadow_map_size_description")}</dd>
           </dl>
           <pi-slider
             currentValue={this.userSettings.shadowMapSize}
-            edgeLabels={_lowHighEdgeLabels}
+            edgeLabels={_lowHighEdgeLabelsTranslated}
             labels={_shadowMapSizeLabels}
             onChange={this.onShadowMapSizeChange}
             values={_shadowMapSizeValues}
@@ -286,14 +312,14 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
         </form>
         {isOffscreenCanvasSupported && (
           <Fragment>
-            <h2>{this.i18next.t("ui:user_settings_experimental")}</h2>
+            <h2>{this.t("ui:user_settings_experimental")}</h2>
             <form class="options__form">
               <dl>
-                <dt>{this.i18next.t("ui:user_settings_use_offscreen_canvas")}</dt>
-                <dd>{this.i18next.t("ui:user_settings_use_offscreen_canvas_description")}</dd>
+                <dt>{this.t("ui:user_settings_use_offscreen_canvas")}</dt>
+                <dd>{this.t("ui:user_settings_use_offscreen_canvas_description")}</dd>
                 {this._isUseOffscreenCanvasChanged && (
                   <Fragment>
-                    <dd class="option__warning">{this.i18next.t("ui:user_settings_required_reload_to_take_effect")}</dd>
+                    <dd class="option__warning">{this.t("ui:user_settings_required_reload_to_take_effect")}</dd>
                     <pi-reload-button />
                   </Fragment>
                 )}
@@ -302,23 +328,23 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
                 currentValue={this.userSettings.useOffscreenCanvas}
                 disabled={!isOffscreenCanvasSupported}
                 edgeLabels={_booleanEdgeLabels}
-                labels={_booleanLabels}
+                labels={_booleanLabelsTranslated}
                 onChange={this.onUseOffscreenCanvasChanged}
                 values={_booleanValues}
               />
             </form>
           </Fragment>
         )}
-        <h2>{this.i18next.t("ui:user_settings_utilities")}</h2>
+        <h2>{this.t("ui:user_settings_utilities")}</h2>
         <form class="options__form">
           <dl>
-            <dt>{this.i18next.t("ui:user_settings_show_rendering_stats")}</dt>
-            <dd>{this.i18next.t("ui:user_settings_show_rendering_stats_description")}</dd>
+            <dt>{this.t("ui:user_settings_show_rendering_stats")}</dt>
+            <dd>{this.t("ui:user_settings_show_rendering_stats_description")}</dd>
           </dl>
           <pi-slider
             currentValue={this.userSettings.showStatsReporter}
             edgeLabels={_booleanEdgeLabels}
-            labels={_booleanLabels}
+            labels={_booleanLabelsTranslated}
             onChange={this.onShowStatsReporterChange}
             values={_booleanValues}
           />

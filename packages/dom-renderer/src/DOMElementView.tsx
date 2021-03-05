@@ -6,7 +6,7 @@ import { must } from "@personalidol/framework/src/must";
 import { createConstructableStylesheet } from "./createConstructableStylesheet";
 import { Events } from "./Events.enum";
 
-import type { i18n } from "i18next";
+import type { i18n, TOptions } from "i18next";
 import type { VNode } from "preact";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
@@ -79,6 +79,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
     super();
 
     this.render = this.render.bind(this);
+    this.t = this.t.bind(this);
 
     this.shadow = this.attachShadow({
       mode: "closed",
@@ -125,6 +126,10 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
 
   render(delta: number, elapsedTime: number, tickTimerState: TickTimerState): null | VNode<any> {
     return null;
+  }
+
+  t(key: string, options?: string | TOptions<object>): string {
+    return this.i18next.t(key, options);
   }
 
   update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {

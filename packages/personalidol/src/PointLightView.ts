@@ -28,7 +28,7 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
 
   const _color = new Color(parseInt(entity.color, 16));
   const _pointLight = new PointLight(_color, entity.intensity, 1024);
-  const _userSetingsManager = ShadowLightUserSettingsManager(userSettings, _pointLight);
+  const _userSetingsManager = ShadowLightUserSettingsManager(userSettings, entity, _pointLight);
 
   function dispose(): void {
     state.isDisposed = true;

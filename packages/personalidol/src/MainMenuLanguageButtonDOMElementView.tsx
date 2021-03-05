@@ -74,7 +74,7 @@ export class MainMenuLanguageButtonDOMElementView extends DOMElementView<UserSet
               d="M2305.305 1137.595l208.147 63.053 379.204 1366.689-213.808-64.866-76.806-280.572-441.831-133.919-95.014 228.559-213.861-64.881zm95.156 361.813l-158.581 383.286 291.537 88.366-132.956-471.652"
             />
           </svg>
-          <span>{this.i18next.t("ui:menu_language")}</span>
+          <span>{this.t("ui:menu_language")}</span>
         </div>
       </pi-main-menu-button>
     );

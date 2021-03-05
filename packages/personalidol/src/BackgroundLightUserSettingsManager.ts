@@ -2,6 +2,8 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
 
+import { UserSettingsDynamicLightQualityMap } from "./UserSettingsDynamicLightQualityMap.enum";
+
 import type { AmbientLight } from "three/src/lights/AmbientLight";
 import type { HemisphereLight } from "three/src/lights/HemisphereLight";
 
@@ -34,10 +36,10 @@ export function BackgroundLightUserSettingsManager(userSettings: UserSettings, l
       throw new Error("Unable to retrieve default light intensity.");
     }
 
-    if (userSettings.useDynamicLighting) {
-      light.intensity = _defaultLightIntensity;
-    } else {
+    if (UserSettingsDynamicLightQualityMap.None === userSettings.dynamicLightQuality) {
       light.intensity = Math.min(1, Math.max(0.6, _defaultLightIntensity * 2));
+    } else {
+      light.intensity = _defaultLightIntensity;
     }
   });
 
