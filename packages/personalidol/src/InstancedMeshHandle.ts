@@ -15,8 +15,6 @@ export function InstancedMeshHandle(logger: Logger, userSettings: UserSettings, 
     needsUpdates: true,
   });
 
-  let _needsUpdate: boolean = false;
-
   function _updateMatrix(): void {
     reference.updateMatrix();
 
@@ -33,20 +31,7 @@ export function InstancedMeshHandle(logger: Logger, userSettings: UserSettings, 
     state.isPreloaded = true;
   }
 
-  function update(): void {
-    if (!_needsUpdate) {
-      return;
-    }
-
-    _needsUpdate = false;
-    _updateMatrix();
-  }
-
   return Object.freeze({
-    set needsUpdate(needsUpdate: boolean) {
-      _needsUpdate = needsUpdate;
-    },
-
     id: MathUtils.generateUUID(),
     isInstancedMeshHandle: true,
     name: "InstancedMeshHandle",
@@ -54,6 +39,6 @@ export function InstancedMeshHandle(logger: Logger, userSettings: UserSettings, 
     state: state,
 
     preload: preload,
-    update: update,
+    update: _updateMatrix,
   });
 }

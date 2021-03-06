@@ -9,6 +9,4 @@ export interface InstancedMeshHandle extends MainLoopUpdatable, Preloadable {
   readonly isInstancedMeshHandle: true;
   readonly object3D: Object3D;
   readonly state: InstancedMeshHandleState;
-
-  needsUpdate: boolean;
 }

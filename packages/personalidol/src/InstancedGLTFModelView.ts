@@ -34,6 +34,7 @@ export function InstancedGLTFModelView(
 
   const _object3D: IObject3D = new Object3D();
   let _instancedMeshHandle: null | InstancedMeshHandle = null;
+  let _instancedMeshHandleNeedsUpdate: boolean = false;
 
   function dispose(): void {
     state.isDisposed = true;
@@ -53,7 +54,7 @@ export function InstancedGLTFModelView(
     _instancedMeshHandle = await instancedGLTFModelViewManager.createEntiyMeshHandle(entity, _object3D);
     _instancedMeshHandle.object3D.rotation.set(0, entity.angle, 0);
     _instancedMeshHandle.object3D.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
-    _instancedMeshHandle.needsUpdate = true;
+    _instancedMeshHandleNeedsUpdate = true;
 
     fPreload(logger, _instancedMeshHandle);
 
@@ -74,6 +75,11 @@ export function InstancedGLTFModelView(
       throw new Error("Instanced mesh handle is not set, but it was expected.");
     }
 
+    if (!_instancedMeshHandleNeedsUpdate) {
+      return;
+    }
+
+    _instancedMeshHandleNeedsUpdate = false;
     _instancedMeshHandle.update(delta, elapsedTime, tickTimerState);
   }
 
@@ -83,7 +89,7 @@ export function InstancedGLTFModelView(
     isEntityView: true,
     isExpectingTargets: false,
     isView: true,
-    name: "InstancedGLTFModelView",
+    name: `InstancedGLTFModelView("${entity.model_name}", "${entity.model_texture}", ${entity.scale})`,
     object3D: _object3D,
     state: state,
 
