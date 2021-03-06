@@ -28,8 +28,9 @@ import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/update
 
 import { AmbientLightView } from "./AmbientLightView";
 import { buildViews } from "./buildViews";
-import { GLTFModelView } from "./GLTFModelView";
 import { HemisphereLightView } from "./HemisphereLightView";
+import { InstancedGLTFModelView } from "./InstancedGLTFModelView";
+import { InstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager";
 import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
 import { MD2ModelView } from "./MD2ModelView";
 import { PlayerView } from "./PlayerView";
@@ -70,6 +71,7 @@ import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
+import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { UIState } from "./UIState.type";
 import type { UserSettings } from "./UserSettings.type";
@@ -145,6 +147,14 @@ export function MapScene(
 
   const _domMousePointerLayerElementId: string = MathUtils.generateUUID();
   const _domInGameMenuTriggerElementId: string = MathUtils.generateUUID();
+  const _instancedGLTFModelViewManager: IInstancedGLTFModelViewManager = InstancedGLTFModelViewManager(
+    logger,
+    userSettings,
+    _scene,
+    gltfMessagePort,
+    texturesMessagePort,
+    _rpcLookupTable
+  );
   let _cameraSkipDamping: boolean = true;
 
   _camera.position.set(100, 100, 100);
@@ -173,7 +183,9 @@ export function MapScene(
     },
 
     model_gltf(entity: EntityGLTFModel): View {
-      return GLTFModelView(logger, userSettings, _scene, entity, gltfMessagePort, texturesMessagePort, _rpcLookupTable);
+      _instancedGLTFModelViewManager.expectEntity(entity);
+
+      return InstancedGLTFModelView(logger, userSettings, _scene, entity, _instancedGLTFModelViewManager);
     },
 
     model_md2(entity: EntityMD2Model): View {
@@ -312,6 +324,8 @@ export function MapScene(
     for (let view of buildViews(logger, entityLookupTable, worldspawnTexture, entities)) {
       views.add(view);
     }
+
+    views.add(_instancedGLTFModelViewManager);
 
     state.isPreloading = false;
     state.isPreloaded = true;

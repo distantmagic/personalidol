@@ -64,7 +64,6 @@ export function AmbientLightView(logger: Logger, userSettings: UserSettings, sce
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
-    isScene: false,
     isView: true,
     name: `AmbientLightView(${entity.light})`,
     object3D: _ambientLight,

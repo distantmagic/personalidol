@@ -95,7 +95,6 @@ export function ScriptedBlockView(
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: _controller.isExpectingTargets,
-    isScene: false,
     isView: true,
     name: `ScriptedBlockView("${entity.controller}", ${name(_worldspawnGeometryView)})`,
     object3D: _worldspawnGeometryView.object3D,

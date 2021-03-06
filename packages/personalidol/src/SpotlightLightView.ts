@@ -82,7 +82,6 @@ export function SpotlightLightView(logger: Logger, userSettings: UserSettings, s
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: true,
-    isScene: false,
     isView: true,
     name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     object3D: _spotLight,

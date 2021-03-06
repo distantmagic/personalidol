@@ -161,7 +161,6 @@ export function WorldspawnGeometryView(
 
   return Object.freeze({
     id: id,
-    isScene: false,
     isView: true,
     name: `WorldspawnGeometryView`,
     object3D: _mesh,

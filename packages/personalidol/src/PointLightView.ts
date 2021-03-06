@@ -72,7 +72,6 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
-    isScene: false,
     isView: true,
     name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     state: state,

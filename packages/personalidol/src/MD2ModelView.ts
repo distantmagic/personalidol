@@ -279,7 +279,6 @@ export function MD2ModelView(
     id: id,
     isEntityView: true,
     isExpectingTargets: false,
-    isScene: false,
     isView: true,
     name: name,
     object3D: _mesh,

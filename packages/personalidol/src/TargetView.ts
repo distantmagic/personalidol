@@ -62,7 +62,6 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
-    isScene: false,
     isView: true,
     name: `TargetView("${entity.properties.targetname}")`,
     object3D: base,

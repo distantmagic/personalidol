@@ -1,35 +1,27 @@
 import { MathUtils } from "three/src/math/MathUtils";
+import { Object3D } from "three/src/core/Object3D";
 
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
-import { mount as fMount } from "@personalidol/framework/src/mount";
-import { pause as fPause } from "@personalidol/framework/src/pause";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
-import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
-
-import { MD2ModelView } from "./MD2ModelView";
 
 import type { Logger } from "loglevel";
+import type { Object3D as IObject3D } from "three/src/core/Object3D";
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { ViewState } from "@personalidol/framework/src/ViewState.type";
 
-import type { EntityMD2Model } from "./EntityMD2Model.type";
-import type { EntityPlayer } from "./EntityPlayer.type";
+import type { EntityGLTFModel } from "./EntityGLTFModel.type";
 import type { EntityView } from "./EntityView.interface";
+import type { InstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
+import type { InstancedMeshHandle } from "./InstancedMeshHandle.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function PlayerView(
+export function InstancedGLTFModelView(
   logger: Logger,
   userSettings: UserSettings,
   scene: Scene,
-  entity: EntityPlayer,
-  domMessagePort: MessagePort,
-  md2MessagePort: MessagePort,
-  texturesMessagePort: MessagePort,
-  rpcLookupTable: RPCLookupTable
+  entity: EntityGLTFModel,
+  instancedGLTFModelViewManager: InstancedGLTFModelViewManager
 ): EntityView {
   const state: ViewState = Object.seal({
     isDisposed: false,
@@ -40,38 +32,30 @@ export function PlayerView(
     needsUpdates: true,
   });
 
-  const _md2Entity: EntityMD2Model = Object.freeze({
-    id: MathUtils.generateUUID(),
-    angle: 0,
-    classname: "model_md2",
-    model_name: "necron99",
-    origin: entity.origin,
-    properties: entity.properties,
-    skin: 1,
-    transferables: [],
-  });
-
-  const _playerModel = MD2ModelView(logger, userSettings, scene, _md2Entity, domMessagePort, md2MessagePort, texturesMessagePort, rpcLookupTable);
+  const _object3D: IObject3D = new Object3D();
+  let _instancedMeshHandle: null | InstancedMeshHandle = null;
 
   function dispose(): void {
     state.isDisposed = true;
-    fDispose(logger, _playerModel);
   }
 
   function mount(): void {
     state.isMounted = true;
-    fMount(logger, _playerModel);
   }
 
   function pause(): void {
     state.isPaused = true;
-    fPause(logger, _playerModel);
   }
 
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
-    await fPreload(logger, _playerModel);
+    _instancedMeshHandle = await instancedGLTFModelViewManager.createEntiyMeshHandle(entity, _object3D);
+    _instancedMeshHandle.object3D.rotation.set(0, entity.angle, 0);
+    _instancedMeshHandle.object3D.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+    _instancedMeshHandle.needsUpdate = true;
+
+    fPreload(logger, _instancedMeshHandle);
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -79,16 +63,18 @@ export function PlayerView(
 
   function unmount(): void {
     state.isMounted = false;
-    fUnmount(logger, _playerModel);
   }
 
   function unpause(): void {
     state.isPaused = false;
-    fUnpause(logger, _playerModel);
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    _playerModel.update(delta, elapsedTime, tickTimerState);
+    if (!_instancedMeshHandle) {
+      throw new Error("Instanced mesh handle is not set, but it was expected.");
+    }
+
+    _instancedMeshHandle.update(delta, elapsedTime, tickTimerState);
   }
 
   return Object.freeze({
@@ -97,8 +83,8 @@ export function PlayerView(
     isEntityView: true,
     isExpectingTargets: false,
     isView: true,
-    name: `PlayerView`,
-    object3D: _playerModel.object3D,
+    name: "InstancedGLTFModelView",
+    object3D: _object3D,
     state: state,
 
     dispose: dispose,
