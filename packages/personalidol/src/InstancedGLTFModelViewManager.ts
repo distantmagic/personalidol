@@ -68,7 +68,7 @@ export function InstancedGLTFModelViewManager(
   });
 
   const _disposables: Set<DisposableCallback> = new Set();
-  const _expectedEntities: Set<EntityGLTFModel> = new Set();
+  const _expectedEntities: WeakSet<EntityGLTFModel> = new WeakSet();
   const _expectedEntitiesCount: {
     [key: string]: number;
   } = {};
@@ -219,7 +219,6 @@ export function InstancedGLTFModelViewManager(
   function dispose(): void {
     state.isDisposed = true;
 
-    _expectedEntities.clear();
     _expectedEntitiesUnique.clear();
     _expectedGemetryAttributes.clear();
     _expectedTextures.clear();
