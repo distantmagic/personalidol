@@ -19,6 +19,7 @@ import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPointerInitiatedByRootElement } from "@personalidol/framework/src/isPointerInitiatedByRootElement";
 import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
+import { KeyboardIndices } from "@personalidol/framework/src/KeyboardIndices.enum";
 import { mountAll } from "@personalidol/framework/src/mountAll";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
@@ -78,7 +79,7 @@ import type { UserSettings } from "./UserSettings.type";
 
 const CAMERA_DAMP = 10;
 const CAMERA_ZOOM_INITIAL = 401;
-const CAMERA_ZOOM_MAX = 0;
+const CAMERA_ZOOM_MAX = 1;
 const CAMERA_ZOOM_MIN = 1401;
 const CAMERA_ZOOM_STEP = 50;
 
@@ -88,6 +89,7 @@ _camera.far = 4000;
 _camera.near = 1;
 
 const _cameraDirection = new Vector3();
+const _cameraPosition = new Vector3();
 const _disposables: Set<DisposableCallback> = new Set();
 const _playerPosition = new Vector3();
 const _pointerVector = new Vector2(0, 0);
@@ -124,7 +126,8 @@ export function MapScene(
   eventBus: EventBus,
   views: Set<View>,
   dimensionsState: Uint32Array,
-  inputState: Int32Array,
+  keyboardState: Uint8Array,
+  pointerState: Int32Array,
   domMessagePort: MessagePort,
   gltfMessagePort: MessagePort,
   internationalizationMessagePort: MessagePort,
@@ -194,6 +197,7 @@ export function MapScene(
 
     player(entity: EntityPlayer): View {
       _playerPosition.set(entity.origin.x, entity.origin.y, entity.origin.z);
+      _cameraPosition.copy(_playerPosition);
       _cameraSkipDamping = true;
 
       return PlayerView(logger, userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
@@ -354,12 +358,45 @@ export function MapScene(
   function update(delta: number, elapsedTime: number): void {
     updateStoreCameraAspect(_camera, dimensionsState);
 
-    if (!state.isPaused && isPrimaryPointerPressed(inputState) && isPointerInitiatedByRootElement(inputState)) {
-      _pointerVector.x = getPrimaryPointerStretchVectorX(inputState);
-      _pointerVector.y = getPrimaryPointerStretchVectorY(inputState);
+    if (!state.isPaused && isPrimaryPointerPressed(pointerState) && isPointerInitiatedByRootElement(pointerState)) {
+      _pointerVector.x = getPrimaryPointerStretchVectorX(pointerState);
+      _pointerVector.y = getPrimaryPointerStretchVectorY(pointerState);
       _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
-      _playerPosition.x += 1000 * _pointerVector.y * delta;
-      _playerPosition.z += 1000 * _pointerVector.x * delta;
+      _cameraPosition.x += 1000 * _pointerVector.y * delta;
+      _cameraPosition.z += 1000 * _pointerVector.x * delta;
+    }
+
+    if (!state.isPaused && (keyboardState[KeyboardIndices.ArrowUp] || keyboardState[KeyboardIndices.KeyW])) {
+      _cameraPosition.x -= 600 * delta;
+      _cameraPosition.z -= 600 * delta;
+    }
+
+    if (!state.isPaused && (keyboardState[KeyboardIndices.ArrowLeft] || keyboardState[KeyboardIndices.KeyA])) {
+      _cameraPosition.x -= 600 * delta;
+      _cameraPosition.z += 600 * delta;
+    }
+
+    if (!state.isPaused && (keyboardState[KeyboardIndices.ArrowRight] || keyboardState[KeyboardIndices.KeyD])) {
+      _cameraPosition.x += 600 * delta;
+      _cameraPosition.z -= 600 * delta;
+    }
+
+    if (!state.isPaused && (keyboardState[KeyboardIndices.ArrowDown] || keyboardState[KeyboardIndices.KeyS])) {
+      _cameraPosition.x += 600 * delta;
+      _cameraPosition.z += 600 * delta;
+    }
+
+    if (!state.isPaused && keyboardState[KeyboardIndices.PageDown]) {
+      _onPointerZoomRequest(-1, 0.1);
+    }
+
+    if (!state.isPaused && keyboardState[KeyboardIndices.PageUp]) {
+      _onPointerZoomRequest(+1, 0.1);
+    }
+
+    if (!state.isPaused && keyboardState[KeyboardIndices.Home]) {
+      _cameraPosition.copy(_playerPosition);
+      _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
     }
 
     if (!state.isPaused) {
@@ -374,28 +411,28 @@ export function MapScene(
     // prettier-ignore
     if (_cameraSkipDamping) {
       _camera.position.set(
-        _playerPosition.x + _cameraZoomAmount,
-        _playerPosition.y + _cameraZoomAmount,
-        _playerPosition.z + _cameraZoomAmount
+        _cameraPosition.x + _cameraZoomAmount,
+        _cameraPosition.y + _cameraZoomAmount,
+        _cameraPosition.z + _cameraZoomAmount
       );
       _cameraSkipDamping = false;
     } else {
       _camera.position.set(
-        damp(_camera.position.x, _playerPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta),
-        damp(_camera.position.y, _playerPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta),
-        damp(_camera.position.z, _playerPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta),
+        damp(_camera.position.x, _cameraPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta),
+        damp(_camera.position.y, _cameraPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta),
+        damp(_camera.position.z, _cameraPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta),
       );
     }
 
     _camera.lookAt(_camera.position.x - _cameraZoomAmount, _camera.position.y - _cameraZoomAmount, _camera.position.z - _cameraZoomAmount);
   }
 
-  function _onPointerZoomRequest(zoomAmount: number): void {
+  function _onPointerZoomRequest(zoomAmount: number, scale: number = 1): void {
     if (state.isPaused) {
       return;
     }
 
-    _cameraZoomAmount += zoomAmount < 0 ? -1 * CAMERA_ZOOM_STEP : CAMERA_ZOOM_STEP;
+    _cameraZoomAmount += (zoomAmount < 0 ? -1 * CAMERA_ZOOM_STEP : CAMERA_ZOOM_STEP) * scale;
     _cameraZoomAmount = Math.max(CAMERA_ZOOM_MAX, _cameraZoomAmount);
     _cameraZoomAmount = Math.min(CAMERA_ZOOM_MIN, _cameraZoomAmount);
   }

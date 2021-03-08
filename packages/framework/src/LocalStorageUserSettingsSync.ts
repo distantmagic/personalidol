@@ -22,7 +22,7 @@ export function LocalStorageUserSettingsSync<U extends UserSettings>(userSetting
   let _lastSyncedVersion: number = userSettings.version;
 
   function start(): void {
-    const storedUserSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const storedUserSettings: null | string = localStorage.getItem(LOCAL_STORAGE_KEY);
 
     if ("string" !== typeof storedUserSettings) {
       _storeUserSettings<U>(userSettings);

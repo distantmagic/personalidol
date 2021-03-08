@@ -96,6 +96,7 @@ export function createScenes(
     currentSceneDirector.state,
     eventBus,
     dimensionsState,
+    keyboardState,
     pointerState,
     domMessagePort,
     fontPreloadMessagePort,

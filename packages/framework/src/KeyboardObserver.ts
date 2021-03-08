@@ -83,16 +83,6 @@ export function KeyboardObserver(
 
   function _onKeyboardStateChange(): void {
     state.lastUpdate = tickTimerState.currentTick;
-
-    // const currentlyPressed: Array<string> = [];
-
-    // for (let i = 0; i < keyboardState.length; i += 1) {
-    //   if (keyboardState[i] > 0) {
-    //     currentlyPressed.push(KeyboardIndices[i]);
-    //   }
-    // }
-
-    // console.log("PRESSED", currentlyPressed.join("+"));
   }
 
   function _onKeyCodeDown(keyName: KeyboardKeyName, keyIndex: number): void {
