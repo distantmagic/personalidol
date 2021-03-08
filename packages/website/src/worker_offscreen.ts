@@ -11,6 +11,7 @@ import { Pointer } from "@personalidol/framework/src/Pointer";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
+import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 
 import { createScenes } from "./createScenes";
 
@@ -35,7 +36,7 @@ let _canvas: null | OffscreenCanvas = null;
 let _devicePixelRatio: null | number = null;
 let _dimensionsState: null | Uint32Array = null;
 let _isBootstrapped: boolean = false;
-let _keyboardState: null | Uint32Array = null;
+let _keyboardState: null | Uint8Array = null;
 let _mainLoop: null | IMainLoop = null;
 let _notifiedReady: boolean = false;
 let _pointerState: null | Int32Array = null;
@@ -79,15 +80,15 @@ function _createScenesSafe(): void {
     throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
   }
 
-  const mainLoopStatsHook = MainLoopStatsHook();
-  const statsReporter = StatsReporter(self.name, statsMessagePort);
-
-  statsReporter.hooks.add(mainLoopStatsHook);
-
-  _mainLoop = MainLoop(logger, mainLoopStatsHook, RequestAnimationFrameScheduler());
-  _mainLoop.updatables.add(statsReporter);
-
+  _mainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
   _serviceManager = ServiceManager(logger);
+
+  const userSettings = UserSettings.createEmptyState(_devicePixelRatio);
+  const statsReporter = StatsReporter(self.name, userSettings, statsMessagePort, _mainLoop.tickTimerState);
+
+  statsReporter.hooks.add(MainLoopStatsHook(_mainLoop));
+
+  _mainLoop.updatables.add(statsReporter);
   _serviceManager.services.add(statsReporter);
 
   // prettier-ignore
@@ -103,6 +104,7 @@ function _createScenesSafe(): void {
     _pointerState,
     logger,
     statsReporter,
+    userSettings,
     domMessagePort,
     fontPreloadMessagePort,
     gltfMessagePort,
@@ -231,7 +233,7 @@ self.onmessage = createRouter({
   },
 
   sharedKeyboardState(keyboard: SharedArrayBuffer): void {
-    _keyboardState = new Uint32Array(keyboard);
+    _keyboardState = new Uint8Array(keyboard);
   },
 
   sharedPointerState(input: SharedArrayBuffer): void {

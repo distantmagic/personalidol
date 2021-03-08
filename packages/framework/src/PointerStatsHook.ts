@@ -7,6 +7,7 @@ import { getPrimaryPointerStretchVectorY } from "./getPrimaryPointerStretchVecto
 import { isPointerInitiatedByRootElement } from "./isPointerInitiatedByRootElement";
 import { isPrimaryMouseButtonPressed } from "./isPrimaryMouseButtonPressed";
 import { isPrimaryTouchPressed } from "./isPrimaryTouchPressed";
+import { PointerIndices } from "./PointerIndices.enum";
 
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { StatsHook } from "./StatsHook.interface";
@@ -25,6 +26,7 @@ export function PointerStatsHook(pointerState: Int32Array): StatsHook {
     isPrimaryMouseButtonPressed: false,
     isPrimaryTouchPressed: false,
     lastUpdate: 0,
+    navigatorMaxTouchPoints: 0,
     primaryPointerClientX: 0,
     primaryPointerClientY: 0,
     primaryPointerStretchVectorX: 0,
@@ -38,6 +40,7 @@ export function PointerStatsHook(pointerState: Int32Array): StatsHook {
     statsReport.isPrimaryMouseButtonPressed = isPrimaryMouseButtonPressed(pointerState);
     statsReport.isPrimaryTouchPressed = isPrimaryTouchPressed(pointerState);
     statsReport.lastUpdate = tickTimerState.currentTick;
+    statsReport.navigatorMaxTouchPoints = pointerState[PointerIndices.T_NAVIGATOR_MAX_TOUCH_POINTS];
     statsReport.primaryPointerClientX = getPrimaryPointerClientX(pointerState);
     statsReport.primaryPointerClientY = getPrimaryPointerClientY(pointerState);
     statsReport.primaryPointerStretchVectorX = getPrimaryPointerStretchVectorX(pointerState);

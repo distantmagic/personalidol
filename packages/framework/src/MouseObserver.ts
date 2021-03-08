@@ -8,33 +8,86 @@ import { DimensionsIndices } from "./DimensionsIndices.enum";
 import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { MouseButtons } from "./MouseButtons.enum";
 import { passiveEventListener } from "./passiveEventListener";
+import { Pointer } from "./Pointer";
 import { PointerIndices } from "./PointerIndices.enum";
 
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { MouseObserver as IMouseObserver } from "./MouseObserver.interface";
 import type { TickTimerState } from "./TickTimerState.type";
+import type { WindowFocusObserverState } from "./WindowFocusObserverState.type";
 
-export function MouseObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, pointerState: Int32Array, tickTimerState: TickTimerState): IMouseObserver {
+export function MouseObserver(
+  htmlElement: HTMLElement,
+  dimensionsState: Uint32Array,
+  pointerState: Int32Array,
+  windowFocusObserverState: WindowFocusObserverState,
+  tickTimerState: TickTimerState
+): IMouseObserver {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
 
+  let _isListening: boolean = false;
+
   function start(): void {
+    _attachListeners();
+  }
+
+  function stop(): void {
+    if (_isListening) {
+      // Service might be stopped while the document is out of focus.
+      return;
+    }
+
+    _detachListeners();
+  }
+
+  function update(): void {
+    if (!windowFocusObserverState.isDocumentFocused && _isListening) {
+      _detachListeners();
+    }
+
+    if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > pointerState[PointerIndices.LAST_UPDATE]) {
+      // Clear inputs if the game window is not focused.
+      pointerState.fill(0, Pointer.range_mouse_first, Pointer.range_mouse_last);
+      pointerState[PointerIndices.LAST_UPDATE] = tickTimerState.currentTick;
+    }
+
+    if (!windowFocusObserverState.isDocumentFocused) {
+      return;
+    }
+
+    if (windowFocusObserverState.isDocumentFocused && !_isListening) {
+      _attachListeners();
+    }
+
+    if (dimensionsState[DimensionsIndices.LAST_UPDATE] > pointerState[PointerIndices.LAST_UPDATE]) {
+      _updateDimensionsRelativeCoords();
+    }
+  }
+
+  function _attachListeners() {
+    if (_isListening) {
+      throw new Error("Mouse listeners are already attached.");
+    }
+
+    _isListening = true;
+
     document.addEventListener("mousedown", _onMouseDown, passiveEventListener);
     document.addEventListener("mousemove", _onMouseChange, passiveEventListener);
     document.addEventListener("mouseup", _onMouseUp, passiveEventListener);
   }
 
-  function stop(): void {
+  function _detachListeners() {
+    if (!_isListening) {
+      throw new Error("Mouse listeners are already detached.");
+    }
+
+    _isListening = false;
+
     document.removeEventListener("mousedown", _onMouseDown);
     document.removeEventListener("mousemove", _onMouseChange);
     document.removeEventListener("mouseup", _onMouseUp);
-  }
-
-  function update(): void {
-    if (dimensionsState[DimensionsIndices.LAST_UPDATE] > pointerState[PointerIndices.LAST_UPDATE]) {
-      _updateDimensionsRelativeCoords();
-    }
   }
 
   function _onMouseChange(evt: MouseEvent): void {

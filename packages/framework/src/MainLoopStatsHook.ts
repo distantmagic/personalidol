@@ -1,13 +1,13 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import type { MainLoop } from "./MainLoop.interface";
 import type { MainLoopStatsHook as IMainLoopStatsHook } from "./MainLoopStatsHook.interface";
 import type { MainLoopStatsReport } from "./MainLoopStatsReport.type";
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
-import type { TickTimerState } from "./TickTimerState.type";
 
 const DEBUG_NAME: "main_loop" = "main_loop";
 
-export function MainLoopStatsHook(): IMainLoopStatsHook {
+export function MainLoopStatsHook(mainLoop: MainLoop): IMainLoopStatsHook {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -25,10 +25,10 @@ export function MainLoopStatsHook(): IMainLoopStatsHook {
     statsReport.currentIntervalTicks = 0;
   }
 
-  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    statsReport.currentIntervalDuration += delta;
+  function update(): void {
+    statsReport.currentIntervalDuration += mainLoop.tickTimerState.delta;
     statsReport.currentIntervalTicks += 1;
-    statsReport.lastUpdate = tickTimerState.currentTick;
+    statsReport.lastUpdate = mainLoop.tickTimerState.currentTick;
   }
 
   return Object.freeze({

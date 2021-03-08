@@ -37,17 +37,19 @@ export function StatsCollector(userSettings: UserSettings, domMessagePort: Messa
 
   function stop() {
     if (!_domStatsReporterElementId) {
-      return;
+      _disposeDOMStatsView();
     }
-
-    domMessagePort.postMessage({
-      dispose: <MessageDOMUIDispose>[_domStatsReporterElementId],
-    });
-
-    _domStatsReporterElementId = null;
   }
 
   function update(delta: number) {
+    if (!userSettings.showStatsReporter && _domStatsReporterElementId) {
+      _disposeDOMStatsView();
+    }
+
+    if (!userSettings.showStatsReporter) {
+      return;
+    }
+
     if (!_domStatsReporterElementId) {
       _domStatsReporterElementId = MathUtils.generateUUID();
     }
@@ -57,10 +59,23 @@ export function StatsCollector(userSettings: UserSettings, domMessagePort: Messa
         id: _domStatsReporterElementId,
         element: "pi-stats-reporter",
         props: {
+          // Make a snapshot copy.
           statsReports: Object.values(_statsReports),
         },
       },
     });
+  }
+
+  function _disposeDOMStatsView() {
+    if (!_domStatsReporterElementId) {
+      throw new Error("DOM stats siew was never rendered.");
+    }
+
+    domMessagePort.postMessage({
+      dispose: <MessageDOMUIDispose>[_domStatsReporterElementId],
+    });
+
+    _domStatsReporterElementId = null;
   }
 
   return Object.freeze({

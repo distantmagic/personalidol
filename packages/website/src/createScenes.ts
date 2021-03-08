@@ -9,7 +9,6 @@ import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiTh
 import { RendererDimensionsManager } from "@personalidol/three-renderer/src/RendererDimensionsManager";
 import { SceneTransition } from "@personalidol/framework/src/SceneTransition";
 import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
-import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { ViewBagSceneObserver } from "@personalidol/framework/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
@@ -21,6 +20,7 @@ import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 import type { StatsReporter } from "@personalidol/framework/src/StatsReporter.interface";
 import type { UIState } from "@personalidol/personalidol/src/UIState.type";
+import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
 
 export function createScenes(
   threadDebugName: string,
@@ -30,10 +30,11 @@ export function createScenes(
   serviceManager: ServiceManager,
   canvas: HTMLCanvasElement | OffscreenCanvas,
   dimensionsState: Uint32Array,
-  keyboardState: Uint32Array,
+  keyboardState: Uint8Array,
   pointerState: Int32Array,
   logger: Logger,
   statsReporter: StatsReporter,
+  userSettings: UserSettings,
   domMessagePort: MessagePort,
   fontPreloadMessagePort: MessagePort,
   gltfMessagePort: MessagePort,
@@ -46,9 +47,7 @@ export function createScenes(
   uiMessagePort: MessagePort,
   userSettingsMessagePort: MessagePort
 ): void {
-  const userSettings = UserSettings.createEmptyState(devicePixelRatio);
   const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessagePort, threadDebugName);
-
   const rendererDimensionsManager = RendererDimensionsManager(dimensionsState);
 
   const webGLRenderer = new WebGLRenderer({
@@ -71,12 +70,10 @@ export function createScenes(
   rendererDimensionsManager.state.renderers.add(effectComposer);
   rendererDimensionsManager.state.renderers.add(webGLRenderer);
 
-  const css2DRendererStatsHook = CSS2DRendererStatsHook(css2DRenderer);
-  const webGLRendererStatsHook = WebGLRendererStatsHook(webGLRenderer);
   const webGLRendererUserSettingsManager = WebGLRendererUserSettingsManager(userSettings, webGLRenderer);
 
-  statsReporter.hooks.add(css2DRendererStatsHook);
-  statsReporter.hooks.add(webGLRendererStatsHook);
+  statsReporter.hooks.add(CSS2DRendererStatsHook(css2DRenderer));
+  statsReporter.hooks.add(WebGLRendererStatsHook(webGLRenderer));
 
   const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
@@ -131,6 +128,4 @@ export function createScenes(
   mainLoop.updatables.add(uiStateController);
   mainLoop.updatables.add(sceneTransition);
   mainLoop.updatables.add(rendererDimensionsManager);
-  mainLoop.updatables.add(css2DRendererStatsHook);
-  mainLoop.updatables.add(webGLRendererStatsHook);
 }

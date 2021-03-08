@@ -1,12 +1,12 @@
 import { KeyboardIndices } from "./KeyboardIndices.enum";
 
-function createEmptyState(usesSharedBuffer: boolean): Uint32Array {
+function createEmptyState(usesSharedBuffer: boolean): Uint8Array {
   if (usesSharedBuffer) {
-    // Int32Array takes 4 bytes per value.
-    return new Uint32Array(new SharedArrayBuffer(KeyboardIndices.__TOTAL * 4));
+    // Uint8Array takes 1 bytes per value.
+    return new Uint8Array(new SharedArrayBuffer(KeyboardIndices.__TOTAL));
   }
 
-  return new Uint32Array(KeyboardIndices.__TOTAL);
+  return new Uint8Array(KeyboardIndices.__TOTAL);
 }
 
 export const Keyboard = Object.freeze({

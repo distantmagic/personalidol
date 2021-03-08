@@ -29,10 +29,10 @@ import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/Requ
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
-import { StatsCollectorUserSettingsManager } from "@personalidol/dom-renderer/src/StatsCollectorUserSettingsManager";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
+import { WindowFocusObserver } from "@personalidol/framework/src/WindowFocusObserver";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 // This is a workaround for i18n typing strongly tied to the module.
@@ -88,41 +88,40 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const useSharedBuffers = isSharedArrayBufferSupported();
   const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
   const keyboardState = Keyboard.createEmptyState(useSharedBuffers);
+
   const pointerState = Pointer.createEmptyState(useSharedBuffers);
-  const pointerStatsHook = PointerStatsHook(pointerState);
 
   const eventBus = EventBus();
   const statsReporterMessageChannel = createSingleThreadMessageChannel();
 
-  const mainLoopStatsHook = MainLoopStatsHook();
-  const mainLoop = MainLoop(logger, mainLoopStatsHook, RequestAnimationFrameScheduler());
-  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsReporterMessageChannel.port2);
-
-  statsReporter.hooks.add(pointerStatsHook);
-  statsReporter.hooks.add(mainLoopStatsHook);
-
-  // This is an unofficial Chrome JS extension so it's not typed by default.
-  if ((globalThis.performance as any).memory) {
-    const performanceStatsHook = PerformanceStatsHook();
-
-    mainLoop.updatables.add(performanceStatsHook);
-    statsReporter.hooks.add(performanceStatsHook);
-  }
+  const mainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
 
   const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
 
-  const keyboardObserver = KeyboardObserver(canvas, keyboardState, mainLoop.tickTimerState);
-  const mouseObserver = MouseObserver(canvas, dimensionsState, pointerState, mainLoop.tickTimerState);
-  const touchObserver = TouchObserver(canvas, dimensionsState, pointerState, mainLoop.tickTimerState);
+  const windowFocusObserver = WindowFocusObserver(logger, mainLoop.tickTimerState);
+  const keyboardObserver = KeyboardObserver(logger, canvas, keyboardState, windowFocusObserver.state, mainLoop.tickTimerState);
+  const mouseObserver = MouseObserver(canvas, dimensionsState, pointerState, windowFocusObserver.state, mainLoop.tickTimerState);
+  const touchObserver = TouchObserver(canvas, dimensionsState, pointerState, windowFocusObserver.state, mainLoop.tickTimerState);
 
   const userSettings = UserSettings.createEmptyState(devicePixelRatio);
   const userSettingsMessageChannel = createMultiThreadMessageChannel();
   const localStorageUserSettingsSync = LocalStorageUserSettingsSync(userSettings, isUserSettingsValid, THREAD_DEBUG_NAME);
   const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessageChannel.port1, THREAD_DEBUG_NAME);
 
+  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, userSettings, statsReporterMessageChannel.port2, mainLoop.tickTimerState);
+
+  statsReporter.hooks.add(PointerStatsHook(pointerState));
+  statsReporter.hooks.add(MainLoopStatsHook(mainLoop));
+
+  // This is an unofficial Chrome JS extension so it's not typed by default.
+  if ((globalThis.performance as any).memory) {
+    statsReporter.hooks.add(PerformanceStatsHook());
+  }
+
   const serviceManager = ServiceManager(logger);
 
   serviceManager.services.add(htmlElementResizeObserver);
+  serviceManager.services.add(windowFocusObserver);
   serviceManager.services.add(keyboardObserver);
   serviceManager.services.add(mouseObserver);
   serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, pointerState));
@@ -132,10 +131,10 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(statsReporter);
 
   mainLoop.updatables.add(htmlElementResizeObserver);
+  mainLoop.updatables.add(windowFocusObserver);
   mainLoop.updatables.add(keyboardObserver);
   mainLoop.updatables.add(mouseObserver);
   mainLoop.updatables.add(touchObserver);
-  mainLoop.updatables.add(pointerStatsHook);
   mainLoop.updatables.add(localStorageUserSettingsSync);
   mainLoop.updatables.add(multiThreadUserSettingsSync);
   mainLoop.updatables.add(statsReporter);
@@ -277,10 +276,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   statsCollector.registerMessagePort(statsReporterMessageChannel.port1);
   statsCollector.registerMessagePort(statsMessageChannel.port1);
 
-  const statsCollectorUserSettingsManager = StatsCollectorUserSettingsManager(userSettings, statsCollector);
-
-  serviceManager.services.add(statsCollectorUserSettingsManager);
-  mainLoop.updatables.add(statsCollectorUserSettingsManager);
+  serviceManager.services.add(statsCollector);
+  mainLoop.updatables.add(statsCollector);
 
   // FontPreloadService does exactly what its name says. Thanks to this
   // service it is possible for worker threads to request font face to be

@@ -63,24 +63,12 @@ function createEmptyState(usesSharedBuffer: boolean): Int32Array {
 }
 
 export const Pointer = Object.freeze({
-  range: Object.freeze({
-    mouse_min: PointerIndices.M_BUTTON_L,
-    mouse_max: PointerIndices.M_VECTOR_Y,
-
-    touches_min: PointerIndices.T_INITIATED_BY_ROOT_ELEMENT,
-    touches_max: PointerIndices.T2_VECTOR_Y,
-    touches_total: touches.length,
-
-    touch1_min: PointerIndices.T0_CLIENT_X,
-    touch1_max: PointerIndices.T0_VECTOR_Y,
-
-    touch2_min: PointerIndices.T1_CLIENT_X,
-    touch2_max: PointerIndices.T1_VECTOR_Y,
-
-    touch3_min: PointerIndices.T2_CLIENT_X,
-    touch3_max: PointerIndices.T2_VECTOR_Y,
-  }),
+  range_mouse_first: PointerIndices.M_BUTTON_L,
+  range_mouse_last: PointerIndices.M_VECTOR_Y,
+  range_touch_first: PointerIndices.T_INITIATED_BY_ROOT_ELEMENT,
+  range_touch_last: PointerIndices.T2_VECTOR_Y,
   touches: touches,
+  touches_total: touches.length,
   vector_scale: 32000,
 
   createEmptyState: createEmptyState,

@@ -7,7 +7,6 @@ import { name } from "./name";
 import type { Logger } from "loglevel";
 
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
-import type { MainLoopStatsHook } from "./MainLoopStatsHook.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
 import type { Scheduler } from "./Scheduler.interface";
 import type { TickTimerState } from "./TickTimerState.type";
@@ -34,7 +33,7 @@ import type { TickTimerState } from "./TickTimerState.type";
  * @see MouseObserevr
  * @see TouchObserver
  */
-export function MainLoop<TickType>(logger: Logger, statsHook: MainLoopStatsHook, frameScheduler: Scheduler<TickType>): IMainLoop {
+export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<TickType>): IMainLoop {
   const clock = new Clock(false);
   const tickTimerState: TickTimerState = Object.seal({
     currentTick: 0,
@@ -78,7 +77,6 @@ export function MainLoop<TickType>(logger: Logger, statsHook: MainLoopStatsHook,
     tickTimerState.elapsedTime = clock.getElapsedTime();
 
     updatables.forEach(_updateUpdatable);
-    statsHook.update(tickTimerState.delta, tickTimerState.elapsedTime, tickTimerState);
 
     // something might have changed withing the update callback
     if (_continue) {

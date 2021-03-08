@@ -1,10 +1,22 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { isKeyboardKeyName } from "./isKeyboardKeyName";
+import { KeyboardIndices } from "./KeyboardIndices.enum";
+
+import type { Logger } from "loglevel";
+
 import type { KeyboardObserver as IKeyboardObserver } from "./KeyboardObserver.interface";
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { TickTimerState } from "./TickTimerState.type";
+import type { WindowFocusObserverState } from "./WindowFocusObserverState.type";
 
-export function KeyboardObserver(htmlElement: HTMLElement, keyboardState: Uint32Array, tickTimerState: TickTimerState): IKeyboardObserver {
+export function KeyboardObserver(
+  logger: Logger,
+  htmlElement: HTMLElement,
+  keyboardState: Uint8Array,
+  windowFocusObserverState: WindowFocusObserverState,
+  tickTimerState: TickTimerState
+): IKeyboardObserver {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -20,7 +32,15 @@ export function KeyboardObserver(htmlElement: HTMLElement, keyboardState: Uint32
   function update(): void {}
 
   function _onKeyDown(evt: KeyboardEvent): void {
-    console.log(evt.key);
+    const eventKeyCode: string = evt.code;
+
+    if (!isKeyboardKeyName(eventKeyCode)) {
+      logger.warn(`Unknown key pressed: ${evt.code}`);
+
+      return;
+    }
+
+    console.log(evt.code, KeyboardIndices[eventKeyCode]);
   }
 
   return Object.freeze({

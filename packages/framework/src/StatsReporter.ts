@@ -5,61 +5,80 @@ import type { StatsHook } from "./StatsHook.interface";
 import type { StatsReport } from "./StatsReport.type";
 import type { StatsReporter as IStatsReporter } from "./StatsReporter.interface";
 import type { TickTimerState } from "./TickTimerState.type";
+import type { UserSettings } from "./UserSettings.type";
 
-type HooksStatuses = WeakMap<StatsHook, ReportStatus>;
+type HookLastReports = WeakMap<StatsHook, number>;
 
-type ReportStatus = {
-  lastUpdate: number;
-};
+function _shouldUpdateHookReport(hookLastReports: HookLastReports, hook: StatsHook, elapsedTime: number): boolean {
+  const hookLastReport: undefined | number = hookLastReports.get(hook);
 
-function _shouldReport(hooksStatuses: HooksStatuses, hook: StatsHook, elapsedTime: number): boolean {
-  const hookStatus: undefined | ReportStatus = hooksStatuses.get(hook);
-
-  if (!hookStatus) {
-    hooksStatuses.set(hook, <ReportStatus>{
-      lastUpdate: elapsedTime,
-    });
+  if ("undefined" === typeof hookLastReport) {
+    hookLastReports.set(hook, elapsedTime);
 
     return true;
   }
 
-  if (elapsedTime - hookStatus.lastUpdate < hook.statsReportIntervalSeconds) {
+  if (elapsedTime - hookLastReport < hook.statsReportIntervalSeconds) {
     return false;
   }
 
-  hookStatus.lastUpdate = elapsedTime;
+  hookLastReports.set(hook, elapsedTime);
 
   return true;
 }
 
-export function StatsReporter(debugName: string, statsMessagePort: MessagePort): IStatsReporter {
+export function StatsReporter(debugName: string, userSettings: UserSettings, statsMessagePort: MessagePort, tickTimerState: TickTimerState): IStatsReporter {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
 
   const hooks: Set<StatsHook> = new Set();
 
-  const _hooksStatuses: HooksStatuses = new WeakMap();
-  const _statsReport: StatsReport = {
+  const _hooksStatuses: HookLastReports = new WeakMap();
+  const _report: StatsReport = {
     debugName: debugName,
     lastUpdate: 0,
   };
+
+  let _shouldReportAnthing: boolean = false;
+
+  function _updateHook(hook: StatsHook): void {
+    hook.update(tickTimerState.delta, tickTimerState.elapsedTime, tickTimerState);
+
+    if (!_shouldUpdateHookReport(_hooksStatuses, hook, tickTimerState.elapsedTime)) {
+      return;
+    }
+
+    _shouldReportAnthing = true;
+
+    // Make a snapshot copy of a stats report.
+    _report[hook.statsReport.debugName] = Object.assign({}, hook.statsReport);
+    _report.lastUpdate = tickTimerState.currentTick;
+
+    hook.reset();
+  }
 
   function start() {}
 
   function stop() {}
 
-  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
-    for (let hook of hooks) {
-      if (_shouldReport(_hooksStatuses, hook, elapsedTime)) {
-        _statsReport[hook.statsReport.debugName] = Object.assign({}, hook.statsReport);
-        _statsReport.lastUpdate = tickTimerState.currentTick;
-        hook.reset();
-      }
+  function update() {
+    if (!userSettings.showStatsReporter) {
+      return;
     }
 
+    _shouldReportAnthing = false;
+
+    hooks.forEach(_updateHook);
+
+    if (!_shouldReportAnthing) {
+      return;
+    }
+
+    _shouldReportAnthing = false;
+
     statsMessagePort.postMessage({
-      statsReport: _statsReport,
+      statsReport: _report,
     });
   }
 
