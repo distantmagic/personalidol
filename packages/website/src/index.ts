@@ -70,7 +70,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 // Depending on browser feature support, some workers will be started or not.
 // Checking for features is asynchronous.
 (async function () {
-  logger.info(`BUILD_ID("${__BUILD_ID}")`);
+  logger.debug(`BUILD_ID("${__BUILD_ID}")`);
 
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
@@ -206,7 +206,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   // Preload translations and the internationalization service.
 
-  const i18next = createI18next();
+  const i18next = createI18next(logger);
   const internationalizationToProgressMessageChannel = createMultiThreadMessageChannel();
   const internationalizationService = InternationalizationService(i18next as Frameworki18n, internationalizationToProgressMessageChannel.port2);
   const internationalizationMessageChannel = createMultiThreadMessageChannel();
@@ -469,10 +469,13 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     domUIController,
     dimensionsState,
     eventBus,
+    keyboardObserver.state,
     keyboardState,
+    mouseObserver.state,
     pointerState,
     statsReporter,
     THREAD_DEBUG_NAME,
+    touchObserver.state,
     userSettings
   );
 

@@ -29,8 +29,6 @@ function _createEntityView<K extends keyof EntityLookup>(
     throw new Error(`Unknown entity class: ${entity.classname}`);
   }
 
-  logger.trace("CREATE MAP ENTITY VIEW", entity.classname);
-
   return (entityLookupTable[entity.classname] as EntityLookupCallback<K>)(entity, worldspawnTexture, targetedViews);
 }
 

@@ -14,7 +14,7 @@ export function dispose(logger: Logger, mount: Mountable): void {
     unmount(logger, mount);
   }
 
-  logger.info(`DISPOSE(${name(mount)})`);
+  logger.debug(`DISPOSE(${name(mount)})`);
   mount.dispose();
 
   if (!mount.state.isDisposed) {

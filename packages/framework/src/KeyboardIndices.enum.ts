@@ -5,8 +5,6 @@
  * It is likely that all or most keys are handled here.
  */
 export enum KeyboardIndices {
-  LAST_UPDATE,
-
   Again,
   AltLeft,
   AltRight,

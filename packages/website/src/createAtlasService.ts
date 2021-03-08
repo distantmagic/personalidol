@@ -24,7 +24,7 @@ export function createAtlasService(
     // "userSettings.useOffscreenCanvas" does not relate to the atlas canvas,
     // because it's a utility worker, not the primary rendering thread.
     if (isCanvasTransferControlToOffscreenSupported()) {
-      logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad atlas service to a worker thread");
+      logger.debug("SUPPORTED(canvas.transferControlToOffscreen) // offlad atlas service to a worker thread");
 
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
       const atlasWorker = new Worker(`${__STATIC_BASE_PATH}${workers.atlas.url}?${__CACHE_BUST}`, {
@@ -60,7 +60,7 @@ export function createAtlasService(
         },
       });
     } else {
-      logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
+      logger.debug("NO_SUPPORT(canvas.transferControlToOffscreen) // starting atlas service in the main thread");
 
       const atlasCanvasContext2D = atlasCanvas.getContext("2d");
 

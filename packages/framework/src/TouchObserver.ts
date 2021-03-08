@@ -10,9 +10,9 @@ import { passiveEventListener } from "./passiveEventListener";
 import { Pointer } from "./Pointer";
 import { PointerIndices } from "./PointerIndices.enum";
 
-import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { TouchObserver as ITouchObserver } from "./TouchObserver.interface";
+import type { TouchObserverState } from "./TouchObserverState.type";
 import type { WindowFocusObserverState } from "./WindowFocusObserverState.type";
 
 export function TouchObserver(
@@ -22,7 +22,8 @@ export function TouchObserver(
   windowFocusObserverState: WindowFocusObserverState,
   tickTimerState: TickTimerState
 ): ITouchObserver {
-  const state: MainLoopUpdatableState = Object.seal({
+  const state: TouchObserverState = Object.seal({
+    lastUpdate: 0,
     needsUpdates: true,
   });
 
@@ -46,10 +47,10 @@ export function TouchObserver(
       _detachListeners();
     }
 
-    if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > pointerState[PointerIndices.LAST_UPDATE]) {
+    if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > state.lastUpdate) {
       // Clear inputs if the game window is not focused.
       pointerState.fill(0, Pointer.range_touch_first, Pointer.range_touch_last);
-      pointerState[PointerIndices.LAST_UPDATE] = tickTimerState.currentTick;
+      state.lastUpdate = tickTimerState.currentTick;
     }
 
     if (!windowFocusObserverState.isDocumentFocused) {
@@ -62,10 +63,10 @@ export function TouchObserver(
 
     if (pointerState[PointerIndices.T_NAVIGATOR_MAX_TOUCH_POINTS] !== navigator.maxTouchPoints) {
       pointerState[PointerIndices.T_NAVIGATOR_MAX_TOUCH_POINTS] = navigator.maxTouchPoints;
-      pointerState[PointerIndices.LAST_UPDATE] = tickTimerState.currentTick;
+      state.lastUpdate = tickTimerState.currentTick;
     }
 
-    if (dimensionsState[DimensionsIndices.LAST_UPDATE] > pointerState[PointerIndices.LAST_UPDATE]) {
+    if (dimensionsState[DimensionsIndices.LAST_UPDATE] > state.lastUpdate) {
       _updateDimensionsRelativeCoords();
     }
   }
@@ -147,7 +148,7 @@ export function TouchObserver(
       );
     }
 
-    pointerState[PointerIndices.LAST_UPDATE] = tickTimerState.currentTick;
+    state.lastUpdate = tickTimerState.currentTick;
   }
 
   return Object.freeze({

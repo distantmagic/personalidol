@@ -1,6 +1,4 @@
 export const enum PointerIndices {
-  LAST_UPDATE,
-
   // Mouse
   M_BUTTON_L,
   M_BUTTON_R,

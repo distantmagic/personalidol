@@ -1,5 +1,6 @@
 export const enum DimensionsIndices {
   LAST_UPDATE,
+
   D_HEIGHT,
   D_WIDTH,
   P_BOTTOM,

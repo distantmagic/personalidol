@@ -94,7 +94,7 @@ export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<Tic
         return;
       }
 
-      logger.info(`REMOVED(MAIN_LOOP(${name(updatable)}))`);
+      logger.debug(`REMOVED(MAIN_LOOP(${name(updatable)}))`);
     }
   }
 

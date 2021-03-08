@@ -102,7 +102,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
         customElements.upgrade(element);
 
         if (isDOMElementView<U>(element)) {
-          logger.info(`UPGRADE("${name}")`);
+          logger.debug(`UPGRADE("${name}")`);
           _initializeDOMElementView(element, i18next, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
           _registerDOMElementView(element);
           _updateRenderedElement(element);
@@ -110,7 +110,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
       }
     }
 
-    logger.info(`DEFINE("${name}")`);
+    logger.debug(`DEFINE("${name}")`);
   }
 
   function _defineCustomElementByName(elementName: string & keyof L): Promise<void> {

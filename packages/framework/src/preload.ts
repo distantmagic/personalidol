@@ -26,7 +26,7 @@ export function preload(logger: Logger, mount: Preloadable): void | Promise<void
     throw new Error(`Mount is already preloading: "${name(mount)}"`);
   }
 
-  logger.info(`PRELOAD(${name(mount)})`);
+  logger.debug(`PRELOAD(${name(mount)})`);
 
   const ret = mount.preload();
 

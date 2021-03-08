@@ -9,7 +9,7 @@ export function mount(logger: Logger, mount: Mountable): void {
     throw new Error(`Mount is already mounted: "${name(mount)}"`);
   }
 
-  logger.info(`MOUNT(${name(mount)})`);
+  logger.debug(`MOUNT(${name(mount)})`);
   mount.mount();
 
   if (!mount.state.isMounted) {

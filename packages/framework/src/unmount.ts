@@ -9,7 +9,7 @@ export function unmount(logger: Logger, mount: Mountable): void {
     throw new Error(`Mount is already unmounted: "${name(mount)}"`);
   }
 
-  logger.info(`UNMOUNT(${name(mount)})`);
+  logger.debug(`UNMOUNT(${name(mount)})`);
   mount.unmount();
 
   if (mount.state.isMounted) {

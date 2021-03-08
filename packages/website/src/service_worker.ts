@@ -15,7 +15,7 @@ logger.setLevel(__LOG_LEVEL);
 
 // Keeping __BUILD_ID somewhere is actually quite important, as it would reload
 // the service worker after code changes.
-logger.info(`SERVICE_WORKER_SPAWNED("${__BUILD_ID}")`);
+logger.debug(`SERVICE_WORKER_SPAWNED("${__BUILD_ID}")`);
 
 function _shouldCache(event: FetchEvent): boolean {
   return event.request.url.endsWith(__CACHE_BUST);

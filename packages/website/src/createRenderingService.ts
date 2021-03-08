@@ -3,8 +3,6 @@ import { createSingleThreadMessageChannel } from "@personalidol/framework/src/cr
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
-import { KeyboardIndices } from "@personalidol/framework/src/KeyboardIndices.enum";
-import { PointerIndices } from "@personalidol/framework/src/PointerIndices.enum";
 import { WorkerService } from "@personalidol/framework/src/WorkerService";
 
 import workers from "./workers.json";
@@ -14,9 +12,12 @@ import type { Logger } from "loglevel";
 import type { DOMElementsLookup } from "@personalidol/personalidol/src/DOMElementsLookup.type";
 import type { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { KeyboardObserverState } from "@personalidol/framework/src/KeyboardObserverState.type";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
+import type { MouseObserverState } from "@personalidol/framework/src/MouseObserverState.type";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 import type { StatsReporter } from "@personalidol/framework/src/StatsReporter.interface";
+import type { TouchObserverState } from "@personalidol/framework/src/TouchObserverState.type";
 import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
 
 export async function createRenderingService(
@@ -28,14 +29,17 @@ export async function createRenderingService(
   domUIController: DOMUIController<DOMElementsLookup, UserSettings>,
   dimensionsState: Uint32Array,
   eventBus: EventBus,
+  keyboardObserverState: KeyboardObserverState,
   keyboardState: Uint8Array,
+  mouseObserverState: MouseObserverState,
   pointerState: Int32Array,
   statsReporter: StatsReporter,
   threadDebugName: string,
+  touchObserverState: TouchObserverState,
   userSettings: UserSettings
 ) {
   if (userSettings.useOffscreenCanvas && isCanvasTransferControlToOffscreenSupported()) {
-    logger.info("SUPPORTED(canvas.transferControlToOffscreen) // offlad 3D canvas to a worker thread");
+    logger.debug("SUPPORTED(canvas.transferControlToOffscreen) // offlad 3D canvas to a worker thread");
 
     const domRendererMessageChannel = createMultiThreadMessageChannel();
 
@@ -55,7 +59,7 @@ export async function createRenderingService(
     // copy of input / dimensions states every frame to the worker.
     const offscreenWorkerService = (function () {
       function sharedArrayBufferNotAvailable() {
-        logger.info("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
+        logger.debug("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
 
         offscreenWorker.postMessage({
           awaitSharedDimensions: false,
@@ -71,8 +75,9 @@ export async function createRenderingService(
         return WorkerService(offscreenWorker, workers.offscreen.name, function () {
           // prettier-ignore
           if ( _lastNotificationTick < dimensionsState[DimensionsIndices.LAST_UPDATE]
-            || _lastNotificationTick < keyboardState[KeyboardIndices.LAST_UPDATE]
-            || _lastNotificationTick < pointerState[PointerIndices.LAST_UPDATE]
+            || _lastNotificationTick < keyboardObserverState.lastUpdate
+            || _lastNotificationTick < mouseObserverState.lastUpdate
+            || _lastNotificationTick < touchObserverState.lastUpdate
           ) {
             offscreenWorker.postMessage(updateMessage);
             _lastNotificationTick = mainLoop.tickTimerState.currentTick;
@@ -95,7 +100,7 @@ export async function createRenderingService(
           return sharedArrayBufferNotAvailable();
         }
 
-        logger.info("SUPPORTED(SharedArrayBuffer) // sharing dimensions/input memory array between threads");
+        logger.debug("SUPPORTED(SharedArrayBuffer) // sharing dimensions/input memory array between threads");
 
         return WorkerService(offscreenWorker, workers.offscreen.name);
       } else {
@@ -164,9 +169,9 @@ export async function createRenderingService(
     };
   } else {
     if (isCanvasTransferControlToOffscreenSupported()) {
-      logger.info("DISABLED(SUPPORTED(canvas.transferControlToOffscreen)) // starting 3D canvas in the main thread");
+      logger.debug("DISABLED(SUPPORTED(canvas.transferControlToOffscreen)) // starting 3D canvas in the main thread");
     } else {
-      logger.info("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
+      logger.debug("NO_SUPPORT(canvas.transferControlToOffscreen) // starting 3D canvas in the main thread");
     }
 
     const domRendererMessageChannel = createSingleThreadMessageChannel();

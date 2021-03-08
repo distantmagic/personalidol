@@ -20,7 +20,7 @@ export async function createTexturesService(logger: Logger, mainLoop: MainLoop, 
 
   return (async function () {
     if (await isCreateImageBitmapSupported()) {
-      logger.info("SUPPORTED(createImageBitmap) // offload texture service to a worker thread");
+      logger.debug("SUPPORTED(createImageBitmap) // offload texture service to a worker thread");
 
       const texturesWorker = new Worker(`${__STATIC_BASE_PATH}${workers.textures.url}?${__CACHE_BUST}`, {
         credentials: "same-origin",
@@ -49,7 +49,7 @@ export async function createTexturesService(logger: Logger, mainLoop: MainLoop, 
         },
       });
     } else {
-      logger.info("NO_SUPPORT(createImageBitmap) // starting texture service in the main thread");
+      logger.debug("NO_SUPPORT(createImageBitmap) // starting texture service in the main thread");
 
       const textureService = DOMTextureService(textureCanvas, textureCanvasContext2D, progressMessagePort);
 

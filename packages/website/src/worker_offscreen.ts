@@ -5,6 +5,7 @@ import Loglevel from "loglevel";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { EventBus } from "@personalidol/framework/src/EventBus";
+import { Keyboard } from "@personalidol/framework/src/Keyboard";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { Pointer } from "@personalidol/framework/src/Pointer";
@@ -146,6 +147,7 @@ self.onmessage = createRouter({
     }
 
     _dimensionsState = Dimensions.createEmptyState(false);
+    _keyboardState = Keyboard.createEmptyState(false);
     _pointerState = Pointer.createEmptyState(false);
     _createScenesSafe();
   },

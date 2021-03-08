@@ -11,8 +11,8 @@ import { passiveEventListener } from "./passiveEventListener";
 import { Pointer } from "./Pointer";
 import { PointerIndices } from "./PointerIndices.enum";
 
-import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { MouseObserver as IMouseObserver } from "./MouseObserver.interface";
+import type { MouseObserverState } from "./MouseObserverState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { WindowFocusObserverState } from "./WindowFocusObserverState.type";
 
@@ -23,7 +23,8 @@ export function MouseObserver(
   windowFocusObserverState: WindowFocusObserverState,
   tickTimerState: TickTimerState
 ): IMouseObserver {
-  const state: MainLoopUpdatableState = Object.seal({
+  const state: MouseObserverState = Object.seal({
+    lastUpdate: 0,
     needsUpdates: true,
   });
 
@@ -47,10 +48,10 @@ export function MouseObserver(
       _detachListeners();
     }
 
-    if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > pointerState[PointerIndices.LAST_UPDATE]) {
+    if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > state.lastUpdate) {
       // Clear inputs if the game window is not focused.
       pointerState.fill(0, Pointer.range_mouse_first, Pointer.range_mouse_last);
-      pointerState[PointerIndices.LAST_UPDATE] = tickTimerState.currentTick;
+      state.lastUpdate = tickTimerState.currentTick;
     }
 
     if (!windowFocusObserverState.isDocumentFocused) {
@@ -61,7 +62,7 @@ export function MouseObserver(
       _attachListeners();
     }
 
-    if (dimensionsState[DimensionsIndices.LAST_UPDATE] > pointerState[PointerIndices.LAST_UPDATE]) {
+    if (dimensionsState[DimensionsIndices.LAST_UPDATE] > state.lastUpdate) {
       _updateDimensionsRelativeCoords();
     }
   }
@@ -139,7 +140,7 @@ export function MouseObserver(
     pointerState[PointerIndices.M_VECTOR_Y] = computePointerVectorY(dimensionsState, pointerState[PointerIndices.M_RELATIVE_Y]);
     pointerState[PointerIndices.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, pointerState[PointerIndices.M_CLIENT_X], pointerState[PointerIndices.M_CLIENT_Y]));
 
-    pointerState[PointerIndices.LAST_UPDATE] = tickTimerState.currentTick;
+    state.lastUpdate = tickTimerState.currentTick;
   }
 
   return Object.freeze({

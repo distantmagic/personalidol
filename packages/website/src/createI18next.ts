@@ -5,14 +5,18 @@ import intervalPlural from "i18next-intervalplural-postprocessor";
 import LocalStorageBackend from "i18next-localstorage-backend";
 import YAML from "js-yaml";
 
+import { LoglevelPlugin } from "@personalidol/i18n/src/LoglevelPlugin";
+
+import type { Logger } from "loglevel";
 import type { i18n } from "i18next";
 
-export function createI18next(): i18n {
+export function createI18next(logger: Logger): i18n {
   i18next
     .use(ChainedBackend)
     .use(intervalPlural)
+    .use(LoglevelPlugin(logger))
     .init({
-      debug: "info" === __LOG_LEVEL,
+      debug: "debug" === __LOG_LEVEL,
       fallbackLng: "en",
       lng: "en",
       ns: ["ui"],

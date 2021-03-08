@@ -2,11 +2,13 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { isKeyboardKeyName } from "./isKeyboardKeyName";
 import { KeyboardIndices } from "./KeyboardIndices.enum";
+import { passiveEventListener } from "./passiveEventListener";
 
 import type { Logger } from "loglevel";
 
+import type { KeyboardKeyName } from "./KeyboardKeyName.type";
 import type { KeyboardObserver as IKeyboardObserver } from "./KeyboardObserver.interface";
-import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
+import type { KeyboardObserverState } from "./KeyboardObserverState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { WindowFocusObserverState } from "./WindowFocusObserverState.type";
 
@@ -17,19 +19,91 @@ export function KeyboardObserver(
   windowFocusObserverState: WindowFocusObserverState,
   tickTimerState: TickTimerState
 ): IKeyboardObserver {
-  const state: MainLoopUpdatableState = Object.seal({
+  const state: KeyboardObserverState = Object.seal({
+    lastUpdate: 0,
     needsUpdates: true,
   });
 
+  let _isListening: boolean = false;
+
   function start(): void {
-    document.addEventListener("keydown", _onKeyDown);
+    _attachListeners();
   }
 
   function stop(): void {
-    document.removeEventListener("keydown", _onKeyDown);
+    if (_isListening) {
+      // Service might be stopped while the document is out of focus.
+      return;
+    }
+
+    _detachListeners();
   }
 
-  function update(): void {}
+  function _attachListeners(): void {
+    if (_isListening) {
+      throw new Error("Touch listeners are already attached.");
+    }
+
+    _isListening = true;
+
+    document.addEventListener("keydown", _onKeyDown, passiveEventListener);
+    document.addEventListener("keyup", _onKeyUp, passiveEventListener);
+  }
+
+  function _detachListeners(): void {
+    if (!_isListening) {
+      throw new Error("Touch listeners are already detached.");
+    }
+
+    _isListening = false;
+
+    document.removeEventListener("keydown", _onKeyDown);
+    document.removeEventListener("keyup", _onKeyUp);
+  }
+
+  function update(): void {
+    if (!windowFocusObserverState.isDocumentFocused && _isListening) {
+      _detachListeners();
+    }
+
+    if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > state.lastUpdate) {
+      // Clear inputs if the game window is not focused.
+      keyboardState.fill(0);
+      _onKeyboardStateChange();
+    }
+
+    if (!windowFocusObserverState.isDocumentFocused) {
+      return;
+    }
+
+    if (windowFocusObserverState.isDocumentFocused && !_isListening) {
+      _attachListeners();
+    }
+  }
+
+  function _onKeyboardStateChange(): void {
+    state.lastUpdate = tickTimerState.currentTick;
+
+    // const currentlyPressed: Array<string> = [];
+
+    // for (let i = 0; i < keyboardState.length; i += 1) {
+    //   if (keyboardState[i] > 0) {
+    //     currentlyPressed.push(KeyboardIndices[i]);
+    //   }
+    // }
+
+    // console.log("PRESSED", currentlyPressed.join("+"));
+  }
+
+  function _onKeyCodeDown(keyName: KeyboardKeyName, keyIndex: number): void {
+    keyboardState[keyIndex] = 1;
+    _onKeyboardStateChange();
+  }
+
+  function _onKeyCodeUp(keyName: KeyboardKeyName, keyIndex: number): void {
+    keyboardState[keyIndex] = 0;
+    _onKeyboardStateChange();
+  }
 
   function _onKeyDown(evt: KeyboardEvent): void {
     const eventKeyCode: string = evt.code;
@@ -40,7 +114,24 @@ export function KeyboardObserver(
       return;
     }
 
-    console.log(evt.code, KeyboardIndices[eventKeyCode]);
+    if (evt.repeat) {
+      // This is a repeated keypress.
+      return;
+    }
+
+    _onKeyCodeDown(eventKeyCode, KeyboardIndices[eventKeyCode]);
+  }
+
+  function _onKeyUp(evt: KeyboardEvent): void {
+    const eventKeyCode: string = evt.code;
+
+    if (!isKeyboardKeyName(eventKeyCode)) {
+      logger.warn(`Unknown key pressed: ${evt.code}`);
+
+      return;
+    }
+
+    _onKeyCodeUp(eventKeyCode, KeyboardIndices[eventKeyCode]);
   }
 
   return Object.freeze({

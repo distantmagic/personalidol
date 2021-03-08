@@ -76,8 +76,6 @@ export function WorldspawnGeometryView(
   function preload(): void {
     state.isPreloading = true;
 
-    logger.debug(`LOADED_MAP_TRIS("${id}", ${entity.position.length / 3})`);
-
     // Geometry
 
     const bufferGeometry = new BufferGeometry();
