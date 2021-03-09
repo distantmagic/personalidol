@@ -88,33 +88,24 @@
       </div>
     </div>
     <script>(function () {
-      const _uiPlaceholderLabel = document.getElementById("ui-placeholder-label");
-
-      _uiPlaceholderLabel.classList.remove("ui-placeholder-label--disabled");
-
-      if (!navigator.serviceWorker) {
-        document.body.style.backgroundColor = "darkred";
-        _uiPlaceholderLabel.textContent = "Error: this app needs to be run under SSL.";
-
-        return;
-      }
-
-      const _script = document.createElement("script");
-
-      _script.setAttribute("src", "/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}");
-      _script.setAttribute("type", "module");
-
-      document.body.appendChild(_script);
-
-      const _uiPlaceholder = document.getElementById("ui-placeholder");
-      const _uiRoot = document.getElementById("ui-root");
-
       let _domControllerReady = false;
+      let _fatalError = null;
       let _version = 0;
 
-      _uiPlaceholderLabel.textContent = "Loading game engine ...";
+      const _uiRoot = document.getElementById("ui-root");
+
+      function _onLoadingError(evt) {
+        _fatalError = evt.detail;
+        _renderError(_fatalError.message);
+      }
 
       function _onLoadingProgress(evt) {
+        if (_fatalError) {
+          return;
+        }
+
+        const _uiPlaceholder = document.getElementById("ui-placeholder");
+
         if (evt.detail.isDOMControllerReady) {
           _domControllerReady = true;
           _uiPlaceholder.classList.remove("ui-placeholder--loading");
@@ -141,7 +132,34 @@
         };
       }
 
+      function _renderError(message) {
+        document.body.style.backgroundColor = "darkred";
+
+        _uiRoot.innerHTML = `
+          <div class="ui-placeholder ui-placeholder--loading" id="ui-placeholder">
+            <div class="ui-placeholder-label" id="ui-placeholder-label">Error: ${message}</div>
+          </div>
+        `;
+      }
+
+      const _uiPlaceholderLabel = document.getElementById("ui-placeholder-label");
+
+      _uiPlaceholderLabel.classList.remove("ui-placeholder-label--disabled");
+      _uiPlaceholderLabel.textContent = "Loading game engine ...";
+
+      if (!navigator.serviceWorker) {
+        return void _renderError("this app needs to run under SSL and support service workers");
+      }
+
+      const _script = document.createElement("script");
+
+      _script.setAttribute("src", "/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}");
+      _script.setAttribute("type", "module");
+
+      document.body.appendChild(_script);
+
       _uiRoot.addEventListener("loading", _onLoadingProgress);
+      _uiRoot.addEventListener("error", _onLoadingError);
     }());</script>
     <script src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}" type="module"></script>
   </body>

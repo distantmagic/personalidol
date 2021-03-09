@@ -139,6 +139,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this._unaryT = unary(this.t);
 
     this.close = this.close.bind(this);
+    this.onCameraMovementSpeedChange = this.onCameraMovementSpeedChange.bind(this);
     this.onCameraTypeChange = this.onCameraTypeChange.bind(this);
     this.onDynamicLightQualityChange = this.onDynamicLightQualityChange.bind(this);
     this.onOverlayClick = this.onOverlayClick.bind(this);
@@ -161,6 +162,15 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     super.disconnectedCallback();
 
     this.close();
+  }
+
+  onCameraMovementSpeedChange(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onDynamicLightQualityChange'.");
+    }
+
+    this.userSettings.cameraMovementSpeed = Number(evt.detail);
+    this.userSettings.version += 1;
   }
 
   onCameraTypeChange(evt: Event) {
@@ -335,7 +345,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dt>{this.t("ui:user_settings_camera_movement_speed")}</dt>
             <dd>{this.t("ui:user_settings_camera_movement_speed_description")}</dd>
           </dl>
-          <div />
+          <pi-form-range-slider max={2000} min={200} onChange={this.onCameraMovementSpeedChange} step={200} value={this.userSettings.cameraMovementSpeed} />
         </form>
         {isOffscreenCanvasSupported && (
           <Fragment>

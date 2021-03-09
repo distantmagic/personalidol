@@ -356,8 +356,8 @@ export function MapScene(
       _pointerVector.x = getPrimaryPointerStretchVectorX(mouseState, touchState);
       _pointerVector.y = getPrimaryPointerStretchVectorY(mouseState, touchState);
       _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
-      _cameraController.position.x += 600 * _pointerVector.y * delta;
-      _cameraController.position.z += 600 * _pointerVector.x * delta;
+      _cameraController.position.x += userSettings.cameraMovementSpeed * _pointerVector.y * delta;
+      _cameraController.position.z += userSettings.cameraMovementSpeed * _pointerVector.x * delta;
     }
 
     if (!state.isPaused && keyboardState[KeyboardIndices.Home]) {

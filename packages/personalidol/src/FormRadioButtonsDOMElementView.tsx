@@ -16,7 +16,7 @@ const _css = `
     box-sizing: border-box;
   }
 
-  .pi-slider {
+  .pi-radio {
     align-items: center;
     display: grid;
     font-family: Mukta;
@@ -29,11 +29,11 @@ const _css = `
     padding-right: 1.6rem;
   }
 
-  .pi-slider.pi-slider--disabled {
+  .pi-radio.pi-radio--disabled {
     opacity: 0.3;
   }
 
-  .pi-slider-bullets {
+  .pi-radio-buttons {
     background-color: black;
     border: 1px solid white;
     border-radius: 1rem;
@@ -42,7 +42,7 @@ const _css = `
     padding: 2px;
   }
 
-  .pi-slider-bullet {
+  .pi-radio-button {
     align-items: center;
     border-radius: 1rem;
     color: white;
@@ -56,24 +56,24 @@ const _css = `
     vertical-align: center;
   }
 
-  .pi-slider-bullet.pi-slider-bullet--disabled {
+  .pi-radio-button.pi-radio-button--disabled {
     cursor: not-allowed;
   }
 
-  .pi-slider-bullet.pi-slider-bullet--active {
+  .pi-radio-button.pi-radio-button--active {
     background-color: white;
     color: black;
   }
 
-  .pi-slider-edge-label {
+  .pi-radio-edge-label {
     color: white;
   }
 
-  .pi-slider-edge-label.pi-slider-edge-label--low {
+  .pi-radio-edge-label.pi-radio-edge-label--low {
     grid-area: label-edge-low;
   }
 
-  .pi-slider-edge-label.pi-slider-edge-label--high {
+  .pi-radio-edge-label.pi-radio-edge-label--high {
     grid-area: label-edge-high;
     text-align: right;
   }
@@ -165,9 +165,9 @@ export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettin
   renderBulletDisabled(value: T, index: number) {
     return (
       <div
-        class={classnames("pi-slider-bullet pi-slider-bullet--disabled", {
-          "pi-slider-bullet--active": value === this.currentValue,
-          "pi-slider-bullet--inactive": value !== this.currentValue,
+        class={classnames("pi-radio-button pi-radio-button--disabled", {
+          "pi-radio-button--active": value === this.currentValue,
+          "pi-radio-button--inactive": value !== this.currentValue,
         })}
         draggable={false}
         key={String(value)}
@@ -182,9 +182,9 @@ export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettin
 
     return (
       <div
-        class={classnames("pi-slider-bullet", {
-          "pi-slider-bullet--active": value === this.currentValue,
-          "pi-slider-bullet--inactive": value !== this.currentValue,
+        class={classnames("pi-radio-button", {
+          "pi-radio-button--active": value === this.currentValue,
+          "pi-radio-button--inactive": value !== this.currentValue,
         })}
         draggable={false}
         key={String(value)}
@@ -209,20 +209,20 @@ export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettin
 
     return (
       <div
-        class={classnames("pi-slider", {
-          "pi-slider--disabled": this._isDisabled,
+        class={classnames("pi-radio", {
+          "pi-radio--disabled": this._isDisabled,
         })}
       >
-        <div class="pi-slider-edge-label pi-slider-edge-label--low">{this.edgeLabels[0]}</div>
+        <div class="pi-radio-edge-label pi-radio-edge-label--low">{this.edgeLabels[0]}</div>
         <div
-          class="pi-slider-bullets"
+          class="pi-radio-buttons"
           style={{
             "grid-template-columns": `repeat(${this.values.length}, 1fr)`,
           }}
         >
           {this.values.map(this._isDisabled ? this.renderBulletDisabled : this.renderBulletEnabled)}
         </div>
-        <div class="pi-slider-edge-label pi-slider-edge-label--high">{this.edgeLabels[1]}</div>
+        <div class="pi-radio-edge-label pi-radio-edge-label--high">{this.edgeLabels[1]}</div>
       </div>
     );
   }

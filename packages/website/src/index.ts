@@ -49,18 +49,8 @@ import { createRenderingService } from "./createRenderingService";
 import { createTexturesService } from "./createTexturesService";
 
 const THREAD_DEBUG_NAME: string = "main_thread";
-const canvas = getHTMLElementById(window.document, "canvas");
 const totalLoadingSteps: number = 12;
 let currentLoadingStep: number = 1;
-
-if (!(canvas instanceof HTMLCanvasElement)) {
-  throw new Error("Canvas is not an instance of HTMLCanvasElement");
-}
-
-const devicePixelRatio = window.devicePixelRatio;
-const logger = Loglevel.getLogger(THREAD_DEBUG_NAME);
-
-logger.setLevel(__LOG_LEVEL);
 
 const canvasRoot = getHTMLElementById(window.document, "canvas-root");
 const uiRoot = getHTMLElementById(window.document, "ui-root");
@@ -69,7 +59,17 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 // widely supported yet.
 // Depending on browser feature support, some workers will be started or not.
 // Checking for features is asynchronous.
-(async function () {
+async function bootstrap() {
+  const canvas = getHTMLElementById(window.document, "canvas");
+
+  if (!(canvas instanceof HTMLCanvasElement)) {
+    throw new Error("Canvas is not an instance of HTMLCanvasElement");
+  }
+
+  const devicePixelRatio = window.devicePixelRatio;
+  const logger = Loglevel.getLogger(THREAD_DEBUG_NAME);
+
+  logger.setLevel(__LOG_LEVEL);
   logger.debug(`BUILD_ID("${__BUILD_ID}")`);
 
   uiRoot.dispatchEvent(
@@ -505,4 +505,16 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     uiMessageChannel.port2,
     userSettingsMessageChannel.port2
   );
+}
+
+(async function () {
+  try {
+    await bootstrap();
+  } catch (err) {
+    uiRoot.dispatchEvent(
+      new CustomEvent("error", {
+        detail: err,
+      })
+    );
+  }
 })();

@@ -4,6 +4,7 @@ import { ButtonDOMElementView } from "./ButtonDOMElementView";
 import { DOMZIndex } from "./DOMZIndex.enum";
 import { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import { FormRadioButtonsDOMElementView } from "./FormRadioButtonsDOMElementView";
+import { FormRangeSliderDOMElementView } from "./FormRangeSliderDOMElementView";
 import { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import { LanguageSettingsDOMElementView } from "./LanguageSettingsDOMElementView";
@@ -29,6 +30,7 @@ export const domElementsLookup: DOMElementsLookup = {
   "pi-button": ButtonDOMElementView,
   "pi-fatal-error": FatalErrorDOMElementView,
   "pi-form-radio-buttons": FormRadioButtonsDOMElementView,
+  "pi-form-range-slider": FormRangeSliderDOMElementView,
   "pi-in-game-menu": InGameMenuDOMElementView,
   "pi-in-game-menu-trigger": InGameMenuTriggerDOMElementView,
   "pi-language-settings": LanguageSettingsDOMElementView,

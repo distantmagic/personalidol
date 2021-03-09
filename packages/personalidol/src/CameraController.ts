@@ -106,6 +106,11 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
       _currentCamera = _orthographicCamera;
     }
 
+    if (_perspectiveCamera.type === userSettings.cameraType) {
+      _needsImmediateMove = _needsImmediateMove || _currentCamera.type !== _perspectiveCamera.type;
+      _currentCamera = _perspectiveCamera;
+    }
+
     if (_needsImmediateMove) {
       _orthographicCameraFrustumSize = _cameraZoomAmount;
     } else {
@@ -117,11 +122,6 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
     updateOrthographicCameraAspect(dimensionsState, _orthographicCamera, _orthographicCameraFrustumSize);
     updatePerspectiveCameraAspect(dimensionsState, _perspectiveCamera);
 
-    if (_perspectiveCamera.type === userSettings.cameraType) {
-      _needsImmediateMove = _needsImmediateMove || _currentCamera.type !== _perspectiveCamera.type;
-      _currentCamera = _perspectiveCamera;
-    }
-
     if (!state.isPaused && keyboardState[KeyboardIndices.PageDown]) {
       _onPointerZoomRequest(-1, 0.1);
     }
@@ -131,26 +131,25 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
     }
 
     if (!state.isPaused && (keyboardState[KeyboardIndices.ArrowUp] || keyboardState[KeyboardIndices.KeyW])) {
-      _cameraPosition.x -= 600 * delta;
-      _cameraPosition.z -= 600 * delta;
+      _cameraPosition.x -= userSettings.cameraMovementSpeed * delta;
+      _cameraPosition.z -= userSettings.cameraMovementSpeed * delta;
     }
 
     if (!state.isPaused && (keyboardState[KeyboardIndices.ArrowLeft] || keyboardState[KeyboardIndices.KeyA])) {
-      _cameraPosition.x -= 600 * delta;
-      _cameraPosition.z += 600 * delta;
+      _cameraPosition.x -= userSettings.cameraMovementSpeed * delta;
+      _cameraPosition.z += userSettings.cameraMovementSpeed * delta;
     }
 
     if (!state.isPaused && (keyboardState[KeyboardIndices.ArrowRight] || keyboardState[KeyboardIndices.KeyD])) {
-      _cameraPosition.x += 600 * delta;
-      _cameraPosition.z -= 600 * delta;
+      _cameraPosition.x += userSettings.cameraMovementSpeed * delta;
+      _cameraPosition.z -= userSettings.cameraMovementSpeed * delta;
     }
 
     if (!state.isPaused && (keyboardState[KeyboardIndices.ArrowDown] || keyboardState[KeyboardIndices.KeyS])) {
-      _cameraPosition.x += 600 * delta;
-      _cameraPosition.z += 600 * delta;
+      _cameraPosition.x += userSettings.cameraMovementSpeed * delta;
+      _cameraPosition.z += userSettings.cameraMovementSpeed * delta;
     }
 
-    // prettier-ignore
     if (_needsImmediateMove) {
       _needsImmediateMove = false;
 
@@ -158,9 +157,9 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
       _currentCamera.position.z = _cameraPosition.z + _cameraZoomAmount;
       _currentCamera.position.y = _cameraPosition.y + _cameraZoomAmount;
     } else {
-      _currentCamera.position.x = damp(_currentCamera.position.x, _cameraPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta),
-      _currentCamera.position.z = damp(_currentCamera.position.z, _cameraPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta),
-      _currentCamera.position.y = damp(_currentCamera.position.y, _cameraPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta);
+      (_currentCamera.position.x = damp(_currentCamera.position.x, _cameraPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta)),
+        (_currentCamera.position.z = damp(_currentCamera.position.z, _cameraPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta)),
+        (_currentCamera.position.y = damp(_currentCamera.position.y, _cameraPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta));
     }
 
     _currentCamera.lookAt(_currentCamera.position.x - _cameraZoomAmount, _currentCamera.position.y - _cameraZoomAmount, _currentCamera.position.z - _cameraZoomAmount);

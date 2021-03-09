@@ -4,6 +4,8 @@ import type { ButtonDOMElementView } from "./ButtonDOMElementView";
 import type { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
 import type { FormRadioButtonsDOMElementProps } from "./FormRadioButtonsDOMElementProps.interface";
 import type { FormRadioButtonsDOMElementView } from "./FormRadioButtonsDOMElementView";
+import type { FormRangeSliderDOMElementProps } from "./FormRangeSliderDOMElementProps.interface";
+import type { FormRangeSliderDOMElementView } from "./FormRangeSliderDOMElementView";
 import type { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import type { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import type { LanguageSettingsDOMElementView } from "./LanguageSettingsDOMElementView";
@@ -27,6 +29,7 @@ declare global {
     interface IntrinsicElements {
       "pi-button": HTMLAttributes<ButtonDOMElementView>;
       "pi-form-radio-buttons": HTMLAttributes<FormRadioButtonsDOMElementView<any>> & FormRadioButtonsDOMElementProps<any>;
+      "pi-form-range-slider": HTMLAttributes<FormRangeSliderDOMElementView> & FormRangeSliderDOMElementProps;
       "pi-main-menu-button": HTMLAttributes<MainMenuButtonDOMElementView> & MainMenuButtonDOMElementProps;
       "pi-main-menu-language-button": HTMLAttributes<MainMenuLanguageButtonDOMElementView>;
       "pi-main-menu-layout": HTMLAttributes<MainMenuLayoutDOMElementView>;
@@ -42,6 +45,7 @@ export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-button": typeof ButtonDOMElementView;
   "pi-fatal-error": typeof FatalErrorDOMElementView;
   "pi-form-radio-buttons": typeof FormRadioButtonsDOMElementView;
+  "pi-form-range-slider": typeof FormRangeSliderDOMElementView;
   "pi-in-game-menu": typeof InGameMenuDOMElementView;
   "pi-in-game-menu-trigger": typeof InGameMenuTriggerDOMElementView;
   "pi-language-settings": typeof LanguageSettingsDOMElementView;
