@@ -26,7 +26,9 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
 
   private _domMessagePort: null | MessagePort = null;
   private _i18next: null | i18n = null;
-  private _inputState: null | Int32Array = null;
+  private _keyboardState: null | Uint8Array = null;
+  private _mouseState: null | Int32Array = null;
+  private _touchState: null | Int32Array = null;
   private _uiMessagePort: null | MessagePort = null;
   private _userSettings: null | U = null;
 
@@ -48,13 +50,31 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
     this._i18next = i18next;
   }
 
-  get inputState(): Int32Array {
-    return must(this._inputState, "inputState is not set but it was expected to be.");
+  get keyboardState(): Uint8Array {
+    return must(this._keyboardState, "keyboardState is not set but it was expected to be.");
   }
 
-  set inputState(inputState: Int32Array) {
+  set keyboardState(keyboardState: Uint8Array) {
     this.needsRender = true;
-    this._inputState = inputState;
+    this._keyboardState = keyboardState;
+  }
+
+  get mouseState(): Int32Array {
+    return must(this._mouseState, "mouseState is not set but it was expected to be.");
+  }
+
+  set mouseState(mouseState: Int32Array) {
+    this.needsRender = true;
+    this._mouseState = mouseState;
+  }
+
+  get touchState(): Int32Array {
+    return must(this._touchState, "touchState is not set but it was expected to be.");
+  }
+
+  set touchState(touchState: Int32Array) {
+    this.needsRender = true;
+    this._touchState = touchState;
   }
 
   get uiMessagePort(): MessagePort {

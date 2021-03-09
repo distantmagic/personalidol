@@ -1,6 +1,5 @@
 import { DimensionsIndices } from "./DimensionsIndices.enum";
-import { Pointer } from "./Pointer";
 
-export function computePointerVectorY(dimensionsState: Uint32Array, relativeY: number): number {
-  return Pointer.vector_scale * (-1 * (relativeY / dimensionsState[DimensionsIndices.D_HEIGHT]) * 2 + 1);
+export function computePointerVectorY(dimensionsState: Uint32Array, relativeY: number, scale: number): number {
+  return scale * (-1 * (relativeY / dimensionsState[DimensionsIndices.D_HEIGHT]) * 2 + 1);
 }

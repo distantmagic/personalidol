@@ -127,7 +127,8 @@ export function MapScene(
   views: Set<View>,
   dimensionsState: Uint32Array,
   keyboardState: Uint8Array,
-  pointerState: Int32Array,
+  mouseState: Int32Array,
+  touchState: Int32Array,
   domMessagePort: MessagePort,
   gltfMessagePort: MessagePort,
   internationalizationMessagePort: MessagePort,
@@ -358,9 +359,9 @@ export function MapScene(
   function update(delta: number, elapsedTime: number): void {
     updateStoreCameraAspect(_camera, dimensionsState);
 
-    if (!state.isPaused && isPrimaryPointerPressed(pointerState) && isPointerInitiatedByRootElement(pointerState)) {
-      _pointerVector.x = getPrimaryPointerStretchVectorX(pointerState);
-      _pointerVector.y = getPrimaryPointerStretchVectorY(pointerState);
+    if (!state.isPaused && isPrimaryPointerPressed(mouseState, touchState) && isPointerInitiatedByRootElement(mouseState, touchState)) {
+      _pointerVector.x = getPrimaryPointerStretchVectorX(mouseState, touchState);
+      _pointerVector.y = getPrimaryPointerStretchVectorY(mouseState, touchState);
       _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
       _cameraPosition.x += 1000 * _pointerVector.y * delta;
       _cameraPosition.z += 1000 * _pointerVector.x * delta;

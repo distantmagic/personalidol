@@ -1,9 +1,10 @@
-import { PointerIndices } from "./PointerIndices.enum";
+import { MouseIndices } from "./MouseIndices.enum";
+import { TouchIndices } from "./TouchIndices.enum";
 
-export function isPointerInitiatedByRootElement(pointerState: Int32Array): boolean {
-  if (pointerState[PointerIndices.M_LAST_USED] > pointerState[PointerIndices.T_LAST_USED]) {
-    return Boolean(pointerState[PointerIndices.M_INITIATED_BY_ROOT_ELEMENT]);
+export function isPointerInitiatedByRootElement(mouseState: Int32Array, touchState: Int32Array): boolean {
+  if (mouseState[MouseIndices.M_LAST_USED] > touchState[TouchIndices.T_LAST_USED]) {
+    return Boolean(mouseState[MouseIndices.M_INITIATED_BY_ROOT_ELEMENT]);
   }
 
-  return Boolean(pointerState[PointerIndices.T_INITIATED_BY_ROOT_ELEMENT]);
+  return Boolean(touchState[TouchIndices.T_INITIATED_BY_ROOT_ELEMENT]);
 }

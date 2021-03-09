@@ -33,13 +33,17 @@ function _initializeDOMElementView<U extends UserSettings>(
   domElementView: DOMElementView<U>,
   i18next: i18n,
   userSettings: U,
-  inputState: Int32Array,
+  keyboardState: Uint8Array,
+  mouseState: Int32Array,
+  touchState: Int32Array,
   domMessagePort: MessagePort,
   uiMessagePort: MessagePort
 ) {
   domElementView.domMessagePort = domMessagePort;
   domElementView.i18next = i18next;
-  domElementView.inputState = inputState;
+  domElementView.keyboardState = keyboardState;
+  domElementView.mouseState = mouseState;
+  domElementView.touchState = touchState;
   domElementView.uiMessagePort = uiMessagePort;
   domElementView.userSettings = userSettings;
 }
@@ -51,7 +55,9 @@ function _isCustomElementDefined<L extends DOMElementsLookup>(name: string & key
 export function DOMUIController<L extends DOMElementsLookup, U extends UserSettings>(
   logger: Logger,
   i18next: i18n,
-  inputState: Int32Array,
+  keyboardState: Uint8Array,
+  mouseState: Int32Array,
+  touchState: Int32Array,
   mainLoop: MainLoop,
   uiMessagePort: MessagePort,
   uiRootElement: HTMLElement,
@@ -82,7 +88,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     const domElementView = new DOMElementViewConstructor<U>();
 
-    _initializeDOMElementView(domElementView, i18next, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+    _initializeDOMElementView(domElementView, i18next, userSettings, keyboardState, mouseState, touchState, internalDOMMessageChannel.port2, uiMessagePort);
 
     return domElementView;
   }
@@ -103,7 +109,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
         if (isDOMElementView<U>(element)) {
           logger.debug(`UPGRADE("${name}")`);
-          _initializeDOMElementView(element, i18next, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+          _initializeDOMElementView(element, i18next, userSettings, keyboardState, mouseState, touchState, internalDOMMessageChannel.port2, uiMessagePort);
           _registerDOMElementView(element);
           _updateRenderedElement(element);
         }
@@ -161,7 +167,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     // Pick up any element that was created by a view.
 
-    _initializeDOMElementView(target, i18next, userSettings, inputState, internalDOMMessageChannel.port2, uiMessagePort);
+    _initializeDOMElementView(target, i18next, userSettings, keyboardState, mouseState, touchState, internalDOMMessageChannel.port2, uiMessagePort);
     _registerDOMElementView(target);
     _updateRenderedElement(target);
 

@@ -18,18 +18,18 @@ import { LanguageUserSettingsManager } from "@personalidol/personalidol/src/Lang
 import { LocalStorageUserSettingsSync } from "@personalidol/framework/src/LocalStorageUserSettingsSync";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
+import { Mouse } from "@personalidol/framework/src/Mouse";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
-import { Pointer } from "@personalidol/framework/src/Pointer";
-import { PointerStatsHook } from "@personalidol/framework/src/PointerStatsHook";
 import { preload } from "@personalidol/framework/src/preload";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
+import { Touch } from "@personalidol/framework/src/Touch";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { WindowFocusObserver } from "@personalidol/framework/src/WindowFocusObserver";
@@ -89,7 +89,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
   const keyboardState = Keyboard.createEmptyState(useSharedBuffers);
 
-  const pointerState = Pointer.createEmptyState(useSharedBuffers);
+  const mouseState = Mouse.createEmptyState(useSharedBuffers);
+  const touchState = Touch.createEmptyState(useSharedBuffers);
 
   const eventBus = EventBus();
   const statsReporterMessageChannel = createSingleThreadMessageChannel();
@@ -100,8 +101,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const windowFocusObserver = WindowFocusObserver(logger, mainLoop.tickTimerState);
   const keyboardObserver = KeyboardObserver(logger, canvas, keyboardState, windowFocusObserver.state, mainLoop.tickTimerState);
-  const mouseObserver = MouseObserver(canvas, dimensionsState, pointerState, windowFocusObserver.state, mainLoop.tickTimerState);
-  const touchObserver = TouchObserver(canvas, dimensionsState, pointerState, windowFocusObserver.state, mainLoop.tickTimerState);
+  const mouseObserver = MouseObserver(canvas, dimensionsState, mouseState, windowFocusObserver.state, mainLoop.tickTimerState);
+  const touchObserver = TouchObserver(canvas, dimensionsState, touchState, windowFocusObserver.state, mainLoop.tickTimerState);
 
   const userSettings = UserSettings.createEmptyState(devicePixelRatio);
   const userSettingsMessageChannel = createMultiThreadMessageChannel();
@@ -110,7 +111,6 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
 
   const statsReporter = StatsReporter(THREAD_DEBUG_NAME, userSettings, statsReporterMessageChannel.port2, mainLoop.tickTimerState);
 
-  statsReporter.hooks.add(PointerStatsHook(pointerState));
   statsReporter.hooks.add(MainLoopStatsHook(mainLoop));
 
   // This is an unofficial Chrome JS extension so it's not typed by default.
@@ -124,7 +124,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   serviceManager.services.add(windowFocusObserver);
   serviceManager.services.add(keyboardObserver);
   serviceManager.services.add(mouseObserver);
-  serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, pointerState));
+  serviceManager.services.add(MouseWheelObserver(canvas, eventBus, dimensionsState, mouseState));
   serviceManager.services.add(touchObserver);
   serviceManager.services.add(localStorageUserSettingsSync);
   serviceManager.services.add(multiThreadUserSettingsSync);
@@ -243,7 +243,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const domUIController = DOMUIController(
     logger,
     internationalizationService.i18next as DOMi18n,
-    pointerState,
+    keyboardState,
+    mouseState,
+    touchState,
     mainLoop,
     uiMessageChannel.port1,
     uiRoot,
@@ -472,7 +474,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     keyboardObserver.state,
     keyboardState,
     mouseObserver.state,
-    pointerState,
+    mouseState,
+    touchState,
     statsReporter,
     THREAD_DEBUG_NAME,
     touchObserver.state,

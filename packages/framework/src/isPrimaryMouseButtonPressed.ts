@@ -1,5 +1,5 @@
-import { PointerIndices } from "./PointerIndices.enum";
+import { MouseIndices } from "./MouseIndices.enum";
 
-export function isPrimaryMouseButtonPressed(pointerState: Int32Array): boolean {
-  return pointerState[PointerIndices.M_BUTTON_L] > 0 && pointerState[PointerIndices.M_IN_BOUNDS] > 0;
+export function isPrimaryMouseButtonPressed(mouseState: Int32Array): boolean {
+  return mouseState[MouseIndices.M_BUTTON_L] > 0 && mouseState[MouseIndices.M_IN_BOUNDS] > 0;
 }

@@ -1,5 +1,5 @@
-import { PointerIndices } from "./PointerIndices.enum";
+import { MouseIndices } from "./MouseIndices.enum";
 
-export function isMousePointerInDimensionsBounds(dimensionsState: Uint32Array, pointerState: Int32Array): boolean {
-  return pointerState[PointerIndices.M_IN_BOUNDS] > 0;
+export function isMousePointerInDimensionsBounds(dimensionsState: Uint32Array, mouseState: Int32Array): boolean {
+  return mouseState[MouseIndices.M_IN_BOUNDS] > 0;
 }

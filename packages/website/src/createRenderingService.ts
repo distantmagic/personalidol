@@ -32,7 +32,8 @@ export async function createRenderingService(
   keyboardObserverState: KeyboardObserverState,
   keyboardState: Uint8Array,
   mouseObserverState: MouseObserverState,
-  pointerState: Int32Array,
+  mouseState: Int32Array,
+  touchState: Int32Array,
   statsReporter: StatsReporter,
   threadDebugName: string,
   touchObserverState: TouchObserverState,
@@ -61,22 +62,40 @@ export async function createRenderingService(
       function sharedArrayBufferNotAvailable() {
         logger.debug("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
 
-        let _lastNotificationTick: number = -1;
-        const updateMessage = {
-          dimensionsState: dimensionsState,
-          keyboardState: keyboardState,
-          pointerState: pointerState,
+        let _lastNotificationTicks = {
+          dimensionsState: -1,
+          keyboardState: -1,
+          mouseState: -1,
+          touchState: -1,
         };
 
         function updateStateArrays(): void {
-          // prettier-ignore
-          if ( _lastNotificationTick < dimensionsState[DimensionsIndices.LAST_UPDATE]
-            || _lastNotificationTick < keyboardObserverState.lastUpdate
-            || _lastNotificationTick < mouseObserverState.lastUpdate
-            || _lastNotificationTick < touchObserverState.lastUpdate
-          ) {
-            offscreenWorker.postMessage(updateMessage);
-            _lastNotificationTick = mainLoop.tickTimerState.currentTick;
+          if (_lastNotificationTicks.dimensionsState < dimensionsState[DimensionsIndices.LAST_UPDATE]) {
+            offscreenWorker.postMessage({
+              dimensionsState: dimensionsState,
+            });
+            _lastNotificationTicks.dimensionsState = dimensionsState[DimensionsIndices.LAST_UPDATE];
+          }
+
+          if (_lastNotificationTicks.keyboardState < keyboardObserverState.lastUpdate) {
+            offscreenWorker.postMessage({
+              keyboardState: keyboardState,
+            });
+            _lastNotificationTicks.keyboardState = keyboardObserverState.lastUpdate;
+          }
+
+          if (_lastNotificationTicks.mouseState < mouseObserverState.lastUpdate) {
+            offscreenWorker.postMessage({
+              mouseState: mouseState,
+            });
+            _lastNotificationTicks.mouseState = mouseObserverState.lastUpdate;
+          }
+
+          if (_lastNotificationTicks.touchState < touchObserverState.lastUpdate) {
+            offscreenWorker.postMessage({
+              touchState: touchState,
+            });
+            _lastNotificationTicks.touchState = touchObserverState.lastUpdate;
           }
         }
 
@@ -90,7 +109,8 @@ export async function createRenderingService(
           offscreenWorker.postMessage({
             sharedDimensionsState: dimensionsState.buffer,
             sharedKeyboardState: keyboardState.buffer,
-            sharedPointerState: pointerState.buffer,
+            sharedMouseState: mouseState.buffer,
+            sharedTouchState: touchState.buffer,
           });
         } catch (err) {
           // In some cases, `postMessage` will throw when trying to send
@@ -213,7 +233,8 @@ export async function createRenderingService(
         canvas,
         dimensionsState,
         keyboardState,
-        pointerState,
+        mouseState,
+        touchState,
         logger,
         statsReporter,
         userSettings,

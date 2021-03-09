@@ -29,11 +29,12 @@ type Dependencies = {
   internationalizationMessagePort: MessagePort;
   keyboardState: Uint8Array;
   md2MessagePort: MessagePort;
-  pointerState: Int32Array;
+  mouseState: Int32Array;
   progressMessagePort: MessagePort;
   quakeMapsMessagePort: MessagePort;
   statsMessagePort: MessagePort;
   texturesMessagePort: MessagePort;
+  touchState: Int32Array;
   uiMessagePort: MessagePort;
   userSettingsMessagePort: MessagePort;
 };
@@ -50,11 +51,12 @@ const partialDependencies: Partial<Dependencies> = {
   internationalizationMessagePort: undefined,
   keyboardState: undefined,
   md2MessagePort: undefined,
-  pointerState: undefined,
+  mouseState: undefined,
   progressMessagePort: undefined,
   quakeMapsMessagePort: undefined,
   statsMessagePort: undefined,
   texturesMessagePort: undefined,
+  touchState: undefined,
   uiMessagePort: undefined,
   userSettingsMessagePort: undefined,
 };
@@ -101,7 +103,8 @@ function onDependenciesReady(dependencies: Dependencies): void {
     dependencies.canvas,
     dependencies.dimensionsState,
     dependencies.keyboardState,
-    dependencies.pointerState,
+    dependencies.mouseState,
+    dependencies.touchState,
     logger,
     statsReporter,
     userSettings,
@@ -171,13 +174,13 @@ self.onmessage = createRouter({
     serviceBuilder.setDependency("md2MessagePort", port);
   },
 
-  pointerState(newPointerState: Int32Array): void {
-    const pointerState: undefined | Int32Array = partialDependencies.pointerState;
+  mouseState(newMouseState: Int32Array): void {
+    const mouseState: undefined | Int32Array = partialDependencies.mouseState;
 
-    if (pointerState) {
-      pointerState.set(newPointerState);
+    if (mouseState) {
+      mouseState.set(newMouseState);
     } else {
-      serviceBuilder.setDependency("pointerState", newPointerState);
+      serviceBuilder.setDependency("mouseState", newMouseState);
     }
   },
 
@@ -203,8 +206,12 @@ self.onmessage = createRouter({
     serviceBuilder.setDependency("keyboardState", new Uint8Array(keyboard));
   },
 
-  sharedPointerState(input: SharedArrayBuffer): void {
-    serviceBuilder.setDependency("pointerState", new Int32Array(input));
+  sharedMouseState(input: SharedArrayBuffer): void {
+    serviceBuilder.setDependency("mouseState", new Int32Array(input));
+  },
+
+  sharedTouchState(input: SharedArrayBuffer): void {
+    serviceBuilder.setDependency("touchState", new Int32Array(input));
   },
 
   statsMessagePort(port: MessagePort): void {
@@ -213,6 +220,16 @@ self.onmessage = createRouter({
 
   texturesMessagePort(port: MessagePort): void {
     serviceBuilder.setDependency("texturesMessagePort", port);
+  },
+
+  touchState(newTouchState: Int32Array): void {
+    const touchState: undefined | Int32Array = partialDependencies.touchState;
+
+    if (touchState) {
+      touchState.set(newTouchState);
+    } else {
+      serviceBuilder.setDependency("touchState", newTouchState);
+    }
   },
 
   uiMessagePort(port: MessagePort): void {

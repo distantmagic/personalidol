@@ -8,8 +8,8 @@ import { DimensionsIndices } from "./DimensionsIndices.enum";
 import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { MouseButtons } from "./MouseButtons.enum";
 import { passiveEventListener } from "./passiveEventListener";
-import { Pointer } from "./Pointer";
-import { PointerIndices } from "./PointerIndices.enum";
+import { Mouse } from "./Mouse";
+import { MouseIndices } from "./MouseIndices.enum";
 
 import type { MouseObserver as IMouseObserver } from "./MouseObserver.interface";
 import type { MouseObserverState } from "./MouseObserverState.type";
@@ -19,7 +19,7 @@ import type { WindowFocusObserverState } from "./WindowFocusObserverState.type";
 export function MouseObserver(
   htmlElement: HTMLElement,
   dimensionsState: Uint32Array,
-  pointerState: Int32Array,
+  mouseState: Int32Array,
   windowFocusObserverState: WindowFocusObserverState,
   tickTimerState: TickTimerState
 ): IMouseObserver {
@@ -50,7 +50,7 @@ export function MouseObserver(
 
     if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > state.lastUpdate) {
       // Clear inputs if the game window is not focused.
-      pointerState.fill(0, Pointer.range_mouse_first, Pointer.range_mouse_last);
+      mouseState.fill(0);
       state.lastUpdate = tickTimerState.currentTick;
     }
 
@@ -92,26 +92,28 @@ export function MouseObserver(
   }
 
   function _onMouseChange(evt: MouseEvent): void {
-    pointerState[PointerIndices.M_LAST_USED] = tickTimerState.currentTick;
-    pointerState[PointerIndices.M_BUTTON_L] = evt.buttons & MouseButtons.Primary;
-    pointerState[PointerIndices.M_BUTTON_R] = evt.buttons & MouseButtons.Secondary;
-    pointerState[PointerIndices.M_BUTTON_M] = evt.buttons & MouseButtons.Middle;
-    pointerState[PointerIndices.M_BUTTON_4] = evt.buttons & MouseButtons.Generic1;
-    pointerState[PointerIndices.M_BUTTON_5] = evt.buttons & MouseButtons.Generic2;
+    mouseState[MouseIndices.M_LAST_USED] = tickTimerState.currentTick;
+    mouseState[MouseIndices.M_BUTTON_L] = evt.buttons & MouseButtons.Primary;
+    mouseState[MouseIndices.M_BUTTON_R] = evt.buttons & MouseButtons.Secondary;
+    mouseState[MouseIndices.M_BUTTON_M] = evt.buttons & MouseButtons.Middle;
+    mouseState[MouseIndices.M_BUTTON_4] = evt.buttons & MouseButtons.Generic1;
+    mouseState[MouseIndices.M_BUTTON_5] = evt.buttons & MouseButtons.Generic2;
 
-    pointerState[PointerIndices.M_CLIENT_X] = evt.clientX;
-    pointerState[PointerIndices.M_CLIENT_Y] = evt.clientY;
+    mouseState[MouseIndices.M_CLIENT_X] = evt.clientX;
+    mouseState[MouseIndices.M_CLIENT_Y] = evt.clientY;
 
     if (evt.buttons) {
-      pointerState[PointerIndices.M_STRETCH_VECTOR_X] = computePointerStretchVectorX(
+      mouseState[MouseIndices.M_STRETCH_VECTOR_X] = computePointerStretchVectorX(
         dimensionsState,
-        pointerState[PointerIndices.M_DOWN_INITIAL_CLIENT_X],
-        pointerState[PointerIndices.M_CLIENT_X]
+        mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_X],
+        mouseState[MouseIndices.M_CLIENT_X],
+        Mouse.vector_scale
       );
-      pointerState[PointerIndices.M_STRETCH_VECTOR_Y] = computePointerStretchVectorY(
+      mouseState[MouseIndices.M_STRETCH_VECTOR_Y] = computePointerStretchVectorY(
         dimensionsState,
-        pointerState[PointerIndices.M_DOWN_INITIAL_CLIENT_Y],
-        pointerState[PointerIndices.M_CLIENT_Y]
+        mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_Y],
+        mouseState[MouseIndices.M_CLIENT_Y],
+        Mouse.vector_scale
       );
     }
 
@@ -120,25 +122,25 @@ export function MouseObserver(
   }
 
   function _onMouseDown(evt: MouseEvent): void {
-    pointerState[PointerIndices.M_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
-    pointerState[PointerIndices.M_DOWN_INITIAL_CLIENT_X] = evt.clientX;
-    pointerState[PointerIndices.M_DOWN_INITIAL_CLIENT_Y] = evt.clientY;
+    mouseState[MouseIndices.M_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
+    mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_X] = evt.clientX;
+    mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_Y] = evt.clientY;
 
     _onMouseChange(evt);
   }
 
   function _onMouseUp(evt: MouseEvent): void {
-    pointerState[PointerIndices.M_INITIATED_BY_ROOT_ELEMENT] = 0;
+    mouseState[MouseIndices.M_INITIATED_BY_ROOT_ELEMENT] = 0;
 
     _onMouseChange(evt);
   }
 
   function _updateDimensionsRelativeCoords(): void {
-    pointerState[PointerIndices.M_RELATIVE_X] = pointerState[PointerIndices.M_CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
-    pointerState[PointerIndices.M_RELATIVE_Y] = pointerState[PointerIndices.M_CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
-    pointerState[PointerIndices.M_VECTOR_X] = computePointerVectorX(dimensionsState, pointerState[PointerIndices.M_RELATIVE_X]);
-    pointerState[PointerIndices.M_VECTOR_Y] = computePointerVectorY(dimensionsState, pointerState[PointerIndices.M_RELATIVE_Y]);
-    pointerState[PointerIndices.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, pointerState[PointerIndices.M_CLIENT_X], pointerState[PointerIndices.M_CLIENT_Y]));
+    mouseState[MouseIndices.M_RELATIVE_X] = mouseState[MouseIndices.M_CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
+    mouseState[MouseIndices.M_RELATIVE_Y] = mouseState[MouseIndices.M_CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
+    mouseState[MouseIndices.M_VECTOR_X] = computePointerVectorX(dimensionsState, mouseState[MouseIndices.M_RELATIVE_X], Mouse.vector_scale);
+    mouseState[MouseIndices.M_VECTOR_Y] = computePointerVectorY(dimensionsState, mouseState[MouseIndices.M_RELATIVE_Y], Mouse.vector_scale);
+    mouseState[MouseIndices.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, mouseState[MouseIndices.M_CLIENT_X], mouseState[MouseIndices.M_CLIENT_Y]));
 
     state.lastUpdate = tickTimerState.currentTick;
   }

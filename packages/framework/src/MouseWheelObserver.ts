@@ -1,12 +1,12 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { isPrimaryPointerInDimensionsBounds } from "./isPrimaryPointerInDimensionsBounds";
+import { isMousePointerInDimensionsBounds } from "./isMousePointerInDimensionsBounds";
 import { passiveEventListener } from "./passiveEventListener";
 
 import type { EventBus } from "./EventBus.interface";
 import type { MouseWheelObserver as IMouseWheelObserver } from "./MouseWheelObserver.interface";
 
-export function MouseWheelObserver(htmlElement: HTMLElement, eventBus: EventBus, dimensionsState: Uint32Array, pointerState: Int32Array): IMouseWheelObserver {
+export function MouseWheelObserver(htmlElement: HTMLElement, eventBus: EventBus, dimensionsState: Uint32Array, mouseState: Int32Array): IMouseWheelObserver {
   let _zoomAmount = 0;
 
   function start(): void {
@@ -22,7 +22,7 @@ export function MouseWheelObserver(htmlElement: HTMLElement, eventBus: EventBus,
   }
 
   function _onMouseWheel(evt: WheelEvent): void {
-    if (!isPrimaryPointerInDimensionsBounds(dimensionsState, pointerState)) {
+    if (!isMousePointerInDimensionsBounds(dimensionsState, mouseState)) {
       return;
     }
 
