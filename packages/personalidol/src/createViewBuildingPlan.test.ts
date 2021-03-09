@@ -1,6 +1,6 @@
 import { createViewBuildingPlan } from "./createViewBuildingPlan";
 
-import type { EntityAny } from "@personalidol/personalidol/src/EntityAny.type";
+import type { AnyEntity } from "@personalidol/personalidol/src/AnyEntity.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
 // import type { TargetOrTargetedEntity } from "@personalidol/personalidol/TargetOrTargetedEntity.type";
 
@@ -12,7 +12,7 @@ const _entityOrigin: Vector3Simple = {
   z: 0,
 };
 
-const _entitiesFixture: ReadonlyArray<EntityAny> = [
+const _entitiesFixture: ReadonlyArray<AnyEntity> = [
   {
     classname: "target",
     id: "2",

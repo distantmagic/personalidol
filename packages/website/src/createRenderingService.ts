@@ -61,18 +61,14 @@ export async function createRenderingService(
       function sharedArrayBufferNotAvailable() {
         logger.debug("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
 
-        offscreenWorker.postMessage({
-          awaitSharedDimensions: false,
-        });
-
-        let _lastNotificationTick = 0;
+        let _lastNotificationTick: number = -1;
         const updateMessage = {
           dimensionsState: dimensionsState,
           keyboardState: keyboardState,
           pointerState: pointerState,
         };
 
-        return WorkerServiceClient(offscreenWorker, workers.offscreen.name, function () {
+        function updateStateArrays(): void {
           // prettier-ignore
           if ( _lastNotificationTick < dimensionsState[DimensionsIndices.LAST_UPDATE]
             || _lastNotificationTick < keyboardObserverState.lastUpdate
@@ -82,13 +78,16 @@ export async function createRenderingService(
             offscreenWorker.postMessage(updateMessage);
             _lastNotificationTick = mainLoop.tickTimerState.currentTick;
           }
-        });
+        }
+
+        updateStateArrays();
+
+        return WorkerServiceClient(offscreenWorker, workers.offscreen.name, updateStateArrays);
       }
 
       if (isSharedArrayBufferSupported()) {
         try {
           offscreenWorker.postMessage({
-            awaitSharedDimensions: true,
             sharedDimensionsState: dimensionsState.buffer,
             sharedKeyboardState: keyboardState.buffer,
             sharedPointerState: pointerState.buffer,

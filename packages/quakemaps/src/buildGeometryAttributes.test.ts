@@ -31,5 +31,5 @@ test.skip("geometry attributes are created", async function () {
   // Remember again that if a vertex has any unique parts it has to be a
   // separate vertex. As such to make a cube requires 36 vertices.
   // 2 triangles per face, 3 vertices per triangle, 6 faces = 36 vertices.
-  expect(geometryAttributes.vertices).toHaveLength(36);
+  expect(geometryAttributes.position).toHaveLength(36);
 });

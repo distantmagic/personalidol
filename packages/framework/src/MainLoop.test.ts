@@ -1,13 +1,11 @@
 import Loglevel from "loglevel";
 
 import { MainLoop } from "./MainLoop";
-import { MainLoopStatsHook } from "./MainLoopStatsHook";
 import { SetTimeoutScheduler } from "./SetTimeoutScheduler";
 
 test("loops until canceled", async function () {
   const logger = Loglevel.getLogger("test");
-  const mainLoopStatsHook = MainLoopStatsHook();
-  const mainLoop = MainLoop(logger, mainLoopStatsHook, SetTimeoutScheduler());
+  const mainLoop = MainLoop(logger, SetTimeoutScheduler());
 
   let ticks = 0;
 

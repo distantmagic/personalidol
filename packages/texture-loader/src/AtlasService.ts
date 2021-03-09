@@ -112,6 +112,8 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
     needsUpdates: true,
   });
 
+  let _isProcessingRequest: boolean = false;
+
   const _messagesRouter = {
     createTextureAtlas(messagePort: MessagePort, { textureUrls, rpc }: CreateAtlasTextureRequest): void {
       if (textureUrls.length < 1) {
@@ -128,7 +130,11 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
     },
   };
 
-  function _processAtlasQueue() {
+  function _processAtlasQueue(): void {
+    if (_isProcessingRequest) {
+      return;
+    }
+
     for (let request of _pendingRequests) {
       _pendingRequests.delete(request);
       _processAtlasRequest(request);
@@ -244,6 +250,12 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   }
 
   async function _processAtlasRequest(request: AtlasQueueItem): Promise<void> {
+    if (_isProcessingRequest) {
+      throw new Error("AtlasService is already processing another request.");
+    }
+
+    _isProcessingRequest = true;
+
     const requestKey = _keyFromAtlasQueueItem(request);
     const { data: response, isLast } = await reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createTextureAtlas);
     const { imageData, textureDimensions } = response;
@@ -261,6 +273,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
       isLast ? [imageData.data.buffer] : _emptyTransferables
     );
 
+    _isProcessingRequest = false;
     _processAtlasQueue();
   }
 

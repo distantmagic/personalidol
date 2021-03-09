@@ -3,14 +3,12 @@
 import Loglevel from "loglevel";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { Dimensions } from "@personalidol/framework/src/Dimensions";
 import { EventBus } from "@personalidol/framework/src/EventBus";
-import { Keyboard } from "@personalidol/framework/src/Keyboard";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
-import { Pointer } from "@personalidol/framework/src/Pointer";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
+import { ServiceBuilder } from "@personalidol/framework/src/ServiceBuilder";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 
@@ -18,200 +16,169 @@ import { createScenes } from "./createScenes";
 
 import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
+import type { ServiceBuilder as IServiceBuilder } from "@personalidol/framework/src/ServiceBuilder.interface";
 import type { ServiceManager as IServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
+
+type Dependencies = {
+  canvas: OffscreenCanvas;
+  devicePixelRatio: number;
+  dimensionsState: Uint32Array;
+  domMessagePort: MessagePort;
+  fontPreloadMessagePort: MessagePort;
+  gltfMessagePort: MessagePort;
+  internationalizationMessagePort: MessagePort;
+  keyboardState: Uint8Array;
+  md2MessagePort: MessagePort;
+  pointerState: Int32Array;
+  progressMessagePort: MessagePort;
+  quakeMapsMessagePort: MessagePort;
+  statsMessagePort: MessagePort;
+  texturesMessagePort: MessagePort;
+  uiMessagePort: MessagePort;
+  userSettingsMessagePort: MessagePort;
+};
 
 declare var self: DedicatedWorkerGlobalScope;
 
+const partialDependencies: Partial<Dependencies> = {
+  canvas: undefined,
+  devicePixelRatio: undefined,
+  dimensionsState: undefined,
+  domMessagePort: undefined,
+  fontPreloadMessagePort: undefined,
+  gltfMessagePort: undefined,
+  internationalizationMessagePort: undefined,
+  keyboardState: undefined,
+  md2MessagePort: undefined,
+  pointerState: undefined,
+  progressMessagePort: undefined,
+  quakeMapsMessagePort: undefined,
+  statsMessagePort: undefined,
+  texturesMessagePort: undefined,
+  uiMessagePort: undefined,
+  userSettingsMessagePort: undefined,
+};
 const eventBus = EventBus();
 const logger = Loglevel.getLogger(self.name);
 
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
 
-const _canvasStyle = {
+const _canvasStyle = Object.seal({
   height: 0,
   width: 0,
-};
+});
 
-let _canvas: null | OffscreenCanvas = null;
-let _devicePixelRatio: null | number = null;
-let _dimensionsState: null | Uint32Array = null;
-let _isBootstrapped: boolean = false;
-let _keyboardState: null | Uint8Array = null;
-let _mainLoop: null | IMainLoop = null;
-let _notifiedReady: boolean = false;
-let _pointerState: null | Int32Array = null;
-let _serviceManager: null | IServiceManager = null;
-let _shouldNotifyReady: boolean = false;
-let domMessagePort: null | MessagePort = null;
-let fontPreloadMessagePort: null | MessagePort = null;
-let gltfMessagePort: null | MessagePort = null;
-let internationalizationMessagePort: null | MessagePort = null;
-let md2MessagePort: null | MessagePort = null;
-let progressMessagePort: null | MessagePort = null;
-let quakeMapsMessagePort: null | MessagePort = null;
-let statsMessagePort: null | MessagePort = null;
-let texturesMessagePort: null | MessagePort = null;
-let uiMessagePort: null | MessagePort = null;
-let userSettingsMessagePort: null | MessagePort = null;
+const mainLoop: IMainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
+const serviceManager: IServiceManager = ServiceManager(logger);
 
-function _createScenesSafe(): void {
-  if (
-    _canvas === null ||
-    _devicePixelRatio === null ||
-    _dimensionsState === null ||
-    _keyboardState === null ||
-    _pointerState === null ||
-    domMessagePort === null ||
-    fontPreloadMessagePort === null ||
-    gltfMessagePort === null ||
-    internationalizationMessagePort === null ||
-    md2MessagePort === null ||
-    progressMessagePort === null ||
-    quakeMapsMessagePort === null ||
-    statsMessagePort === null ||
-    texturesMessagePort === null ||
-    uiMessagePort === null ||
-    userSettingsMessagePort === null
-  ) {
-    return;
-  }
+const serviceBuilder: IServiceBuilder<Dependencies> = ServiceBuilder<Dependencies>(self.name, partialDependencies);
 
-  if (_isBootstrapped) {
-    throw new Error(`WORKER(${self.name}) can be only bootstrapped once. It has to be torn down and reinitialized.`);
-  }
+serviceBuilder.onready.add(onDependenciesReady);
 
-  _mainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
-  _serviceManager = ServiceManager(logger);
-
-  const userSettings = UserSettings.createEmptyState(_devicePixelRatio);
-  const statsReporter = StatsReporter(self.name, userSettings, statsMessagePort, _mainLoop.tickTimerState);
-
-  statsReporter.hooks.add(MainLoopStatsHook(_mainLoop));
-
-  _mainLoop.updatables.add(statsReporter);
-  _serviceManager.services.add(statsReporter);
-
-  // prettier-ignore
-  createScenes(
-    self.name,
-    _devicePixelRatio,
-    eventBus,
-    _mainLoop,
-    _serviceManager,
-    _canvas,
-    _dimensionsState,
-    _keyboardState,
-    _pointerState,
-    logger,
-    statsReporter,
-    userSettings,
-    domMessagePort,
-    fontPreloadMessagePort,
-    gltfMessagePort,
-    internationalizationMessagePort,
-    md2MessagePort,
-    progressMessagePort,
-    quakeMapsMessagePort,
-    statsMessagePort,
-    texturesMessagePort,
-    uiMessagePort,
-    userSettingsMessagePort,
-  );
-
-  _isBootstrapped = true;
-
-  if (_shouldNotifyReady) {
-    _notifyReady();
-  }
-}
-
-function _notifyReady(): void {
-  if (_notifiedReady) {
-    throw new Error("WORKER(${self.name}) already notified its ready state.");
-  }
-
-  _notifiedReady = true;
-
+function notifyReady(): void {
   self.postMessage(<MessageWorkerReady>{
     ready: true,
   });
 }
 
+function onDependenciesReady(dependencies: Dependencies): void {
+  const userSettings = UserSettings.createEmptyState(dependencies.devicePixelRatio);
+  const statsReporter = StatsReporter(self.name, userSettings, dependencies.statsMessagePort, mainLoop.tickTimerState);
+
+  statsReporter.hooks.add(MainLoopStatsHook(mainLoop));
+
+  mainLoop.updatables.add(statsReporter);
+  serviceManager.services.add(statsReporter);
+
+  // prettier-ignore
+  createScenes(
+    self.name,
+    dependencies.devicePixelRatio,
+    eventBus,
+    mainLoop,
+    serviceManager,
+    dependencies.canvas,
+    dependencies.dimensionsState,
+    dependencies.keyboardState,
+    dependencies.pointerState,
+    logger,
+    statsReporter,
+    userSettings,
+    dependencies.domMessagePort,
+    dependencies.fontPreloadMessagePort,
+    dependencies.gltfMessagePort,
+    dependencies.internationalizationMessagePort,
+    dependencies.md2MessagePort,
+    dependencies.progressMessagePort,
+    dependencies.quakeMapsMessagePort,
+    dependencies.statsMessagePort,
+    dependencies.texturesMessagePort,
+    dependencies.uiMessagePort,
+    dependencies.userSettingsMessagePort,
+  );
+}
+
 self.onmessage = createRouter({
-  // Dependencies
-
-  awaitSharedDimensions(awaitSharedDimensions: boolean): void {
-    if (awaitSharedDimensions) {
-      return;
-    }
-
-    _dimensionsState = Dimensions.createEmptyState(false);
-    _keyboardState = Keyboard.createEmptyState(false);
-    _pointerState = Pointer.createEmptyState(false);
-    _createScenesSafe();
-  },
-
   canvas(canvas: OffscreenCanvas): void {
     // hack to make it work with three.js
     (canvas as any).style = _canvasStyle;
 
-    _canvas = canvas;
-    _createScenesSafe();
+    serviceBuilder.setDependency("canvas", canvas);
   },
 
   devicePixelRatio(devicePixelRatio: number): void {
-    _devicePixelRatio = devicePixelRatio;
-    _createScenesSafe();
+    serviceBuilder.setDependency("devicePixelRatio", devicePixelRatio);
   },
 
-  dimensionsState(dimensions: Uint32Array): void {
-    if (!_dimensionsState) {
-      throw new Error("Dimensions state must be set before it's updated.");
-    }
+  dimensionsState(newDimensionsState: Uint32Array): void {
+    const dimensionsState: undefined | Uint32Array = partialDependencies.dimensionsState;
 
-    _dimensionsState.set(dimensions);
+    if (dimensionsState) {
+      dimensionsState.set(newDimensionsState);
+    } else {
+      serviceBuilder.setDependency("dimensionsState", newDimensionsState);
+    }
   },
 
   domMessagePort(port: MessagePort): void {
-    domMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("domMessagePort", port);
   },
 
   fontPreloadMessagePort(port: MessagePort): void {
-    fontPreloadMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("fontPreloadMessagePort", port);
   },
 
   gltfMessagePort(port: MessagePort): void {
-    gltfMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("gltfMessagePort", port);
   },
 
   internationalizationMessagePort(port: MessagePort): void {
-    internationalizationMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("internationalizationMessagePort", port);
   },
 
-  keyboardState(input: Uint32Array): void {
-    if (!_keyboardState) {
-      throw new Error("Keyboard state must be set before it's updated.");
-    }
+  keyboardState(newKeyboardState: Uint8Array): void {
+    const keyboardState: undefined | Uint8Array = partialDependencies.keyboardState;
 
-    _keyboardState.set(input);
+    if (keyboardState) {
+      keyboardState.set(newKeyboardState);
+    } else {
+      serviceBuilder.setDependency("keyboardState", newKeyboardState);
+    }
   },
 
   md2MessagePort(port: MessagePort): void {
-    md2MessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("md2MessagePort", port);
   },
 
-  pointerState(input: Int32Array): void {
-    if (!_pointerState) {
-      throw new Error("Pointer state must be set before it's updated.");
-    }
+  pointerState(newPointerState: Int32Array): void {
+    const pointerState: undefined | Int32Array = partialDependencies.pointerState;
 
-    _pointerState.set(input);
+    if (pointerState) {
+      pointerState.set(newPointerState);
+    } else {
+      serviceBuilder.setDependency("pointerState", newPointerState);
+    }
   },
 
   pointerZoomRequest(zoomAmount: number): void {
@@ -221,76 +188,58 @@ self.onmessage = createRouter({
   },
 
   progressMessagePort(port: MessagePort): void {
-    progressMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("progressMessagePort", port);
   },
 
   quakeMapsMessagePort(port: MessagePort): void {
-    quakeMapsMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("quakeMapsMessagePort", port);
   },
 
   sharedDimensionsState(dimensions: SharedArrayBuffer): void {
-    _dimensionsState = new Uint32Array(dimensions);
+    serviceBuilder.setDependency("dimensionsState", new Uint32Array(dimensions));
   },
 
   sharedKeyboardState(keyboard: SharedArrayBuffer): void {
-    _keyboardState = new Uint8Array(keyboard);
+    serviceBuilder.setDependency("keyboardState", new Uint8Array(keyboard));
   },
 
   sharedPointerState(input: SharedArrayBuffer): void {
-    _pointerState = new Int32Array(input);
+    serviceBuilder.setDependency("pointerState", new Int32Array(input));
   },
 
   statsMessagePort(port: MessagePort): void {
-    if (null !== statsMessagePort) {
-      throw new Error(`Stats message port was already received by WORKER(${self.name}).`);
-    }
-
-    statsMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("statsMessagePort", port);
   },
 
   texturesMessagePort(port: MessagePort): void {
-    texturesMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("texturesMessagePort", port);
   },
 
   uiMessagePort(port: MessagePort): void {
-    uiMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("uiMessagePort", port);
   },
 
   userSettingsMessagePort(port: MessagePort): void {
-    userSettingsMessagePort = port;
-    _createScenesSafe();
+    serviceBuilder.setDependency("userSettingsMessagePort", port);
   },
 
   // WorkerService
 
   ready(): void {
-    if (_isBootstrapped) {
-      _notifyReady();
+    if (serviceBuilder.isReady()) {
+      notifyReady();
     } else {
-      _shouldNotifyReady = true;
+      serviceBuilder.onready.add(notifyReady);
     }
   },
 
   start(): void {
-    if (null === _mainLoop || null === _serviceManager) {
-      throw new Error("MainLoop and ServiceManager are not ready.");
-    }
-
-    _mainLoop.start();
-    _serviceManager.start();
+    mainLoop.start();
+    serviceManager.start();
   },
 
   stop(): void {
-    if (null === _mainLoop || null === _serviceManager) {
-      throw new Error("MainLoop and ServiceManager are not ready.");
-    }
-
-    _mainLoop.stop();
-    _serviceManager.stop();
+    mainLoop.stop();
+    serviceManager.stop();
   },
 });
