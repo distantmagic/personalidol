@@ -62,7 +62,7 @@ function createEmptyState(usesSharedBuffer: boolean): Int32Array {
   return new Int32Array(TouchIndices.__TOTAL);
 }
 
-export const Touch = Object.freeze({
+export const TouchState = Object.freeze({
   touches: touches,
   touches_total: touches.length,
   vector_scale: 32000,

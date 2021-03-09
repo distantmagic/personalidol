@@ -9,6 +9,6 @@ function createEmptyState(usesSharedBuffer: boolean): Uint8Array {
   return new Uint8Array(KeyboardIndices.__TOTAL);
 }
 
-export const Keyboard = Object.freeze({
+export const KeyboardState = Object.freeze({
   createEmptyState: createEmptyState,
 });

@@ -2,7 +2,7 @@ import Loglevel from "loglevel";
 
 import { createMultiThreadMessageChannel } from "@personalidol/framework/src/createMultiThreadMessageChannel";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
-import { Dimensions } from "@personalidol/framework/src/Dimensions";
+import { DimensionsState } from "@personalidol/framework/src/DimensionsState";
 import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
 import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
@@ -12,14 +12,14 @@ import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLEleme
 import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
-import { Keyboard } from "@personalidol/framework/src/Keyboard";
 import { KeyboardObserver } from "@personalidol/framework/src/KeyboardObserver";
+import { KeyboardState } from "@personalidol/framework/src/KeyboardState";
 import { LanguageUserSettingsManager } from "@personalidol/personalidol/src/LanguageUserSettingsManager";
 import { LocalStorageUserSettingsSync } from "@personalidol/framework/src/LocalStorageUserSettingsSync";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
-import { Mouse } from "@personalidol/framework/src/Mouse";
 import { MouseObserver } from "@personalidol/framework/src/MouseObserver";
+import { MouseState } from "@personalidol/framework/src/MouseState";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
@@ -29,8 +29,8 @@ import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
 import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
-import { Touch } from "@personalidol/framework/src/Touch";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
+import { TouchState } from "@personalidol/framework/src/TouchState";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { WindowFocusObserver } from "@personalidol/framework/src/WindowFocusObserver";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
@@ -86,11 +86,11 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   // access to the DOM API.
 
   const useSharedBuffers = isSharedArrayBufferSupported();
-  const dimensionsState = Dimensions.createEmptyState(useSharedBuffers);
-  const keyboardState = Keyboard.createEmptyState(useSharedBuffers);
+  const dimensionsState = DimensionsState.createEmptyState(useSharedBuffers);
+  const keyboardState = KeyboardState.createEmptyState(useSharedBuffers);
 
-  const mouseState = Mouse.createEmptyState(useSharedBuffers);
-  const touchState = Touch.createEmptyState(useSharedBuffers);
+  const mouseState = MouseState.createEmptyState(useSharedBuffers);
+  const touchState = TouchState.createEmptyState(useSharedBuffers);
 
   const eventBus = EventBus();
   const statsReporterMessageChannel = createSingleThreadMessageChannel();

@@ -9,7 +9,7 @@ function createEmptyState(usesSharedBuffer: boolean): Int32Array {
   return new Int32Array(MouseIndices.__TOTAL);
 }
 
-export const Mouse = Object.freeze({
+export const MouseState = Object.freeze({
   vector_scale: 32000,
 
   createEmptyState: createEmptyState,

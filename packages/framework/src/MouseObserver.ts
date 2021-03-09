@@ -7,9 +7,9 @@ import { computePointerVectorY } from "./computePointerVectorY";
 import { DimensionsIndices } from "./DimensionsIndices.enum";
 import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { MouseButtons } from "./MouseButtons.enum";
-import { passiveEventListener } from "./passiveEventListener";
-import { Mouse } from "./Mouse";
 import { MouseIndices } from "./MouseIndices.enum";
+import { MouseState } from "./MouseState";
+import { passiveEventListener } from "./passiveEventListener";
 
 import type { MouseObserver as IMouseObserver } from "./MouseObserver.interface";
 import type { MouseObserverState } from "./MouseObserverState.type";
@@ -69,7 +69,7 @@ export function MouseObserver(
 
   function _attachListeners() {
     if (_isListening) {
-      throw new Error("Mouse listeners are already attached.");
+      throw new Error("MouseState listeners are already attached.");
     }
 
     _isListening = true;
@@ -81,7 +81,7 @@ export function MouseObserver(
 
   function _detachListeners() {
     if (!_isListening) {
-      throw new Error("Mouse listeners are already detached.");
+      throw new Error("MouseState listeners are already detached.");
     }
 
     _isListening = false;
@@ -107,13 +107,13 @@ export function MouseObserver(
         dimensionsState,
         mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_X],
         mouseState[MouseIndices.M_CLIENT_X],
-        Mouse.vector_scale
+        MouseState.vector_scale
       );
       mouseState[MouseIndices.M_STRETCH_VECTOR_Y] = computePointerStretchVectorY(
         dimensionsState,
         mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_Y],
         mouseState[MouseIndices.M_CLIENT_Y],
-        Mouse.vector_scale
+        MouseState.vector_scale
       );
     }
 
@@ -138,8 +138,8 @@ export function MouseObserver(
   function _updateDimensionsRelativeCoords(): void {
     mouseState[MouseIndices.M_RELATIVE_X] = mouseState[MouseIndices.M_CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
     mouseState[MouseIndices.M_RELATIVE_Y] = mouseState[MouseIndices.M_CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
-    mouseState[MouseIndices.M_VECTOR_X] = computePointerVectorX(dimensionsState, mouseState[MouseIndices.M_RELATIVE_X], Mouse.vector_scale);
-    mouseState[MouseIndices.M_VECTOR_Y] = computePointerVectorY(dimensionsState, mouseState[MouseIndices.M_RELATIVE_Y], Mouse.vector_scale);
+    mouseState[MouseIndices.M_VECTOR_X] = computePointerVectorX(dimensionsState, mouseState[MouseIndices.M_RELATIVE_X], MouseState.vector_scale);
+    mouseState[MouseIndices.M_VECTOR_Y] = computePointerVectorY(dimensionsState, mouseState[MouseIndices.M_RELATIVE_Y], MouseState.vector_scale);
     mouseState[MouseIndices.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, mouseState[MouseIndices.M_CLIENT_X], mouseState[MouseIndices.M_CLIENT_Y]));
 
     state.lastUpdate = tickTimerState.currentTick;

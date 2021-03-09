@@ -7,8 +7,8 @@ import { computePointerVectorY } from "./computePointerVectorY";
 import { DimensionsIndices } from "./DimensionsIndices.enum";
 import { isInDimensionsBounds } from "./isInDimensionsBounds";
 import { passiveEventListener } from "./passiveEventListener";
-import { Touch } from "./Touch";
 import { TouchIndices } from "./TouchIndices.enum";
+import { TouchState } from "./TouchState";
 
 import type { TickTimerState } from "./TickTimerState.type";
 import type { TouchObserver as ITouchObserver } from "./TouchObserver.interface";
@@ -73,7 +73,7 @@ export function TouchObserver(
 
   function _attachListeners(): void {
     if (_isListening) {
-      throw new Error("Touch listeners are already attached.");
+      throw new Error("TouchState listeners are already attached.");
     }
 
     _isListening = true;
@@ -86,7 +86,7 @@ export function TouchObserver(
 
   function _detachListeners(): void {
     if (!_isListening) {
-      throw new Error("Touch listeners are already detached.");
+      throw new Error("TouchState listeners are already detached.");
     }
 
     _isListening = false;
@@ -101,21 +101,21 @@ export function TouchObserver(
     touchState[TouchIndices.T_LAST_USED] = tickTimerState.currentTick;
     touchState[TouchIndices.T_TOTAL] = evt.touches.length;
 
-    for (let i = 0; i < evt.touches.length && i < Touch.touches_total; i += 1) {
-      touchState[Touch.touches[i].CLIENT_X] = evt.touches[i].clientX;
-      touchState[Touch.touches[i].CLIENT_Y] = evt.touches[i].clientY;
-      touchState[Touch.touches[i].PRESSURE] = Math.floor(evt.touches[i].force * 100);
-      touchState[Touch.touches[i].STRETCH_VECTOR_X] = computePointerStretchVectorX(
+    for (let i = 0; i < evt.touches.length && i < TouchState.touches_total; i += 1) {
+      touchState[TouchState.touches[i].CLIENT_X] = evt.touches[i].clientX;
+      touchState[TouchState.touches[i].CLIENT_Y] = evt.touches[i].clientY;
+      touchState[TouchState.touches[i].PRESSURE] = Math.floor(evt.touches[i].force * 100);
+      touchState[TouchState.touches[i].STRETCH_VECTOR_X] = computePointerStretchVectorX(
         dimensionsState,
-        touchState[Touch.touches[i].DOWN_INITIAL_CLIENT_X],
-        touchState[Touch.touches[i].CLIENT_X],
-        Touch.vector_scale
+        touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_X],
+        touchState[TouchState.touches[i].CLIENT_X],
+        TouchState.vector_scale
       );
-      touchState[Touch.touches[i].STRETCH_VECTOR_Y] = computePointerStretchVectorY(
+      touchState[TouchState.touches[i].STRETCH_VECTOR_Y] = computePointerStretchVectorY(
         dimensionsState,
-        touchState[Touch.touches[i].DOWN_INITIAL_CLIENT_Y],
-        touchState[Touch.touches[i].CLIENT_Y],
-        Touch.vector_scale
+        touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_Y],
+        touchState[TouchState.touches[i].CLIENT_Y],
+        TouchState.vector_scale
       );
     }
 
@@ -131,21 +131,23 @@ export function TouchObserver(
   function _onTouchStart(evt: TouchEvent): void {
     touchState[TouchIndices.T_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
 
-    for (let i = 0; i < evt.touches.length && i < Touch.touches_total; i += 1) {
-      touchState[Touch.touches[i].DOWN_INITIAL_CLIENT_X] = evt.touches[i].clientX;
-      touchState[Touch.touches[i].DOWN_INITIAL_CLIENT_Y] = evt.touches[i].clientY;
+    for (let i = 0; i < evt.touches.length && i < TouchState.touches_total; i += 1) {
+      touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_X] = evt.touches[i].clientX;
+      touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_Y] = evt.touches[i].clientY;
     }
 
     _onTouchChange(evt);
   }
 
   function _updateDimensionsRelativeCoords(): void {
-    for (let i = 0; i < touchState[TouchIndices.T_TOTAL] && i < Touch.touches_total; i += 1) {
-      touchState[Touch.touches[i].RELATIVE_X] = touchState[Touch.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
-      touchState[Touch.touches[i].RELATIVE_Y] = touchState[Touch.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
-      touchState[Touch.touches[i].VECTOR_X] = computePointerVectorX(dimensionsState, touchState[Touch.touches[i].RELATIVE_X], Touch.vector_scale);
-      touchState[Touch.touches[i].VECTOR_Y] = computePointerVectorY(dimensionsState, touchState[Touch.touches[i].RELATIVE_Y], Touch.vector_scale);
-      touchState[Touch.touches[i].IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, touchState[Touch.touches[i].CLIENT_X], touchState[Touch.touches[i].CLIENT_Y]));
+    for (let i = 0; i < touchState[TouchIndices.T_TOTAL] && i < TouchState.touches_total; i += 1) {
+      touchState[TouchState.touches[i].RELATIVE_X] = touchState[TouchState.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
+      touchState[TouchState.touches[i].RELATIVE_Y] = touchState[TouchState.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
+      touchState[TouchState.touches[i].VECTOR_X] = computePointerVectorX(dimensionsState, touchState[TouchState.touches[i].RELATIVE_X], TouchState.vector_scale);
+      touchState[TouchState.touches[i].VECTOR_Y] = computePointerVectorY(dimensionsState, touchState[TouchState.touches[i].RELATIVE_Y], TouchState.vector_scale);
+      touchState[TouchState.touches[i].IN_BOUNDS] = Number(
+        isInDimensionsBounds(dimensionsState, touchState[TouchState.touches[i].CLIENT_X], touchState[TouchState.touches[i].CLIENT_Y])
+      );
     }
 
     state.lastUpdate = tickTimerState.currentTick;

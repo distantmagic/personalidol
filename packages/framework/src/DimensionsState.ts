@@ -11,6 +11,6 @@ function createEmptyState(usesSharedBuffer: boolean): Uint32Array {
   return new Uint32Array(DimensionsIndices.__TOTAL);
 }
 
-export const Dimensions = Object.freeze({
+export const DimensionsState = Object.freeze({
   createEmptyState: createEmptyState,
 });
