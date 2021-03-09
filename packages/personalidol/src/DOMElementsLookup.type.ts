@@ -2,6 +2,8 @@ import type { DOMElementsLookup as BaseDOMElementsLookup } from "@personalidol/d
 
 import type { ButtonDOMElementView } from "./ButtonDOMElementView";
 import type { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
+import type { FormRadioButtonsDOMElementProps } from "./FormRadioButtonsDOMElementProps.interface";
+import type { FormRadioButtonsDOMElementView } from "./FormRadioButtonsDOMElementView";
 import type { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import type { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import type { LanguageSettingsDOMElementView } from "./LanguageSettingsDOMElementView";
@@ -18,14 +20,13 @@ import type { ProgressManagerStateDOMElementView } from "./ProgressManagerStateD
 import type { ReloadButtonDOMElementView } from "./ReloadButtonDOMElementView";
 import type { SettingsBackdropDOMElementProps } from "./SettingsBackdropDOMElementProps.interface";
 import type { SettingsBackdropDOMElementView } from "./SettingsBackdropDOMElementView";
-import type { SliderDOMElementProps } from "./SliderDOMElementProps.interface";
-import type { SliderDOMElementView } from "./SliderDOMElementView";
 import type { UserSettingsDOMElementView } from "./UserSettingsDOMElementView";
 
 declare global {
   namespace preact.JSX {
     interface IntrinsicElements {
       "pi-button": HTMLAttributes<ButtonDOMElementView>;
+      "pi-form-radio-buttons": HTMLAttributes<FormRadioButtonsDOMElementView<any>> & FormRadioButtonsDOMElementProps<any>;
       "pi-main-menu-button": HTMLAttributes<MainMenuButtonDOMElementView> & MainMenuButtonDOMElementProps;
       "pi-main-menu-language-button": HTMLAttributes<MainMenuLanguageButtonDOMElementView>;
       "pi-main-menu-layout": HTMLAttributes<MainMenuLayoutDOMElementView>;
@@ -33,7 +34,6 @@ declare global {
       "pi-progress-manager-state": HTMLAttributes<ProgressManagerStateDOMElementView> & ProgressManagerStateDOMElementProps;
       "pi-reload-button": HTMLAttributes<ReloadButtonDOMElementView>;
       "pi-settings-backdrop": HTMLAttributes<SettingsBackdropDOMElementView> & SettingsBackdropDOMElementProps;
-      "pi-slider": HTMLAttributes<SliderDOMElementView<any>> & SliderDOMElementProps<any>;
     }
   }
 }
@@ -41,6 +41,7 @@ declare global {
 export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-button": typeof ButtonDOMElementView;
   "pi-fatal-error": typeof FatalErrorDOMElementView;
+  "pi-form-radio-buttons": typeof FormRadioButtonsDOMElementView;
   "pi-in-game-menu": typeof InGameMenuDOMElementView;
   "pi-in-game-menu-trigger": typeof InGameMenuTriggerDOMElementView;
   "pi-language-settings": typeof LanguageSettingsDOMElementView;
@@ -54,6 +55,5 @@ export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-progress-manager-state": typeof ProgressManagerStateDOMElementView;
   "pi-reload-button": typeof ReloadButtonDOMElementView;
   "pi-settings-backdrop": typeof SettingsBackdropDOMElementView;
-  "pi-slider": typeof SliderDOMElementView;
   "pi-user-settings": typeof UserSettingsDOMElementView;
 };

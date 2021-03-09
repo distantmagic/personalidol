@@ -3,12 +3,12 @@ import { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Vector3 } from "three/src/math/Vector3";
 
-import type { Logger } from "loglevel";
-
 import { damp } from "@personalidol/framework/src/damp";
 import { KeyboardIndices } from "@personalidol/framework/src/KeyboardIndices.enum";
 import { updateOrthographicCameraAspect } from "@personalidol/three-renderer/src/updateOrthographicCameraAspect";
 import { updatePerspectiveCameraAspect } from "@personalidol/three-renderer/src/updatePerspectiveCameraAspect";
+
+import type { Logger } from "loglevel";
 
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 
@@ -22,8 +22,6 @@ const CAMERA_ZOOM_MAX = 1;
 const CAMERA_ZOOM_MIN = 1401;
 const CAMERA_ZOOM_STEP = 50;
 const CAMERA_ORTHOGRAPHIC_FRUSTUM_SIZE_MIN = CAMERA_ZOOM_MAX + 4 * CAMERA_ZOOM_STEP;
-
-// const _cameraDirection = new Vector3();
 
 export function CameraController(logger: Logger, userSettings: UserSettings, dimensionsState: Uint32Array, keyboardState: Uint8Array, eventBus: EventBus): ICameraController {
   const state: CameraControllerState = Object.seal({
@@ -55,11 +53,6 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
   let _orthographicCameraFrustumSize: number = _cameraZoomAmount;
   let _needsImmediateMove: boolean = false;
 
-  // setTimeout(function () {
-  //   _currentCamera = _orthographicCamera;
-  //   _needsImmediateMove = true;
-  // }, 3000);
-
   function _onPointerZoomRequest(zoomAmount: number, scale: number = 1): void {
     if (state.isPaused) {
       return;
@@ -77,7 +70,8 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
   function mount(): void {
     state.isMounted = true;
 
-    _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
+    resetZoom();
+    _needsImmediateMove = true;
     eventBus.POINTER_ZOOM_REQUEST.add(_onPointerZoomRequest);
   }
 
@@ -90,6 +84,10 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
 
     state.isPreloading = false;
     state.isPreloaded = true;
+  }
+
+  function resetZoom(): void {
+    _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
   }
 
   function unmount(): void {
@@ -186,6 +184,7 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
     mount: mount,
     pause: pause,
     preload: preload,
+    resetZoom: resetZoom,
     unmount: unmount,
     unpause: unpause,
     update: update,

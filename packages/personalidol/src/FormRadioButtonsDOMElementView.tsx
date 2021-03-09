@@ -4,7 +4,7 @@ import { h } from "preact";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 
-import type { SliderDOMElementProps } from "./SliderDOMElementProps.interface";
+import type { FormRadioButtonsDOMElementProps } from "./FormRadioButtonsDOMElementProps.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
@@ -79,7 +79,7 @@ const _css = `
   }
 `;
 
-export class SliderDOMElementView<T> extends DOMElementView<UserSettings> implements SliderDOMElementProps<T> {
+export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettings> implements FormRadioButtonsDOMElementProps<T> {
   static get observedAttributes() {
     return ["disabled"];
   }

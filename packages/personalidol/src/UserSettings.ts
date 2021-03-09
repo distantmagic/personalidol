@@ -4,6 +4,7 @@ import type { UserSettings as IUserSettings } from "./UserSettings.type";
 
 function createEmptyState(pixelRatio: number): IUserSettings {
   return {
+    cameraMovementSpeed: 600,
     cameraType: "PerspectiveCamera",
     devicePixelRatio: pixelRatio,
     dynamicLightQuality: UserSettingsDynamicLightQualityMap.Low,

@@ -274,21 +274,10 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
         <h2>{this.t("ui:user_settings_graphics")}</h2>
         <form class="options__form">
           <dl>
-            <dt>{this.t("ui:user_settings_camera")}</dt>
-            <dd>{this.t("ui:user_settings_camera_description")}</dd>
-          </dl>
-          <pi-slider
-            currentValue={this.userSettings.cameraType}
-            edgeLabels={_booleanEdgeLabels}
-            labels={_cameraTypeLabelsTranslated}
-            onChange={this.onCameraTypeChange}
-            values={_cameraTypeValues}
-          />
-          <dl>
             <dt>{this.t("ui:user_settings_rendering_resolution")}</dt>
             <dd>{this.t("ui:user_settings_rendering_resolution_description")}</dd>
           </dl>
-          <pi-slider
+          <pi-form-radio-buttons
             currentValue={this.userSettings.pixelRatio}
             edgeLabels={_lowHighEdgeLabelsTranslated}
             labels={_pixelRatioLabels}
@@ -299,7 +288,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dt>{this.t("ui:user_settings_dynamic_light_quality")}</dt>
             <dd>{this.t("ui:user_settings_dynamic_light_quality_description")}</dd>
           </dl>
-          <pi-slider
+          <pi-form-radio-buttons
             currentValue={this.userSettings.dynamicLightQuality}
             edgeLabels={_booleanEdgeLabels}
             labels={_lightQualityLabels.map(this._unaryT)}
@@ -310,7 +299,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dt>{this.t("ui:user_settings_use_shadows")}</dt>
             <dd>{this.t("ui:user_settings_use_shadows_description")}</dd>
           </dl>
-          <pi-slider
+          <pi-form-radio-buttons
             currentValue={this.userSettings.useShadows}
             edgeLabels={_booleanEdgeLabels}
             labels={_booleanLabelsTranslated}
@@ -321,13 +310,32 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dt>{this.t("ui:user_settings_shadow_map_size")}</dt>
             <dd>{this.t("ui:user_settings_shadow_map_size_description")}</dd>
           </dl>
-          <pi-slider
+          <pi-form-radio-buttons
             currentValue={this.userSettings.shadowMapSize}
             edgeLabels={_lowHighEdgeLabelsTranslated}
             labels={_shadowMapSizeLabels}
             onChange={this.onShadowMapSizeChange}
             values={_shadowMapSizeValues}
           />
+        </form>
+        <h2>{this.t("ui:user_settings_camera")}</h2>
+        <form class="options__form">
+          <dl>
+            <dt>{this.t("ui:user_settings_camera_type")}</dt>
+            <dd>{this.t("ui:user_settings_camera_type_description")}</dd>
+          </dl>
+          <pi-form-radio-buttons
+            currentValue={this.userSettings.cameraType}
+            edgeLabels={_booleanEdgeLabels}
+            labels={_cameraTypeLabelsTranslated}
+            onChange={this.onCameraTypeChange}
+            values={_cameraTypeValues}
+          />
+          <dl>
+            <dt>{this.t("ui:user_settings_camera_movement_speed")}</dt>
+            <dd>{this.t("ui:user_settings_camera_movement_speed_description")}</dd>
+          </dl>
+          <div />
         </form>
         {isOffscreenCanvasSupported && (
           <Fragment>
@@ -343,7 +351,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
                   </Fragment>
                 )}
               </dl>
-              <pi-slider
+              <pi-form-radio-buttons
                 currentValue={this.userSettings.useOffscreenCanvas}
                 disabled={!isOffscreenCanvasSupported}
                 edgeLabels={_booleanEdgeLabels}
@@ -360,7 +368,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dt>{this.t("ui:user_settings_show_rendering_stats")}</dt>
             <dd>{this.t("ui:user_settings_show_rendering_stats_description")}</dd>
           </dl>
-          <pi-slider
+          <pi-form-radio-buttons
             currentValue={this.userSettings.showStatsReporter}
             edgeLabels={_booleanEdgeLabels}
             labels={_booleanLabelsTranslated}

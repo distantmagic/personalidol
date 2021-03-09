@@ -13,4 +13,6 @@ export interface CameraController extends Mountable, Pauseable {
   readonly state: CameraControllerState;
 
   needsImmediateMove: boolean;
+
+  resetZoom(): void;
 }

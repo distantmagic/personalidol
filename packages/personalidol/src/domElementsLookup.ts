@@ -3,6 +3,7 @@ import { domElementsLookup as baseDomElementsLookup } from "@personalidol/dom-re
 import { ButtonDOMElementView } from "./ButtonDOMElementView";
 import { DOMZIndex } from "./DOMZIndex.enum";
 import { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
+import { FormRadioButtonsDOMElementView } from "./FormRadioButtonsDOMElementView";
 import { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import { LanguageSettingsDOMElementView } from "./LanguageSettingsDOMElementView";
@@ -16,7 +17,6 @@ import { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
 import { ProgressManagerStateDOMElementView } from "./ProgressManagerStateDOMElementView";
 import { ReloadButtonDOMElementView } from "./ReloadButtonDOMElementView";
 import { SettingsBackdropDOMElementView } from "./SettingsBackdropDOMElementView";
-import { SliderDOMElementView } from "./SliderDOMElementView";
 import { UserSettingsDOMElementView } from "./UserSettingsDOMElementView";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
@@ -28,6 +28,7 @@ export const domElementsLookup: DOMElementsLookup = {
 
   "pi-button": ButtonDOMElementView,
   "pi-fatal-error": FatalErrorDOMElementView,
+  "pi-form-radio-buttons": FormRadioButtonsDOMElementView,
   "pi-in-game-menu": InGameMenuDOMElementView,
   "pi-in-game-menu-trigger": InGameMenuTriggerDOMElementView,
   "pi-language-settings": LanguageSettingsDOMElementView,
@@ -41,6 +42,5 @@ export const domElementsLookup: DOMElementsLookup = {
   "pi-progress-manager-state": ProgressManagerStateDOMElementView,
   "pi-reload-button": ReloadButtonDOMElementView,
   "pi-settings-backdrop": SettingsBackdropDOMElementView,
-  "pi-slider": SliderDOMElementView,
   "pi-user-settings": UserSettingsDOMElementView,
 };

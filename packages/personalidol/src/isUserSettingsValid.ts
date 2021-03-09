@@ -14,6 +14,10 @@ export function isUserSettingsValid(userSettings: any): userSettings is UserSett
     return false;
   }
 
+  if ("number" !== typeof userSettings.cameraMovementSpeed) {
+    return false;
+  }
+
   switch (userSettings.cameraType) {
     case "OrthographicCamera":
     case "PerspectiveCamera":
