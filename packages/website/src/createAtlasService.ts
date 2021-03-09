@@ -1,6 +1,6 @@
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
-import { WorkerService } from "@personalidol/framework/src/WorkerService";
+import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import workers from "./workers.json";
 
@@ -43,11 +43,11 @@ export function createAtlasService(
         [progressMessagePort, statsMessagePort, texturesMessagePort, offscreenAtlas]
       );
 
-      const atlasWorkerService = WorkerService(atlasWorker, workers.atlas.name);
-      await atlasWorkerService.ready();
+      const atlasWorkerServiceClient = WorkerServiceClient(atlasWorker, workers.atlas.name);
+      await atlasWorkerServiceClient.ready();
 
-      mainLoop.updatables.add(atlasWorkerService);
-      serviceManager.services.add(atlasWorkerService);
+      mainLoop.updatables.add(atlasWorkerServiceClient);
+      serviceManager.services.add(atlasWorkerServiceClient);
 
       return Object.freeze({
         registerMessagePort(messagePort: MessagePort) {

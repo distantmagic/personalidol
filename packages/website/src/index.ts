@@ -33,7 +33,7 @@ import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { WindowFocusObserver } from "@personalidol/framework/src/WindowFocusObserver";
-import { WorkerService } from "@personalidol/framework/src/WorkerService";
+import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 // This is a workaround for i18n typing strongly tied to the module.
 // It resolves typing issues, but requires to really keep exactly the same
@@ -173,9 +173,9 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     type: "module",
   });
 
-  const progressWorkerService = WorkerService(progressWorker, workers.progress.name);
+  const progressWorkerServiceClient = WorkerServiceClient(progressWorker, workers.progress.name);
 
-  await progressWorkerService.ready();
+  await progressWorkerServiceClient.ready();
 
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
@@ -187,8 +187,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     })
   );
 
-  mainLoop.updatables.add(progressWorkerService);
-  serviceManager.services.add(progressWorkerService);
+  mainLoop.updatables.add(progressWorkerServiceClient);
+  serviceManager.services.add(progressWorkerServiceClient);
 
   function addProgressMessagePort(messagePort: MessagePort, broadcastProgress: boolean) {
     progressWorker.postMessage(
@@ -365,8 +365,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     type: "module",
   });
 
-  const quakeMapsWorkerService = WorkerService(quakeMapsWorker, workers.quakemaps.name);
-  await quakeMapsWorkerService.ready();
+  const quakeMapsWorkerServiceClient = WorkerServiceClient(quakeMapsWorker, workers.quakemaps.name);
+  await quakeMapsWorkerServiceClient.ready();
 
   uiRoot.dispatchEvent(
     new CustomEvent("loading", {
@@ -400,8 +400,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     type: "module",
   });
 
-  const gltfWorkerService = WorkerService(gltfWorker, workers.gltf.name);
-  await gltfWorkerService.ready();
+  const gltfWorkerServiceClient = WorkerServiceClient(gltfWorker, workers.gltf.name);
+  await gltfWorkerServiceClient.ready();
 
   gltfWorker.postMessage(
     {
@@ -436,8 +436,8 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
     type: "module",
   });
 
-  const md2WorkerService = WorkerService(md2Worker, workers.md2.name);
-  await md2WorkerService.ready();
+  const md2WorkerServiceClient = WorkerServiceClient(md2Worker, workers.md2.name);
+  await md2WorkerServiceClient.ready();
 
   md2Worker.postMessage(
     {

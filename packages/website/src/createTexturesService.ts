@@ -1,6 +1,6 @@
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
-import { WorkerService } from "@personalidol/framework/src/WorkerService";
+import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import workers from "./workers.json";
 
@@ -28,8 +28,8 @@ export async function createTexturesService(logger: Logger, mainLoop: MainLoop, 
         type: "module",
       });
 
-      const texturesWorkerService = WorkerService(texturesWorker, workers.textures.name);
-      await texturesWorkerService.ready();
+      const texturesWorkerServiceClient = WorkerServiceClient(texturesWorker, workers.textures.name);
+      await texturesWorkerServiceClient.ready();
 
       texturesWorker.postMessage(
         {

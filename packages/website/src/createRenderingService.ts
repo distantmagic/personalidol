@@ -3,7 +3,7 @@ import { createSingleThreadMessageChannel } from "@personalidol/framework/src/cr
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
-import { WorkerService } from "@personalidol/framework/src/WorkerService";
+import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import workers from "./workers.json";
 
@@ -57,7 +57,7 @@ export async function createRenderingService(
     // After some time it got enabled again, so it's a bit messy.
     // If it's enabled, then we should use it, otherwise the app will be sending
     // copy of input / dimensions states every frame to the worker.
-    const offscreenWorkerService = (function () {
+    const offscreenWorkerServiceClient = (function () {
       function sharedArrayBufferNotAvailable() {
         logger.debug("NO_SUPPORT(SharedArrayBuffer) // starting dimensions/input sync service");
 
@@ -72,7 +72,7 @@ export async function createRenderingService(
           pointerState: pointerState,
         };
 
-        return WorkerService(offscreenWorker, workers.offscreen.name, function () {
+        return WorkerServiceClient(offscreenWorker, workers.offscreen.name, function () {
           // prettier-ignore
           if ( _lastNotificationTick < dimensionsState[DimensionsIndices.LAST_UPDATE]
             || _lastNotificationTick < keyboardObserverState.lastUpdate
@@ -102,7 +102,7 @@ export async function createRenderingService(
 
         logger.debug("SUPPORTED(SharedArrayBuffer) // sharing dimensions/input memory array between threads");
 
-        return WorkerService(offscreenWorker, workers.offscreen.name);
+        return WorkerServiceClient(offscreenWorker, workers.offscreen.name);
       } else {
         return sharedArrayBufferNotAvailable();
       }
@@ -162,10 +162,10 @@ export async function createRenderingService(
         offscreenWorker.postMessage(offscreenWorkerZoomRequestMessage);
       });
 
-      await offscreenWorkerService.ready();
+      await offscreenWorkerServiceClient.ready();
 
-      mainLoop.updatables.add(offscreenWorkerService);
-      serviceManager.services.add(offscreenWorkerService);
+      mainLoop.updatables.add(offscreenWorkerServiceClient);
+      serviceManager.services.add(offscreenWorkerServiceClient);
     };
   } else {
     if (isCanvasTransferControlToOffscreenSupported()) {
