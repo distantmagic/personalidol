@@ -345,7 +345,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dt>{this.t("ui:user_settings_camera_movement_speed")}</dt>
             <dd>{this.t("ui:user_settings_camera_movement_speed_description")}</dd>
           </dl>
-          <pi-form-range-slider max={2000} min={200} onChange={this.onCameraMovementSpeedChange} step={200} value={this.userSettings.cameraMovementSpeed} />
+          <pi-form-range-slider max={2000} min={100} onChange={this.onCameraMovementSpeedChange} step={100} value={this.userSettings.cameraMovementSpeed} />
         </form>
         {isOffscreenCanvasSupported && (
           <Fragment>

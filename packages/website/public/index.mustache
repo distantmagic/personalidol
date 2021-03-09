@@ -106,6 +106,12 @@
 
         const _uiPlaceholder = document.getElementById("ui-placeholder");
 
+        if (!_uiPlaceholder) {
+          // It is possible that placeholder element is already overridden by
+          // the target view.
+          return;
+        }
+
         if (evt.detail.isDOMControllerReady) {
           _domControllerReady = true;
           _uiPlaceholder.classList.remove("ui-placeholder--loading");

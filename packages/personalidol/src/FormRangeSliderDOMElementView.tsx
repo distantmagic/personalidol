@@ -7,7 +7,7 @@ import type { JSX } from "preact";
 import type { UserSettings } from "./UserSettings.type";
 
 const CSS_THUMB_BACKGROUND_COLOR = "#ffffff";
-const CSS_THUMB_BORDER_COLOR = "#0000ff";
+const CSS_THUMB_BORDER_COLOR = "#000000";
 const CSS_THUMB_HEIGHT = 26;
 const CSS_TRACK_BACKGROUND_COLOR = "#000000";
 const CSS_TRACK_BORDER_COLOR = "#ffffff";

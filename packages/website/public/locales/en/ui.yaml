@@ -42,6 +42,15 @@ resource_type_accusative_translations_count: Translations
 
 trigger_menu: Menu
 
+user_settings_camera: Camera
+user_settings_camera_movement_speed: Movement Speed
+user_settings_camera_movement_speed_description: >
+  Determines how fast the camera is moving in response to your interactions
+  (for example like panning or tilting).
+user_settings_camera_type: Projection Type
+user_settings_camera_type_description: >
+  Switching between camera projection type does not impact performance.
+  You can choose the one that suits you better.
 user_settings_done: Done
 user_settings_dynamic_light_quality: Light Quality
 user_settings_dynamic_light_quality_description: >
@@ -51,6 +60,8 @@ user_settings_dynamic_light_quality_description: >
   be no light sources that cast shadows.
 user_settings_experimental: Experimental
 user_settings_graphics: Graphics
+user_settings_label_camera_orthographic: Isometric
+user_settings_label_camera_perspective: Perspective
 user_settings_label_off: "off"
 user_settings_label_on: "on"
 user_settings_language: Language

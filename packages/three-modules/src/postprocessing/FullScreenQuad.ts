@@ -1,6 +1,9 @@
 import { Mesh } from "three/src/objects/Mesh";
+import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
 import { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
 import { PlaneGeometry } from "three/src/geometries/PlaneGeometry";
+
+import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 
 import type { BufferGeometry } from "three/src/core/BufferGeometry";
 import type { Camera } from "three/src/cameras/Camera";
@@ -22,10 +25,11 @@ export class FullScreenQuad implements DisposableGeneric {
   }
 
   set material(value: Material | Material[]) {
+    disposableMaterial(this._mesh.material)();
     this._mesh.material = value;
   }
 
-  constructor(material: Material | Material[]) {
+  constructor(material: Material | Material[] = new MeshBasicMaterial()) {
     this._camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this._geometry = new PlaneGeometry(2, 2);
     this._mesh = new Mesh(this._geometry, material);

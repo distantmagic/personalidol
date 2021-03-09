@@ -50,6 +50,14 @@ resource_type_accusative_translations_count: Translations
 
 trigger_menu: Menu
 
+user_settings_camera: Kamera
+user_settings_camera_movement_speed: Szybkość poruszania
+user_settings_camera_movement_speed_description: >
+  Określa jak szybko porusza się kamera w odpowiedzi na twoje ruchy.
+user_settings_camera_type: Rzut kamery
+user_settings_camera_type_description: >
+  Przełączanie się pomiędzy rzutem kamery nie ma wpływu na wydajność gry.
+  Wybierz opcję, która bardziej ci odpowiada.
 user_settings_done: Wyjdź
 user_settings_dynamic_light_quality: Jakość światła
 user_settings_dynamic_light_quality_description: >
@@ -58,6 +66,8 @@ user_settings_dynamic_light_quality_description: >
   oświetlone, a na scene nie będzie źródeł światła, które rzucają cienie.
 user_settings_experimental: Eksperymentalne
 user_settings_graphics: Grafika
+user_settings_label_camera_orthographic: Izometryczny
+user_settings_label_camera_perspective: Perspektywiczny
 user_settings_label_off: wyłączone
 user_settings_label_on: włączone
 user_settings_language: Język

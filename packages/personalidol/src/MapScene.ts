@@ -227,6 +227,7 @@ export function MapScene(
     fMount(logger, _cameraController);
 
     effectComposer.addPass(_renderPass);
+
     _unmountables.add(unmountPass(effectComposer, _renderPass));
     _disposables.add(disposableGeneric(_renderPass));
 
