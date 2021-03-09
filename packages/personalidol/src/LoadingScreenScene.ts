@@ -16,7 +16,7 @@ import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/Glitc
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
-import { updateStoreCameraAspect } from "@personalidol/three-renderer/src/updateStoreCameraAspect";
+import { updatePerspectiveCameraAspect } from "@personalidol/three-renderer/src/updatePerspectiveCameraAspect";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
@@ -214,7 +214,7 @@ export function LoadingScreenScene(
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    updateStoreCameraAspect(_camera, dimensionsState);
+    updatePerspectiveCameraAspect(dimensionsState, _camera);
 
     _boxMesh.rotation.x += delta;
     _boxMesh.rotation.z += delta;

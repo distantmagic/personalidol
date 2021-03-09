@@ -51,6 +51,7 @@ resource_type_accusative_translations_count: Translations
 trigger_menu: Menu
 
 user_settings_done: Wyjdź
+user_settings_camera: Kamera
 user_settings_dynamic_light_quality: Jakość światła
 user_settings_dynamic_light_quality_description: >
   Niższa jakość poprawia wydajność i sprawia, że mniej źródeł światła będzie
@@ -58,9 +59,11 @@ user_settings_dynamic_light_quality_description: >
   oświetlone, a na scene nie będzie źródeł światła, które rzucają cienie.
 user_settings_experimental: Eksperymentalne
 user_settings_graphics: Grafika
-user_settings_language: Język
+user_settings_label_camera_orthographic: Izometryczna
+user_settings_label_camera_perspective: Perspektywiczna
 user_settings_label_off: wyłączone
 user_settings_label_on: włączone
+user_settings_language: Język
 user_settings_options: Opcje
 user_settings_quality_low: niska
 user_settings_quality_medium: średnia

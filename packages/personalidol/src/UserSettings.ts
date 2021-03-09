@@ -4,9 +4,10 @@ import type { UserSettings as IUserSettings } from "./UserSettings.type";
 
 function createEmptyState(pixelRatio: number): IUserSettings {
   return {
+    cameraType: "PerspectiveCamera",
     devicePixelRatio: pixelRatio,
-    language: "en",
     dynamicLightQuality: UserSettingsDynamicLightQualityMap.Low,
+    language: "en",
     pixelRatio: 1,
     shadowMapSize: 512,
     showStatsReporter: false,

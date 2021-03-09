@@ -9,6 +9,7 @@ export interface DOMElementView<U extends UserSettings> extends HTMLElement, Mai
   readonly t: TFunction;
 
   css: string;
+  dimensionsState: Uint32Array;
   domMessagePort: MessagePort;
   i18next: i18n;
   keyboardState: Uint8Array;

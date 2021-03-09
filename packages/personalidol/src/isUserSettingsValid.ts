@@ -14,6 +14,14 @@ export function isUserSettingsValid(userSettings: any): userSettings is UserSett
     return false;
   }
 
+  switch (userSettings.cameraType) {
+    case "OrthographicCamera":
+    case "PerspectiveCamera":
+      break;
+    default:
+      return false;
+  }
+
   if ("number" !== typeof userSettings.devicePixelRatio) {
     return false;
   }
@@ -22,11 +30,33 @@ export function isUserSettingsValid(userSettings: any): userSettings is UserSett
     return false;
   }
 
+  switch (userSettings.language) {
+    case "en":
+    case "pl":
+      break;
+    default:
+      return false;
+  }
+
   if ("number" !== typeof userSettings.pixelRatio) {
     return false;
   }
 
+  switch (userSettings.shadowMapSize) {
+    case 512:
+    case 1024:
+    case 2048:
+    case 4096:
+      break;
+    default:
+      return false;
+  }
+
   if ("boolean" !== typeof userSettings.showStatsReporter) {
+    return false;
+  }
+
+  if ("boolean" !== typeof userSettings.useOffscreenCanvas) {
     return false;
   }
 
@@ -38,17 +68,5 @@ export function isUserSettingsValid(userSettings: any): userSettings is UserSett
     return false;
   }
 
-  if ("number" !== typeof userSettings.shadowMapSize) {
-    return false;
-  }
-
-  switch (userSettings.shadowMapSize) {
-    case 512:
-    case 1024:
-    case 2048:
-    case 4096:
-      return true;
-  }
-
-  return false;
+  return true;
 }

@@ -43,6 +43,7 @@ resource_type_accusative_translations_count: Translations
 trigger_menu: Menu
 
 user_settings_done: Done
+user_settings_camera: Camera
 user_settings_dynamic_light_quality: Light Quality
 user_settings_dynamic_light_quality_description: >
   You can reduce overall dynamic light quality for better performance. With
@@ -51,12 +52,14 @@ user_settings_dynamic_light_quality_description: >
   be no light sources that cast shadows.
 user_settings_experimental: Experimental
 user_settings_graphics: Graphics
-user_settings_language: Language
+user_settings_label_camera_orthographic: Isometric
+user_settings_label_camera_perspective: Perspective
 user_settings_label_off: "off"
 user_settings_label_on: "on"
+user_settings_language: Language
 user_settings_options: Options
-user_settings_quality_none: disabled
 user_settings_quality_low: low
+user_settings_quality_none: disabled
 user_settings_quality_medium: medium
 user_settings_quality_high: high
 user_settings_rendering_resolution: Rendering Resolution

@@ -24,6 +24,7 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
     needsUpdates: true,
   });
 
+  private _dimensionsState: null | Uint32Array = null;
   private _domMessagePort: null | MessagePort = null;
   private _i18next: null | i18n = null;
   private _keyboardState: null | Uint8Array = null;
@@ -31,6 +32,15 @@ export abstract class DOMElementView<U extends UserSettings> extends HTMLElement
   private _touchState: null | Int32Array = null;
   private _uiMessagePort: null | MessagePort = null;
   private _userSettings: null | U = null;
+
+  get dimensionsState(): Uint32Array {
+    return must(this._dimensionsState, "dimensionsState is not set but it was expected to be.");
+  }
+
+  set dimensionsState(dimensionsState: Uint32Array) {
+    this.needsRender = true;
+    this._dimensionsState = dimensionsState;
+  }
 
   get domMessagePort(): MessagePort {
     return must(this._domMessagePort, "domMessagePort is not set but it was expected to be.");

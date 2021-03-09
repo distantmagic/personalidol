@@ -14,6 +14,10 @@ export function WindowFocusObserver(logger: Logger, tickTimerState: TickTimerSta
     needsUpdates: true,
   });
 
+  function _onDocumentVisibilityChange(): void {
+    _setIsDocumentFocused(state.isDocumentFocused && "visible" === document.visibilityState);
+  }
+
   function _onWindowBlur(): void {
     _setIsDocumentFocused(false);
   }
@@ -32,11 +36,13 @@ export function WindowFocusObserver(logger: Logger, tickTimerState: TickTimerSta
   }
 
   function start(): void {
+    document.addEventListener("visibilitychange", _onDocumentVisibilityChange);
     window.addEventListener("blur", _onWindowBlur);
     window.addEventListener("focus", _onWindowFocus);
   }
 
   function stop(): void {
+    document.removeEventListener("visibilitychange", _onDocumentVisibilityChange);
     window.removeEventListener("blur", _onWindowBlur);
     window.removeEventListener("focus", _onWindowFocus);
   }

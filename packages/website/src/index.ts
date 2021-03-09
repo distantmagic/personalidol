@@ -243,6 +243,7 @@ const uiRoot = getHTMLElementById(window.document, "ui-root");
   const domUIController = DOMUIController(
     logger,
     internationalizationService.i18next as DOMi18n,
+    dimensionsState,
     keyboardState,
     mouseState,
     touchState,

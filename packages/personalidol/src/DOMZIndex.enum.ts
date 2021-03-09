@@ -7,9 +7,10 @@ export const enum DOMZIndex {
   // Order here is important, settings z-index of every possible element
   // prevents overlapping. Later ones on this list will end on top of lower
   // ones.
+  InGameMousePointerGadgets,
   InGameMenuTrigger,
   MainMenu,
   Settings,
   StatsReporter,
-  MousePointerLayer,
+  MousePointer,
 }

@@ -107,6 +107,9 @@ const _booleanEdgeLabels: ["", ""] = ["", ""];
 const _booleanLabels: [string, string] = ["ui:user_settings_label_off", "ui:user_settings_label_on"];
 const _booleanValues: [false, true] = [false, true];
 
+const _cameraTypeLabels: [string, string] = ["ui:user_settings_label_camera_orthographic", "ui:user_settings_label_camera_perspective"];
+const _cameraTypeValues = ["OrthographicCamera", "PerspectiveCamera"];
+
 const _lightQualityLabels = ["ui:user_settings_label_off", "ui:user_settings_quality_low", "ui:user_settings_quality_medium", "ui:user_settings_quality_high"];
 const _lightQualityValues = [
   UserSettingsDynamicLightQualityMap.None,
@@ -136,6 +139,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this._unaryT = unary(this.t);
 
     this.close = this.close.bind(this);
+    this.onCameraTypeChange = this.onCameraTypeChange.bind(this);
     this.onDynamicLightQualityChange = this.onDynamicLightQualityChange.bind(this);
     this.onOverlayClick = this.onOverlayClick.bind(this);
     this.onPixelRatioChange = this.onPixelRatioChange.bind(this);
@@ -159,22 +163,30 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this.close();
   }
 
+  onCameraTypeChange(evt: Event) {
+    if (!isCustomEvent(evt)) {
+      throw new Error("Expected custom event with:: 'onDynamicLightQualityChange'.");
+    }
+
+    if (!_cameraTypeValues.includes(evt.detail)) {
+      throw new Error(`Unexpected camera type: "${evt.detail}"`);
+    }
+
+    this.userSettings.cameraType = evt.detail;
+    this.userSettings.version += 1;
+  }
+
   onDynamicLightQualityChange(evt: Event) {
     if (!isCustomEvent(evt)) {
       throw new Error("Expected custom event with:: 'onDynamicLightQualityChange'.");
     }
 
-    switch (evt.detail) {
-      case UserSettingsDynamicLightQualityMap.None:
-      case UserSettingsDynamicLightQualityMap.Low:
-      case UserSettingsDynamicLightQualityMap.Medium:
-      case UserSettingsDynamicLightQualityMap.High:
-        this.userSettings.dynamicLightQuality = evt.detail;
-        this.userSettings.version += 1;
-        return;
-      default:
-        throw new Error(`Unexpected shadowmap size: "${evt.detail}"`);
+    if (!_lightQualityValues.includes(evt.detail)) {
+      throw new Error(`Unexpected shadowmap size: "${evt.detail}"`);
     }
+
+    this.userSettings.dynamicLightQuality = evt.detail;
+    this.userSettings.version += 1;
   }
 
   onPixelRatioChange(evt: Event) {
@@ -191,17 +203,12 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       throw new Error("Expected custom event with:: 'onShadowMapSizeChange'.");
     }
 
-    switch (evt.detail) {
-      case 512:
-      case 1024:
-      case 2048:
-      case 4096:
-        this.userSettings.shadowMapSize = evt.detail;
-        this.userSettings.version += 1;
-        return;
-      default:
-        throw new Error(`Unexpected shadowmap size: "${evt.detail}"`);
+    if (!_shadowMapSizeValues.includes(evt.detail)) {
+      throw new Error(`Unexpected shadowmap size: "${evt.detail}"`);
     }
+
+    this.userSettings.shadowMapSize = evt.detail;
+    this.userSettings.version += 1;
   }
 
   onShowStatsReporterChange(evt: Event) {
@@ -255,6 +262,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
 
   render(delta: number) {
     const _booleanLabelsTranslated: [string, string] = _booleanLabels.map(this._unaryT) as [string, string];
+    const _cameraTypeLabelsTranslated: [string, string] = _cameraTypeLabels.map(this._unaryT) as [string, string];
     const _lowHighEdgeLabelsTranslated: [string, string] = _lowHighEdgeLabels.map(this._unaryT) as [string, string];
 
     return (
@@ -265,6 +273,17 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
         </h1>
         <h2>{this.t("ui:user_settings_graphics")}</h2>
         <form class="options__form">
+          <dl>
+            <dt>{this.t("ui:user_settings_camera")}</dt>
+            <dd>{this.t("ui:user_settings_camera_description")}</dd>
+          </dl>
+          <pi-slider
+            currentValue={this.userSettings.cameraType}
+            edgeLabels={_booleanEdgeLabels}
+            labels={_cameraTypeLabelsTranslated}
+            onChange={this.onCameraTypeChange}
+            values={_cameraTypeValues}
+          />
           <dl>
             <dt>{this.t("ui:user_settings_rendering_resolution")}</dt>
             <dd>{this.t("ui:user_settings_rendering_resolution_description")}</dd>
