@@ -2,6 +2,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
+import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
@@ -17,10 +18,23 @@ const _css = `
   }
 
   #ingame-menu-trigger {
+    cursor: pointer;
     position: absolute;
-    right: 1.6rem;
-    top: 1.6rem;
     z-index: ${DOMZIndex.InGameMenuTrigger};
+  }
+
+  @media (max-width: ${DOMBreakpoints.MobileMax}px) {
+    #ingame-menu-trigger {
+      right: 1.6rem;
+      bottom: 1.6rem;
+    }
+  }
+
+  @media (min-width: ${DOMBreakpoints.TabletMin}px) {
+    #ingame-menu-trigger {
+      right: 1.6rem;
+      top: 1.6rem;
+    }
   }
 `;
 

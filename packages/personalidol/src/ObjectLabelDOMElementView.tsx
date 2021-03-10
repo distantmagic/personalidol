@@ -123,8 +123,8 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
           transform: `
             translate3D(-50%, -100%, 0)
             translate3D(
-              ${this._rendererState[CSS2DObjectStateIndices.TRANSLATE_X]}px,
-              ${this._rendererState[CSS2DObjectStateIndices.TRANSLATE_Y]}px,
+              ${Math.round(this._rendererState[CSS2DObjectStateIndices.TRANSLATE_X])}px,
+              ${Math.round(this._rendererState[CSS2DObjectStateIndices.TRANSLATE_Y])}px,
               0
             )
           `,
