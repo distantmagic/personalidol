@@ -1,8 +1,8 @@
 import { createMultiThreadMessageChannel } from "@personalidol/framework/src/createMultiThreadMessageChannel";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
-import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
-import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
+import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/framework/src/isCanvasTransferControlToOffscreenSupported";
+import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import workers from "./workers.json";

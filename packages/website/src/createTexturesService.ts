@@ -1,5 +1,5 @@
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
-import { isCreateImageBitmapSupported } from "@personalidol/support/src/isCreateImageBitmapSupported";
+import { isCreateImageBitmapSupported } from "@personalidol/framework/src/isCreateImageBitmapSupported";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import workers from "./workers.json";

@@ -10,7 +10,7 @@ import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadSe
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
 import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
 import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
-import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
+import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
 import { KeyboardObserver } from "@personalidol/framework/src/KeyboardObserver";
 import { KeyboardState } from "@personalidol/framework/src/KeyboardState";

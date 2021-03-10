@@ -1,7 +1,7 @@
 import { Fragment, h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/support/src/isCanvasTransferControlToOffscreenSupported";
+import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/framework/src/isCanvasTransferControlToOffscreenSupported";
 import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 import { unary } from "@personalidol/framework/src/unary";
 

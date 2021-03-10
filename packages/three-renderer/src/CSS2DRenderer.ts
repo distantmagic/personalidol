@@ -2,6 +2,8 @@ import { Matrix4 } from "three/src/math/Matrix4";
 import { Object3D } from "three/src/core/Object3D";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
+
 import { CSS2DObjectStateIndices } from "./CSS2DObjectStateIndices.enum";
 import { isCSS2DObject } from "./isCSS2DObject";
 
@@ -15,11 +17,13 @@ import type { CSS2DObject } from "./CSS2DObject.interface";
 import type { CSS2DRenderer as ICSS2DRenderer } from "./CSS2DRenderer.interface";
 import type { CSS2DRendererInfo } from "./CSS2DRendererInfo.type";
 
+const useSharedArrayBuffer: boolean = isSharedArrayBufferSupported();
+
 const _vec = new Vector3();
 const _vecTmpA = new Vector3();
 const _vecTmpB = new Vector3();
 
-export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
+export function CSS2DRenderer<L extends DOMElementsLookup>(domMessagePort: MessagePort): ICSS2DRenderer {
   let _height: number = 0;
   let _heightHalf: number = 0;
   let _width: number = 0;
@@ -27,14 +31,16 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
   let i: number = 0;
 
   let _cameraFar: number = 0;
+  let _isObjectChanged: boolean = false;
   let _previousDistanceToCameraSquared: number = 0;
   let _previousIsRendered: number = 0;
   let _previousTranslateX: number = 0;
   let _previousTranslateY: number = 0;
   let _previousVisible: number = 0;
 
-  const viewMatrix = new Matrix4();
-  const viewProjectionMatrix = new Matrix4();
+  const _sentBuffers: WeakMap<CSS2DObject<L>, boolean> = new WeakMap();
+  const _viewMatrix = new Matrix4();
+  const _viewProjectionMatrix = new Matrix4();
 
   const renderer: ICSS2DRenderer = Object.freeze({
     info: <CSS2DRendererInfo>Object.seal({
@@ -48,9 +54,36 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     setSize: setSize,
   });
 
-  function _renderObject(object: CSS2DObject, scene: Scene, camera: Camera) {
+  function _createObjectRenderMessage(object: CSS2DObject<L>): MessageDOMUIRender<L> {
+    const message: MessageDOMUIRender<L> = {
+      element: object.element,
+      id: object.uuid,
+      props: {
+        objectProps: object.props,
+        version: object.state[CSS2DObjectStateIndices.VERSION],
+      },
+    };
+
+    object.isRendered = true;
+
+    if (!useSharedArrayBuffer) {
+      message.props.rendererState = object.state;
+
+      return message;
+    }
+
+    if (!_sentBuffers.has(object)) {
+      // There is no need to send shared array buffer more than once.
+      message.props.rendererState = object.state.buffer;
+      _sentBuffers.set(object, true);
+    }
+
+    return message;
+  }
+
+  function _renderObject(object: CSS2DObject<L>, scene: Scene, camera: Camera) {
     _vec.setFromMatrixPosition(object.matrixWorld);
-    _vec.applyMatrix4(viewProjectionMatrix);
+    _vec.applyMatrix4(_viewProjectionMatrix);
 
     _previousDistanceToCameraSquared = object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED];
     _previousIsRendered = object.state[CSS2DObjectStateIndices.IS_RENDERED];
@@ -80,17 +113,24 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
       object.state[CSS2DObjectStateIndices.VISIBLE] = Number(object.visible && _vec.z >= -1 && _vec.z <= 1);
     }
 
-    // prettier-ignore
-    object.isDirty = (
-      (!object.state[CSS2DObjectStateIndices.VISIBLE] && !_previousVisible)
-      || _previousDistanceToCameraSquared !== object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED]
-      || _previousIsRendered !== object.state[CSS2DObjectStateIndices.IS_RENDERED]
-      || _previousTranslateX !== object.state[CSS2DObjectStateIndices.TRANSLATE_X]
-      || _previousTranslateY !== object.state[CSS2DObjectStateIndices.TRANSLATE_Y]
-      || _previousVisible !== object.state[CSS2DObjectStateIndices.VISIBLE]
-    );
+    _isObjectChanged =
+      (!object.state[CSS2DObjectStateIndices.VISIBLE] && !_previousVisible) ||
+      _previousDistanceToCameraSquared !== object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED] ||
+      _previousIsRendered !== object.state[CSS2DObjectStateIndices.IS_RENDERED] ||
+      _previousTranslateX !== object.state[CSS2DObjectStateIndices.TRANSLATE_X] ||
+      _previousTranslateY !== object.state[CSS2DObjectStateIndices.TRANSLATE_Y] ||
+      _previousVisible !== object.state[CSS2DObjectStateIndices.VISIBLE];
 
-    if (object.isDirty) {
+    if (useSharedArrayBuffer) {
+      // There is no need to send object state over and over when shared
+      // buffers are used.
+      object.isDirty = !_sentBuffers.has(object);
+    } else {
+      // prettier-ignore
+      object.isDirty = _isObjectChanged;
+    }
+
+    if (_isObjectChanged) {
       object.state[CSS2DObjectStateIndices.VERSION] += 1;
     }
   }
@@ -102,11 +142,11 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     return _vecTmpA.distanceToSquared(_vecTmpB);
   }
 
-  function _filterAndFlatten(scene: Scene): Array<CSS2DObject> {
-    const result: Array<CSS2DObject> = [];
+  function _filterAndFlatten(scene: Scene): Array<CSS2DObject<L>> {
+    const result: Array<CSS2DObject<L>> = [];
 
     scene.traverse(function (object: Object3D) {
-      if (isCSS2DObject(object)) {
+      if (isCSS2DObject<L>(object)) {
         result.push(object);
       }
     });
@@ -114,20 +154,12 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     return result;
   }
 
-  function _reportRenderBatch(css2DObjects: Array<CSS2DObject>) {
-    const renderBatch: Array<MessageDOMUIRender<DOMElementsLookup>> = [];
+  function _reportRenderBatch(css2DObjects: Array<CSS2DObject<L>>) {
+    const renderBatch: Array<MessageDOMUIRender<L>> = [];
 
     for (let object of css2DObjects) {
       if (object.isDirty) {
-        renderBatch.push(<MessageDOMUIRender<DOMElementsLookup>>{
-          element: object.element,
-          id: object.uuid,
-          props: {
-            objectProps: object.props,
-            rendererState: object.state,
-            version: object.state[CSS2DObjectStateIndices.VERSION],
-          },
-        });
+        renderBatch.push(_createObjectRenderMessage(object));
         object.isDirty = false;
       }
     }
@@ -141,14 +173,14 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     });
   }
 
-  function _sortObjectsByDistance(a: CSS2DObject, b: CSS2DObject) {
+  function _sortObjectsByDistance(a: CSS2DObject<L>, b: CSS2DObject<L>) {
     const distanceA = a.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED];
     const distanceB = b.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED];
 
     return distanceA - distanceB;
   }
 
-  function _zOrder(css2DObjects: Array<CSS2DObject>, scene: Scene) {
+  function _zOrder(css2DObjects: Array<CSS2DObject<L>>, scene: Scene) {
     const sorted = css2DObjects.sort(_sortObjectsByDistance);
     const zMax = sorted.length;
 
@@ -184,10 +216,10 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
       camera.updateMatrixWorld();
     }
 
-    viewMatrix.copy(camera.matrixWorldInverse);
-    viewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, viewMatrix);
+    _viewMatrix.copy(camera.matrixWorldInverse);
+    _viewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, _viewMatrix);
 
-    const css2DObjects: Array<CSS2DObject> = _filterAndFlatten(scene);
+    const css2DObjects: Array<CSS2DObject<L>> = _filterAndFlatten(scene);
 
     for (let object of css2DObjects) {
       _renderObject(object, scene, camera);

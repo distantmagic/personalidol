@@ -15,6 +15,7 @@ import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src
 
 import type { Logger } from "loglevel";
 
+import type { DOMElementsLookup } from "@personalidol/personalidol/src/DOMElementsLookup.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
@@ -65,7 +66,7 @@ export function createScenes(
   webGLRenderer.shadowMap.autoUpdate = true;
 
   const effectComposer = new EffectComposer(webGLRenderer);
-  const css2DRenderer = CSS2DRenderer(domMessagePort);
+  const css2DRenderer = CSS2DRenderer<DOMElementsLookup>(domMessagePort);
 
   rendererDimensionsManager.state.renderers.add(css2DRenderer);
   rendererDimensionsManager.state.renderers.add(effectComposer);

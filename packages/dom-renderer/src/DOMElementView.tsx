@@ -1,6 +1,6 @@
 import { Fragment, h, render } from "preact";
 
-import { isConstructableCSSStyleSheetSupported } from "@personalidol/support/src/isConstructableCSSStyleSheetSupported";
+import { isConstructableCSSStyleSheetSupported } from "@personalidol/framework/src/isConstructableCSSStyleSheetSupported";
 import { must } from "@personalidol/framework/src/must";
 
 import { createConstructableStylesheet } from "./createConstructableStylesheet";

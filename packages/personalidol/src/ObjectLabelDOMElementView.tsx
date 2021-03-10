@@ -4,7 +4,7 @@ import { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObjectSt
 import { CSS2DObjectStateIndices } from "@personalidol/three-renderer/src/CSS2DObjectStateIndices.enum";
 import { damp } from "@personalidol/framework/src/damp";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
+import { isSharedArrayBuffer } from "@personalidol/framework/src/isSharedArrayBuffer";
 
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -13,7 +13,6 @@ import type { UserSettings } from "./UserSettings.type";
 
 const OPACITY_DAMP = 10;
 const FADE_OUT_DISTANCE_SQUARED: number = 4000;
-const useSharedArrayBuffer: boolean = isSharedArrayBufferSupported();
 
 const _css = `
   :host {
@@ -54,7 +53,7 @@ type LabelProps = DOMElementProps & {
 export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
-  public _rendererState: Float32Array = CSS2DObjectState.createEmptyState(useSharedArrayBuffer);
+  public _rendererState: Float32Array = CSS2DObjectState.createEmptyState(false);
 
   private _currentLabel: string = "";
   private _currentObjectPropsVersion: number = 0;
@@ -71,6 +70,14 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
 
   beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
     super.beforeRender(delta, elapsedTime, tickTimerState);
+
+    if (this.needsRender) {
+      return;
+    }
+
+    // Object state MAY use shared array for a state. Because of that this
+    // needs to be checked every frame.
+    this.needsRender = this._lastRenderedState < this._rendererState[CSS2DObjectStateIndices.VERSION];
   }
 
   getTargetOpacity(): number {
@@ -83,9 +90,12 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
     return 0.3;
   }
 
-  set rendererState(rendererState: Float32Array) {
-    this.needsRender = this._lastRenderedState < rendererState[CSS2DObjectStateIndices.VERSION];
-    this._rendererState = rendererState;
+  set rendererState(rendererState: Float32Array | SharedArrayBuffer) {
+    if (isSharedArrayBuffer(rendererState)) {
+      this._rendererState = new Float32Array(rendererState);
+    } else {
+      this._rendererState = rendererState;
+    }
   }
 
   render(delta: number) {

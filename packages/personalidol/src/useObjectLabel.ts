@@ -10,6 +10,7 @@ import type { MountableCallback } from "@personalidol/framework/src/MountableCal
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 import type { AnyEntity } from "./AnyEntity.type";
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 
 export function useObjectLabel(
   domMessagePort: MessagePort,
@@ -23,7 +24,7 @@ export function useObjectLabel(
     return;
   }
 
-  const label = new CSS2DObject(domMessagePort, "pi-object-label", {
+  const label = new CSS2DObject<DOMElementsLookup>(domMessagePort, "pi-object-label", {
     label: entity.properties.label,
     version: 0,
   });
