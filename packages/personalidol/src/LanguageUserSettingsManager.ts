@@ -17,7 +17,9 @@ export function LanguageUserSettingsManager(userSettings: UserSettings, i18next:
   });
 
   const applySettings = createSettingsHandle(userSettings, function () {
-    i18next.changeLanguage(userSettings.language);
+    if (i18next.language !== userSettings.language) {
+      i18next.changeLanguage(userSettings.language);
+    }
   });
 
   function preload(): void {
