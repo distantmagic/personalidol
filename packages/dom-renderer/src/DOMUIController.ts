@@ -213,6 +213,11 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   }
 
   function _updateRenderedElementProps(domElementView: DOMElementView<U>, props: DOMElementProps) {
+    if (domElementView.version >= props.version) {
+      // Props did not change.
+      return;
+    }
+
     for (let prop in props) {
       if (props.hasOwnProperty(prop)) {
         if (prop in domElementView) {

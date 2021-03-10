@@ -1,23 +1,20 @@
 import { Object3D } from "three/src/core/Object3D";
 
+import { isSharedArrayBufferSupported } from "@personalidol/support/src/isSharedArrayBufferSupported";
+
+import { CSS2DObjectState } from "./CSS2DObjectState";
 import { isCSS2DObject } from "./isCSS2DObject";
 
 import type { DOMElementProps } from "@personalidol/dom-renderer/src/DOMElementProps.type";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 
 import type { CSS2DObject as ICSS2DObject } from "./CSS2DObject.interface";
-import type { CSS2DObjectState } from "./CSS2DObjectState.type";
+
+const useSharedArrayBuffer: boolean = isSharedArrayBufferSupported();
 
 export class CSS2DObject extends Object3D implements ICSS2DObject {
   public readonly element: string;
-  public readonly state: CSS2DObjectState = {
-    cameraFar: 0,
-    distanceToCameraSquared: 0,
-    translateX: 0,
-    translateY: 0,
-    visible: false,
-    zIndex: 0,
-  };
+  public readonly state: Float32Array = CSS2DObjectState.createEmptyState(useSharedArrayBuffer);
   public readonly type: "CSS2DObject" = "CSS2DObject";
 
   public isDirty: boolean = false;
@@ -25,7 +22,7 @@ export class CSS2DObject extends Object3D implements ICSS2DObject {
   public isRendered: boolean = false;
   public props: DOMElementProps;
 
-  constructor(domMessagePort: MessagePort, element: string, props: DOMElementProps = {}) {
+  constructor(domMessagePort: MessagePort, element: string, props: DOMElementProps) {
     super();
 
     let self: ICSS2DObject = this;

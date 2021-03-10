@@ -20,6 +20,7 @@ export class DOMElementView<U extends UserSettings> extends HTMLElement implemen
   public lastRenderedLanguage: string = "";
   public needsRender: boolean = true;
   public shadow: ShadowRoot;
+  public version: number = -1;
   public state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });

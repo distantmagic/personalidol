@@ -19,6 +19,7 @@ export interface DOMElementView<U extends UserSettings> extends HTMLElement, Mai
   needsRender: boolean;
   uiMessagePort: MessagePort;
   userSettings: U;
+  version: number;
 
   beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;
 

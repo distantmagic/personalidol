@@ -7,6 +7,7 @@
   "dependencies": {
     "@personalidol/dom-renderer": "^0.0.4",
     "@personalidol/framework": "^0.0.4",
+    "@personalidol/support": "^0.0.4",
     "@personalidol/three-modules": "^0.0.4",
     "three": "^0.126.1"
   },

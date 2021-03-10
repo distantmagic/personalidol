@@ -25,6 +25,7 @@ export function useObjectLabel(
 
   const label = new CSS2DObject(domMessagePort, "pi-object-label", {
     label: entity.properties.label,
+    version: 0,
   });
 
   mountables.add(function () {

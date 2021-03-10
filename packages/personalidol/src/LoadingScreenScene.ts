@@ -50,6 +50,8 @@ export function LoadingScreenScene(
 
   let _domFatalErrorElementId: null | string = null;
   let _domLoadingScreenElementId: null | string = null;
+  let _errorPropsVersion: number = 0;
+  let _progressPropsVersion: number = 0;
 
   const _ambientLight = new AmbientLight(0xffffff, 0.1);
   const _camera = new PerspectiveCamera();
@@ -100,12 +102,15 @@ export function LoadingScreenScene(
         _domLoadingScreenElementId = MathUtils.generateUUID();
       }
 
+      _progressPropsVersion += 1;
+
       domMessagePort.postMessage({
         render: <MessageDOMUIRender<DOMElementsLookup>>{
           id: _domLoadingScreenElementId,
           element: "pi-progress-manager-state",
           props: {
             progressManagerState: progressState,
+            version: _progressPropsVersion,
           },
         },
       });
@@ -127,12 +132,15 @@ export function LoadingScreenScene(
 
     _unmountLoadingScreen();
 
+    _errorPropsVersion += 1;
+
     domMessagePort.postMessage({
       render: <MessageDOMUIRender<DOMElementsLookup>>{
         id: _domFatalErrorElementId,
         element: "pi-fatal-error",
         props: {
           errors: errors,
+          version: _errorPropsVersion,
         },
       },
     });

@@ -2,6 +2,7 @@ import { Matrix4 } from "three/src/math/Matrix4";
 import { Object3D } from "three/src/core/Object3D";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { CSS2DObjectStateIndices } from "./CSS2DObjectStateIndices.enum";
 import { isCSS2DObject } from "./isCSS2DObject";
 
 import type { Camera } from "three/src/cameras/Camera";
@@ -27,10 +28,10 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
 
   let _cameraFar: number = 0;
   let _previousDistanceToCameraSquared: number = 0;
-  let _previousIsRendered: boolean = false;
+  let _previousIsRendered: number = 0;
   let _previousTranslateX: number = 0;
   let _previousTranslateY: number = 0;
-  let _previousVisible: boolean = false;
+  let _previousVisible: number = 0;
 
   const viewMatrix = new Matrix4();
   const viewProjectionMatrix = new Matrix4();
@@ -51,43 +52,47 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     _vec.setFromMatrixPosition(object.matrixWorld);
     _vec.applyMatrix4(viewProjectionMatrix);
 
-    _previousDistanceToCameraSquared = object.state.distanceToCameraSquared;
-    _previousIsRendered = object.isRendered;
-    _previousTranslateX = object.state.translateX;
-    _previousTranslateY = object.state.translateY;
-    _previousVisible = object.state.visible;
+    _previousDistanceToCameraSquared = object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED];
+    _previousIsRendered = object.state[CSS2DObjectStateIndices.IS_RENDERED];
+    _previousTranslateX = object.state[CSS2DObjectStateIndices.TRANSLATE_X];
+    _previousTranslateY = object.state[CSS2DObjectStateIndices.TRANSLATE_Y];
+    _previousVisible = object.state[CSS2DObjectStateIndices.VISIBLE];
 
-    object.isRendered = true;
-    object.state.distanceToCameraSquared = _getDistanceToSquared(camera, object);
+    object.state[CSS2DObjectStateIndices.IS_RENDERED] = 1;
+    object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED] = _getDistanceToSquared(camera, object);
 
     // @ts-ignore this is safe and does not require to import all possible
     // cameras to typecheck
     _cameraFar = camera.far || 0;
 
-    object.state.cameraFar = _cameraFar;
-    object.state.translateX = _vec.x * _widthHalf + _widthHalf;
-    object.state.translateY = -1 * _vec.y * _heightHalf + _heightHalf;
+    object.state[CSS2DObjectStateIndices.CAMERA_FAR] = _cameraFar;
+    object.state[CSS2DObjectStateIndices.TRANSLATE_X] = _vec.x * _widthHalf + _widthHalf;
+    object.state[CSS2DObjectStateIndices.TRANSLATE_Y] = -1 * _vec.y * _heightHalf + _heightHalf;
 
     // prettier-ignore
-    if ( object.state.translateX < 0
-      || object.state.translateY < 0
-      || object.state.translateX > _width
-      || object.state.translateY > _height
+    if ( object.state[CSS2DObjectStateIndices.TRANSLATE_X] < 0
+      || object.state[CSS2DObjectStateIndices.TRANSLATE_Y] < 0
+      || object.state[CSS2DObjectStateIndices.TRANSLATE_X] > _width
+      || object.state[CSS2DObjectStateIndices.TRANSLATE_Y] > _height
     ) {
-      object.state.visible = false;
+      object.state[CSS2DObjectStateIndices.VISIBLE] = 0;
     } else {
-      object.state.visible = object.visible && _vec.z >= -1 && _vec.z <= 1;
+      object.state[CSS2DObjectStateIndices.VISIBLE] = Number(object.visible && _vec.z >= -1 && _vec.z <= 1);
     }
 
     // prettier-ignore
     object.isDirty = (
-      (!object.state.visible && !_previousVisible)
-      || _previousDistanceToCameraSquared !== object.state.distanceToCameraSquared
-      || _previousIsRendered !== object.isRendered
-      || _previousTranslateX !== object.state.translateX
-      || _previousTranslateY !== object.state.translateY
-      || _previousVisible !== object.state.visible
+      (!object.state[CSS2DObjectStateIndices.VISIBLE] && !_previousVisible)
+      || _previousDistanceToCameraSquared !== object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED]
+      || _previousIsRendered !== object.state[CSS2DObjectStateIndices.IS_RENDERED]
+      || _previousTranslateX !== object.state[CSS2DObjectStateIndices.TRANSLATE_X]
+      || _previousTranslateY !== object.state[CSS2DObjectStateIndices.TRANSLATE_Y]
+      || _previousVisible !== object.state[CSS2DObjectStateIndices.VISIBLE]
     );
+
+    if (object.isDirty) {
+      object.state[CSS2DObjectStateIndices.VERSION] += 1;
+    }
   }
 
   function _getDistanceToSquared(object1: Object3D, object2: Object3D): number {
@@ -120,6 +125,7 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
           props: {
             objectProps: object.props,
             rendererState: object.state,
+            version: object.state[CSS2DObjectStateIndices.VERSION],
           },
         });
         object.isDirty = false;
@@ -136,8 +142,8 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
   }
 
   function _sortObjectsByDistance(a: CSS2DObject, b: CSS2DObject) {
-    const distanceA = a.state.distanceToCameraSquared;
-    const distanceB = b.state.distanceToCameraSquared;
+    const distanceA = a.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED];
+    const distanceB = b.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED];
 
     return distanceA - distanceB;
   }
@@ -147,7 +153,7 @@ export function CSS2DRenderer(domMessagePort: MessagePort): ICSS2DRenderer {
     const zMax = sorted.length;
 
     for (i = 0; i < zMax; i++) {
-      sorted[i].state.zIndex = zMax - i;
+      sorted[i].state[CSS2DObjectStateIndices.Z_INDEX] = zMax - i;
     }
   }
 

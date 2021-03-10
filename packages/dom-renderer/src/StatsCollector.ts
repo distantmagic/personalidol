@@ -28,6 +28,7 @@ export function StatsCollector(userSettings: UserSettings, domMessagePort: Messa
   });
 
   let _domStatsReporterElementId: null | string;
+  let _domPropsVersion: number = 0;
 
   function registerMessagePort(messagePort: MessagePort) {
     messagePort.onmessage = _statsRouter;
@@ -61,6 +62,7 @@ export function StatsCollector(userSettings: UserSettings, domMessagePort: Messa
         props: {
           // Make a snapshot copy.
           statsReports: Object.values(_statsReports),
+          version: _domPropsVersion,
         },
       },
     });
