@@ -66,7 +66,7 @@ export function createScenes(
   webGLRenderer.shadowMap.autoUpdate = true;
 
   const effectComposer = new EffectComposer(webGLRenderer);
-  const css2DRenderer = CSS2DRenderer<DOMElementsLookup>(domMessagePort);
+  const css2DRenderer = CSS2DRenderer<DOMElementsLookup>(logger, domMessagePort);
 
   rendererDimensionsManager.state.renderers.add(css2DRenderer);
   rendererDimensionsManager.state.renderers.add(effectComposer);

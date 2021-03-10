@@ -4,10 +4,12 @@ import { Vector3 } from "three/src/math/Vector3";
 
 import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
 
+import { CSS2DObjectState } from "./CSS2DObjectState";
 import { CSS2DObjectStateIndices } from "./CSS2DObjectStateIndices.enum";
 import { isCSS2DObject } from "./isCSS2DObject";
 
 import type { Camera } from "three/src/cameras/Camera";
+import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { DOMElementsLookup } from "@personalidol/dom-renderer/src/DOMElementsLookup.type";
@@ -17,13 +19,14 @@ import type { CSS2DObject } from "./CSS2DObject.interface";
 import type { CSS2DRenderer as ICSS2DRenderer } from "./CSS2DRenderer.interface";
 import type { CSS2DRendererInfo } from "./CSS2DRendererInfo.type";
 
-const useSharedArrayBuffer: boolean = isSharedArrayBufferSupported();
-
+const _useSharedArrayBuffer: boolean = isSharedArrayBufferSupported();
 const _vec = new Vector3();
 const _vecTmpA = new Vector3();
 const _vecTmpB = new Vector3();
 
-export function CSS2DRenderer<L extends DOMElementsLookup>(domMessagePort: MessagePort): ICSS2DRenderer {
+let _sharedArrayBufferNotified: boolean = false;
+
+export function CSS2DRenderer<L extends DOMElementsLookup>(logger: Logger, domMessagePort: MessagePort): ICSS2DRenderer {
   let _height: number = 0;
   let _heightHalf: number = 0;
   let _width: number = 0;
@@ -31,16 +34,21 @@ export function CSS2DRenderer<L extends DOMElementsLookup>(domMessagePort: Messa
   let i: number = 0;
 
   let _cameraFar: number = 0;
+  let _compareStateSnapshot: Float32Array = CSS2DObjectState.createEmptyState(false);
   let _isObjectChanged: boolean = false;
-  let _previousDistanceToCameraSquared: number = 0;
-  let _previousIsRendered: number = 0;
-  let _previousTranslateX: number = 0;
-  let _previousTranslateY: number = 0;
-  let _previousVisible: number = 0;
 
   const _sentBuffers: WeakMap<CSS2DObject<L>, boolean> = new WeakMap();
   const _viewMatrix = new Matrix4();
   const _viewProjectionMatrix = new Matrix4();
+
+  if (!_sharedArrayBufferNotified) {
+    _sharedArrayBufferNotified = true;
+    if (_useSharedArrayBuffer) {
+      logger.debug("SUPPORTED(SharedArrayBuffer) // CSS2DRenderer uses shared array state for updates");
+    } else {
+      logger.debug("NO_SUPPORT(SharedArrayBuffer) // CSS2DRenderer uses message channel for updates");
+    }
+  }
 
   const renderer: ICSS2DRenderer = Object.freeze({
     info: <CSS2DRendererInfo>Object.seal({
@@ -66,7 +74,7 @@ export function CSS2DRenderer<L extends DOMElementsLookup>(domMessagePort: Messa
 
     object.isRendered = true;
 
-    if (!useSharedArrayBuffer) {
+    if (!_useSharedArrayBuffer) {
       message.props.rendererState = object.state;
 
       return message;
@@ -81,15 +89,22 @@ export function CSS2DRenderer<L extends DOMElementsLookup>(domMessagePort: Messa
     return message;
   }
 
+  function _isStateChanged(state: Float32Array): boolean {
+    for (let i = 0; i < state.length; i += 1) {
+      if (_compareStateSnapshot[i] !== state[i]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   function _renderObject(object: CSS2DObject<L>, scene: Scene, camera: Camera) {
     _vec.setFromMatrixPosition(object.matrixWorld);
     _vec.applyMatrix4(_viewProjectionMatrix);
 
-    _previousDistanceToCameraSquared = object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED];
-    _previousIsRendered = object.state[CSS2DObjectStateIndices.IS_RENDERED];
-    _previousTranslateX = object.state[CSS2DObjectStateIndices.TRANSLATE_X];
-    _previousTranslateY = object.state[CSS2DObjectStateIndices.TRANSLATE_Y];
-    _previousVisible = object.state[CSS2DObjectStateIndices.VISIBLE];
+    // Create a snapshot to compare later.
+    _compareStateSnapshot.set(object.state);
 
     object.state[CSS2DObjectStateIndices.IS_RENDERED] = 1;
     object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED] = _getDistanceToSquared(camera, object);
@@ -113,21 +128,20 @@ export function CSS2DRenderer<L extends DOMElementsLookup>(domMessagePort: Messa
       object.state[CSS2DObjectStateIndices.VISIBLE] = Number(object.visible && _vec.z >= -1 && _vec.z <= 1);
     }
 
-    _isObjectChanged =
-      (!object.state[CSS2DObjectStateIndices.VISIBLE] && !_previousVisible) ||
-      _previousDistanceToCameraSquared !== object.state[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED] ||
-      _previousIsRendered !== object.state[CSS2DObjectStateIndices.IS_RENDERED] ||
-      _previousTranslateX !== object.state[CSS2DObjectStateIndices.TRANSLATE_X] ||
-      _previousTranslateY !== object.state[CSS2DObjectStateIndices.TRANSLATE_Y] ||
-      _previousVisible !== object.state[CSS2DObjectStateIndices.VISIBLE];
+    _isObjectChanged = _isStateChanged(object.state);
 
-    if (useSharedArrayBuffer) {
+    if (_useSharedArrayBuffer) {
       // There is no need to send object state over and over when shared
       // buffers are used.
       object.isDirty = !_sentBuffers.has(object);
     } else {
-      // prettier-ignore
-      object.isDirty = _isObjectChanged;
+      if (!object.state[CSS2DObjectStateIndices.VISIBLE] && !_compareStateSnapshot[CSS2DObjectStateIndices.VISIBLE]) {
+        // Object is not visible and was not visible before, so it should not
+        // be rendered anyway.
+        object.isDirty = false;
+      } else {
+        object.isDirty = _isObjectChanged;
+      }
     }
 
     if (_isObjectChanged) {
