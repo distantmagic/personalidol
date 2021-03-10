@@ -60,12 +60,26 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   private _currentOpacity: number = 1;
   private _lastRenderedState: number = -1;
   private _lastRenderedProps: number = -1;
+  private _receivedSharedArrayBuffer: boolean = false;
   private _targetOpacity: number = 1;
 
   set objectProps(objectProps: LabelProps) {
     this._currentLabel = objectProps.label;
     this._currentObjectPropsVersion = objectProps.version;
     this.needsRender = this._lastRenderedProps < objectProps.version;
+  }
+
+  set rendererState(rendererState: Float32Array | SharedArrayBuffer) {
+    if (isSharedArrayBuffer(rendererState)) {
+      if (this._receivedSharedArrayBuffer) {
+        throw new Error("ObjectLabelDOMElementView already received shared array buffer from CSS2DRenderer.");
+      }
+
+      this._receivedSharedArrayBuffer = true;
+      this._rendererState = new Float32Array(rendererState);
+    } else {
+      this._rendererState = rendererState;
+    }
   }
 
   beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState) {
@@ -88,14 +102,6 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
     }
 
     return 0.3;
-  }
-
-  set rendererState(rendererState: Float32Array | SharedArrayBuffer) {
-    if (isSharedArrayBuffer(rendererState)) {
-      this._rendererState = new Float32Array(rendererState);
-    } else {
-      this._rendererState = rendererState;
-    }
   }
 
   render(delta: number) {
