@@ -72,8 +72,6 @@ export function CSS2DRenderer<L extends DOMElementsLookup>(logger: Logger, domMe
       },
     };
 
-    object.isRendered = true;
-
     if (!_useSharedArrayBuffer) {
       message.props.rendererState = object.state;
 
@@ -175,6 +173,8 @@ export function CSS2DRenderer<L extends DOMElementsLookup>(logger: Logger, domMe
       if (object.isDirty) {
         renderBatch.push(_createObjectRenderMessage(object));
         object.isDirty = false;
+        // Rendered in this case  means that object is pushed to DOM.
+        object.isRendered = true;
       }
     }
 

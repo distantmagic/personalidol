@@ -55,6 +55,8 @@ export function StatsCollector(userSettings: UserSettings, domMessagePort: Messa
       _domStatsReporterElementId = MathUtils.generateUUID();
     }
 
+    _domPropsVersion += 1;
+
     domMessagePort.postMessage({
       render: <MessageDOMUIRender<DOMElementsLookup>>{
         id: _domStatsReporterElementId,
