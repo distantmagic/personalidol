@@ -2,8 +2,7 @@ import { MouseIndices } from "./MouseIndices.enum";
 
 function createEmptyState(usesSharedBuffer: boolean): Int32Array {
   if (usesSharedBuffer) {
-    // Int32Array takes 4 bytes per value.
-    return new Int32Array(new SharedArrayBuffer(MouseIndices.__TOTAL * 4));
+    return new Int32Array(new SharedArrayBuffer(MouseIndices.__TOTAL * Int32Array.BYTES_PER_ELEMENT));
   }
 
   return new Int32Array(MouseIndices.__TOTAL);
