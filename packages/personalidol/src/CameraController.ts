@@ -157,9 +157,9 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
       _currentCamera.position.z = _cameraPosition.z + _cameraZoomAmount;
       _currentCamera.position.y = _cameraPosition.y + _cameraZoomAmount;
     } else {
-      (_currentCamera.position.x = damp(_currentCamera.position.x, _cameraPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta)),
-        (_currentCamera.position.z = damp(_currentCamera.position.z, _cameraPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta)),
-        (_currentCamera.position.y = damp(_currentCamera.position.y, _cameraPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta));
+      _currentCamera.position.x = damp(_currentCamera.position.x, _cameraPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta);
+      _currentCamera.position.z = damp(_currentCamera.position.z, _cameraPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta);
+      _currentCamera.position.y = damp(_currentCamera.position.y, _cameraPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta);
     }
 
     _currentCamera.lookAt(_currentCamera.position.x - _cameraZoomAmount, _currentCamera.position.y - _cameraZoomAmount, _currentCamera.position.z - _cameraZoomAmount);
