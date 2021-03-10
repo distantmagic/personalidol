@@ -188,7 +188,6 @@ export function MD2ModelView(
 
     const material = new MeshBasicMaterial({
       color: 0xcccccc,
-      flatShading: true,
       map: await _loadTexture(`${__ASSETS_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}?${__CACHE_BUST}`),
       morphTargets: true,
       // morphNormals: true,

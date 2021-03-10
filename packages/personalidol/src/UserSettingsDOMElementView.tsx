@@ -24,16 +24,6 @@ const _css = `
     box-sizing: border-box;
   }
 
-  .options__form {
-    align-items: center;
-    display: grid;
-    grid-row-gap: 3rem;
-  }
-
-  .option__warning {
-    color: yellow;
-  }
-
   dl {
     display: grid;
     grid-gap: 0.8rem;
@@ -67,6 +57,7 @@ const _css = `
   }
 
   h2 {
+    font-family: Mukta, sans-serif;
     font-size: 1.6rem;
     font-weight: bold;
     margin: 0;
@@ -88,14 +79,25 @@ const _css = `
     }
   }
 
+  .user-settings__form {
+    align-items: center;
+    display: grid;
+    font-family: Mukta, sans-serif;
+    grid-row-gap: 3rem;
+  }
+
+  .user-settings__warning {
+    color: yellow;
+  }
+
   @media (max-width: ${DOMBreakpoints.TabletMax}px) {
-    .options__form {
+    .user-settings__form {
       grid-template-columns: 1fr;
     }
   }
 
   @media (min-width: ${DOMBreakpoints.DesktopMin}px) {
-    .options__form {
+    .user-settings__form {
       grid-column-gap: 2rem;
       grid-template-columns: 1fr 1fr;
     }
@@ -282,7 +284,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
           <pi-button onClick={this.close}>{this.t("ui:user_settings_done").toLocaleLowerCase()}</pi-button>
         </h1>
         <h2>{this.t("ui:user_settings_graphics")}</h2>
-        <form class="options__form">
+        <form class="user-settings__form">
           <dl>
             <dt>{this.t("ui:user_settings_rendering_resolution")}</dt>
             <dd>{this.t("ui:user_settings_rendering_resolution_description")}</dd>
@@ -329,7 +331,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
           />
         </form>
         <h2>{this.t("ui:user_settings_camera")}</h2>
-        <form class="options__form">
+        <form class="user-settings__form">
           <dl>
             <dt>{this.t("ui:user_settings_camera_type")}</dt>
             <dd>{this.t("ui:user_settings_camera_type_description")}</dd>
@@ -350,13 +352,13 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
         {isOffscreenCanvasSupported && (
           <Fragment>
             <h2>{this.t("ui:user_settings_experimental")}</h2>
-            <form class="options__form">
+            <form class="user-settings__form">
               <dl>
                 <dt>{this.t("ui:user_settings_use_offscreen_canvas")}</dt>
                 <dd>{this.t("ui:user_settings_use_offscreen_canvas_description")}</dd>
                 {this._isUseOffscreenCanvasChanged && (
                   <Fragment>
-                    <dd class="option__warning">{this.t("ui:user_settings_required_reload_to_take_effect")}</dd>
+                    <dd class="user-settings__warning">{this.t("ui:user_settings_required_reload_to_take_effect")}</dd>
                     <pi-reload-button />
                   </Fragment>
                 )}
@@ -373,7 +375,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
           </Fragment>
         )}
         <h2>{this.t("ui:user_settings_utilities")}</h2>
-        <form class="options__form">
+        <form class="user-settings__form">
           <dl>
             <dt>{this.t("ui:user_settings_show_rendering_stats")}</dt>
             <dd>{this.t("ui:user_settings_show_rendering_stats_description")}</dd>

@@ -15,7 +15,7 @@ import type { UserSettings } from "@personalidol/framework/src/UserSettings.type
 
 import type { DOMElementView as IDOMElementView } from "./DOMElementView.interface";
 
-export abstract class DOMElementView<U extends UserSettings> extends HTMLElement implements IDOMElementView<U> {
+export class DOMElementView<U extends UserSettings> extends HTMLElement implements IDOMElementView<U> {
   public css: string = "";
   public lastRenderedLanguage: string = "";
   public needsRender: boolean = true;

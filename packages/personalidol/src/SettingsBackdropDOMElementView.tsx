@@ -29,7 +29,6 @@ const _css = `
   .overlay {
     background-color: rgba(0, 0, 0, 0.6);
     bottom: 0;
-    font-family: Mukta, sans-serif;
     left: 0;
     line-height: 1.7;
     position: absolute;
@@ -50,7 +49,7 @@ const _css = `
     animation-iteration-count: infinite;
     animation-name: spin;
     animation-timing-function: ease-in-out;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.8);
     border: 1px solid white;
     content: "";
     height: 3rem;
@@ -75,7 +74,7 @@ const _css = `
   @media (max-width: ${DOMBreakpoints.MobileMax}px) {
     .overlay {
       align-items: stretch;
-      background-color: black;
+      background-color: rgba(0, 0, 0, 0.8);
       justify-content: stretch;
       display: grid;
       overflow-y: auto;
@@ -98,7 +97,7 @@ const _css = `
     }
 
     .overlay__content {
-      background-color: black;
+      background-color: rgba(0, 0, 0, 0.8);
       bottom: 0;
       left: calc(400px + 3.2rem);
       overflow-y: auto;
