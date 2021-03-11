@@ -48,7 +48,7 @@ const _atlasMessageRouter = createRouter({
   textureAtlas: handleRPCResponse(_rpcLookupTable),
 });
 
-function _estimateItemsToLoad(entitySketches: ReadonlyArray<EntitySketch>, textureUrls: ReadonlyArray<string>): number {
+function _estimateResourcesToLoad(entitySketches: ReadonlyArray<EntitySketch>, textureUrls: ReadonlyArray<string>): number {
   const resources: {
     [key: string]: boolean;
   } = {};
@@ -136,7 +136,7 @@ async function _onMapContentLoaded(
   const entitySketches: Array<EntitySketch> = Array.from(unmarshalMap(filename, content, _resolveTextureUrl));
 
   progressMessagePort.postMessage({
-    expect: _estimateItemsToLoad(entitySketches, textureUrls),
+    expect: _estimateResourcesToLoad(entitySketches, textureUrls),
   });
 
   const response: {

@@ -7,6 +7,7 @@ import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
+import type { EntityScriptedZone } from "./EntityScriptedZone.type";
 import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
@@ -22,6 +23,7 @@ export type EntityLookup = {
   model_md2: EntityMD2Model;
   player: EntityPlayer;
   scripted_block: EntityScriptedBlock;
+  scripted_zone: EntityScriptedZone;
   sounds: EntitySounds;
   spark_particles: EntitySparkParticles;
   target: EntityTarget;

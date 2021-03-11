@@ -56,6 +56,10 @@
     target(target_destination) : "Target"
 ]
 
+@baseclass = Zone
+[
+]
+
 // ----------------------------------------------------------------------------
 // ABSTRACT ENTITIES
 // ----------------------------------------------------------------------------
@@ -100,7 +104,8 @@
 @PointClass base(PlayerModel) = player : "Player entry point" []
 
 // ----------------------------------------------------------------------------
-// SCRIPTED BRUSHES
+// CUSTOM BRUSHES
 // ----------------------------------------------------------------------------
 
 @SolidClass base(Scripted) = scripted_brush : "Scripted brush" []
+@SolidClass base(Zone) = scripted_zone : "Scripted zone" []

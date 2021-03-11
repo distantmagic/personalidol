@@ -66,6 +66,7 @@ function _onProgress(): void {
 
   if (_progressManager.state.errors.length > 0) {
     _onProgressError();
+    return;
   }
 
   if (!_domLoadingScreenElementId) {
