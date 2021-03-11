@@ -3,10 +3,10 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { Progress } from "@personalidol/loading-manager/src/Progress";
+import { Progress } from "@personalidol/framework/src/Progress";
 
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
-import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
+import type { Progress as IProgress } from "@personalidol/framework/src/Progress.interface";
 
 import type { FontPreloadService as IFontPreloadService } from "./FontPreloadService.interface";
 import type { FontPreloadParameters } from "./FontPreloadParameters.type";

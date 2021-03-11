@@ -1,13 +1,12 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { name } from "@personalidol/framework/src/name";
-
-import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
+import { name } from "./name";
 
 import type { MessageProgressChange } from "./MessageProgressChange.type";
 import type { MessageProgressDone } from "./MessageProgressDone.type";
 import type { MessageProgressError } from "./MessageProgressError.type";
 import type { MessageProgressStart } from "./MessageProgressStart.type";
+import type { Nameable } from "./Nameable.interface";
 import type { Progress as IProgress } from "./Progress.interface";
 import type { ProgressState } from "./ProgressState.type";
 

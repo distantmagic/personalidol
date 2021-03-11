@@ -1,5 +1,4 @@
-import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
-
+import type { Nameable } from "./Nameable.interface";
 import type { ProgressCallback } from "./ProgressCallback.type";
 import type { ProgressState } from "./ProgressState.type";
 

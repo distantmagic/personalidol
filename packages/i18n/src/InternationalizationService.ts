@@ -1,13 +1,13 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { Progress } from "@personalidol/loading-manager/src/Progress";
+import { Progress } from "@personalidol/framework/src/Progress";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 
 import type { i18n } from "i18next";
 
 import type { PreloadableState } from "@personalidol/framework/src/PreloadableState.type";
-import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
+import type { Progress as IProgress } from "@personalidol/framework/src/Progress.interface";
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 
 import type { InternationalizationService as IInternationalizationService } from "./InternationalizationService.interface";

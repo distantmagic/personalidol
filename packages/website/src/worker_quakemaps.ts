@@ -8,9 +8,9 @@ import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter
 import { buildEntities } from "@personalidol/personalidol/src/buildEntities";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
-import { fetchProgress } from "@personalidol/loading-manager/src/fetchProgress";
+import { fetchProgress } from "@personalidol/framework/src/fetchProgress";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
-import { Progress } from "@personalidol/loading-manager/src/Progress";
+import { Progress } from "@personalidol/framework/src/Progress";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
 
@@ -21,7 +21,7 @@ import type { AtlasResponse } from "@personalidol/texture-loader/src/AtlasRespon
 import type { AtlasTextureDimension } from "@personalidol/texture-loader/src/AtlasTextureDimension.type";
 import type { EntitySketch } from "@personalidol/quakemaps/src/EntitySketch.type";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
-import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
+import type { Progress as IProgress } from "@personalidol/framework/src/Progress.interface";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";

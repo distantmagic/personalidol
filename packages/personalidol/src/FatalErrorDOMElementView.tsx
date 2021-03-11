@@ -2,7 +2,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
-import type { MessageProgressError } from "@personalidol/loading-manager/src/MessageProgressError.type";
+import type { MessageProgressError } from "@personalidol/framework/src/MessageProgressError.type";
 
 import type { UserSettings } from "./UserSettings.type";
 

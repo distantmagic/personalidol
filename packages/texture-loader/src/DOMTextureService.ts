@@ -5,13 +5,13 @@ import { canvas2DDrawImage } from "@personalidol/dom-renderer/src/canvas2DDrawIm
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { preloadImage } from "@personalidol/dom-renderer/src/preloadImage";
-import { Progress } from "@personalidol/loading-manager/src/Progress";
+import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import { keyFromTextureRequest } from "./keyFromTextureRequest";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
-import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
+import type { Progress as IProgress } from "@personalidol/framework/src/Progress.interface";
 import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
 

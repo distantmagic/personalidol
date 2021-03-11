@@ -6,7 +6,6 @@
   },
   "dependencies": {
     "@personalidol/framework": "^0.0.4",
-    "@personalidol/loading-manager": "^0.0.4",
     "i18next": "^19.9.2",
     "loglevel": "^1.7.1",
     "three": "^0.126.1"

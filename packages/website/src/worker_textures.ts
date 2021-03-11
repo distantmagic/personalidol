@@ -6,13 +6,13 @@ import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { fetchProgress } from "@personalidol/loading-manager/src/fetchProgress";
+import { fetchProgress } from "@personalidol/framework/src/fetchProgress";
 import { keyFromTextureRequest } from "@personalidol/texture-loader/src/keyFromTextureRequest";
-import { Progress } from "@personalidol/loading-manager/src/Progress";
+import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
-import type { Progress as IProgress } from "@personalidol/loading-manager/src/Progress.interface";
+import type { Progress as IProgress } from "@personalidol/framework/src/Progress.interface";
 import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
 import type { TextureRequest } from "@personalidol/texture-loader/src/TextureRequest.type";

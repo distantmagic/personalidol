@@ -7,9 +7,9 @@ import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { fetchProgress } from "@personalidol/loading-manager/src/fetchProgress";
+import { fetchProgress } from "@personalidol/framework/src/fetchProgress";
 import { MD2Loader } from "@personalidol/three-modules/src/loaders/MD2Loader";
-import { Progress } from "@personalidol/loading-manager/src/Progress";
+import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import type { MD2GeometryParts } from "@personalidol/three-modules/src/loaders/MD2GeometryParts.type";

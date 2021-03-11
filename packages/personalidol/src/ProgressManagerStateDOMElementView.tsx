@@ -2,7 +2,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
-import type { ProgressManagerState } from "@personalidol/loading-manager/src/ProgressManagerState.type";
+import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
 
 import type { UserSettings } from "./UserSettings.type";
 

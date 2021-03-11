@@ -4,15 +4,15 @@ import Loglevel from "loglevel";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { ProgressManager } from "@personalidol/loading-manager/src/ProgressManager";
+import { ProgressManager } from "@personalidol/framework/src/ProgressManager";
 
-import type { MessageProgressChange } from "@personalidol/loading-manager/src/MessageProgressChange.type";
-import type { MessageProgressDone } from "@personalidol/loading-manager/src/MessageProgressDone.type";
-import type { MessageProgressError } from "@personalidol/loading-manager/src/MessageProgressError.type";
-import type { MessageProgressStart } from "@personalidol/loading-manager/src/MessageProgressStart.type";
+import type { MessageProgressChange } from "@personalidol/framework/src/MessageProgressChange.type";
+import type { MessageProgressDone } from "@personalidol/framework/src/MessageProgressDone.type";
+import type { MessageProgressError } from "@personalidol/framework/src/MessageProgressError.type";
+import type { MessageProgressStart } from "@personalidol/framework/src/MessageProgressStart.type";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
-import type { ProgressManager as IProgressManager } from "@personalidol/loading-manager/src/ProgressManager.interface";
-import type { ProgressManagerState } from "@personalidol/loading-manager/src/ProgressManagerState.type";
+import type { ProgressManager as IProgressManager } from "@personalidol/framework/src/ProgressManager.interface";
+import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
 
 declare var self: DedicatedWorkerGlobalScope;
 

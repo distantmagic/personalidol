@@ -22,8 +22,8 @@ import type { DisposableCallback } from "@personalidol/framework/src/DisposableC
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
-import type { MessageProgressError } from "@personalidol/loading-manager/src/MessageProgressError.type";
-import type { ProgressManagerState } from "@personalidol/loading-manager/src/ProgressManagerState.type";
+import type { MessageProgressError } from "@personalidol/framework/src/MessageProgressError.type";
+import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";

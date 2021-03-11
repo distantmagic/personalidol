@@ -1,4 +1,4 @@
-import type { ProgressManagerState } from "@personalidol/loading-manager/src/ProgressManagerState.type";
+import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
 
 export type ProgressManagerStateDOMElementProps = {
   progressManagerState: ProgressManagerState;

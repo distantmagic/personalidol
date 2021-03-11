@@ -10,7 +10,7 @@ import { createReusedResponsesUsage } from "@personalidol/framework/src/createRe
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { isMesh } from "@personalidol/framework/src/isMesh";
-import { Progress } from "@personalidol/loading-manager/src/Progress";
+import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import type { BufferAttribute } from "three/src/core/BufferAttribute";
