@@ -46,8 +46,6 @@ function _md2LoadWithProgress(url: string): Promise<MD2LoaderParsedGeometry> {
 
   const progress = Progress(_progressMessagePort, "model", url);
 
-  progress.start();
-
   return progress.wait(
     _md2Loader.loadAsync(url, function (evt: ProgressEvent) {
       progress.progress(evt.loaded, evt.total);
@@ -95,8 +93,6 @@ function _fetchModelParts(partsUrl: string): Promise<MD2GeometryParts> {
   }
 
   const progress = Progress(_progressMessagePort, "model_parts", partsUrl);
-
-  progress.start();
 
   return progress.wait(fetch(partsUrl).then(fetchProgress(progress.progress)).then(_responseToModelParts));
 }

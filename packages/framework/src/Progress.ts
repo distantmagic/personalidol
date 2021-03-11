@@ -61,7 +61,7 @@ export function Progress(progressMessagePort: MessagePort, resourceType: string,
     }
 
     if (state.isFailed || state.isFinished) {
-      throw new Error(`Progress that is failed or finished cannot be changed: "${name(_nameable)}"`);
+      throw new Error(`Progress that is failed or finished cannot be moved forward: "${name(_nameable)}" "${loaded}/${total}"`);
     }
 
     progressMessagePort.postMessage({
@@ -96,6 +96,8 @@ export function Progress(progressMessagePort: MessagePort, resourceType: string,
   }
 
   function wait<T>(promise: Promise<T>): Promise<T> {
+    start();
+
     function _onDone(ret: T): T {
       done();
 

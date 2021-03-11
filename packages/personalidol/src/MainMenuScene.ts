@@ -153,6 +153,10 @@ export function MainMenuScene(
   function mount(): void {
     state.isMounted = true;
 
+    progressMessagePort.postMessage({
+      reset: true,
+    });
+
     const renderPass = new RenderPass(_scene, _camera);
 
     effectComposer.addPass(renderPass);
@@ -181,8 +185,7 @@ export function MainMenuScene(
 
   function preload(): void {
     if (_fontsPreloaded) {
-      state.isPreloading = false;
-      state.isPreloaded = true;
+      _onFontsPreloaded();
 
       return;
     }
@@ -190,10 +193,6 @@ export function MainMenuScene(
     state.isPreloading = true;
 
     fontPreloadMessagePort.onmessage = _fontMessageRouter;
-
-    progressMessagePort.postMessage({
-      reset: true,
-    });
 
     Promise.all(_fonts.map(_preloadFont)).then(_onFontsPreloaded);
   }

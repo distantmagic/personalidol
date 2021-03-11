@@ -3,10 +3,9 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { Progress } from "@personalidol/framework/src/Progress";
+import { prefetch } from "@personalidol/framework/src/prefetch";
 
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
-import type { Progress as IProgress } from "@personalidol/framework/src/Progress.interface";
 
 import type { FontPreloadService as IFontPreloadService } from "./FontPreloadService.interface";
 import type { FontPreloadParameters } from "./FontPreloadParameters.type";
@@ -27,12 +26,11 @@ export function FontPreloadService(fontPreloadMessagePort: MessagePort, progress
   }
 
   async function _preloadFont(parameters: FontPreloadParameters & RPCMessage) {
-    const progress: IProgress = Progress(progressMessagePort, "font", parameters.family);
+    await prefetch(progressMessagePort, "font", parameters.source);
+
     const fontFace = new FontFace(parameters.family, `url(${parameters.source})`, parameters.descriptors);
 
-    progress.start();
-
-    await progress.wait(fontFace.load());
+    await fontFace.load();
 
     document.fonts.add(fontFace);
 

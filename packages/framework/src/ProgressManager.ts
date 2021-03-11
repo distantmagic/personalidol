@@ -44,7 +44,7 @@ export function ProgressManager(): IProgressManager {
   }
 
   function expect(expect: number): void {
-    state.expect = expect;
+    state.expect = state.messages.length + expect;
     _updateState();
   }
 

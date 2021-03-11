@@ -23,6 +23,7 @@ import { MouseState } from "@personalidol/framework/src/MouseState";
 import { MouseWheelObserver } from "@personalidol/framework/src/MouseWheelObserver";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
+import { prefetch } from "@personalidol/framework/src/prefetch";
 import { preload } from "@personalidol/framework/src/preload";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
@@ -35,7 +36,6 @@ import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { WindowFocusObserver } from "@personalidol/framework/src/WindowFocusObserver";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
-// This is a workaround for i18n typing strongly tied to the module.
 // It resolves typing issues, but requires to really keep exactly the same
 // version across modules (which is ok).
 import type { i18n as DOMi18n } from "@personalidol/dom-renderer/node_modules/i18next/index";
@@ -49,8 +49,10 @@ import { createRenderingService } from "./createRenderingService";
 import { createTexturesService } from "./createTexturesService";
 
 const THREAD_DEBUG_NAME: string = "main_thread";
-const totalLoadingSteps: number = 12;
-let currentLoadingStep: number = 1;
+
+// Number of items expected to be loaded before the game engine is ready.
+// 6 services + 3 fonts
+const PROGRESS_EXPECT = 6 + 3;
 
 const canvasRoot = getHTMLElementById(window.document, "canvas-root");
 const uiRoot = getHTMLElementById(window.document, "ui-root");
@@ -71,16 +73,6 @@ async function bootstrap() {
 
   logger.setLevel(__LOG_LEVEL);
   logger.debug(`BUILD_ID("${__BUILD_ID}")`);
-
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "service_worker",
-      },
-    })
-  );
 
   // Services that need to stay in the main browser thread, because they need
   // access to the DOM API.
@@ -151,59 +143,6 @@ async function bootstrap() {
 
   await ServiceWorkerManager(logger, `${__SERVICE_WORKER_BASE_PATH}/service_worker.js?${__CACHE_BUST}`).install();
 
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "progress_service",
-      },
-    })
-  );
-
-  // Progress worker is used to gather information about assets and other
-  // resources currently being loaded. It passess the summary information back,
-  // so it's possible to render loading screen or do something else with that
-  // information.
-
-  const progressMessageChannel = createMultiThreadMessageChannel();
-  const progressWorker = new Worker(`${__STATIC_BASE_PATH}${workers.progress.url}?${__CACHE_BUST}`, {
-    credentials: "same-origin",
-    name: workers.progress.name,
-    type: "module",
-  });
-
-  const progressWorkerServiceClient = WorkerServiceClient(progressWorker, workers.progress.name);
-
-  await progressWorkerServiceClient.ready();
-
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "translations",
-      },
-    })
-  );
-
-  mainLoop.updatables.add(progressWorkerServiceClient);
-  serviceManager.services.add(progressWorkerServiceClient);
-
-  function addProgressMessagePort(messagePort: MessagePort, broadcastProgress: boolean) {
-    progressWorker.postMessage(
-      {
-        progressMessagePort: {
-          broadcastProgress: broadcastProgress,
-          messagePort: messagePort,
-        },
-      },
-      [messagePort]
-    );
-  }
-
-  addProgressMessagePort(progressMessageChannel.port1, true);
-
   // Preload translations and the internationalization service.
 
   const i18next = createI18next(logger);
@@ -211,7 +150,6 @@ async function bootstrap() {
   const internationalizationService = InternationalizationService(i18next as Frameworki18n, internationalizationToProgressMessageChannel.port2);
   const internationalizationMessageChannel = createMultiThreadMessageChannel();
 
-  addProgressMessagePort(internationalizationToProgressMessageChannel.port1, false);
   internationalizationService.registerMessagePort(internationalizationMessageChannel.port1);
 
   await preload(logger, internationalizationService);
@@ -225,16 +163,6 @@ async function bootstrap() {
   await preload(logger, languageUserSettingsManager);
 
   mainLoop.updatables.add(languageUserSettingsManager);
-
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "dom_controller",
-      },
-    })
-  );
 
   // DOMUiController handles DOM rendering using reconciliated routes.
 
@@ -258,16 +186,60 @@ async function bootstrap() {
 
   serviceManager.services.add(domUIController);
 
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        isDOMControllerReady: true,
-        step: currentLoadingStep++,
-        type: "textures_service",
-        totalSteps: totalLoadingSteps,
-      },
-    })
+  // Progress worker is used to gather information about assets and other
+  // resources currently being loaded. It passess the summary information back,
+  // so it's possible to render loading screen or do something else with that
+  // information.
+
+  const progressMessageChannel = createMultiThreadMessageChannel();
+  const progressToDOMRendererMessageChannel = createMultiThreadMessageChannel();
+  const progressWorker = new Worker(`${__STATIC_BASE_PATH}${workers.progress.url}?${__CACHE_BUST}`, {
+    credentials: "same-origin",
+    name: workers.progress.name,
+    type: "module",
+  });
+
+  const progressWorkerServiceClient = WorkerServiceClient(progressWorker, workers.progress.name);
+
+  progressWorker.postMessage(
+    {
+      domMessagePort: progressToDOMRendererMessageChannel.port2,
+    },
+    [progressToDOMRendererMessageChannel.port2]
   );
+
+  await progressWorkerServiceClient.ready();
+
+  domUIController.registerMessagePort(progressToDOMRendererMessageChannel.port1);
+
+  mainLoop.updatables.add(progressWorkerServiceClient);
+  serviceManager.services.add(progressWorkerServiceClient);
+
+  function addProgressMessagePort(messagePort: MessagePort, broadcastProgress: boolean) {
+    progressWorker.postMessage(
+      {
+        progressMessagePort: {
+          broadcastProgress: broadcastProgress,
+          messagePort: messagePort,
+        },
+      },
+      [messagePort]
+    );
+  }
+
+  addProgressMessagePort(progressMessageChannel.port1, true);
+  addProgressMessagePort(internationalizationToProgressMessageChannel.port1, false);
+
+  // Notify about the loading progress of subsequent workers and other engine
+  // components.
+
+  const websiteToProgressMessageChannel = createMultiThreadMessageChannel();
+
+  addProgressMessagePort(websiteToProgressMessageChannel.port1, false);
+
+  websiteToProgressMessageChannel.port2.postMessage({
+    expect: PROGRESS_EXPECT,
+  });
 
   // Stats collector reports debug stats like FPS, memory usage, etc.
 
@@ -307,19 +279,9 @@ async function bootstrap() {
 
   addProgressMessagePort(texturesToProgressMessageChannel.port1, false);
 
-  const texturesService = await createTexturesService(logger, mainLoop, serviceManager, texturesToProgressMessageChannel.port2);
+  const texturesService = await createTexturesService(logger, mainLoop, serviceManager, texturesToProgressMessageChannel.port2, websiteToProgressMessageChannel.port2);
 
   texturesService.registerMessagePort(texturesMessageChannel.port1);
-
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "atlas_service",
-      },
-    })
-  );
 
   // Atlas canvas is used to speed up texture atlas creation.
 
@@ -338,20 +300,11 @@ async function bootstrap() {
     serviceManager,
     atlasToProgressMessageChannel.port2,
     atlasToStatsMessageChannel.port2,
-    atlasToTextureMessageChannel.port2
+    atlasToTextureMessageChannel.port2,
+    websiteToProgressMessageChannel.port2
   );
 
   atlasService.registerMessagePort(atlasMessageChannel.port1);
-
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "maps_service",
-      },
-    })
-  );
 
   // Workers can share a message channel if necessary. If there is no offscreen
   // worker then the message channel can be used in the main thread. It is an
@@ -362,7 +315,11 @@ async function bootstrap() {
 
   addProgressMessagePort(quakeMapsToProgressMessageChannel.port1, false);
 
-  const quakeMapsWorker = new Worker(`${__STATIC_BASE_PATH}${workers.quakemaps.url}?${__CACHE_BUST}`, {
+  const quakeMapsWorkerURL = `${__STATIC_BASE_PATH}${workers.quakemaps.url}?${__CACHE_BUST}`;
+
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", quakeMapsWorkerURL);
+
+  const quakeMapsWorker = new Worker(quakeMapsWorkerURL, {
     credentials: "same-origin",
     name: workers.quakemaps.name,
     type: "module",
@@ -370,16 +327,6 @@ async function bootstrap() {
 
   const quakeMapsWorkerServiceClient = WorkerServiceClient(quakeMapsWorker, workers.quakemaps.name);
   await quakeMapsWorkerServiceClient.ready();
-
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "gltf_service",
-      },
-    })
-  );
 
   quakeMapsWorker.postMessage(
     {
@@ -397,7 +344,11 @@ async function bootstrap() {
 
   addProgressMessagePort(gltfToProgressMessageChannel.port1, false);
 
-  const gltfWorker = new Worker(`${__STATIC_BASE_PATH}${workers.gltf.url}?${__CACHE_BUST}`, {
+  const gltfWorkerURL = `${__STATIC_BASE_PATH}${workers.gltf.url}?${__CACHE_BUST}`;
+
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", gltfWorkerURL);
+
+  const gltfWorker = new Worker(gltfWorkerURL, {
     credentials: "same-origin",
     name: workers.gltf.name,
     type: "module",
@@ -414,16 +365,6 @@ async function bootstrap() {
     [gltfMessageChannel.port1, gltfToProgressMessageChannel.port2]
   );
 
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "md2_service",
-      },
-    })
-  );
-
   // MD2 worker offloads model loading from the thread whether it's the main
   // browser thread or the offscreen canvas thread. Loading MD2 models cause
   // rendering to stutter.
@@ -433,7 +374,11 @@ async function bootstrap() {
 
   addProgressMessagePort(md2ToProgressMessageChannel.port1, false);
 
-  const md2Worker = new Worker(`${__STATIC_BASE_PATH}${workers.md2.url}?${__CACHE_BUST}`, {
+  const md2WorkerURL = `${__STATIC_BASE_PATH}${workers.md2.url}?${__CACHE_BUST}`;
+
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", md2WorkerURL);
+
+  const md2Worker = new Worker(md2WorkerURL, {
     credentials: "same-origin",
     name: workers.md2.name,
     type: "module",
@@ -448,16 +393,6 @@ async function bootstrap() {
       progressMessagePort: md2ToProgressMessageChannel.port2,
     },
     [md2MessageChannel.port1, md2ToProgressMessageChannel.port2]
-  );
-
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "rendering_service",
-      },
-    })
   );
 
   // If browser supports the offscreen canvas, then we can offload everything
@@ -480,17 +415,8 @@ async function bootstrap() {
     statsReporter,
     THREAD_DEBUG_NAME,
     touchObserver.state,
-    userSettings
-  );
-
-  uiRoot.dispatchEvent(
-    new CustomEvent("loading", {
-      detail: {
-        step: currentLoadingStep++,
-        totalSteps: totalLoadingSteps,
-        type: "scenes",
-      },
-    })
+    userSettings,
+    websiteToProgressMessageChannel.port2
   );
 
   await createScenes(
@@ -508,13 +434,5 @@ async function bootstrap() {
 }
 
 (async function () {
-  try {
-    await bootstrap();
-  } catch (err) {
-    uiRoot.dispatchEvent(
-      new CustomEvent("error", {
-        detail: err,
-      })
-    );
-  }
+  await bootstrap();
 })();

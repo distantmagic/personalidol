@@ -15,39 +15,6 @@ loading: ładuję
 
 reload_button_reload_now: Przeładuj grę
 
-resource_type_accusative_atlas_count_0: atlas
-resource_type_accusative_atlas_count_1: "{{count}} atlasy"
-resource_type_accusative_atlas_count_2: "{{count}} atlasów"
-resource_type_accusative_atlas_service_count: Atlas Service
-resource_type_accusative_dom_controller_count: DOMController
-resource_type_accusative_font_count_0: czczionkę
-resource_type_accusative_font_count_1: "{{count}} czczionki"
-resource_type_accusative_font_count_2: "{{count}} czczionek"
-resource_type_accusative_gltf_service_count: GLTF Service
-resource_type_accusative_map_count_0: mapę
-resource_type_accusative_map_count_1: "{{count}} mapy"
-resource_type_accusative_map_count_2: "{{count}} map"
-resource_type_accusative_maps_service_count: Maps Service
-resource_type_accusative_md2_service_count: MD2 Service
-resource_type_accusative_model_count_0: model
-resource_type_accusative_model_count_1: "{{count}} modele"
-resource_type_accusative_model_count_2: "{{count}} modeli"
-resource_type_accusative_model_parts_count_0: metadane modelu
-resource_type_accusative_model_parts_count_1: "{{count}} metadane modeli"
-resource_type_accusative_model_parts_count_2: "{{count}} metadane modeli"
-resource_type_accusative_progress_service_count: Progress Service
-resource_type_accusative_rendering_service_count: Rendering Service
-resource_type_accusative_scenes_count: Scenes
-resource_type_accusative_service_worker_count: Service Worker
-resource_type_accusative_texture_count_0: teksturę
-resource_type_accusative_texture_count_1: "{{count}} tekstury"
-resource_type_accusative_texture_count_2: "{{count}} tekstur"
-resource_type_accusative_textures_service_count: Textures Service
-resource_type_accusative_translation_count_0: tłumaczenie
-resource_type_accusative_translation_count_1: "{{count}} tłumaczenia"
-resource_type_accusative_translation_count_2: "{{count}} tłumaczeń"
-resource_type_accusative_translations_count: Translations
-
 trigger_menu: Menu
 
 user_settings_camera: Kamera

@@ -13,7 +13,7 @@ CACHE_BUST := $(shell BUILD_ID=$(BUILD_ID) sh ./scripts/helper_cache_bust.sh)
 
 .PHONY: public.watch
 public.watch: node_modules
-	NODE_ENV=development ../../scripts/watch_trigger.sh $(MAKE) "$${PWD}/../*/src" "release" true
+	NODE_ENV=development ../../scripts/watch_trigger.sh $(MAKE) "$${PWD}/../*/src $${PWD}/public/*.mustache" "release" true
 
 public/index.html: public/index.mustache $(SOURCES_TS)
 	CACHE_BUST=$(CACHE_BUST) node ./scripts/build_mustache.js

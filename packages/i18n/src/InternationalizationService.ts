@@ -30,8 +30,6 @@ export function InternationalizationService(i18next: i18n, progressMessagePort: 
 
       const progress: IProgress = Progress(progressMessagePort, "translation", namespaces.join(", "));
 
-      progress.start();
-
       // prettier-ignore
       await progress.wait(i18next.loadNamespaces(namespaces));
 

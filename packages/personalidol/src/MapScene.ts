@@ -226,6 +226,10 @@ export function MapScene(
 
     fMount(logger, _cameraController);
 
+    progressMessagePort.postMessage({
+      reset: true,
+    });
+
     effectComposer.addPass(_renderPass);
 
     _unmountables.add(unmountPass(effectComposer, _renderPass));
@@ -382,6 +386,7 @@ export function MapScene(
     id: MathUtils.generateUUID(),
     isMapScene: true,
     isScene: true,
+    isViewBaggableScene: true,
     name: `Map("${mapFilename}")`,
     state: state,
 

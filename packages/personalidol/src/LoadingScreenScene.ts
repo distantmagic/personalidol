@@ -20,8 +20,6 @@ import { updatePerspectiveCameraAspect } from "@personalidol/three-renderer/src/
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
-import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
-import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MessageProgressError } from "@personalidol/framework/src/MessageProgressError.type";
 import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
@@ -29,7 +27,6 @@ import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
-import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { UserSettings } from "./UserSettings.type";
 
 export function LoadingScreenScene(
@@ -47,11 +44,6 @@ export function LoadingScreenScene(
     isPreloading: false,
     needsUpdates: true,
   });
-
-  let _domFatalErrorElementId: null | string = null;
-  let _domLoadingScreenElementId: null | string = null;
-  let _errorPropsVersion: number = 0;
-  let _progressPropsVersion: number = 0;
 
   const _ambientLight = new AmbientLight(0xffffff, 0.1);
   const _camera = new PerspectiveCamera();
@@ -86,88 +78,28 @@ export function LoadingScreenScene(
   _disposables.add(disposableGeneric(_boxGeometry));
   _disposables.add(disposableMaterial(_boxMaterial));
 
+  let _isProgressErrorHandled: boolean = false;
+
   const _progressRouter = createRouter({
     progress(progressState: ProgressManagerState): void {
-      if (_domFatalErrorElementId) {
-        // There is a fatal error going on.
+      if (progressState.errors.length < 1 || _isProgressErrorHandled) {
         return;
       }
 
-      if (progressState.errors.length > 0) {
-        _onProgressError(progressState.errors);
-        return;
-      }
-
-      if (!_domLoadingScreenElementId) {
-        _domLoadingScreenElementId = MathUtils.generateUUID();
-      }
-
-      _progressPropsVersion += 1;
-
-      domMessagePort.postMessage({
-        render: <MessageDOMUIRender<DOMElementsLookup>>{
-          id: _domLoadingScreenElementId,
-          element: "pi-progress-manager-state",
-          props: {
-            progressManagerState: progressState,
-            version: _progressPropsVersion,
-          },
-        },
-      });
+      _onProgressError(progressState.errors);
     },
   });
 
   function _onProgressError(errors: ReadonlyArray<MessageProgressError>): void {
-    _boxMaterial.color = new Color(0xff0000);
+    _isProgressErrorHandled = true;
 
     const glitchPass = new GlitchPass();
+
+    _boxMaterial.color = new Color(0xff0000);
 
     effectComposer.addPass(glitchPass);
     _unmountables.add(unmountPass(effectComposer, glitchPass));
     _disposables.add(disposableGeneric(glitchPass));
-
-    if (!_domFatalErrorElementId) {
-      _domFatalErrorElementId = MathUtils.generateUUID();
-    }
-
-    _unmountLoadingScreen();
-
-    _errorPropsVersion += 1;
-
-    domMessagePort.postMessage({
-      render: <MessageDOMUIRender<DOMElementsLookup>>{
-        id: _domFatalErrorElementId,
-        element: "pi-fatal-error",
-        props: {
-          errors: errors,
-          version: _errorPropsVersion,
-        },
-      },
-    });
-  }
-
-  function _unmountFatalErrorScreen() {
-    if (!_domFatalErrorElementId) {
-      return;
-    }
-
-    domMessagePort.postMessage({
-      dispose: <MessageDOMUIDispose>[_domFatalErrorElementId],
-    });
-
-    _domFatalErrorElementId = null;
-  }
-
-  function _unmountLoadingScreen() {
-    if (!_domLoadingScreenElementId) {
-      return;
-    }
-
-    domMessagePort.postMessage({
-      dispose: <MessageDOMUIDispose>[_domLoadingScreenElementId],
-    });
-
-    _domLoadingScreenElementId = null;
   }
 
   function dispose(): void {
@@ -210,9 +142,6 @@ export function LoadingScreenScene(
     state.isMounted = false;
 
     progressMessagePort.onmessage = null;
-
-    _unmountLoadingScreen();
-    _unmountFatalErrorScreen();
 
     unmountAll(_unmountables);
   }

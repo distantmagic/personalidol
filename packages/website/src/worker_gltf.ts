@@ -85,14 +85,12 @@ function _extractGLTFGeometryAttributes(gltf: GLTF, modelScale: number): Geometr
   };
 }
 
-async function _gltfLoadWithProgress(url: string, modelScale: number): Promise<GeometryAttributes> {
+function _gltfLoadWithProgress(url: string, modelScale: number): Promise<GeometryAttributes> {
   if (null === _progressMessagePort) {
     throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading GLTF model.`);
   }
 
   const progress = Progress(_progressMessagePort, "model", url);
-
-  progress.start();
 
   return progress.wait(
     _gltfLoader

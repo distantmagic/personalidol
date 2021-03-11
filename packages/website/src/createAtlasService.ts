@@ -1,5 +1,6 @@
 import { AtlasService } from "@personalidol/texture-loader/src/AtlasService";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/framework/src/isCanvasTransferControlToOffscreenSupported";
+import { prefetch } from "@personalidol/framework/src/prefetch";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import workers from "./workers.json";
@@ -16,7 +17,8 @@ export function createAtlasService(
   serviceManager: ServiceManager,
   progressMessagePort: MessagePort,
   statsMessagePort: MessagePort,
-  texturesMessagePort: MessagePort
+  texturesMessagePort: MessagePort,
+  websiteToProgressMessagePort: MessagePort
 ): Promise<RegistersMessagePort> {
   const atlasCanvas = document.createElement("canvas");
 
@@ -27,7 +29,12 @@ export function createAtlasService(
       logger.debug("SUPPORTED(canvas.transferControlToOffscreen) // offlad atlas service to a worker thread");
 
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
-      const atlasWorker = new Worker(`${__STATIC_BASE_PATH}${workers.atlas.url}?${__CACHE_BUST}`, {
+
+      const atlasWorkerURL = `${__STATIC_BASE_PATH}${workers.atlas.url}?${__CACHE_BUST}`;
+
+      await prefetch(websiteToProgressMessagePort, "worker", atlasWorkerURL);
+
+      const atlasWorker = new Worker(atlasWorkerURL, {
         credentials: "same-origin",
         name: workers.atlas.name,
         type: "module",

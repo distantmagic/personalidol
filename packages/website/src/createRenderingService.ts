@@ -3,6 +3,7 @@ import { createSingleThreadMessageChannel } from "@personalidol/framework/src/cr
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/framework/src/isCanvasTransferControlToOffscreenSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
+import { prefetch } from "@personalidol/framework/src/prefetch";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import workers from "./workers.json";
@@ -37,7 +38,8 @@ export async function createRenderingService(
   statsReporter: StatsReporter,
   threadDebugName: string,
   touchObserverState: TouchObserverState,
-  userSettings: UserSettings
+  userSettings: UserSettings,
+  websiteToProgressMessagePort: MessagePort
 ) {
   if (userSettings.useOffscreenCanvas && isCanvasTransferControlToOffscreenSupported()) {
     logger.debug("SUPPORTED(canvas.transferControlToOffscreen) // offlad 3D canvas to a worker thread");
@@ -46,7 +48,11 @@ export async function createRenderingService(
 
     domUIController.registerMessagePort(domRendererMessageChannel.port1);
 
-    const offscreenWorker = new Worker(`${__STATIC_BASE_PATH}${workers.offscreen.url}?${__CACHE_BUST}`, {
+    const offscreenWorkerURL = `${__STATIC_BASE_PATH}${workers.offscreen.url}?${__CACHE_BUST}`;
+
+    await prefetch(websiteToProgressMessagePort, "worker", offscreenWorkerURL);
+
+    const offscreenWorker = new Worker(offscreenWorkerURL, {
       credentials: "same-origin",
       name: workers.offscreen.name,
       type: "module",
@@ -215,6 +221,11 @@ export async function createRenderingService(
        * @see https://github.com/evanw/esbuild/issues/113
        */
       const _dynamicImport = `${__STATIC_BASE_PATH}/lib/createScenes.js`;
+
+      await prefetch(websiteToProgressMessagePort, "worker", _dynamicImport);
+
+      // This block is here to supress esbuild warnings about importing a
+      // module that may not exist.
       const { createScenes } = await (async function () {
         try {
           return await import(_dynamicImport);

@@ -51,8 +51,6 @@ async function _fetchImageBitmapWithProgress(textureRequest: TextureRequest): Pr
 
   const progress = Progress(_progressMessagePort, "texture", textureRequest.textureUrl);
 
-  progress.start();
-
   return progress.wait(_fetchImageBitmap(progress, textureRequest));
 }
 

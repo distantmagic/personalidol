@@ -9,6 +9,7 @@ import { buildEntities } from "@personalidol/personalidol/src/buildEntities";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { fetchProgress } from "@personalidol/framework/src/fetchProgress";
+import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { Progress } from "@personalidol/framework/src/Progress";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
@@ -47,6 +48,39 @@ const _atlasMessageRouter = createRouter({
   textureAtlas: handleRPCResponse(_rpcLookupTable),
 });
 
+function _estimateItemsToLoad(entitySketches: ReadonlyArray<EntitySketch>, textureUrls: ReadonlyArray<string>): number {
+  const resources: {
+    [key: string]: boolean;
+  } = {};
+
+  for (let entitySketch of entitySketches) {
+    const label = entitySketch.properties.label;
+
+    if ("string" === typeof label) {
+      resources[`translations_${getI18NextKeyNamespace(label)}`] = true;
+    }
+
+    switch (entitySketch.properties.classname) {
+      case "model_gltf":
+        resources[`gltf_model_${entitySketch.properties.model_name}`] = true;
+        resources[`gltf_texture_${entitySketch.properties.model_name}_${entitySketch.properties.model_texture}`] = true;
+        break;
+      case "model_md2":
+        resources[`md2_model_${entitySketch.properties.model_name}`] = true;
+        resources[`md2_model_parts_${entitySketch.properties.model_name}`] = true;
+        resources[`md2_model_skin_${entitySketch.properties.model_name}_${entitySketch.properties.skin}`] = true;
+        break;
+      case "player":
+        resources["player_model"] = true;
+        resources["player_model_parts"] = true;
+        resources["player_model_skin"] = true;
+        break;
+    }
+  }
+
+  return Object.keys(resources).length + textureUrls.length;
+}
+
 async function _fetchUnmarshalMapContent(
   progress: IProgress,
   messagePort: MessagePort,
@@ -57,6 +91,7 @@ async function _fetchUnmarshalMapContent(
   discardOccluding: null | Vector3Simple = null
 ): Promise<void> {
   const content: string = await fetch(filename).then(fetchProgress(progress.progress)).then(_responseToText);
+
   return _onMapContentLoaded(progress, messagePort, atlasMessagePort, progressMessagePort, filename, rpc, content, discardOccluding);
 }
 
@@ -100,29 +135,8 @@ async function _onMapContentLoaded(
 
   const entitySketches: Array<EntitySketch> = Array.from(unmarshalMap(filename, content, _resolveTextureUrl));
 
-  // Map is currently loading.
-  let progressExpect: number = 1;
-
-  for (let entitySketch of entitySketches) {
-    switch (entitySketch.properties.classname) {
-      case "model_gltf":
-        // Model itself and texture.
-        progressExpect += 2;
-        break;
-      case "model_md2":
-      case "player":
-        // Model itself, metadata and texture.
-        progressExpect += 3;
-        break;
-      case "worldspawn":
-        // Texture and translation namespace.
-        progressExpect += 2;
-        break;
-    }
-  }
-
   progressMessagePort.postMessage({
-    expect: progressExpect,
+    expect: _estimateItemsToLoad(entitySketches, textureUrls),
   });
 
   const response: {
@@ -169,13 +183,6 @@ const quakeMapsMessagesRouter = {
     }
 
     const progress = Progress(_progressMessagePort, "map", filename);
-
-    progress.start();
-
-    // At least map texture and translation messages.
-    _progressMessagePort.postMessage({
-      expect: 3,
-    });
 
     progress.wait(_fetchUnmarshalMapContent(progress, messagePort, _atlasMessagePort, _progressMessagePort, filename, rpc, discardOccluding));
   },

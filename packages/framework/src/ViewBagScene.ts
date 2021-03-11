@@ -10,17 +10,17 @@ import { unpause as fUnpause } from "./unpause";
 
 import type { Logger } from "loglevel";
 
-import type { Scene } from "./Scene.interface";
 import type { SceneState } from "./SceneState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { ViewBag as IViewBag } from "./ViewBag.interface";
+import type { ViewBaggableScene } from "./ViewBaggableScene.interface";
 import type { ViewBagScene as IViewBagScene } from "./ViewBagScene.interface";
 
 /**
  * This class preloads scene views after the scene itself is fully preloaded
  * and views list is populated.
  */
-export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: Scene): IViewBagScene {
+export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: ViewBaggableScene): IViewBagScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,

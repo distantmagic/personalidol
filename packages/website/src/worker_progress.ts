@@ -1,18 +1,22 @@
 /// <reference lib="webworker" />
 
 import Loglevel from "loglevel";
+import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { ProgressManager } from "@personalidol/framework/src/ProgressManager";
 
+import type { DOMElementsLookup } from "@personalidol/personalidol/src/DOMElementsLookup.type";
+import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
+import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MessageProgressChange } from "@personalidol/framework/src/MessageProgressChange.type";
 import type { MessageProgressDone } from "@personalidol/framework/src/MessageProgressDone.type";
 import type { MessageProgressError } from "@personalidol/framework/src/MessageProgressError.type";
 import type { MessageProgressStart } from "@personalidol/framework/src/MessageProgressStart.type";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { ProgressManager as IProgressManager } from "@personalidol/framework/src/ProgressManager.interface";
-import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
+// import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
 
 declare var self: DedicatedWorkerGlobalScope;
 
@@ -21,65 +25,184 @@ const logger = Loglevel.getLogger(self.name);
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
 
-const messagePorts: Array<MessagePort> = [];
-const progressManager: IProgressManager = ProgressManager();
+const _broadcastMessagePorts: Array<MessagePort> = [];
+const _progressManager: IProgressManager = ProgressManager();
 
+let _domFatalErrorElementId: null | string = null;
+let _domLoadingScreenElementId: null | string = null;
+let _domMessagePort: null | MessagePort = null;
+let _errorPropsVersion: number = 0;
 let _lastProgressBroadcastVersion: number = 0;
+let _progressPropsVersion: number = 0;
 
-function _broadcastMessage(message: { progress: ProgressManagerState }): void {
-  for (let i = 0; i < messagePorts.length; i += 1) {
-    messagePorts[i].postMessage(message);
+function _clear(): void {
+  if (!_domMessagePort) {
+    throw new Error("DOMUIController message port is not ready.");
+  }
+
+  if (_domLoadingScreenElementId) {
+    _unmountLoadingScreenElement();
+  }
+
+  if (_domFatalErrorElementId) {
+    _unmountFatalErrorElement();
   }
 }
 
-function _refreshNotifyProgress(): void {
-  if (_lastProgressBroadcastVersion >= progressManager.state.version) {
+function _onProgress(): void {
+  if (!_domMessagePort) {
+    throw new Error("DOMUIController message port is not ready.");
+  }
+
+  if (_progressManager.state.errors.length < 1 && _progressManager.state.messages.length < 1) {
+    _clear();
     return;
   }
 
-  _lastProgressBroadcastVersion = progressManager.state.version;
+  if (_domFatalErrorElementId) {
+    // There is a fatal error going on.
+    return;
+  }
 
-  _broadcastMessage({
-    progress: progressManager.state,
+  if (_progressManager.state.errors.length > 0) {
+    _onProgressError();
+  }
+
+  if (!_domLoadingScreenElementId) {
+    _domLoadingScreenElementId = MathUtils.generateUUID();
+  }
+
+  _progressPropsVersion += 1;
+
+  _domMessagePort.postMessage({
+    render: <MessageDOMUIRender<DOMElementsLookup>>{
+      id: _domLoadingScreenElementId,
+      element: "pi-progress-manager-state",
+      props: {
+        progressManagerState: _progressManager.state,
+        version: _progressPropsVersion,
+      },
+    },
   });
+}
+
+function _onProgressError(): void {
+  if (!_domMessagePort) {
+    throw new Error("DOMUIController message port is not ready.");
+  }
+
+  if (_domLoadingScreenElementId) {
+    _unmountLoadingScreenElement();
+  }
+
+  if (!_domFatalErrorElementId) {
+    _domFatalErrorElementId = MathUtils.generateUUID();
+  }
+
+  _errorPropsVersion += 1;
+
+  _domMessagePort.postMessage({
+    render: <MessageDOMUIRender<DOMElementsLookup>>{
+      id: _domFatalErrorElementId,
+      element: "pi-fatal-error",
+      props: {
+        errors: _progressManager.state.errors,
+        version: _errorPropsVersion,
+      },
+    },
+  });
+}
+
+function _unmountFatalErrorElement(): void {
+  if (!_domMessagePort) {
+    throw new Error("DOMUIController message port is not ready.");
+  }
+
+  if (!_domFatalErrorElementId) {
+    throw new Error("DOM fatal error screen is not rendered.");
+  }
+
+  _domMessagePort.postMessage({
+    dispose: <MessageDOMUIDispose>[_domFatalErrorElementId],
+  });
+
+  _domFatalErrorElementId = null;
+}
+
+function _unmountLoadingScreenElement(): void {
+  if (!_domMessagePort) {
+    throw new Error("DOMUIController message port is not ready.");
+  }
+
+  if (!_domLoadingScreenElementId) {
+    throw new Error("DOM loading screen is not rendered.");
+  }
+
+  _domMessagePort.postMessage({
+    dispose: <MessageDOMUIDispose>[_domLoadingScreenElementId],
+  });
+
+  _domLoadingScreenElementId = null;
+}
+
+function _refreshNotifyProgress(): void {
+  if (_lastProgressBroadcastVersion >= _progressManager.state.version) {
+    return;
+  }
+
+  _lastProgressBroadcastVersion = _progressManager.state.version;
+
+  _onProgress();
+
+  const broadcastMessage = {
+    progress: _progressManager.state,
+  };
+
+  for (let i = 0; i < _broadcastMessagePorts.length; i += 1) {
+    _broadcastMessagePorts[i].postMessage(broadcastMessage);
+  }
 }
 
 const progressMessagesRouter = Object.freeze({
   done(messagePort: MessagePort, message: MessageProgressDone) {
-    progressManager.done(message);
+    _progressManager.done(message);
     _refreshNotifyProgress();
   },
 
   error(messagePort: MessagePort, message: MessageProgressError) {
-    progressManager.error(message);
+    _progressManager.error(message);
     _refreshNotifyProgress();
   },
 
   expect(messagePort: MessagePort, expect: number) {
-    progressManager.expect(expect);
+    _progressManager.expect(expect);
     _refreshNotifyProgress();
   },
 
   progress(messagePort: MessagePort, message: MessageProgressChange) {
-    progressManager.progress(message);
+    _progressManager.progress(message);
     _refreshNotifyProgress();
   },
 
   reset() {
-    progressManager.reset();
+    _progressManager.reset();
     _refreshNotifyProgress();
   },
 
   start(messagePort: MessagePort, message: MessageProgressStart) {
-    progressManager.start(message);
+    _progressManager.start(message);
     _refreshNotifyProgress();
   },
 });
 
 self.onmessage = createRouter({
+  domMessagePort(domMessagePort: MessagePort): void {
+    _domMessagePort = domMessagePort;
+  },
+
   progressMessagePort({ broadcastProgress, messagePort }: { broadcastProgress: boolean; messagePort: MessagePort }): void {
     if (broadcastProgress) {
-      messagePorts.push(messagePort);
+      _broadcastMessagePorts.push(messagePort);
     }
 
     attachMultiRouter(messagePort, progressMessagesRouter);

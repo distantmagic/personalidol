@@ -1,5 +1,6 @@
 import { DOMTextureService } from "@personalidol/texture-loader/src/DOMTextureService";
 import { isCreateImageBitmapSupported } from "@personalidol/framework/src/isCreateImageBitmapSupported";
+import { prefetch } from "@personalidol/framework/src/prefetch";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import workers from "./workers.json";
@@ -10,7 +11,13 @@ import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { RegistersMessagePort } from "@personalidol/framework/src/RegistersMessagePort.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 
-export async function createTexturesService(logger: Logger, mainLoop: MainLoop, serviceManager: ServiceManager, progressMessagePort: MessagePort): Promise<RegistersMessagePort> {
+export async function createTexturesService(
+  logger: Logger,
+  mainLoop: MainLoop,
+  serviceManager: ServiceManager,
+  progressMessagePort: MessagePort,
+  websiteToProgressMessagePort: MessagePort
+): Promise<RegistersMessagePort> {
   const textureCanvas = document.createElement("canvas");
   const textureCanvasContext2D = textureCanvas.getContext("2d");
 
@@ -22,7 +29,11 @@ export async function createTexturesService(logger: Logger, mainLoop: MainLoop, 
     if (await isCreateImageBitmapSupported()) {
       logger.debug("SUPPORTED(createImageBitmap) // offload texture service to a worker thread");
 
-      const texturesWorker = new Worker(`${__STATIC_BASE_PATH}${workers.textures.url}?${__CACHE_BUST}`, {
+      const texturesWorkerURL = `${__STATIC_BASE_PATH}${workers.textures.url}?${__CACHE_BUST}`;
+
+      await prefetch(websiteToProgressMessagePort, "worker", texturesWorkerURL);
+
+      const texturesWorker = new Worker(texturesWorkerURL, {
         credentials: "same-origin",
         name: workers.textures.name,
         type: "module",

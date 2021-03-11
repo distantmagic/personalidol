@@ -11,6 +11,7 @@ export const enum DOMZIndex {
   InGameMenuTrigger,
   MainMenu,
   Settings,
+  ProgressManagerState,
   StatsReporter,
   MousePointer,
 }
