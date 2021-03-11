@@ -69,8 +69,6 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   async function _createImageData(request: TextureQueueItem): Promise<ImageData> {
     const progress: IProgress = Progress(progressMessagePort, "texture", request.textureUrl);
 
-    progress.start();
-
     const image: HTMLImageElement = await progress.wait(preloadImage(progress, request.textureUrl));
 
     canvas2DDrawImage(canvas, context2D, image);
