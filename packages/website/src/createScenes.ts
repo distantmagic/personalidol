@@ -6,7 +6,7 @@ import { Director } from "@personalidol/framework/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
-import { RendererDimensionsManager } from "@personalidol/three-renderer/src/RendererDimensionsManager";
+import { RendererDimensionsManager } from "@personalidol/dom-renderer/src/RendererDimensionsManager";
 import { SceneTransition } from "@personalidol/framework/src/SceneTransition";
 import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
@@ -25,6 +25,7 @@ import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.t
 export function createScenes(
   threadDebugName: string,
   devicePixelRatio: number,
+  isOffscreen: boolean,
   eventBus: EventBus,
   mainLoop: MainLoop,
   serviceManager: ServiceManager,
@@ -49,7 +50,6 @@ export function createScenes(
   userSettingsMessagePort: MessagePort
 ): void {
   const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessagePort, threadDebugName);
-  const rendererDimensionsManager = RendererDimensionsManager(dimensionsState);
 
   const webGLRenderer = new WebGLRenderer({
     alpha: false,
@@ -66,10 +66,6 @@ export function createScenes(
 
   const effectComposer = new EffectComposer(webGLRenderer);
   const css2DRenderer = CSS2DRenderer<DOMElementsLookup>(logger, domMessagePort);
-
-  rendererDimensionsManager.state.renderers.add(css2DRenderer);
-  rendererDimensionsManager.state.renderers.add(effectComposer);
-  rendererDimensionsManager.state.renderers.add(webGLRenderer);
 
   const webGLRendererUserSettingsManager = WebGLRendererUserSettingsManager(userSettings, webGLRenderer);
 
@@ -117,9 +113,11 @@ export function createScenes(
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(uiStateController);
   serviceManager.services.add(loadingSceneDirector);
-  serviceManager.services.add(rendererDimensionsManager);
   serviceManager.services.add(sceneTransition);
 
+  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, css2DRenderer, !isOffscreen));
+  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, effectComposer, !isOffscreen));
+  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, webGLRenderer, !isOffscreen));
   mainLoop.updatables.add(multiThreadUserSettingsSync);
   mainLoop.updatables.add(webGLRendererUserSettingsManager);
   mainLoop.updatables.add(serviceManager);
@@ -127,5 +125,4 @@ export function createScenes(
   mainLoop.updatables.add(loadingSceneDirector);
   mainLoop.updatables.add(uiStateController);
   mainLoop.updatables.add(sceneTransition);
-  mainLoop.updatables.add(rendererDimensionsManager);
 }

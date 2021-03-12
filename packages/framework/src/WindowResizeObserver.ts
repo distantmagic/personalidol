@@ -16,6 +16,11 @@ export function WindowResizeObserver(dimensionsState: Uint32Array, tickTimerStat
   function stop(): void {}
 
   function update(): void {
+    if (dimensionsState[DimensionsIndices.D_HEIGHT] === window.innerHeight && dimensionsState[DimensionsIndices.D_WIDTH] === window.innerWidth) {
+      // Nothing changed.
+      return;
+    }
+
     dimensionsState[DimensionsIndices.P_BOTTOM] = window.innerHeight;
     dimensionsState[DimensionsIndices.P_LEFT] = 0;
     dimensionsState[DimensionsIndices.P_RIGHT] = window.innerWidth;

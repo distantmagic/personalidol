@@ -66,11 +66,6 @@ const logger = Loglevel.getLogger(self.name);
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
 
-const _canvasStyle = Object.seal({
-  height: 0,
-  width: 0,
-});
-
 const mainLoop: IMainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
 const serviceManager: IServiceManager = ServiceManager(logger);
 
@@ -97,6 +92,7 @@ function onDependenciesReady(dependencies: Dependencies): void {
   createScenes(
     self.name,
     dependencies.devicePixelRatio,
+    true,
     eventBus,
     mainLoop,
     serviceManager,
@@ -124,9 +120,6 @@ function onDependenciesReady(dependencies: Dependencies): void {
 
 self.onmessage = createRouter({
   canvas(canvas: OffscreenCanvas): void {
-    // hack to make it work with three.js
-    (canvas as any).style = _canvasStyle;
-
     serviceBuilder.setDependency("canvas", canvas);
   },
 

@@ -19,17 +19,6 @@
         user-select: none;
       }
 
-      body,
-      #canvas-root,
-      #game-root,
-      #ui-root {
-        bottom: 0;
-        left: 0;
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-
       body {
         -moz-osx-font-smoothing: grayscale;
         -webkit-font-smoothing: antialiased;
@@ -38,17 +27,16 @@
         overflow: hidden;
       }
 
-      #canvas {
-        height: 100%;
-        width: 100%;
+      #canvas,
+      #ui-root {
         will-change: height, width;
       }
 
       #ui-root {
-        -webkit-font-kerning: normal;
-        font-kerning: normal;
-        font-kerning: normal;
+        left: 0;
         pointer-events: none;
+        position: absolute;
+        top: 0;
       }
 
       .ui-placeholder-label {
@@ -72,9 +60,7 @@
   </head>
   <body>
     <div id="game-root">
-      <div id="canvas-root">
-        <canvas id="canvas"></canvas>
-      </div>
+      <canvas id="canvas"></canvas>
       <div id="ui-root">
         <pi-progress-manager-state class="ui-placeholder" id="ui-placeholder">
           <div class="ui-placeholder-label ui-placeholder-label--disabled" id="ui-placeholder-label">

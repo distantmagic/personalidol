@@ -238,6 +238,7 @@ export async function createRenderingService(
       return createScenes(
         threadDebugName,
         devicePixelRatio,
+        false,
         eventBus,
         mainLoop,
         serviceManager,

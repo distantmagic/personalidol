@@ -4,14 +4,12 @@ import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices
 
 import type { ResizeableRenderer } from "@personalidol/three-modules/src/ResizeableRenderer.interface";
 
-import type { RendererDimensionsManager as IRendererDimensionsManager } from "./RendererDimensionsManager.interface";
-import type { RendererDimensionsManagerState } from "./RendererDimensionsManagerState.type";
+import type { HTMLElementDimensionsManager as IHTMLElementDimensionsManager } from "./HTMLElementDimensionsManager.interface";
+import type { HTMLElementDimensionsManagerState } from "./HTMLElementDimensionsManagerState.type";
 
-export function RendererDimensionsManager(dimensionsState: Uint32Array): IRendererDimensionsManager {
-  const state: RendererDimensionsManagerState = Object.seal({
+export function HTMLElementDimensionsManager(htmlElement: HTMLElement, dimensionsState: Uint32Array): IHTMLElementDimensionsManager {
+  const state: HTMLElementDimensionsManagerState = Object.seal({
     needsUpdates: true,
-    renderers: new Set(),
-    renderersNeedingUpdate: new Set(),
   });
 
   let _isStarted: boolean = false;
@@ -24,7 +22,7 @@ export function RendererDimensionsManager(dimensionsState: Uint32Array): IRender
 
   function start(): void {
     if (_isStarted) {
-      throw new Error("RendererDimensionsManager is already started.");
+      throw new Error("HTMLElementDimensionsManager is already started.");
     }
 
     _isStarted = true;
@@ -32,7 +30,7 @@ export function RendererDimensionsManager(dimensionsState: Uint32Array): IRender
 
   function stop(): void {
     if (!_isStarted) {
-      throw new Error("RendererDimensionsManager is already stopped.");
+      throw new Error("HTMLElementDimensionsManager is already stopped.");
     }
 
     _isStarted = false;
@@ -53,7 +51,7 @@ export function RendererDimensionsManager(dimensionsState: Uint32Array): IRender
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    name: "RendererDimensionsManager",
+    name: "HTMLElementDimensionsManager",
     state: state,
 
     start: start,

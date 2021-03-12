@@ -8,7 +8,7 @@ import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController"
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
 import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
-import { HTMLElementResizeObserver } from "@personalidol/framework/src/HTMLElementResizeObserver";
+import { HTMLElementSizeHandle } from "@personalidol/dom-renderer/src/HTMLElementSizeHandle";
 import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
 import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
@@ -25,6 +25,7 @@ import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiTh
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
 import { prefetch } from "@personalidol/framework/src/prefetch";
 import { preload } from "@personalidol/framework/src/preload";
+import { RendererDimensionsManager } from "@personalidol/dom-renderer/src/RendererDimensionsManager";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
@@ -34,6 +35,7 @@ import { TouchObserver } from "@personalidol/framework/src/TouchObserver";
 import { TouchState } from "@personalidol/framework/src/TouchState";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 import { WindowFocusObserver } from "@personalidol/framework/src/WindowFocusObserver";
+import { WindowResizeObserver } from "@personalidol/framework/src/WindowResizeObserver";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 // It resolves typing issues, but requires to really keep exactly the same
@@ -54,7 +56,6 @@ const THREAD_DEBUG_NAME: string = "main_thread";
 // 6 services + 3 fonts
 const PROGRESS_EXPECT = 6 + 3;
 
-const canvasRoot = getHTMLElementById(window.document, "canvas-root");
 const uiRoot = getHTMLElementById(window.document, "ui-root");
 
 // The entire bootstrap code is wrapped to allow 'await'. Global await is not
@@ -89,7 +90,7 @@ async function bootstrap() {
 
   const mainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
 
-  const htmlElementResizeObserver = HTMLElementResizeObserver(canvasRoot, dimensionsState, mainLoop.tickTimerState);
+  const windowResizeObserver = WindowResizeObserver(dimensionsState, mainLoop.tickTimerState);
 
   const windowFocusObserver = WindowFocusObserver(logger, mainLoop.tickTimerState);
   const keyboardObserver = KeyboardObserver(logger, canvas, keyboardState, windowFocusObserver.state, mainLoop.tickTimerState);
@@ -112,7 +113,7 @@ async function bootstrap() {
 
   const serviceManager = ServiceManager(logger);
 
-  serviceManager.services.add(htmlElementResizeObserver);
+  serviceManager.services.add(windowResizeObserver);
   serviceManager.services.add(windowFocusObserver);
   serviceManager.services.add(keyboardObserver);
   serviceManager.services.add(mouseObserver);
@@ -122,7 +123,8 @@ async function bootstrap() {
   serviceManager.services.add(multiThreadUserSettingsSync);
   serviceManager.services.add(statsReporter);
 
-  mainLoop.updatables.add(htmlElementResizeObserver);
+  mainLoop.updatables.add(windowResizeObserver);
+  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, HTMLElementSizeHandle(uiRoot), true));
   mainLoop.updatables.add(windowFocusObserver);
   mainLoop.updatables.add(keyboardObserver);
   mainLoop.updatables.add(mouseObserver);
