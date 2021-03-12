@@ -27,6 +27,10 @@
         overflow: hidden;
       }
 
+      body.bootstrap-fatal-error {
+        background-color: darkred;
+      }
+
       #canvas,
       #ui-root {
         left: 0;
@@ -61,6 +65,10 @@
   <body>
     <noscript>
       <style>
+        body {
+          background-color: darkred;
+        }
+
         #ui-label-loading {
           display: none;
         }
@@ -78,7 +86,7 @@
     <div id="game-root">
       <canvas id="canvas"></canvas>
       <div id="ui-root">
-        <pi-progress-manager-state class="ui-placeholder" id="ui-placeholder">
+        <pi-progress-manager-state class="ui-placeholder">
           <div class="ui-placeholder-label" id="ui-label-loading">
             Loading ...
           </div>
@@ -88,6 +96,23 @@
         </pi-progress-manager-state>
       </div>
     </div>
+    <script>(function () {
+      const uiRoot = document.getElementById("ui-root");
+
+      uiRoot.addEventListener("error", function (evt) {
+        document.body.classList.add("bootstrap-fatal-error");
+
+        uiRoot.style.bottom = "0";
+        uiRoot.style.right = "0";
+        uiRoot.innerHTML = `
+          <div class="ui-placeholder">
+            <div class="ui-placeholder-label">
+              Error: ${evt.detail.message}
+            </div>
+          </div>
+        `;
+      });
+    }());</script>
     <script src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}" type="module"></script>
   </body>
 </html>

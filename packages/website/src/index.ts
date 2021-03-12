@@ -435,4 +435,13 @@ async function bootstrap() {
   );
 }
 
-bootstrap();
+(async function () {
+  try {
+    await bootstrap();
+  } catch (err) {
+    uiRoot.dispatchEvent(new CustomEvent("error", {
+      bubbles: true,
+      detail: err,
+    }));
+  }
+}());
