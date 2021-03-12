@@ -65,10 +65,6 @@
           background-color: darkred;
         }
 
-        #ui-label-loading {
-          display: none;
-        }
-
         #ui-root {
           bottom: 0;
           right: 0;
@@ -79,9 +75,6 @@
       <canvas id="canvas"></canvas>
       <div id="ui-root">
         <pi-progress-manager-state class="ui-placeholder">
-          <div class="ui-placeholder-label" id="ui-label-loading">
-            Loading ...
-          </div>
           <noscript>
             <div class="ui-placeholder-label" id="ui-label-js-disabled">
               Error: You need to JavaScript to run this application.
@@ -107,6 +100,10 @@
         `;
       });
     }());</script>
-    <script src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}" type="module"></script>
+    <script
+      async
+      src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}"
+      type="module"
+    ></script>
   </body>
 </html>

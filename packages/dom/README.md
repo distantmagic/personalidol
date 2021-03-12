@@ -1,4 +1,4 @@
 # `dom`
 
 This package contains utilities and facades around DOM elements that make them
-compatible with `@personalidol/framework` interfaces.
+compatible with `framework` interfaces.

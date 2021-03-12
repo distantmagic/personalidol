@@ -5,14 +5,12 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/dom": "^0.0.4",
     "@personalidol/framework": "^0.0.4",
-    "i18next": "^19.9.2",
     "loglevel": "^1.7.1",
-    "preact": "^10.5.12",
     "three": "^0.126.1"
   },
   "devDependencies": {
+    "@types/css-font-loading-module": "^0.0.4",
     "@types/jest": "^26.0.20",
     "@types/three": "^0.126.0",
     "esbuild": "^0.9.0",
@@ -24,7 +22,7 @@
   },
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",
-  "name": "@personalidol/dom-renderer",
+  "name": "@personalidol/ammo",
   "publishConfig": {
     "access": "public"
   },

@@ -53,8 +53,8 @@ import { createTexturesService } from "./createTexturesService";
 const THREAD_DEBUG_NAME: string = "main_thread";
 
 // Number of items expected to be loaded before the game engine is ready.
-// 6 services + 3 fonts
-const PROGRESS_EXPECT = 6 + 3;
+// 7 services + 3 fonts
+const PROGRESS_EXPECT = 7 + 3;
 
 const uiRoot = getHTMLElementById(window.document, "ui-root");
 
@@ -307,6 +307,34 @@ async function bootstrap() {
   );
 
   atlasService.registerMessagePort(atlasMessageChannel.port1);
+
+  // Ammo worker handles game physics.
+
+  const ammoMessageChannel = createMultiThreadMessageChannel();
+  const ammoToProgressMessageChannel = createMultiThreadMessageChannel();
+
+  addProgressMessagePort(ammoToProgressMessageChannel.port1, false);
+
+  const ammoWorkerURL = `${__STATIC_BASE_PATH}${workers.ammo.url}?${__CACHE_BUST}`;
+
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", ammoWorkerURL);
+
+  const ammoWorker = new Worker(ammoWorkerURL, {
+    credentials: "same-origin",
+    name: workers.ammo.name,
+    type: "module",
+  });
+
+  const ammoWorkerServiceClient = WorkerServiceClient(ammoWorker, workers.ammo.name);
+  await ammoWorkerServiceClient.ready();
+
+  ammoWorker.postMessage(
+    {
+      ammoMessagePort: ammoMessageChannel.port1,
+      progressMessagePort: ammoToProgressMessageChannel.port2,
+    },
+    [ammoMessageChannel.port1, ammoToProgressMessageChannel.port2]
+  );
 
   // Workers can share a message channel if necessary. If there is no offscreen
   // worker then the message channel can be used in the main thread. It is an

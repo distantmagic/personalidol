@@ -486,11 +486,6 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@personalidol/support@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@personalidol/support/-/support-0.0.4.tgz#5fc7f7c79bfdf7cd3eaf4523fa571a85b4369b13"
-  integrity sha512-hukgqLXXQLaL2nj+RwQRcUHRvKCjuX3ZtremdATEaZlmcDdwybgv1MAFiHQD5K689haIOJNn4a8N1t0avHIuZQ==
-
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.2.tgz#858f5c4b48d80778fde4b9d541f27edc0d56488b"

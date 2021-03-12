@@ -1,4 +1,8 @@
 {
+  "ammo": {
+    "name": "Loader(Ammo)",
+    "url": "/lib/worker_ammo.js"
+  },
   "atlas": {
     "name": "Loader(Atlas)",
     "url": "/lib/worker_atlas.js"

@@ -1,3 +1,3 @@
 # `framework`
 
-Base interfaces and services other paackages rely on.
+Base interfaces and services other packages rely on.
