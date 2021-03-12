@@ -6,8 +6,8 @@ import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { fetchProgress } from "@personalidol/framework/src/fetchProgress";
 import { keyFromTextureRequest } from "@personalidol/texture-loader/src/keyFromTextureRequest";
+import { monitorResponseProgress } from "@personalidol/framework/src/monitorResponseProgress";
 import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
@@ -41,7 +41,7 @@ function _createImageBitmapFlipY(blob: Blob): Promise<ImageBitmap> {
 }
 
 function _fetchImageBitmap(progress: IProgress, textureRequest: TextureRequest): Promise<ImageBitmap> {
-  return fetch(textureRequest.textureUrl).then(fetchProgress(progress.progress)).then(_responseToBlob).then(_createImageBitmapFlipY);
+  return fetch(textureRequest.textureUrl).then(monitorResponseProgress(progress.progress, true)).then(_responseToBlob).then(_createImageBitmapFlipY);
 }
 
 async function _fetchImageBitmapWithProgress(textureRequest: TextureRequest): Promise<ImageBitmap> {

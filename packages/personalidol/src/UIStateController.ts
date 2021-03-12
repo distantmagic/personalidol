@@ -21,6 +21,7 @@ import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
 import type { ViewBag as IViewBag } from "@personalidol/framework/src/ViewBag.interface";
+import type { ViewBagScene as IViewBagScene } from "@personalidol/framework/src/ViewBagScene.interface";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { UIState } from "./UIState.type";
@@ -65,6 +66,7 @@ export function UIStateController(
 
   let _dirtyCurrentMap: null | string = null;
 
+  let _transitioningViewBagScene: null | IViewBagScene = null;
   let _uiStateCurrentMap: null | string = uiState.currentMap;
 
   let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu");
@@ -80,38 +82,8 @@ export function UIStateController(
   }
 
   function update(delta: number, elapsedTime: number): void {
-    _inGameMenuHandle.enable(uiState.isInGameMenuOpened);
-    _languageSettingsScreenHandle.enable(uiState.isLanguageSettingsScreenOpened);
-    _userSettingsScreenHandle.enable(uiState.isUserSettingsScreenOpened);
-
-    if (directorState.isTransitioning) {
-      // Don't do anything with the director if a scene is loading.
-      return;
-    }
-
-    _uiStateCurrentMap = uiState.currentMap;
-
-    if (!_uiStateCurrentMap && !isMainMenuScene(directorState.current)) {
-      // Default to the main menu in any case.
-      _transitionToMainMenuScene();
-      return;
-    }
-
-    if (_uiStateCurrentMap && _uiStateCurrentMap !== _dirtyCurrentMap) {
-      _transitionToaMapScene(_uiStateCurrentMap);
-      return;
-    }
-
-    _currentScene = directorState.current;
-
-    if (_currentScene && _currentScene.state.isPaused !== uiState.isScenePaused) {
-      if (!uiState.isScenePaused) {
-        unpause(logger, _currentScene);
-      }
-      if (uiState.isScenePaused) {
-        pause(logger, _currentScene);
-      }
-    }
+    _updateTransitioningViewBagScene();
+    _updateUIState();
   }
 
   function _onCurrentMapMessage(mapName: null | string): void {
@@ -179,10 +151,62 @@ export function UIStateController(
       `${__ASSETS_BASE_PATH}/maps/${targetMap}.map?${__CACHE_BUST}`,
     );
 
-    directorState.next = ViewBagScene(logger, viewBag, mapScene);
+    _transitioningViewBagScene = ViewBagScene(logger, viewBag, mapScene);
+    directorState.next = _transitioningViewBagScene;
 
     uiState.currentMap = targetMap;
     _dirtyCurrentMap = targetMap;
+  }
+
+  function _updateTransitioningViewBagScene(): void {
+    if (!_transitioningViewBagScene) {
+      return;
+    }
+
+    if (_transitioningViewBagScene.state.isPreloading) {
+      // Polling for updates is necessary only when a scene is actually
+      // preloading.
+      _transitioningViewBagScene.updatePreloadingState();
+    }
+
+    if (_transitioningViewBagScene.state.isPreloaded && !_transitioningViewBagScene.state.isPreloading) {
+      _transitioningViewBagScene = null;
+    }
+  }
+
+  function _updateUIState(): void {
+    _inGameMenuHandle.enable(uiState.isInGameMenuOpened);
+    _languageSettingsScreenHandle.enable(uiState.isLanguageSettingsScreenOpened);
+    _userSettingsScreenHandle.enable(uiState.isUserSettingsScreenOpened);
+
+    if (directorState.isTransitioning) {
+      // Don't do anything with the director if a scene is loading.
+      return;
+    }
+
+    _uiStateCurrentMap = uiState.currentMap;
+
+    if (!_uiStateCurrentMap && !isMainMenuScene(directorState.current)) {
+      // Default to the main menu in any case.
+      _transitionToMainMenuScene();
+      return;
+    }
+
+    if (_uiStateCurrentMap && _uiStateCurrentMap !== _dirtyCurrentMap) {
+      _transitionToaMapScene(_uiStateCurrentMap);
+      return;
+    }
+
+    _currentScene = directorState.current;
+
+    if (_currentScene && _currentScene.state.isPaused !== uiState.isScenePaused) {
+      if (!uiState.isScenePaused) {
+        unpause(logger, _currentScene);
+      }
+      if (uiState.isScenePaused) {
+        pause(logger, _currentScene);
+      }
+    }
   }
 
   return Object.seal({

@@ -30,11 +30,11 @@ prettier: node_modules/.bin/prettier $(SOURCES_TS)
 
 .PHONY: test
 test: node_modules/.bin/jest
-	yarn run jest
+	yarn run jest  --detectOpenHandles
 
 .PHONY: test.watch
 test.watch: node_modules
-	yarn run jest --watch
+	yarn run jest --watch --detectOpenHandles
 
 .PHONY: tsc
 tsc: node_modules

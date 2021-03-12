@@ -433,6 +433,4 @@ async function bootstrap() {
   );
 }
 
-(async function () {
-  await bootstrap();
-})();
+bootstrap();

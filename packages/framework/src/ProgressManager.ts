@@ -69,11 +69,13 @@ export function ProgressManager(): IProgressManager {
       throw new Error(`Items is already started: ${_messageToString(message)}`);
     }
 
-    _currentlyLoading.set(message.id, <MessageProgressChange>{
-      ...message,
-      loaded: 0,
-      total: 1,
-    });
+    _currentlyLoading.set(
+      message.id,
+      <MessageProgressChange>Object.assign(message, {
+        loaded: 0,
+        total: 1,
+      })
+    );
 
     _updateState();
   }

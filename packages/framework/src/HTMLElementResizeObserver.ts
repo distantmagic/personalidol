@@ -12,9 +12,7 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
-  const _resizeObserver = new ResizeObserver(_onResizeObserverTriggered);
-
-  let _needsUpdating = false;
+  const _resizeObserver = new ResizeObserver(_updateDimensions);
 
   function start(): void {
     _resizeObserver.observe(htmlElement);
@@ -24,11 +22,9 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
     _resizeObserver.disconnect();
   }
 
-  function update(): void {
-    if (!_needsUpdating) {
-      return;
-    }
+  function update(): void {}
 
+  function _updateDimensions(): void {
     // ResizeObserver theoretically provides the same values as bounding
     // rect, but in reality sometimes it gives incorrect values, for example
     // when element uses vh / wv units
@@ -42,12 +38,6 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
     dimensionsState[DimensionsIndices.D_WIDTH] = right - left;
 
     dimensionsState[DimensionsIndices.LAST_UPDATE] = tickTimerState.currentTick;
-
-    _needsUpdating = false;
-  }
-
-  function _onResizeObserverTriggered(): void {
-    _needsUpdating = true;
   }
 
   return Object.freeze({

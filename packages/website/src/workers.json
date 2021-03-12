@@ -12,11 +12,11 @@
     "url": "/lib/worker_md2.js"
   },
   "offscreen": {
-    "name": "OffscreenCanvas",
+    "name": "Worker(OffscreenCanvas)",
     "url": "/lib/worker_offscreen.js"
   },
   "progress": {
-    "name": "Progress",
+    "name": "Worker(Progress)",
     "url": "/lib/worker_progress.js"
   },
   "quakemaps": {

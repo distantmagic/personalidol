@@ -7,8 +7,8 @@ import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
-import { fetchProgress } from "@personalidol/framework/src/fetchProgress";
 import { MD2Loader } from "@personalidol/three-modules/src/loaders/MD2Loader";
+import { monitorResponseProgress } from "@personalidol/framework/src/monitorResponseProgress";
 import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
@@ -94,7 +94,7 @@ function _fetchModelParts(partsUrl: string): Promise<MD2GeometryParts> {
 
   const progress = Progress(_progressMessagePort, "model_parts", partsUrl);
 
-  return progress.wait(fetch(partsUrl).then(fetchProgress(progress.progress)).then(_responseToModelParts));
+  return progress.wait(fetch(partsUrl).then(monitorResponseProgress(progress.progress, true)).then(_responseToModelParts));
 }
 
 const md2MessagesRouter = {

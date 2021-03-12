@@ -9,7 +9,6 @@ import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiTh
 import { RendererDimensionsManager } from "@personalidol/three-renderer/src/RendererDimensionsManager";
 import { SceneTransition } from "@personalidol/framework/src/SceneTransition";
 import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
-import { ViewBagSceneObserver } from "@personalidol/framework/src/ViewBagSceneObserver";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
 
@@ -80,7 +79,6 @@ export function createScenes(
   const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
   const sceneTransition = SceneTransition(logger, currentSceneDirector.state, loadingSceneDirector.state);
-  const viewBagSceneObserver = ViewBagSceneObserver(currentSceneDirector.state);
 
   const uiState: UIState = {
     currentMap: null,
@@ -116,7 +114,6 @@ export function createScenes(
   loadingSceneDirector.state.next = LoadingScreenScene(userSettings, effectComposer, dimensionsState, domMessagePort, progressMessagePort);
 
   serviceManager.services.add(multiThreadUserSettingsSync);
-  serviceManager.services.add(viewBagSceneObserver);
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(uiStateController);
   serviceManager.services.add(loadingSceneDirector);
@@ -126,7 +123,6 @@ export function createScenes(
   mainLoop.updatables.add(multiThreadUserSettingsSync);
   mainLoop.updatables.add(webGLRendererUserSettingsManager);
   mainLoop.updatables.add(serviceManager);
-  mainLoop.updatables.add(viewBagSceneObserver);
   mainLoop.updatables.add(currentSceneDirector);
   mainLoop.updatables.add(loadingSceneDirector);
   mainLoop.updatables.add(uiStateController);

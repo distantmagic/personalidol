@@ -1,4 +1,4 @@
-import { fetchProgress } from "./fetchProgress";
+import { monitorResponseProgress } from "./monitorResponseProgress";
 import { Progress } from "./Progress";
 
 /**
@@ -9,5 +9,7 @@ import { Progress } from "./Progress";
 export async function prefetch(messagePort: MessagePort, resourceType: string, url: string): Promise<void> {
   const progress = Progress(messagePort, resourceType, url);
 
-  await progress.wait(fetch(url).then(fetchProgress(progress.progress)));
+  // Just prefetch and discard the response. It should be cached in the
+  // ServiceWorker.
+  await progress.wait(fetch(url).then(monitorResponseProgress(progress.progress, false)));
 }

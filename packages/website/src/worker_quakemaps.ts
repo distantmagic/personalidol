@@ -8,9 +8,9 @@ import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter
 import { buildEntities } from "@personalidol/personalidol/src/buildEntities";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
-import { fetchProgress } from "@personalidol/framework/src/fetchProgress";
 import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
+import { monitorResponseProgress } from "@personalidol/framework/src/monitorResponseProgress";
 import { Progress } from "@personalidol/framework/src/Progress";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmarshalMap } from "@personalidol/quakemaps/src/unmarshalMap";
@@ -90,7 +90,7 @@ async function _fetchUnmarshalMapContent(
   rpc: string,
   discardOccluding: null | Vector3Simple = null
 ): Promise<void> {
-  const content: string = await fetch(filename).then(fetchProgress(progress.progress)).then(_responseToText);
+  const content: string = await fetch(filename).then(monitorResponseProgress(progress.progress, true)).then(_responseToText);
 
   return _onMapContentLoaded(progress, messagePort, atlasMessagePort, progressMessagePort, filename, rpc, content, discardOccluding);
 }

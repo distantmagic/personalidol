@@ -11,8 +11,6 @@ import type { Scene } from "./Scene.interface";
 import type { TickTimerState } from "./TickTimerState.type";
 
 export function Director(logger: Logger, tickTimerState: TickTimerState, debugName: string): IDirector {
-  let transitioning: null | Scene = null;
-
   const state: DirectorState = Object.seal({
     current: null,
     isStarted: false,
@@ -22,11 +20,9 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
     lastUpdateTransitioningTick: -1,
     needsUpdates: true,
     next: null,
-
-    get transitioning(): null | Scene {
-      return transitioning;
-    },
   });
+
+  let _transitioning: null | Scene = null;
 
   function start(): void {
     if (state.isStarted) {
@@ -49,23 +45,24 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
       throw new Error("Director is not started, but it was updated.");
     }
 
+    // This assignment is here to avoid a lot of additional typechecking.
     const { current, next } = state;
 
     // 0,0,0
-    if (!next && !transitioning && !current) {
+    if (!next && !_transitioning && !current) {
       return;
     }
 
     // 0,0,1
-    if (!next && !transitioning && current) {
+    if (!next && !_transitioning && current) {
       return;
     }
 
     // 0,1,0
-    if (!next && transitioning && !current && transitioning.state.isPreloaded) {
-      state.current = transitioning;
+    if (!next && _transitioning && !current && _transitioning.state.isPreloaded) {
+      state.current = _transitioning;
       state.isTransitioning = false;
-      transitioning = null;
+      _transitioning = null;
 
       state.lastUpdateCurrentTick = tickTimerState.currentTick;
       state.lastUpdateTransitioningTick = tickTimerState.currentTick;
@@ -76,27 +73,27 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
     }
 
     // 0,1,0
-    if (!next && transitioning && !current && transitioning.state.isPreloading) {
+    if (!next && _transitioning && !current && _transitioning.state.isPreloading) {
       return;
     }
 
     // 0,1,0
-    if (!next && transitioning && !current && !transitioning.state.isPreloading) {
+    if (!next && _transitioning && !current && !_transitioning.state.isPreloading) {
       throw new Error("Transitioning scene is not preloading, but it was expected to be.");
     }
 
     // 0,1,1
-    if (!next && transitioning && current) {
-      throw new Error("Unexpected director state: both transitioning and final scenes are set.");
+    if (!next && _transitioning && current) {
+      throw new Error("Unexpected director state: both _transitioning and final scenes are set.");
     }
 
     // 1,0,0
-    if (next && !transitioning && !current) {
+    if (next && !_transitioning && !current) {
       preload(logger, next);
 
       state.next = null;
       state.isTransitioning = true;
-      transitioning = next;
+      _transitioning = next;
 
       state.lastUpdateNextTick = tickTimerState.currentTick;
       state.lastUpdateTransitioningTick = tickTimerState.currentTick;
@@ -111,7 +108,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
     }
 
     // 1,0,1
-    if (next && !transitioning && current) {
+    if (next && !_transitioning && current) {
       dispose(logger, current);
 
       state.current = null;
@@ -126,13 +123,13 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
     }
 
     // 1,1,0
-    if (next && transitioning && !current) {
-      throw new Error("Can't set a new scene while current one is still transitioning.");
+    if (next && _transitioning && !current) {
+      throw new Error("Can't set a new scene while current one is still _transitioning.");
     }
 
     // 1,1,1
-    if (next && transitioning && current) {
-      throw new Error("Can't set a new scene while current one is still transitioning.");
+    if (next && _transitioning && current) {
+      throw new Error("Can't set a new scene while current one is still _transitioning.");
     }
   }
 
