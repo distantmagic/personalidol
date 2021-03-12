@@ -53,28 +53,41 @@
         text-transform: lowercase;
       }
 
-      .ui-placeholder-label.ui-placeholder-label--disabled {
+      #ui-js-disabled {
         display: none;
       }
     </style>
   </head>
   <body>
+    <noscript>
+      <style>
+        #ui-label-loading {
+          display: none;
+        }
+
+        #ui-root {
+          bottom: 0;
+          right: 0;
+        }
+
+        #ui-js-disabled {
+          display: block;
+        }
+      </style>
+    </noscript>
     <div id="game-root">
       <canvas id="canvas"></canvas>
       <div id="ui-root">
         <pi-progress-manager-state class="ui-placeholder" id="ui-placeholder">
-          <div class="ui-placeholder-label ui-placeholder-label--disabled" id="ui-placeholder-label">
+          <div class="ui-placeholder-label" id="ui-label-loading">
             Loading ...
           </div>
-          <noscript class="ui-placeholder-label">
+          <div class="ui-placeholder-label" id="ui-label-js-disabled">
             Error: You need to JavaScript to run this application.
-          </noscript>
+          </div>
         </pi-progress-manager-state>
       </div>
     </div>
-    <script>(function () {
-      document.getElementById("ui-placeholder-label").classList.remove("ui-placeholder-label--disabled");
-    }());</script>
     <script src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}" type="module"></script>
   </body>
 </html>
