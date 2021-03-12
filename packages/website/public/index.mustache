@@ -56,10 +56,6 @@
         text-align: center;
         text-transform: lowercase;
       }
-
-      #ui-js-disabled {
-        display: none;
-      }
     </style>
   </head>
   <body>
@@ -77,10 +73,6 @@
           bottom: 0;
           right: 0;
         }
-
-        #ui-js-disabled {
-          display: block;
-        }
       </style>
     </noscript>
     <div id="game-root">
@@ -90,9 +82,11 @@
           <div class="ui-placeholder-label" id="ui-label-loading">
             Loading ...
           </div>
-          <div class="ui-placeholder-label" id="ui-label-js-disabled">
-            Error: You need to JavaScript to run this application.
-          </div>
+          <noscript>
+            <div class="ui-placeholder-label" id="ui-label-js-disabled">
+              Error: You need to JavaScript to run this application.
+            </div>
+          </noscript>
         </pi-progress-manager-state>
       </div>
     </div>
