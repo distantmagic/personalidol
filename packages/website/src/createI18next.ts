@@ -3,7 +3,6 @@ import HTTPBackend from "i18next-http-backend";
 import i18next from "i18next";
 import intervalPlural from "i18next-intervalplural-postprocessor";
 import LocalStorageBackend from "i18next-localstorage-backend";
-import YAML from "js-yaml";
 
 import { LoglevelPlugin } from "@personalidol/i18n/src/LoglevelPlugin";
 
@@ -32,7 +31,7 @@ export function createI18next(logger: Logger): i18n {
           },
           {
             loadPath: `${__LOCALES_LOAD_PATH}?${__CACHE_BUST}`,
-            parse: YAML.load,
+            parse: JSON.parse,
           },
         ],
       },

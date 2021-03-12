@@ -4,7 +4,7 @@ include ../../Makefile_packages.mk
 
 ASSETS_BASE_PATH ?= /g/personalidol/assets
 NODE_ENV ?= production
-LOCALES_LOAD_PATH ?= /g/personalidol/locales/{{lng}}/{{ns}}.yaml
+LOCALES_LOAD_PATH ?= /g/personalidol/locales/{{lng}}/{{ns}}.json
 SERVICE_WORKER_BASE_PATH ?= /g/personalidol
 STATIC_BASE_PATH ?= /g/personalidol
 
