@@ -50,6 +50,7 @@ export function createScenes(
   userSettingsMessagePort: MessagePort
 ): void {
   const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessagePort, threadDebugName);
+  const updateRendererCSS: boolean = !isOffscreen;
 
   const webGLRenderer = new WebGLRenderer({
     alpha: false,
@@ -115,9 +116,9 @@ export function createScenes(
   serviceManager.services.add(loadingSceneDirector);
   serviceManager.services.add(sceneTransition);
 
-  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, css2DRenderer, !isOffscreen));
-  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, effectComposer, !isOffscreen));
-  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, webGLRenderer, !isOffscreen));
+  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, css2DRenderer, updateRendererCSS));
+  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, effectComposer, updateRendererCSS));
+  mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, webGLRenderer, updateRendererCSS));
   mainLoop.updatables.add(multiThreadUserSettingsSync);
   mainLoop.updatables.add(webGLRendererUserSettingsManager);
   mainLoop.updatables.add(serviceManager);
