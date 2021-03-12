@@ -147,8 +147,8 @@ async function bootstrap() {
 
   // Preload translations and the internationalization service.
 
-  const i18next = createI18next(logger);
   const internationalizationToProgressMessageChannel = createMultiThreadMessageChannel();
+  const i18next = createI18next(logger, internationalizationToProgressMessageChannel.port2);
   const internationalizationService = InternationalizationService(i18next, internationalizationToProgressMessageChannel.port2);
   const internationalizationMessageChannel = createMultiThreadMessageChannel();
 

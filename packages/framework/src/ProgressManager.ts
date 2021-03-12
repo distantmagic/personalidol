@@ -21,12 +21,26 @@ export function ProgressManager(): IProgressManager {
   });
 
   const _currentErrors: Map<string, MessageProgressError> = new Map();
+  const _currentlyLoaded: WeakSet<MessageProgressChange> = new WeakSet();
   const _currentlyLoading: Map<string, MessageProgressChange> = new Map();
 
   function _updateState(): void {
     state.errors = Array.from(_currentErrors.values());
     state.messages = Array.from(_currentlyLoading.values());
     state.version += 1;
+
+    if (_currentErrors.size > 0 || state.expect > 0 || _currentlyLoading.size < 1) {
+      return;
+    }
+
+    for (let message of state.messages) {
+      if (!_currentlyLoaded.has(message)) {
+        return;
+      }
+    }
+
+    // All ad-hoc messages have been loaded and progress queue can be cleared.
+    reset();
   }
 
   function done(message: MessageProgressDone): void {
@@ -34,7 +48,12 @@ export function ProgressManager(): IProgressManager {
       throw new Error(`Item is done loading, but it has never started: ${_messageToString(message)}`);
     }
 
+    if (_currentlyLoaded.has(message)) {
+      throw new Error(`Item is already done loading: ${_messageToString(message)}`);
+    }
+
     _currentlyLoading.set(message.id, <MessageProgressChange>message);
+    _currentlyLoaded.add(message);
     _updateState();
   }
 
@@ -44,7 +63,7 @@ export function ProgressManager(): IProgressManager {
   }
 
   function expect(expect: number): void {
-    state.expect = state.messages.length + expect;
+    state.expect = state.messages.length + state.expect + expect;
     _updateState();
   }
 

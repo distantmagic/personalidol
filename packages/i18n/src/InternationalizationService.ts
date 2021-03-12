@@ -1,13 +1,10 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { Progress } from "@personalidol/framework/src/Progress";
-
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 
 import type { i18n } from "i18next";
 
 import type { PreloadableState } from "@personalidol/framework/src/PreloadableState.type";
-import type { Progress as IProgress } from "@personalidol/framework/src/Progress.interface";
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 
 import type { InternationalizationService as IInternationalizationService } from "./InternationalizationService.interface";
@@ -28,10 +25,8 @@ export function InternationalizationService(i18next: i18n, progressMessagePort: 
         throw new Error("Expected namespaces.");
       }
 
-      const progress: IProgress = Progress(progressMessagePort, "translation", namespaces.join(", "));
-
-      // prettier-ignore
-      await progress.wait(i18next.loadNamespaces(namespaces));
+      // Progress is monitored in the i18next plugin.
+      i18next.loadNamespaces(namespaces);
 
       messagePort.postMessage({
         loadedNamespaces: {
