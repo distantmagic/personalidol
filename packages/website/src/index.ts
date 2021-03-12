@@ -6,9 +6,9 @@ import { DimensionsState } from "@personalidol/framework/src/DimensionsState";
 import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
 import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
-import { FontPreloadService } from "@personalidol/dom-renderer/src/FontPreloadService";
-import { getHTMLElementById } from "@personalidol/framework/src/getHTMLElementById";
-import { HTMLElementSizeHandle } from "@personalidol/dom-renderer/src/HTMLElementSizeHandle";
+import { FontPreloadService } from "@personalidol/dom/src/FontPreloadService";
+import { getHTMLElementById } from "@personalidol/dom/src/getHTMLElementById";
+import { HTMLElementSizeHandle } from "@personalidol/dom/src/HTMLElementSizeHandle";
 import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
 import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
@@ -439,9 +439,11 @@ async function bootstrap() {
   try {
     await bootstrap();
   } catch (err) {
-    uiRoot.dispatchEvent(new CustomEvent("error", {
-      bubbles: true,
-      detail: err,
-    }));
+    uiRoot.dispatchEvent(
+      new CustomEvent("error", {
+        bubbles: true,
+        detail: err,
+      })
+    );
   }
-}());
+})();

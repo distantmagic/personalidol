@@ -3,9 +3,9 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
+import type { ResizeableRenderer } from "@personalidol/framework/src/ResizeableRenderer.interface";
 
 import type { RendererDimensionsManager as IRendererDimensionsManager } from "./RendererDimensionsManager.interface";
-import type { ResizeableRenderer } from "./ResizeableRenderer.interface";
 
 export function RendererDimensionsManager(dimensionsState: Uint32Array, renderer: ResizeableRenderer, updateStyles: boolean): IRendererDimensionsManager {
   const state: MainLoopUpdatableState = Object.seal({

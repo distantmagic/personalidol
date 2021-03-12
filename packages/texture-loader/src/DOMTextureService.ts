@@ -1,13 +1,13 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
-import { canvas2DDrawImage } from "@personalidol/dom-renderer/src/canvas2DDrawImage";
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
-import { preloadImage } from "@personalidol/dom-renderer/src/preloadImage";
+import { preloadImage } from "@personalidol/dom/src/preloadImage";
 import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
+import { canvas2DDrawImage } from "./canvas2DDrawImage";
 import { keyFromTextureRequest } from "./keyFromTextureRequest";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";

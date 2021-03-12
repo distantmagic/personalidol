@@ -16,10 +16,10 @@ import type { Logger } from "loglevel";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
-import type { FontPreloadParameters } from "@personalidol/dom-renderer/src/FontPreloadParameters.type";
+import type { FontPreloadParameters } from "@personalidol/dom/src/FontPreloadParameters.type";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
-import type { MessageFontPreload } from "@personalidol/dom-renderer/src/MessageFontPreload.type";
+import type { MessageFontPreload } from "@personalidol/dom/src/MessageFontPreload.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";

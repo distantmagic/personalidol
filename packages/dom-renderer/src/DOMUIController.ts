@@ -1,10 +1,10 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { clearHTMLElement } from "@personalidol/dom/src/clearHTMLElement";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 
-import { clearHTMLElement } from "./clearHTMLElement";
 import { Events } from "./Events.enum";
 import { isDOMElementView } from "./isDOMElementView";
 import { isDOMElementViewConstructor } from "./isDOMElementViewConstructor";

@@ -1,9 +1,9 @@
 import { Fragment, h, render } from "preact";
 
+import { createConstructableStylesheet } from "@personalidol/dom/src/createConstructableStylesheet";
 import { isConstructableCSSStyleSheetSupported } from "@personalidol/framework/src/isConstructableCSSStyleSheetSupported";
 import { must } from "@personalidol/framework/src/must";
 
-import { createConstructableStylesheet } from "./createConstructableStylesheet";
 import { Events } from "./Events.enum";
 
 import type { i18n, TOptions } from "i18next";
