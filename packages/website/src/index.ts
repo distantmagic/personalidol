@@ -40,9 +40,9 @@ import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceCl
 
 // It resolves typing issues, but requires to really keep exactly the same
 // version across modules (which is ok).
-import type { i18n as DOMi18n } from "@personalidol/dom-renderer/node_modules/i18next/index";
-import type { i18n as Frameworki18n } from "@personalidol/framework/node_modules/i18next/index";
-import type { i18n as PersonalIdoli18n } from "@personalidol/personalidol/node_modules/i18next/index";
+// import type { i18n as DOMi18n } from "@personalidol/dom-renderer/node_modules/i18next/index";
+// import type { i18n as Frameworki18n } from "@personalidol/framework/node_modules/i18next/index";
+// import type { i18n as PersonalIdoli18n } from "@personalidol/personalidol/node_modules/i18next/index";
 
 import workers from "./workers.json";
 import { createAtlasService } from "./createAtlasService";
@@ -149,7 +149,7 @@ async function bootstrap() {
 
   const i18next = createI18next(logger);
   const internationalizationToProgressMessageChannel = createMultiThreadMessageChannel();
-  const internationalizationService = InternationalizationService(i18next as Frameworki18n, internationalizationToProgressMessageChannel.port2);
+  const internationalizationService = InternationalizationService(i18next, internationalizationToProgressMessageChannel.port2);
   const internationalizationMessageChannel = createMultiThreadMessageChannel();
 
   internationalizationService.registerMessagePort(internationalizationMessageChannel.port1);
@@ -160,7 +160,7 @@ async function bootstrap() {
 
   // Listen to user settings to adjust the language.
 
-  const languageUserSettingsManager = LanguageUserSettingsManager(userSettings, i18next as PersonalIdoli18n);
+  const languageUserSettingsManager = LanguageUserSettingsManager(userSettings, i18next);
 
   await preload(logger, languageUserSettingsManager);
 
@@ -172,7 +172,7 @@ async function bootstrap() {
 
   const domUIController = DOMUIController(
     logger,
-    internationalizationService.i18next as DOMi18n,
+    internationalizationService.i18next,
     dimensionsState,
     keyboardState,
     mouseState,

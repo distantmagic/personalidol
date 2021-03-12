@@ -11,7 +11,7 @@ endef
 
 .PHONY: bootstrap
 bootstrap: node_modules
-	yarn run lerna bootstrap
+	yarn run lerna bootstrap --hoist
 
 .PHONY: build
 build: bootstrap
