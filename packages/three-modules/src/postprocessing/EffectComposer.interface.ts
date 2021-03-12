@@ -1,7 +1,7 @@
 import type { DisposableGeneric } from "@personalidol/framework/src/DisposableGeneric.interface";
+import type { ResizeableRenderer } from "@personalidol/framework/src/ResizeableRenderer.interface";
 
 import type { Pass } from "./Pass.interface";
-import type { ResizeableRenderer } from "../ResizeableRenderer.interface";
 
 export interface EffectComposer extends DisposableGeneric, ResizeableRenderer {
   addPass(pass: Pass): void;

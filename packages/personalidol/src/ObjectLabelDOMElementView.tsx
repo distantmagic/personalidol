@@ -1,7 +1,7 @@
 import { h } from "preact";
 
-import { CSS2DObjectState } from "@personalidol/three-renderer/src/CSS2DObjectState";
-import { CSS2DObjectStateIndices } from "@personalidol/three-renderer/src/CSS2DObjectStateIndices.enum";
+import { CSS2DObjectState } from "@personalidol/three-css2d-renderer/src/CSS2DObjectState";
+import { CSS2DObjectStateIndices } from "@personalidol/three-css2d-renderer/src/CSS2DObjectStateIndices.enum";
 import { damp } from "@personalidol/framework/src/damp";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { isSharedArrayBuffer } from "@personalidol/framework/src/isSharedArrayBuffer";

@@ -49,7 +49,7 @@ import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
-import type { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer.interface";
+import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer.interface";
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";

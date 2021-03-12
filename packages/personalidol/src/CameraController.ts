@@ -5,8 +5,8 @@ import { Vector3 } from "three/src/math/Vector3";
 
 import { damp } from "@personalidol/framework/src/damp";
 import { KeyboardIndices } from "@personalidol/framework/src/KeyboardIndices.enum";
-import { updateOrthographicCameraAspect } from "@personalidol/three-renderer/src/updateOrthographicCameraAspect";
-import { updatePerspectiveCameraAspect } from "@personalidol/three-renderer/src/updatePerspectiveCameraAspect";
+import { updateOrthographicCameraAspect } from "@personalidol/framework/src/updateOrthographicCameraAspect";
+import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updatePerspectiveCameraAspect";
 
 import type { Logger } from "loglevel";
 

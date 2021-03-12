@@ -14,7 +14,7 @@
     "@personalidol/service-worker": "^0.0.4",
     "@personalidol/texture-loader": "^0.0.4",
     "@personalidol/three-modules": "^0.0.4",
-    "@personalidol/three-renderer": "^0.0.4",
+    "@personalidol/three-css2d-renderer": "^0.0.4",
     "i18next": "^19.9.2",
     "i18next-chained-backend": "^2.0.1",
     "i18next-http-backend": "^1.1.1",

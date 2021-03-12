@@ -1,7 +1,7 @@
 import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
-import { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer";
-import { CSS2DRendererStatsHook } from "@personalidol/three-renderer/src/CSS2DRendererStatsHook";
+import { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer";
+import { CSS2DRendererStatsHook } from "@personalidol/three-css2d-renderer/src/CSS2DRendererStatsHook";
 import { Director } from "@personalidol/framework/src/Director";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";

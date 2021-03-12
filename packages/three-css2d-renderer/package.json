@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",
-  "name": "@personalidol/three-renderer",
+  "name": "@personalidol/three-css2d-renderer",
   "publishConfig": {
     "access": "public"
   },

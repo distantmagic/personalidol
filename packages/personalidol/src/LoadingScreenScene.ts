@@ -16,7 +16,7 @@ import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/Glitc
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
-import { updatePerspectiveCameraAspect } from "@personalidol/three-renderer/src/updatePerspectiveCameraAspect";
+import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updatePerspectiveCameraAspect";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";

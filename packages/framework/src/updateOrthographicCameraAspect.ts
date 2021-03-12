@@ -1,4 +1,4 @@
-import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
+import { DimensionsIndices } from "./DimensionsIndices.enum";
 
 import type { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
 

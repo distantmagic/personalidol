@@ -13,7 +13,7 @@ import { MapScene } from "./MapScene";
 
 import type { Logger } from "loglevel";
 
-import type { CSS2DRenderer } from "@personalidol/three-renderer/src/CSS2DRenderer.interface";
+import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer.interface";
 import type { DirectorState } from "@personalidol/framework/src/DirectorState.type";
 import type { DOMElementViewHandle as IDOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle.interface";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
