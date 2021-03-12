@@ -25,22 +25,28 @@ export function ProgressManager(): IProgressManager {
   const _currentlyLoading: Map<string, MessageProgressChange> = new Map();
 
   function _updateState(): void {
-    state.errors = Array.from(_currentErrors.values());
-    state.messages = Array.from(_currentlyLoading.values());
-    state.version += 1;
-
     if (_currentErrors.size > 0 || state.expect > 0 || _currentlyLoading.size < 1) {
+      _updateStateMessages();
+
       return;
     }
 
-    for (let message of state.messages) {
+    for (let message of _currentlyLoading.values()) {
       if (!_currentlyLoaded.has(message)) {
+        _updateStateMessages();
+
         return;
       }
     }
 
     // All ad-hoc messages have been loaded and progress queue can be cleared.
     reset();
+  }
+
+  function _updateStateMessages(): void {
+    state.errors = Array.from(_currentErrors.values());
+    state.messages = Array.from(_currentlyLoading.values());
+    state.version += 1;
   }
 
   function done(message: MessageProgressDone): void {
