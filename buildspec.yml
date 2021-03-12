@@ -14,6 +14,7 @@ artifacts:
     - lib/index.js
     - lib/index.js.map
     - lib/worker_ammo.js
+    - lib/worker_ammo.js.map
     - lib/worker_atlas.js
     - lib/worker_atlas.js.map
     - lib/worker_gltf.js
