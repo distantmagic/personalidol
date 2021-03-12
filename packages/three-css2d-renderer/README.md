@@ -1,7 +1,6 @@
-# `three-renderer`
+# `three-css2d-renderer`
 
-Wrapper around THREE WebGL renderer to work as a Personal Idol service. It uses EffectComposer to allow scenes to control most of the rendering process.
-
-## Services
-
-1. `Renderer` - plugs into the animation frame and handles rendering via the EffectComposer.
+Custom implementation of `three` `CSS2DRenderer` that is capable of running
+in the worker thread. Instead of rendering directly to DOM, it renders views
+supported by `dom-renderer` package and communicates via shared memory and
+message channels.
