@@ -33,6 +33,8 @@
 
       #canvas,
       #ui-root {
+        bottom: 0;
+        right: 0;
         left: 0;
         position: absolute;
         top: 0;
@@ -64,17 +66,15 @@
         body {
           background-color: darkred;
         }
-
-        #ui-root {
-          bottom: 0;
-          right: 0;
-        }
       </style>
     </noscript>
     <div id="game-root">
       <canvas id="canvas"></canvas>
       <div id="ui-root">
         <pi-progress-manager-state class="ui-placeholder">
+          <div class="ui-placeholder-label">
+            Loading ...
+          </div>
           <noscript>
             <div class="ui-placeholder-label" id="ui-label-js-disabled">
               Error: You need to JavaScript to run this application.
@@ -100,10 +100,6 @@
         `;
       });
     }());</script>
-    <script
-      async
-      src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}"
-      type="module"
-    ></script>
+    <script async src="/g/personalidol/lib/index.js?{{{__CACHE_BUST}}}"type="module"></script>
   </body>
 </html>
