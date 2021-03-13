@@ -18,7 +18,6 @@ const _css = `
   }
 
   .overlay {
-    background-color: rgba(0, 0, 0, 0.6);
     bottom: 0;
     left: 0;
     line-height: 1.7;
@@ -48,7 +47,7 @@ const _css = `
   @media (max-width: ${DOMBreakpoints.MobileMax}px) {
     .overlay {
       align-items: stretch;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: black;
       justify-content: stretch;
       display: grid;
       overflow-y: auto;
