@@ -1,7 +1,16 @@
 {
-  "name": "root",
   "private": true,
-  "devDependencies": {
-    "lerna": "^3.22.1"
-  }
+  "workspaces": [
+    "packages/ammo",
+    "packages/dom",
+    "packages/dom-renderer",
+    "packages/framework",
+    "packages/i18n",
+    "packages/personalidol",
+    "packages/quakemaps",
+    "packages/service-worker",
+    "packages/texture-loader",
+    "packages/three-css2d-renderer",
+    "packages/three-modules"
+  ]
 }

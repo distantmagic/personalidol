@@ -1,7 +1,7 @@
-node_modules:
-	yarn install
+node_modules: package-lock.json
+	npm install
 	touch node_modules
 
-yarn.lock: package.json
-	yarn install
+package-lock.json: package.json
+	npm install
 	touch node_modules
