@@ -35,7 +35,7 @@ This is a sample Nginx config that works with the project (assuming you are
 using the above gist to generate local cert). You also need to adjust the
 Nginx config to match your project paths:
 
-```
+```nginx
 server {
     listen 443 ssl default_server;
     listen [::]:443 ssl default_server;
