@@ -9,7 +9,7 @@ You need to use `yarn` package manager as this project relies on yarn
 workspaces. Although it may work, you shouldn't try build this project with
 `npm` because it will result in much bigger build size (`npm` does not support
 dependencies hoisting without additional tools like
-[Lerna](https://github.com/lerna/lerna) , which is not used here).
+[Lerna](https://github.com/lerna/lerna), which is not used here).
 
 Invoke `make release` to build the project. It will install all the
 dependencies, etc. You do not have to run `yarn install` or anything else
@@ -28,7 +28,7 @@ command line. It will start the compiler in "watch" mode.
 
 This package does not contain the web server and really I think it shouldn't.
 Locally I am using nginx for development. Since the project requires service
-worker to work it needs to run with SSL (even if you are developing locally).
+worker it needs to run under SSL (even if you are developing locally).
 
 I prepared a code snippet to generate self-signed SSL certificate for use under
 local development to make things a bit easier:
@@ -76,3 +76,11 @@ server {
 ```
 
 Assets are not included in this repo as some of them have non-free licenses.
+
+## Support
+
+If you need support, feel free to open issue on GitHub.
+
+If you need 1:1 support via call, you can find me on Codementor.
+
+[![Contact me on Codementor](https://www.codementor.io/m-badges/matcha/im-a-cm-b.svg)](https://www.codementor.io/@matcha?refer=badge)
