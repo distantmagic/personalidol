@@ -68,6 +68,7 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     isView: true,
     name: `TargetView("${entity.properties.targetname}")`,
     object3D: base,
+    raycasterObject3D: base,
     state: state,
 
     dispose: dispose,

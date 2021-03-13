@@ -38,7 +38,7 @@ export function PlayerView(
     isPreloaded: false,
     isPreloading: false,
     isRayIntersecting: false,
-    needsRaycast: false,
+    needsRaycast: true,
     needsUpdates: true,
   });
 
@@ -90,6 +90,7 @@ export function PlayerView(
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    _playerModel.state.isRayIntersecting = state.isRayIntersecting;
     _playerModel.update(delta, elapsedTime, tickTimerState);
   }
 
@@ -102,6 +103,7 @@ export function PlayerView(
     isView: true,
     name: `PlayerView`,
     object3D: _playerModel.object3D,
+    raycasterObject3D: _playerModel.raycasterObject3D,
     state: state,
 
     dispose: dispose,

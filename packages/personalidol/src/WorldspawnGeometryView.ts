@@ -165,6 +165,7 @@ export function WorldspawnGeometryView(
     isView: true,
     name: `WorldspawnGeometryView`,
     object3D: _mesh,
+    raycasterObject3D: _mesh,
     state: state,
 
     dispose: dispose,

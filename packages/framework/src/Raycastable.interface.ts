@@ -4,6 +4,6 @@ import type { RaycastableState } from "./RaycastableState.type";
 
 export interface Raycastable {
   readonly isRaycastable: true;
-  readonly object3D: Object3D;
+  readonly raycasterObject3D: Object3D;
   readonly state: RaycastableState;
 }

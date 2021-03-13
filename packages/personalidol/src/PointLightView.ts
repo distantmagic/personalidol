@@ -77,8 +77,9 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
     isRaycastable: true,
     isView: true,
     name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
-    state: state,
     object3D: _pointLight,
+    raycasterObject3D: _pointLight,
+    state: state,
 
     dispose: dispose,
     mount: mount,

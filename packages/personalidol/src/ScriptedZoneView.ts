@@ -75,6 +75,7 @@ export function ScriptedZoneView(logger: Logger, userSettings: UserSettings, sce
     isView: true,
     name: `ScriptedZoneView()`,
     object3D: new Object3D(),
+    raycasterObject3D: new Object3D(),
     state: state,
 
     dispose: dispose,

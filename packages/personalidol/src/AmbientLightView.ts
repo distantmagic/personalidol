@@ -70,6 +70,7 @@ export function AmbientLightView(logger: Logger, userSettings: UserSettings, sce
     isView: true,
     name: `AmbientLightView(${entity.light})`,
     object3D: _ambientLight,
+    raycasterObject3D: _ambientLight,
     state: state,
 
     dispose: dispose,

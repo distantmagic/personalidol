@@ -8,12 +8,13 @@ import type { Raycaster as ITHREERaycaster } from "three/src/core/Raycaster";
 import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 
 import type { CameraController } from "./CameraController.interface";
-import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { Raycastable } from "./Raycastable.interface";
 import type { Raycaster as IRaycaster } from "./Raycaster.interface";
+import type { RaycasterState } from "./RaycasterState.type";
 
 export function Raycaster(camerController: CameraController, mouseState: Int32Array, touchState: Int32Array): IRaycaster {
-  const state: MainLoopUpdatableState = Object.seal({
+  const state: RaycasterState = Object.seal({
+    hasIntersections: false,
     needsUpdates: true,
   });
   const raycastables: Set<Raycastable> = new Set();
@@ -22,7 +23,8 @@ export function Raycaster(camerController: CameraController, mouseState: Int32Ar
   const _vector2: IVector2 = new Vector2();
 
   function _raycast(raycastable: Raycastable): void {
-    raycastable.state.isRayIntersecting = _threeRaycaster.intersectObject(raycastable.object3D, false).length > 0;
+    raycastable.state.isRayIntersecting = _threeRaycaster.intersectObject(raycastable.raycasterObject3D, false).length > 0;
+    state.hasIntersections = state.hasIntersections || raycastable.state.isRayIntersecting;
   }
 
   function _updateRaycasterCamera(): void {
@@ -33,6 +35,8 @@ export function Raycaster(camerController: CameraController, mouseState: Int32Ar
 
   function update(): void {
     _updateRaycasterCamera();
+
+    state.hasIntersections = false;
     raycastables.forEach(_raycast);
   }
 

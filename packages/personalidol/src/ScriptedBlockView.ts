@@ -101,6 +101,7 @@ export function ScriptedBlockView(
     isView: true,
     name: `ScriptedBlockView("${entity.controller}", ${name(_worldspawnGeometryView)})`,
     object3D: _worldspawnGeometryView.object3D,
+    raycasterObject3D: _worldspawnGeometryView.object3D,
     state: state,
 
     dispose: dispose,

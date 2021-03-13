@@ -88,6 +88,7 @@ export function SpotlightLightView(logger: Logger, userSettings: UserSettings, s
     isView: true,
     name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     object3D: _spotLight,
+    raycasterObject3D: _spotLight,
     state: state,
 
     dispose: dispose,

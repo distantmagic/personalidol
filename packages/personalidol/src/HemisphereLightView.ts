@@ -72,6 +72,7 @@ export function HemisphereLightView(logger: Logger, userSettings: UserSettings, 
     isView: true,
     name: `HemisphereLightView(${entity.light})`,
     object3D: _hemisphereLight,
+    raycasterObject3D: _hemisphereLight,
     state: state,
 
     dispose: dispose,

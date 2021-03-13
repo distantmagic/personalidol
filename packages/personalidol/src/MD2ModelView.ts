@@ -294,6 +294,7 @@ export function MD2ModelView(
     isView: true,
     name: name,
     object3D: _mesh,
+    raycasterObject3D: _mesh,
     state: state,
 
     dispose: dispose,

@@ -94,6 +94,7 @@ export function InstancedGLTFModelView(
     isView: true,
     name: `InstancedGLTFModelView("${entity.model_name}", "${entity.model_texture}", ${entity.scale})`,
     object3D: _object3D,
+    raycasterObject3D: _object3D,
     state: state,
 
     dispose: dispose,

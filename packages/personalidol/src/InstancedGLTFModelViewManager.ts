@@ -310,6 +310,7 @@ export function InstancedGLTFModelViewManager(
     isView: true,
     name: nameable.name,
     object3D: scene,
+    raycasterObject3D: scene,
     scene: scene,
     state: state,
 
