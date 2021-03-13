@@ -10,10 +10,11 @@ import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updat
 
 import type { Logger } from "loglevel";
 
+import type { CameraController as ICameraController } from "@personalidol/framework/src/CameraController.interface";
+import type { CameraControllerState } from "@personalidol/framework/src/CameraControllerState.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { CameraControllerState } from "./CameraControllerState.type";
-import type { CameraController as ICameraController } from "./CameraController.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 const CAMERA_DAMP = 10;
@@ -30,6 +31,7 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    lastCameraTypeChange: 0,
     needsUpdates: true,
   });
 
@@ -50,6 +52,7 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
 
   let _currentCamera: OrthographicCamera | PerspectiveCamera = _perspectiveCamera;
   let _cameraZoomAmount = 0;
+  let _isCameraChanged: boolean = false;
   let _orthographicCameraFrustumSize: number = _cameraZoomAmount;
   let _needsImmediateMove: boolean = false;
 
@@ -100,14 +103,20 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
     state.isPaused = false;
   }
 
-  function update(delta: number): void {
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    _isCameraChanged = _currentCamera.type !== userSettings.cameraType;
+
+    if (_isCameraChanged) {
+      state.lastCameraTypeChange = tickTimerState.currentTick;
+    }
+
     if (_orthographicCamera.type === userSettings.cameraType) {
-      _needsImmediateMove = _needsImmediateMove || _currentCamera.type !== _orthographicCamera.type;
+      _needsImmediateMove = _needsImmediateMove || _isCameraChanged;
       _currentCamera = _orthographicCamera;
     }
 
     if (_perspectiveCamera.type === userSettings.cameraType) {
-      _needsImmediateMove = _needsImmediateMove || _currentCamera.type !== _perspectiveCamera.type;
+      _needsImmediateMove = _needsImmediateMove || _isCameraChanged;
       _currentCamera = _perspectiveCamera;
     }
 

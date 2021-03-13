@@ -22,6 +22,7 @@ import { KeyboardIndices } from "@personalidol/framework/src/KeyboardIndices.enu
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
+import { Raycaster } from "@personalidol/framework/src/Raycaster";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
@@ -49,19 +50,20 @@ import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
+import type { CameraController as ICameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer.interface";
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
+import type { Raycaster as IRaycaster } from "@personalidol/framework/src/Raycaster.interface";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/framework/src/View.interface";
 
-import type { CameraController as ICameraController } from "./CameraController.interface";
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { EntityFuncGroup } from "./EntityFuncGroup.type";
 import type { EntityGLTFModel } from "./EntityGLTFModel.type";
@@ -139,6 +141,7 @@ export function MapScene(
 
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState, eventBus);
   const _scene = new Scene();
+  const _raycaster: IRaycaster = Raycaster(_cameraController, mouseState, touchState);
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
 
   _scene.background = new Color(0x000000);
@@ -327,6 +330,10 @@ export function MapScene(
 
     for (let view of buildViews(logger, entityLookupTable, worldspawnTexture, entities)) {
       views.add(view);
+
+      if (view.state.needsRaycast) {
+        _raycaster.raycastables.add(view);
+      }
     }
 
     views.add(_instancedGLTFModelViewManager);
@@ -377,6 +384,10 @@ export function MapScene(
     }
 
     _cameraController.update(delta, elapsedTime, tickTimerState);
+
+    // Order is important here, update raycaster after the camera controller is
+    // updated, because it uses camera for raycasting.
+    _raycaster.update(delta, elapsedTime, tickTimerState);
 
     _renderPass.camera = _cameraController.camera;
 

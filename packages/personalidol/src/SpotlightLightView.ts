@@ -25,6 +25,8 @@ export function SpotlightLightView(logger: Logger, userSettings: UserSettings, s
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: true,
   });
 
@@ -82,6 +84,7 @@ export function SpotlightLightView(logger: Logger, userSettings: UserSettings, s
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: true,
+    isRaycastable: true,
     isView: true,
     name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     object3D: _spotLight,

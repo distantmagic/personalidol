@@ -48,6 +48,8 @@ export function WorldspawnGeometryView(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: true,
   });
 
@@ -159,6 +161,7 @@ export function WorldspawnGeometryView(
 
   return Object.freeze({
     id: id,
+    isRaycastable: true,
     isView: true,
     name: `WorldspawnGeometryView`,
     object3D: _mesh,

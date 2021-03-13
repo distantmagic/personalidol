@@ -50,7 +50,7 @@ export function MouseObserver(
 
     if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > state.lastUpdate) {
       // Clear inputs if the game window is not focused.
-      mouseState.fill(0);
+      MouseState.resetStateArray(mouseState);
       state.lastUpdate = tickTimerState.currentTick;
     }
 
@@ -107,13 +107,13 @@ export function MouseObserver(
         dimensionsState,
         mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_X],
         mouseState[MouseIndices.M_CLIENT_X],
-        MouseState.vector_scale
+        mouseState[MouseIndices.M_VECTOR_SCALE]
       );
       mouseState[MouseIndices.M_STRETCH_VECTOR_Y] = computePointerStretchVectorY(
         dimensionsState,
         mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_Y],
         mouseState[MouseIndices.M_CLIENT_Y],
-        MouseState.vector_scale
+        mouseState[MouseIndices.M_VECTOR_SCALE]
       );
     }
 
@@ -138,8 +138,8 @@ export function MouseObserver(
   function _updateDimensionsRelativeCoords(): void {
     mouseState[MouseIndices.M_RELATIVE_X] = mouseState[MouseIndices.M_CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
     mouseState[MouseIndices.M_RELATIVE_Y] = mouseState[MouseIndices.M_CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
-    mouseState[MouseIndices.M_VECTOR_X] = computePointerVectorX(dimensionsState, mouseState[MouseIndices.M_RELATIVE_X], MouseState.vector_scale);
-    mouseState[MouseIndices.M_VECTOR_Y] = computePointerVectorY(dimensionsState, mouseState[MouseIndices.M_RELATIVE_Y], MouseState.vector_scale);
+    mouseState[MouseIndices.M_VECTOR_X] = computePointerVectorX(dimensionsState, mouseState[MouseIndices.M_RELATIVE_X], mouseState[MouseIndices.M_VECTOR_SCALE]);
+    mouseState[MouseIndices.M_VECTOR_Y] = computePointerVectorY(dimensionsState, mouseState[MouseIndices.M_RELATIVE_Y], mouseState[MouseIndices.M_VECTOR_SCALE]);
     mouseState[MouseIndices.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, mouseState[MouseIndices.M_CLIENT_X], mouseState[MouseIndices.M_CLIENT_Y]));
 
     state.lastUpdate = tickTimerState.currentTick;

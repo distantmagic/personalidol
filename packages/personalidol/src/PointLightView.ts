@@ -23,6 +23,8 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: true,
   });
 
@@ -72,6 +74,7 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isRaycastable: true,
     isView: true,
     name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,
     state: state,

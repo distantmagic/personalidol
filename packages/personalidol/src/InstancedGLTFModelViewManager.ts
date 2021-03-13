@@ -64,6 +64,8 @@ export function InstancedGLTFModelViewManager(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: true,
   });
 
@@ -304,6 +306,7 @@ export function InstancedGLTFModelViewManager(
   return Object.freeze({
     id: nameable.id,
     isInstancedGLTFModelViewManager: true,
+    isRaycastable: true,
     isView: true,
     name: nameable.name,
     object3D: scene,

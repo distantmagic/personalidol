@@ -37,6 +37,8 @@ export function PlayerView(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: true,
   });
 
@@ -96,6 +98,7 @@ export function PlayerView(
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isRaycastable: true,
     isView: true,
     name: `PlayerView`,
     object3D: _playerModel.object3D,

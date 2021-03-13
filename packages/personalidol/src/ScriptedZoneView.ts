@@ -26,6 +26,8 @@ export function ScriptedZoneView(logger: Logger, userSettings: UserSettings, sce
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: false,
   });
 
@@ -69,6 +71,7 @@ export function ScriptedZoneView(logger: Logger, userSettings: UserSettings, sce
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isRaycastable: true,
     isView: true,
     name: `ScriptedZoneView()`,
     object3D: new Object3D(),

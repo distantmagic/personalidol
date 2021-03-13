@@ -29,6 +29,8 @@ export function InstancedGLTFModelView(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: true,
   });
 
@@ -88,6 +90,7 @@ export function InstancedGLTFModelView(
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isRaycastable: true,
     isView: true,
     name: `InstancedGLTFModelView("${entity.model_name}", "${entity.model_texture}", ${entity.scale})`,
     object3D: _object3D,

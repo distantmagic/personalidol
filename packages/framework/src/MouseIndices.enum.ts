@@ -16,6 +16,7 @@ export const enum MouseIndices {
   M_RELATIVE_Y,
   M_STRETCH_VECTOR_X,
   M_STRETCH_VECTOR_Y,
+  M_VECTOR_SCALE,
   M_VECTOR_X,
   M_VECTOR_Y,
 

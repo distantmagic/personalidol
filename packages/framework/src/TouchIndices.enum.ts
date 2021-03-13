@@ -3,6 +3,7 @@ export const enum TouchIndices {
   T_INITIATED_BY_ROOT_ELEMENT,
   T_LAST_USED,
   T_NAVIGATOR_MAX_TOUCH_POINTS,
+  T_VECTOR_SCALE,
   T_TOTAL,
 
   // Touch point 1

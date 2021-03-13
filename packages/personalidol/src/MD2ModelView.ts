@@ -117,6 +117,8 @@ export function MD2ModelView(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: true,
     needsUpdates: true,
   });
 
@@ -268,9 +270,19 @@ export function MD2ModelView(
 
     _meshUserSettingsManager.update(delta, elapsedTime, tickTimerState);
 
-    if (!state.isPaused) {
-      _animationMixer.update(delta);
+    if (state.isPaused) {
+      return;
     }
+
+    if (state.isRayIntersecting) {
+      // @ts-ignore
+      _mesh.material.color.set(0xff0000);
+    } else {
+      // @ts-ignore
+      _mesh.material.color.set(0xffffff);
+    }
+
+    _animationMixer.update(delta);
   }
 
   return Object.freeze({
@@ -278,6 +290,7 @@ export function MD2ModelView(
     id: id,
     isEntityView: true,
     isExpectingTargets: false,
+    isRaycastable: true,
     isView: true,
     name: name,
     object3D: _mesh,

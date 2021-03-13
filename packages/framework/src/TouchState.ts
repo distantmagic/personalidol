@@ -2,6 +2,8 @@ import { TouchIndices } from "./TouchIndices.enum";
 
 import type { PointerTouch } from "./PointerTouch.type";
 
+const T_VECTOR_SCALE = 32000;
+
 const touches: ReadonlyArray<PointerTouch> = [
   {
     CLIENT_X: TouchIndices.T0_CLIENT_X,
@@ -53,7 +55,7 @@ const touches: ReadonlyArray<PointerTouch> = [
   },
 ];
 
-function createEmptyState(usesSharedBuffer: boolean): Int32Array {
+function createStateArray(usesSharedBuffer: boolean): Int32Array {
   if (usesSharedBuffer) {
     return new Int32Array(new SharedArrayBuffer(TouchIndices.__TOTAL * Int32Array.BYTES_PER_ELEMENT));
   }
@@ -61,10 +63,21 @@ function createEmptyState(usesSharedBuffer: boolean): Int32Array {
   return new Int32Array(TouchIndices.__TOTAL);
 }
 
+function createEmptyState(usesSharedBuffer: boolean): Int32Array {
+  return resetStateArray(createStateArray(usesSharedBuffer));
+}
+
+function resetStateArray(stateArray: Int32Array): Int32Array {
+  stateArray.fill(0);
+  stateArray[TouchIndices.T_VECTOR_SCALE] = T_VECTOR_SCALE;
+
+  return stateArray;
+}
+
 export const TouchState = Object.freeze({
   touches: touches,
   touches_total: touches.length,
-  vector_scale: 32000,
 
   createEmptyState: createEmptyState,
+  resetStateArray: resetStateArray,
 });

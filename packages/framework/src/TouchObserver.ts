@@ -49,7 +49,7 @@ export function TouchObserver(
 
     if (!windowFocusObserverState.isDocumentFocused && windowFocusObserverState.lastUpdate > state.lastUpdate) {
       // Clear inputs if the game window is not focused.
-      touchState.fill(0);
+      TouchState.resetStateArray(touchState);
       state.lastUpdate = tickTimerState.currentTick;
     }
 
@@ -109,13 +109,13 @@ export function TouchObserver(
         dimensionsState,
         touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_X],
         touchState[TouchState.touches[i].CLIENT_X],
-        TouchState.vector_scale
+        touchState[TouchIndices.T_VECTOR_SCALE]
       );
       touchState[TouchState.touches[i].STRETCH_VECTOR_Y] = computePointerStretchVectorY(
         dimensionsState,
         touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_Y],
         touchState[TouchState.touches[i].CLIENT_Y],
-        TouchState.vector_scale
+        touchState[TouchIndices.T_VECTOR_SCALE]
       );
     }
 
@@ -143,8 +143,8 @@ export function TouchObserver(
     for (let i = 0; i < touchState[TouchIndices.T_TOTAL] && i < TouchState.touches_total; i += 1) {
       touchState[TouchState.touches[i].RELATIVE_X] = touchState[TouchState.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
       touchState[TouchState.touches[i].RELATIVE_Y] = touchState[TouchState.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
-      touchState[TouchState.touches[i].VECTOR_X] = computePointerVectorX(dimensionsState, touchState[TouchState.touches[i].RELATIVE_X], TouchState.vector_scale);
-      touchState[TouchState.touches[i].VECTOR_Y] = computePointerVectorY(dimensionsState, touchState[TouchState.touches[i].RELATIVE_Y], TouchState.vector_scale);
+      touchState[TouchState.touches[i].VECTOR_X] = computePointerVectorX(dimensionsState, touchState[TouchState.touches[i].RELATIVE_X], touchState[TouchIndices.T_VECTOR_SCALE]);
+      touchState[TouchState.touches[i].VECTOR_Y] = computePointerVectorY(dimensionsState, touchState[TouchState.touches[i].RELATIVE_Y], touchState[TouchIndices.T_VECTOR_SCALE]);
       touchState[TouchState.touches[i].IN_BOUNDS] = Number(
         isInDimensionsBounds(dimensionsState, touchState[TouchState.touches[i].CLIENT_X], touchState[TouchState.touches[i].CLIENT_Y])
       );

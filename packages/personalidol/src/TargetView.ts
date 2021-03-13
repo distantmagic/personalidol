@@ -21,6 +21,8 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: false,
   });
 
@@ -62,6 +64,7 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isRaycastable: true,
     isView: true,
     name: `TargetView("${entity.properties.targetname}")`,
     object3D: base,

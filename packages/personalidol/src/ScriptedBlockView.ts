@@ -43,6 +43,8 @@ export function ScriptedBlockView(
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
+    isRayIntersecting: false,
+    needsRaycast: false,
     needsUpdates: true,
   });
 
@@ -95,6 +97,7 @@ export function ScriptedBlockView(
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: _controller.isExpectingTargets,
+    isRaycastable: true,
     isView: true,
     name: `ScriptedBlockView("${entity.controller}", ${name(_worldspawnGeometryView)})`,
     object3D: _worldspawnGeometryView.object3D,
