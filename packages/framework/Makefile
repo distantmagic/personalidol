@@ -1,2 +1,7 @@
-include ../../Makefile_node.mk
-include ../../Makefile_packages.mk
+.PHONY: clean
+clean:
+	rm -rf ./node_modules
+
+.PHONY: prettier
+prettier:
+	yarn run prettier --write --print-width 180 "src/**/*.{ts,tsx}"

@@ -12,4 +12,4 @@ const path = require("path");
   });
 
   await fs.writeFile(outputPath, rendered, "utf-8");
-}());
+})();

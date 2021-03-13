@@ -11,6 +11,7 @@
     "packages/service-worker",
     "packages/texture-loader",
     "packages/three-css2d-renderer",
-    "packages/three-modules"
+    "packages/three-modules",
+    "packages/website"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "author": "Mateusz Charytoniuk <mateusz.charytoniuk@protonmail.com>",
-  "browser": true,
+  "browser": {},
   "bugs": {
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },

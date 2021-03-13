@@ -1,7 +1,3 @@
-include ../../Makefile_node.mk
-include ../../Makefile_go.mk
-include ../../Makefile_packages.mk
-
 ASSETS_BASE_PATH ?= /g/personalidol/assets
 NODE_ENV ?= production
 LOCALES_LOAD_PATH ?= /g/personalidol/locales/{{lng}}/{{ns}}.json
@@ -11,14 +7,12 @@ STATIC_BASE_PATH ?= /g/personalidol
 BUILD_ID := $(shell sh ./scripts/helper_build_id.sh)
 CACHE_BUST := $(shell BUILD_ID=$(BUILD_ID) sh ./scripts/helper_cache_bust.sh)
 
-.PHONY: public.watch
-public.watch: node_modules
-	NODE_ENV=development ../../scripts/watch_trigger.sh $(MAKE) "$${PWD}/../*/src $${PWD}/public/*.mustache" "release" true
+# real targets
 
 public/index.html: public/index.mustache $(SOURCES_TS)
 	CACHE_BUST=$(CACHE_BUST) node ./scripts/build_mustache.js
 
-public/index.js: node_modules/.bin/esbuild scripts/build_public.sh tsc $(SOURCES_TS)
+public/index.js: scripts/build_public.sh $(SOURCES_TS)
 	ASSETS_BASE_PATH=${ASSETS_BASE_PATH} \
 	BUILD_ID=$(BUILD_ID) \
 	CACHE_BUST=$(CACHE_BUST) \
@@ -28,9 +22,27 @@ public/index.js: node_modules/.bin/esbuild scripts/build_public.sh tsc $(SOURCES
 	STATIC_BASE_PATH=${STATIC_BASE_PATH} \
 		./scripts/build_public.sh
 
-.PHONY: release
-release: public/index.html public/index.js
+# phony targets
 
-.PHONY: test
-test:
-	echo "-"
+.PHONY: clean
+clean:
+	rm -rf ./node_modules
+	rm -rf ./public/index.html
+	rm -rf ./public/lib
+	rm -rf ./public/service_worker.js
+	rm -rf ./public/service_worker.js.map
+
+.PHONY: prettier
+prettier:
+	yarn run prettier --write --print-width 180 "{scripts,src}/**/*.{js,ts,tsx}"
+
+.PHONY: public.watch
+public.watch:
+	NODE_ENV=development ../../scripts/watch_trigger.sh $(MAKE) "$${PWD}/../*/src $${PWD}/public/*.mustache" "release" true
+
+.PHONY: release
+release: tsc public/index.html public/index.js
+
+.PHONY: tsc
+tsc:
+	yarn run tsc --noEmit
