@@ -6,7 +6,10 @@ of those subprojects (packages) has its own README file.
 ## Building
 
 You need to use `yarn` package manager as this project relies on yarn
-workspaces.
+workspaces. Although it may work, you shouldn't try build this project with
+`npm` because it will result in much bigger build size (`npm` does not support
+dependencies hoisting without additional tools like
+[Lerna](https://github.com/lerna/lerna) , which is not used here).
 
 Invoke `make release` to build the project. It will install all the
 dependencies, etc. You do not have to run `yarn install` or anything else
