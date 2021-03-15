@@ -7,7 +7,7 @@ STATIC_BASE_PATH ?= /g/personalidol
 BUILD_ID := $(shell sh ./scripts/helper_build_id.sh)
 CACHE_BUST := $(shell BUILD_ID=$(BUILD_ID) sh ./scripts/helper_cache_bust.sh)
 
-# real targets
+# Real targets
 
 public/index.html: public/index.mustache $(SOURCES_TS)
 	CACHE_BUST=$(CACHE_BUST) node ./scripts/build_mustache.js
@@ -22,7 +22,7 @@ public/index.js: scripts/build_public.sh $(SOURCES_TS)
 	STATIC_BASE_PATH=${STATIC_BASE_PATH} \
 		./scripts/build_public.sh
 
-# phony targets
+# Phony targets
 
 .PHONY: clean
 clean:
@@ -39,6 +39,10 @@ prettier:
 .PHONY: public.watch
 public.watch:
 	NODE_ENV=development ../../scripts/watch_trigger.sh $(MAKE) "$${PWD}/../*/src $${PWD}/public/*.mustache" "release" true
+
+.PHONY: purge
+purge:
+	rm -f yarn.lock
 
 .PHONY: release
 release: tsc public/index.html public/index.js

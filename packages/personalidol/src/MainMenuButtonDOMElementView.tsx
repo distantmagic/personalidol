@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import clsx from "clsx";
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
@@ -77,7 +77,7 @@ export class MainMenuButtonDOMElementView extends DOMElementView<UserSettings> {
   render() {
     return (
       <button
-        class={classnames("main-menu-button", {
+        class={clsx("main-menu-button", {
           "main-menu-button--active": this._isActive,
         })}
         disabled={this._isDisabled}

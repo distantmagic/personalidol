@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import clsx from "clsx";
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
@@ -131,7 +131,7 @@ export class SettingsBackdropDOMElementView extends DOMElementView<UserSettings>
     return (
       <div class="overlay" id="overlay" onClick={this.onClick}>
         <div
-          class={classnames("overlay__content", {
+          class={clsx("overlay__content", {
             "overlay__content--is-loading": this._isLoading,
           })}
         >

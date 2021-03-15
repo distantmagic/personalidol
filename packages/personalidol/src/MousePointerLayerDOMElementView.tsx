@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import clsx from "clsx";
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
@@ -75,7 +75,7 @@ export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings
     return (
       <div class="mouse-pointer-layer">
         <svg
-          class={classnames("pointer", {
+          class={clsx("pointer", {
             "pointer--in-bounds": isMousePointerInDimensionsBounds(this.dimensionsState, this.mouseState),
             "pointer--is-pressed": isPrimaryMouseButtonPressed(this.mouseState) && isPointerInitiatedByRootElement(this.mouseState, this.touchState),
           })}

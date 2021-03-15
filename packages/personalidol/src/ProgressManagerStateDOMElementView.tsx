@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import clsx from "clsx";
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
@@ -162,7 +162,7 @@ export class ProgressManagerStateDOMElementView extends DOMElementView<UserSetti
           </div>
           <div class="progress-value">{this._expect > 0 ? this._progressPercentage : ""}</div>
           <div
-            class={classnames("progress-indicator", {
+            class={clsx("progress-indicator", {
               "progress-indicator--undetermined": this._expect < 1,
             })}
           >

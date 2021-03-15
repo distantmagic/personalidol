@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import clsx from "clsx";
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
@@ -165,7 +165,7 @@ export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettin
   renderBulletDisabled(value: T, index: number) {
     return (
       <div
-        class={classnames("pi-radio-button pi-radio-button--disabled", {
+        class={clsx("pi-radio-button pi-radio-button--disabled", {
           "pi-radio-button--active": value === this.currentValue,
           "pi-radio-button--inactive": value !== this.currentValue,
         })}
@@ -182,7 +182,7 @@ export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettin
 
     return (
       <div
-        class={classnames("pi-radio-button", {
+        class={clsx("pi-radio-button", {
           "pi-radio-button--active": value === this.currentValue,
           "pi-radio-button--inactive": value !== this.currentValue,
         })}
@@ -209,7 +209,7 @@ export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettin
 
     return (
       <div
-        class={classnames("pi-radio", {
+        class={clsx("pi-radio", {
           "pi-radio--disabled": this._isDisabled,
         })}
       >
