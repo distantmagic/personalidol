@@ -15,7 +15,6 @@ module.exports = {
   themeConfig: {
     colorMode: {
       defaultMode: 'dark',
-      disableSwitch: true,
       respectPrefersColorScheme: true,
     },
     navbar: {
