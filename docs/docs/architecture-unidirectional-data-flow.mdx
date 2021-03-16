@@ -24,52 +24,53 @@ Data flow approach was inspired by the
 ### Unidirectional data flow with the `DimensionsState`
 
 This is the example partial flow of the
-[`DimensionsState`](framework-DimensionsState.md), which keeps the canvas
-dimensions. [`DimensionsState`](framework-DimensionsState.md),
-[`MouseState`](framework-MouseState.md), [`TouchState`](framework-TouchState.md)
-are not active (they do not notify other elements about changes, they just keep
-the state). State objects always have some kind of `lastUpdate` field for
+[`DimensionsState`](framework-DimensionsState.mdx), which keeps the canvas
+dimensions. [`DimensionsState`](framework-DimensionsState.mdx),
+[`MouseState`](framework-MouseState.mdx),
+[`TouchState`](framework-TouchState.mdx) are not active (they do not notify
+other elements about changes, they just keep the state). State objects always
+have some kind of `lastUpdate` field for
 reference, they are able to be polled for changes if necessary.
 
 Flow of data is always unidirectional.
-[`WindowResizeObserver`](framework-WindowResizeObserver.md) listens to the
+[`WindowResizeObserver`](framework-WindowResizeObserver.mdx) listens to the
 window resize event and sets dimensions state to those of the window. This is
 the only responsibility of this object and *nothing else* modifies the
-[`DimensionsState`](framework-DimensionsState.md) array. This is not enforced
+[`DimensionsState`](framework-DimensionsState.mdx) array. This is not enforced
 by defensing programming, using write tokens, etc, just by adhering to the
 application architecture.
 
 There are several objects that read from the
-[`DimensionsState`](framework-DimensionsState.md). On the diagram only some of
+[`DimensionsState`](framework-DimensionsState.mdx). On the diagram only some of
 them are listed for the sake of the example.
 
 ![DimensionsState](../static/diagrams/architecture-event-and-state-DimensionsState-WindowResizeObserver.svg)
 
-- [`MouseObserver`](framework-MouseObserver.md) reads the dimensions array to
+- [`MouseObserver`](framework-MouseObserver.mdx) reads the dimensions array to
   produce normalized mouse pointer vector for further processing by the scene
   controller (the kind of [-1; 1] vector you can use for raycasting for
   example). Then it stores that vector alongside other mouse state parameters
   (on-screen position, currently pressed buttons, etc) to the
-  [`MouseState`](framework-MouseState.md).
+  [`MouseState`](framework-MouseState.mdx).
 
-- [`TouchObserver`](framework-TouchObserver.md) does the same thing as
-  [`MouseObserver`](framework-MouseObserver.md), but with touch input. It
-  writes to the [`TouchState`](framework-TouchState.md).
+- [`TouchObserver`](framework-TouchObserver.mdx) does the same thing as
+  [`MouseObserver`](framework-MouseObserver.mdx), but with touch input. It
+  writes to the [`TouchState`](framework-TouchState.mdx).
 
-- [`RendererDimensionsManager`](dom-renderer-RendererDimensionsManager.md)
+- [`RendererDimensionsManager`](dom-renderer-RendererDimensionsManager.mdx)
   during every frame checks if the
-  [`DimensionsState`](framework-DimensionsState.md) has been changed. If so, it
+  [`DimensionsState`](framework-DimensionsState.mdx) has been changed. If so, it
   reads the dimensions and sets the canvas size to those dimensions.
 
-- [`CameraController`](personalidol-CameraController.md)
+- [`CameraController`](personalidol-CameraController.mdx)
   during every frame checks if the
-  [`DimensionsState`](framework-DimensionsState.md) has been changed. If so, it
+  [`DimensionsState`](framework-DimensionsState.mdx) has been changed. If so, it
   uses dimensions to set the camera aspect or frustum size (depending on the
   type of the camera)
 
-- [`MapScene`](personalidol-MapScene.md) is a controller that reads from
-  [`MouseState`](framework-MouseState.md)
-  and [`TouchState`](framework-TouchState.md) to respond to user
+- [`MapScene`](personalidol-MapScene.mdx) is a controller that reads from
+  [`MouseState`](framework-MouseState.mdx)
+  and [`TouchState`](framework-TouchState.mdx) to respond to user
   interactions.
 
 ### Separation of concerns benefits
@@ -105,6 +106,6 @@ achieves several things (among others):
 The huge thing that deserves it's own paragraph is maintainability. For
 example, what if you want your application to fit the canvas into some
 specific `HTMLElement` instead of span it across the entire window? You can
-just replace the [`WindowResizeObserver`](framework-WindowResizeObserver.md)
-with [`HTMLElementResizeObserver`](framework-HTMLElementResizeObserver.md) and
+just replace the [`WindowResizeObserver`](framework-WindowResizeObserver.mdx)
+with [`HTMLElementResizeObserver`](framework-HTMLElementResizeObserver.mdx) and
 et voilà! Just works.
