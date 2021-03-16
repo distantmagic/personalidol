@@ -1,0 +1,195 @@
+---
+id: dom-renderer-DOMElementView
+title: DOMElementView
+slug: /dom-renderer/DOMElementView
+---
+
+import Link from '@docusaurus/Link';
+
+:::note
+This is a class and needs to be instantiated with a `new` keyword.
+This is an exception to the rule here. See:
+[Class-free object oriented programming](architecture-class-free.mdx).
+:::
+
+:::caution
+Internally by default it uses [Preact](https://preactjs.com/) just to render
+HTML elements, but behold! It behaves much differently than a Preact component.
+Please read the this page carefully before using `DOMElementView`.
+:::
+
+`DOMElementView` extends
+[`HTMLElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement)
+and by detault opens a
+[`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot).
+
+It is highly recommended to not use this class on its own, but to always use it
+with [`DOMUIController`](dom-renderer-DOMUIController.mdx) instead.
+
+## Behaviors
+
+<table>
+  <thead>
+    <tr>
+      <th scope="column">Interface</th>
+      <th scope="column">Implementation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">
+        <Link to="../framework/MainLoopUpdatable.interface">MainLoopUpdatable</Link>
+      </th>
+      <td>
+        <p>
+          Normally, Preact components are updated when state, props or context
+          changes, but <code>DOMElementView</code> is not a Preact component,
+          it only uses it for rendering.
+        </p>
+        <p>
+          Instead, <code>DOMElementView</code> checks every frame if it needs
+          to render. This is like so, because it makes it much easier to
+          synchronize the DOM state with WebGL scene state.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Generics
+
+### `U`: extends [`UserSettings`](framework-UserSettings.mdx)
+
+## Constructor
+
+:::caution
+`DOMElementView` extends `HTMLElement` and as such it can't use constructor
+arguments. If you are not using
+[`DOMUIController`](dom-renderer-DOMUIController.mdx), you have to set
+desired properties before using the object.
+:::
+
+```typescript
+import { DOMElementView } from "@personalidol/dom-renderer/DOMElementView";
+
+const domElementView = new DOMElementView();
+```
+
+## Properties
+
+### `.css`: string
+
+Set this property to the desired css limited in scope to the
+[`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot).
+If [constructable stylesheets](https://caniuse.com/mdn-api_cssstylesheet_replacesync)
+are supported, they will be used to share styles between multiple instances of
+the component. Otherwise, CSS will be inlined in the `<style />` tag.
+
+### `.dimensionsState`: Uint32Array
+
+Set this to the [`DimensionsState`](framework-DimensionsState.mdx) array before
+using the object if you need it.
+
+If you are using [`DOMUIController`](dom-renderer-DOMUIController.mdx) it sets
+this property for you when object is connected to the DOM.
+
+### `.domMessagePort`: MessagePort
+
+Set this to the
+[`MessagePort`](https://developer.mozilla.org/en-US/docs/Web/API/MessagePort)
+that is connected to the [`DOMUIController`](dom-renderer-DOMUIController.mdx)
+if you want to render other DOM views using the
+[portal pattern](https://reactjs.org/docs/portals.html).
+
+If you are using [`DOMUIController`](dom-renderer-DOMUIController.mdx) it sets
+this property for you when object is connected to the DOM.
+
+### `.i18next`: i18n
+
+Set this to the [`i18next`](https://www.i18next.com/) instance if you want to
+use translations.
+
+If you are using [`DOMUIController`](dom-renderer-DOMUIController.mdx) it sets
+this property for you when object is connected to the DOM.
+
+### `.keyboardState`: Uint8Array
+
+Set this to the [`KeyboardState`](framework-KeyboardState.mdx) array before
+using the object if you need it.
+
+If you are using [`DOMUIController`](dom-renderer-DOMUIController.mdx) it sets
+this property for you when object is connected to the DOM.
+
+### `.mouseState`: Int32Array
+
+Set this to the [`MouseState`](framework-MouseState.mdx) array before
+using the object if you need it.
+
+If you are using [`DOMUIController`](dom-renderer-DOMUIController.mdx) it sets
+this property for you when object is connected to the DOM.
+
+### `.touchState`: Int32Array
+
+Set this to the [`TouchState`](framework-TouchState.mdx) array before
+using the object if you need it.
+
+If you are using [`DOMUIController`](dom-renderer-DOMUIController.mdx) it sets
+this property for you when object is connected to the DOM.
+
+### `.lastRenderedLanguage`: string
+
+Stores the information about the last rendered language that is currently
+in the DOM. You can use it to display the current language. It is also
+used to check if language changed since the last render, so you should
+not write to this property yourself unless you know what you are doing.
+
+### `.needsRender`: boolean
+
+You need to set this property to `true` if you want to write the changes
+to DOM upon the next animation tick. Without setting this to `true`,
+`.render()` method won't be called. It's not just the optimization, this field
+is *required* to be `true` in order to render anything.
+
+Changing user settings or user language changes this property to `true`
+automatically, so you don't have to check for settings or language changes.
+
+After rendering, it is changed back to `false`, so each time you want an
+update, you have to set it to `true`. Good place to do so and perform
+additional checks to determine if you want a render is either
+`.beforeRender()` method, which is here primarily just for this purpose, or
+inside a property / attribute setter.
+
+### `.uiMessagePort`: MessagePort
+
+This
+[`MessagePort`](https://developer.mozilla.org/en-US/docs/Web/API/MessagePort)
+can be used to notify the UIStateController about the desired state of the UI.
+It is better to use the UI state instead of directly render other components
+via `.domMessagePort`, but the possibility is still there.
+
+### `.userSettings`: U
+
+Current user settings.
+
+### `.version`: number
+
+This property is bumped by 1 by
+[`DOMUIController`](dom-renderer-DOMUIController.mdx) each time it sets a new
+properties batch. This is done for optimization, to not have to compare all
+properties each time component needs to check if it needs to be rendered.
+
+## Methods
+
+### `.beforeRender()`: `void`
+
+This method is called on each tick to perform additional check to see if a
+render is required.
+
+### `.render()`: `null` | `VNode<any>`
+
+This method returns JSX VNode that is going to be written to DOM.
+
+### `.t()`: `void`
+
+This is a wrapper around [`i18next.t`](https://www.i18next.com/) function, but
+it's bound to the i18n context.

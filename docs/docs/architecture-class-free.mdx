@@ -1,7 +1,7 @@
 ---
 id: architecture-class-free
 title: Class-free object oriented programming
-slug: /architecture/design-principles
+slug: /architecture/class-free-object-oriented-programming
 ---
 
 ## Why are there no classes?
@@ -9,7 +9,7 @@ slug: /architecture/design-principles
 In short the project is avoiding inheritance to promote composition.
 
 I know that this one may sound like a heresy (not using classes) to a lot of
-programmers, so I'll try to expand more on the topic.
+programmers, so I'll try to elaborate more on the topic.
 
 Also I am a 30+ year old boomer, so I'll use a dead meme.
 
@@ -74,8 +74,8 @@ inconenience / improvement anyway.
 Unfortunately, it was not possible to apply this principle when working with
 external APIs that force the use of classes. Luckily, currently inheritance
 is used only with DOM custom elements as I think it would be better to just
-expose the entire [custom elements API](dom-renderer-DOMElementView.md) instead
-of creating some artificial class-free wrapper around them.
+expose the entire [custom elements API](dom-renderer-DOMElementView.mdx)
+instead of creating some artificial class-free wrapper around them.
 
 Also, yes it is possible to achieve the same thing with classes (as well as
 with hundreds of different approaches), but if it is the easiest and most
@@ -90,4 +90,11 @@ I highly recommend diving into Douglas Crockford works and lectures. I followed
 the similar approach in this project. When I tried it I was surprised how many
 common issues it resolves and how much easier it is to code that way.
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/XFTOG895C7c?start=2690" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe
+  height="400"
+  width="100%"
+  src="https://www.youtube-nocookie.com/embed/XFTOG895C7c?start=2690"
+  frameBorder="0"
+  allow="accelerometer;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+  allowFullScreen
+></iframe>

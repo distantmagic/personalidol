@@ -4,30 +4,40 @@ title: CameraController
 slug: /personalidol/CameraController
 ---
 
+import Link from '@docusaurus/Link';
+
 `CameraController` changes the camera position and type in response to user
 settings and actions. It also updates the camera aspect (for perspective
 camera) or frustum size (for orthographic camera) in response to changes in the
-[`DimensionsState`](framework-DimensionsState.md).
+[`DimensionsState`](framework-DimensionsState.mdx).
 
-It is aware of [`UserSettings`](personalidol-UserSettings.md) and is able to
+It is aware of [`UserSettings`](personalidol-UserSettings.mdx) and is able to
 switch between
 [`THREE.PerspectiveCamera`](https://threejs.org/docs/?q=perspe#api/en/cameras/PerspectiveCamera)
 and
 [`THREE.OrthographicCamera`](https://threejs.org/docs/?q=ortho#api/en/cameras/OrthographicCamera).
 
 Camera state is not updated immediately after
-[`UserSettings`](personalidol-UserSettings.md) are changed. Instead it updates
+[`UserSettings`](personalidol-UserSettings.mdx) are changed. Instead it updates
 the camera type and settings on the next available frame. `CameraController`
 should be updated before the scene is rendered.
 
 ## Behaviors
 
-See the base [`Mountable`](framework-Mountable.interface.md) and [`Pauseable`](framework-Pauseable.interface.md) interfaces for all methods and properties.
+See the base [`Mountable`](framework-Mountable.interface.mdx) and [`Pauseable`](framework-Pauseable.interface.mdx) interfaces for all methods and properties.
 
 <table>
+  <thead>
+    <tr>
+      <th scope="column">Interface</th>
+      <th scope="column">Implementation</th>
+    </tr>
+  </thead>
   <tbody>
     <tr>
-      <th>Pauseable</th>
+      <th scope="row">
+        <Link to="../framework/Pauseable.interface">Pauseable</Link>
+      </th>
       <td>
         If the <code>CameraController</code> is paused and updated, it does not
         respond to the user input, but it still updates camera frustum size or
@@ -35,9 +45,13 @@ See the base [`Mountable`](framework-Mountable.interface.md) and [`Pauseable`](f
       </td>
     </tr>
     <tr>
-      <th>MainLoopUpdatable</th>
+      <th scope="row">
+        <Link to="../framework/MainLoopUpdatable.interface">MainLoopUpdatable</Link>
+      </th>
       <td>
-        During each tick, <code>CameraController</code> (in this order):
+        <p>
+          During each tick, <code>CameraController</code> (in this order):
+        </p>
         <ol>
           <li>
             Checks <code>UserSettings</code> if a camera projection changed and
@@ -61,7 +75,9 @@ See the base [`Mountable`](framework-Mountable.interface.md) and [`Pauseable`](f
       </td>
     </tr>
     <tr>
-      <th>Mountable</th>
+      <th scope="row">
+        <Link to="../framework/Mountable.interface">Mountable</Link>
+      </th>
       <td>
         After mounting, <code>CameraController</code> starts listening to the
         event bus for user input events like mouse wheel zoom or gestures that
@@ -76,27 +92,29 @@ See the base [`Mountable`](framework-Mountable.interface.md) and [`Pauseable`](f
 ```typescript
 import type { Logger } from "loglevel";
 
-import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import { DimensionsState } from "@personalidol/framework/DimensionsState";
+import { KeyboardState } from "@personalidol/framework/KeyboardState";
+import { EventBus } from "@personalidol/framework/src/EventBus";
 
-import type { CameraController as ICameraController } from "@personalidol/personalidol/src/CameraController.interface";
-import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
+import { CameraController } from "@personalidol/personalidol/CameraController";
+import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 
-type CameraControllerConstructor = (
-  logger: Logger,
-  userSettings: UserSettings,
-  dimensionsState: Uint32Array,
-  keyboardState: Uint8Array,
-  eventBus: EventBus,
-) => ICameraController;
+const cameraController = CameraController(
+  Logger.getLogger(),
+  UserSettings.createEmptyState(window.devicePixelRatio),
+  DimensionsState.createEmptyState(false),
+  KeyboardState.createEmptyState(),
+  EventBus(),
+);
 ```
 
 ## Properties
 
-### `.camera`: [`THREE.OrthographicCamera`](https://threejs.org/docs/?q=ortho#api/en/cameras/OrthographicCamera) | [`THREE.PerspectiveCamera`](https://threejs.org/docs/?q=perspe#api/en/cameras/PerspectiveCamera) *readonly*
+### `.camera`: [`THREE.OrthographicCamera`](https://threejs.org/docs/?q=ortho#api/en/cameras/OrthographicCamera) | [`THREE.PerspectiveCamera`](https://threejs.org/docs/?q=perspe#api/en/cameras/PerspectiveCamera) *getter* *readonly*
 
 Contains a reference to the currently used camera.
 
-### `.needsImmediateMove`: `boolean`
+### `.needsImmediateMove`: `boolean` *setter*
 
 Settings this causes the `CameraController` to skip damping and move
 immediately to the target during the next frame. After camera moves to the
@@ -111,7 +129,7 @@ movement) to get to that position during a series of frames. You can change
 the position anytime, you don't have to check if `CameraController` is already
 moving, it will adjust automatically.
 
-### `.state`: [`CameraControllerState`](personalidol-CameraControllerState.type.md) *readonly*
+### `.state`: [`CameraControllerState`](personalidol-CameraControllerState.type.mdx) *readonly*
 
 All state properties are read-only and should not be changed from outside the
 `CameraController`.

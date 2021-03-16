@@ -1,0 +1,149 @@
+---
+id: architecture-parallelism
+title: Parallelism
+slug: /architecture/parallelism
+---
+
+import Link from '@docusaurus/Link';
+
+JavaScript at its core is an asynchronous language, but it does not allow real
+parallel execution unless you are using worker threads. I find this a really
+good solution that allows to handle UI events without worrying about thread
+safety and other similar concerns.
+
+## Workers
+
+The problem arises when the application needs to compute something heavy, that
+is able to block the main thread. There are a lot of such tasks to handle when
+developing a 3D environment project, especially loading 3D models, decoding
+audio or loading other types of assets. It is also a good idea to use offscreen
+canvas (although it has its own quirks) to render WebGL in the separate thread
+from the DOM rendering thread.
+
+This project starts with several workers to offload operations that may block
+the main thread:
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Fallback</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Loader(Atlas)</th>
+      <td>
+        <p>
+          Combines several textures into one bigger texture atlas to be used
+          later with world geometry.
+        </p>
+        <p>
+          Communicatest with <code>Loader(Texture)</code> and <code>Worker(Progress)</code>.
+        </p>
+      </td>
+      <td>
+        <p>
+          Falls back to the main thread if there is no support for <a href="https://caniuse.com/offscreencanvas"><code>OffscreenCanvas</code></a> as
+          it is used to combine textures.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Loader(GLTF)</th>
+      <td>
+        <p>
+          Parses GLTF/GLB model geometries and posts geometry attributes
+          back to the rendering thread.
+        </p>
+        <p>
+          Communicates with <code>Worker(Progress)</code>.
+        </p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">Loader(Map)</th>
+      <td>
+        <p>
+          Parses
+          <a href="https://kristianduske.com/trenchbroom/">Trenchbroom</a> maps
+          and posts back geometry attributes and texture atlas back to the
+          rendering thread.
+        </p>
+        <p>
+          Communicates with <code>Worker(Atlas)</code> and
+          <code>Worker(Progress)</code>.
+        </p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">Loader(MD2)</th>
+      <td>
+        <p>
+          Parses <a href="http://tfc.duke.free.fr/old/models/md2.htm">MD2</a>
+          models and posts geometry attributes back to the rendering thread.
+        </p>
+        <p>
+          Communicates with <code>Worker(Progress)</code>
+        </p>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Loader(Texture)</th>
+      <td>
+        <p>
+          Downloads a texture and creates a bitmap version for further use.
+        </p>
+        <p>
+          Communicates with <code>Worker(Progress)</code>
+        </p>
+      </td>
+      <td>
+        <p>
+          Falls back to the main thread if there is no support or there is only a partial support for <a href="https://caniuse.com/createimagebitmap"><code>createImageBitmap</code></a>.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Worker(Ammo)</th>
+      <td>
+        <p>
+          Processes <a href="https://github.com/kripken/ammo.js/">ammo.js</a> physics.
+        </p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <th scope="row">Worker(OffscreenCanvas)</th>
+      <td>
+        <p>
+          Renders WebGL scene off the main thread.
+        </p>
+        <p>
+          Communicates with <code>Worker(GLTF)</code>, <code>Worker(MD2)</code>, <code>Worker(Progress)</code>.
+        </p>
+      </td>
+      <td>
+        <p>
+          Falls back to the main thread if there is no support for <a href="https://caniuse.com/offscreencanvas"><code>OffscreenCanvas</code></a>.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Worker(Progress)</th>
+      <td>
+        <p>
+          Collects progress data (downloads, processing, etc) from all threads,
+          combines it and broadcasts progress state to render the loading
+          screen.
+        </p>
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>

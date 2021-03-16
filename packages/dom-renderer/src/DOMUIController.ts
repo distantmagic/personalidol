@@ -228,6 +228,8 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
         }
       }
     }
+
+    domElementView.version = props.version;
   }
 
   function dispose(message: MessageDOMUIDispose): void {

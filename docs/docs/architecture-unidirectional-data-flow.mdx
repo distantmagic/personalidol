@@ -1,7 +1,7 @@
 ---
-id: architecture-data-flow
-title: Data Flow
-slug: /architecture/events-and-state
+id: architecture-unidirectional-data-flow
+title: Unidirectional Data Flow
+slug: /architecture/unidirectional-data-flow
 ---
 
 ## Events, controllers and data
@@ -21,7 +21,7 @@ Data flow approach was inspired by the
 
 ## Example
 
-### One-directional data flow with the `DimensionsState`
+### Unidirectional data flow with the `DimensionsState`
 
 This is the example partial flow of the
 [`DimensionsState`](framework-DimensionsState.md), which keeps the canvas
@@ -31,7 +31,7 @@ are not active (they do not notify other elements about changes, they just keep
 the state). State objects always have some kind of `lastUpdate` field for
 reference, they are able to be polled for changes if necessary.
 
-Flow of data is always one-directional.
+Flow of data is always unidirectional.
 [`WindowResizeObserver`](framework-WindowResizeObserver.md) listens to the
 window resize event and sets dimensions state to those of the window. This is
 the only responsibility of this object and *nothing else* modifies the
@@ -89,9 +89,9 @@ achieves several things (among others):
   just before render and paint. The same goes with resizing window, etc.
 3. You can control when and how to handle events. For example, it would be
   better to resize the canvas and update the camera aspect first and render
-  later to avoid drawing drawing frame with invalid resolution and then
-  updating its size in response to the `resize` event. If the app responds to
-  events directly, anything can happend in whatever order.
+  later to avoid drawing frame with invalid resolution and then updating its
+  size in response to the `resize` event. If the app responds to events
+  directly, anything can happen in whatever order.
 4. Keeping the state in one place allows sharing information between workers
   and other different contexts where they are normally not accessible. For
   example, the framework uses
@@ -108,5 +108,3 @@ specific `HTMLElement` instead of span it across the entire window? You can
 just replace the [`WindowResizeObserver`](framework-WindowResizeObserver.md)
 with [`HTMLElementResizeObserver`](framework-HTMLElementResizeObserver.md) and
 et voilà! Just works.
-
-![DimensionsState](../static/diagrams/architecture-event-and-state-DimensionsState-HTMLElementResizeObserver.svg)

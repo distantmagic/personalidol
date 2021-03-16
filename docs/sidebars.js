@@ -5,12 +5,17 @@ module.exports = {
     ],
     architecture: [
       'architecture-class-free',
-      'architecture-data-flow',
+      'architecture-parallelism',
+      'architecture-unidirectional-data-flow',
+    ],
+    "known-issues": [
+      'known-issues-firefox-on-linux',
     ],
     api: [
       {
         "dom-renderer": [
           'dom-renderer-DOMElementView',
+          'dom-renderer-DOMUIController',
           'dom-renderer-RendererDimensionsManager',
         ],
         framework: [
@@ -18,10 +23,14 @@ module.exports = {
           'framework-HTMLElementResizeObserver',
           'framework-KeyboardObserver',
           'framework-KeyboardState',
+          'framework-MainLoop',
+          'framework-MainLoopUpdatable.interface',
           'framework-Mountable.interface',
           'framework-MouseState',
           'framework-Pauseable.interface',
+          'framework-TickTImerState.type',
           'framework-TouchState',
+          'framework-UserSettings',
           'framework-WindowResizeObserver',
         ],
         personalidol: [

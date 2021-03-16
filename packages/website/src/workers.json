@@ -1,6 +1,6 @@
 {
   "ammo": {
-    "name": "Loader(Ammo)",
+    "name": "Worker(Ammo)",
     "url": "/lib/worker_ammo.js"
   },
   "atlas": {

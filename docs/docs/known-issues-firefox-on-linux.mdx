@@ -1,0 +1,26 @@
+---
+id: known-issues-firefox-on-linux
+title: Firefox on Linux and WebGL
+slug: /known-issues/firefox-on-linux
+---
+
+To keep it short, support for WebGL in Firefox on Linux is not perfect (on
+Windows or Mac its fine) and it has not been addressed for years at the time of
+writing:
+
+https://bugzilla.mozilla.org/show_bug.cgi?id=1010527
+
+The biggest issue is that FPS is capped at 60 no matter what your display
+refresh rate is (there is no VSYNC on web anyway, but at least most WebGL
+browser implentations keep up with the refresh rate) and even with this cap, it
+has about 10 times less performance than WebKit. It is normal for me to see 144
+FPS on Chrome/Linux and 20 FPS on Firefox/Linux and this is purely the Firefox
+issue.
+
+According to the Firefox bugtracker it is related to X11 and be resolved when
+Wayland arrives.
+
+I wish Firefox the best, but my understanding is that there is no workaround
+for this and the issue won't be addressed with X11, so If you want to enjoy
+WebGL on Linux either wait for Wayland to arrive or just use Chrome in the
+meantime.

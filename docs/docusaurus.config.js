@@ -5,8 +5,8 @@ const githubRepoUrl = 'https://github.com/distantmagic/personalidol';
 module.exports = {
   title: 'Personal Idol',
   tagline: '',
-  url: 'https://distantmagic.com/g/personalidol/index.html',
-  baseUrl: '/',
+  url: 'https://distantmagic.github.io',
+  baseUrl: '/personalidol/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
@@ -81,7 +81,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} <a href="https://newride.tech/">Newride</a> Built with Docusaurus.`,
     },
   },
   presets: [
