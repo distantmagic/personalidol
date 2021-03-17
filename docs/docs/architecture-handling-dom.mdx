@@ -75,7 +75,7 @@ From the bottom up:
   id is defined in those messages, which allows to remotely render and update
   any specific component.
 
-5. [`UIStateController`](personalidol-UIStateController) is the declarative
+5. [`UIStateController`](personalidol-UIStateController.mdx) is the declarative
   part. It infers which elements should be rendered based on the `UIState`.
   `UIState` and `UIStateController` contain the business logic and need to be
   implemented in your project. This is an example `UIState`:
@@ -91,7 +91,7 @@ From the bottom up:
   ```
 
   It is the responsibility of the
-  [`UIStateController`](personalidol-UIStateController) to determine if the
+  [`UIStateController`](personalidol-UIStateController.mdx) to determine if the
   current state is valid or a state transition is allowed. If it is, then
   it requests the [`DOMUIController`](dom-renderer-DOMUIController.mdx)
   to render or dispose some specific DOM elements to make the DOM state
@@ -104,11 +104,11 @@ From the bottom up:
 7. [`DOMUIController`](dom-renderer-DOMUIController.mdx) can receive direct
   messages from both DOM views and scene controllers, but this possibility
   is there to handle some possible edge-cases that may be difficult to handle
-  via the `UIState` and [`UIStateController`](personalidol-UIStateController) -
-  primarily when the scene controller or view need to set specific properties
-  to the DOM view. This disrupts the unidirectional data flow (which may be
-  fine in some cases) and as a rule, `UIState` should be used for the sake of
-  consistency.
+  via the `UIState`
+  and [`UIStateController`](personalidol-UIStateController.mdx) - primarily
+  when the scene controller or view need to set specific properties to the DOM
+  view. This disrupts the unidirectional data flow (which may be fine in some
+  cases) and as a rule, `UIState` should be used for the sake of consistency.
 
 ## See also
 
