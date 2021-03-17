@@ -1,7 +1,11 @@
-# Personal Idol
+# Personal Idol (work in progress)
 
 Project is divided into smaller subprojects that are managed by Lerna. Each
 of those subprojects (packages) has its own README file.
+
+## Docs
+
+https://distantmagic.github.io/personalidol/docs/
 
 ## Building
 

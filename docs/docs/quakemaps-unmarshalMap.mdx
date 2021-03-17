@@ -1,0 +1,21 @@
+---
+id: quakemaps-unmarshalMap
+title: unmarshalMap
+slug: /quakemaps/unmarshalMap
+---
+
+`unmarshalMap` parses the `.map` file and creates a series of
+[`EntitySketch`](quakemaps-EntitySketch.type.mdx) objects which can be further
+handled by your game logic.
+
+It does not produce a BSP tree (which may be an advantage or a disadvantage,
+dpeneding on how you look at it), instead each entity sketch contains entity
+properties and a collection of brushes that are included in the entity.
+
+You can find more info on what an entity can be and what it may contain here:
+https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_2.htm#CMFMF
+
+Usually it's a collection of custom properties, `classname` and a series of
+brushes that are used to create underlying meshes or just a set of properties
+with no meshes, that need to be handled by your domain logic.
+
