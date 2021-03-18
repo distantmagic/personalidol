@@ -40,7 +40,7 @@ module.exports = {
           'framework-Mountable.interface',
           'framework-MouseState',
           'framework-Pauseable.interface',
-          'framework-TickTImerState.type',
+          'framework-TickTimerState.type',
           'framework-TouchState',
           'framework-UserSettings',
           'framework-WindowResizeObserver',
