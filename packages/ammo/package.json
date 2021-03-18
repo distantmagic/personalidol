@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@personalidol/framework": "^0.0.4",
+    "ammo.js": "kripken/ammo.js#a32e94b553e22cf80d6a7775bfdd1ede2ac229b2",
     "loglevel": "^1.7.1",
     "three": "^0.126.1"
   },
