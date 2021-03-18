@@ -18,7 +18,12 @@
   --ifm-color-primary-lightest: #24a8ff;
   --ifm-code-font-size: 95%;
   --ifm-font-family-base: "Mukta", system-ui, -apple-system, sans-serif;
-  --doc-sidebar-width: 360px !important;
+}
+
+@media (min-width: 1320px) {
+  :root {
+    --doc-sidebar-width: 400px !important;
+  }
 }
 
 .docusaurus-highlight-code-line {

@@ -1,14 +1,18 @@
 module.exports = {
-  someSidebar: {
+  sidebar: {
     introduction: [
       'introduction-introduction',
     ],
     architecture: [
+      'architecture-typescript-only',
       'architecture-class-free',
       'architecture-unidirectional-data-flow',
       'architecture-handling-dom',
       'architecture-parallelism',
       'architecture-quake-bsp-maps',
+    ],
+    development: [
+      'development-building-the-project',
     ],
     "known-issues": [
       'known-issues-firefox-on-linux',
@@ -16,6 +20,7 @@ module.exports = {
     api: [
       {
         "dom-renderer": [
+          'dom-renderer-intro',
           'dom-renderer-domElementsLookup',
           'dom-renderer-DOMElementsLookup.type',
           'dom-renderer-DOMElementView',
@@ -25,6 +30,7 @@ module.exports = {
           'dom-renderer-RendererDimensionsManager',
         ],
         framework: [
+          'framework-intro',
           'framework-DimensionsState',
           'framework-HTMLElementResizeObserver',
           'framework-KeyboardObserver',
@@ -40,6 +46,7 @@ module.exports = {
           'framework-WindowResizeObserver',
         ],
         personalidol: [
+          'personalidol-intro',
           'personalidol-CameraController',
           'personalidol-CameraControllerState.type',
           'personalidol-MapScene',
@@ -47,6 +54,7 @@ module.exports = {
           'personalidol-UserSettings',
         ],
         quakemaps: [
+          'quakemaps-intro',
           'quakemaps-buildGeometryAttributes',
           'quakemaps-EntitySketch.type',
           'quakemaps-UnmarshalException',
