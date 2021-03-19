@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
+const minify = require('html-minifier').minify;
 const Mustache = require("mustache");
 
 const templateBaseDir = path.join(__dirname, "..", "public");
@@ -24,4 +25,4 @@ const rendered = Mustache.render(template, {
   },
 });
 
-fs.writeFileSync(outputPath, rendered, "utf-8");
+fs.writeFileSync(outputPath, minify(rendered), "utf-8");
