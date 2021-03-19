@@ -1,68 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="icon" href="/g/personalidol/assets/favicon.ico?{{{__CACHE_BUST}}}">
-    <link rel="manifest" href="/g/personalidol/manifest.json?{{{__CACHE_BUST}}}">
+    <link
+      href="/g/personalidol/assets/favicon.ico?{{{__CACHE_BUST}}}"
+      rel="icon"
+    >
+    <link
+      href="/g/personalidol/manifest.json?{{{__CACHE_BUST}}}"
+      integrity="{{#integrity}}./manifest.json{{/integrity}}"
+      rel="manifest"
+    >
+    <link
+      href="/g/personalidol/style.css?{{{__CACHE_BUST}}}"
+      integrity="{{#integrity}}./style.css{{/integrity}}"
+      rel="stylesheet"
+    >
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
     <title>Personal Idol</title>
-    <style>
-      html, body {
-        touch-action: none;
-        -webkit-user-select: none;
-        user-select: none;
-      }
-
-      body {
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-font-smoothing: antialiased;
-        background-color: black;
-        margin: 0;
-        overflow: hidden;
-      }
-
-      body.bootstrap-fatal-error {
-        background-color: darkred;
-      }
-
-      #canvas,
-      #ui-root {
-        bottom: 0;
-        right: 0;
-        left: 0;
-        position: absolute;
-        top: 0;
-        will-change: height, width;
-      }
-
-      #ui-root {
-        pointer-events: none;
-      }
-
-      .ui-placeholder-label {
-        bottom: 2.4rem;
-        color: white;
-        font-family: sans-serif;
-        font-size: 1rem;
-        font-variant: small-caps;
-        letter-spacing: 0.1ch;
-        left: 1.6rem;
-        line-height: 1rem;
-        position: absolute;
-        text-align: left;
-        text-transform: lowercase;
-      }
-    </style>
   </head>
   <body>
-    <noscript>
-      <style>
-        body {
-          background-color: darkred;
-        }
-      </style>
-    </noscript>
     <div id="game-root">
       <canvas id="canvas"></canvas>
       <div id="ui-root">
@@ -78,23 +36,15 @@
         </pi-progress-manager-state>
       </div>
     </div>
-    <script>(function () {
-      const uiRoot = document.getElementById("ui-root");
-
-      uiRoot.addEventListener("error", function (evt) {
-        document.body.classList.add("bootstrap-fatal-error");
-
-        uiRoot.style.bottom = "0";
-        uiRoot.style.right = "0";
-        uiRoot.innerHTML = `
-          <div class="ui-placeholder">
-            <div class="ui-placeholder-label">
-              Error: ${evt.detail.message}
-            </div>
-          </div>
-        `;
-      });
-    }());</script>
-    <script async src="/g/personalidol/lib/index_{{__BUILD_ID}}.js"type="module"></script>
+    <script
+      integrity="{{#integrity}}./preload.js{{/integrity}}"
+      src="/g/personalidol/preload.js?{{{__CACHE_BUST}}}"
+    ></script>
+    <script
+      async
+      integrity="{{#integrity}}./lib/index_{{__BUILD_ID}}.js{{/integrity}}"
+      src="/g/personalidol/lib/index_{{__BUILD_ID}}.js"
+      type="module"
+    ></script>
   </body>
 </html>

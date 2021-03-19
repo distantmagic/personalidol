@@ -1,16 +1,27 @@
-const Mustache = require("mustache");
-const fs = require("fs").promises;
+const crypto = require("crypto");
+const fs = require("fs");
 const path = require("path");
 
-(async function () {
-  const templatePath = path.join(__dirname, "..", "public", "index.mustache");
-  const outputPath = path.join(__dirname, "..", "public", "index.html");
-  const templateBuffer = await fs.readFile(templatePath);
-  const template = templateBuffer.toString("utf-8");
-  const rendered = Mustache.render(template, {
-    __BUILD_ID: process.env.BUILD_ID,
-    __CACHE_BUST: process.env.CACHE_BUST,
-  });
+const Mustache = require("mustache");
 
-  await fs.writeFile(outputPath, rendered, "utf-8");
-})();
+const templateBaseDir = path.join(__dirname, "..", "public");
+const templatePath = path.join(templateBaseDir, "index.mustache");
+const outputPath = path.join(templateBaseDir, "index.html");
+const templateBuffer = fs.readFileSync(templatePath);
+const template = templateBuffer.toString("utf-8");
+const rendered = Mustache.render(template, {
+  __BUILD_ID: process.env.BUILD_ID,
+  __CACHE_BUST: process.env.CACHE_BUST,
+
+  integrity: function () {
+    return function (text, render) {
+      const hash = crypto.createHash("sha384");
+      const filename = render(text);
+      const fileContents = fs.readFileSync(path.join(templateBaseDir, filename)).toString("utf-8");
+
+      return "sha384-" + hash.update(fileContents, "utf-8").digest("base64");
+    };
+  },
+});
+
+fs.writeFileSync(outputPath, rendered, "utf-8");

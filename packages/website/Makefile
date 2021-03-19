@@ -10,7 +10,7 @@ CACHE_BUST := $(shell BUILD_ID=$(BUILD_ID) sh ./scripts/helper_cache_bust.sh)
 # Real targets
 
 .PHONY: public/index.html
-public/index.html: public/index.mustache $(SOURCES_TS)
+public/index.html: public/index.js public/index.mustache $(SOURCES_TS)
 	BUILD_ID=$(BUILD_ID) CACHE_BUST=$(CACHE_BUST) node ./scripts/build_mustache.js
 
 public/index.js: scripts/build_public.sh $(SOURCES_TS)
@@ -50,7 +50,7 @@ purge:
 	rm -f yarn.lock
 
 .PHONY: release
-release: tsc public/index.html public/index.js
+release: public/index.html public/index.js
 
 .PHONY: tsc
 tsc:

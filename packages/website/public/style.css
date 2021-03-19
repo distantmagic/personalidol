@@ -1,0 +1,45 @@
+html, body {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  background-color: black;
+  margin: 0;
+  overflow: hidden;
+}
+
+body.bootstrap-fatal-error {
+  background-color: darkred;
+}
+
+#canvas,
+#ui-root {
+  bottom: 0;
+  right: 0;
+  left: 0;
+  position: absolute;
+  top: 0;
+  will-change: height, width;
+}
+
+#ui-root {
+  pointer-events: none;
+}
+
+.ui-placeholder-label {
+  bottom: 2.4rem;
+  color: white;
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-variant: small-caps;
+  letter-spacing: 0.1ch;
+  left: 1.6rem;
+  line-height: 1rem;
+  position: absolute;
+  text-align: left;
+  text-transform: lowercase;
+}
