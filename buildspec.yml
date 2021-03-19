@@ -8,32 +8,5 @@ phases:
 artifacts:
   name: server
   files:
-    - index.html
-    - lib/createScenes.js
-    - lib/createScenes.js.map
-    - lib/index.js
-    - lib/index.js.map
-    - lib/worker_ammo.js
-    - lib/worker_ammo.js.map
-    - lib/worker_atlas.js
-    - lib/worker_atlas.js.map
-    - lib/worker_gltf.js
-    - lib/worker_gltf.js.map
-    - lib/worker_md2.js
-    - lib/worker_md2.js.map
-    - lib/worker_offscreen.js
-    - lib/worker_offscreen.js.map
-    - lib/worker_progress.js
-    - lib/worker_progress.js.map
-    - lib/worker_quakemaps.js
-    - lib/worker_quakemaps.js.map
-    - lib/worker_textures.js
-    - lib/worker_textures.js.map
-    - locales/en/characters.json
-    - locales/en/ui.json
-    - locales/pl/characters.json
-    - locales/pl/ui.json
-    - manifest.json
-    - service_worker.js
-    - service_worker.js.map
+    - "**/*"
   base-directory: packages/website/public

@@ -3,7 +3,7 @@ import { isCreateImageBitmapSupported } from "@personalidol/framework/src/isCrea
 import { prefetch } from "@personalidol/framework/src/prefetch";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
-import workers from "./workers.json";
+import { workers } from "./workers";
 
 import type { Logger } from "loglevel";
 
@@ -29,11 +29,9 @@ export async function createTexturesService(
     if (await isCreateImageBitmapSupported()) {
       logger.debug("SUPPORTED(createImageBitmap) // offload texture service to a worker thread");
 
-      const texturesWorkerURL = `${__STATIC_BASE_PATH}${workers.textures.url}?${__CACHE_BUST}`;
+      await prefetch(websiteToProgressMessagePort, "worker", workers.textures.url);
 
-      await prefetch(websiteToProgressMessagePort, "worker", texturesWorkerURL);
-
-      const texturesWorker = new Worker(texturesWorkerURL, {
+      const texturesWorker = new Worker(workers.textures.url, {
         credentials: "same-origin",
         name: workers.textures.name,
         type: "module",

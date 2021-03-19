@@ -9,8 +9,9 @@ CACHE_BUST := $(shell BUILD_ID=$(BUILD_ID) sh ./scripts/helper_cache_bust.sh)
 
 # Real targets
 
+.PHONY: public/index.html
 public/index.html: public/index.mustache $(SOURCES_TS)
-	CACHE_BUST=$(CACHE_BUST) node ./scripts/build_mustache.js
+	BUILD_ID=$(BUILD_ID) CACHE_BUST=$(CACHE_BUST) node ./scripts/build_mustache.js
 
 public/index.js: scripts/build_public.sh $(SOURCES_TS)
 	ASSETS_BASE_PATH=${ASSETS_BASE_PATH} \
@@ -31,6 +32,10 @@ clean:
 	rm -rf ./public/lib
 	rm -rf ./public/service_worker.js
 	rm -rf ./public/service_worker.js.map
+
+.PHONY: ncu
+ncu:
+	ncu -u
 
 .PHONY: prettier
 prettier:

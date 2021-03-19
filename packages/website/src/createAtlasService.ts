@@ -3,7 +3,7 @@ import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/frame
 import { prefetch } from "@personalidol/framework/src/prefetch";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
-import workers from "./workers.json";
+import { workers } from "./workers";
 
 import type { Logger } from "loglevel";
 
@@ -30,11 +30,9 @@ export function createAtlasService(
 
       const offscreenAtlas = atlasCanvas.transferControlToOffscreen();
 
-      const atlasWorkerURL = `${__STATIC_BASE_PATH}${workers.atlas.url}?${__CACHE_BUST}`;
+      await prefetch(websiteToProgressMessagePort, "worker", workers.atlas.url);
 
-      await prefetch(websiteToProgressMessagePort, "worker", atlasWorkerURL);
-
-      const atlasWorker = new Worker(atlasWorkerURL, {
+      const atlasWorker = new Worker(workers.atlas.url, {
         credentials: "same-origin",
         name: workers.atlas.name,
         type: "module",

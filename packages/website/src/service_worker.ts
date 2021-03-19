@@ -18,7 +18,7 @@ logger.setLevel(__LOG_LEVEL);
 logger.debug(`SERVICE_WORKER_SPAWNED("${__BUILD_ID}")`);
 
 function _shouldCache(event: FetchEvent): boolean {
-  return event.request.url.endsWith(__CACHE_BUST);
+  return event.request.url.endsWith(__CACHE_BUST) || event.request.url.endsWith(`${__BUILD_ID}.js`);
 }
 
 self.addEventListener("activate", function (event: ExtendableEvent) {

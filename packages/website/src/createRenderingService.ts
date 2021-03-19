@@ -6,7 +6,7 @@ import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isShar
 import { prefetch } from "@personalidol/framework/src/prefetch";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
-import workers from "./workers.json";
+import { workers } from "./workers";
 
 import type { Logger } from "loglevel";
 
@@ -48,11 +48,9 @@ export async function createRenderingService(
 
     domUIController.registerMessagePort(domRendererMessageChannel.port1);
 
-    const offscreenWorkerURL = `${__STATIC_BASE_PATH}${workers.offscreen.url}?${__CACHE_BUST}`;
+    await prefetch(websiteToProgressMessagePort, "worker", workers.offscreen.url);
 
-    await prefetch(websiteToProgressMessagePort, "worker", offscreenWorkerURL);
-
-    const offscreenWorker = new Worker(offscreenWorkerURL, {
+    const offscreenWorker = new Worker(workers.offscreen.url, {
       credentials: "same-origin",
       name: workers.offscreen.name,
       type: "module",
@@ -220,7 +218,7 @@ export async function createRenderingService(
        * @see https://github.com/evanw/esbuild/issues/56#issuecomment-643100248
        * @see https://github.com/evanw/esbuild/issues/113
        */
-      const _dynamicImport = `${__STATIC_BASE_PATH}/lib/createScenes.js`;
+      const _dynamicImport = `${__STATIC_BASE_PATH}/lib/createScenes_${__BUILD_ID}.js`;
 
       await prefetch(websiteToProgressMessagePort, "worker", _dynamicImport);
 

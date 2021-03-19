@@ -22,6 +22,10 @@ deploy: node_modules
 docusaurus: node_modules
 	yarn run docusaurus
 
+.PHONY: ncu
+ncu:
+	ncu -u
+
 .PHONY: release
 release: build
 

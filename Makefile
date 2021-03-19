@@ -31,6 +31,11 @@ clean:
 	$(MAKE) -C docs clean
 	rm -rf node_modules
 
+.PHONY: ncu
+ncu:
+	$(call FOREACH,ncu)
+	$(MAKE) -C docs ncu
+
 .PHONY: purge
 purge: clean
 	$(call FOREACH,purge)

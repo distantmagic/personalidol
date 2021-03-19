@@ -38,7 +38,7 @@ import { WindowFocusObserver } from "@personalidol/framework/src/WindowFocusObse
 import { WindowResizeObserver } from "@personalidol/framework/src/WindowResizeObserver";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
-import workers from "./workers.json";
+import { workers } from "./workers";
 import { createAtlasService } from "./createAtlasService";
 import { createI18next } from "./createI18next";
 import { createRenderingService } from "./createRenderingService";
@@ -47,8 +47,8 @@ import { createTexturesService } from "./createTexturesService";
 const THREAD_DEBUG_NAME: string = "main_thread";
 
 // Number of items expected to be loaded before the game engine is ready.
-// 7 services + 3 fonts
-const PROGRESS_EXPECT = 7 + 3;
+// 7 services + 3 fonts + 1 ammo.wasm
+const PROGRESS_EXPECT = 7 + 3 + 1;
 
 const uiRoot = getHTMLElementById(window.document, "ui-root");
 
@@ -189,7 +189,7 @@ async function bootstrap() {
 
   const progressMessageChannel = createMultiThreadMessageChannel();
   const progressToDOMRendererMessageChannel = createMultiThreadMessageChannel();
-  const progressWorker = new Worker(`${__STATIC_BASE_PATH}${workers.progress.url}?${__CACHE_BUST}`, {
+  const progressWorker = new Worker(workers.progress.url, {
     credentials: "same-origin",
     name: workers.progress.name,
     type: "module",
@@ -309,18 +309,15 @@ async function bootstrap() {
 
   addProgressMessagePort(ammoToProgressMessageChannel.port1, false);
 
-  const ammoWorkerURL = `${__STATIC_BASE_PATH}${workers.ammo.url}?${__CACHE_BUST}`;
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", workers.ammo.url);
 
-  await prefetch(websiteToProgressMessageChannel.port2, "worker", ammoWorkerURL);
-
-  const ammoWorker = new Worker(ammoWorkerURL, {
+  const ammoWorker = new Worker(workers.ammo.url, {
     credentials: "same-origin",
     name: workers.ammo.name,
     type: "module",
   });
 
   const ammoWorkerServiceClient = WorkerServiceClient(ammoWorker, workers.ammo.name);
-  await ammoWorkerServiceClient.ready();
 
   ammoWorker.postMessage(
     {
@@ -329,6 +326,8 @@ async function bootstrap() {
     },
     [ammoMessageChannel.port1, ammoToProgressMessageChannel.port2]
   );
+
+  await ammoWorkerServiceClient.ready();
 
   // Workers can share a message channel if necessary. If there is no offscreen
   // worker then the message channel can be used in the main thread. It is an
@@ -339,11 +338,9 @@ async function bootstrap() {
 
   addProgressMessagePort(quakeMapsToProgressMessageChannel.port1, false);
 
-  const quakeMapsWorkerURL = `${__STATIC_BASE_PATH}${workers.quakemaps.url}?${__CACHE_BUST}`;
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", workers.quakemaps.url);
 
-  await prefetch(websiteToProgressMessageChannel.port2, "worker", quakeMapsWorkerURL);
-
-  const quakeMapsWorker = new Worker(quakeMapsWorkerURL, {
+  const quakeMapsWorker = new Worker(workers.quakemaps.url, {
     credentials: "same-origin",
     name: workers.quakemaps.name,
     type: "module",
@@ -368,11 +365,9 @@ async function bootstrap() {
 
   addProgressMessagePort(gltfToProgressMessageChannel.port1, false);
 
-  const gltfWorkerURL = `${__STATIC_BASE_PATH}${workers.gltf.url}?${__CACHE_BUST}`;
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", workers.gltf.url);
 
-  await prefetch(websiteToProgressMessageChannel.port2, "worker", gltfWorkerURL);
-
-  const gltfWorker = new Worker(gltfWorkerURL, {
+  const gltfWorker = new Worker(workers.gltf.url, {
     credentials: "same-origin",
     name: workers.gltf.name,
     type: "module",
@@ -398,11 +393,9 @@ async function bootstrap() {
 
   addProgressMessagePort(md2ToProgressMessageChannel.port1, false);
 
-  const md2WorkerURL = `${__STATIC_BASE_PATH}${workers.md2.url}?${__CACHE_BUST}`;
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", workers.md2.url);
 
-  await prefetch(websiteToProgressMessageChannel.port2, "worker", md2WorkerURL);
-
-  const md2Worker = new Worker(md2WorkerURL, {
+  const md2Worker = new Worker(workers.md2.url, {
     credentials: "same-origin",
     name: workers.md2.name,
     type: "module",

@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-# Service worker needs to be placed in the root directory.
+# Clean up old files first.
+rm -rf ./public/lib/*;
+rm ./public/service_worker_*
 
 yarn run esbuild \
     --bundle \
@@ -12,6 +14,7 @@ yarn run esbuild \
     --define:__SERVICE_WORKER_BASE_PATH=\"${SERVICE_WORKER_BASE_PATH}\" \
     --define:__STATIC_BASE_PATH=\"${STATIC_BASE_PATH}\" \
     --define:process.env.NODE_ENV=\"${NODE_ENV}\" \
+    --entry-names="./[name]_${BUILD_ID}" \
     --format=esm \
     --minify \
     --outdir=./public/lib \
@@ -32,5 +35,8 @@ yarn run esbuild \
     src/worker_textures.ts \
 ;
 
-mv ./public/lib/service_worker.js ./public/service_worker.js
-mv ./public/lib/service_worker.js.map ./public/service_worker.js.map
+# Service worker needs to be placed in the root directory.
+mv ./public/lib/service_worker_${BUILD_ID}.js ./public/service_worker.js
+mv ./public/lib/service_worker_${BUILD_ID}.js.map ./public/service_worker_${BUILD_ID}.js.map
+
+cp `node -e "console.log(require.resolve('ammo.js/builds/ammo.wasm.wasm'))"` ./public/lib/ammo.wasm.wasm

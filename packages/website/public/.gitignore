@@ -3,4 +3,4 @@
 /index.html
 /lib
 /service_worker.js
-/service_worker.js.map
+/service_worker_*.js.map
