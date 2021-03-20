@@ -6,4 +6,6 @@ export interface Raycaster extends MainLoopUpdatable {
   readonly isRaycaster: true;
   readonly raycastables: Set<Raycastable>;
   readonly state: RaycasterState;
+
+  reset(): void;
 }

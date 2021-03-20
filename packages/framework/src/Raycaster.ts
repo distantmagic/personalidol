@@ -24,13 +24,25 @@ export function Raycaster(camerController: CameraController, mouseState: Int32Ar
 
   function _raycast(raycastable: Raycastable): void {
     raycastable.state.isRayIntersecting = _threeRaycaster.intersectObject(raycastable.raycasterObject3D, false).length > 0;
-    state.hasIntersections = state.hasIntersections || raycastable.state.isRayIntersecting;
+
+    if (!state.hasIntersections) {
+      state.hasIntersections = raycastable.state.isRayIntersecting;
+    }
+  }
+
+  function _resetRaycastable(raycastable: Raycastable): void {
+    raycastable.state.isRayIntersecting = false;
   }
 
   function _updateRaycasterCamera(): void {
     _vector2.x = getPrimaryPointerVectorX(mouseState, touchState);
     _vector2.y = getPrimaryPointerVectorY(mouseState, touchState);
     _threeRaycaster.setFromCamera(_vector2, camerController.camera);
+  }
+
+  function reset(): void {
+    state.hasIntersections = false;
+    raycastables.forEach(_resetRaycastable);
   }
 
   function update(): void {
@@ -45,6 +57,7 @@ export function Raycaster(camerController: CameraController, mouseState: Int32Ar
     raycastables: raycastables,
     state: state,
 
+    reset: reset,
     update: update,
   });
 }

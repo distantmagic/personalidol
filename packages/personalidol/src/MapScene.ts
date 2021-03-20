@@ -371,6 +371,12 @@ export function MapScene(
       _scene.fog = null;
     }
 
+    if (state.isPaused) {
+      _raycaster.reset();
+    } else {
+      _raycaster.update(delta, elapsedTime, tickTimerState);
+    }
+
     if (!state.isPaused && isPrimaryPointerPressed(mouseState, touchState) && isPointerInitiatedByRootElement(mouseState, touchState)) {
       computePrimaryPointerStretchVector(_stretchVector, dimensionsState, mouseState, touchState);
 
@@ -386,10 +392,6 @@ export function MapScene(
     }
 
     _cameraController.update(delta, elapsedTime, tickTimerState);
-
-    // Order is important here, update raycaster after the camera controller is
-    // updated, because it uses camera for raycasting.
-    _raycaster.update(delta, elapsedTime, tickTimerState);
 
     _renderPass.camera = _cameraController.camera;
 
