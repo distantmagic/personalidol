@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
-const minify = require('html-minifier').minify;
+const minify = require("html-minifier").minify;
 const Mustache = require("mustache");
 
 const templateBaseDir = path.join(__dirname, "..", "public");

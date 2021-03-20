@@ -13,3 +13,7 @@ prettier:
 .PHONY: purge
 purge:
 	rm -f yarn.lock
+
+.PHONY: test.watch
+test.watch:
+	yarn run jest --watch

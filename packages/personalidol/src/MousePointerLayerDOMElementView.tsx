@@ -1,13 +1,18 @@
 import clsx from "clsx";
 import { h } from "preact";
+import { Vector2 } from "three/src/math/Vector2";
 
+import { computePrimaryPointerStretchVector } from "@personalidol/framework/src/computePrimaryPointerStretchVector";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { isMousePointerInDimensionsBounds } from "@personalidol/framework/src/isMousePointerInDimensionsBounds";
+import { getPrimaryPointerInitialClientX } from "@personalidol/framework/src/getPrimaryPointerInitialClientX";
+import { getPrimaryPointerInitialClientY } from "@personalidol/framework/src/getPrimaryPointerInitialClientY";
 import { isPointerInitiatedByRootElement } from "@personalidol/framework/src/isPointerInitiatedByRootElement";
-import { isPrimaryMouseButtonPressed } from "@personalidol/framework/src/isPrimaryMouseButtonPressed";
-import { MouseIndices } from "@personalidol/framework/src/MouseIndices.enum";
+import { isPrimaryPointerInDimensionsBounds } from "@personalidol/framework/src/isPrimaryPointerInDimensionsBounds";
+import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
 
 import { DOMZIndex } from "./DOMZIndex.enum";
+
+import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 
 import type { UserSettings } from "./UserSettings.type";
 
@@ -28,7 +33,8 @@ const _css = `
 
   .mouse-pointer-layer,
   .pointer,
-  .pointer__stretch-indicator {
+  .pointer__stretch-boundary,
+  pointer__stretch-indicator {
     pointer-events: none;
   }
 
@@ -41,53 +47,64 @@ const _css = `
   }
 
   .pointer {
-    display: none;
-    height: 200px;
+    height: 220px;
     position: absolute;
     transform:
       translate3D(-50%, -50%, 0)
       translate3D(var(--translate-x), var(--translate-y), 0)
     ;
-    width: 200px;
+    width: 220px;
     will-change: transform, z-index;
     z-index: ${DOMZIndex.InGameMousePointerGadgets};
   }
 
   .pointer.pointer--in-bounds.pointer--is-pressed {
-    /* display: block; */
   }
 
+  .pointer__stretch-boundary,
   .pointer__stretch-indicator {
     fill: none;
     stroke: white;
-    stroke-width: 2;
+    stroke-width: 0.5;
   }
 `;
 
 export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
+  private _stretchVector: IVector2 = new Vector2();
+
   beforeRender(): void {
     this.needsRender = true;
   }
 
   render() {
+    const _isInBounds = isPrimaryPointerInDimensionsBounds(this.dimensionsState, this.mouseState, this.touchState);
+    const _isPressed = isPrimaryPointerPressed(this.mouseState, this.touchState);
+    const _isInitiatedByRootElement = isPointerInitiatedByRootElement(this.mouseState, this.touchState);
+
+    if (!_isInBounds || !_isPressed || !_isInitiatedByRootElement) {
+      return null;
+    }
+
+    computePrimaryPointerStretchVector(this._stretchVector, this.dimensionsState, this.mouseState, this.touchState);
+
     return (
       <div class="mouse-pointer-layer">
         <svg
           class={clsx("pointer", {
-            "pointer--in-bounds": isMousePointerInDimensionsBounds(this.dimensionsState, this.mouseState),
-            "pointer--is-pressed": isPrimaryMouseButtonPressed(this.mouseState) && isPointerInitiatedByRootElement(this.mouseState, this.touchState),
+            "pointer--in-bounds": _isInBounds,
+            "pointer--is-pressed": _isPressed && _isInitiatedByRootElement,
           })}
           style={{
-            "--translate-x": `${this.mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_X]}px`,
-            "--translate-y": `${this.mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_Y]}px`,
+            "--translate-x": `${getPrimaryPointerInitialClientX(this.mouseState, this.touchState)}px`,
+            "--translate-y": `${getPrimaryPointerInitialClientY(this.mouseState, this.touchState)}px`,
           }}
-          viewBox="0 0 100 100"
+          viewBox="0 0 110 110"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <circle class="pointer__stretch-indicator" cx="50" cy="50" r="49" />
-          <line x1="50" y1="50" x2="100" y2="20" stroke="red" />
+          <circle class="pointer__stretch-boundary" cx="55" cy="55" r="50" />
+          <circle class="pointer__stretch-indicator" cx={55 + 40 * this._stretchVector.x} cy={55 + -40 * this._stretchVector.y} r="10" />
         </svg>
       </div>
     );

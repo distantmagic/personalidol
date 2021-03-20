@@ -114,3 +114,12 @@ for (let entitySketch of unmarshalMap(filename, contents, resolveTextureUrl)) {
 // Combines all map brushes into one geometry.
 const geometryAttributes: Geometry = buildGeometryAttributes(allBrushes, resolveTextureDimensions);
 ```
+
+### Personal Idol implementation
+
+You can check this code to have the general idea how this API can be used.
+Entities are grouped by the classname and any entitiy that won't need a
+controller is merged with the world geometry. It is possible for a single
+entity sketch to produce more than one 3D scene object:
+
+https://github.com/distantmagic/personalidol/blob/master/packages/personalidol/src/buildEntities.ts

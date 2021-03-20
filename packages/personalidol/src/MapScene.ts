@@ -5,6 +5,7 @@ import { Scene } from "three/src/scenes/Scene";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { computePrimaryPointerStretchVector } from "@personalidol/framework/src/computePrimaryPointerStretchVector";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
@@ -12,8 +13,6 @@ import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
-import { getPrimaryPointerStretchVectorX } from "@personalidol/framework/src/getPrimaryPointerStretchVectorX";
-import { getPrimaryPointerStretchVectorY } from "@personalidol/framework/src/getPrimaryPointerStretchVectorY";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { isPointerInitiatedByRootElement } from "@personalidol/framework/src/isPointerInitiatedByRootElement";
@@ -49,6 +48,8 @@ import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
+import type { Vector2 as IVector2 } from "three/src/math/Vector2";
+import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { CameraController as ICameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer.interface";
@@ -86,9 +87,9 @@ import type { UIState } from "./UIState.type";
 import type { UserSettings } from "./UserSettings.type";
 
 const _disposables: Set<DisposableCallback> = new Set();
-const _playerPosition = new Vector3();
-const _pointerVector = new Vector2(0, 0);
-const _pointerVectorRotationPivot = new Vector2(0, 0);
+const _playerPosition: IVector3 = new Vector3();
+const _stretchVector: IVector2 = new Vector2(0, 0);
+const _stretchVectorRotationPivot: IVector2 = new Vector2(0, 0);
 
 const _unmountables: Set<UnmountableCallback> = new Set();
 
@@ -371,11 +372,12 @@ export function MapScene(
     }
 
     if (!state.isPaused && isPrimaryPointerPressed(mouseState, touchState) && isPointerInitiatedByRootElement(mouseState, touchState)) {
-      _pointerVector.x = getPrimaryPointerStretchVectorX(mouseState, touchState);
-      _pointerVector.y = getPrimaryPointerStretchVectorY(mouseState, touchState);
-      _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
-      _cameraController.position.x += userSettings.cameraMovementSpeed * _pointerVector.y * delta;
-      _cameraController.position.z += userSettings.cameraMovementSpeed * _pointerVector.x * delta;
+      computePrimaryPointerStretchVector(_stretchVector, dimensionsState, mouseState, touchState);
+
+      _stretchVector.rotateAround(_stretchVectorRotationPivot, (3 * Math.PI) / 4);
+
+      _cameraController.position.x += userSettings.cameraMovementSpeed * _stretchVector.y * delta;
+      _cameraController.position.z += userSettings.cameraMovementSpeed * _stretchVector.x * delta;
     }
 
     if (!state.isPaused && keyboardState[KeyboardIndices.Home]) {

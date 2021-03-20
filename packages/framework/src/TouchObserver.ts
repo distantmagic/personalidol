@@ -1,7 +1,5 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { computePointerStretchVectorX } from "./computePointerStretchVectorX";
-import { computePointerStretchVectorY } from "./computePointerStretchVectorY";
 import { computePointerVectorX } from "./computePointerVectorX";
 import { computePointerVectorY } from "./computePointerVectorY";
 import { DimensionsIndices } from "./DimensionsIndices.enum";
@@ -105,18 +103,6 @@ export function TouchObserver(
       touchState[TouchState.touches[i].CLIENT_X] = evt.touches[i].clientX;
       touchState[TouchState.touches[i].CLIENT_Y] = evt.touches[i].clientY;
       touchState[TouchState.touches[i].PRESSURE] = Math.floor(evt.touches[i].force * 100);
-      touchState[TouchState.touches[i].STRETCH_VECTOR_X] = computePointerStretchVectorX(
-        dimensionsState,
-        touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_X],
-        touchState[TouchState.touches[i].CLIENT_X],
-        touchState[TouchIndices.T_VECTOR_SCALE]
-      );
-      touchState[TouchState.touches[i].STRETCH_VECTOR_Y] = computePointerStretchVectorY(
-        dimensionsState,
-        touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_Y],
-        touchState[TouchState.touches[i].CLIENT_Y],
-        touchState[TouchIndices.T_VECTOR_SCALE]
-      );
     }
 
     _updateDimensionsRelativeCoords();

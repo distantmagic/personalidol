@@ -1,7 +1,5 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { computePointerStretchVectorX } from "./computePointerStretchVectorX";
-import { computePointerStretchVectorY } from "./computePointerStretchVectorY";
 import { computePointerVectorX } from "./computePointerVectorX";
 import { computePointerVectorY } from "./computePointerVectorY";
 import { DimensionsIndices } from "./DimensionsIndices.enum";
@@ -101,21 +99,6 @@ export function MouseObserver(
 
     mouseState[MouseIndices.M_CLIENT_X] = evt.clientX;
     mouseState[MouseIndices.M_CLIENT_Y] = evt.clientY;
-
-    if (evt.buttons) {
-      mouseState[MouseIndices.M_STRETCH_VECTOR_X] = computePointerStretchVectorX(
-        dimensionsState,
-        mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_X],
-        mouseState[MouseIndices.M_CLIENT_X],
-        mouseState[MouseIndices.M_VECTOR_SCALE]
-      );
-      mouseState[MouseIndices.M_STRETCH_VECTOR_Y] = computePointerStretchVectorY(
-        dimensionsState,
-        mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_Y],
-        mouseState[MouseIndices.M_CLIENT_Y],
-        mouseState[MouseIndices.M_VECTOR_SCALE]
-      );
-    }
 
     // Update relative values to keep the mouse state consistent.
     _updateDimensionsRelativeCoords();

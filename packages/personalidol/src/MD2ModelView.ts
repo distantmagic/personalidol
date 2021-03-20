@@ -2,6 +2,7 @@ import { AnimationClip } from "three/src/animation/AnimationClip";
 import { AnimationMixer } from "three/src/animation/AnimationMixer";
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
+import { Color } from "three/src/math/Color";
 import { Float32BufferAttribute } from "three/src/core/BufferAttribute";
 import { Group } from "three/src/objects/Group";
 import { MathUtils } from "three/src/math/MathUtils";
@@ -22,6 +23,7 @@ import { useObjectLabel } from "./useObjectLabel";
 
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
 import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
+import type { Color as IColor } from "three/src/math/Color";
 import type { Group as IGroup } from "three/src/objects/Group";
 import type { Logger } from "loglevel";
 import type { Mesh as IMesh } from "three/src/objects/Mesh";
@@ -127,6 +129,7 @@ export function MD2ModelView(
   const _animationOffset: number = _globalAnimationOffset;
   const _disposables: Set<DisposableCallback> = new Set();
   const _labelContainer: IGroup = new Group();
+  const _materialColor: IColor = new Color();
   const _mesh: IMesh = createEmptyMesh();
   const _meshUserSettingsManager = MeshUserSettingsManager(logger, userSettings, _mesh);
   const _mountables: Set<MountableCallback> = new Set();
@@ -189,11 +192,12 @@ export function MD2ModelView(
     // Material
 
     const material = new MeshBasicMaterial({
-      color: 0xcccccc,
       map: await _loadTexture(`${__ASSETS_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}?${__CACHE_BUST}`),
       morphTargets: true,
       // morphNormals: true,
     });
+
+    material.color = _materialColor;
 
     // Mesh
 
@@ -270,16 +274,16 @@ export function MD2ModelView(
 
     _meshUserSettingsManager.update(delta, elapsedTime, tickTimerState);
 
+    if (state.isPaused || !state.isRayIntersecting) {
+      _materialColor.set(0xffffff);
+    }
+
     if (state.isPaused) {
       return;
     }
 
     if (state.isRayIntersecting) {
-      // @ts-ignore
-      _mesh.material.color.set(0xff0000);
-    } else {
-      // @ts-ignore
-      _mesh.material.color.set(0xffffff);
+      _materialColor.set(0xff0000);
     }
 
     _animationMixer.update(delta);
