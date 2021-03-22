@@ -2,13 +2,13 @@ import clsx from "clsx";
 import { h } from "preact";
 import { Vector2 } from "three/src/math/Vector2";
 
-import { computePrimaryPointerStretchVector } from "@personalidol/input/src/computePrimaryPointerStretchVector";
+import { computePrimaryTouchStretchVector } from "@personalidol/input/src/computePrimaryTouchStretchVector";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { getPrimaryPointerInitialClientX } from "@personalidol/input/src/getPrimaryPointerInitialClientX";
-import { getPrimaryPointerInitialClientY } from "@personalidol/input/src/getPrimaryPointerInitialClientY";
-import { isPointerInitiatedByRootElement } from "@personalidol/input/src/isPointerInitiatedByRootElement";
-import { isPrimaryPointerInDimensionsBounds } from "@personalidol/input/src/isPrimaryPointerInDimensionsBounds";
-import { isPrimaryPointerPressed } from "@personalidol/input/src/isPrimaryPointerPressed";
+import { getPrimaryTouchInitialClientX } from "@personalidol/input/src/getPrimaryTouchInitialClientX";
+import { getPrimaryTouchInitialClientY } from "@personalidol/input/src/getPrimaryTouchInitialClientY";
+import { isPrimaryTouchInDimensionsBounds } from "@personalidol/input/src/isPrimaryTouchInDimensionsBounds";
+import { isPrimaryTouchInitiatedByRootElement } from "@personalidol/input/src/isPrimaryTouchInitiatedByRootElement";
+import { isPrimaryTouchPressed } from "@personalidol/input/src/isPrimaryTouchPressed";
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 
@@ -79,15 +79,15 @@ export class VirtualJoystickLayerDOMElementView extends DOMElementView<UserSetti
   }
 
   render() {
-    const _isInBounds = isPrimaryPointerInDimensionsBounds(this.dimensionsState, this.mouseState, this.touchState);
-    const _isPressed = isPrimaryPointerPressed(this.mouseState, this.touchState);
-    const _isInitiatedByRootElement = isPointerInitiatedByRootElement(this.mouseState, this.touchState);
+    const _isInBounds = isPrimaryTouchInDimensionsBounds(this.dimensionsState, this.touchState);
+    const _isPressed = isPrimaryTouchPressed(this.touchState);
+    const _isInitiatedByRootElement = isPrimaryTouchInitiatedByRootElement(this.touchState);
 
     if (!_isInBounds || !_isPressed || !_isInitiatedByRootElement) {
       return null;
     }
 
-    computePrimaryPointerStretchVector(this._stretchVector, this.dimensionsState, this.mouseState, this.touchState);
+    computePrimaryTouchStretchVector(this._stretchVector, this.touchState);
 
     return (
       <div class="mouse-pointer-layer">
@@ -97,8 +97,8 @@ export class VirtualJoystickLayerDOMElementView extends DOMElementView<UserSetti
             "pointer--is-pressed": _isPressed && _isInitiatedByRootElement,
           })}
           style={{
-            "--translate-x": `${getPrimaryPointerInitialClientX(this.mouseState, this.touchState)}px`,
-            "--translate-y": `${getPrimaryPointerInitialClientY(this.mouseState, this.touchState)}px`,
+            "--translate-x": `${getPrimaryTouchInitialClientX(this.touchState)}px`,
+            "--translate-y": `${getPrimaryTouchInitialClientY(this.touchState)}px`,
           }}
           viewBox="0 0 110 110"
           xmlns="http://www.w3.org/2000/svg"

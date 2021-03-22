@@ -28,9 +28,6 @@ import { AmbientLightView } from "./AmbientLightView";
 import { buildViews } from "./buildViews";
 import { CameraController } from "./CameraController";
 import { HemisphereLightView } from "./HemisphereLightView";
-import { InputEventBusController } from "./InputEventBusController";
-import { InputKeyboardController } from "./InputKeyboardController";
-import { InputMouseController } from "./InputMouseController";
 import { InstancedGLTFModelView } from "./InstancedGLTFModelView";
 import { InstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager";
 import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
@@ -42,6 +39,10 @@ import { ScriptedBlockView } from "./ScriptedBlockView";
 import { ScriptedZoneView } from "./ScriptedZoneView";
 import { SpotlightLightView } from "./SpotlightLightView";
 import { TargetView } from "./TargetView";
+import { UserInputEventBusController } from "./UserInputEventBusController";
+import { UserInputKeyboardController } from "./UserInputKeyboardController";
+import { UserInputMouseController } from "./UserInputMouseController";
+import { UserInputTouchController } from "./UserInputTouchController";
 import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 
 import type { Logger } from "loglevel";
@@ -78,7 +79,7 @@ import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
-import type { InputController } from "./InputController.interface";
+import type { UserInputController } from "./UserInputController.interface";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { UIState } from "./UIState.type";
@@ -86,10 +87,8 @@ import type { UserSettings } from "./UserSettings.type";
 
 const _disposables: Set<DisposableCallback> = new Set();
 const _playerPosition: IVector3 = new Vector3();
-
-const _unmountables: Set<UnmountableCallback> = new Set();
-
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
+const _unmountables: Set<UnmountableCallback> = new Set();
 
 const _internationalizationMessageRouter = createRouter({
   loadedNamespaces: handleRPCResponse(_rpcLookupTable),
@@ -103,6 +102,7 @@ const _md2MessageRouter = createRouter({
 const _quakeMapsRouter = createRouter({
   map: handleRPCResponse(_rpcLookupTable),
 });
+
 const _textureReceiverMessageRouter = createTextureReceiverMessagesRouter(_rpcLookupTable);
 
 export function MapScene(
@@ -137,11 +137,12 @@ export function MapScene(
   });
 
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
-  const _inputEventBusController: InputController = InputEventBusController(userSettings, eventBus, _cameraController);
-  const _inputKeyboardController: InputController = InputKeyboardController(userSettings, keyboardState, _cameraController, _playerPosition);
-  const _inputMouseController: InputController = InputMouseController(userSettings, dimensionsState, mouseState, touchState, _cameraController);
+  const _userInputEventBusController: UserInputController = UserInputEventBusController(userSettings, eventBus, _cameraController);
+  const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController, _playerPosition);
+  const _userInputMouseController: UserInputController = UserInputMouseController(userSettings, dimensionsState, mouseState, _cameraController);
+  const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState, _cameraController);
   const _scene = new Scene();
-  const _raycaster: IRaycaster = Raycaster(_cameraController, mouseState, touchState);
+  const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
 
   _scene.background = new Color(0x000000);
@@ -227,18 +228,20 @@ export function MapScene(
     state.isDisposed = true;
 
     disposeAll(_disposables);
-    fDispose(logger, _inputEventBusController);
-    fDispose(logger, _inputKeyboardController);
-    fDispose(logger, _inputMouseController);
+    fDispose(logger, _userInputEventBusController);
+    fDispose(logger, _userInputKeyboardController);
+    fDispose(logger, _userInputMouseController);
+    fDispose(logger, _userInputTouchController);
     fDispose(logger, _cameraController);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    fMount(logger, _inputEventBusController);
-    fMount(logger, _inputKeyboardController);
-    fMount(logger, _inputMouseController);
+    fMount(logger, _userInputEventBusController);
+    fMount(logger, _userInputKeyboardController);
+    fMount(logger, _userInputMouseController);
+    fMount(logger, _userInputTouchController);
     fMount(logger, _cameraController);
 
     progressMessagePort.postMessage({
@@ -282,18 +285,20 @@ export function MapScene(
   function pause(): void {
     state.isPaused = true;
 
-    fPause(logger, _inputEventBusController);
-    fPause(logger, _inputKeyboardController);
-    fPause(logger, _inputMouseController);
+    fPause(logger, _userInputEventBusController);
+    fPause(logger, _userInputKeyboardController);
+    fPause(logger, _userInputMouseController);
+    fPause(logger, _userInputTouchController);
     fPause(logger, _cameraController);
   }
 
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
-    fPreload(logger, _inputEventBusController);
-    fPreload(logger, _inputKeyboardController);
-    fPreload(logger, _inputMouseController);
+    fPreload(logger, _userInputEventBusController);
+    fPreload(logger, _userInputKeyboardController);
+    fPreload(logger, _userInputMouseController);
+    fPreload(logger, _userInputTouchController);
     fPreload(logger, _cameraController);
 
     gltfMessagePort.onmessage = _gltfMessageRouter;
@@ -365,9 +370,10 @@ export function MapScene(
   function unmount(): void {
     state.isMounted = false;
 
-    fUnmount(logger, _inputEventBusController);
-    fUnmount(logger, _inputKeyboardController);
-    fUnmount(logger, _inputMouseController);
+    fUnmount(logger, _userInputEventBusController);
+    fUnmount(logger, _userInputKeyboardController);
+    fUnmount(logger, _userInputMouseController);
+    fUnmount(logger, _userInputTouchController);
     fUnmount(logger, _cameraController);
     unmountAll(_unmountables);
   }
@@ -375,9 +381,10 @@ export function MapScene(
   function unpause(): void {
     state.isPaused = false;
 
-    fUnpause(logger, _inputEventBusController);
-    fUnpause(logger, _inputKeyboardController);
-    fUnpause(logger, _inputMouseController);
+    fUnpause(logger, _userInputEventBusController);
+    fUnpause(logger, _userInputKeyboardController);
+    fUnpause(logger, _userInputMouseController);
+    fUnpause(logger, _userInputTouchController);
     fUnpause(logger, _cameraController);
   }
 
@@ -394,12 +401,13 @@ export function MapScene(
       _raycaster.update(delta, elapsedTime, tickTimerState);
     }
 
-    if (_inputEventBusController.state.needsUpdates) {
-      _inputEventBusController.update(delta, elapsedTime, tickTimerState);
+    if (_userInputEventBusController.state.needsUpdates) {
+      _userInputEventBusController.update(delta, elapsedTime, tickTimerState);
     }
 
-    _inputKeyboardController.update(delta, elapsedTime, tickTimerState);
-    _inputMouseController.update(delta, elapsedTime, tickTimerState);
+    _userInputKeyboardController.update(delta, elapsedTime, tickTimerState);
+    _userInputMouseController.update(delta, elapsedTime, tickTimerState);
+    _userInputTouchController.update(delta, elapsedTime, tickTimerState);
     _cameraController.update(delta, elapsedTime, tickTimerState);
 
     _renderPass.camera = _cameraController.camera;

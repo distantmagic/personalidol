@@ -5,12 +5,12 @@ import { noop } from "@personalidol/framework/src/noop";
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 
-import type { InputController } from "./InputController.interface";
-import type { InputControllerState } from "./InputControllerState.type";
+import type { UserInputController } from "./UserInputController.interface";
+import type { UserInputControllerState } from "./UserInputControllerState.type";
 import type { UserSettings } from "./UserSettings.type";
 
-export function InputEventBusController(userSettings: UserSettings, eventBus: EventBus, cameraController: CameraController): InputController {
-  const state: InputControllerState = Object.seal({
+export function UserInputEventBusController(userSettings: UserSettings, eventBus: EventBus, cameraController: CameraController): UserInputController {
+  const state: UserInputControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,
     isPaused: false,
@@ -60,8 +60,8 @@ export function InputEventBusController(userSettings: UserSettings, eventBus: Ev
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    isInputController: true,
-    name: "InputEventBusController",
+    isUserInputController: true,
+    name: "UserInputEventBusController",
     state: state,
 
     dispose: dispose,

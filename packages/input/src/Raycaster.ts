@@ -13,7 +13,7 @@ import type { Raycastable } from "./Raycastable.interface";
 import type { Raycaster as IRaycaster } from "./Raycaster.interface";
 import type { RaycasterState } from "./RaycasterState.type";
 
-export function Raycaster(camerController: CameraController, mouseState: Int32Array, touchState: Int32Array): IRaycaster {
+export function Raycaster(camerController: CameraController, dimensionsState: Uint32Array, mouseState: Int32Array, touchState: Int32Array): IRaycaster {
   const state: RaycasterState = Object.seal({
     hasIntersections: false,
     needsUpdates: true,
@@ -36,8 +36,8 @@ export function Raycaster(camerController: CameraController, mouseState: Int32Ar
   }
 
   function _updateRaycasterCamera(): void {
-    _vector2.x = getPrimaryPointerVectorX(mouseState, touchState);
-    _vector2.y = getPrimaryPointerVectorY(mouseState, touchState);
+    _vector2.x = getPrimaryPointerVectorX(dimensionsState, mouseState, touchState);
+    _vector2.y = getPrimaryPointerVectorY(dimensionsState, mouseState, touchState);
     _threeRaycaster.setFromCamera(_vector2, camerController.camera);
   }
 

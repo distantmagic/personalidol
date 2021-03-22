@@ -2,8 +2,6 @@ import { TouchIndices } from "./TouchIndices.enum";
 
 import type { PointerTouch } from "./PointerTouch.type";
 
-const T_VECTOR_SCALE = 32000;
-
 const touches: ReadonlyArray<PointerTouch> = [
   {
     CLIENT_X: TouchIndices.T0_CLIENT_X,
@@ -14,8 +12,6 @@ const touches: ReadonlyArray<PointerTouch> = [
     PRESSURE: TouchIndices.T0_PRESSURE,
     RELATIVE_X: TouchIndices.T0_RELATIVE_X,
     RELATIVE_Y: TouchIndices.T0_RELATIVE_Y,
-    VECTOR_X: TouchIndices.T0_VECTOR_X,
-    VECTOR_Y: TouchIndices.T0_VECTOR_Y,
   },
   {
     CLIENT_X: TouchIndices.T1_CLIENT_X,
@@ -26,8 +22,6 @@ const touches: ReadonlyArray<PointerTouch> = [
     PRESSURE: TouchIndices.T1_PRESSURE,
     RELATIVE_X: TouchIndices.T1_RELATIVE_X,
     RELATIVE_Y: TouchIndices.T1_RELATIVE_Y,
-    VECTOR_X: TouchIndices.T1_VECTOR_X,
-    VECTOR_Y: TouchIndices.T1_VECTOR_Y,
   },
   {
     CLIENT_X: TouchIndices.T2_CLIENT_X,
@@ -38,8 +32,6 @@ const touches: ReadonlyArray<PointerTouch> = [
     PRESSURE: TouchIndices.T2_PRESSURE,
     RELATIVE_X: TouchIndices.T2_RELATIVE_X,
     RELATIVE_Y: TouchIndices.T2_RELATIVE_Y,
-    VECTOR_X: TouchIndices.T2_VECTOR_X,
-    VECTOR_Y: TouchIndices.T2_VECTOR_Y,
   },
 ];
 
@@ -57,7 +49,6 @@ function createEmptyState(usesSharedBuffer: boolean): Int32Array {
 
 function resetStateArray(stateArray: Int32Array): Int32Array {
   stateArray.fill(0);
-  stateArray[TouchIndices.T_VECTOR_SCALE] = T_VECTOR_SCALE;
 
   return stateArray;
 }

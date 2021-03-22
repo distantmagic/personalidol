@@ -7,12 +7,17 @@ import type { Vector3 } from "three/src/math/Vector3";
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { InputController } from "./InputController.interface";
-import type { InputControllerState } from "./InputControllerState.type";
+import type { UserInputController } from "./UserInputController.interface";
+import type { UserInputControllerState } from "./UserInputControllerState.type";
 import type { UserSettings } from "./UserSettings.type";
 
-export function InputKeyboardController(userSettings: UserSettings, keyboardState: Uint8Array, cameraController: CameraController, cameraResetPosition: Vector3): InputController {
-  const state: InputControllerState = Object.seal({
+export function UserInputKeyboardController(
+  userSettings: UserSettings,
+  keyboardState: Uint8Array,
+  cameraController: CameraController,
+  cameraResetPosition: Vector3
+): UserInputController {
+  const state: UserInputControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,
     isPaused: false,
@@ -87,8 +92,8 @@ export function InputKeyboardController(userSettings: UserSettings, keyboardStat
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    isInputController: true,
-    name: "InputKeyboardController",
+    isUserInputController: true,
+    name: "UserInputKeyboardController",
     state: state,
 
     dispose: dispose,

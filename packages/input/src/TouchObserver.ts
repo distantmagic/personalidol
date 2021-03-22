@@ -4,8 +4,6 @@ import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices
 import { isInDimensionsBounds } from "@personalidol/framework/src/isInDimensionsBounds";
 import { passiveEventListener } from "@personalidol/framework/src/passiveEventListener";
 
-import { computePointerVectorX } from "./computePointerVectorX";
-import { computePointerVectorY } from "./computePointerVectorY";
 import { TouchIndices } from "./TouchIndices.enum";
 import { TouchState } from "./TouchState";
 
@@ -131,8 +129,6 @@ export function TouchObserver(
     for (let i = 0; i < touchState[TouchIndices.T_TOTAL] && i < TouchState.touches_total; i += 1) {
       touchState[TouchState.touches[i].RELATIVE_X] = touchState[TouchState.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
       touchState[TouchState.touches[i].RELATIVE_Y] = touchState[TouchState.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
-      touchState[TouchState.touches[i].VECTOR_X] = computePointerVectorX(dimensionsState, touchState[TouchState.touches[i].RELATIVE_X], touchState[TouchIndices.T_VECTOR_SCALE]);
-      touchState[TouchState.touches[i].VECTOR_Y] = computePointerVectorY(dimensionsState, touchState[TouchState.touches[i].RELATIVE_Y], touchState[TouchIndices.T_VECTOR_SCALE]);
       touchState[TouchState.touches[i].IN_BOUNDS] = Number(
         isInDimensionsBounds(dimensionsState, touchState[TouchState.touches[i].CLIENT_X], touchState[TouchState.touches[i].CLIENT_Y])
       );

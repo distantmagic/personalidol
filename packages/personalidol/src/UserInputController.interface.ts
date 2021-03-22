@@ -2,9 +2,9 @@ import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpda
 import type { Mountable } from "@personalidol/framework/src/Mountable.interface";
 import type { Pauseable } from "@personalidol/framework/src/Pauseable.interface";
 
-import type { InputControllerState } from "./InputControllerState.type";
+import type { UserInputControllerState } from "./UserInputControllerState.type";
 
-export interface InputController extends MainLoopUpdatable, Mountable, Pauseable {
-  readonly state: InputControllerState;
-  readonly isInputController: true;
+export interface UserInputController extends MainLoopUpdatable, Mountable, Pauseable {
+  readonly state: UserInputControllerState;
+  readonly isUserInputController: true;
 }

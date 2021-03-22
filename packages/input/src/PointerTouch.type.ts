@@ -7,6 +7,4 @@ export type PointerTouch = {
   PRESSURE: number;
   RELATIVE_X: number;
   RELATIVE_Y: number;
-  VECTOR_X: number;
-  VECTOR_Y: number;
 };

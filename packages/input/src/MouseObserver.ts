@@ -4,8 +4,6 @@ import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices
 import { isInDimensionsBounds } from "@personalidol/framework/src/isInDimensionsBounds";
 import { passiveEventListener } from "@personalidol/framework/src/passiveEventListener";
 
-import { computePointerVectorX } from "./computePointerVectorX";
-import { computePointerVectorY } from "./computePointerVectorY";
 import { MouseButtons } from "./MouseButtons.enum";
 import { MouseIndices } from "./MouseIndices.enum";
 import { MouseState } from "./MouseState";
@@ -123,8 +121,6 @@ export function MouseObserver(
   function _updateDimensionsRelativeCoords(): void {
     mouseState[MouseIndices.M_RELATIVE_X] = mouseState[MouseIndices.M_CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
     mouseState[MouseIndices.M_RELATIVE_Y] = mouseState[MouseIndices.M_CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
-    mouseState[MouseIndices.M_VECTOR_X] = computePointerVectorX(dimensionsState, mouseState[MouseIndices.M_RELATIVE_X], mouseState[MouseIndices.M_VECTOR_SCALE]);
-    mouseState[MouseIndices.M_VECTOR_Y] = computePointerVectorY(dimensionsState, mouseState[MouseIndices.M_RELATIVE_Y], mouseState[MouseIndices.M_VECTOR_SCALE]);
     mouseState[MouseIndices.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, mouseState[MouseIndices.M_CLIENT_X], mouseState[MouseIndices.M_CLIENT_Y]));
 
     state.lastUpdate = tickTimerState.currentTick;

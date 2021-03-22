@@ -2,30 +2,29 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { Vector2 } from "three/src/math/Vector2";
 
-import { computePrimaryPointerStretchVector } from "@personalidol/input/src/computePrimaryPointerStretchVector";
-import { isPointerInitiatedByRootElement } from "@personalidol/input/src/isPointerInitiatedByRootElement";
-import { isPrimaryPointerPressed } from "@personalidol/input/src/isPrimaryPointerPressed";
+import { computePrimaryTouchStretchVector } from "@personalidol/input/src/computePrimaryTouchStretchVector";
+import { isPrimaryTouchInitiatedByRootElement } from "@personalidol/input/src/isPrimaryTouchInitiatedByRootElement";
+import { isPrimaryTouchPressed } from "@personalidol/input/src/isPrimaryTouchPressed";
 
 import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { InputController } from "./InputController.interface";
-import type { InputControllerState } from "./InputControllerState.type";
+import type { UserInputController } from "./UserInputController.interface";
+import type { UserInputControllerState } from "./UserInputControllerState.type";
 import type { UserSettings } from "./UserSettings.type";
 
 const _stretchVector: IVector2 = new Vector2(0, 0);
 const _stretchVectorRotationPivot: IVector2 = new Vector2(0, 0);
 
-export function InputMouseController(
+export function UserInputTouchController(
   userSettings: UserSettings,
   dimensionsState: Uint32Array,
-  mouseState: Int32Array,
   touchState: Int32Array,
   cameraController: CameraController
-): InputController {
-  const state: InputControllerState = Object.seal({
+): UserInputController {
+  const state: UserInputControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,
     isPaused: false,
@@ -64,8 +63,8 @@ export function InputMouseController(
       return;
     }
 
-    if (isPrimaryPointerPressed(mouseState, touchState) && isPointerInitiatedByRootElement(mouseState, touchState)) {
-      computePrimaryPointerStretchVector(_stretchVector, dimensionsState, mouseState, touchState);
+    if (isPrimaryTouchPressed(touchState) && isPrimaryTouchInitiatedByRootElement(touchState)) {
+      computePrimaryTouchStretchVector(_stretchVector, touchState);
 
       _stretchVector.rotateAround(_stretchVectorRotationPivot, (3 * Math.PI) / 4);
 
@@ -76,8 +75,8 @@ export function InputMouseController(
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    isInputController: true,
-    name: "InputMouseController",
+    isUserInputController: true,
+    name: "UserInputTouchController",
     state: state,
 
     dispose: dispose,
