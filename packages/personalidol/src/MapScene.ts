@@ -2,10 +2,8 @@ import { Color } from "three/src/math/Color";
 import { Fog } from "three/src/scenes/Fog";
 import { MathUtils } from "three/src/math/MathUtils";
 import { Scene } from "three/src/scenes/Scene";
-import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
-import { computePrimaryPointerStretchVector } from "@personalidol/input/src/computePrimaryPointerStretchVector";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
@@ -15,9 +13,6 @@ import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
-import { isPointerInitiatedByRootElement } from "@personalidol/input/src/isPointerInitiatedByRootElement";
-import { isPrimaryPointerPressed } from "@personalidol/input/src/isPrimaryPointerPressed";
-import { KeyboardIndices } from "@personalidol/input/src/KeyboardIndices.enum";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
@@ -33,6 +28,9 @@ import { AmbientLightView } from "./AmbientLightView";
 import { buildViews } from "./buildViews";
 import { CameraController } from "./CameraController";
 import { HemisphereLightView } from "./HemisphereLightView";
+import { InputEventBusController } from "./InputEventBusController";
+import { InputKeyboardController } from "./InputKeyboardController";
+import { InputMouseController } from "./InputMouseController";
 import { InstancedGLTFModelView } from "./InstancedGLTFModelView";
 import { InstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager";
 import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
@@ -48,7 +46,6 @@ import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
-import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { CameraController as ICameraController } from "@personalidol/framework/src/CameraController.interface";
@@ -81,6 +78,7 @@ import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
+import type { InputController } from "./InputController.interface";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { UIState } from "./UIState.type";
@@ -88,8 +86,6 @@ import type { UserSettings } from "./UserSettings.type";
 
 const _disposables: Set<DisposableCallback> = new Set();
 const _playerPosition: IVector3 = new Vector3();
-const _stretchVector: IVector2 = new Vector2(0, 0);
-const _stretchVectorRotationPivot: IVector2 = new Vector2(0, 0);
 
 const _unmountables: Set<UnmountableCallback> = new Set();
 
@@ -140,7 +136,10 @@ export function MapScene(
     needsUpdates: true,
   });
 
-  const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState, eventBus);
+  const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
+  const _inputEventBusController: InputController = InputEventBusController(userSettings, eventBus, _cameraController);
+  const _inputKeyboardController: InputController = InputKeyboardController(userSettings, keyboardState, _cameraController, _playerPosition);
+  const _inputMouseController: InputController = InputMouseController(userSettings, dimensionsState, mouseState, touchState, _cameraController);
   const _scene = new Scene();
   const _raycaster: IRaycaster = Raycaster(_cameraController, mouseState, touchState);
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
@@ -228,12 +227,18 @@ export function MapScene(
     state.isDisposed = true;
 
     disposeAll(_disposables);
+    fDispose(logger, _inputEventBusController);
+    fDispose(logger, _inputKeyboardController);
+    fDispose(logger, _inputMouseController);
     fDispose(logger, _cameraController);
   }
 
   function mount(): void {
     state.isMounted = true;
 
+    fMount(logger, _inputEventBusController);
+    fMount(logger, _inputKeyboardController);
+    fMount(logger, _inputMouseController);
     fMount(logger, _cameraController);
 
     progressMessagePort.postMessage({
@@ -277,12 +282,18 @@ export function MapScene(
   function pause(): void {
     state.isPaused = true;
 
+    fPause(logger, _inputEventBusController);
+    fPause(logger, _inputKeyboardController);
+    fPause(logger, _inputMouseController);
     fPause(logger, _cameraController);
   }
 
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
+    fPreload(logger, _inputEventBusController);
+    fPreload(logger, _inputKeyboardController);
+    fPreload(logger, _inputMouseController);
     fPreload(logger, _cameraController);
 
     gltfMessagePort.onmessage = _gltfMessageRouter;
@@ -354,6 +365,9 @@ export function MapScene(
   function unmount(): void {
     state.isMounted = false;
 
+    fUnmount(logger, _inputEventBusController);
+    fUnmount(logger, _inputKeyboardController);
+    fUnmount(logger, _inputMouseController);
     fUnmount(logger, _cameraController);
     unmountAll(_unmountables);
   }
@@ -361,6 +375,9 @@ export function MapScene(
   function unpause(): void {
     state.isPaused = false;
 
+    fUnpause(logger, _inputEventBusController);
+    fUnpause(logger, _inputKeyboardController);
+    fUnpause(logger, _inputMouseController);
     fUnpause(logger, _cameraController);
   }
 
@@ -377,20 +394,12 @@ export function MapScene(
       _raycaster.update(delta, elapsedTime, tickTimerState);
     }
 
-    if (!state.isPaused && isPrimaryPointerPressed(mouseState, touchState) && isPointerInitiatedByRootElement(mouseState, touchState)) {
-      computePrimaryPointerStretchVector(_stretchVector, dimensionsState, mouseState, touchState);
-
-      _stretchVector.rotateAround(_stretchVectorRotationPivot, (3 * Math.PI) / 4);
-
-      _cameraController.position.x += userSettings.cameraMovementSpeed * _stretchVector.y * delta;
-      _cameraController.position.z += userSettings.cameraMovementSpeed * _stretchVector.x * delta;
+    if (_inputEventBusController.state.needsUpdates) {
+      _inputEventBusController.update(delta, elapsedTime, tickTimerState);
     }
 
-    if (!state.isPaused && keyboardState[KeyboardIndices.Home]) {
-      _cameraController.position.copy(_playerPosition);
-      _cameraController.resetZoom();
-    }
-
+    _inputKeyboardController.update(delta, elapsedTime, tickTimerState);
+    _inputMouseController.update(delta, elapsedTime, tickTimerState);
     _cameraController.update(delta, elapsedTime, tickTimerState);
 
     _renderPass.camera = _cameraController.camera;

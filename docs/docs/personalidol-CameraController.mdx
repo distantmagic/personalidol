@@ -83,11 +83,7 @@ See the base [`Mountable`](framework-Mountable.interface.mdx) and [`Pauseable`](
       <th scope="row">
         <Link to="../framework/Mountable.interface">Mountable</Link>
       </th>
-      <td>
-        After mounting, <code>CameraController</code> starts listening to the
-        event bus for user input events like mouse wheel zoom or gestures that
-        may influence the camera position.
-      </td>
+      <td></td>
     </tr>
   </tbody>
 </table>
@@ -95,21 +91,20 @@ See the base [`Mountable`](framework-Mountable.interface.mdx) and [`Pauseable`](
 ## Constructor
 
 ```typescript
-import type { Logger } from "loglevel";
+import Logger from "loglevel";
 
 import { DimensionsState } from "@personalidol/framework/DimensionsState";
 import { KeyboardState } from "@personalidol/framework/KeyboardState";
-import { EventBus } from "@personalidol/framework/src/EventBus";
 
 import { CameraController } from "@personalidol/personalidol/CameraController";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
 
+const cameraPosition = new Vector3();
 const cameraController = CameraController(
   Logger.getLogger(),
   UserSettings.createEmptyState(window.devicePixelRatio),
   DimensionsState.createEmptyState(false),
   KeyboardState.createEmptyState(),
-  EventBus(),
 );
 ```
 
@@ -139,9 +134,16 @@ moving, it will adjust automatically.
 All state properties are read-only and should not be changed from outside the
 `CameraController`.
 
-
 ## Methods
 
 ### `.resetZoom()`: `void`
 
 Resets zoom to the initial level.
+
+### `.zoomIn(scale: number)`: `void`
+
+Zoom in by one step. Scale tells how fast the zoom is.
+
+### `.zoomOut(scale: number)`: `void`
+
+Zoom out by one step. Scale tells how fast the zoom is.
