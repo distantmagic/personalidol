@@ -63,14 +63,16 @@ export function UserInputTouchController(
       return;
     }
 
-    if (isPrimaryTouchPressed(touchState) && isPrimaryTouchInitiatedByRootElement(touchState)) {
-      computePrimaryTouchStretchVector(_stretchVector, touchState);
-
-      _stretchVector.rotateAround(_stretchVectorRotationPivot, (3 * Math.PI) / 4);
-
-      cameraController.position.x += userSettings.cameraMovementSpeed * _stretchVector.y * delta;
-      cameraController.position.z += userSettings.cameraMovementSpeed * _stretchVector.x * delta;
+    if (!isPrimaryTouchPressed(touchState) || !isPrimaryTouchInitiatedByRootElement(touchState)) {
+      return;
     }
+
+    computePrimaryTouchStretchVector(_stretchVector, touchState);
+
+    _stretchVector.rotateAround(_stretchVectorRotationPivot, (3 * Math.PI) / 4);
+
+    cameraController.position.x += userSettings.cameraMovementSpeed * _stretchVector.y * delta;
+    cameraController.position.z += userSettings.cameraMovementSpeed * _stretchVector.x * delta;
   }
 
   return Object.freeze({
