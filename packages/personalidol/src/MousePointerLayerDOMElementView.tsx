@@ -64,7 +64,7 @@ const _css = `
   .pointer__stretch-boundary,
   .pointer__stretch-indicator {
     fill: none;
-    stroke: white;
+    stroke: rgba(255, 255, 255, 0.3);
     stroke-width: 0.5;
   }
 `;
