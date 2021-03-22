@@ -27,8 +27,8 @@ Data flow approach was inspired by the
 This is the example partial flow of the
 [`DimensionsState`](framework-DimensionsState.mdx), which keeps the canvas
 dimensions. [`DimensionsState`](framework-DimensionsState.mdx),
-[`MouseState`](framework-MouseState.mdx),
-[`TouchState`](framework-TouchState.mdx) are not active (they do not notify
+[`MouseState`](input-MouseState.mdx),
+[`TouchState`](input-TouchState.mdx) are not active (they do not notify
 other elements about changes, they just keep the state). State objects always
 have some kind of `lastUpdate` field for
 reference, they are able to be polled for changes if necessary.
@@ -47,16 +47,16 @@ them are listed for the sake of the example.
 
 ![DimensionsState](../static/diagrams/architecture-event-and-state-DimensionsState-WindowResizeObserver.svg)
 
-- [`MouseObserver`](framework-MouseObserver.mdx) reads the dimensions array to
+- [`MouseObserver`](input-MouseObserver.mdx) reads the dimensions array to
   produce normalized mouse pointer vector for further processing by the scene
   controller (the kind of [-1; 1] vector you can use for raycasting for
   example). Then it stores that vector alongside other mouse state parameters
   (on-screen position, currently pressed buttons, etc) to the
-  [`MouseState`](framework-MouseState.mdx).
+  [`MouseState`](input-MouseState.mdx).
 
-- [`TouchObserver`](framework-TouchObserver.mdx) does the same thing as
-  [`MouseObserver`](framework-MouseObserver.mdx), but with touch input. It
-  writes to the [`TouchState`](framework-TouchState.mdx).
+- [`TouchObserver`](input-TouchObserver.mdx) does the same thing as
+  [`MouseObserver`](input-MouseObserver.mdx), but with touch input. It
+  writes to the [`TouchState`](input-TouchState.mdx).
 
 - [`RendererDimensionsManager`](dom-renderer-RendererDimensionsManager.mdx)
   during every frame checks if the
@@ -70,8 +70,8 @@ them are listed for the sake of the example.
   type of the camera)
 
 - [`MapScene`](personalidol-MapScene.mdx) is a controller that reads from
-  [`MouseState`](framework-MouseState.mdx)
-  and [`TouchState`](framework-TouchState.mdx) to respond to user
+  [`MouseState`](input-MouseState.mdx)
+  and [`TouchState`](input-TouchState.mdx) to respond to user
   interactions.
 
 ### Separation of concerns benefits

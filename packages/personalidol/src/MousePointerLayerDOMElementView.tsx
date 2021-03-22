@@ -2,13 +2,13 @@ import clsx from "clsx";
 import { h } from "preact";
 import { Vector2 } from "three/src/math/Vector2";
 
-import { computePrimaryPointerStretchVector } from "@personalidol/framework/src/computePrimaryPointerStretchVector";
+import { computePrimaryPointerStretchVector } from "@personalidol/input/src/computePrimaryPointerStretchVector";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
-import { getPrimaryPointerInitialClientX } from "@personalidol/framework/src/getPrimaryPointerInitialClientX";
-import { getPrimaryPointerInitialClientY } from "@personalidol/framework/src/getPrimaryPointerInitialClientY";
-import { isPointerInitiatedByRootElement } from "@personalidol/framework/src/isPointerInitiatedByRootElement";
-import { isPrimaryPointerInDimensionsBounds } from "@personalidol/framework/src/isPrimaryPointerInDimensionsBounds";
-import { isPrimaryPointerPressed } from "@personalidol/framework/src/isPrimaryPointerPressed";
+import { getPrimaryPointerInitialClientX } from "@personalidol/input/src/getPrimaryPointerInitialClientX";
+import { getPrimaryPointerInitialClientY } from "@personalidol/input/src/getPrimaryPointerInitialClientY";
+import { isPointerInitiatedByRootElement } from "@personalidol/input/src/isPointerInitiatedByRootElement";
+import { isPrimaryPointerInDimensionsBounds } from "@personalidol/input/src/isPrimaryPointerInDimensionsBounds";
+import { isPrimaryPointerPressed } from "@personalidol/input/src/isPrimaryPointerPressed";
 
 import { DOMZIndex } from "./DOMZIndex.enum";
 

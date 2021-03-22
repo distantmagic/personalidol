@@ -13,12 +13,12 @@ import type { Logger } from "loglevel";
 import type { DOMElementsLookup } from "@personalidol/personalidol/src/DOMElementsLookup.type";
 import type { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
-import type { KeyboardObserverState } from "@personalidol/framework/src/KeyboardObserverState.type";
+import type { KeyboardObserverState } from "@personalidol/input/src/KeyboardObserverState.type";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
-import type { MouseObserverState } from "@personalidol/framework/src/MouseObserverState.type";
+import type { MouseObserverState } from "@personalidol/input/src/MouseObserverState.type";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 import type { StatsReporter } from "@personalidol/framework/src/StatsReporter.interface";
-import type { TouchObserverState } from "@personalidol/framework/src/TouchObserverState.type";
+import type { TouchObserverState } from "@personalidol/input/src/TouchObserverState.type";
 import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
 
 export async function createRenderingService(

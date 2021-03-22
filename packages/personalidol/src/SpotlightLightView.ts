@@ -11,8 +11,8 @@ import { ShadowLightUserSettingsManager } from "./ShadowLightUserSettingsManager
 import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { View } from "@personalidol/framework/src/View.interface";
-import type { ViewState } from "@personalidol/framework/src/ViewState.type";
+import type { View } from "@personalidol/views/src/View.interface";
+import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityView } from "./EntityView.interface";

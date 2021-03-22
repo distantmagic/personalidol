@@ -8,7 +8,7 @@ import { isEntityView } from "./isEntityView";
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
-import type { View } from "@personalidol/framework/src/View.interface";
+import type { View } from "@personalidol/views/src/View.interface";
 
 import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityLookup } from "./EntityLookup.type";

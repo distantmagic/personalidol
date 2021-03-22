@@ -1,6 +1,6 @@
 import type { Texture as ITexture } from "three";
 
-import type { View } from "@personalidol/framework/src/View.interface";
+import type { View } from "@personalidol/views/src/View.interface";
 
 import type { EntityLookup } from "./EntityLookup.type";
 

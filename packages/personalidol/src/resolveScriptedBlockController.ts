@@ -1,7 +1,7 @@
 import { FollowScriptedBlockController } from "./FollowScriptedBlockController";
 import { RotateScriptedBlockController } from "./RotateScriptedBlockController";
 
-import type { View } from "@personalidol/framework/src/View.interface";
+import type { View } from "@personalidol/views/src/View.interface";
 
 import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
 import type { ScriptedBlockController } from "./ScriptedBlockController.interface";

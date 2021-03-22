@@ -34,7 +34,7 @@ import type { Texture as ITexture } from "three/src/textures/Texture";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { UserSettingsManager } from "@personalidol/framework/src/UserSettingsManager.interface";
-import type { ViewState } from "@personalidol/framework/src/ViewState.type";
+import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { EntityGLTFModel } from "./EntityGLTFModel.type";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";

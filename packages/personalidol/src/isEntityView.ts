@@ -1,4 +1,4 @@
-import type { View } from "@personalidol/framework/src/View.interface";
+import type { View } from "@personalidol/views/src/View.interface";
 
 import type { EntityView } from "./EntityView.interface";
 

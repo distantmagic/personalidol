@@ -8,7 +8,7 @@ import { BackgroundLightUserSettingsManager } from "./BackgroundLightUserSetting
 import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { ViewState } from "@personalidol/framework/src/ViewState.type";
+import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
 import type { EntityView } from "./EntityView.interface";

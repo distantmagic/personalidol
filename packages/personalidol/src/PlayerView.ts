@@ -14,7 +14,7 @@ import type { Scene } from "three/src/scenes/Scene";
 
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { ViewState } from "@personalidol/framework/src/ViewState.type";
+import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { EntityPlayer } from "./EntityPlayer.type";

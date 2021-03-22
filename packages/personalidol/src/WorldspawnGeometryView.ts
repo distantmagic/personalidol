@@ -26,7 +26,7 @@ import type { DisposableCallback } from "@personalidol/framework/src/DisposableC
 import type { Geometry } from "@personalidol/quakemaps/src/Geometry.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
-import type { ViewState } from "@personalidol/framework/src/ViewState.type";
+import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { UserSettings } from "./UserSettings.type";
 import type { WorldspawnGeometryView as IWorldspawnGeometryView } from "./WorldspawnGeometryView.interface";

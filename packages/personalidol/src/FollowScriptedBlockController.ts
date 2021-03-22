@@ -5,7 +5,7 @@ import { onlyOne } from "@personalidol/framework/src/onlyOne";
 
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
-import type { View } from "@personalidol/framework/src/View.interface";
+import type { View } from "@personalidol/views/src/View.interface";
 
 import type { ScriptedBlockController } from "./ScriptedBlockController.interface";
 import type { ScriptedBlockControllerState } from "./ScriptedBlockControllerState.type";

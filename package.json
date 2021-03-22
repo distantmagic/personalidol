@@ -6,12 +6,14 @@
     "packages/dom-renderer",
     "packages/framework",
     "packages/i18n",
+    "packages/input",
     "packages/personalidol",
     "packages/quakemaps",
     "packages/service-worker",
     "packages/texture-loader",
     "packages/three-css2d-renderer",
     "packages/three-modules",
+    "packages/views",
     "packages/website"
   ]
 }

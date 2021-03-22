@@ -6,7 +6,7 @@ import { noop } from "@personalidol/framework/src/noop";
 import type { Object3D as IObject3D } from "three/src/core/Object3D";
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { ViewState } from "@personalidol/framework/src/ViewState.type";
+import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityView } from "./EntityView.interface";

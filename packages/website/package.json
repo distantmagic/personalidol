@@ -9,6 +9,7 @@
     "@personalidol/dom": "^0.0.4",
     "@personalidol/dom-renderer": "^0.0.4",
     "@personalidol/framework": "^0.0.4",
+    "@personalidol/input": "^0.0.4",
     "@personalidol/i18n": "^0.0.4",
     "@personalidol/personalidol": "^0.0.4",
     "@personalidol/quakemaps": "^0.0.4",

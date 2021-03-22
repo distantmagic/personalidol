@@ -4,7 +4,7 @@ import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { damp } from "@personalidol/framework/src/damp";
-import { KeyboardIndices } from "@personalidol/framework/src/KeyboardIndices.enum";
+import { KeyboardIndices } from "@personalidol/input/src/KeyboardIndices.enum";
 import { updateOrthographicCameraAspect } from "@personalidol/framework/src/updateOrthographicCameraAspect";
 import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updatePerspectiveCameraAspect";
 
