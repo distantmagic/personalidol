@@ -15,7 +15,6 @@ import type { MainMenuDOMElementView } from "./MainMenuDOMElementView";
 import type { MainMenuLanguageButtonDOMElementView } from "./MainMenuLanguageButtonDOMElementView";
 import type { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementView";
 import type { MainMenuUserSettingsButtonDOMElementView } from "./MainMenuUserSettingsButtonDOMElementView";
-import type { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import type { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
 import type { ProgressManagerStateDOMElementProps } from "./ProgressManagerStateDOMElementProps.type";
 import type { ProgressManagerStateDOMElementView } from "./ProgressManagerStateDOMElementView";
@@ -23,6 +22,7 @@ import type { ReloadButtonDOMElementView } from "./ReloadButtonDOMElementView";
 import type { SettingsBackdropDOMElementProps } from "./SettingsBackdropDOMElementProps.interface";
 import type { SettingsBackdropDOMElementView } from "./SettingsBackdropDOMElementView";
 import type { UserSettingsDOMElementView } from "./UserSettingsDOMElementView";
+import type { VirtualJoystickLayerDOMElementView } from "./VirtualJoystickLayerDOMElementView";
 
 declare global {
   namespace preact.JSX {
@@ -54,10 +54,10 @@ export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-main-menu-language-button": typeof MainMenuLanguageButtonDOMElementView;
   "pi-main-menu-layout": typeof MainMenuLayoutDOMElementView;
   "pi-main-menu-user-settings-button": typeof MainMenuUserSettingsButtonDOMElementView;
-  "pi-mouse-pointer-layer": typeof MousePointerLayerDOMElementView;
   "pi-object-label": typeof ObjectLabelDOMElementView;
   "pi-progress-manager-state": typeof ProgressManagerStateDOMElementView;
   "pi-reload-button": typeof ReloadButtonDOMElementView;
   "pi-settings-backdrop": typeof SettingsBackdropDOMElementView;
   "pi-user-settings": typeof UserSettingsDOMElementView;
+  "pi-virtual-joystick-layer": typeof VirtualJoystickLayerDOMElementView;
 };

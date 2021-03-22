@@ -69,7 +69,7 @@ const _css = `
   }
 `;
 
-export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings> {
+export class VirtualJoystickLayerDOMElementView extends DOMElementView<UserSettings> {
   public css: string = _css;
 
   private _stretchVector: IVector2 = new Vector2();

@@ -148,8 +148,8 @@ export function MapScene(
 
   const _fog = new Fog(_scene.background, 0, 0);
 
-  const _domMousePointerLayerElementId: string = MathUtils.generateUUID();
   const _domInGameMenuTriggerElementId: string = MathUtils.generateUUID();
+  const _domVirtualJoystickLayerElementId: string = MathUtils.generateUUID();
   const _instancedGLTFModelViewManager: IInstancedGLTFModelViewManager = InstancedGLTFModelViewManager(
     logger,
     userSettings,
@@ -252,15 +252,15 @@ export function MapScene(
 
     domMessagePort.postMessage({
       render: <MessageDOMUIRender<DOMElementsLookup>>{
-        id: _domMousePointerLayerElementId,
-        element: "pi-mouse-pointer-layer",
+        id: _domVirtualJoystickLayerElementId,
+        element: "pi-virtual-joystick-layer",
         props: {},
       },
     });
 
     _unmountables.add(function () {
       domMessagePort.postMessage({
-        dispose: <MessageDOMUIDispose>[_domMousePointerLayerElementId],
+        dispose: <MessageDOMUIDispose>[_domVirtualJoystickLayerElementId],
       });
     });
 
