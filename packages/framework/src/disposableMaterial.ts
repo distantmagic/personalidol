@@ -1,4 +1,5 @@
 import { disposableGeneric } from "./disposableGeneric";
+import { invoke } from "./invoke";
 
 import type { Material } from "three";
 
@@ -12,8 +13,6 @@ export function disposableMaterial(materials: Material | Array<Material>): Dispo
   const disposables = materials.map(disposableGeneric);
 
   return function () {
-    for (let disposable of disposables) {
-      disposable();
-    }
+    disposables.forEach(invoke);
   };
 }

@@ -70,6 +70,13 @@ export function UserInputMouseController(
 
     _pointerVector.x = getMousePointerVectorX(dimensionsState, mouseState);
     _pointerVector.y = getMousePointerVectorY(dimensionsState, mouseState);
+
+    if (_pointerVector.length() < 0.05) {
+      // Create some dead-zone in the middle to be able to interact with the
+      // player character.
+      return;
+    }
+
     _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
     _pointerVector.normalize();
 

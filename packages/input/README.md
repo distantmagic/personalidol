@@ -1,3 +1,3 @@
-# `framework`
+# `input`
 
-Base interfaces and services other packages rely on.
+Package that handles user input devices.

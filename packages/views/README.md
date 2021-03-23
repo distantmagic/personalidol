@@ -1,3 +1,3 @@
-# `framework`
+# `views`
 
-Base interfaces and services other packages rely on.
+Bridge between a scene and game domain logic.

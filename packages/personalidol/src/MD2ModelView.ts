@@ -1,5 +1,6 @@
 import { AnimationClip } from "three/src/animation/AnimationClip";
 import { AnimationMixer } from "three/src/animation/AnimationMixer";
+import { BoxGeometry } from "three/src/geometries/BoxGeometry";
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { Color } from "three/src/math/Color";
@@ -132,6 +133,7 @@ export function MD2ModelView(
   const _materialColor: IColor = new Color();
   const _mesh: IMesh = createEmptyMesh();
   const _meshUserSettingsManager = MeshUserSettingsManager(logger, userSettings, _mesh);
+  const _raycastMesh: IMesh = createEmptyMesh();
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
 
@@ -203,12 +205,32 @@ export function MD2ModelView(
 
     _mesh.geometry = bufferGeometry;
     _mesh.material = material;
-
-    // Update morph targets after swapping both geometry and material.
     _mesh.updateMorphTargets();
 
     _mesh.rotation.set(0, entity.angle, 0);
     _mesh.position.set(entity.origin.x, entity.origin.y, entity.origin.z);
+
+    // Raycaster mesh
+
+    const _raycastGeometry = new BoxGeometry(
+      Math.abs(geometry.boundingBoxes.stand.min.x - geometry.boundingBoxes.stand.max.x),
+      Math.abs(geometry.boundingBoxes.stand.min.y - geometry.boundingBoxes.stand.max.y),
+      Math.abs(geometry.boundingBoxes.stand.min.z - geometry.boundingBoxes.stand.max.z)
+    );
+
+    _disposables.add(disposableGeneric(_raycastGeometry));
+
+    const _raycastMaterial = new MeshBasicMaterial();
+
+    _disposables.add(disposableMaterial(_raycastMaterial));
+
+    _raycastMesh.geometry = _raycastGeometry;
+    _raycastMesh.material = _raycastMaterial;
+    _raycastMesh.position.y += 5;
+    _raycastMesh.visible = false;
+    _raycastMesh.updateMorphTargets();
+
+    _mesh.add(_raycastMesh);
 
     // Object label
 
@@ -298,7 +320,7 @@ export function MD2ModelView(
     isView: true,
     name: name,
     object3D: _mesh,
-    raycasterObject3D: _mesh,
+    raycasterObject3D: _raycastMesh,
     state: state,
 
     dispose: dispose,
