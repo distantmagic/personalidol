@@ -102,6 +102,7 @@ export function TouchObserver(
     for (let i = 0; i < evt.touches.length && i < TouchState.touches_total; i += 1) {
       touchState[TouchState.touches[i].CLIENT_X] = evt.touches[i].clientX;
       touchState[TouchState.touches[i].CLIENT_Y] = evt.touches[i].clientY;
+
       touchState[TouchState.touches[i].PRESSURE] = Math.floor(evt.touches[i].force * 100);
     }
 
@@ -136,6 +137,7 @@ export function TouchObserver(
     for (let i = 0; i < touchState[TouchIndices.T_TOTAL] && i < TouchState.touches_total; i += 1) {
       touchState[TouchState.touches[i].RELATIVE_X] = touchState[TouchState.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
       touchState[TouchState.touches[i].RELATIVE_Y] = touchState[TouchState.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
+
       touchState[TouchState.touches[i].IN_BOUNDS] = Number(
         isInDimensionsBounds(dimensionsState, touchState[TouchState.touches[i].CLIENT_X], touchState[TouchState.touches[i].CLIENT_Y])
       );

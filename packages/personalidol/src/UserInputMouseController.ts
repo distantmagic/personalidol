@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { Vector2 } from "three/src/math/Vector2";
 
+import { canBeMouseClick } from "@personalidol/input/src/canBeMouseClick";
 import { getMousePointerVectorX } from "@personalidol/input/src/getMousePointerVectorX";
 import { getMousePointerVectorY } from "@personalidol/input/src/getMousePointerVectorY";
 import { isPrimaryMouseButtonPressed } from "@personalidol/input/src/isPrimaryMouseButtonPressed";
@@ -67,6 +68,10 @@ export function UserInputMouseController(
     }
 
     if (!isPrimaryMouseButtonPressed(mouseState) || !isPrimaryMouseButtonPressInitiatedByRootElement(mouseState)) {
+      return;
+    }
+
+    if (raycaster.state.hasIntersections && canBeMouseClick(mouseState)) {
       return;
     }
 

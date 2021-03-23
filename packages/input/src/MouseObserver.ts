@@ -1,4 +1,5 @@
 import { MathUtils } from "three/src/math/MathUtils";
+import { Vector2 } from "three/src/math/Vector2";
 
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
 import { isInDimensionsBounds } from "@personalidol/framework/src/isInDimensionsBounds";
@@ -7,6 +8,8 @@ import { passiveEventListener } from "@personalidol/framework/src/passiveEventLi
 import { MouseButtons } from "./MouseButtons.enum";
 import { MouseIndices } from "./MouseIndices.enum";
 import { MouseState } from "./MouseState";
+
+import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { WindowFocusObserverState } from "@personalidol/framework/src/WindowFocusObserverState.type";
@@ -26,6 +29,7 @@ export function MouseObserver(
     needsUpdates: true,
   });
 
+  const _travelDistance: IVector2 = new Vector2();
   let _isListening: boolean = false;
 
   function start(): void {
@@ -97,6 +101,14 @@ export function MouseObserver(
     mouseState[MouseIndices.M_BUTTON_4] = evt.buttons & MouseButtons.Generic1;
     mouseState[MouseIndices.M_BUTTON_5] = evt.buttons & MouseButtons.Generic2;
 
+    if (evt.buttons > 0) {
+      // Only record travel distance if any button is pressed.
+      _travelDistance.x = Math.abs(mouseState[MouseIndices.M_CLIENT_X] - evt.clientX);
+      _travelDistance.y = Math.abs(mouseState[MouseIndices.M_CLIENT_Y] - evt.clientY);
+
+      mouseState[MouseIndices.M_DOWN_TRAVEL_DISTANCE] += Math.round(_travelDistance.length());
+    }
+
     mouseState[MouseIndices.M_CLIENT_X] = evt.clientX;
     mouseState[MouseIndices.M_CLIENT_Y] = evt.clientY;
 
@@ -106,15 +118,18 @@ export function MouseObserver(
 
   function _onMouseDown(evt: MouseEvent): void {
     mouseState[MouseIndices.M_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
+
     mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_X] = evt.clientX;
     mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_Y] = evt.clientY;
     mouseState[MouseIndices.M_DOWN_LAST_UPDATE] = tickTimerState.currentTick;
+    mouseState[MouseIndices.M_DOWN_TRAVEL_DISTANCE] = 0;
 
     _onMouseChange(evt);
   }
 
   function _onMouseUp(evt: MouseEvent): void {
     mouseState[MouseIndices.M_INITIATED_BY_ROOT_ELEMENT] = 0;
+
     mouseState[MouseIndices.M_UP_CLIENT_X] = evt.clientX;
     mouseState[MouseIndices.M_UP_CLIENT_Y] = evt.clientY;
     mouseState[MouseIndices.M_UP_LAST_UPDATE] = tickTimerState.currentTick;
@@ -125,6 +140,7 @@ export function MouseObserver(
   function _updateDimensionsRelativeCoords(): void {
     mouseState[MouseIndices.M_RELATIVE_X] = mouseState[MouseIndices.M_CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
     mouseState[MouseIndices.M_RELATIVE_Y] = mouseState[MouseIndices.M_CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
+
     mouseState[MouseIndices.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, mouseState[MouseIndices.M_CLIENT_X], mouseState[MouseIndices.M_CLIENT_Y]));
 
     state.lastUpdate = tickTimerState.currentTick;
