@@ -8,6 +8,7 @@ import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreen
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { RendererDimensionsManager } from "@personalidol/dom-renderer/src/RendererDimensionsManager";
 import { SceneTransition } from "@personalidol/framework/src/SceneTransition";
+import { UIState } from "@personalidol/personalidol/src/UIState";
 import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
@@ -19,7 +20,7 @@ import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 import type { StatsReporter } from "@personalidol/framework/src/StatsReporter.interface";
-import type { UIState } from "@personalidol/personalidol/src/UIState.type";
+import type { UIState as IUIState } from "@personalidol/personalidol/src/UIState.type";
 import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.type";
 
 export function createScenes(
@@ -77,13 +78,7 @@ export function createScenes(
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
   const sceneTransition = SceneTransition(logger, currentSceneDirector.state, loadingSceneDirector.state);
 
-  const uiState: UIState = {
-    currentMap: null,
-    isInGameMenuOpened: false,
-    isLanguageSettingsScreenOpened: false,
-    isUserSettingsScreenOpened: false,
-    isScenePaused: false,
-  };
+  const uiState: IUIState = UIState.createEmptyState();
 
   const uiStateController = UIStateController(
     logger,

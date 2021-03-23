@@ -1,6 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { DOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle";
 import { pause } from "@personalidol/framework/src/pause";
 import { unpause } from "@personalidol/framework/src/unpause";
@@ -57,27 +58,34 @@ export function UIStateController(
   const _domMessageRouter = createRouter({
     currentMap: _onCurrentMapMessage,
     isInGameMenuOpened: _onIsInGameMenuOpenedMessage,
+    isInGameMenuTriggerVisible: _onIsInGameMenuTriggerVisible,
     isLanguageSettingsScreenOpened: _onIsLanguageSettingsScreenOpened,
+    isMousePointerLayerVisible: _onIsMousePointerLayerVisible,
     isScenePaused: _onIsScenePausedMessage,
     isUserSettingsScreenOpened: _onIsUserSettingsScreenOpenedMessage,
+    isVirtualJoystickLayerVisible: _onIsVirtualJoystickLayerVisible,
   });
 
   let _currentScene: null | Scene = null;
-
   let _dirtyCurrentMap: null | string = null;
-
+  let _internalUIMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _transitioningViewBagScene: null | IViewBagScene = null;
   let _uiStateCurrentMap: null | string = uiState.currentMap;
 
   let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu");
+  let _inGameMenuTriggerHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu-trigger");
   let _languageSettingsScreenHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-language-settings");
+  let _mousePointerLayerHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-mouse-pointer-layer");
   let _userSettingsScreenHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-user-settings");
+  let _virtualJoystickLayerHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-virtual-joystick-layer");
 
   function start() {
+    _internalUIMessageChannel.port1.onmessage = _domMessageRouter;
     uiMessagePort.onmessage = _domMessageRouter;
   }
 
   function stop() {
+    _internalUIMessageChannel.port1.onmessage = null;
     uiMessagePort.onmessage = null;
   }
 
@@ -94,16 +102,28 @@ export function UIStateController(
     uiState.isInGameMenuOpened = isInGameMenuOpened;
   }
 
+  function _onIsInGameMenuTriggerVisible(isInGameMenuTriggerVisible: boolean): void {
+    uiState.isInGameMenuTriggerVisible = isInGameMenuTriggerVisible;
+  }
+
   function _onIsLanguageSettingsScreenOpened(isLanguageSettingsScreenOpened: boolean): void {
     uiState.isLanguageSettingsScreenOpened = isLanguageSettingsScreenOpened;
+  }
+
+  function _onIsMousePointerLayerVisible(isMousePointerLayerVisible: boolean): void {
+    uiState.isMousePointerLayerVisible = isMousePointerLayerVisible;
+  }
+
+  function _onIsScenePausedMessage(isScenePaused: boolean): void {
+    uiState.isScenePaused = isScenePaused;
   }
 
   function _onIsUserSettingsScreenOpenedMessage(isUserSettingsScreenOpened: boolean): void {
     uiState.isUserSettingsScreenOpened = isUserSettingsScreenOpened;
   }
 
-  function _onIsScenePausedMessage(isScenePaused: boolean): void {
-    uiState.isScenePaused = isScenePaused;
+  function _onIsVirtualJoystickLayerVisible(isVirtualJoystickLayerVisible: boolean): void {
+    uiState.isVirtualJoystickLayerVisible = isVirtualJoystickLayerVisible;
   }
 
   function _transitionToMainMenuScene(): void {
@@ -146,7 +166,7 @@ export function UIStateController(
       progressMessagePort,
       quakeMapsMessagePort,
       texturesMessagePort,
-      uiState,
+      _internalUIMessageChannel.port2,
       targetMap,
       `${__ASSETS_BASE_PATH}/maps/${targetMap}.map?${__CACHE_BUST}`,
     );
@@ -176,11 +196,14 @@ export function UIStateController(
 
   function _updateUIState(): void {
     _inGameMenuHandle.enable(uiState.isInGameMenuOpened);
+    _inGameMenuTriggerHandle.enable(uiState.isInGameMenuTriggerVisible);
     _languageSettingsScreenHandle.enable(uiState.isLanguageSettingsScreenOpened);
+    _mousePointerLayerHandle.enable(uiState.isMousePointerLayerVisible);
     _userSettingsScreenHandle.enable(uiState.isUserSettingsScreenOpened);
+    _virtualJoystickLayerHandle.enable(uiState.isVirtualJoystickLayerVisible);
 
     if (directorState.isTransitioning) {
-      // Don't do anything with the director if a scene is loading.
+      // Don't do any more transitioning while the Director is transitioning.
       return;
     }
 

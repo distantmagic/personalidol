@@ -71,7 +71,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     isPreloaded: false,
     isPreloading: false,
   });
-  const internalDOMMessageChannel: MessageChannel = createSingleThreadMessageChannel();
+  const _internalDOMMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _isRootElementCleared: boolean = false;
 
   const _domElementViews: Set<DOMElementView<U>> = new Set();
@@ -91,7 +91,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     const domElementView = new DOMElementViewConstructor<U>();
 
-    _initializeDOMElementView(domElementView, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, internalDOMMessageChannel.port2, uiMessagePort);
+    _initializeDOMElementView(domElementView, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, _internalDOMMessageChannel.port2, uiMessagePort);
 
     return domElementView;
   }
@@ -112,7 +112,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
         if (isDOMElementView<U>(element)) {
           logger.debug(`UPGRADE("${name}")`);
-          _initializeDOMElementView(element, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, internalDOMMessageChannel.port2, uiMessagePort);
+          _initializeDOMElementView(element, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, _internalDOMMessageChannel.port2, uiMessagePort);
           _registerDOMElementView(element);
           _updateRenderedElement(element);
         }
@@ -170,7 +170,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     // Pick up any element that was created by a view.
 
-    _initializeDOMElementView(target, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, internalDOMMessageChannel.port2, uiMessagePort);
+    _initializeDOMElementView(target, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, _internalDOMMessageChannel.port2, uiMessagePort);
     _registerDOMElementView(target);
     _updateRenderedElement(target);
 
@@ -288,12 +288,12 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   }
 
   function start() {
-    internalDOMMessageChannel.port1.onmessage = _uiMessageRouter;
+    _internalDOMMessageChannel.port1.onmessage = _uiMessageRouter;
     uiRootElement.addEventListener(Events.elementConnected, _onElementConnected);
   }
 
   function stop() {
-    internalDOMMessageChannel.port1.onmessage = null;
+    _internalDOMMessageChannel.port1.onmessage = null;
     uiRootElement.removeEventListener(Events.elementConnected, _onElementConnected);
   }
 

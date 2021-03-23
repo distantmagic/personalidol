@@ -15,6 +15,7 @@ import type { MainMenuDOMElementView } from "./MainMenuDOMElementView";
 import type { MainMenuLanguageButtonDOMElementView } from "./MainMenuLanguageButtonDOMElementView";
 import type { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementView";
 import type { MainMenuUserSettingsButtonDOMElementView } from "./MainMenuUserSettingsButtonDOMElementView";
+import type { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import type { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
 import type { ProgressManagerStateDOMElementProps } from "./ProgressManagerStateDOMElementProps.type";
 import type { ProgressManagerStateDOMElementView } from "./ProgressManagerStateDOMElementView";
@@ -54,6 +55,7 @@ export type DOMElementsLookup = BaseDOMElementsLookup & {
   "pi-main-menu-language-button": typeof MainMenuLanguageButtonDOMElementView;
   "pi-main-menu-layout": typeof MainMenuLayoutDOMElementView;
   "pi-main-menu-user-settings-button": typeof MainMenuUserSettingsButtonDOMElementView;
+  "pi-mouse-pointer-layer": typeof MousePointerLayerDOMElementView;
   "pi-object-label": typeof ObjectLabelDOMElementView;
   "pi-progress-manager-state": typeof ProgressManagerStateDOMElementView;
   "pi-reload-button": typeof ReloadButtonDOMElementView;

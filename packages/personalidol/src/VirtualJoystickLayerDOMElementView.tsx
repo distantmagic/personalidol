@@ -18,8 +18,10 @@ import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
   :host,
-  #mouse-pointer-layer,
-  #pointer {
+  .virtual-joystick-layer,
+  .pointer,
+  .pointer__stretch-boundary,
+  .pointer__stretch-indicator {
     pointer-events: none;
   }
 
@@ -31,14 +33,7 @@ const _css = `
     box-sizing: border-box;
   }
 
-  .mouse-pointer-layer,
-  .pointer,
-  .pointer__stretch-boundary,
-  pointer__stretch-indicator {
-    pointer-events: none;
-  }
-
-  .mouse-pointer-layer {
+  .virtual-joystick-layer {
     bottom: 0;
     left: 0;
     position: absolute;
@@ -90,7 +85,7 @@ export class VirtualJoystickLayerDOMElementView extends DOMElementView<UserSetti
     computePrimaryTouchStretchVector(this._stretchVector, this.touchState);
 
     return (
-      <div class="mouse-pointer-layer">
+      <div class="virtual-joystick-layer">
         <svg
           class={clsx("pointer", {
             "pointer--in-bounds": _isInBounds,

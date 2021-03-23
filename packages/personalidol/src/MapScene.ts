@@ -54,8 +54,6 @@ import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2D
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
-import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
-import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { Raycaster as IRaycaster } from "@personalidol/input/src/Raycaster.interface";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
@@ -63,7 +61,6 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/views/src/View.interface";
 
-import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { EntityFuncGroup } from "./EntityFuncGroup.type";
 import type { EntityGLTFModel } from "./EntityGLTFModel.type";
 import type { EntityLightAmbient } from "./EntityLightAmbient.type";
@@ -79,10 +76,10 @@ import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
-import type { UserInputController } from "./UserInputController.interface";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
-import type { UIState } from "./UIState.type";
+import type { MessageUIStateChange } from "./MessageUIStateChange.type";
+import type { UserInputController } from "./UserInputController.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 const _disposables: Set<DisposableCallback> = new Set();
@@ -123,7 +120,7 @@ export function MapScene(
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
-  uiState: UIState,
+  uiMessagePort: MessagePort,
   mapName: string,
   mapFilename: string
 ): IMapScene {
@@ -149,8 +146,6 @@ export function MapScene(
 
   const _fog = new Fog(_scene.background, 0, 0);
 
-  const _domInGameMenuTriggerElementId: string = MathUtils.generateUUID();
-  const _domVirtualJoystickLayerElementId: string = MathUtils.generateUUID();
   const _instancedGLTFModelViewManager: IInstancedGLTFModelViewManager = InstancedGLTFModelViewManager(
     logger,
     userSettings,
@@ -253,32 +248,10 @@ export function MapScene(
     _unmountables.add(unmountPass(effectComposer, _renderPass));
     _disposables.add(disposableGeneric(_renderPass));
 
-    domMessagePort.postMessage({
-      render: <MessageDOMUIRender<DOMElementsLookup>>{
-        id: _domVirtualJoystickLayerElementId,
-        element: "pi-virtual-joystick-layer",
-        props: {},
-      },
-    });
-
-    _unmountables.add(function () {
-      domMessagePort.postMessage({
-        dispose: <MessageDOMUIDispose>[_domVirtualJoystickLayerElementId],
-      });
-    });
-
-    domMessagePort.postMessage({
-      render: <MessageDOMUIRender<DOMElementsLookup>>{
-        id: _domInGameMenuTriggerElementId,
-        element: "pi-in-game-menu-trigger",
-        props: {},
-      },
-    });
-
-    _unmountables.add(function () {
-      domMessagePort.postMessage({
-        dispose: <MessageDOMUIDispose>[_domInGameMenuTriggerElementId],
-      });
+    uiMessagePort.postMessage(<MessageUIStateChange>{
+      isInGameMenuTriggerVisible: true,
+      isMousePointerLayerVisible: true,
+      isVirtualJoystickLayerVisible: true,
     });
   }
 
@@ -369,6 +342,12 @@ export function MapScene(
 
   function unmount(): void {
     state.isMounted = false;
+
+    uiMessagePort.postMessage(<MessageUIStateChange>{
+      isInGameMenuTriggerVisible: false,
+      isMousePointerLayerVisible: false,
+      isVirtualJoystickLayerVisible: false,
+    });
 
     fUnmount(logger, _userInputEventBusController);
     fUnmount(logger, _userInputKeyboardController);
