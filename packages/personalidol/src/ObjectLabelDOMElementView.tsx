@@ -120,11 +120,15 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
         id="label"
         style={{
           opacity: this._currentOpacity,
+          // Although those are pixels, rounding to the 1 decimal place
+          // actually makes a difference (labels are not jittery) on displays
+          // with high pixel ratio. It does not make sense to leave the exact
+          // position as-is, because it will cause unnecessary redraws.
           transform: `
             translate3D(-50%, -100%, 0)
             translate3D(
-              ${Math.round(this._rendererState[CSS2DObjectStateIndices.TRANSLATE_X])}px,
-              ${Math.round(this._rendererState[CSS2DObjectStateIndices.TRANSLATE_Y])}px,
+              ${this._rendererState[CSS2DObjectStateIndices.TRANSLATE_X].toFixed(1)}px,
+              ${this._rendererState[CSS2DObjectStateIndices.TRANSLATE_Y].toFixed(1)}px,
               0
             )
           `,
