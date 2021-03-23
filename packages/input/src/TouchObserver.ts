@@ -111,6 +111,12 @@ export function TouchObserver(
   function _onTouchEnd(evt: TouchEvent): void {
     touchState[TouchIndices.T_INITIATED_BY_ROOT_ELEMENT] = 0;
 
+    for (let i = 0; i < evt.touches.length && i < TouchState.touches_total; i += 1) {
+      touchState[TouchState.touches[i].UP_CLIENT_X] = evt.touches[i].clientX;
+      touchState[TouchState.touches[i].UP_CLIENT_Y] = evt.touches[i].clientY;
+      touchState[TouchState.touches[i].UP_LAST_UPDATE] = tickTimerState.currentTick;
+    }
+
     _onTouchChange(evt);
   }
 
@@ -120,6 +126,7 @@ export function TouchObserver(
     for (let i = 0; i < evt.touches.length && i < TouchState.touches_total; i += 1) {
       touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_X] = evt.touches[i].clientX;
       touchState[TouchState.touches[i].DOWN_INITIAL_CLIENT_Y] = evt.touches[i].clientY;
+      touchState[TouchState.touches[i].DOWN_INITIAL_LAST_UPDATE] = tickTimerState.currentTick;
     }
 
     _onTouchChange(evt);

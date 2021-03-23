@@ -48,8 +48,7 @@ const _css = `
       translate3D(-50%, -50%, 0)
       translate3D(var(--translate-x), var(--translate-y), 0)
     ;
-    width: 220px;
-    will-change: transform, z-index;
+    width: 220px;;
     z-index: ${DOMZIndex.InGameMousePointerGadgets};
   }
 

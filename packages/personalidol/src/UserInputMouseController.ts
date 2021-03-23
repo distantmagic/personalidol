@@ -10,6 +10,7 @@ import { isPrimaryMouseButtonPressInitiatedByRootElement } from "@personalidol/i
 import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
+import type { Raycaster } from "@personalidol/input/src/Raycaster.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { UserInputController } from "./UserInputController.interface";
@@ -23,7 +24,8 @@ export function UserInputMouseController(
   userSettings: UserSettings,
   dimensionsState: Uint32Array,
   mouseState: Int32Array,
-  cameraController: CameraController
+  cameraController: CameraController,
+  raycaster: Raycaster
 ): UserInputController {
   const state: UserInputControllerState = Object.seal({
     isDisposed: false,

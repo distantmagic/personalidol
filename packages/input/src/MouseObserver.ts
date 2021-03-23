@@ -108,12 +108,16 @@ export function MouseObserver(
     mouseState[MouseIndices.M_INITIATED_BY_ROOT_ELEMENT] = Number(htmlElement === evt.target);
     mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_X] = evt.clientX;
     mouseState[MouseIndices.M_DOWN_INITIAL_CLIENT_Y] = evt.clientY;
+    mouseState[MouseIndices.M_DOWN_LAST_UPDATE] = tickTimerState.currentTick;
 
     _onMouseChange(evt);
   }
 
   function _onMouseUp(evt: MouseEvent): void {
     mouseState[MouseIndices.M_INITIATED_BY_ROOT_ELEMENT] = 0;
+    mouseState[MouseIndices.M_UP_CLIENT_X] = evt.clientX;
+    mouseState[MouseIndices.M_UP_CLIENT_Y] = evt.clientY;
+    mouseState[MouseIndices.M_UP_LAST_UPDATE] = tickTimerState.currentTick;
 
     _onMouseChange(evt);
   }
