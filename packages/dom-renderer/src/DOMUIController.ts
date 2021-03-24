@@ -10,7 +10,6 @@ import { isDOMElementView } from "./isDOMElementView";
 import { isDOMElementViewConstructor } from "./isDOMElementViewConstructor";
 import { isHTMLElementConstructor } from "./isHTMLElementConstructor";
 
-import type { i18n } from "i18next";
 import type { Logger } from "loglevel";
 
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
@@ -19,6 +18,7 @@ import type { UserSettings } from "@personalidol/framework/src/UserSettings.type
 import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementView } from "./DOMElementView.interface";
+import type { DOMElementViewBuilder } from "./DOMElementViewBuilder.interface";
 import type { DOMUIController as IDOMUIController } from "./DOMUIController.interface";
 import type { DOMUIControllerState } from "./DOMUIControllerState.type";
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
@@ -29,43 +29,16 @@ const _evtOnce = Object.freeze({
   once: true,
 });
 
-function _initializeDOMElementView<U extends UserSettings>(
-  domElementView: DOMElementView<U>,
-  i18next: i18n,
-  userSettings: U,
-  dimensionsState: Uint32Array,
-  keyboardState: Uint8Array,
-  mouseState: Int32Array,
-  touchState: Int32Array,
-  domMessagePort: MessagePort,
-  uiMessagePort: MessagePort
-) {
-  domElementView.dimensionsState = dimensionsState;
-  domElementView.domMessagePort = domMessagePort;
-  domElementView.i18next = i18next;
-  domElementView.keyboardState = keyboardState;
-  domElementView.mouseState = mouseState;
-  domElementView.touchState = touchState;
-  domElementView.uiMessagePort = uiMessagePort;
-  domElementView.userSettings = userSettings;
-}
-
 function _isCustomElementDefined<L extends DOMElementsLookup>(name: string & keyof L): boolean {
   return _definedCustomElements.includes(name);
 }
 
 export function DOMUIController<L extends DOMElementsLookup, U extends UserSettings>(
   logger: Logger,
-  i18next: i18n,
-  dimensionsState: Uint32Array,
-  keyboardState: Uint8Array,
-  mouseState: Int32Array,
-  touchState: Int32Array,
   mainLoop: MainLoop,
-  uiMessagePort: MessagePort,
   uiRootElement: HTMLElement,
-  userSettings: U,
-  domElementsLookup: L
+  domElementsLookup: L,
+  domElementViewBuilder: DOMElementViewBuilder<U>
 ): IDOMUIController<L, U> {
   const state: DOMUIControllerState = Object.seal({
     isPreloaded: false,
@@ -91,12 +64,12 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     const domElementView = new DOMElementViewConstructor<U>();
 
-    _initializeDOMElementView(domElementView, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, _internalDOMMessageChannel.port2, uiMessagePort);
+    domElementViewBuilder.initialize(domElementView, _internalDOMMessageChannel.port2);
 
     return domElementView;
   }
 
-  async function _defineCustomElement(logger: Logger, uiRootElement: HTMLElement, name: string & keyof L, element: typeof HTMLElement): Promise<void> {
+  async function _defineCustomElement(name: string & keyof L, element: typeof HTMLElement): Promise<void> {
     if (_isCustomElementDefined<L>(name)) {
       throw new Error(`Custom element is already defined: "${name}"`);
     }
@@ -112,7 +85,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
         if (isDOMElementView<U>(element)) {
           logger.debug(`UPGRADE("${name}")`);
-          _initializeDOMElementView(element, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, _internalDOMMessageChannel.port2, uiMessagePort);
+          domElementViewBuilder.initialize(element, _internalDOMMessageChannel.port2);
           _registerDOMElementView(element);
           _updateRenderedElement(element);
         }
@@ -133,7 +106,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
       throw new Error("Object is not a HTMLElement constructor.");
     }
 
-    return _defineCustomElement(logger, uiRootElement, elementName, Constructor);
+    return _defineCustomElement(elementName, Constructor);
   }
 
   function _disposeElementById(id: string): void {
@@ -170,7 +143,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     // Pick up any element that was created by a view.
 
-    _initializeDOMElementView(target, i18next, userSettings, dimensionsState, keyboardState, mouseState, touchState, _internalDOMMessageChannel.port2, uiMessagePort);
+    domElementViewBuilder.initialize(target, _internalDOMMessageChannel.port2);
     _registerDOMElementView(target);
     _updateRenderedElement(target);
 
