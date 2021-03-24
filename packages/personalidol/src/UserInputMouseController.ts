@@ -37,6 +37,7 @@ export function UserInputMouseController(
     needsUpdates: true,
   });
 
+  let _started: boolean = false;
   let _startedWithinIntersection: boolean = false;
 
   function dispose(): void {
@@ -67,15 +68,16 @@ export function UserInputMouseController(
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     if (state.isPaused || !isPrimaryMouseButtonPressed(mouseState) || !isPrimaryMouseButtonPressInitiatedByRootElement(mouseState)) {
       _startedWithinIntersection = false;
+      _started = false;
 
       return;
     }
 
-    if (raycaster.state.hasIntersections && isPotentiallyMouseClick(mouseState)) {
+    if (!_started && raycaster.state.hasIntersections && isPotentiallyMouseClick(mouseState)) {
       _startedWithinIntersection = true;
-
-      return;
     }
+
+    _started = true;
 
     if (_startedWithinIntersection) {
       return;
