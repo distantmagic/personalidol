@@ -2,9 +2,9 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { Vector2 } from "three/src/math/Vector2";
 
-import { canBeMouseClick } from "@personalidol/input/src/canBeMouseClick";
 import { getMousePointerVectorX } from "@personalidol/input/src/getMousePointerVectorX";
 import { getMousePointerVectorY } from "@personalidol/input/src/getMousePointerVectorY";
+import { isPotentiallyMouseClick } from "@personalidol/input/src/isPotentiallyMouseClick";
 import { isPrimaryMouseButtonPressed } from "@personalidol/input/src/isPrimaryMouseButtonPressed";
 import { isPrimaryMouseButtonPressInitiatedByRootElement } from "@personalidol/input/src/isPrimaryMouseButtonPressInitiatedByRootElement";
 
@@ -37,6 +37,8 @@ export function UserInputMouseController(
     needsUpdates: true,
   });
 
+  let _startedWithinIntersection: boolean = false;
+
   function dispose(): void {
     state.isDisposed = true;
   }
@@ -63,15 +65,19 @@ export function UserInputMouseController(
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    if (state.isPaused) {
+    if (state.isPaused || !isPrimaryMouseButtonPressed(mouseState) || !isPrimaryMouseButtonPressInitiatedByRootElement(mouseState)) {
+      _startedWithinIntersection = false;
+
       return;
     }
 
-    if (!isPrimaryMouseButtonPressed(mouseState) || !isPrimaryMouseButtonPressInitiatedByRootElement(mouseState)) {
+    if (raycaster.state.hasIntersections && isPotentiallyMouseClick(mouseState)) {
+      _startedWithinIntersection = true;
+
       return;
     }
 
-    if (raycaster.state.hasIntersections && canBeMouseClick(mouseState)) {
+    if (_startedWithinIntersection) {
       return;
     }
 

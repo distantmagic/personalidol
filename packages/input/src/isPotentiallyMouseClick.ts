@@ -1,7 +1,7 @@
 import { isPrimaryMouseButtonPressed } from "./isPrimaryMouseButtonPressed";
 import { MouseIndices } from "./MouseIndices.enum";
 
-export function canBeMouseClick(mouseState: Int32Array): boolean {
+export function isPotentiallyMouseClick(mouseState: Int32Array): boolean {
   if (!isPrimaryMouseButtonPressed(mouseState)) {
     return false;
   }

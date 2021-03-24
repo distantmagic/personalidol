@@ -17,14 +17,24 @@ export function Raycaster(camerController: CameraController, dimensionsState: Ui
   const state: RaycasterState = Object.seal({
     hasIntersections: false,
     needsUpdates: true,
+    intersections: new Set(),
   });
   const raycastables: Set<Raycastable> = new Set();
 
   const _threeRaycaster: ITHREERaycaster = new THREERaycaster();
   const _vector2: IVector2 = new Vector2();
 
+  function _clearIntersections(): void {
+    state.hasIntersections = false;
+    state.intersections.clear();
+  }
+
   function _raycast(raycastable: Raycastable): void {
     raycastable.state.isRayIntersecting = _threeRaycaster.intersectObject(raycastable.raycasterObject3D, false).length > 0;
+
+    if (raycastable.state.isRayIntersecting) {
+      state.intersections.add(raycastable);
+    }
 
     if (!state.hasIntersections) {
       state.hasIntersections = raycastable.state.isRayIntersecting;
@@ -42,14 +52,13 @@ export function Raycaster(camerController: CameraController, dimensionsState: Ui
   }
 
   function reset(): void {
-    state.hasIntersections = false;
+    _clearIntersections();
     raycastables.forEach(_resetRaycastable);
   }
 
   function update(): void {
     _updateRaycasterCamera();
-
-    state.hasIntersections = false;
+    _clearIntersections();
     raycastables.forEach(_raycast);
   }
 

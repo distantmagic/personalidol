@@ -106,7 +106,7 @@ export function MouseObserver(
       _travelDistance.x = Math.abs(mouseState[MouseIndices.M_CLIENT_X] - evt.clientX);
       _travelDistance.y = Math.abs(mouseState[MouseIndices.M_CLIENT_Y] - evt.clientY);
 
-      mouseState[MouseIndices.M_DOWN_TRAVEL_DISTANCE] += Math.round(_travelDistance.length());
+      mouseState[MouseIndices.M_DOWN_TRAVEL_DISTANCE] += Math.floor(_travelDistance.length());
     }
 
     mouseState[MouseIndices.M_CLIENT_X] = evt.clientX;
