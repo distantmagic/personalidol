@@ -21,8 +21,6 @@ import type { EntityLightPoint } from "./EntityLightPoint.type";
 import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { EntityPlayer } from "./EntityPlayer.type";
-import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
-import type { EntityScriptedZone } from "./EntityScriptedZone.type";
 import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
@@ -141,27 +139,6 @@ export function* buildEntities(
           origin: _getEntityOrigin(filename, entity),
           properties: entity.properties,
           transferables: _transferablesEmpty,
-        };
-        break;
-      case "scripted_block":
-        yield <EntityScriptedBlock>{
-          classname: entityClassName,
-          controller: entity.properties.controller,
-          id: MathUtils.generateUUID(),
-          properties: entity.properties,
-          // Do not discard occluding faces because of the same reasons as
-          // with "func_group".
-          ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, null),
-        };
-        break;
-      case "scripted_zone":
-        yield <EntityScriptedZone>{
-          classname: entityClassName,
-          id: MathUtils.generateUUID(),
-          properties: entity.properties,
-          // Do not discard occluding faces because of the same reasons as
-          // with "func_group".
-          ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, null),
         };
         break;
       case "spark_particles":

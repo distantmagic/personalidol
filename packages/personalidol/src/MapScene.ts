@@ -34,9 +34,6 @@ import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
 import { MD2ModelView } from "./MD2ModelView";
 import { PlayerView } from "./PlayerView";
 import { PointLightView } from "./PointLightView";
-import { resolveScriptedBlockController } from "./resolveScriptedBlockController";
-import { ScriptedBlockView } from "./ScriptedBlockView";
-import { ScriptedZoneView } from "./ScriptedZoneView";
 import { SpotlightLightView } from "./SpotlightLightView";
 import { TargetView } from "./TargetView";
 import { UserInputEventBusController } from "./UserInputEventBusController";
@@ -70,8 +67,6 @@ import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityLookupTable } from "./EntityLookupTable.type";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { EntityPlayer } from "./EntityPlayer.type";
-import type { EntityScriptedBlock } from "./EntityScriptedBlock.type";
-import type { EntityScriptedZone } from "./EntityScriptedZone.type";
 import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
@@ -192,14 +187,6 @@ export function MapScene(
       _cameraController.needsImmediateMove = true;
 
       return PlayerView(logger, userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
-    },
-
-    scripted_block(entity: EntityScriptedBlock, worldspawnTexture: ITexture, targetedViews: Set<View>): View {
-      return ScriptedBlockView(logger, userSettings, _scene, entity, domMessagePort, worldspawnTexture, views, targetedViews, resolveScriptedBlockController);
-    },
-
-    scripted_zone(entity: EntityScriptedZone): View {
-      return ScriptedZoneView(logger, userSettings, _scene, entity);
     },
 
     sounds(entity: EntitySounds): View {
