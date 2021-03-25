@@ -23,13 +23,13 @@ import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
-import type { Geometry } from "@personalidol/quakemaps/src/Geometry.type";
+import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
+import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
-import type { WorldspawnGeometryView as IWorldspawnGeometryView } from "./WorldspawnGeometryView.interface";
 
 const _geometryOffset = new Vector3();
 
@@ -37,10 +37,10 @@ export function WorldspawnGeometryView(
   logger: Logger,
   userSettings: UserSettings,
   scene: Scene,
-  entity: Geometry,
+  entity: EntityWorldspawn,
   worldspawnTexture: ITexture,
   matrixAutoUpdate: boolean = false
-): IWorldspawnGeometryView {
+): EntityView {
   const id: string = MathUtils.generateUUID();
   const state: ViewState = Object.seal({
     isDisposed: false,
@@ -160,7 +160,10 @@ export function WorldspawnGeometryView(
   }
 
   return Object.freeze({
+    entity: entity,
     id: id,
+    isEntityView: true,
+    isExpectingTargets: false,
     isRaycastable: true,
     isView: true,
     name: `WorldspawnGeometryView`,

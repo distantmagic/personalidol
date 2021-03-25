@@ -1,7 +1,6 @@
 import type { Texture as ITexture } from "three";
 
-import type { View } from "@personalidol/views/src/View.interface";
-
 import type { EntityLookup } from "./EntityLookup.type";
+import type { EntityView } from "./EntityView.interface";
 
-export type EntityLookupCallback<K extends keyof EntityLookup> = (entity: EntityLookup[K], worldspawnTexture: ITexture, targetedViews: Set<View>) => View;
+export type EntityLookupCallback<K extends keyof EntityLookup> = (entity: EntityLookup[K], worldspawnTexture: ITexture, targetedViews: Set<EntityView>) => EntityView;

@@ -70,6 +70,7 @@ import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
+import type { EntityView } from "./EntityView.interface";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
@@ -151,37 +152,37 @@ export function MapScene(
   );
 
   const entityLookupTable: EntityLookupTable = {
-    func_group(entity: EntityFuncGroup): View {
+    func_group(entity: EntityFuncGroup): EntityView {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
-    light_ambient(entity: EntityLightAmbient): View {
+    light_ambient(entity: EntityLightAmbient): EntityView {
       return AmbientLightView(logger, userSettings, _scene, entity);
     },
 
-    light_hemisphere(entity: EntityLightHemisphere): View {
+    light_hemisphere(entity: EntityLightHemisphere): EntityView {
       return HemisphereLightView(logger, userSettings, _scene, entity);
     },
 
-    light_point(entity: EntityLightPoint): View {
+    light_point(entity: EntityLightPoint): EntityView {
       return PointLightView(logger, userSettings, _scene, entity);
     },
 
-    light_spotlight(entity: EntityLightSpotlight, worldspawnTexture: ITexture, targetedViews: Set<View>): View {
+    light_spotlight(entity: EntityLightSpotlight, worldspawnTexture: ITexture, targetedViews: Set<View>): EntityView {
       return SpotlightLightView(logger, userSettings, _scene, entity, targetedViews);
     },
 
-    model_gltf(entity: EntityGLTFModel): View {
+    model_gltf(entity: EntityGLTFModel): EntityView {
       _instancedGLTFModelViewManager.expectEntity(entity);
 
       return InstancedGLTFModelView(logger, userSettings, _scene, entity, _instancedGLTFModelViewManager);
     },
 
-    model_md2(entity: EntityMD2Model): View {
+    model_md2(entity: EntityMD2Model): EntityView {
       return MD2ModelView(logger, userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
     },
 
-    player(entity: EntityPlayer): View {
+    player(entity: EntityPlayer): EntityView {
       _playerPosition.set(entity.origin.x, entity.origin.y, entity.origin.z);
       _cameraController.position.copy(_playerPosition);
       _cameraController.needsImmediateMove = true;
@@ -189,19 +190,19 @@ export function MapScene(
       return PlayerView(logger, userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
     },
 
-    sounds(entity: EntitySounds): View {
+    sounds(entity: EntitySounds): EntityView {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
-    spark_particles(entity: EntitySparkParticles): View {
+    spark_particles(entity: EntitySparkParticles): EntityView {
       throw new Error(`Not yet implemented: "${entity.classname}"`);
     },
 
-    target(entity: EntityTarget): View {
+    target(entity: EntityTarget): EntityView {
       return TargetView(_scene, entity);
     },
 
-    worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): View {
+    worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): EntityView {
       return WorldspawnGeometryView(logger, userSettings, _scene, entity, worldspawnTexture);
     },
   };

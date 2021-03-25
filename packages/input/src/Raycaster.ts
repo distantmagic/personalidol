@@ -17,7 +17,6 @@ export function Raycaster(camerController: CameraController, dimensionsState: Ui
   const state: RaycasterState = Object.seal({
     hasIntersections: false,
     needsUpdates: true,
-    intersections: new Set(),
   });
   const raycastables: Set<Raycastable> = new Set();
 
@@ -26,15 +25,10 @@ export function Raycaster(camerController: CameraController, dimensionsState: Ui
 
   function _clearIntersections(): void {
     state.hasIntersections = false;
-    state.intersections.clear();
   }
 
   function _raycast(raycastable: Raycastable): void {
     raycastable.state.isRayIntersecting = _threeRaycaster.intersectObject(raycastable.raycasterObject3D, false).length > 0;
-
-    if (raycastable.state.isRayIntersecting) {
-      state.intersections.add(raycastable);
-    }
 
     if (!state.hasIntersections) {
       state.hasIntersections = raycastable.state.isRayIntersecting;
