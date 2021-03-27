@@ -157,6 +157,8 @@ export function MapScene(
     fMount(logger, _userInputTouchController);
     fMount(logger, _cameraController);
 
+    _entityControllersBag.forEach(fMount.bind(null, logger));
+
     progressMessagePort.postMessage({
       reset: true,
     });
@@ -181,6 +183,8 @@ export function MapScene(
     fPause(logger, _userInputMouseController);
     fPause(logger, _userInputTouchController);
     fPause(logger, _cameraController);
+
+    _entityControllersBag.forEach(fPause.bind(null, logger));
   }
 
   async function preload(): Promise<void> {
@@ -273,6 +277,8 @@ export function MapScene(
     fUnmount(logger, _userInputTouchController);
     fUnmount(logger, _cameraController);
     unmountAll(_unmountables);
+
+    _entityControllersBag.forEach(fUnmount.bind(null, logger));
   }
 
   function unpause(): void {
@@ -283,6 +289,8 @@ export function MapScene(
     fUnpause(logger, _userInputMouseController);
     fUnpause(logger, _userInputTouchController);
     fUnpause(logger, _cameraController);
+
+    _entityControllersBag.forEach(fUnpause.bind(null, logger));
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
@@ -305,6 +313,11 @@ export function MapScene(
     _userInputKeyboardController.update(delta, elapsedTime, tickTimerState);
     _userInputMouseController.update(delta, elapsedTime, tickTimerState);
     _userInputTouchController.update(delta, elapsedTime, tickTimerState);
+
+    for (let entityController of _entityControllersBag) {
+      entityController.update(delta, elapsedTime, tickTimerState);
+    }
+
     _cameraController.update(delta, elapsedTime, tickTimerState);
 
     _renderPass.camera = _cameraController.camera;

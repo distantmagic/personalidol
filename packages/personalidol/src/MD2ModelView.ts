@@ -113,7 +113,7 @@ export function MD2ModelView(
   rpcLookupTable: RPCLookupTable
 ): EntityView<EntityMD2Model> {
   const id: string = MathUtils.generateUUID();
-  const name: string = `MD2ModelView("${entity.model_name}",${entity.skin})`;
+  const name: string = `MD2ModelView("${entity.model_name}", ${entity.skin})`;
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,

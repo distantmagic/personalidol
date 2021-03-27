@@ -9,11 +9,7 @@ import type { UserInputController } from "./UserInputController.interface";
 import type { UserInputControllerState } from "./UserInputControllerState.type";
 import type { UserSettings } from "./UserSettings.type";
 
-export function UserInputKeyboardController(
-  userSettings: UserSettings,
-  keyboardState: Uint8Array,
-  cameraController: CameraController
-): UserInputController {
+export function UserInputKeyboardController(userSettings: UserSettings, keyboardState: Uint8Array, cameraController: CameraController): UserInputController {
   const state: UserInputControllerState = Object.seal({
     isMounted: false,
     isPaused: false,

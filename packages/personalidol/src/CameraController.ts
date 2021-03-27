@@ -23,12 +23,7 @@ const CAMERA_ZOOM_MIN = 1401;
 const CAMERA_ZOOM_STEP = 50;
 const CAMERA_ORTHOGRAPHIC_FRUSTUM_SIZE_MIN = CAMERA_ZOOM_MAX + 4 * CAMERA_ZOOM_STEP;
 
-export function CameraController(
-  logger: Logger,
-  userSettings: UserSettings,
-  dimensionsState: Uint32Array,
-  keyboardState: Uint8Array,
-): ICameraController {
+export function CameraController(logger: Logger, userSettings: UserSettings, dimensionsState: Uint32Array, keyboardState: Uint8Array): ICameraController {
   const state: CameraControllerState = Object.seal({
     isMounted: false,
     isPaused: false,
