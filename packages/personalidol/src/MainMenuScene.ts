@@ -225,6 +225,7 @@ export function MainMenuScene(
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isMainMenuScene: true,
+    isMountable: true,
     isScene: true,
     name: `MainMenu`,
     state: state,

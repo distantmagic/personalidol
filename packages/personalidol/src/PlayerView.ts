@@ -30,7 +30,7 @@ export function PlayerView(
   md2MessagePort: MessagePort,
   texturesMessagePort: MessagePort,
   rpcLookupTable: RPCLookupTable
-): EntityView {
+): EntityView<EntityPlayer> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -38,7 +38,7 @@ export function PlayerView(
     isPreloaded: false,
     isPreloading: false,
     isRayIntersecting: false,
-    needsRaycast: true,
+    needsRaycast: false,
     needsUpdates: true,
   });
 
@@ -99,6 +99,7 @@ export function PlayerView(
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: `PlayerView`,

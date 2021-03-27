@@ -101,6 +101,7 @@ export function UserInputMouseController(
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMountable: true,
     isUserInputController: true,
     name: "UserInputMouseController",
     state: state,

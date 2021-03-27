@@ -60,6 +60,7 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMountable: true,
     isUserInputController: true,
     name: "UserInputEventBusController",
     state: state,

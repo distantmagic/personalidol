@@ -26,6 +26,7 @@ import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiTh
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
 import { prefetch } from "@personalidol/framework/src/prefetch";
 import { preload } from "@personalidol/framework/src/preload";
+import { Preloader } from "@personalidol/framework/src/Preloader";
 import { RendererDimensionsManager } from "@personalidol/dom-renderer/src/RendererDimensionsManager";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
@@ -149,7 +150,11 @@ async function bootstrap() {
 
   internationalizationService.registerMessagePort(internationalizationMessageChannel.port1);
 
-  await preload(logger, internationalizationService);
+  const internationalizationServicePreloader = Preloader(logger, internationalizationService);
+
+  mainLoop.updatables.add(internationalizationServicePreloader);
+
+  await internationalizationServicePreloader.wait();
 
   serviceManager.services.add(internationalizationService);
 
@@ -157,7 +162,7 @@ async function bootstrap() {
 
   const languageUserSettingsManager = LanguageUserSettingsManager(userSettings, i18next);
 
-  await preload(logger, languageUserSettingsManager);
+  preload(logger, languageUserSettingsManager);
 
   mainLoop.updatables.add(languageUserSettingsManager);
 
@@ -176,7 +181,7 @@ async function bootstrap() {
   );
   const domUIController = DOMUIController(logger, mainLoop, uiRoot, domElementsLookup, domElementViewBuilder);
 
-  await preload(logger, domUIController);
+  preload(logger, domUIController);
 
   serviceManager.services.add(domUIController);
 

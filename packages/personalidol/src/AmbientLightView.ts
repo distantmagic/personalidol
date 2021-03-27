@@ -13,7 +13,7 @@ import type { EntityLightAmbient } from "./EntityLightAmbient.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function AmbientLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightAmbient): EntityView {
+export function AmbientLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightAmbient): EntityView<EntityLightAmbient> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -66,6 +66,7 @@ export function AmbientLightView(logger: Logger, userSettings: UserSettings, sce
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: `AmbientLightView(${entity.light})`,

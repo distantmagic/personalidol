@@ -40,7 +40,7 @@ export function WorldspawnGeometryView(
   entity: EntityWorldspawn,
   worldspawnTexture: ITexture,
   matrixAutoUpdate: boolean = false
-): EntityView {
+): EntityView<EntityWorldspawn> {
   const id: string = MathUtils.generateUUID();
   const state: ViewState = Object.seal({
     isDisposed: false,
@@ -164,6 +164,7 @@ export function WorldspawnGeometryView(
     id: id,
     isEntityView: true,
     isExpectingTargets: false,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: `WorldspawnGeometryView`,

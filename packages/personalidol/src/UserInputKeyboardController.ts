@@ -92,6 +92,7 @@ export function UserInputKeyboardController(
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMountable: true,
     isUserInputController: true,
     name: "UserInputKeyboardController",
     state: state,

@@ -22,7 +22,7 @@ export function InstancedGLTFModelView(
   scene: Scene,
   entity: EntityGLTFModel,
   instancedGLTFModelViewManager: InstancedGLTFModelViewManager
-): EntityView {
+): EntityView<EntityGLTFModel> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -90,6 +90,7 @@ export function InstancedGLTFModelView(
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: `InstancedGLTFModelView("${entity.model_name}", "${entity.model_texture}", ${entity.scale})`,

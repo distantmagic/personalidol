@@ -1,1 +1,1 @@
-export type PreloadableCallback = () => void | Promise<void>;
+export type PreloadableCallback = () => void;

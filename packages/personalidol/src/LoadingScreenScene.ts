@@ -18,6 +18,8 @@ import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updatePerspectiveCameraAspect";
 
+import type { Logger } from "loglevel";
+
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { MessageProgressError } from "@personalidol/framework/src/MessageProgressError.type";
@@ -30,6 +32,7 @@ import type { UnmountableCallback } from "@personalidol/framework/src/Unmountabl
 import type { UserSettings } from "./UserSettings.type";
 
 export function LoadingScreenScene(
+  logger: Logger,
   userSettings: UserSettings,
   effectComposer: EffectComposer,
   dimensionsState: Uint32Array,
@@ -161,6 +164,7 @@ export function LoadingScreenScene(
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMountable: true,
     isScene: true,
     name: "LoadingScreen",
     state: state,

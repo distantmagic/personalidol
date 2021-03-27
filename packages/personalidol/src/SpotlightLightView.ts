@@ -18,7 +18,13 @@ import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function SpotlightLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightSpotlight, targetedViews: Set<View>): EntityView {
+export function SpotlightLightView(
+  logger: Logger,
+  userSettings: UserSettings,
+  scene: Scene,
+  entity: EntityLightSpotlight,
+  targetedViews: Set<View>
+): EntityView<EntityLightSpotlight> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -84,6 +90,7 @@ export function SpotlightLightView(logger: Logger, userSettings: UserSettings, s
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: true,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,

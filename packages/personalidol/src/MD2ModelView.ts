@@ -111,7 +111,7 @@ export function MD2ModelView(
   md2MessagePort: MessagePort,
   texturesMessagePort: MessagePort,
   rpcLookupTable: RPCLookupTable
-): EntityView {
+): EntityView<EntityMD2Model> {
   const id: string = MathUtils.generateUUID();
   const name: string = `MD2ModelView("${entity.model_name}",${entity.skin})`;
   const state: ViewState = Object.seal({
@@ -316,6 +316,7 @@ export function MD2ModelView(
     id: id,
     isEntityView: true,
     isExpectingTargets: false,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: name,

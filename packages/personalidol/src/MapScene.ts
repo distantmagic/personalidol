@@ -24,26 +24,19 @@ import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
 
-import { AmbientLightView } from "./AmbientLightView";
 import { buildViews } from "./buildViews";
 import { CameraController } from "./CameraController";
-import { HemisphereLightView } from "./HemisphereLightView";
-import { InstancedGLTFModelView } from "./InstancedGLTFModelView";
+import { EntityControllerFactory } from "./EntityControllerFactory";
+import { EntityViewFactory } from "./EntityViewFactory";
 import { InstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager";
+import { isEntityWithController } from "./isEntityWithController";
 import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
-import { MD2ModelView } from "./MD2ModelView";
-import { PlayerView } from "./PlayerView";
-import { PointLightView } from "./PointLightView";
-import { SpotlightLightView } from "./SpotlightLightView";
-import { TargetView } from "./TargetView";
 import { UserInputEventBusController } from "./UserInputEventBusController";
 import { UserInputKeyboardController } from "./UserInputKeyboardController";
 import { UserInputMouseController } from "./UserInputMouseController";
 import { UserInputTouchController } from "./UserInputTouchController";
-import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
 
 import type { Logger } from "loglevel";
-import type { Texture as ITexture } from "three/src/textures/Texture";
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { CameraController as ICameraController } from "@personalidol/framework/src/CameraController.interface";
@@ -58,28 +51,16 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/views/src/View.interface";
 
-import type { EntityFuncGroup } from "./EntityFuncGroup.type";
-import type { EntityGLTFModel } from "./EntityGLTFModel.type";
-import type { EntityLightAmbient } from "./EntityLightAmbient.type";
-import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
-import type { EntityLightPoint } from "./EntityLightPoint.type";
-import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
-import type { EntityLookupTable } from "./EntityLookupTable.type";
-import type { EntityMD2Model } from "./EntityMD2Model.type";
-import type { EntityPlayer } from "./EntityPlayer.type";
-import type { EntitySounds } from "./EntitySounds.type";
-import type { EntitySparkParticles } from "./EntitySparkParticles.type";
-import type { EntityTarget } from "./EntityTarget.type";
-import type { EntityView } from "./EntityView.interface";
-import type { EntityWorldspawn } from "./EntityWorldspawn.type";
+import type { EntityControllerFactory as IEntityControllerFactory } from "./EntityControllerFactory.interface";
+import type { EntityViewFactory as IEntityViewFactory } from "./EntityViewFactory.interface";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserInputController } from "./UserInputController.interface";
 import type { UserSettings } from "./UserSettings.type";
 
+const _cameraResetPosition: IVector3 = new Vector3();
 const _disposables: Set<DisposableCallback> = new Set();
-const _playerPosition: IVector3 = new Vector3();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _unmountables: Set<UnmountableCallback> = new Set();
 
@@ -129,13 +110,13 @@ export function MapScene(
     needsUpdates: true,
   });
 
+  const _scene = new Scene();
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
   const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
   const _userInputEventBusController: UserInputController = UserInputEventBusController(userSettings, eventBus, _cameraController);
-  const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController, _playerPosition);
+  const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController, _cameraResetPosition);
   const _userInputMouseController: UserInputController = UserInputMouseController(userSettings, dimensionsState, mouseState, _cameraController, _raycaster);
   const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState, _cameraController);
-  const _scene = new Scene();
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
 
   _scene.background = new Color(0x000000);
@@ -151,61 +132,17 @@ export function MapScene(
     _rpcLookupTable
   );
 
-  const entityLookupTable: EntityLookupTable = {
-    func_group(entity: EntityFuncGroup): EntityView {
-      throw new Error(`Not yet implemented: "${entity.classname}"`);
-    },
-
-    light_ambient(entity: EntityLightAmbient): EntityView {
-      return AmbientLightView(logger, userSettings, _scene, entity);
-    },
-
-    light_hemisphere(entity: EntityLightHemisphere): EntityView {
-      return HemisphereLightView(logger, userSettings, _scene, entity);
-    },
-
-    light_point(entity: EntityLightPoint): EntityView {
-      return PointLightView(logger, userSettings, _scene, entity);
-    },
-
-    light_spotlight(entity: EntityLightSpotlight, worldspawnTexture: ITexture, targetedViews: Set<View>): EntityView {
-      return SpotlightLightView(logger, userSettings, _scene, entity, targetedViews);
-    },
-
-    model_gltf(entity: EntityGLTFModel): EntityView {
-      _instancedGLTFModelViewManager.expectEntity(entity);
-
-      return InstancedGLTFModelView(logger, userSettings, _scene, entity, _instancedGLTFModelViewManager);
-    },
-
-    model_md2(entity: EntityMD2Model): EntityView {
-      return MD2ModelView(logger, userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
-    },
-
-    player(entity: EntityPlayer): EntityView {
-      _playerPosition.set(entity.origin.x, entity.origin.y, entity.origin.z);
-      _cameraController.position.copy(_playerPosition);
-      _cameraController.needsImmediateMove = true;
-
-      return PlayerView(logger, userSettings, _scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, _rpcLookupTable);
-    },
-
-    sounds(entity: EntitySounds): EntityView {
-      throw new Error(`Not yet implemented: "${entity.classname}"`);
-    },
-
-    spark_particles(entity: EntitySparkParticles): EntityView {
-      throw new Error(`Not yet implemented: "${entity.classname}"`);
-    },
-
-    target(entity: EntityTarget): EntityView {
-      return TargetView(_scene, entity);
-    },
-
-    worldspawn(entity: EntityWorldspawn, worldspawnTexture: ITexture): EntityView {
-      return WorldspawnGeometryView(logger, userSettings, _scene, entity, worldspawnTexture);
-    },
-  };
+  const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(_cameraController, _cameraResetPosition);
+  const _entityViewFactory: IEntityViewFactory = EntityViewFactory(
+    logger,
+    userSettings,
+    _instancedGLTFModelViewManager,
+    _rpcLookupTable,
+    _scene,
+    domMessagePort,
+    md2MessagePort,
+    texturesMessagePort
+  );
 
   function dispose(): void {
     state.isDisposed = true;
@@ -306,8 +243,12 @@ export function MapScene(
       });
     }
 
-    for (let view of buildViews(logger, entityLookupTable, worldspawnTexture, entities)) {
+    for (let view of buildViews(logger, _entityViewFactory, worldspawnTexture, entities)) {
       views.add(view);
+
+      if (isEntityWithController(view.entity)) {
+        _entityControllerFactory.create(view);
+      }
 
       if (view.state.needsRaycast) {
         _raycaster.raycastables.add(view);
@@ -390,6 +331,7 @@ export function MapScene(
     currentMap: mapName,
     id: MathUtils.generateUUID(),
     isMapScene: true,
+    isMountable: true,
     isScene: true,
     isViewBaggableScene: true,
     name: `Map("${mapFilename}")`,

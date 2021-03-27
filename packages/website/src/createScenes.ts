@@ -103,7 +103,7 @@ export function createScenes(
     uiState
   );
 
-  loadingSceneDirector.state.next = LoadingScreenScene(userSettings, effectComposer, dimensionsState, domMessagePort, progressMessagePort);
+  loadingSceneDirector.state.next = LoadingScreenScene(logger, userSettings, effectComposer, dimensionsState, domMessagePort, progressMessagePort);
 
   serviceManager.services.add(multiThreadUserSettingsSync);
   serviceManager.services.add(currentSceneDirector);

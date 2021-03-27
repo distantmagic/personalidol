@@ -14,7 +14,7 @@ import type { EntityView } from "./EntityView.interface";
 // "target" is an abstract entity. At this point it won't be used with brushes,
 // so the view is barebone.
 
-export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
+export function TargetView(scene: Scene, entity: EntityTarget): EntityView<EntityTarget> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -64,6 +64,7 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView {
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: `TargetView("${entity.properties.targetname}")`,

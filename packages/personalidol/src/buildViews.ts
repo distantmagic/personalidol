@@ -8,36 +8,20 @@ import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
 import type { AnyEntity } from "./AnyEntity.type";
-import type { EntityLookup } from "./EntityLookup.type";
-import type { EntityLookupCallback } from "./EntityLookupCallback.type";
-import type { EntityLookupTable } from "./EntityLookupTable.type";
 import type { EntityView } from "./EntityView.interface";
+import type { EntityViewFactory } from "./EntityViewFactory.interface";
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
 
-function _createEntityView<K extends keyof EntityLookup>(
-  logger: Logger,
-  entityLookupTable: EntityLookupTable,
-  worldspawnTexture: ITexture,
-  entity: EntityLookup[K],
-  targetedViews: Set<EntityView>
-): EntityView {
-  if (!entityLookupTable.hasOwnProperty(entity.classname)) {
-    throw new Error(`Unknown entity class: ${entity.classname}`);
-  }
-
-  return (entityLookupTable[entity.classname] as EntityLookupCallback<K>)(entity, worldspawnTexture, targetedViews);
-}
-
-function _findTargetedViews(entityViews: WeakMap<AnyEntity, EntityView>, step: ViewBuildingStep): Set<EntityView> {
+function _findTargetedViews(entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>>, step: ViewBuildingStep): Set<EntityView<AnyEntity>> {
   const entity: AnyEntity = step.entity;
-  const targetedViews: Set<EntityView> = new Set();
+  const targetedViews: Set<EntityView<AnyEntity>> = new Set();
 
   if (!isTargeting(entity)) {
     return targetedViews;
   }
 
   for (let targetedEntity of step.targetedEntities) {
-    const targetedView: undefined | EntityView = entityViews.get(targetedEntity);
+    const targetedView: undefined | EntityView<AnyEntity> = entityViews.get(targetedEntity);
 
     if (!targetedView) {
       throw new Error(`Targeted entity view was expected to be ready before constructing "${entity.classname}": "${targetedEntity.classname}"`);
@@ -49,12 +33,17 @@ function _findTargetedViews(entityViews: WeakMap<AnyEntity, EntityView>, step: V
   return targetedViews;
 }
 
-export function* buildViews(logger: Logger, entityLookupTable: EntityLookupTable, worldspawnTexture: ITexture, entities: ReadonlyArray<AnyEntity>): Generator<EntityView> {
-  const entityViews: WeakMap<AnyEntity, EntityView> = new WeakMap();
+export function* buildViews(
+  logger: Logger,
+  entityViewFactory: EntityViewFactory,
+  worldspawnTexture: ITexture,
+  entities: ReadonlyArray<AnyEntity>
+): Generator<EntityView<AnyEntity>> {
+  const entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>> = new WeakMap();
 
   for (let step of createViewBuildingPlan(entities)) {
     const targetedViews = _findTargetedViews(entityViews, step);
-    const entityView = _createEntityView(logger, entityLookupTable, worldspawnTexture, step.entity, targetedViews);
+    const entityView = entityViewFactory.create(step.entity, targetedViews, worldspawnTexture);
 
     // Some sanity checks for entity views.
     if (entityView.isExpectingTargets && targetedViews.size < 1) {

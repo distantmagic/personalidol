@@ -192,7 +192,7 @@ export function InstancedGLTFModelViewManager(
 
   async function createEntiyMeshHandle(entity: EntityGLTFModel, reference: Object3D): Promise<IInstancedMeshHandle> {
     if (!_expectedEntities.has(entity)) {
-      throw new Error(`Entity is not expected: "Entity("${entity.classname}", "${entity.model_name}", "${entity.model_texture}")`);
+      throw new Error(`Entity is not expected for instancing: "Entity("${entity.classname}", "${entity.model_name}", "${entity.model_texture}")`);
     }
 
     const entityKey = _createEntityKey(entity);
@@ -306,6 +306,7 @@ export function InstancedGLTFModelViewManager(
   return Object.freeze({
     id: nameable.id,
     isInstancedGLTFModelViewManager: true,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: nameable.name,

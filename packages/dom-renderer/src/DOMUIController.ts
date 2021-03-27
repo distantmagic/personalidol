@@ -212,15 +212,11 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   async function preload() {
     state.isPreloading = true;
 
-    const preloading = [];
-
     for (let customElementName of Object.keys(domElementsLookup)) {
       if (!_isCustomElementDefined<L>(customElementName as string & keyof L)) {
-        preloading.push(_defineCustomElementByName(customElementName as string & keyof L));
+        await _defineCustomElementByName(customElementName as string & keyof L);
       }
     }
-
-    await Promise.all(preloading);
 
     state.isPreloading = false;
     state.isPreloaded = true;

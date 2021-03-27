@@ -77,6 +77,7 @@ export function UserInputTouchController(
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMountable: true,
     isUserInputController: true,
     name: "UserInputTouchController",
     state: state,

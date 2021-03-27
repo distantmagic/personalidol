@@ -16,7 +16,7 @@ import type { EntityLightPoint } from "./EntityLightPoint.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function PointLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightPoint): EntityView {
+export function PointLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightPoint): EntityView<EntityLightPoint> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -74,6 +74,7 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
     id: MathUtils.generateUUID(),
     isEntityView: true,
     isExpectingTargets: false,
+    isMountable: true,
     isRaycastable: true,
     isView: true,
     name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,

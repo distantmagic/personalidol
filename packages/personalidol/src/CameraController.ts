@@ -148,6 +148,7 @@ export function CameraController(
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isMountable: true,
     name: "CameraController",
     position: cameraPosition,
     state: state,

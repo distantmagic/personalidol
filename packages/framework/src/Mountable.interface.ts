@@ -7,6 +7,7 @@ import type { Preloadable } from "./Preloadable.interface";
 import type { UnmountableCallback } from "./UnmountableCallback.type";
 
 export interface Mountable extends DisposableGeneric, MainLoopUpdatable, Nameable, Preloadable {
+  readonly isMountable: true;
   readonly mount: MountableCallback;
   readonly state: MountState;
   readonly unmount: UnmountableCallback;
