@@ -1,5 +1,5 @@
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
-import type { MountState } from "@personalidol/framework/src/MountState.type";
+import type { MountableState } from "@personalidol/framework/src/MountableState.type";
 import type { PauseableState } from "@personalidol/framework/src/PauseableState.type";
 
-export type UserInputControllerState = MainLoopUpdatableState & MountState & PauseableState;
+export type UserInputControllerState = MainLoopUpdatableState & MountableState & PauseableState;
