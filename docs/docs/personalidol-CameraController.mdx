@@ -114,6 +114,11 @@ const cameraController = CameraController(
 
 Contains a reference to the currently used camera.
 
+### `.cameraResetPosition`: [`THREE.Vector3`](https://threejs.org/docs/?q=vector3#api/en/math/Vector3)
+
+This is the position that camera resets to if a user requests that. This
+property can be changed anytime.
+
 ### `.needsImmediateMove`: `boolean` *setter*
 
 Settings this causes the `CameraController` to skip damping and move
@@ -135,6 +140,10 @@ All state properties are read-only and should not be changed from outside the
 `CameraController`.
 
 ## Methods
+
+### `.resetPosition()`: `void`
+
+Resets camera position to the initial value.
 
 ### `.resetZoom()`: `void`
 

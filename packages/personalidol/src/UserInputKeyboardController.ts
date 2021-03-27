@@ -2,8 +2,6 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { KeyboardIndices } from "@personalidol/input/src/KeyboardIndices.enum";
 
-import type { Vector3 } from "three/src/math/Vector3";
-
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
@@ -14,8 +12,7 @@ import type { UserSettings } from "./UserSettings.type";
 export function UserInputKeyboardController(
   userSettings: UserSettings,
   keyboardState: Uint8Array,
-  cameraController: CameraController,
-  cameraResetPosition: Vector3
+  cameraController: CameraController
 ): UserInputController {
   const state: UserInputControllerState = Object.seal({
     isMounted: false,
@@ -75,8 +72,8 @@ export function UserInputKeyboardController(
     }
 
     if (keyboardState[KeyboardIndices.Home]) {
-      cameraController.position.copy(cameraResetPosition);
-      cameraController.zoomReset();
+      cameraController.resetPosition();
+      cameraController.resetZoom();
     }
   }
 

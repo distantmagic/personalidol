@@ -2,7 +2,6 @@ import { Color } from "three/src/math/Color";
 import { Fog } from "three/src/scenes/Fog";
 import { MathUtils } from "three/src/math/MathUtils";
 import { Scene } from "three/src/scenes/Scene";
-import { Vector3 } from "three/src/math/Vector3";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
@@ -35,7 +34,6 @@ import { UserInputMouseController } from "./UserInputMouseController";
 import { UserInputTouchController } from "./UserInputTouchController";
 
 import type { Logger } from "loglevel";
-import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { CameraController as ICameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer.interface";
@@ -59,7 +57,6 @@ import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserInputController } from "./UserInputController.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-const _cameraResetPosition: IVector3 = new Vector3();
 const _disposables: Set<DisposableCallback> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
 const _unmountables: Set<UnmountableCallback> = new Set();
@@ -114,7 +111,7 @@ export function MapScene(
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
   const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
   const _userInputEventBusController: UserInputController = UserInputEventBusController(userSettings, eventBus, _cameraController);
-  const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController, _cameraResetPosition);
+  const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController);
   const _userInputMouseController: UserInputController = UserInputMouseController(userSettings, dimensionsState, mouseState, _cameraController, _raycaster);
   const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState, _cameraController);
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
@@ -133,7 +130,7 @@ export function MapScene(
   );
 
   const _entityControllersBag: Set<EntityController<AnyEntity>> = new Set();
-  const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(_cameraController, _cameraResetPosition);
+  const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(_cameraController);
   const _entityViewFactory: IEntityViewFactory = EntityViewFactory(
     logger,
     userSettings,

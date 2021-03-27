@@ -28,7 +28,6 @@ export function CameraController(
   userSettings: UserSettings,
   dimensionsState: Uint32Array,
   keyboardState: Uint8Array,
-  cameraPosition: IVector3 = new Vector3()
 ): ICameraController {
   const state: CameraControllerState = Object.seal({
     isMounted: false,
@@ -50,6 +49,9 @@ export function CameraController(
   _perspectiveCamera.lookAt(0, 0, 0);
   _perspectiveCamera.near = 1;
 
+  const _cameraPosition: IVector3 = new Vector3();
+  const _cameraResetPosition: IVector3 = new Vector3();
+
   let _currentCamera: OrthographicCamera | PerspectiveCamera = _perspectiveCamera;
   let _cameraZoomAmount = 0;
   let _isCameraChanged: boolean = false;
@@ -59,12 +61,22 @@ export function CameraController(
   function mount(): void {
     state.isMounted = true;
 
-    zoomReset();
     _needsImmediateMove = true;
+
+    resetPosition();
+    resetZoom();
   }
 
   function pause(): void {
     state.isPaused = true;
+  }
+
+  function resetPosition(): void {
+    _cameraPosition.copy(_cameraResetPosition);
+  }
+
+  function resetZoom(): void {
+    _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
   }
 
   function unmount(): void {
@@ -106,13 +118,13 @@ export function CameraController(
     if (_needsImmediateMove) {
       _needsImmediateMove = false;
 
-      _currentCamera.position.x = cameraPosition.x + _cameraZoomAmount;
-      _currentCamera.position.z = cameraPosition.z + _cameraZoomAmount;
-      _currentCamera.position.y = cameraPosition.y + _cameraZoomAmount;
+      _currentCamera.position.x = _cameraPosition.x + _cameraZoomAmount;
+      _currentCamera.position.z = _cameraPosition.z + _cameraZoomAmount;
+      _currentCamera.position.y = _cameraPosition.y + _cameraZoomAmount;
     } else {
-      _currentCamera.position.x = damp(_currentCamera.position.x, cameraPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta);
-      _currentCamera.position.z = damp(_currentCamera.position.z, cameraPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta);
-      _currentCamera.position.y = damp(_currentCamera.position.y, cameraPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta);
+      _currentCamera.position.x = damp(_currentCamera.position.x, _cameraPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta);
+      _currentCamera.position.z = damp(_currentCamera.position.z, _cameraPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta);
+      _currentCamera.position.y = damp(_currentCamera.position.y, _cameraPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta);
     }
 
     _currentCamera.lookAt(_currentCamera.position.x - _cameraZoomAmount, _currentCamera.position.y - _cameraZoomAmount, _currentCamera.position.z - _cameraZoomAmount);
@@ -128,15 +140,12 @@ export function CameraController(
     _cameraZoomAmount = Math.max(CAMERA_ZOOM_MAX, _cameraZoomAmount);
   }
 
-  function zoomReset(): void {
-    _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
-  }
-
   return Object.freeze({
+    cameraResetPosition: _cameraResetPosition,
     id: MathUtils.generateUUID(),
     isMountable: true,
     name: "CameraController",
-    position: cameraPosition,
+    position: _cameraPosition,
     state: state,
 
     get camera() {
@@ -149,11 +158,12 @@ export function CameraController(
 
     mount: mount,
     pause: pause,
+    resetPosition: resetPosition,
+    resetZoom: resetZoom,
     unmount: unmount,
     unpause: unpause,
     update: update,
     zoomIn: zoomIn,
     zoomOut: zoomOut,
-    zoomReset: zoomReset,
   });
 }

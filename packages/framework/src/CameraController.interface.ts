@@ -10,14 +10,17 @@ import type { CameraControllerState } from "./CameraControllerState.type";
 
 export interface CameraController extends MainLoopUpdatable, Mountable, Pauseable {
   readonly camera: OrthographicCamera | PerspectiveCamera;
+  readonly cameraResetPosition: Vector3;
   readonly position: Vector3;
   readonly state: CameraControllerState;
 
   needsImmediateMove: boolean;
 
+  resetPosition(): void;
+
+  resetZoom(): void;
+
   zoomIn(scale?: number): void;
 
   zoomOut(scale?: number): void;
-
-  zoomReset(): void;
 }
