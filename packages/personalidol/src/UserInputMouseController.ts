@@ -13,9 +13,9 @@ import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { Raycaster } from "@personalidol/input/src/Raycaster.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
+import type { UserInputControllerState } from "@personalidol/input/src/UserInputControllerState.type";
 
-import type { UserInputController } from "./UserInputController.interface";
-import type { UserInputControllerState } from "./UserInputControllerState.type";
 import type { UserSettings } from "./UserSettings.type";
 
 const _pointerVector: IVector2 = new Vector2(0, 0);

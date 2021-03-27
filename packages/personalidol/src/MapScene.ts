@@ -45,6 +45,7 @@ import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
+import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
 import type { View } from "@personalidol/views/src/View.interface";
 
 import type { AnyEntity } from "./AnyEntity.type";
@@ -54,7 +55,6 @@ import type { EntityViewFactory as IEntityViewFactory } from "./EntityViewFactor
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
-import type { UserInputController } from "./UserInputController.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 const _disposables: Set<DisposableCallback> = new Set();

@@ -4,9 +4,9 @@ import { noop } from "@personalidol/framework/src/noop";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
+import type { UserInputControllerState } from "@personalidol/input/src/UserInputControllerState.type";
 
-import type { UserInputController } from "./UserInputController.interface";
-import type { UserInputControllerState } from "./UserInputControllerState.type";
 import type { UserSettings } from "./UserSettings.type";
 
 export function UserInputEventBusController(userSettings: UserSettings, eventBus: EventBus, cameraController: CameraController): UserInputController {

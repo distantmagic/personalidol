@@ -4,9 +4,9 @@ import { KeyboardIndices } from "@personalidol/input/src/KeyboardIndices.enum";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
+import type { UserInputControllerState } from "@personalidol/input/src/UserInputControllerState.type";
 
-import type { UserInputController } from "./UserInputController.interface";
-import type { UserInputControllerState } from "./UserInputControllerState.type";
 import type { UserSettings } from "./UserSettings.type";
 
 export function UserInputKeyboardController(userSettings: UserSettings, keyboardState: Uint8Array, cameraController: CameraController): UserInputController {
