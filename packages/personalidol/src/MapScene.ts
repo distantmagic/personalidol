@@ -51,6 +51,8 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { View } from "@personalidol/views/src/View.interface";
 
+import type { AnyEntity } from "./AnyEntity.type";
+import type { EntityController } from "./EntityController.interface";
 import type { EntityControllerFactory as IEntityControllerFactory } from "./EntityControllerFactory.interface";
 import type { EntityViewFactory as IEntityViewFactory } from "./EntityViewFactory.interface";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
@@ -132,6 +134,7 @@ export function MapScene(
     _rpcLookupTable
   );
 
+  const _entityControllersBag: Set<EntityController<AnyEntity>> = new Set();
   const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(_cameraController, _cameraResetPosition);
   const _entityViewFactory: IEntityViewFactory = EntityViewFactory(
     logger,
@@ -247,7 +250,9 @@ export function MapScene(
       views.add(view);
 
       if (isEntityWithController(view.entity)) {
-        _entityControllerFactory.create(view);
+        for (let controller of _entityControllerFactory.create(view)) {
+          _entityControllersBag.add(controller);
+        }
       }
 
       if (view.state.needsRaycast) {

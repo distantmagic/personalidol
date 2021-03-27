@@ -5,5 +5,5 @@ import type { EntityView } from "./EntityView.interface";
 export interface EntityControllerFactory {
   readonly isEntityControllerFactory: true;
 
-  create(entityView: EntityView<AnyEntity>): EntityController;
+  create<E extends AnyEntity>(entityView: EntityView<E>): Generator<EntityController<E>>;
 }

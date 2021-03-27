@@ -16,20 +16,22 @@ import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntityView } from "./EntityView.interface";
 
 export function EntityControllerFactory(cameraController: CameraController, cameraResetPosition: Vector3): IEntityControllerFactory {
-  function create(view: EntityView<AnyEntity>): IEntityController {
+  function* create<E extends AnyEntity>(view: EntityView<E>): Generator<IEntityController<E>> {
     if (!isEntityWithController(view.entity)) {
       throw new Error(`View do not use a controller: "${name(view)}"`);
     }
 
     switch (view.entity.properties.controller) {
       case "npc":
-        return NPCEntityController();
+        yield NPCEntityController(view);
+        break;
       case "player":
         if (!isEntityViewOfClass<EntityPlayer>(view, "player")) {
           throw new Error("Player entity controller only supports player entity.");
         }
 
-        return PlayerEntityController(view, cameraController, cameraResetPosition);
+        yield PlayerEntityController(view, cameraController, cameraResetPosition) as IEntityController<E>;
+        break;
       default:
         throw new Error(`Unsupported entity controller: "${view.entity.properties.controller}"`);
     }
