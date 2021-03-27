@@ -1,6 +1,9 @@
 import { MathUtils } from "three/src/math/MathUtils";
+import { Vector3 } from "three/src/math/Vector3";
 
 import { KeyboardIndices } from "@personalidol/input/src/KeyboardIndices.enum";
+
+import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -17,6 +20,8 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
     isPreloading: false,
     needsUpdates: true,
   });
+
+  const _cameraTransitionRequest: IVector3 = new Vector3();
 
   function mount(): void {
     state.isMounted = true;
@@ -35,7 +40,16 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    _cameraTransitionRequest.set(0, 0, 0);
+
     if (state.isPaused) {
+      return;
+    }
+
+    if (keyboardState[KeyboardIndices.Home]) {
+      cameraController.resetPosition();
+      cameraController.resetZoom();
+
       return;
     }
 
@@ -48,32 +62,28 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
     }
 
     if (keyboardState[KeyboardIndices.ArrowUp] || keyboardState[KeyboardIndices.KeyW]) {
-      cameraController.position.x -= userSettings.cameraMovementSpeed * delta;
-      cameraController.position.z -= userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.x -= userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.z -= userSettings.cameraMovementSpeed * delta;
     }
 
     if (keyboardState[KeyboardIndices.ArrowLeft] || keyboardState[KeyboardIndices.KeyA]) {
-      cameraController.position.x -= userSettings.cameraMovementSpeed * delta;
-      cameraController.position.z += userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.x -= userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.z += userSettings.cameraMovementSpeed * delta;
     }
 
     if (keyboardState[KeyboardIndices.ArrowRight] || keyboardState[KeyboardIndices.KeyD]) {
-      cameraController.position.x += userSettings.cameraMovementSpeed * delta;
-      cameraController.position.z -= userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.x += userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.z -= userSettings.cameraMovementSpeed * delta;
     }
 
     if (keyboardState[KeyboardIndices.ArrowDown] || keyboardState[KeyboardIndices.KeyS]) {
-      cameraController.position.x += userSettings.cameraMovementSpeed * delta;
-      cameraController.position.z += userSettings.cameraMovementSpeed * delta;
-    }
-
-    if (keyboardState[KeyboardIndices.Home]) {
-      cameraController.resetPosition();
-      cameraController.resetZoom();
+      _cameraTransitionRequest.x += userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.z += userSettings.cameraMovementSpeed * delta;
     }
   }
 
   return Object.freeze({
+    cameraTransitionRequest: _cameraTransitionRequest,
     id: MathUtils.generateUUID(),
     isMountable: true,
     isUserInputController: true,

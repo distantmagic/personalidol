@@ -1,14 +1,14 @@
 import { MathUtils } from "three/src/math/MathUtils";
-
 import { Vector2 } from "three/src/math/Vector2";
+import { Vector3 } from "three/src/math/Vector3";
 
 import { computePrimaryTouchStretchVector } from "@personalidol/input/src/computePrimaryTouchStretchVector";
 import { isPrimaryTouchInitiatedByRootElement } from "@personalidol/input/src/isPrimaryTouchInitiatedByRootElement";
 import { isPrimaryTouchPressed } from "@personalidol/input/src/isPrimaryTouchPressed";
 
 import type { Vector2 as IVector2 } from "three/src/math/Vector2";
+import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
-import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
 import type { UserInputControllerState } from "@personalidol/input/src/UserInputControllerState.type";
@@ -18,17 +18,14 @@ import type { UserSettings } from "./UserSettings.type";
 const _stretchVector: IVector2 = new Vector2(0, 0);
 const _stretchVectorRotationPivot: IVector2 = new Vector2(0, 0);
 
-export function UserInputTouchController(
-  userSettings: UserSettings,
-  dimensionsState: Uint32Array,
-  touchState: Int32Array,
-  cameraController: CameraController
-): UserInputController {
+export function UserInputTouchController(userSettings: UserSettings, dimensionsState: Uint32Array, touchState: Int32Array): UserInputController {
   const state: UserInputControllerState = Object.seal({
     isMounted: false,
     isPaused: false,
     needsUpdates: true,
   });
+
+  const _cameraTransitionRequest: IVector3 = new Vector3();
 
   function mount(): void {
     state.isMounted = true;
@@ -47,6 +44,8 @@ export function UserInputTouchController(
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    _cameraTransitionRequest.set(0, 0, 0);
+
     if (state.isPaused) {
       return;
     }
@@ -59,11 +58,12 @@ export function UserInputTouchController(
 
     _stretchVector.rotateAround(_stretchVectorRotationPivot, (3 * Math.PI) / 4);
 
-    cameraController.position.x += userSettings.cameraMovementSpeed * _stretchVector.y * delta;
-    cameraController.position.z += userSettings.cameraMovementSpeed * _stretchVector.x * delta;
+    _cameraTransitionRequest.x += userSettings.cameraMovementSpeed * _stretchVector.y * delta;
+    _cameraTransitionRequest.z += userSettings.cameraMovementSpeed * _stretchVector.x * delta;
   }
 
   return Object.freeze({
+    cameraTransitionRequest: _cameraTransitionRequest,
     id: MathUtils.generateUUID(),
     isMountable: true,
     isUserInputController: true,

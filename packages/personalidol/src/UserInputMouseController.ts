@@ -1,6 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
-
 import { Vector2 } from "three/src/math/Vector2";
+import { Vector3 } from "three/src/math/Vector3";
 
 import { getMousePointerVectorX } from "@personalidol/input/src/getMousePointerVectorX";
 import { getMousePointerVectorY } from "@personalidol/input/src/getMousePointerVectorY";
@@ -9,8 +9,8 @@ import { isPrimaryMouseButtonPressed } from "@personalidol/input/src/isPrimaryMo
 import { isPrimaryMouseButtonPressInitiatedByRootElement } from "@personalidol/input/src/isPrimaryMouseButtonPressInitiatedByRootElement";
 
 import type { Vector2 as IVector2 } from "three/src/math/Vector2";
+import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
-import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { Raycaster } from "@personalidol/input/src/Raycaster.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
@@ -21,18 +21,14 @@ import type { UserSettings } from "./UserSettings.type";
 const _pointerVector: IVector2 = new Vector2(0, 0);
 const _pointerVectorRotationPivot: IVector2 = new Vector2(0, 0);
 
-export function UserInputMouseController(
-  userSettings: UserSettings,
-  dimensionsState: Uint32Array,
-  mouseState: Int32Array,
-  cameraController: CameraController,
-  raycaster: Raycaster
-): UserInputController {
+export function UserInputMouseController(userSettings: UserSettings, dimensionsState: Uint32Array, mouseState: Int32Array, raycaster: Raycaster): UserInputController {
   const state: UserInputControllerState = Object.seal({
     isMounted: false,
     isPaused: false,
     needsUpdates: true,
   });
+
+  const _cameraTransitionRequest: IVector3 = new Vector3();
 
   let _started: boolean = false;
   let _startedWithinIntersection: boolean = false;
@@ -54,6 +50,8 @@ export function UserInputMouseController(
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    _cameraTransitionRequest.set(0, 0, 0);
+
     if (state.isPaused || !isPrimaryMouseButtonPressed(mouseState) || !isPrimaryMouseButtonPressInitiatedByRootElement(mouseState)) {
       _startedWithinIntersection = false;
       _started = false;
@@ -83,11 +81,12 @@ export function UserInputMouseController(
     _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
     _pointerVector.normalize();
 
-    cameraController.position.x += userSettings.cameraMovementSpeed * _pointerVector.y * delta;
-    cameraController.position.z += userSettings.cameraMovementSpeed * _pointerVector.x * delta;
+    _cameraTransitionRequest.x += userSettings.cameraMovementSpeed * _pointerVector.y * delta;
+    _cameraTransitionRequest.z += userSettings.cameraMovementSpeed * _pointerVector.x * delta;
   }
 
   return Object.freeze({
+    cameraTransitionRequest: _cameraTransitionRequest,
     id: MathUtils.generateUUID(),
     isMountable: true,
     isUserInputController: true,

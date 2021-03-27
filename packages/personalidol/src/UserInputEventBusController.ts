@@ -1,6 +1,9 @@
 import { MathUtils } from "three/src/math/MathUtils";
+import { Vector3 } from "three/src/math/Vector3";
 
 import { noop } from "@personalidol/framework/src/noop";
+
+import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
@@ -15,6 +18,8 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
     isPaused: false,
     needsUpdates: false,
   });
+
+  const _cameraTransitionRequest: IVector3 = new Vector3();
 
   function _onPointerZoomRequest(zoomAmount: number, scale: number = 1): void {
     if (state.isPaused) {
@@ -47,6 +52,7 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
   }
 
   return Object.freeze({
+    cameraTransitionRequest: _cameraTransitionRequest,
     id: MathUtils.generateUUID(),
     isMountable: true,
     isUserInputController: true,

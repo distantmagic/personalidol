@@ -8,6 +8,7 @@ import { Float32BufferAttribute } from "three/src/core/BufferAttribute";
 import { Group } from "three/src/objects/Group";
 import { MathUtils } from "three/src/math/MathUtils";
 import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
+// import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";

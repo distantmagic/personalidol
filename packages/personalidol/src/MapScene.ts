@@ -112,8 +112,8 @@ export function MapScene(
   const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
   const _userInputEventBusController: UserInputController = UserInputEventBusController(userSettings, eventBus, _cameraController);
   const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController);
-  const _userInputMouseController: UserInputController = UserInputMouseController(userSettings, dimensionsState, mouseState, _cameraController, _raycaster);
-  const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState, _cameraController);
+  const _userInputMouseController: UserInputController = UserInputMouseController(userSettings, dimensionsState, mouseState, _raycaster);
+  const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState);
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
 
   _scene.background = new Color(0x000000);
@@ -130,7 +130,13 @@ export function MapScene(
   );
 
   const _entityControllersBag: Set<EntityController<AnyEntity>> = new Set();
-  const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(_cameraController);
+  const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(
+    _cameraController,
+    _userInputEventBusController,
+    _userInputKeyboardController,
+    _userInputMouseController,
+    _userInputTouchController
+  );
   const _entityViewFactory: IEntityViewFactory = EntityViewFactory(
     logger,
     userSettings,
