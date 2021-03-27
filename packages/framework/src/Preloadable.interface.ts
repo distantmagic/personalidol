@@ -3,6 +3,7 @@ import type { PreloadableCallback } from "./PreloadableCallback.type";
 import type { PreloadableState } from "./PreloadableState.type";
 
 export interface Preloadable extends Nameable {
-  readonly state: PreloadableState;
+  readonly isPreloadable: true;
   readonly preload: PreloadableCallback;
+  readonly state: PreloadableState;
 }

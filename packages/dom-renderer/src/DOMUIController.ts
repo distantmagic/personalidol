@@ -268,6 +268,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isPreloadable: true,
     name: "DOMUIController",
     state: state,
 

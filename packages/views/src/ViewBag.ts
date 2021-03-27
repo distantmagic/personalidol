@@ -122,6 +122,7 @@ export function ViewBag(logger: Logger): IViewBag {
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isMountable: true,
+    isPreloadable: true,
     name: "ViewBag",
     state: state,
     views: views,

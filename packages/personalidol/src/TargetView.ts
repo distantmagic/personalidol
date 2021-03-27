@@ -65,6 +65,7 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView<Entit
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,
+    isPreloadable: true,
     isRaycastable: true,
     isView: true,
     name: `TargetView("${entity.properties.targetname}")`,

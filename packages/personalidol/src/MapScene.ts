@@ -15,7 +15,6 @@ import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
-import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { Raycaster } from "@personalidol/input/src/Raycaster";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
@@ -196,12 +195,6 @@ export function MapScene(
   async function preload(): Promise<void> {
     state.isPreloading = true;
 
-    fPreload(logger, _userInputEventBusController);
-    fPreload(logger, _userInputKeyboardController);
-    fPreload(logger, _userInputMouseController);
-    fPreload(logger, _userInputTouchController);
-    fPreload(logger, _cameraController);
-
     gltfMessagePort.onmessage = _gltfMessageRouter;
     internationalizationMessagePort.onmessage = _internationalizationMessageRouter;
     md2MessagePort.onmessage = _md2MessageRouter;
@@ -337,6 +330,7 @@ export function MapScene(
     id: MathUtils.generateUUID(),
     isMapScene: true,
     isMountable: true,
+    isPreloadable: true,
     isScene: true,
     isViewBaggableScene: true,
     name: `Map("${mapFilename}")`,

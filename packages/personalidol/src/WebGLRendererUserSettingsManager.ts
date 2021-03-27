@@ -31,6 +31,7 @@ export function WebGLRendererUserSettingsManager(userSettings: UserSettings, ren
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isPreloadable: true,
     isUserSettingsManager: true,
     name: "WebGLRendererUserSettingsManager",
     state: state,

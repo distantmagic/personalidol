@@ -51,6 +51,7 @@ export function ShadowLightUserSettingsManager(userSettings: UserSettings, entit
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isPreloadable: true,
     isUserSettingsManager: true,
     name: "ShadowLightUserSettingsManager",
     state: state,

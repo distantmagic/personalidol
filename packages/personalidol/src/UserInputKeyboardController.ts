@@ -38,11 +38,6 @@ export function UserInputKeyboardController(
     state.isPaused = true;
   }
 
-  function preload(): void {
-    state.isPreloaded = true;
-    state.isPreloading = false;
-  }
-
   function unmount(): void {
     state.isMounted = false;
   }
@@ -100,7 +95,6 @@ export function UserInputKeyboardController(
     dispose: dispose,
     mount: mount,
     pause: pause,
-    preload: preload,
     unmount: unmount,
     unpause: unpause,
     update: update,

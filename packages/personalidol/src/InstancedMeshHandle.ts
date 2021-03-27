@@ -34,6 +34,7 @@ export function InstancedMeshHandle(logger: Logger, userSettings: UserSettings, 
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isInstancedMeshHandle: true,
+    isPreloadable: true,
     name: "InstancedMeshHandle",
     object3D: reference,
     state: state,

@@ -165,6 +165,7 @@ export function LoadingScreenScene(
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isMountable: true,
+    isPreloadable: true,
     isScene: true,
     name: "LoadingScreen",
     state: state,

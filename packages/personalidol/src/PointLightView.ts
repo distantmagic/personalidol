@@ -75,6 +75,7 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,
+    isPreloadable: true,
     isRaycastable: true,
     isView: true,
     name: `PointLightView("${entity.color}",${entity.decay},${entity.intensity})`,

@@ -28,8 +28,6 @@ export function UserInputTouchController(
     isDisposed: false,
     isMounted: false,
     isPaused: false,
-    isPreloaded: false,
-    isPreloading: false,
     needsUpdates: true,
   });
 
@@ -43,11 +41,6 @@ export function UserInputTouchController(
 
   function pause(): void {
     state.isPaused = true;
-  }
-
-  function preload(): void {
-    state.isPreloaded = true;
-    state.isPreloading = false;
   }
 
   function unmount(): void {
@@ -85,7 +78,6 @@ export function UserInputTouchController(
     dispose: dispose,
     mount: mount,
     pause: pause,
-    preload: preload,
     unmount: unmount,
     unpause: unpause,
     update: update,

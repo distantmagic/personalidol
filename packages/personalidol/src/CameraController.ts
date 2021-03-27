@@ -34,8 +34,6 @@ export function CameraController(
     isDisposed: false,
     isMounted: false,
     isPaused: false,
-    isPreloaded: false,
-    isPreloading: false,
     lastCameraTypeChange: 0,
     needsUpdates: true,
   });
@@ -72,13 +70,6 @@ export function CameraController(
 
   function pause(): void {
     state.isPaused = true;
-  }
-
-  function preload(): void {
-    state.isPreloading = true;
-
-    state.isPreloading = false;
-    state.isPreloaded = true;
   }
 
   function unmount(): void {
@@ -164,7 +155,6 @@ export function CameraController(
     dispose: dispose,
     mount: mount,
     pause: pause,
-    preload: preload,
     unmount: unmount,
     unpause: unpause,
     update: update,

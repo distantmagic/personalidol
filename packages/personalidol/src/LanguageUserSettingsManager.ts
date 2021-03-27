@@ -33,6 +33,7 @@ export function LanguageUserSettingsManager(userSettings: UserSettings, i18next:
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isPreloadable: true,
     isUserSettingsManager: true,
     name: "LanguageUserSettingsManager",
     state: state,

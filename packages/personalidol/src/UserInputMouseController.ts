@@ -32,8 +32,6 @@ export function UserInputMouseController(
     isDisposed: false,
     isMounted: false,
     isPaused: false,
-    isPreloaded: false,
-    isPreloading: false,
     needsUpdates: true,
   });
 
@@ -50,11 +48,6 @@ export function UserInputMouseController(
 
   function pause(): void {
     state.isPaused = true;
-  }
-
-  function preload(): void {
-    state.isPreloaded = true;
-    state.isPreloading = false;
   }
 
   function unmount(): void {
@@ -109,7 +102,6 @@ export function UserInputMouseController(
     dispose: dispose,
     mount: mount,
     pause: pause,
-    preload: preload,
     unmount: unmount,
     unpause: unpause,
     update: update,

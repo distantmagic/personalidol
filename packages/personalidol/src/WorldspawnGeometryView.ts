@@ -165,6 +165,7 @@ export function WorldspawnGeometryView(
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,
+    isPreloadable: true,
     isRaycastable: true,
     isView: true,
     name: `WorldspawnGeometryView`,

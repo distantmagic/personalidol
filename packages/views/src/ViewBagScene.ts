@@ -102,6 +102,7 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: ViewBagga
   return Object.freeze({
     id: MathUtils.generateUUID(),
     isMountable: true,
+    isPreloadable: true,
     isScene: true,
     isViewBagScene: true,
     name: `ViewBagScene(${name(viewBag)},${name(scene)})`,

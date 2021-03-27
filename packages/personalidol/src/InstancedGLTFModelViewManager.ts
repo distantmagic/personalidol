@@ -307,6 +307,7 @@ export function InstancedGLTFModelViewManager(
     id: nameable.id,
     isInstancedGLTFModelViewManager: true,
     isMountable: true,
+    isPreloadable: true,
     isRaycastable: true,
     isView: true,
     name: nameable.name,

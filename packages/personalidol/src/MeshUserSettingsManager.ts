@@ -33,6 +33,7 @@ export function MeshUserSettingsManager(logger: Logger, userSettings: UserSettin
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isPreloadable: true,
     isUserSettingsManager: true,
     name: "MeshUserSettingsManager",
     state: state,

@@ -67,6 +67,7 @@ export function AmbientLightView(logger: Logger, userSettings: UserSettings, sce
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,
+    isPreloadable: true,
     isRaycastable: true,
     isView: true,
     name: `AmbientLightView(${entity.light})`,

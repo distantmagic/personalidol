@@ -226,6 +226,7 @@ export function MainMenuScene(
     id: MathUtils.generateUUID(),
     isMainMenuScene: true,
     isMountable: true,
+    isPreloadable: true,
     isScene: true,
     name: `MainMenu`,
     state: state,

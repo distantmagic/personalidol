@@ -65,6 +65,7 @@ export function InternationalizationService(i18next: i18n, progressMessagePort: 
   return Object.freeze({
     id: MathUtils.generateUUID(),
     i18next: i18next,
+    isPreloadable: true,
     name: "InternationalizationService",
     state: state,
 

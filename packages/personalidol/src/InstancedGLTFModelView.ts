@@ -91,6 +91,7 @@ export function InstancedGLTFModelView(
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,
+    isPreloadable: true,
     isRaycastable: true,
     isView: true,
     name: `InstancedGLTFModelView("${entity.model_name}", "${entity.model_texture}", ${entity.scale})`,

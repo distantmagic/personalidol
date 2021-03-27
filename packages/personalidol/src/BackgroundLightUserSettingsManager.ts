@@ -54,6 +54,7 @@ export function BackgroundLightUserSettingsManager(userSettings: UserSettings, l
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isPreloadable: true,
     isUserSettingsManager: true,
     name: "BackgroundLightUserSettingsManager",
     state: state,

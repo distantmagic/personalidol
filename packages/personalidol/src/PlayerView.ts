@@ -100,6 +100,7 @@ export function PlayerView(
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,
+    isPreloadable: true,
     isRaycastable: true,
     isView: true,
     name: `PlayerView`,

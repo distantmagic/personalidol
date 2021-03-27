@@ -91,6 +91,7 @@ export function SpotlightLightView(
     isEntityView: true,
     isExpectingTargets: true,
     isMountable: true,
+    isPreloadable: true,
     isRaycastable: true,
     isView: true,
     name: `SpotlightLightView("${entity.color}",${entity.decay},${entity.intensity})`,

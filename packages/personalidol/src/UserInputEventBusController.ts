@@ -14,8 +14,6 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
     isDisposed: false,
     isMounted: false,
     isPaused: false,
-    isPreloaded: false,
-    isPreloading: false,
     needsUpdates: false,
   });
 
@@ -44,11 +42,6 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
     state.isPaused = true;
   }
 
-  function preload(): void {
-    state.isPreloaded = true;
-    state.isPreloading = false;
-  }
-
   function unmount(): void {
     state.isMounted = false;
     eventBus.POINTER_ZOOM_REQUEST.delete(_onPointerZoomRequest);
@@ -68,7 +61,6 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
     dispose: dispose,
     mount: mount,
     pause: pause,
-    preload: preload,
     unmount: unmount,
     unpause: unpause,
     update: noop,
