@@ -224,6 +224,7 @@ export function MainMenuScene(
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
+    isDisposable: true,
     isMainMenuScene: true,
     isMountable: true,
     isPreloadable: true,

@@ -25,15 +25,10 @@ export function UserInputTouchController(
   cameraController: CameraController
 ): UserInputController {
   const state: UserInputControllerState = Object.seal({
-    isDisposed: false,
     isMounted: false,
     isPaused: false,
     needsUpdates: true,
   });
-
-  function dispose(): void {
-    state.isDisposed = true;
-  }
 
   function mount(): void {
     state.isMounted = true;
@@ -75,7 +70,6 @@ export function UserInputTouchController(
     name: "UserInputTouchController",
     state: state,
 
-    dispose: dispose,
     mount: mount,
     pause: pause,
     unmount: unmount,

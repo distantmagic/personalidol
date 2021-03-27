@@ -8,7 +8,6 @@ import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
@@ -150,11 +149,6 @@ export function MapScene(
     state.isDisposed = true;
 
     disposeAll(_disposables);
-    fDispose(logger, _userInputEventBusController);
-    fDispose(logger, _userInputKeyboardController);
-    fDispose(logger, _userInputMouseController);
-    fDispose(logger, _userInputTouchController);
-    fDispose(logger, _cameraController);
   }
 
   function mount(): void {
@@ -328,6 +322,7 @@ export function MapScene(
   return Object.freeze({
     currentMap: mapName,
     id: MathUtils.generateUUID(),
+    isDisposable: true,
     isMapScene: true,
     isMountable: true,
     isPreloadable: true,

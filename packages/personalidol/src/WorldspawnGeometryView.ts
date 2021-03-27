@@ -162,6 +162,7 @@ export function WorldspawnGeometryView(
   return Object.freeze({
     entity: entity,
     id: id,
+    isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,

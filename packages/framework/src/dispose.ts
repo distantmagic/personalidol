@@ -1,23 +1,23 @@
+import { isMountable } from "./isMountable";
 import { name } from "./name";
-import { unmount } from "./unmount";
 
 import type { Logger } from "loglevel";
 
-import type { Mountable } from "./Mountable.interface";
+import type { Disposable } from "./Disposable.interface";
 
-export function dispose(logger: Logger, mount: Mountable): void {
-  if (mount.state.isDisposed) {
-    throw new Error(`Mount point is already disposed: "${name(mount)}"`);
+export function dispose(logger: Logger, disposable: Disposable): void {
+  if (disposable.state.isDisposed) {
+    throw new Error(`Mount point is already disposed: "${name(disposable)}"`);
   }
 
-  if (mount.state.isMounted) {
-    unmount(logger, mount);
+  if (isMountable(disposable) && disposable.state.isMounted) {
+    throw new Error(`Mount point needs to be unmounted before disposing: "${name(disposable)}"`);
   }
 
-  logger.debug(`DISPOSE(${name(mount)})`);
-  mount.dispose();
+  logger.debug(`DISPOSE(${name(disposable)})`);
+  disposable.dispose();
 
-  if (!mount.state.isDisposed) {
-    throw new Error(`Mount point needs to be disposed immediately after calling 'dispose' method and it's not: "${name(mount)}"`);
+  if (!disposable.state.isDisposed) {
+    throw new Error(`Mount point needs to be disposed immediately after calling 'dispose' method and it's not: "${name(disposable)}"`);
   }
 }

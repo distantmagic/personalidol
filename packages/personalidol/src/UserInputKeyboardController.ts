@@ -18,17 +18,12 @@ export function UserInputKeyboardController(
   cameraResetPosition: Vector3
 ): UserInputController {
   const state: UserInputControllerState = Object.seal({
-    isDisposed: false,
     isMounted: false,
     isPaused: false,
     isPreloaded: false,
     isPreloading: false,
     needsUpdates: true,
   });
-
-  function dispose(): void {
-    state.isDisposed = true;
-  }
 
   function mount(): void {
     state.isMounted = true;
@@ -92,7 +87,6 @@ export function UserInputKeyboardController(
     name: "UserInputKeyboardController",
     state: state,
 
-    dispose: dispose,
     mount: mount,
     pause: pause,
     unmount: unmount,

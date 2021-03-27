@@ -31,7 +31,6 @@ export function CameraController(
   cameraPosition: IVector3 = new Vector3()
 ): ICameraController {
   const state: CameraControllerState = Object.seal({
-    isDisposed: false,
     isMounted: false,
     isPaused: false,
     lastCameraTypeChange: 0,
@@ -56,10 +55,6 @@ export function CameraController(
   let _isCameraChanged: boolean = false;
   let _orthographicCameraFrustumSize: number = _cameraZoomAmount;
   let _needsImmediateMove: boolean = false;
-
-  function dispose(): void {
-    state.isDisposed = true;
-  }
 
   function mount(): void {
     state.isMounted = true;
@@ -152,7 +147,6 @@ export function CameraController(
       _needsImmediateMove = needsImmediateMove;
     },
 
-    dispose: dispose,
     mount: mount,
     pause: pause,
     unmount: unmount,

@@ -72,6 +72,7 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
   return Object.freeze({
     entity: entity,
     id: MathUtils.generateUUID(),
+    isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,

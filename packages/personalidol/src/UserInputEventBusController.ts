@@ -11,7 +11,6 @@ import type { UserSettings } from "./UserSettings.type";
 
 export function UserInputEventBusController(userSettings: UserSettings, eventBus: EventBus, cameraController: CameraController): UserInputController {
   const state: UserInputControllerState = Object.seal({
-    isDisposed: false,
     isMounted: false,
     isPaused: false,
     needsUpdates: false,
@@ -27,10 +26,6 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
     } else {
       cameraController.zoomIn();
     }
-  }
-
-  function dispose(): void {
-    state.isDisposed = true;
   }
 
   function mount(): void {
@@ -58,7 +53,6 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
     name: "UserInputEventBusController",
     state: state,
 
-    dispose: dispose,
     mount: mount,
     pause: pause,
     unmount: unmount,

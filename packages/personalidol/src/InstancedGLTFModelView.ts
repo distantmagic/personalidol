@@ -88,6 +88,7 @@ export function InstancedGLTFModelView(
   return Object.freeze({
     entity: entity,
     id: MathUtils.generateUUID(),
+    isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,
     isMountable: true,

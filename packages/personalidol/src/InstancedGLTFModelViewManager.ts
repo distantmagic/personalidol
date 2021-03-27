@@ -305,6 +305,7 @@ export function InstancedGLTFModelViewManager(
 
   return Object.freeze({
     id: nameable.id,
+    isDisposable: true,
     isInstancedGLTFModelViewManager: true,
     isMountable: true,
     isPreloadable: true,

@@ -29,7 +29,6 @@ export function UserInputMouseController(
   raycaster: Raycaster
 ): UserInputController {
   const state: UserInputControllerState = Object.seal({
-    isDisposed: false,
     isMounted: false,
     isPaused: false,
     needsUpdates: true,
@@ -37,10 +36,6 @@ export function UserInputMouseController(
 
   let _started: boolean = false;
   let _startedWithinIntersection: boolean = false;
-
-  function dispose(): void {
-    state.isDisposed = true;
-  }
 
   function mount(): void {
     state.isMounted = true;
@@ -99,7 +94,6 @@ export function UserInputMouseController(
     name: "UserInputMouseController",
     state: state,
 
-    dispose: dispose,
     mount: mount,
     pause: pause,
     unmount: unmount,

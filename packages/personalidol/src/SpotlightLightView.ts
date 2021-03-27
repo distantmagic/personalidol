@@ -88,6 +88,7 @@ export function SpotlightLightView(
   return Object.freeze({
     entity: entity,
     id: MathUtils.generateUUID(),
+    isDisposable: true,
     isEntityView: true,
     isExpectingTargets: true,
     isMountable: true,

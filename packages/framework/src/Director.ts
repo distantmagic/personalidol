@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { dispose } from "./dispose";
 import { preload } from "./preload";
+import { unmount } from "./unmount";
 
 import type { Logger } from "loglevel";
 
@@ -109,6 +110,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
 
     // 1,0,1
     if (next && !_transitioning && current) {
+      unmount(logger, current);
       dispose(logger, current);
 
       state.current = null;
