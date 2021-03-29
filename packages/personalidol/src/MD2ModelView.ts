@@ -1,5 +1,4 @@
 import { AnimationClip } from "three/src/animation/AnimationClip";
-// import { AnimationMixer } from "three/src/animation/AnimationMixer";
 import { BoxGeometry } from "three/src/geometries/BoxGeometry";
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
@@ -8,6 +7,7 @@ import { Float32BufferAttribute } from "three/src/core/BufferAttribute";
 import { Group } from "three/src/objects/Group";
 import { MathUtils } from "three/src/math/MathUtils";
 import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
+import { Vector3 } from "three/src/math/Vector3";
 
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
@@ -23,9 +23,7 @@ import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { MeshUserSettingsManager } from "./MeshUserSettingsManager";
 import { useObjectLabel } from "./useObjectLabel";
 
-// import type { AnimationAction as IAnimationAction } from "three/src/animation/AnimationAction";
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
-// import type { AnimationMixer as IAnimationMixer } from "three/src/animation/AnimationMixer";
 import type { Color as IColor } from "three/src/math/Color";
 import type { Group as IGroup } from "three/src/objects/Group";
 import type { Logger } from "loglevel";
@@ -55,7 +53,8 @@ type AnimationClipsCached = {
 };
 
 const _animationClipsCache: Map<string, AnimationClipsCached> = new Map();
-// let _globalAnimationOffset: number = 0;
+const _transitionFrames: number = 20;
+let _globalAnimationOffset: number = 0;
 
 function _clearCachedAnimations(entity: EntityMD2Model): void {
   const cachedAnimations: undefined | AnimationClipsCached = _animationClipsCache.get(entity.model_name);
@@ -130,9 +129,9 @@ export function MD2ModelView(
     needsUpdates: true,
   });
 
-  // _globalAnimationOffset += 0.3;
+  _globalAnimationOffset += 0.3;
 
-  // const _animationOffset: number = _globalAnimationOffset;
+  const _animationOffset: number = _globalAnimationOffset;
   const _disposables: Set<DisposableCallback> = new Set();
   const _labelContainer: IGroup = new Group();
   const _materialColor: IColor = new Color();
@@ -141,8 +140,13 @@ export function MD2ModelView(
   const _mountables: Set<MountableCallback> = new Set();
   const _unmountables: Set<UnmountableCallback> = new Set();
 
+  let _animationMix: number = 1;
+  let _activeAnimation: string = "";
+  let _oldAnimation: string = "";
+  let _blendCounter: number = _transitionFrames;
   let _mesh: null | MorphBlendMesh = null;
   let _meshUserSettingsManager: null | UserSettingsManager = null;
+  let _transitionTarget: IVector3 = new Vector3();
 
   async function _loadTexture(textureUrl: string): Promise<ITexture> {
     const texture = await requestTexture<ITexture>(rpcLookupTable, texturesMessagePort, textureUrl);
@@ -150,6 +154,24 @@ export function MD2ModelView(
     _disposables.add(disposableGeneric(texture));
 
     return texture;
+  }
+
+  function _setAnimation(animationName: string): void {
+    if (!_mesh) {
+      throw new Error("Mesh is not ready for animation");
+    }
+
+    if (_activeAnimation === animationName) {
+      return;
+    }
+
+    _mesh.setAnimationWeight(animationName, 0);
+    _mesh.playAnimation(animationName);
+
+    _oldAnimation = _activeAnimation;
+    _activeAnimation = animationName;
+
+    _blendCounter = _transitionFrames;
   }
 
   function dispose(): void {
@@ -215,9 +237,10 @@ export function MD2ModelView(
     _mesh.updateMorphTargets();
     _mesh.autoCreateAnimations(10);
 
+    _setAnimation("stand");
+
+    _mesh.setAnimationTime("stand", _animationOffset);
     _mesh.rotation.set(0, entity.angle, 0);
-    _mesh.setAnimationWeight(geometry.parts.animations["idle"], 1);
-    _mesh.playAnimation(geometry.parts.animations["idle"]);
 
     _meshContainer.add(_mesh);
     _meshUserSettingsManager = MeshUserSettingsManager(logger, userSettings, _mesh);
@@ -281,7 +304,23 @@ export function MD2ModelView(
   }
 
   function transition(vec: IVector3): void {
-    _meshContainer.position.add(vec);
+    if (vec.length() <= 0) {
+      _setAnimation("stand");
+
+      return;
+    }
+
+    if (_mesh) {
+      _mesh.rotation.set(0, (-1 * Math.PI) / 2, 0);
+    }
+
+    _setAnimation("run");
+
+    _transitionTarget.copy(_meshContainer.position).add(vec);
+    _meshContainer.lookAt(_transitionTarget);
+
+    // _meshContainer.rotation.set(0, entity.angle, 0);
+    _meshContainer.position.copy(_transitionTarget);
   }
 
   function unmount(): void {
@@ -311,9 +350,18 @@ export function MD2ModelView(
       _materialColor.set(0xff0000);
     }
 
-    if (_mesh) {
-      _mesh.update(delta);
+    if (!_mesh) {
+      return;
     }
+
+    if (_blendCounter > 0) {
+      _animationMix = (_transitionFrames - _blendCounter) / _transitionFrames;
+      _blendCounter -= 1;
+    }
+
+    _mesh.setAnimationWeight(_activeAnimation, _animationMix);
+    _mesh.setAnimationWeight(_oldAnimation, 1 - _animationMix);
+    _mesh.update(delta);
   }
 
   return Object.freeze({
