@@ -62,24 +62,27 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
     }
 
     if (keyboardState[KeyboardIndices.ArrowUp] || keyboardState[KeyboardIndices.KeyW]) {
-      _cameraTransitionRequest.x -= userSettings.cameraMovementSpeed * delta;
-      _cameraTransitionRequest.z -= userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.x -= 1;
+      _cameraTransitionRequest.z -= 1;
     }
 
     if (keyboardState[KeyboardIndices.ArrowLeft] || keyboardState[KeyboardIndices.KeyA]) {
-      _cameraTransitionRequest.x -= userSettings.cameraMovementSpeed * delta;
-      _cameraTransitionRequest.z += userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.x -= 1;
+      _cameraTransitionRequest.z += 1;
     }
 
     if (keyboardState[KeyboardIndices.ArrowRight] || keyboardState[KeyboardIndices.KeyD]) {
-      _cameraTransitionRequest.x += userSettings.cameraMovementSpeed * delta;
-      _cameraTransitionRequest.z -= userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.x += 1;
+      _cameraTransitionRequest.z -= 1;
     }
 
     if (keyboardState[KeyboardIndices.ArrowDown] || keyboardState[KeyboardIndices.KeyS]) {
-      _cameraTransitionRequest.x += userSettings.cameraMovementSpeed * delta;
-      _cameraTransitionRequest.z += userSettings.cameraMovementSpeed * delta;
+      _cameraTransitionRequest.x += 1;
+      _cameraTransitionRequest.z += 1;
     }
+
+    _cameraTransitionRequest.normalize();
+    _cameraTransitionRequest.multiplyScalar(userSettings.cameraMovementSpeed * delta);
   }
 
   return Object.freeze({
