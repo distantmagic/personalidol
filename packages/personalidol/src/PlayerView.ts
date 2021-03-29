@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { mount as fMount } from "@personalidol/framework/src/mount";
+import { name } from "@personalidol/framework/src/name";
 import { pause as fPause } from "@personalidol/framework/src/pause";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
@@ -16,9 +17,9 @@ import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
+import type { CharacterView } from "./CharacterView.interface";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { EntityPlayer } from "./EntityPlayer.type";
-import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
 export function PlayerView(
@@ -30,7 +31,7 @@ export function PlayerView(
   md2MessagePort: MessagePort,
   texturesMessagePort: MessagePort,
   rpcLookupTable: RPCLookupTable
-): EntityView<EntityPlayer> {
+): CharacterView<EntityPlayer> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -46,7 +47,7 @@ export function PlayerView(
     id: MathUtils.generateUUID(),
     angle: 0,
     classname: "model_md2",
-    model_name: "necron99",
+    model_name: "ogro",
     origin: entity.origin,
     properties: entity.properties,
     skin: 1,
@@ -97,6 +98,7 @@ export function PlayerView(
   return Object.freeze({
     entity: entity,
     id: MathUtils.generateUUID(),
+    isCharacterView: true,
     isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,
@@ -104,7 +106,7 @@ export function PlayerView(
     isPreloadable: true,
     isRaycastable: true,
     isView: true,
-    name: `PlayerView`,
+    name: `PlayerView(${name(_playerModel)})`,
     object3D: _playerModel.object3D,
     raycasterObject3D: _playerModel.raycasterObject3D,
     state: state,
@@ -113,6 +115,7 @@ export function PlayerView(
     mount: mount,
     pause: pause,
     preload: preload,
+    transition: _playerModel.transition,
     unmount: unmount,
     unpause: unpause,
     update: update,

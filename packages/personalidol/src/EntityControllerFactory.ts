@@ -1,5 +1,6 @@
 import { name } from "@personalidol/framework/src/name";
 
+import { isCharacterView } from "./isCharacterView";
 import { isEntityViewOfClass } from "./isEntityViewOfClass";
 import { isEntityWithController } from "./isEntityWithController";
 import { NPCEntityController } from "./NPCEntityController";
@@ -33,6 +34,10 @@ export function EntityControllerFactory(
       case "player":
         if (!isEntityViewOfClass<EntityPlayer>(view, "player")) {
           throw new Error("Player entity controller only supports player entity.");
+        }
+
+        if (!isCharacterView<EntityPlayer>(view)) {
+          throw new Error("Player entity controller only supports character view.");
         }
 
         yield PlayerEntityController(
