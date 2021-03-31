@@ -5,6 +5,7 @@ import { name } from "@personalidol/framework/src/name";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
+import type { UserInputMouseController } from "@personalidol/input/src/UserInputMouseController.interface";
 
 import type { CharacterView } from "./CharacterView.interface";
 import type { EntityController } from "./EntityController.interface";
@@ -16,7 +17,7 @@ export function PlayerEntityController(
   cameraController: CameraController,
   userInputEventBusController: UserInputController,
   userInputKeyboardController: UserInputController,
-  userInputMouseController: UserInputController,
+  userInputMouseController: UserInputMouseController,
   userInputTouchController: UserInputController
 ): EntityController<EntityPlayer> {
   const state: EntityControllerState = Object.seal({

@@ -8,6 +8,7 @@ import { PlayerEntityController } from "./PlayerEntityController";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
+import type { UserInputMouseController } from "@personalidol/input/src/UserInputMouseController.interface";
 
 import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityController as IEntityController } from "./EntityController.interface";
@@ -19,7 +20,7 @@ export function EntityControllerFactory(
   cameraController: CameraController,
   userInputEventBusController: UserInputController,
   userInputKeyboardController: UserInputController,
-  userInputMouseController: UserInputController,
+  userInputMouseController: UserInputMouseController,
   userInputTouchController: UserInputController
 ): IEntityControllerFactory {
   function* create<E extends AnyEntity>(view: EntityView<E>): Generator<IEntityController<E>> {

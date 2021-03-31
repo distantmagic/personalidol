@@ -5,30 +5,14 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/dom": "^0.0.4",
-    "@personalidol/dom-renderer": "^0.0.4",
     "@personalidol/framework": "^0.0.4",
-    "@personalidol/i18n": "^0.0.4",
-    "@personalidol/input": "^0.0.4",
-    "@personalidol/quakemaps": "^0.0.4",
-    "@personalidol/texture-loader": "^0.0.4",
-    "@personalidol/three-css2d-renderer": "^0.0.4",
     "@personalidol/three-modules": "^0.0.4",
-    "@personalidol/three-morph-blend-mesh-mixer": "^0.0.4",
-    "@personalidol/views": "^0.0.4",
-    "clsx": "^1.1.1",
-    "i18next": "^19.9.2",
     "loglevel": "^1.7.1",
-    "preact": "^10.5.13",
-    "three": "^0.126.1",
-    "toposort": "^2.0.2",
-    "tslib": "^2.1.0"
+    "three": "^0.126.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.21",
-    "@types/jsdom": "^16.2.7",
     "@types/three": "^0.126.1",
-    "@types/toposort": "^2.0.3",
     "esbuild": "^0.9.4",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
@@ -38,8 +22,10 @@
   },
   "homepage": "https://github.com/mcharytoniuk/personalidol#readme",
   "license": "GPL-3.0",
-  "name": "@personalidol/personalidol",
-  "private": true,
+  "name": "@personalidol/three-morph-blend-mesh-mixer",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"

@@ -13,25 +13,24 @@ import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { Raycaster } from "@personalidol/input/src/Raycaster.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
-import type { UserInputControllerState } from "@personalidol/input/src/UserInputControllerState.type";
+import type { UserInputMouseController } from "@personalidol/input/src/UserInputMouseController.interface";
+import type { UserInputMouseControllerState } from "@personalidol/input/src/UserInputMouseControllerState.type";
 
 import type { UserSettings } from "./UserSettings.type";
 
 const _pointerVector: IVector2 = new Vector2(0, 0);
 const _pointerVectorRotationPivot: IVector2 = new Vector2(0, 0);
 
-export function UserInputMouseController(userSettings: UserSettings, dimensionsState: Uint32Array, mouseState: Int32Array, raycaster: Raycaster): UserInputController {
-  const state: UserInputControllerState = Object.seal({
+export function UserInputMouseController(userSettings: UserSettings, dimensionsState: Uint32Array, mouseState: Int32Array, raycaster: Raycaster): UserInputMouseController {
+  const state: UserInputMouseControllerState = Object.seal({
     isMounted: false,
     isPaused: false,
+    isPressStarted: false,
+    isPressStartedWithIntersection: false,
     needsUpdates: true,
   });
 
   const _cameraTransitionRequest: IVector3 = new Vector3();
-
-  let _started: boolean = false;
-  let _startedWithinIntersection: boolean = false;
 
   function mount(): void {
     state.isMounted = true;
@@ -53,21 +52,17 @@ export function UserInputMouseController(userSettings: UserSettings, dimensionsS
     _cameraTransitionRequest.set(0, 0, 0);
 
     if (state.isPaused || !isPrimaryMouseButtonPressed(mouseState) || !isPrimaryMouseButtonPressInitiatedByRootElement(mouseState)) {
-      _startedWithinIntersection = false;
-      _started = false;
+      state.isPressStartedWithIntersection = false;
+      state.isPressStarted = false;
 
       return;
     }
 
-    if (!_started && raycaster.state.hasIntersections && isPotentiallyMouseClick(mouseState)) {
-      _startedWithinIntersection = true;
+    if (!state.isPressStarted && raycaster.state.hasIntersections && isPotentiallyMouseClick(mouseState)) {
+      state.isPressStartedWithIntersection = true;
     }
 
-    _started = true;
-
-    if (_startedWithinIntersection) {
-      return;
-    }
+    state.isPressStarted = true;
 
     _pointerVector.x = getMousePointerVectorX(dimensionsState, mouseState);
     _pointerVector.y = getMousePointerVectorY(dimensionsState, mouseState);

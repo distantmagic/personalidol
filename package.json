@@ -13,6 +13,7 @@
     "packages/texture-loader",
     "packages/three-css2d-renderer",
     "packages/three-modules",
+    "packages/three-morph-blend-mesh-mixer",
     "packages/views",
     "packages/website"
   ]

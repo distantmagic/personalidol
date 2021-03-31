@@ -46,6 +46,7 @@ import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
+import type { UserInputMouseController as IUserInputMouseController } from "@personalidol/input/src/UserInputMouseController.interface";
 import type { View } from "@personalidol/views/src/View.interface";
 
 import type { AnyEntity } from "./AnyEntity.type";
@@ -112,7 +113,7 @@ export function MapScene(
   const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
   const _userInputEventBusController: UserInputController = UserInputEventBusController(userSettings, eventBus, _cameraController);
   const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController);
-  const _userInputMouseController: UserInputController = UserInputMouseController(userSettings, dimensionsState, mouseState, _raycaster);
+  const _userInputMouseController: IUserInputMouseController = UserInputMouseController(userSettings, dimensionsState, mouseState, _raycaster);
   const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState);
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
 

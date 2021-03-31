@@ -4,29 +4,20 @@ import { Mesh } from "three/src/objects/Mesh";
 import type { BufferGeometry } from "three/src/core/BufferGeometry";
 import type { Material } from "three/src/materials/Material";
 
-type Animation = {
-  active: boolean;
-  currentFrame: number;
-  direction: number;
-  directionBackwards: boolean;
-  duration: number;
-  end: number;
-  fps: number;
-  lastFrame: number;
-  length: number;
-  mirroredLoop: boolean;
-  start: number;
-  time: number;
-  weight: number;
-};
+import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
+
+import type { MorphBlendMeshAnimation } from "./MorphBlendMeshAnimation.type";
 
 export class MorphBlendMesh extends Mesh {
   animationsMap: {
-    [key: string]: Animation;
+    [key: string]: MorphBlendMeshAnimation;
   } = {};
-  animationsList: Array<Animation> = [];
+  animationsList: Array<MorphBlendMeshAnimation> = [];
   morphTargetDictionary: { [key: string]: number } = {};
   morphTargetInfluences: Array<number> = [];
+  state: MainLoopUpdatableState = Object.seal({
+    needsUpdates: true,
+  });
 
   constructor(geometry: BufferGeometry, material: Material) {
     super(geometry, material);
@@ -48,7 +39,9 @@ export class MorphBlendMesh extends Mesh {
   }
 
   createAnimation(name: string, start: number, end: number, fps: number) {
-    var animation: Animation = {
+    var animation: MorphBlendMeshAnimation = {
+      name: name,
+
       start: start,
       end: end,
 
@@ -208,9 +201,7 @@ export class MorphBlendMesh extends Mesh {
   }
 
   update(delta: number) {
-    for (var i = 0, il = this.animationsList.length; i < il; i++) {
-      var animation = this.animationsList[i];
-
+    for (let animation of this.animationsList) {
       if (!animation.active) continue;
 
       var frameTime = animation.duration / animation.length;
@@ -238,11 +229,10 @@ export class MorphBlendMesh extends Mesh {
       }
 
       var keyframe = animation.start + MathUtils.clamp(Math.floor(animation.time / frameTime), 0, animation.length - 1);
-      var weight = animation.weight;
 
       if (keyframe !== animation.currentFrame) {
         this.morphTargetInfluences[animation.lastFrame] = 0;
-        this.morphTargetInfluences[animation.currentFrame] = 1 * weight;
+        this.morphTargetInfluences[animation.currentFrame] = 1 * animation.weight;
 
         this.morphTargetInfluences[keyframe] = 0;
 
@@ -255,10 +245,10 @@ export class MorphBlendMesh extends Mesh {
       if (animation.directionBackwards) mix = 1 - mix;
 
       if (animation.currentFrame !== animation.lastFrame) {
-        this.morphTargetInfluences[animation.currentFrame] = mix * weight;
-        this.morphTargetInfluences[animation.lastFrame] = (1 - mix) * weight;
+        this.morphTargetInfluences[animation.currentFrame] = mix * animation.weight;
+        this.morphTargetInfluences[animation.lastFrame] = (1 - mix) * animation.weight;
       } else {
-        this.morphTargetInfluences[animation.currentFrame] = weight;
+        this.morphTargetInfluences[animation.currentFrame] = animation.weight;
       }
     }
   }
