@@ -10,42 +10,41 @@ import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
+import { CSS2DObject } from "@personalidol/three-css2d-renderer/src/CSS2DObject";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { flush } from "@personalidol/framework/src/flush";
 import { MorphBlendMesh } from "@personalidol/three-modules/src/misc/MorphBlendMesh";
 import { MorphBlendMeshMixer } from "@personalidol/three-morph-blend-mesh-mixer/src/MorphBlendMeshMixer";
-import { mountAll } from "@personalidol/framework/src/mountAll";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
-import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
+import { isEntityWithObjectLabel } from "./isEntityWithObjectLabel";
 import { MeshUserSettingsManager } from "./MeshUserSettingsManager";
-import { useObjectLabel } from "./useObjectLabel";
 
 import type { AnimationClip as IAnimationClip } from "three/src/animation/AnimationClip";
 import type { Color as IColor } from "three/src/math/Color";
 import type { Group as IGroup } from "three/src/objects/Group";
 import type { Logger } from "loglevel";
 import type { Mesh as IMesh } from "three/src/objects/Mesh";
+import type { Object3D } from "three/src/core/Object3D";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
-import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
+import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
 import type { MD2LoaderMorphPosition } from "@personalidol/three-modules/src/loaders/MD2LoaderMorphPosition.type";
 import type { MD2LoaderParsedGeometryWithParts } from "@personalidol/three-modules/src/loaders/MD2LoaderParsedGeometryWithParts.type";
 import type { MorphBlendMesh as IMorphBlendMesh } from "@personalidol/three-modules/src/misc/MorphBlendMesh.interface";
 import type { MorphBlendMeshMixer as IMorphBlendMeshMixer } from "@personalidol/three-morph-blend-mesh-mixer/src/MorphBlendMeshMixer.interface";
-import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { UserSettingsManager } from "@personalidol/framework/src/UserSettingsManager.interface";
-import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { CharacterView } from "./CharacterView.interface";
+import type { CharacterViewState } from "./CharacterViewState.type";
+import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { UserSettings } from "./UserSettings.type";
 
@@ -119,7 +118,8 @@ export function MD2ModelView(
 ): CharacterView<EntityMD2Model> {
   const id: string = MathUtils.generateUUID();
   const name: string = `MD2ModelView("${entity.model_name}", ${entity.skin})`;
-  const state: ViewState = Object.seal({
+  const state: CharacterViewState = Object.seal({
+    animation: "stand",
     isDisposed: false,
     isMounted: false,
     isPaused: false,
@@ -133,14 +133,15 @@ export function MD2ModelView(
   _globalAnimationOffset += 0.3;
 
   const _animationOffset: number = _globalAnimationOffset;
-  const _disposables: Set<DisposableCallback> = new Set();
+  const _disposables: Set<GenericCallback> = new Set();
   const _labelContainer: IGroup = new Group();
   const _materialColor: IColor = new Color();
   const _meshContainer: IGroup = new Group();
   const _raycastMesh: IMesh = createEmptyMesh();
-  const _mountables: Set<MountableCallback> = new Set();
-  const _unmountables: Set<UnmountableCallback> = new Set();
 
+  _meshContainer.add(_labelContainer);
+
+  let _label: null | Object3D = null;
   let _mesh: null | IMorphBlendMesh = null;
   let _meshUserSettingsManager: null | UserSettingsManager = null;
   let _morphBlendMeshMixer: null | IMorphBlendMeshMixer = null;
@@ -154,24 +155,20 @@ export function MD2ModelView(
     return texture;
   }
 
-  function _setAnimation(animationName: string): void {
-    if (!_morphBlendMeshMixer) {
-      throw new Error("Morph blend mixer is not ready.");
-    }
-
-    _morphBlendMeshMixer.setAnimation(animationName);
-  }
-
   function dispose(): void {
     state.isDisposed = true;
 
-    disposeAll(_disposables);
+    flush(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    mountAll(_mountables);
+    if (_label) {
+      _labelContainer.add(_label);
+    }
+
+    scene.add(_meshContainer);
   }
 
   function pause(): void {
@@ -226,7 +223,6 @@ export function MD2ModelView(
     _mesh.autoCreateAnimations(10);
 
     _morphBlendMeshMixer = MorphBlendMeshMixer(_mesh);
-    _setAnimation("stand");
 
     _mesh.setAnimationTime("stand", _animationOffset);
     _mesh.rotation.set(0, entity.angle, 0);
@@ -260,12 +256,15 @@ export function MD2ModelView(
 
     // Object label
 
-    _meshContainer.add(_labelContainer);
-
     // Only use standing animation to offset the bounding box.
     _labelContainer.position.set(0, geometry.boundingBoxes.stand.max.y + 5, 0);
 
-    useObjectLabel(domMessagePort, _labelContainer, entity, _mountables, _unmountables, _disposables);
+    if (isEntityWithObjectLabel(entity)) {
+      _label = new CSS2DObject<DOMElementsLookup>(domMessagePort, "pi-object-label", {
+        label: entity.properties.label,
+        version: 0,
+      });
+    }
 
     // Animations
 
@@ -277,16 +276,8 @@ export function MD2ModelView(
 
     fPreload(logger, _meshUserSettingsManager);
 
-    _mountables.add(function () {
-      scene.add(_meshContainer);
-    });
-
     _disposables.add(disposableGeneric(bufferGeometry));
     _disposables.add(disposableMaterial(material));
-
-    _unmountables.add(function () {
-      scene.remove(_meshContainer);
-    });
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -294,12 +285,12 @@ export function MD2ModelView(
 
   function transition(vec: IVector3): void {
     if (vec.length() <= 0) {
-      _setAnimation("stand");
+      state.animation = "stand";
 
       return;
     }
 
-    _setAnimation("run");
+    state.animation = "run";
 
     if (_mesh) {
       _mesh.rotation.set(0, (-1 * Math.PI) / 2, 0);
@@ -315,7 +306,11 @@ export function MD2ModelView(
   function unmount(): void {
     state.isMounted = false;
 
-    unmountAll(_unmountables);
+    if (_label) {
+      _labelContainer.remove(_label);
+    }
+
+    scene.remove(_meshContainer);
   }
 
   function unpause(): void {
@@ -343,6 +338,7 @@ export function MD2ModelView(
       return;
     }
 
+    _morphBlendMeshMixer.setAnimation(state.animation);
     _morphBlendMeshMixer.update(delta, elapsedTime, tickTimerState);
   }
 

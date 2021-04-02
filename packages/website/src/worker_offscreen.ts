@@ -30,6 +30,7 @@ type Dependencies = {
   keyboardState: Uint8Array;
   md2MessagePort: MessagePort;
   mouseState: Int32Array;
+  physicsMessagePort: MessagePort;
   progressMessagePort: MessagePort;
   quakeMapsMessagePort: MessagePort;
   statsMessagePort: MessagePort;
@@ -52,6 +53,7 @@ const partialDependencies: Partial<Dependencies> = {
   keyboardState: undefined,
   md2MessagePort: undefined,
   mouseState: undefined,
+  physicsMessagePort: undefined,
   progressMessagePort: undefined,
   quakeMapsMessagePort: undefined,
   statsMessagePort: undefined,
@@ -109,6 +111,7 @@ function onDependenciesReady(dependencies: Dependencies): void {
     dependencies.gltfMessagePort,
     dependencies.internationalizationMessagePort,
     dependencies.md2MessagePort,
+    dependencies.physicsMessagePort,
     dependencies.progressMessagePort,
     dependencies.quakeMapsMessagePort,
     dependencies.statsMessagePort,
@@ -175,6 +178,10 @@ self.onmessage = createRouter({
     } else {
       serviceBuilder.setDependency("mouseState", newMouseState);
     }
+  },
+
+  physicsMessagePort(port: MessagePort): void {
+    serviceBuilder.setDependency("physicsMessagePort", port);
   },
 
   pointerZoomRequest(zoomAmount: number): void {

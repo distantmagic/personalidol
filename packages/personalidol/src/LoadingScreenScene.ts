@@ -11,23 +11,21 @@ import { SpotLight } from "three/src/lights/SpotLight";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { flush } from "@personalidol/framework/src/flush";
 import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
-import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updatePerspectiveCameraAspect";
 
 import type { Logger } from "loglevel";
 
-import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
+import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
 import type { MessageProgressError } from "@personalidol/framework/src/MessageProgressError.type";
 import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
 import type { Scene as IScene } from "@personalidol/framework/src/Scene.interface";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 import type { UserSettings } from "./UserSettings.type";
 
@@ -48,6 +46,9 @@ export function LoadingScreenScene(
     needsUpdates: true,
   });
 
+  const _disposables: Set<GenericCallback> = new Set();
+  const _unmountables: Set<GenericCallback> = new Set();
+
   const _ambientLight = new AmbientLight(0xffffff, 0.1);
   const _camera = new PerspectiveCamera();
 
@@ -55,8 +56,6 @@ export function LoadingScreenScene(
   _camera.position.y = 4;
   _camera.position.z = 12;
 
-  const _disposables: Set<DisposableCallback> = new Set();
-  const _unmountables: Set<UnmountableCallback> = new Set();
   const _scene = new Scene();
   const _spotLight = new SpotLight(0xffffff);
 
@@ -101,6 +100,7 @@ export function LoadingScreenScene(
     _boxMaterial.color = new Color(0xff0000);
 
     effectComposer.addPass(glitchPass);
+
     _unmountables.add(unmountPass(effectComposer, glitchPass));
     _disposables.add(disposableGeneric(glitchPass));
   }
@@ -108,7 +108,7 @@ export function LoadingScreenScene(
   function dispose(): void {
     state.isDisposed = true;
 
-    disposeAll(_disposables);
+    flush(_disposables);
   }
 
   function mount(): void {
@@ -146,7 +146,7 @@ export function LoadingScreenScene(
 
     progressMessagePort.onmessage = null;
 
-    unmountAll(_unmountables);
+    flush(_unmountables);
   }
 
   function unpause(): void {

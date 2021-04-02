@@ -12,11 +12,11 @@ export function AmmoLoader(filename: string): IAmmoLoader {
     return filename;
   }
 
-  async function loadWASM(): Promise<Ammo.Type> {
+  async function loadWASM(): Promise<typeof Ammo> {
     // Ammojs tries to assign properties to the global context, which is not
     // available in modules.
     const context: {
-      Ammo: null | Ammo.Type;
+      Ammo: null | typeof Ammo;
     } = {
       Ammo: null,
     };

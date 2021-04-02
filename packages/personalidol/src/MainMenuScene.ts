@@ -2,11 +2,9 @@ import { MathUtils } from "three/src/math/MathUtils";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Scene } from "three/src/scenes/Scene";
 
-import { disposeAll } from "@personalidol/framework/src/disposeAll";
-import { unmountAll } from "@personalidol/framework/src/unmountAll";
-
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
+import { flush } from "@personalidol/framework/src/flush";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
@@ -14,15 +12,14 @@ import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 
 import type { Logger } from "loglevel";
 
-import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { FontPreloadParameters } from "@personalidol/dom/src/FontPreloadParameters.type";
+import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
 import type { MessageDOMUIDispose } from "@personalidol/dom-renderer/src/MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "@personalidol/dom-renderer/src/MessageDOMUIRender.type";
 import type { MessageFontPreload } from "@personalidol/dom/src/MessageFontPreload.type";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
-import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { MainMenuScene as IMainMenuScene } from "./MainMenuScene.interface";
@@ -107,9 +104,7 @@ const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
   // },
 ]);
 
-const _disposables: Set<DisposableCallback> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
-const _unmountables: Set<UnmountableCallback> = new Set();
 
 const _camera = new PerspectiveCamera();
 const _scene = new Scene();
@@ -137,6 +132,7 @@ export function MainMenuScene(
   });
 
   const _domMainMenuElementId: string = MathUtils.generateUUID();
+  const _unmountables: Set<GenericCallback> = new Set();
 
   function _onFontsPreloaded(): void {
     _fontsPreloaded = true;
@@ -146,8 +142,6 @@ export function MainMenuScene(
 
   function dispose(): void {
     state.isDisposed = true;
-
-    disposeAll(_disposables);
   }
 
   function mount(): void {
@@ -202,7 +196,7 @@ export function MainMenuScene(
 
     fontPreloadMessagePort.onmessage = null;
 
-    unmountAll(_unmountables);
+    flush(_unmountables);
   }
 
   function unpause(): void {

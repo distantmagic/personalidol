@@ -2,12 +2,16 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { name } from "@personalidol/framework/src/name";
 
-import type { AnyEntity } from "./AnyEntity.type";
+import type { MessageSimulantRegister } from "@personalidol/dynamics/src/MessageSimulantRegister.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+
 import type { EntityController } from "./EntityController.interface";
 import type { EntityControllerState } from "./EntityControllerState.type";
 import type { EntityView } from "./EntityView.interface";
+import type { EntityWorldspawn } from "./EntityWorldspawn.type";
+import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function NPCEntityController<E extends AnyEntity>(view: EntityView<E>): EntityController<E> {
+export function WorldspawnGeometryEntityController(view: EntityView<EntityWorldspawn>, physicsMessagePort: MessagePort): EntityController<EntityWorldspawn> {
   const state: EntityControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -16,6 +20,8 @@ export function NPCEntityController<E extends AnyEntity>(view: EntityView<E>): E
     isPreloading: false,
     needsUpdates: true,
   });
+
+  let _simulantId: null | string = null;
 
   function dispose(): void {
     state.isDisposed = true;
@@ -30,8 +36,18 @@ export function NPCEntityController<E extends AnyEntity>(view: EntityView<E>): E
   }
 
   function preload(): void {
-    state.isPreloading = false;
-    state.isPreloaded = true;
+    state.isPreloading = true;
+    state.isPreloaded = false;
+
+    _simulantId = MathUtils.generateUUID();
+
+    physicsMessagePort.postMessage({
+      registerSimulant: <MessageSimulantRegister<SimulantsLookup, "worldspawn-geoemetry">>{
+        id: _simulantId,
+        rpc: MathUtils.generateUUID(),
+        simulant: "worldspawn-geoemetry",
+      },
+    });
   }
 
   function unmount(): void {
@@ -42,7 +58,7 @@ export function NPCEntityController<E extends AnyEntity>(view: EntityView<E>): E
     state.isPaused = false;
   }
 
-  function update(): void {}
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {}
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
@@ -50,7 +66,7 @@ export function NPCEntityController<E extends AnyEntity>(view: EntityView<E>): E
     isEntityController: true,
     isMountable: true,
     isPreloadable: true,
-    name: `NPCEntityController(${name(view)})`,
+    name: `WorldspawnGeometryEntityController(${name(view)})`,
     state: state,
     view: view,
 

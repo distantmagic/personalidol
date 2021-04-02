@@ -5,6 +5,7 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
+    "@personalidol/dynamics": "^0.0.4",
     "@personalidol/framework": "^0.0.4",
     "ammo.js": "github:kripken/ammo.js#a32e94b553e22cf80d6a7775bfdd1ede2ac229b2",
     "fs": "file:./noop",

@@ -176,7 +176,9 @@ export function* buildEntities(
                 classname: "light_ambient",
                 id: MathUtils.generateUUID(),
                 light: Number(entity.properties.light),
-                properties: entity.properties,
+                properties: {
+                  light: entity.properties.light,
+                },
                 transferables: _transferablesEmpty,
               };
               break;
@@ -185,7 +187,9 @@ export function* buildEntities(
                 classname: "light_hemisphere",
                 id: MathUtils.generateUUID(),
                 light: Number(entity.properties.light),
-                properties: entity.properties,
+                properties: {
+                  light: entity.properties.light,
+                },
                 transferables: _transferablesEmpty,
               };
               break;

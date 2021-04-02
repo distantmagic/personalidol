@@ -7,17 +7,18 @@ import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
-import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { flush } from "@personalidol/framework/src/flush";
 import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { Raycaster } from "@personalidol/input/src/Raycaster";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
 import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
-import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
 
@@ -37,14 +38,13 @@ import type { Logger } from "loglevel";
 
 import type { CameraController as ICameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer.interface";
-import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
 import type { Raycaster as IRaycaster } from "@personalidol/input/src/Raycaster.interface";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { SceneState } from "@personalidol/framework/src/SceneState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
 import type { UserInputMouseController as IUserInputMouseController } from "@personalidol/input/src/UserInputMouseController.interface";
 import type { View } from "@personalidol/views/src/View.interface";
@@ -58,9 +58,7 @@ import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
-const _disposables: Set<DisposableCallback> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
-const _unmountables: Set<UnmountableCallback> = new Set();
 
 const _internationalizationMessageRouter = createRouter({
   loadedNamespaces: handleRPCResponse(_rpcLookupTable),
@@ -83,7 +81,6 @@ export function MapScene(
   effectComposer: EffectComposer,
   css2DRenderer: CSS2DRenderer,
   eventBus: EventBus,
-  views: Set<View>,
   dimensionsState: Uint32Array,
   keyboardState: Uint8Array,
   mouseState: Int32Array,
@@ -92,6 +89,7 @@ export function MapScene(
   gltfMessagePort: MessagePort,
   internationalizationMessagePort: MessagePort,
   md2MessagePort: MessagePort,
+  physicsMessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
@@ -108,6 +106,10 @@ export function MapScene(
     needsUpdates: true,
   });
 
+  const _disposables: Set<GenericCallback> = new Set();
+  const _unmountables: Set<GenericCallback> = new Set();
+
+  const _entityControllers: Set<EntityController<AnyEntity>> = new Set();
   const _scene = new Scene();
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
   const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
@@ -116,6 +118,7 @@ export function MapScene(
   const _userInputMouseController: IUserInputMouseController = UserInputMouseController(userSettings, dimensionsState, mouseState, _raycaster);
   const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState);
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
+  const _views: Set<View> = new Set();
 
   _scene.background = new Color(0x000000);
 
@@ -130,9 +133,9 @@ export function MapScene(
     _rpcLookupTable
   );
 
-  const _entityControllersBag: Set<EntityController<AnyEntity>> = new Set();
   const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(
     _cameraController,
+    physicsMessagePort,
     _userInputEventBusController,
     _userInputKeyboardController,
     _userInputMouseController,
@@ -152,7 +155,15 @@ export function MapScene(
   function dispose(): void {
     state.isDisposed = true;
 
-    disposeAll(_disposables);
+    for (let controller of _entityControllers) {
+      fDispose(logger, controller);
+    }
+
+    for (let view of _views) {
+      fDispose(logger, view);
+    }
+
+    flush(_disposables);
   }
 
   function mount(): void {
@@ -164,7 +175,13 @@ export function MapScene(
     fMount(logger, _userInputTouchController);
     fMount(logger, _cameraController);
 
-    _entityControllersBag.forEach(fMount.bind(null, logger));
+    for (let controller of _entityControllers) {
+      fMount(logger, controller);
+    }
+
+    for (let view of _views) {
+      fMount(logger, view);
+    }
 
     progressMessagePort.postMessage({
       reset: true,
@@ -191,7 +208,13 @@ export function MapScene(
     fPause(logger, _userInputTouchController);
     fPause(logger, _cameraController);
 
-    _entityControllersBag.forEach(fPause.bind(null, logger));
+    for (let controller of _entityControllers) {
+      fPause(logger, controller);
+    }
+
+    for (let view of _views) {
+      fPause(logger, view);
+    }
   }
 
   async function preload(): Promise<void> {
@@ -242,11 +265,13 @@ export function MapScene(
     }
 
     for (let view of buildViews(logger, _entityViewFactory, worldspawnTexture, entities)) {
-      views.add(view);
+      await fPreload(logger, view);
+      _views.add(view);
 
       if (isEntityWithController(view.entity)) {
         for (let controller of _entityControllerFactory.create(view)) {
-          _entityControllersBag.add(controller);
+          await fPreload(logger, controller);
+          _entityControllers.add(controller);
         }
       }
 
@@ -255,7 +280,7 @@ export function MapScene(
       }
     }
 
-    views.add(_instancedGLTFModelViewManager);
+    await fPreload(logger, _instancedGLTFModelViewManager);
 
     state.isPreloading = false;
     state.isPreloaded = true;
@@ -283,9 +308,16 @@ export function MapScene(
     fUnmount(logger, _userInputMouseController);
     fUnmount(logger, _userInputTouchController);
     fUnmount(logger, _cameraController);
-    unmountAll(_unmountables);
 
-    _entityControllersBag.forEach(fUnmount.bind(null, logger));
+    flush(_unmountables);
+
+    for (let controller of _entityControllers) {
+      fUnmount(logger, controller);
+    }
+
+    for (let view of _views) {
+      fUnmount(logger, view);
+    }
   }
 
   function unpause(): void {
@@ -297,7 +329,13 @@ export function MapScene(
     fUnpause(logger, _userInputTouchController);
     fUnpause(logger, _cameraController);
 
-    _entityControllersBag.forEach(fUnpause.bind(null, logger));
+    for (let controller of _entityControllers) {
+      fUnpause(logger, controller);
+    }
+
+    for (let view of _views) {
+      fUnpause(logger, view);
+    }
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
@@ -321,8 +359,12 @@ export function MapScene(
     _userInputMouseController.update(delta, elapsedTime, tickTimerState);
     _userInputTouchController.update(delta, elapsedTime, tickTimerState);
 
-    for (let entityController of _entityControllersBag) {
-      entityController.update(delta, elapsedTime, tickTimerState);
+    for (let controller of _entityControllers) {
+      controller.update(delta, elapsedTime, tickTimerState);
+    }
+
+    for (let view of _views) {
+      view.update(delta, elapsedTime, tickTimerState);
     }
 
     _cameraController.update(delta, elapsedTime, tickTimerState);
@@ -344,7 +386,6 @@ export function MapScene(
     isMountable: true,
     isPreloadable: true,
     isScene: true,
-    isViewBaggableScene: true,
     name: `Map("${mapFilename}")`,
     state: state,
 

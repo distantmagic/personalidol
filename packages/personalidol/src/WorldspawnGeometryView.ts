@@ -9,10 +9,8 @@ import { attachAtlasSamplerToStandardShader } from "@personalidol/texture-loader
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { disposeAll } from "@personalidol/framework/src/disposeAll";
-import { mountAll } from "@personalidol/framework/src/mountAll";
+import { flush } from "@personalidol/framework/src/flush";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
-import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
 import { MeshUserSettingsManager } from "./MeshUserSettingsManager";
 
@@ -22,13 +20,11 @@ import type { Mesh as IMesh } from "three/src/objects/Mesh";
 import type { Scene } from "three/src/scenes/Scene";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 
-import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
-import type { EntityWorldspawn } from "./EntityWorldspawn.type";
-import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
-import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
+import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
 import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { EntityView } from "./EntityView.interface";
+import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 import type { UserSettings } from "./UserSettings.type";
 
 const _geometryOffset = new Vector3();
@@ -53,22 +49,20 @@ export function WorldspawnGeometryView(
     needsUpdates: true,
   });
 
-  const _disposables: Set<DisposableCallback> = new Set();
+  const _disposables: Set<GenericCallback> = new Set();
   const _mesh: IMesh = createEmptyMesh();
   const _meshUserSettingsManager = MeshUserSettingsManager(logger, userSettings, _mesh);
-  const _mountables: Set<MountableCallback> = new Set();
-  const _unmountables: Set<UnmountableCallback> = new Set();
 
   function dispose(): void {
     state.isDisposed = true;
 
-    disposeAll(_disposables);
+    flush(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
 
-    mountAll(_mountables);
+    scene.add(_mesh);
   }
 
   function pause(): void {
@@ -137,14 +131,6 @@ export function WorldspawnGeometryView(
       _mesh.updateMatrix();
     }
 
-    _mountables.add(function () {
-      scene.add(_mesh);
-    });
-
-    _unmountables.add(function () {
-      scene.remove(_mesh);
-    });
-
     state.isPreloading = false;
     state.isPreloaded = true;
   }
@@ -152,7 +138,7 @@ export function WorldspawnGeometryView(
   function unmount(): void {
     state.isMounted = false;
 
-    unmountAll(_unmountables);
+    scene.remove(_mesh);
   }
 
   function unpause(): void {

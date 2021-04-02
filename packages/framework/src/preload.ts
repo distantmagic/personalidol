@@ -1,10 +1,11 @@
+import { isPromise } from "./isPromise";
 import { name } from "./name";
 
 import type { Logger } from "loglevel";
 
 import type { Preloadable } from "./Preloadable.interface";
 
-export function preload(logger: Logger, mount: Preloadable): void {
+export function preload(logger: Logger, mount: Preloadable): void | Promise<void> {
   if (mount.state.isPreloaded) {
     throw new Error(`Mount is already preloaded: "${name(mount)}"`);
   }
@@ -25,5 +26,13 @@ export function preload(logger: Logger, mount: Preloadable): void {
     throw new Error(`Mount can't be both preloaded and preloading at the same time: "${name(mount)}"`);
   }
 
-  return ret;
+  if (!isPromise(ret)) {
+    return;
+  }
+
+  return ret.then(function () {
+    if (!mount.state.isPreloaded || mount.state.isPreloading) {
+      throw new Error(`Mount must be in preloaded state after resolving "preload": "${name(mount)}"`);
+    }
+  });
 }
