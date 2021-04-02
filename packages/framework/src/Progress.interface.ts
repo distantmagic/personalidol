@@ -13,5 +13,5 @@ export interface Progress extends Nameable {
 
   start(): void;
 
-  wait<T>(promise: Promise<T>): Promise<T>;
+  wait<T>(promise: T | Promise<T>): Promise<T>;
 }

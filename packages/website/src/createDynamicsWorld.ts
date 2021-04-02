@@ -1,6 +1,7 @@
 /// <reference types="@types/ammo.js" />
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { preload } from "@personalidol/framework/src/preload";
 import { resolveSimulant } from "@personalidol/personalidol/src/resolveSimulant";
 
 import type { Logger } from "loglevel";
@@ -28,8 +29,9 @@ export function createDynamicsWorld(logger: Logger, mainLoop: MainLoop, ammo: ty
 
   physicsMessagePort.onmessage = createRouter({
     registerSimulant(message: MessageSimulantRegister<SimulantsLookup, string & keyof SimulantsLookup>): void {
-      console.log(message);
-      console.log(resolveSimulant<SimulantsLookup>(message));
+      const simulant = resolveSimulant<SimulantsLookup>(message);
+
+      preload(logger, simulant);
     },
   });
 }

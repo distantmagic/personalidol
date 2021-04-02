@@ -1,8 +1,10 @@
+import type { MessageFeedbackSimulantPreloaded } from "@personalidol/dynamics/src/MessageFeedbackSimulantPreloaded.type";
 import type { Simulant } from "@personalidol/dynamics/src/Simulant.interface";
+import type { SimulantsLookup } from "./SimulantsLookup.type";
 import type { SimulantState } from "@personalidol/dynamics/src/SimulantState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-export function WorldspawnGeometrySimulant(id: string): Simulant {
+export function WorldspawnGeometrySimulant(id: string, simulantFeedbackMessagePort: MessagePort): Simulant {
   const state: SimulantState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -26,6 +28,13 @@ export function WorldspawnGeometrySimulant(id: string): Simulant {
 
   function preload(): void {
     state.isPreloading = true;
+
+    simulantFeedbackMessagePort.postMessage({
+      preloaded: <MessageFeedbackSimulantPreloaded<SimulantsLookup, "worldspawn-geometry">>{
+        id: id,
+        simulant: "worldspawn-geometry",
+      },
+    });
 
     state.isPreloading = false;
     state.isPreloaded = true;

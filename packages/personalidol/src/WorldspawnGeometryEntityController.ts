@@ -1,5 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { createRouter } from "@personalidol/framework/src/createRouter";
 import { name } from "@personalidol/framework/src/name";
 
 import type { MessageSimulantRegister } from "@personalidol/dynamics/src/MessageSimulantRegister.type";
@@ -21,10 +22,30 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
     needsUpdates: true,
   });
 
-  let _simulantId: null | string = null;
+  const _simulantFeedbackMessageRouter = createRouter({
+    preloaded: _onSimulantPreloaded,
+  });
+
+  let _internalPhysicsMessageChannel: MessageChannel = new MessageChannel();
+  let _notifyPreloaded: null | Function = null;
+
+  function _onSimulantPreloaded(): void {
+    if (!_notifyPreloaded) {
+      throw new Error("Controller must be preloaded before simulant.");
+    }
+
+    state.isPreloading = false;
+    state.isPreloaded = true;
+
+    _notifyPreloaded();
+    _notifyPreloaded = null;
+  }
 
   function dispose(): void {
     state.isDisposed = true;
+
+    _internalPhysicsMessageChannel.port1.close();
+    // _internalPhysicsMessageChannel.port2.close();
   }
 
   function mount(): void {
@@ -35,19 +56,28 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
     state.isPaused = true;
   }
 
-  function preload(): void {
+  function preload(): Promise<void> {
     state.isPreloading = true;
     state.isPreloaded = false;
 
-    _simulantId = MathUtils.generateUUID();
-
-    physicsMessagePort.postMessage({
-      registerSimulant: <MessageSimulantRegister<SimulantsLookup, "worldspawn-geoemetry">>{
-        id: _simulantId,
-        rpc: MathUtils.generateUUID(),
-        simulant: "worldspawn-geoemetry",
-      },
+    const ret: Promise<void> = new Promise(function (resolve) {
+      _notifyPreloaded = resolve;
     });
+
+    _internalPhysicsMessageChannel.port1.onmessage = _simulantFeedbackMessageRouter;
+
+    physicsMessagePort.postMessage(
+      {
+        registerSimulant: <MessageSimulantRegister<SimulantsLookup, "worldspawn-geoemetry">>{
+          id: MathUtils.generateUUID(),
+          simulant: "worldspawn-geoemetry",
+          simulantFeedbackMessagePort: _internalPhysicsMessageChannel.port2,
+        },
+      },
+      [_internalPhysicsMessageChannel.port2]
+    );
+
+    return ret;
   }
 
   function unmount(): void {

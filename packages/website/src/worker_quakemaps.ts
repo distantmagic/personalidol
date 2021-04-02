@@ -60,6 +60,10 @@ function _estimateResourcesToLoad(entitySketches: ReadonlyArray<EntitySketch>, t
       resources[`translations_${getI18NextKeyNamespace(label)}`] = true;
     }
 
+    if ("string" === typeof entitySketch.properties.controller) {
+      resources[`controller_${MathUtils.generateUUID()}`] = true;
+    }
+
     switch (entitySketch.properties.classname) {
       case "model_gltf":
         resources[`gltf_model_${entitySketch.properties.model_name}`] = true;

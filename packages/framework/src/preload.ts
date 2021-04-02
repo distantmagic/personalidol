@@ -5,7 +5,7 @@ import type { Logger } from "loglevel";
 
 import type { Preloadable } from "./Preloadable.interface";
 
-export function preload(logger: Logger, mount: Preloadable): void | Promise<void> {
+export function preload(logger: Logger, mount: Preloadable, isExpectedToBePreloaded: boolean = true, isAcceptingPromise: boolean = false): void | Promise<void> {
   if (mount.state.isPreloaded) {
     throw new Error(`Mount is already preloaded: "${name(mount)}"`);
   }
@@ -27,7 +27,15 @@ export function preload(logger: Logger, mount: Preloadable): void | Promise<void
   }
 
   if (!isPromise(ret)) {
+    if (isExpectedToBePreloaded && (!mount.state.isPreloaded || mount.state.isPreloading)) {
+      throw new Error(`Mount is expected to be preloaded immediately: "${name(mount)}"`);
+    }
+
     return;
+  }
+
+  if (!isAcceptingPromise) {
+    throw new Error(`Mount was not expected to use a promise during preloading: "${name(mount)}"`);
   }
 
   return ret.then(function () {

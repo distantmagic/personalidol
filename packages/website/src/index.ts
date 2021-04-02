@@ -149,7 +149,7 @@ async function bootstrap() {
 
   internationalizationService.registerMessagePort(internationalizationMessageChannel.port1);
 
-  await preload(logger, internationalizationService);
+  await preload(logger, internationalizationService, true, true);
 
   serviceManager.services.add(internationalizationService);
 
@@ -176,7 +176,7 @@ async function bootstrap() {
   );
   const domUIController = DOMUIController(logger, mainLoop, uiRoot, domElementsLookup, domElementViewBuilder);
 
-  preload(logger, domUIController);
+  await preload(logger, domUIController, true, true);
 
   serviceManager.services.add(domUIController);
 

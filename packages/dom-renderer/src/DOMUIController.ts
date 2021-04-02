@@ -209,7 +209,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     message.forEach(_disposeElementById);
   }
 
-  async function preload() {
+  async function preload(): Promise<void> {
     state.isPreloading = true;
 
     for (let customElementName of Object.keys(domElementsLookup)) {

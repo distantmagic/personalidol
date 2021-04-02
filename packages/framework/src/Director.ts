@@ -90,7 +90,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
 
     // 1,0,0
     if (next && !_transitioning && !current) {
-      preload(logger, next);
+      preload(logger, next, false, true);
 
       state.next = null;
       state.isTransitioning = true;
