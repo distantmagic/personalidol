@@ -146,10 +146,6 @@ export class DOMElementView<U extends UserSettings> extends HTMLElement implemen
   }
 
   disconnectedCallback() {
-    // This render call is necessary to prevent memory leaks. Without it,
-    // preact may not remove event listeners from elements.
-    render(null, this.shadow);
-
     this.dispatchEvent(
       new CustomEvent(Events.elementDisconnected, {
         detail: this,

@@ -15,7 +15,6 @@ import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/s
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
-import { Progress } from "@personalidol/framework/src/Progress";
 import { Raycaster } from "@personalidol/input/src/Raycaster";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
@@ -266,15 +265,12 @@ export function MapScene(
     }
 
     for (let view of buildViews(logger, _entityViewFactory, worldspawnTexture, entities)) {
-      await fPreload(logger, view, true, true);
+      await fPreload(logger, view);
       _views.add(view);
 
       if (isEntityWithController(view.entity)) {
         for (let controller of _entityControllerFactory.create(view)) {
-          const controllerProgress = Progress(progressMessagePort, "controller", view.entity.properties.controller);
-
-          await controllerProgress.wait(fPreload(logger, controller, true, true));
-
+          await fPreload(logger, controller);
           _entityControllers.add(controller);
         }
       }
@@ -284,7 +280,7 @@ export function MapScene(
       }
     }
 
-    await fPreload(logger, _instancedGLTFModelViewManager, true, true);
+    await fPreload(logger, _instancedGLTFModelViewManager);
 
     state.isPreloading = false;
     state.isPreloaded = true;

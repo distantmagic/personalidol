@@ -1,4 +1,4 @@
-// import { h } from "preact";
+import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { MouseIndices } from "@personalidol/input/src/MouseIndices.enum";
@@ -51,15 +51,14 @@ export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings
       return null;
     }
 
-    return null;
-    // return (
-    //   <div
-    //     class="mouse-pointer-decoration"
-    //     style={{
-    //       "--translate-x": `${this.mouseState[MouseIndices.M_RELATIVE_X]}px`,
-    //       "--translate-y": `${this.mouseState[MouseIndices.M_RELATIVE_Y]}px`,
-    //     }}
-    //   ></div>
-    // );
+    return (
+      <div
+        class="mouse-pointer-decoration"
+        style={{
+          "--translate-x": `${this.mouseState[MouseIndices.M_RELATIVE_X]}px`,
+          "--translate-y": `${this.mouseState[MouseIndices.M_RELATIVE_Y]}px`,
+        }}
+      ></div>
+    );
   }
 }

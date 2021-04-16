@@ -1,6 +1,5 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { isPromise } from "./isPromise";
 import { name } from "./name";
 
 import type { MessageProgressChange } from "./MessageProgressChange.type";
@@ -96,14 +95,8 @@ export function Progress(progressMessagePort: MessagePort, resourceType: string,
     });
   }
 
-  function wait<T>(promise: T | Promise<T>): Promise<T> {
+  function wait<T>(promise: Promise<T>): Promise<T> {
     start();
-
-    if (!isPromise(promise)) {
-      done();
-
-      return Promise.resolve(promise);
-    }
 
     function _onDone(ret: T): T {
       done();
