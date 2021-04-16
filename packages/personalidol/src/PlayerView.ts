@@ -1,12 +1,6 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
-import { dispose as fDispose } from "@personalidol/framework/src/dispose";
-import { mount as fMount } from "@personalidol/framework/src/mount";
 import { name } from "@personalidol/framework/src/name";
-import { pause as fPause } from "@personalidol/framework/src/pause";
-import { preload as fPreload } from "@personalidol/framework/src/preload";
-import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
-import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
 
 import { MD2ModelView } from "./MD2ModelView";
 
@@ -14,8 +8,6 @@ import type { Logger } from "loglevel";
 import type { Scene } from "three/src/scenes/Scene";
 
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
-import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { CharacterView } from "./CharacterView.interface";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
@@ -32,68 +24,20 @@ export function PlayerView(
   texturesMessagePort: MessagePort,
   rpcLookupTable: RPCLookupTable
 ): CharacterView<EntityPlayer> {
-  const state: ViewState = Object.seal({
-    isDisposed: false,
-    isMounted: false,
-    isPaused: false,
-    isPreloaded: false,
-    isPreloading: false,
-    isRayIntersecting: false,
-    needsRaycast: false,
-    needsUpdates: true,
-  });
-
   const _md2Entity: EntityMD2Model = Object.freeze({
     id: MathUtils.generateUUID(),
     angle: 0,
     classname: "model_md2",
-    model_name: "ogro",
+    model_name: "necron99",
     origin: entity.origin,
     properties: entity.properties,
-    skin: 1,
+    skin: 3,
     transferables: [],
   });
 
   const _playerModel = MD2ModelView(logger, userSettings, scene, _md2Entity, domMessagePort, md2MessagePort, texturesMessagePort, rpcLookupTable);
 
-  function dispose(): void {
-    state.isDisposed = true;
-    fDispose(logger, _playerModel);
-  }
-
-  function mount(): void {
-    state.isMounted = true;
-    fMount(logger, _playerModel);
-  }
-
-  function pause(): void {
-    state.isPaused = true;
-    fPause(logger, _playerModel);
-  }
-
-  async function preload(): Promise<void> {
-    state.isPreloading = true;
-
-    await fPreload(logger, _playerModel);
-
-    state.isPreloading = false;
-    state.isPreloaded = true;
-  }
-
-  function unmount(): void {
-    state.isMounted = false;
-    fUnmount(logger, _playerModel);
-  }
-
-  function unpause(): void {
-    state.isPaused = false;
-    fUnpause(logger, _playerModel);
-  }
-
-  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    _playerModel.state.isRayIntersecting = state.isRayIntersecting;
-    _playerModel.update(delta, elapsedTime, tickTimerState);
-  }
+  _playerModel.state.needsRaycast = false;
 
   return Object.freeze({
     entity: entity,
@@ -109,15 +53,15 @@ export function PlayerView(
     name: `PlayerView(${name(_playerModel)})`,
     object3D: _playerModel.object3D,
     raycasterObject3D: _playerModel.raycasterObject3D,
-    state: state,
+    state: _playerModel.state,
 
-    dispose: dispose,
-    mount: mount,
-    pause: pause,
-    preload: preload,
+    dispose: _playerModel.dispose,
+    mount: _playerModel.mount,
+    pause: _playerModel.pause,
+    preload: _playerModel.preload,
     transition: _playerModel.transition,
-    unmount: unmount,
-    unpause: unpause,
-    update: update,
+    unmount: _playerModel.unmount,
+    unpause: _playerModel.unpause,
+    update: _playerModel.update,
   });
 }

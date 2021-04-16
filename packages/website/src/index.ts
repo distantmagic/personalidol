@@ -307,10 +307,10 @@ async function bootstrap() {
 
   // Ammo worker handles game physics.
 
-  const ammoMessageChannel = createMultiThreadMessageChannel();
-  const ammoToProgressMessageChannel = createMultiThreadMessageChannel();
+  const physicsMessageChannel = createMultiThreadMessageChannel();
+  const physicsToProgressMessageChannel = createMultiThreadMessageChannel();
 
-  addProgressMessagePort(ammoToProgressMessageChannel.port1, false);
+  addProgressMessagePort(physicsToProgressMessageChannel.port1, false);
 
   await prefetch(websiteToProgressMessageChannel.port2, "worker", workers.ammo.url);
 
@@ -324,10 +324,10 @@ async function bootstrap() {
 
   ammoWorker.postMessage(
     {
-      ammoMessagePort: ammoMessageChannel.port1,
-      progressMessagePort: ammoToProgressMessageChannel.port2,
+      physicsMessagePort: physicsMessageChannel.port1,
+      progressMessagePort: physicsToProgressMessageChannel.port2,
     },
-    [ammoMessageChannel.port1, ammoToProgressMessageChannel.port2]
+    [physicsMessageChannel.port1, physicsToProgressMessageChannel.port2]
   );
 
   await ammoWorkerServiceClient.ready();
@@ -444,6 +444,7 @@ async function bootstrap() {
     gltfMessageChannel.port2,
     internationalizationMessageChannel.port2,
     md2MessageChannel.port2,
+    physicsMessageChannel.port2,
     progressMessageChannel.port2,
     quakeMapsMessageChannel.port2,
     statsMessageChannel.port2,

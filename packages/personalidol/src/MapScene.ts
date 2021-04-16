@@ -95,6 +95,7 @@ export function MapScene(
   gltfMessagePort: MessagePort,
   internationalizationMessagePort: MessagePort,
   md2MessagePort: MessagePort,
+  physicsMessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
@@ -138,6 +139,7 @@ export function MapScene(
 
   const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(
     _cameraController,
+    physicsMessagePort,
     _userInputEventBusController,
     _userInputKeyboardController,
     _userInputMouseController,

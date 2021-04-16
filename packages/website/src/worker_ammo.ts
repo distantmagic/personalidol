@@ -5,28 +5,34 @@ import Loglevel from "loglevel";
 
 import { AmmoLoader } from "@personalidol/ammo/src/AmmoLoader";
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { prefetch } from "@personalidol/framework/src/prefetch";
+import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceBuilder } from "@personalidol/framework/src/ServiceBuilder";
 
+import { createDynamicsWorld } from "./createDynamicsWorld";
+
+import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { ServiceBuilder as IServiceBuilder } from "@personalidol/framework/src/ServiceBuilder.interface";
 
 declare var self: DedicatedWorkerGlobalScope;
 
 type Dependencies = {
-  ammo: Ammo.Type;
-  ammoMessagePort: MessagePort;
+  ammo: typeof Ammo;
+  physicsMessagePort: MessagePort;
   progressMessagePort: MessagePort;
 };
 
 const partialDependencies: Partial<Dependencies> = {
   ammo: undefined,
-  ammoMessagePort: undefined,
+  physicsMessagePort: undefined,
   progressMessagePort: undefined,
 };
 
 const AMMO_WASM_URL: string = `${__STATIC_BASE_PATH}/lib/ammo.wasm.wasm?${__CACHE_BUST}`;
 const logger = Loglevel.getLogger(self.name);
+const mainLoop: IMainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
 
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
@@ -37,7 +43,7 @@ const serviceBuilder: IServiceBuilder<Dependencies> = ServiceBuilder<Dependencie
 serviceBuilder.onready.add(onDependenciesReady);
 
 function onDependenciesReady(dependencies: Dependencies): void {
-  console.log("AMMO DEPENDENCIES READY", dependencies);
+  createDynamicsWorld(logger, mainLoop, dependencies.ammo, dependencies.physicsMessagePort, dependencies.progressMessagePort);
 }
 
 function notifyReady(): void {
@@ -47,8 +53,8 @@ function notifyReady(): void {
 }
 
 self.onmessage = createRouter({
-  ammoMessagePort(port: MessagePort): void {
-    serviceBuilder.setDependency("ammoMessagePort", port);
+  physicsMessagePort(port: MessagePort): void {
+    serviceBuilder.setDependency("physicsMessagePort", port);
   },
 
   async progressMessagePort(port: MessagePort): Promise<void> {
@@ -63,5 +69,13 @@ self.onmessage = createRouter({
     } else {
       serviceBuilder.onready.add(notifyReady);
     }
+  },
+
+  start(): void {
+    mainLoop.start();
+  },
+
+  stop(): void {
+    mainLoop.stop();
   },
 });

@@ -43,9 +43,9 @@ import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { UserSettingsManager } from "@personalidol/framework/src/UserSettingsManager.interface";
-import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
 import type { CharacterView } from "./CharacterView.interface";
+import type { CharacterViewState } from "./CharacterViewState.type";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { UserSettings } from "./UserSettings.type";
 
@@ -119,7 +119,8 @@ export function MD2ModelView(
 ): CharacterView<EntityMD2Model> {
   const id: string = MathUtils.generateUUID();
   const name: string = `MD2ModelView("${entity.model_name}", ${entity.skin})`;
-  const state: ViewState = Object.seal({
+  const state: CharacterViewState = Object.seal({
+    animation: "stand",
     isDisposed: false,
     isMounted: false,
     isPaused: false,
@@ -152,14 +153,6 @@ export function MD2ModelView(
     _disposables.add(disposableGeneric(texture));
 
     return texture;
-  }
-
-  function _setAnimation(animationName: string): void {
-    if (!_morphBlendMeshMixer) {
-      throw new Error("Morph blend mixer is not ready.");
-    }
-
-    _morphBlendMeshMixer.setAnimation(animationName);
   }
 
   function dispose(): void {
@@ -226,7 +219,7 @@ export function MD2ModelView(
     _mesh.autoCreateAnimations(10);
 
     _morphBlendMeshMixer = MorphBlendMeshMixer(_mesh);
-    _setAnimation("stand");
+    state.animation = "stand";
 
     _mesh.setAnimationTime("stand", _animationOffset);
     _mesh.rotation.set(0, entity.angle, 0);
@@ -294,12 +287,12 @@ export function MD2ModelView(
 
   function transition(vec: IVector3): void {
     if (vec.length() <= 0) {
-      _setAnimation("stand");
+      state.animation = "stand";
 
       return;
     }
 
-    _setAnimation("run");
+    state.animation = "run";
 
     if (_mesh) {
       _mesh.rotation.set(0, (-1 * Math.PI) / 2, 0);
@@ -343,6 +336,7 @@ export function MD2ModelView(
       return;
     }
 
+    _morphBlendMeshMixer.setAnimation(state.animation);
     _morphBlendMeshMixer.update(delta, elapsedTime, tickTimerState);
   }
 
