@@ -7,13 +7,18 @@ function cancelFrame(frameId: TickType): void {
   clearTimeout(frameId);
 }
 
+function isSupported(): boolean {
+  return true;
+}
+
 function requestFrame(callback: SchedulerCallback): TickType {
-  return setTimeout(callback, 40 as any);
+  return setTimeout(callback, (1000 / 60) as any);
 }
 
 export function SetTimeoutScheduler(): Scheduler<TickType> {
   return Object.freeze({
     cancelFrame: cancelFrame,
+    isSupported: isSupported,
     requestFrame: requestFrame,
   });
 }
