@@ -98,7 +98,7 @@ async function bootstrap() {
   const localStorageUserSettingsSync = LocalStorageUserSettingsSync(userSettings, isUserSettingsValid, THREAD_DEBUG_NAME);
   const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessageChannel.port1, THREAD_DEBUG_NAME);
 
-  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, userSettings, statsReporterMessageChannel.port2, mainLoop.tickTimerState);
+  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsReporterMessageChannel.port2, mainLoop.tickTimerState);
 
   statsReporter.hooks.add(MainLoopStatsHook(mainLoop));
 
@@ -307,30 +307,35 @@ async function bootstrap() {
 
   // Ammo worker handles game physics.
 
-  const physicsMessageChannel = createMultiThreadMessageChannel();
-  const physicsToProgressMessageChannel = createMultiThreadMessageChannel();
+  const dynamicsMessageChannel = createMultiThreadMessageChannel();
+  const dynamicsToProgressMessageChannel = createMultiThreadMessageChannel();
+  const dynamicsToStatsMessageChannel = createMultiThreadMessageChannel();
 
-  addProgressMessagePort(physicsToProgressMessageChannel.port1, false);
+  addProgressMessagePort(dynamicsToProgressMessageChannel.port1, false);
+  statsCollector.registerMessagePort(dynamicsToStatsMessageChannel.port1);
 
-  await prefetch(websiteToProgressMessageChannel.port2, "worker", workers.ammo.url);
+  await prefetch(websiteToProgressMessageChannel.port2, "worker", workers.dynamics.url);
 
-  const ammoWorker = new Worker(workers.ammo.url, {
+  const dynamicsWorker = new Worker(workers.dynamics.url, {
     credentials: "same-origin",
-    name: workers.ammo.name,
+    name: workers.dynamics.name,
     type: "module",
   });
 
-  const ammoWorkerServiceClient = WorkerServiceClient(ammoWorker, workers.ammo.name);
+  const ammoWorkerServiceClient = WorkerServiceClient(dynamicsWorker, workers.dynamics.name);
 
-  ammoWorker.postMessage(
+  dynamicsWorker.postMessage(
     {
-      physicsMessagePort: physicsMessageChannel.port1,
-      progressMessagePort: physicsToProgressMessageChannel.port2,
+      dynamicsMessagePort: dynamicsMessageChannel.port1,
+      progressMessagePort: dynamicsToProgressMessageChannel.port2,
+      statsMessagePort: dynamicsToStatsMessageChannel.port2,
     },
-    [physicsMessageChannel.port1, physicsToProgressMessageChannel.port2]
+    [dynamicsMessageChannel.port1, dynamicsToProgressMessageChannel.port2, dynamicsToStatsMessageChannel.port2]
   );
 
   await ammoWorkerServiceClient.ready();
+
+  serviceManager.services.add(ammoWorkerServiceClient);
 
   // Workers can share a message channel if necessary. If there is no offscreen
   // worker then the message channel can be used in the main thread. It is an
@@ -440,11 +445,11 @@ async function bootstrap() {
   );
 
   await createScenes(
+    dynamicsMessageChannel.port2,
     fontPreloadMessageChannel.port2,
     gltfMessageChannel.port2,
     internationalizationMessageChannel.port2,
     md2MessageChannel.port2,
-    physicsMessageChannel.port2,
     progressMessageChannel.port2,
     quakeMapsMessageChannel.port2,
     statsMessageChannel.port2,

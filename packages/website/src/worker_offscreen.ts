@@ -24,13 +24,13 @@ type Dependencies = {
   devicePixelRatio: number;
   dimensionsState: Uint32Array;
   domMessagePort: MessagePort;
+  dynamicsMessagePort: MessagePort;
   fontPreloadMessagePort: MessagePort;
   gltfMessagePort: MessagePort;
   internationalizationMessagePort: MessagePort;
   keyboardState: Uint8Array;
   md2MessagePort: MessagePort;
   mouseState: Int32Array;
-  physicsMessagePort: MessagePort;
   progressMessagePort: MessagePort;
   quakeMapsMessagePort: MessagePort;
   statsMessagePort: MessagePort;
@@ -47,13 +47,13 @@ const partialDependencies: Partial<Dependencies> = {
   devicePixelRatio: undefined,
   dimensionsState: undefined,
   domMessagePort: undefined,
+  dynamicsMessagePort: undefined,
   fontPreloadMessagePort: undefined,
   gltfMessagePort: undefined,
   internationalizationMessagePort: undefined,
   keyboardState: undefined,
   md2MessagePort: undefined,
   mouseState: undefined,
-  physicsMessagePort: undefined,
   progressMessagePort: undefined,
   quakeMapsMessagePort: undefined,
   statsMessagePort: undefined,
@@ -83,7 +83,7 @@ function notifyReady(): void {
 
 function onDependenciesReady(dependencies: Dependencies): void {
   const userSettings = UserSettings.createEmptyState(dependencies.devicePixelRatio);
-  const statsReporter = StatsReporter(self.name, userSettings, dependencies.statsMessagePort, mainLoop.tickTimerState);
+  const statsReporter = StatsReporter(self.name, dependencies.statsMessagePort, mainLoop.tickTimerState);
 
   statsReporter.hooks.add(MainLoopStatsHook(mainLoop));
 
@@ -107,11 +107,11 @@ function onDependenciesReady(dependencies: Dependencies): void {
     statsReporter,
     userSettings,
     dependencies.domMessagePort,
+    dependencies.dynamicsMessagePort,
     dependencies.fontPreloadMessagePort,
     dependencies.gltfMessagePort,
     dependencies.internationalizationMessagePort,
     dependencies.md2MessagePort,
-    dependencies.physicsMessagePort,
     dependencies.progressMessagePort,
     dependencies.quakeMapsMessagePort,
     dependencies.statsMessagePort,
@@ -142,6 +142,10 @@ self.onmessage = createRouter({
 
   domMessagePort(port: MessagePort): void {
     serviceBuilder.setDependency("domMessagePort", port);
+  },
+
+  dynamicsMessagePort(port: MessagePort): void {
+    serviceBuilder.setDependency("dynamicsMessagePort", port);
   },
 
   fontPreloadMessagePort(port: MessagePort): void {
@@ -178,10 +182,6 @@ self.onmessage = createRouter({
     } else {
       serviceBuilder.setDependency("mouseState", newMouseState);
     }
-  },
-
-  physicsMessagePort(port: MessagePort): void {
-    serviceBuilder.setDependency("physicsMessagePort", port);
   },
 
   pointerZoomRequest(zoomAmount: number): void {

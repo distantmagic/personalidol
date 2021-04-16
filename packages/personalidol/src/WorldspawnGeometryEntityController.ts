@@ -13,7 +13,7 @@ import type { EntityView } from "./EntityView.interface";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function WorldspawnGeometryEntityController(view: EntityView<EntityWorldspawn>, physicsMessagePort: MessagePort): EntityController<EntityWorldspawn> {
+export function WorldspawnGeometryEntityController(view: EntityView<EntityWorldspawn>, dynamicsMessagePort: MessagePort): EntityController<EntityWorldspawn> {
   const state: EntityControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -27,7 +27,7 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
     preloaded: _onSimulantPreloaded,
   });
 
-  let _internalPhysicsMessageChannel: MessageChannel = new MessageChannel();
+  let _internalDynamicsMessageChannel: MessageChannel = new MessageChannel();
   let _simulantId: string = MathUtils.generateUUID();
 
   function _onSimulantPreloaded(): void {
@@ -42,12 +42,12 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
   function dispose(): void {
     state.isDisposed = true;
 
-    physicsMessagePort.postMessage({
+    dynamicsMessagePort.postMessage({
       disposeSimulant: <MessageSimulantDispose>[_simulantId],
     });
 
-    _internalPhysicsMessageChannel.port1.close();
-    // _internalPhysicsMessageChannel.port2.close();
+    _internalDynamicsMessageChannel.port1.close();
+    // _internalDynamicsMessageChannel.port2.close();
   }
 
   function mount(): void {
@@ -62,19 +62,17 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
     state.isPreloading = true;
     state.isPreloaded = false;
 
-    console.log(view.entity);
+    _internalDynamicsMessageChannel.port1.onmessage = _simulantFeedbackMessageRouter;
 
-    _internalPhysicsMessageChannel.port1.onmessage = _simulantFeedbackMessageRouter;
-
-    physicsMessagePort.postMessage(
+    dynamicsMessagePort.postMessage(
       {
         registerSimulant: <MessageSimulantRegister<SimulantsLookup, "worldspawn-geoemetry">>{
           id: _simulantId,
           simulant: "worldspawn-geoemetry",
-          simulantFeedbackMessagePort: _internalPhysicsMessageChannel.port2,
+          simulantFeedbackMessagePort: _internalDynamicsMessageChannel.port2,
         },
       },
-      [_internalPhysicsMessageChannel.port2]
+      [_internalDynamicsMessageChannel.port2]
     );
   }
 

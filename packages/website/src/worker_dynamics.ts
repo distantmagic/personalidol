@@ -5,34 +5,43 @@ import Loglevel from "loglevel";
 
 import { AmmoLoader } from "@personalidol/ammo/src/AmmoLoader";
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { DynamicsWorld } from "@personalidol/dynamics/src/DynamicsWorld";
+import { DynamicsWorldStatsHook } from "@personalidol/dynamics/src/DynamicsWorldStatsHook";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
+import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { prefetch } from "@personalidol/framework/src/prefetch";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceBuilder } from "@personalidol/framework/src/ServiceBuilder";
-
-import { createDynamicsWorld } from "./createDynamicsWorld";
+import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
+import { SimulantFactory } from "@personalidol/personalidol/src/SimulantFactory";
+import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 
 import type { MainLoop as IMainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWorkerReady.type";
 import type { ServiceBuilder as IServiceBuilder } from "@personalidol/framework/src/ServiceBuilder.interface";
+import type { ServiceManager as IServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
+import type { SimulantsLookup } from "@personalidol/personalidol/src/SimulantsLookup.type";
 
 declare var self: DedicatedWorkerGlobalScope;
 
 type Dependencies = {
   ammo: typeof Ammo;
-  physicsMessagePort: MessagePort;
+  dynamicsMessagePort: MessagePort;
   progressMessagePort: MessagePort;
+  statsMessagePort: MessagePort;
 };
 
 const partialDependencies: Partial<Dependencies> = {
   ammo: undefined,
-  physicsMessagePort: undefined,
+  dynamicsMessagePort: undefined,
   progressMessagePort: undefined,
+  statsMessagePort: undefined,
 };
 
 const AMMO_WASM_URL: string = `${__STATIC_BASE_PATH}/lib/ammo.wasm.wasm?${__CACHE_BUST}`;
 const logger = Loglevel.getLogger(self.name);
 const mainLoop: IMainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
+const serviceManager: IServiceManager = ServiceManager(logger);
 
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
@@ -43,7 +52,24 @@ const serviceBuilder: IServiceBuilder<Dependencies> = ServiceBuilder<Dependencie
 serviceBuilder.onready.add(onDependenciesReady);
 
 function onDependenciesReady(dependencies: Dependencies): void {
-  createDynamicsWorld(logger, mainLoop, dependencies.ammo, dependencies.physicsMessagePort, dependencies.progressMessagePort);
+  const dynamicsWorld = DynamicsWorld<SimulantsLookup>(
+    logger,
+    dependencies.ammo,
+    SimulantFactory<SimulantsLookup>(),
+    dependencies.dynamicsMessagePort,
+    dependencies.progressMessagePort
+  );
+
+  mainLoop.updatables.add(dynamicsWorld);
+  serviceManager.services.add(dynamicsWorld);
+
+  const statsReporter = StatsReporter(self.name, dependencies.statsMessagePort, mainLoop.tickTimerState);
+
+  statsReporter.hooks.add(DynamicsWorldStatsHook(dynamicsWorld));
+  statsReporter.hooks.add(MainLoopStatsHook(mainLoop));
+
+  mainLoop.updatables.add(statsReporter);
+  serviceManager.services.add(statsReporter);
 }
 
 function notifyReady(): void {
@@ -53,8 +79,8 @@ function notifyReady(): void {
 }
 
 self.onmessage = createRouter({
-  physicsMessagePort(port: MessagePort): void {
-    serviceBuilder.setDependency("physicsMessagePort", port);
+  dynamicsMessagePort(port: MessagePort): void {
+    serviceBuilder.setDependency("dynamicsMessagePort", port);
   },
 
   async progressMessagePort(port: MessagePort): Promise<void> {
@@ -62,6 +88,12 @@ self.onmessage = createRouter({
     await prefetch(port, "worker", AMMO_WASM_URL);
     serviceBuilder.setDependency("ammo", await ammoLoader.loadWASM());
   },
+
+  statsMessagePort(port: MessagePort): void {
+    serviceBuilder.setDependency("statsMessagePort", port);
+  },
+
+  // WorkerService
 
   ready(): void {
     if (serviceBuilder.isReady()) {
@@ -73,9 +105,11 @@ self.onmessage = createRouter({
 
   start(): void {
     mainLoop.start();
+    serviceManager.start();
   },
 
   stop(): void {
     mainLoop.stop();
+    serviceManager.stop();
   },
 });

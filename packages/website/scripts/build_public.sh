@@ -25,8 +25,8 @@ yarn run esbuild \
     src/createScenes.ts \
     src/index.ts \
     src/service_worker.ts \
-    src/worker_ammo.ts \
     src/worker_atlas.ts \
+    src/worker_dynamics.ts \
     src/worker_gltf.ts \
     src/worker_md2.ts \
     src/worker_offscreen.ts \

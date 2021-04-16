@@ -5,7 +5,6 @@ import type { StatsHook } from "./StatsHook.interface";
 import type { StatsReport } from "./StatsReport.type";
 import type { StatsReporter as IStatsReporter } from "./StatsReporter.interface";
 import type { TickTimerState } from "./TickTimerState.type";
-import type { UserSettings } from "./UserSettings.type";
 
 type HookLastReports = WeakMap<StatsHook, number>;
 
@@ -27,7 +26,7 @@ function _shouldUpdateHookReport(hookLastReports: HookLastReports, hook: StatsHo
   return true;
 }
 
-export function StatsReporter(debugName: string, userSettings: UserSettings, statsMessagePort: MessagePort, tickTimerState: TickTimerState): IStatsReporter {
+export function StatsReporter(debugName: string, statsMessagePort: MessagePort, tickTimerState: TickTimerState): IStatsReporter {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -63,10 +62,6 @@ export function StatsReporter(debugName: string, userSettings: UserSettings, sta
   function stop() {}
 
   function update() {
-    if (!userSettings.showStatsReporter) {
-      return;
-    }
-
     _shouldReportAnthing = false;
 
     hooks.forEach(_updateHook);

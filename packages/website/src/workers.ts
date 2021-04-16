@@ -1,11 +1,11 @@
 export const workers = {
-  ammo: {
-    name: "Worker(Ammo)",
-    url: `${__STATIC_BASE_PATH}/lib/worker_ammo_${__BUILD_ID}.js`,
-  },
   atlas: {
     name: "Loader(Atlas)",
     url: `${__STATIC_BASE_PATH}/lib/worker_atlas_${__BUILD_ID}.js`,
+  },
+  dynamics: {
+    name: "Worker(Dynamics)",
+    url: `${__STATIC_BASE_PATH}/lib/worker_dynamics_${__BUILD_ID}.js`,
   },
   gltf: {
     name: "Loader(GLTF)",

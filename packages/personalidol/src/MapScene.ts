@@ -92,10 +92,10 @@ export function MapScene(
   mouseState: Int32Array,
   touchState: Int32Array,
   domMessagePort: MessagePort,
+  dynamicsMessagePort: MessagePort,
   gltfMessagePort: MessagePort,
   internationalizationMessagePort: MessagePort,
   md2MessagePort: MessagePort,
-  physicsMessagePort: MessagePort,
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
@@ -139,7 +139,7 @@ export function MapScene(
 
   const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(
     _cameraController,
-    physicsMessagePort,
+    dynamicsMessagePort,
     _userInputEventBusController,
     _userInputKeyboardController,
     _userInputMouseController,
@@ -162,6 +162,9 @@ export function MapScene(
     fDispose(logger, _viewBag);
     fDispose(logger, _entityControllerBag);
     disposeAll(_disposables);
+
+    // Render one more time to clean up stats etc.
+    css2DRenderer.render(_scene, _cameraController.camera, false);
   }
 
   function mount(): void {
