@@ -4,7 +4,6 @@
     "packages/ammo",
     "packages/dom",
     "packages/dom-renderer",
-    "packages/dynamics",
     "packages/framework",
     "packages/i18n",
     "packages/input",

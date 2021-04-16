@@ -17,7 +17,7 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { UserSettings } from "./UserSettings.type";
 
 const CAMERA_DAMP = 10;
-const CAMERA_ZOOM_INITIAL = 301;
+const CAMERA_ZOOM_INITIAL = 401;
 const CAMERA_ZOOM_MAX = 1;
 const CAMERA_ZOOM_MIN = 1401;
 const CAMERA_ZOOM_STEP = 50;

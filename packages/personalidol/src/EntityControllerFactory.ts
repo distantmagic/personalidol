@@ -5,7 +5,6 @@ import { isEntityViewOfClass } from "./isEntityViewOfClass";
 import { isEntityWithController } from "./isEntityWithController";
 import { NPCEntityController } from "./NPCEntityController";
 import { PlayerEntityController } from "./PlayerEntityController";
-import { WorldspawnGeometryEntityController } from "./WorldspawnGeometryEntityController";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
@@ -16,11 +15,9 @@ import type { EntityController as IEntityController } from "./EntityController.i
 import type { EntityControllerFactory as IEntityControllerFactory } from "./EntityControllerFactory.interface";
 import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntityView } from "./EntityView.interface";
-import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 
 export function EntityControllerFactory(
   cameraController: CameraController,
-  physicsMessagePort: MessagePort,
   userInputEventBusController: UserInputController,
   userInputKeyboardController: UserInputController,
   userInputMouseController: UserInputMouseController,
@@ -37,7 +34,7 @@ export function EntityControllerFactory(
         break;
       case "player":
         if (!isEntityViewOfClass<EntityPlayer>(view, "player")) {
-          throw new Error(`Player entity controller only supports player entity. Got: "${view.entity.classname}"`);
+          throw new Error("Player entity controller only supports player entity.");
         }
 
         if (!isCharacterView<EntityPlayer>(view)) {
@@ -52,13 +49,6 @@ export function EntityControllerFactory(
           userInputMouseController,
           userInputTouchController
         ) as IEntityController<E>;
-        break;
-      case "worldspawn":
-        if (!isEntityViewOfClass<EntityWorldspawn>(view, "worldspawn")) {
-          throw new Error(`Worldspawn entity controller only supports worldspawn entity. Got: "${view.entity.classname}"`);
-        }
-
-        yield WorldspawnGeometryEntityController(view, physicsMessagePort) as IEntityController<E>;
         break;
       default:
         throw new Error(`Unsupported entity controller: "${view.entity.properties.controller}"`);

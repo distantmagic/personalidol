@@ -1,6 +1,6 @@
-import type { Scene } from "@personalidol/framework/src/Scene.interface";
+import type { ViewBaggableScene } from "@personalidol/views/src/ViewBaggableScene.interface";
 
-export interface MapScene extends Scene {
+export interface MapScene extends ViewBaggableScene {
   readonly currentMap: string;
   readonly isMapScene: true;
 }

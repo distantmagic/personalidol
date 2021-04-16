@@ -4,7 +4,7 @@ import { Vector2 } from "three/src/math/Vector2";
 import { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
-import { flush } from "@personalidol/framework/src/flush";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
 
 import { Pass } from "./Pass";
 import { ShaderPass } from "./ShaderPass";
@@ -12,15 +12,15 @@ import { ShaderPass } from "./ShaderPass";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget as IWebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
-import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 
 import type { EffectComposer as IEffectComposer } from "./EffectComposer.interface";
 
 export class EffectComposer implements IEffectComposer {
-  private _disposables: Set<GenericCallback> = new Set();
-  private _height: number;
+  private _disposables: Set<DisposableCallback> = new Set();
   private _pixelRatio: number;
   private _width: number;
+  private _height: number;
 
   copyPass: ShaderPass;
   passes: Array<Pass>;
@@ -77,7 +77,7 @@ export class EffectComposer implements IEffectComposer {
   }
 
   dispose(): void {
-    flush(this._disposables);
+    disposeAll(this._disposables);
   }
 
   swapBuffers() {

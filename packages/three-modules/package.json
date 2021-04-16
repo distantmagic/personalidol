@@ -6,7 +6,6 @@
   },
   "dependencies": {
     "@personalidol/framework": "^0.0.4",
-    "loglevel": "^1.7.1",
     "three": "^0.126.1"
   },
   "devDependencies": {

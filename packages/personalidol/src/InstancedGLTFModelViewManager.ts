@@ -6,13 +6,14 @@ import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { flush } from "@personalidol/framework/src/flush";
-import { invoke } from "@personalidol/framework/src/invoke";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { mountAll } from "@personalidol/framework/src/mountAll";
 import { must } from "@personalidol/framework/src/must";
 import { name } from "@personalidol/framework/src/name";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { requestTexture } from "@personalidol/texture-loader/src/requestTexture";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
+import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
 import { InstancedMeshHandle } from "./InstancedMeshHandle";
 import { MeshUserSettingsManager } from "./MeshUserSettingsManager";
@@ -24,12 +25,14 @@ import type { MeshStandardMaterial as IMeshStandardMaterial } from "three/src/ma
 import type { Object3D } from "three/src/core/Object3D";
 import type { Scene } from "three/src/scenes/Scene";
 
-import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { GeometryAttributes } from "@personalidol/three-modules/src/loaders/GeometryAttributes.type";
+import type { MountableCallback } from "@personalidol/framework/src/MountableCallback.type";
 import type { Nameable } from "@personalidol/framework/src/Nameable.interface";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { Texture as ITexture } from "three/src/textures/Texture";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { UserSettingsManager } from "@personalidol/framework/src/UserSettingsManager.interface";
 import type { ViewState } from "@personalidol/views/src/ViewState.type";
 
@@ -66,10 +69,7 @@ export function InstancedGLTFModelViewManager(
     needsUpdates: true,
   });
 
-  const _disposables: Set<GenericCallback> = new Set();
-  const _mountables: Set<GenericCallback> = new Set();
-  const _unmountables: Set<GenericCallback> = new Set();
-
+  const _disposables: Set<DisposableCallback> = new Set();
   const _expectedEntities: WeakSet<EntityGLTFModel> = new WeakSet();
   const _expectedEntitiesCount: {
     [key: string]: number;
@@ -80,6 +80,8 @@ export function InstancedGLTFModelViewManager(
   const _instancedMeshes: Map<string, Promise<IInstancedMesh>> = new Map();
   const _instancedMeshCurrentIndex: WeakMap<IInstancedMesh, number> = new WeakMap();
   const _meshUserSettingsManagers: Set<UserSettingsManager> = new Set();
+  const _mountables: Set<MountableCallback> = new Set();
+  const _unmountables: Set<UnmountableCallback> = new Set();
 
   async function _createBufferGeometry(entity: EntityGLTFModel): Promise<IBufferGeometry> {
     const geometryKey = _createGeometryKey(entity);
@@ -224,9 +226,7 @@ export function InstancedGLTFModelViewManager(
     _expectedTextures.clear();
     _meshUserSettingsManagers.clear();
 
-    flush(_disposables);
-    flush(_mountables);
-    flush(_unmountables);
+    disposeAll(_disposables);
   }
 
   function expectEntity(entity: EntityGLTFModel): void {
@@ -273,7 +273,7 @@ export function InstancedGLTFModelViewManager(
   function mount(): void {
     state.isMounted = true;
 
-    _mountables.forEach(invoke);
+    mountAll(_mountables);
   }
 
   function pause(): void {
@@ -290,7 +290,7 @@ export function InstancedGLTFModelViewManager(
   function unmount(): void {
     state.isMounted = false;
 
-    _unmountables.forEach(invoke);
+    unmountAll(_unmountables);
   }
 
   function unpause(): void {

@@ -25,7 +25,7 @@ import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 
 baseDomElementsLookup["pi-stats-reporter"].zIndex = DOMZIndex.StatsReporter;
 
-export const domElementsLookup: DOMElementsLookup = Object.freeze({
+export const domElementsLookup: DOMElementsLookup = {
   ...baseDomElementsLookup,
 
   "pi-button": ButtonDOMElementView,
@@ -47,4 +47,4 @@ export const domElementsLookup: DOMElementsLookup = Object.freeze({
   "pi-settings-backdrop": SettingsBackdropDOMElementView,
   "pi-user-settings": UserSettingsDOMElementView,
   "pi-virtual-joystick-layer": VirtualJoystickLayerDOMElementView,
-});
+};

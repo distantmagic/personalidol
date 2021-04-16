@@ -21,17 +21,10 @@ export function PlayerEntityController(
   userInputTouchController: UserInputController
 ): EntityController<EntityPlayer> {
   const state: EntityControllerState = Object.seal({
-    isDisposed: false,
     isMounted: false,
     isPaused: false,
-    isPreloaded: false,
-    isPreloading: false,
     needsUpdates: true,
   });
-
-  function dispose(): void {
-    state.isDisposed = true;
-  }
 
   function mount(): void {
     state.isMounted = true;
@@ -43,11 +36,6 @@ export function PlayerEntityController(
 
   function pause(): void {
     state.isPaused = true;
-  }
-
-  function preload(): void {
-    state.isPreloading = false;
-    state.isPreloaded = true;
   }
 
   function unmount(): void {
@@ -74,18 +62,14 @@ export function PlayerEntityController(
 
   return Object.freeze({
     id: MathUtils.generateUUID(),
-    isDisposable: true,
     isEntityController: true,
     isMountable: true,
-    isPreloadable: true,
     name: `PlayerEntityController(${name(view)})`,
     state: state,
     view: view,
 
-    dispose: dispose,
     mount: mount,
     pause: pause,
-    preload: preload,
     unmount: unmount,
     unpause: unpause,
     update: update,

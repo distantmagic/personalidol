@@ -26,6 +26,7 @@ import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiTh
 import { PerformanceStatsHook } from "@personalidol/framework/src/PerformanceStatsHook";
 import { prefetch } from "@personalidol/framework/src/prefetch";
 import { preload } from "@personalidol/framework/src/preload";
+import { Preloader } from "@personalidol/framework/src/Preloader";
 import { RendererDimensionsManager } from "@personalidol/dom-renderer/src/RendererDimensionsManager";
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
@@ -149,7 +150,11 @@ async function bootstrap() {
 
   internationalizationService.registerMessagePort(internationalizationMessageChannel.port1);
 
-  await preload(logger, internationalizationService);
+  const internationalizationServicePreloader = Preloader(logger, internationalizationService);
+
+  mainLoop.updatables.add(internationalizationServicePreloader);
+
+  await internationalizationServicePreloader.wait();
 
   serviceManager.services.add(internationalizationService);
 
@@ -302,7 +307,7 @@ async function bootstrap() {
 
   // Ammo worker handles game physics.
 
-  const physicsMessageChannel = createMultiThreadMessageChannel();
+  const ammoMessageChannel = createMultiThreadMessageChannel();
   const ammoToProgressMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(ammoToProgressMessageChannel.port1, false);
@@ -319,16 +324,13 @@ async function bootstrap() {
 
   ammoWorker.postMessage(
     {
-      physicsMessagePort: physicsMessageChannel.port1,
+      ammoMessagePort: ammoMessageChannel.port1,
       progressMessagePort: ammoToProgressMessageChannel.port2,
     },
-    [physicsMessageChannel.port1, ammoToProgressMessageChannel.port2]
+    [ammoMessageChannel.port1, ammoToProgressMessageChannel.port2]
   );
 
   await ammoWorkerServiceClient.ready();
-
-  mainLoop.updatables.add(ammoWorkerServiceClient);
-  serviceManager.services.add(ammoWorkerServiceClient);
 
   // Workers can share a message channel if necessary. If there is no offscreen
   // worker then the message channel can be used in the main thread. It is an
@@ -442,7 +444,6 @@ async function bootstrap() {
     gltfMessageChannel.port2,
     internationalizationMessageChannel.port2,
     md2MessageChannel.port2,
-    physicsMessageChannel.port2,
     progressMessageChannel.port2,
     quakeMapsMessageChannel.port2,
     statsMessageChannel.port2,

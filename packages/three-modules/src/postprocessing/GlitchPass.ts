@@ -7,7 +7,7 @@ import { UniformsUtils } from "three/src/renderers/shaders/UniformsUtils";
 
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
-import { flush } from "@personalidol/framework/src/flush";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
 
 import { FullScreenQuad } from "./FullScreenQuad";
 import { Pass } from "./Pass";
@@ -17,11 +17,11 @@ import type { Uniform } from "three/src/core/Uniform";
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import type { WebGLRenderTarget } from "three/src/renderers/WebGLRenderTarget";
 
-import type { GenericCallback } from "@personalidol/framework/src/GenericCallback.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 
 export class GlitchPass extends Pass {
+  private _disposables: Set<DisposableCallback> = new Set();
   private curF: number = 0;
-  private disposables: Set<GenericCallback> = new Set();
   private fsQuad: FullScreenQuad;
   private goWild: boolean = false;
   private material: Material;
@@ -42,16 +42,16 @@ export class GlitchPass extends Pass {
       vertexShader: shader.vertexShader,
       fragmentShader: shader.fragmentShader,
     });
-    this.disposables.add(disposableMaterial(this.material));
+    this._disposables.add(disposableMaterial(this.material));
 
     this.fsQuad = new FullScreenQuad(this.material);
-    this.disposables.add(disposableGeneric(this.fsQuad));
+    this._disposables.add(disposableGeneric(this.fsQuad));
 
     this.generateTrigger();
   }
 
   dispose(): void {
-    flush(this.disposables);
+    disposeAll(this._disposables);
   }
 
   render(renderer: WebGLRenderer, renderToScreen: boolean, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
@@ -108,7 +108,7 @@ export class GlitchPass extends Pass {
 
     const dataTexture = new DataTexture(data_arr, dt_size, dt_size, RGBFormat, FloatType);
 
-    this.disposables.add(disposableGeneric(dataTexture));
+    this._disposables.add(disposableGeneric(dataTexture));
 
     return dataTexture;
   }
