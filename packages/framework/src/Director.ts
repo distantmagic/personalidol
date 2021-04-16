@@ -8,12 +8,9 @@ import type { Logger } from "loglevel";
 
 import type { Director as IDirector } from "./Director.interface";
 import type { DirectorState } from "./DirectorState.type";
-import type { Scene } from "./Scene.interface";
 import type { TickTimerState } from "./TickTimerState.type";
 
 export function Director(logger: Logger, tickTimerState: TickTimerState, debugName: string): IDirector {
-  let _transitioning: null | Scene = null;
-
   const state: DirectorState = Object.seal({
     current: null,
     isStarted: false,
@@ -23,10 +20,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
     lastUpdateTransitioningTick: -1,
     needsUpdates: true,
     next: null,
-
-    get transitioning() {
-      return _transitioning;
-    },
+    transitioning: null,
   });
 
   function start(): void {
@@ -50,6 +44,8 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
       throw new Error("Director is not started, but it was updated.");
     }
 
+    const _transitioning = state.transitioning;
+
     // This assignment is here to avoid a lot of additional typechecking.
     const { current, next } = state;
 
@@ -67,7 +63,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
     if (!next && _transitioning && !current && _transitioning.state.isPreloaded) {
       state.current = _transitioning;
       state.isTransitioning = false;
-      _transitioning = null;
+      state.transitioning = null;
 
       state.lastUpdateCurrentTick = tickTimerState.currentTick;
       state.lastUpdateTransitioningTick = tickTimerState.currentTick;
@@ -98,7 +94,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
 
       state.next = null;
       state.isTransitioning = true;
-      _transitioning = next;
+      state.transitioning = next;
 
       state.lastUpdateNextTick = tickTimerState.currentTick;
       state.lastUpdateTransitioningTick = tickTimerState.currentTick;

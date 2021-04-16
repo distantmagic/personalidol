@@ -7,12 +7,14 @@ import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
 import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
+import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
 import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { Raycaster } from "@personalidol/input/src/Raycaster";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { sendRPCMessage } from "@personalidol/framework/src/sendRPCMessage";
@@ -20,6 +22,7 @@ import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 import { unmountPass } from "@personalidol/three-modules/src/unmountPass";
 import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
+import { ViewBag } from "@personalidol/views/src/ViewBag";
 
 import { buildViews } from "./buildViews";
 import { CameraController } from "./CameraController";
@@ -47,7 +50,8 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
 import type { UserInputMouseController as IUserInputMouseController } from "@personalidol/input/src/UserInputMouseController.interface";
-import type { View } from "@personalidol/views/src/View.interface";
+// import type { View } from "@personalidol/views/src/View.interface";
+import type { ViewBag as IViewBag } from "@personalidol/views/src/ViewBag.interface";
 
 import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityController } from "./EntityController.interface";
@@ -83,7 +87,6 @@ export function MapScene(
   effectComposer: EffectComposer,
   css2DRenderer: CSS2DRenderer,
   eventBus: EventBus,
-  views: Set<View>,
   dimensionsState: Uint32Array,
   keyboardState: Uint8Array,
   mouseState: Int32Array,
@@ -108,6 +111,8 @@ export function MapScene(
     needsUpdates: true,
   });
 
+  let _isScenePreloaded: boolean = false;
+
   const _scene = new Scene();
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
   const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
@@ -116,11 +121,11 @@ export function MapScene(
   const _userInputMouseController: IUserInputMouseController = UserInputMouseController(userSettings, dimensionsState, mouseState, _raycaster);
   const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState);
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
+  const _viewBag: IViewBag = ViewBag(logger);
 
   _scene.background = new Color(0x000000);
 
   const _fog = new Fog(_scene.background, 0, 0);
-
   const _instancedGLTFModelViewManager: IInstancedGLTFModelViewManager = InstancedGLTFModelViewManager(
     logger,
     userSettings,
@@ -152,12 +157,14 @@ export function MapScene(
   function dispose(): void {
     state.isDisposed = true;
 
+    fDispose(logger, _viewBag);
     disposeAll(_disposables);
   }
 
   function mount(): void {
     state.isMounted = true;
 
+    fMount(logger, _viewBag);
     fMount(logger, _userInputEventBusController);
     fMount(logger, _userInputKeyboardController);
     fMount(logger, _userInputMouseController);
@@ -185,6 +192,7 @@ export function MapScene(
   function pause(): void {
     state.isPaused = true;
 
+    fPause(logger, _viewBag);
     fPause(logger, _userInputEventBusController);
     fPause(logger, _userInputKeyboardController);
     fPause(logger, _userInputMouseController);
@@ -242,7 +250,7 @@ export function MapScene(
     }
 
     for (let view of buildViews(logger, _entityViewFactory, worldspawnTexture, entities)) {
-      views.add(view);
+      _viewBag.views.add(view);
 
       if (isEntityWithController(view.entity)) {
         for (let controller of _entityControllerFactory.create(view)) {
@@ -255,10 +263,7 @@ export function MapScene(
       }
     }
 
-    views.add(_instancedGLTFModelViewManager);
-
-    state.isPreloading = false;
-    state.isPreloaded = true;
+    _viewBag.views.add(_instancedGLTFModelViewManager);
 
     _disposables.add(function () {
       gltfMessagePort.onmessage = null;
@@ -267,6 +272,10 @@ export function MapScene(
       quakeMapsMessagePort.onmessage = null;
       texturesMessagePort.onmessage = null;
     });
+
+    fPreload(logger, _viewBag);
+
+    _isScenePreloaded = true;
   }
 
   function unmount(): void {
@@ -278,6 +287,7 @@ export function MapScene(
       isVirtualJoystickLayerVisible: false,
     });
 
+    fUnmount(logger, _viewBag);
     fUnmount(logger, _userInputEventBusController);
     fUnmount(logger, _userInputKeyboardController);
     fUnmount(logger, _userInputMouseController);
@@ -291,6 +301,7 @@ export function MapScene(
   function unpause(): void {
     state.isPaused = false;
 
+    fUnpause(logger, _viewBag);
     fUnpause(logger, _userInputEventBusController);
     fUnpause(logger, _userInputKeyboardController);
     fUnpause(logger, _userInputMouseController);
@@ -326,6 +337,7 @@ export function MapScene(
     }
 
     _cameraController.update(delta, elapsedTime, tickTimerState);
+    _viewBag.update(delta, elapsedTime, tickTimerState);
 
     _renderPass.camera = _cameraController.camera;
 
@@ -336,12 +348,26 @@ export function MapScene(
     css2DRenderer.render(_scene, _cameraController.camera, false);
   }
 
+  function updatePreloadingState(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    if (_viewBag.state.isPreloading && !_isScenePreloaded) {
+      throw new Error("ViewBag may only start preloading if scene is fully preloaded.");
+    }
+
+    if (_viewBag.state.isPreloading) {
+      _viewBag.updatePreloadingState(delta, elapsedTime, tickTimerState);
+    }
+
+    state.isPreloaded = _isScenePreloaded && _viewBag.state.isPreloaded;
+    state.isPreloading = state.isPreloading || _viewBag.state.isPreloading;
+  }
+
   return Object.freeze({
     currentMap: mapName,
     id: MathUtils.generateUUID(),
     isDisposable: true,
     isMapScene: true,
     isMountable: true,
+    isPollablePreloading: true,
     isPreloadable: true,
     isScene: true,
     isViewBaggableScene: true,
@@ -355,5 +381,6 @@ export function MapScene(
     unmount: unmount,
     unpause: unpause,
     update: update,
+    updatePreloadingState: updatePreloadingState,
   });
 }
