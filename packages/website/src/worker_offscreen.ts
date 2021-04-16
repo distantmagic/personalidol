@@ -83,7 +83,7 @@ function notifyReady(): void {
 
 function onDependenciesReady(dependencies: Dependencies): void {
   const userSettings = UserSettings.createEmptyState(dependencies.devicePixelRatio);
-  const statsReporter = StatsReporter(self.name, dependencies.statsMessagePort, mainLoop.tickTimerState);
+  const statsReporter = StatsReporter(self.name, dependencies.statsMessagePort, mainLoop.ticker.tickTimerState);
 
   statsReporter.hooks.add(MainLoopStatsHook(mainLoop));
 

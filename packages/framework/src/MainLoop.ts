@@ -1,15 +1,16 @@
 import { Clock } from "three/src/core/Clock";
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { DefaultMainLoopTicker } from "./DefaultMainLoopTicker";
 import { isNameable } from "./isNameable";
 import { name } from "./name";
 
 import type { Logger } from "loglevel";
 
 import type { MainLoop as IMainLoop } from "./MainLoop.interface";
+import type { MainLoopTicker } from "./MainLoopTicker.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
 import type { Scheduler } from "./Scheduler.interface";
-import type { TickTimerState } from "./TickTimerState.type";
 
 /**
  * Why tick timer state exists? There are some services that need to sync
@@ -33,13 +34,8 @@ import type { TickTimerState } from "./TickTimerState.type";
  * @see MouseObserevr
  * @see TouchObserver
  */
-export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<TickType>): IMainLoop {
+export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<TickType>, ticker: MainLoopTicker = DefaultMainLoopTicker()): IMainLoop {
   const clock = new Clock(false);
-  const tickTimerState: TickTimerState = Object.seal({
-    currentTick: 0,
-    delta: 0,
-    elapsedTime: 0,
-  });
   const updatables = new Set<MainLoopUpdatable>();
 
   let _continue: boolean = false;
@@ -72,11 +68,12 @@ export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<Tic
   }
 
   function tick(now: number): void {
-    tickTimerState.currentTick += 1;
-    tickTimerState.delta = clock.getDelta();
-    tickTimerState.elapsedTime = clock.getElapsedTime();
+    ticker.tick(clock.getDelta(), clock.getElapsedTime());
 
-    updatables.forEach(_updateUpdatable);
+    while (ticker.state.scheduledUpdates > 0) {
+      updatables.forEach(_updateUpdatable);
+      ticker.state.scheduledUpdates -= 1;
+    }
 
     // something might have changed withing the update callback
     if (_continue) {
@@ -86,7 +83,7 @@ export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<Tic
 
   function _updateUpdatable(updatable: MainLoopUpdatable): void {
     if (updatable.state.needsUpdates) {
-      updatable.update(tickTimerState.delta, tickTimerState.elapsedTime, tickTimerState);
+      updatable.update(ticker.tickTimerState.delta, ticker.tickTimerState.elapsedTime, ticker.tickTimerState);
     } else {
       updatables.delete(updatable);
 
@@ -102,7 +99,7 @@ export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<Tic
     id: MathUtils.generateUUID(),
     isMainLoop: true,
     name: "MainLoop",
-    tickTimerState: tickTimerState,
+    ticker: ticker,
     updatables: updatables,
 
     start: start,

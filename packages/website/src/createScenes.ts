@@ -76,8 +76,8 @@ export function createScenes(
   statsReporter.hooks.add(CSS2DRendererStatsHook(css2DRenderer));
   statsReporter.hooks.add(WebGLRendererStatsHook(webGLRenderer));
 
-  const currentSceneDirector = Director(logger, mainLoop.tickTimerState, "Scene");
-  const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
+  const currentSceneDirector = Director(logger, mainLoop.ticker.tickTimerState, "Scene");
+  const loadingSceneDirector = Director(logger, mainLoop.ticker.tickTimerState, "LoadingScreen");
   const sceneTransition = SceneTransition(logger, currentSceneDirector.state, loadingSceneDirector.state);
 
   const currentSceneDirectorPollablePreloadingObserver = DirectorPollablePreloadingObserver(currentSceneDirector);

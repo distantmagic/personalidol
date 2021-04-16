@@ -5,6 +5,7 @@ import Loglevel from "loglevel";
 
 import { AmmoLoader } from "@personalidol/ammo/src/AmmoLoader";
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { DynamicsMainLoopTicker } from "@personalidol/dynamics/src/DynamicsMainLoopTicker";
 import { DynamicsWorld } from "@personalidol/dynamics/src/DynamicsWorld";
 import { DynamicsWorldStatsHook } from "@personalidol/dynamics/src/DynamicsWorldStatsHook";
 import { FallbackScheduler } from "@personalidol/framework/src/FallbackScheduler";
@@ -40,7 +41,7 @@ const partialDependencies: Partial<Dependencies> = {
 
 const AMMO_WASM_URL: string = `${__STATIC_BASE_PATH}/lib/ammo.wasm.wasm?${__CACHE_BUST}`;
 const logger = Loglevel.getLogger(self.name);
-const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler());
+const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler(), DynamicsMainLoopTicker());
 const serviceManager: IServiceManager = ServiceManager(logger);
 
 logger.setLevel(__LOG_LEVEL);
@@ -63,7 +64,7 @@ function onDependenciesReady(dependencies: Dependencies): void {
   mainLoop.updatables.add(dynamicsWorld);
   serviceManager.services.add(dynamicsWorld);
 
-  const statsReporter = StatsReporter(self.name, dependencies.statsMessagePort, mainLoop.tickTimerState);
+  const statsReporter = StatsReporter(self.name, dependencies.statsMessagePort, mainLoop.ticker.tickTimerState);
 
   statsReporter.hooks.add(DynamicsWorldStatsHook(dynamicsWorld));
   statsReporter.hooks.add(MainLoopStatsHook(mainLoop));

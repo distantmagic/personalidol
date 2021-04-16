@@ -19,16 +19,25 @@ export function MainLoopStatsHook(mainLoop: MainLoop): IMainLoopStatsHook {
     lastUpdate: 0,
   };
 
+  let _previousUpdateTime: number = 0;
+
   function reset(): void {
     statsReport.currentInterval += 1;
     statsReport.currentIntervalDuration = 0;
     statsReport.currentIntervalTicks = 0;
   }
 
+  /**
+   * MainLoop delta may be something different than the real elapsed time.
+   *
+   * @see packages/dynamics/src/DynamicsMainLoopTicker.ts
+   */
   function update(): void {
-    statsReport.currentIntervalDuration += mainLoop.tickTimerState.delta;
+    statsReport.currentIntervalDuration += mainLoop.ticker.tickTimerState.elapsedTime - _previousUpdateTime;
     statsReport.currentIntervalTicks += 1;
-    statsReport.lastUpdate = mainLoop.tickTimerState.currentTick;
+    statsReport.lastUpdate = mainLoop.ticker.tickTimerState.currentTick;
+
+    _previousUpdateTime = mainLoop.ticker.tickTimerState.elapsedTime;
   }
 
   return Object.freeze({

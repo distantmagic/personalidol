@@ -179,7 +179,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
   function _updateRenderedElement(domElementView: DOMElementView<U>) {
     if (domElementView.state.needsUpdates) {
-      domElementView.update(mainLoop.tickTimerState.delta, mainLoop.tickTimerState.elapsedTime, mainLoop.tickTimerState);
+      domElementView.update(mainLoop.ticker.tickTimerState.delta, mainLoop.ticker.tickTimerState.elapsedTime, mainLoop.ticker.tickTimerState);
     }
   }
 

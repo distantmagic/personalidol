@@ -1,11 +1,11 @@
+import type { MainLoopTicker } from "./MainLoopTicker.interface";
 import type { MainLoopUpdatable } from "./MainLoopUpdatable.interface";
 import type { Service } from "./Service.interface";
-import type { TickTimerState } from "./TickTimerState.type";
 
 export interface MainLoop extends Service {
   isMainLoop: true;
-  tickTimerState: TickTimerState;
+  ticker: MainLoopTicker;
   updatables: Set<MainLoopUpdatable>;
 
-  tick(delta: number): void;
+  tick(now: number): void;
 }

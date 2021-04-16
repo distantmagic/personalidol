@@ -86,19 +86,19 @@ async function bootstrap() {
 
   const mainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
 
-  const windowResizeObserver = WindowResizeObserver(dimensionsState, mainLoop.tickTimerState);
+  const windowResizeObserver = WindowResizeObserver(dimensionsState, mainLoop.ticker.tickTimerState);
 
-  const windowFocusObserver = WindowFocusObserver(logger, mainLoop.tickTimerState);
-  const keyboardObserver = KeyboardObserver(logger, canvas, keyboardState, windowFocusObserver.state, mainLoop.tickTimerState);
-  const mouseObserver = MouseObserver(canvas, dimensionsState, mouseState, windowFocusObserver.state, mainLoop.tickTimerState);
-  const touchObserver = TouchObserver(canvas, dimensionsState, touchState, windowFocusObserver.state, mainLoop.tickTimerState);
+  const windowFocusObserver = WindowFocusObserver(logger, mainLoop.ticker.tickTimerState);
+  const keyboardObserver = KeyboardObserver(logger, canvas, keyboardState, windowFocusObserver.state, mainLoop.ticker.tickTimerState);
+  const mouseObserver = MouseObserver(canvas, dimensionsState, mouseState, windowFocusObserver.state, mainLoop.ticker.tickTimerState);
+  const touchObserver = TouchObserver(canvas, dimensionsState, touchState, windowFocusObserver.state, mainLoop.ticker.tickTimerState);
 
   const userSettings = UserSettings.createEmptyState(devicePixelRatio);
   const userSettingsMessageChannel = createMultiThreadMessageChannel();
   const localStorageUserSettingsSync = LocalStorageUserSettingsSync(userSettings, isUserSettingsValid, THREAD_DEBUG_NAME);
   const multiThreadUserSettingsSync = MultiThreadUserSettingsSync(userSettings, userSettingsMessageChannel.port1, THREAD_DEBUG_NAME);
 
-  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsReporterMessageChannel.port2, mainLoop.tickTimerState);
+  const statsReporter = StatsReporter(THREAD_DEBUG_NAME, statsReporterMessageChannel.port2, mainLoop.ticker.tickTimerState);
 
   statsReporter.hooks.add(MainLoopStatsHook(mainLoop));
 
