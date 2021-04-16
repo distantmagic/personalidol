@@ -62,6 +62,8 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
     state.isPreloading = true;
     state.isPreloaded = false;
 
+    console.log(view.entity);
+
     _internalPhysicsMessageChannel.port1.onmessage = _simulantFeedbackMessageRouter;
 
     physicsMessagePort.postMessage(

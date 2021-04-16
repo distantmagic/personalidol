@@ -281,8 +281,6 @@ export function InstancedGLTFModelViewManager(
   }
 
   async function preload(): Promise<void> {
-    state.isPreloading = true;
-
     state.isPreloading = false;
     state.isPreloaded = true;
   }

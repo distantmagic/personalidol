@@ -5,10 +5,12 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
+    "@personalidol/ammo": "^0.0.4",
     "loglevel": "^1.7.1",
     "three": "^0.126.1"
   },
   "devDependencies": {
+    "@types/ammo.js": "github:osman-turan/ammo.js-typings#4270a20c9f992969ffbd3e989aaa0efbe10fd5c4",
     "@types/jest": "^26.0.21",
     "@types/three": "^0.126.1",
     "esbuild": "^0.9.4",

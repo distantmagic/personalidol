@@ -502,7 +502,6 @@ var GLTFLoader = ( function () {
 
     var parser = this;
     var json = this.json;
-    var extensions = this.extensions;
 
     // Clear the loader cache
     this.cache.removeAll();
@@ -542,7 +541,6 @@ var GLTFLoader = ( function () {
   GLTFParser.prototype._markDefs = function () {
 
     var nodeDefs = this.json.nodes || [];
-    var meshDefs = this.json.meshes || [];
 
     // Iterate over all nodes, marking references to shared resources,
     // as well as skeleton joints.
@@ -1158,8 +1156,6 @@ var GLTFLoader = ( function () {
 
     var parser = this;
     var json = this.json;
-    var extensions = this.extensions;
-
     var meshDef = json.meshes[ meshIndex ];
     var primitives = meshDef.primitives;
 
@@ -1266,7 +1262,6 @@ var GLTFLoader = ( function () {
   GLTFParser.prototype.loadNode = function ( nodeIndex ) {
 
     var json = this.json;
-    var extensions = this.extensions;
     var parser = this;
 
     var nodeDef = json.nodes[ nodeIndex ];
@@ -1433,7 +1428,6 @@ var GLTFLoader = ( function () {
     return function loadScene( sceneIndex ) {
 
       var json = this.json;
-      var extensions = this.extensions;
       var sceneDef = this.json.scenes[ sceneIndex ];
       var parser = this;
 

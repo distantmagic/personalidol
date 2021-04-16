@@ -114,8 +114,6 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     if (!domElementView) {
       throw new Error(`Element is not rendered and can't be disposed: "${id}"`);
-
-      return;
     }
 
     uiRootElement.removeChild(domElementView);
