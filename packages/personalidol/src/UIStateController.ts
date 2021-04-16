@@ -22,7 +22,6 @@ import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
 import type { ViewBag as IViewBag } from "@personalidol/views/src/ViewBag.interface";
-import type { ViewBagScene as IViewBagScene } from "@personalidol/views/src/ViewBagScene.interface";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { UIState } from "./UIState.type";
@@ -69,7 +68,6 @@ export function UIStateController(
   let _currentScene: null | Scene = null;
   let _dirtyCurrentMap: null | string = null;
   let _internalUIMessageChannel: MessageChannel = createSingleThreadMessageChannel();
-  let _transitioningViewBagScene: null | IViewBagScene = null;
   let _uiStateCurrentMap: null | string = uiState.currentMap;
 
   let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu");
@@ -78,21 +76,6 @@ export function UIStateController(
   let _mousePointerLayerHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-mouse-pointer-layer");
   let _userSettingsScreenHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-user-settings");
   let _virtualJoystickLayerHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-virtual-joystick-layer");
-
-  function start() {
-    _internalUIMessageChannel.port1.onmessage = _domMessageRouter;
-    uiMessagePort.onmessage = _domMessageRouter;
-  }
-
-  function stop() {
-    _internalUIMessageChannel.port1.onmessage = null;
-    uiMessagePort.onmessage = null;
-  }
-
-  function update(delta: number, elapsedTime: number): void {
-    _updateTransitioningViewBagScene();
-    _updateUIState();
-  }
 
   function _onCurrentMapMessage(mapName: null | string): void {
     uiState.currentMap = mapName;
@@ -171,30 +154,23 @@ export function UIStateController(
       `${__ASSETS_BASE_PATH}/maps/${targetMap}.map?${__CACHE_BUST}`,
     );
 
-    _transitioningViewBagScene = ViewBagScene(logger, viewBag, mapScene);
-    directorState.next = _transitioningViewBagScene;
+    directorState.next = ViewBagScene(logger, viewBag, mapScene);
 
     uiState.currentMap = targetMap;
     _dirtyCurrentMap = targetMap;
   }
 
-  function _updateTransitioningViewBagScene(): void {
-    if (!_transitioningViewBagScene) {
-      return;
-    }
-
-    if (_transitioningViewBagScene.state.isPreloading) {
-      // Polling for updates is necessary only when a scene is actually
-      // preloading.
-      _transitioningViewBagScene.updatePreloadingState();
-    }
-
-    if (_transitioningViewBagScene.state.isPreloaded && !_transitioningViewBagScene.state.isPreloading) {
-      _transitioningViewBagScene = null;
-    }
+  function start() {
+    _internalUIMessageChannel.port1.onmessage = _domMessageRouter;
+    uiMessagePort.onmessage = _domMessageRouter;
   }
 
-  function _updateUIState(): void {
+  function stop() {
+    _internalUIMessageChannel.port1.onmessage = null;
+    uiMessagePort.onmessage = null;
+  }
+
+  function update(): void {
     _inGameMenuHandle.enable(uiState.isInGameMenuOpened);
     _inGameMenuTriggerHandle.enable(uiState.isInGameMenuTriggerVisible);
     _languageSettingsScreenHandle.enable(uiState.isLanguageSettingsScreenOpened);

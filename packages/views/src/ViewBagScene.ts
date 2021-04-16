@@ -57,7 +57,9 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: ViewBagga
     // the scene.preload method is called, since it's the place to add
     // views to a ViewBag.
     fPreload(logger, scene);
-    updatePreloadingState();
+
+    state.isPreloading = true;
+    state.isPreloaded = false;
   }
 
   function unmount(): void {
@@ -81,7 +83,7 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: ViewBagga
     scene.update(delta, elapsedTime, tickTimerState);
   }
 
-  function updatePreloadingState(): void {
+  function updatePreloadingState(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     if (scene.state.isPreloaded && !viewBag.state.isPreloading && !viewBag.state.isPreloaded) {
       // ViewBag can be preloaded now since the scene is ready.
       fPreload(logger, viewBag);
@@ -92,7 +94,7 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: ViewBagga
     }
 
     if (viewBag.state.isPreloading) {
-      viewBag.updatePreloadingState();
+      viewBag.updatePreloadingState(delta, elapsedTime, tickTimerState);
     }
 
     state.isPreloaded = scene.state.isPreloaded && viewBag.state.isPreloaded;
@@ -103,6 +105,7 @@ export function ViewBagScene(logger: Logger, viewBag: IViewBag, scene: ViewBagga
     id: MathUtils.generateUUID(),
     isDisposable: true,
     isMountable: true,
+    isPollablePreloading: true,
     isPreloadable: true,
     isScene: true,
     isViewBagScene: true,

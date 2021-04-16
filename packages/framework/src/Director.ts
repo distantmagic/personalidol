@@ -12,6 +12,8 @@ import type { Scene } from "./Scene.interface";
 import type { TickTimerState } from "./TickTimerState.type";
 
 export function Director(logger: Logger, tickTimerState: TickTimerState, debugName: string): IDirector {
+  let _transitioning: null | Scene = null;
+
   const state: DirectorState = Object.seal({
     current: null,
     isStarted: false,
@@ -21,9 +23,11 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
     lastUpdateTransitioningTick: -1,
     needsUpdates: true,
     next: null,
-  });
 
-  let _transitioning: null | Scene = null;
+    get transitioning() {
+      return _transitioning;
+    },
+  });
 
   function start(): void {
     if (state.isStarted) {

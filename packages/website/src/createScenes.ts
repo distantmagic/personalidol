@@ -3,6 +3,7 @@ import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer";
 import { CSS2DRendererStatsHook } from "@personalidol/three-css2d-renderer/src/CSS2DRendererStatsHook";
 import { Director } from "@personalidol/framework/src/Director";
+import { DirectorPollablePreloadingObserver } from "@personalidol/framework/src/DirectorPollablePreloadingObserver";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
@@ -78,6 +79,9 @@ export function createScenes(
   const loadingSceneDirector = Director(logger, mainLoop.tickTimerState, "LoadingScreen");
   const sceneTransition = SceneTransition(logger, currentSceneDirector.state, loadingSceneDirector.state);
 
+  const currentSceneDirectorPollablePreloadingObserver = DirectorPollablePreloadingObserver(currentSceneDirector);
+  const loadingSceneDirectorPollablePreloadingObserver = DirectorPollablePreloadingObserver(loadingSceneDirector);
+
   const uiState: IUIState = UIState.createEmptyState();
 
   const uiStateController = UIStateController(
@@ -105,12 +109,16 @@ export function createScenes(
 
   loadingSceneDirector.state.next = LoadingScreenScene(logger, userSettings, effectComposer, dimensionsState, domMessagePort, progressMessagePort);
 
+  serviceManager.services.add(currentSceneDirectorPollablePreloadingObserver);
+  serviceManager.services.add(loadingSceneDirectorPollablePreloadingObserver);
   serviceManager.services.add(multiThreadUserSettingsSync);
   serviceManager.services.add(currentSceneDirector);
   serviceManager.services.add(uiStateController);
   serviceManager.services.add(loadingSceneDirector);
   serviceManager.services.add(sceneTransition);
 
+  mainLoop.updatables.add(currentSceneDirectorPollablePreloadingObserver);
+  mainLoop.updatables.add(loadingSceneDirectorPollablePreloadingObserver);
   mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, css2DRenderer, updateRendererCSS));
   mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, effectComposer, updateRendererCSS));
   mainLoop.updatables.add(RendererDimensionsManager(dimensionsState, webGLRenderer, updateRendererCSS));

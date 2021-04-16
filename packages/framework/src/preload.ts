@@ -15,7 +15,7 @@ export function preload(logger: Logger, mount: Preloadable): void {
 
   logger.debug(`PRELOAD(${name(mount)})`);
 
-  const ret = mount.preload();
+  mount.preload();
 
   if (!mount.state.isPreloading && !mount.state.isPreloaded) {
     throw new Error(`Mount needs to go into 'preloading' state immediately after calling '.preload' method or be preloaded immediately instead: "${name(mount)}"`);
@@ -24,6 +24,4 @@ export function preload(logger: Logger, mount: Preloadable): void {
   if (mount.state.isPreloaded && mount.state.isPreloading) {
     throw new Error(`Mount can't be both preloaded and preloading at the same time: "${name(mount)}"`);
   }
-
-  return ret;
 }

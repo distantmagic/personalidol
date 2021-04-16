@@ -123,6 +123,7 @@ export function ViewBag(logger: Logger): IViewBag {
     id: MathUtils.generateUUID(),
     isDisposable: true,
     isMountable: true,
+    isPollablePreloading: true,
     isPreloadable: true,
     name: "ViewBag",
     state: state,
