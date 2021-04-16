@@ -5,10 +5,11 @@ import type { Pauseable } from "@personalidol/framework/src/Pauseable.interface"
 import type { PollablePreloading } from "@personalidol/framework/src/PollablePreloading.interface";
 import type { Preloadable } from "@personalidol/framework/src/Preloadable.interface";
 
-import type { View } from "./View.interface";
-import type { ViewBagState } from "./ViewBagState.type";
+import type { AnyEntity } from "./AnyEntity.type";
+import type { EntityController } from "./EntityController.interface";
+import type { EntityControllerBagState } from "./EntityControllerBagState.type";
 
-export interface ViewBag extends Disposable, MainLoopUpdatable, Mountable, Pauseable, PollablePreloading, Preloadable {
-  readonly state: ViewBagState;
-  readonly views: Set<View>;
+export interface EntityControllerBag extends Disposable, MainLoopUpdatable, Mountable, Pauseable, PollablePreloading, Preloadable {
+  readonly entityControllers: Set<EntityController<AnyEntity>>;
+  readonly state: EntityControllerBagState;
 }

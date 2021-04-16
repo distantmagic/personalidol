@@ -26,6 +26,7 @@ import { ViewBag } from "@personalidol/views/src/ViewBag";
 
 import { buildViews } from "./buildViews";
 import { CameraController } from "./CameraController";
+import { EntityControllerBag } from "./EntityControllerBag";
 import { EntityControllerFactory } from "./EntityControllerFactory";
 import { EntityViewFactory } from "./EntityViewFactory";
 import { InstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager";
@@ -53,8 +54,7 @@ import type { UserInputMouseController as IUserInputMouseController } from "@per
 // import type { View } from "@personalidol/views/src/View.interface";
 import type { ViewBag as IViewBag } from "@personalidol/views/src/ViewBag.interface";
 
-import type { AnyEntity } from "./AnyEntity.type";
-import type { EntityController } from "./EntityController.interface";
+import type { EntityControllerBag as IEntityControllerBag } from "./EntityControllerBag.interface";
 import type { EntityControllerFactory as IEntityControllerFactory } from "./EntityControllerFactory.interface";
 import type { EntityViewFactory as IEntityViewFactory } from "./EntityViewFactory.interface";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
@@ -115,6 +115,7 @@ export function MapScene(
 
   const _scene = new Scene();
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
+  const _entityControllerBag: IEntityControllerBag = EntityControllerBag(logger);
   const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
   const _userInputEventBusController: UserInputController = UserInputEventBusController(userSettings, eventBus, _cameraController);
   const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController);
@@ -135,7 +136,6 @@ export function MapScene(
     _rpcLookupTable
   );
 
-  const _entityControllersBag: Set<EntityController<AnyEntity>> = new Set();
   const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(
     _cameraController,
     _userInputEventBusController,
@@ -158,6 +158,7 @@ export function MapScene(
     state.isDisposed = true;
 
     fDispose(logger, _viewBag);
+    fDispose(logger, _entityControllerBag);
     disposeAll(_disposables);
   }
 
@@ -165,13 +166,12 @@ export function MapScene(
     state.isMounted = true;
 
     fMount(logger, _viewBag);
+    fMount(logger, _entityControllerBag);
     fMount(logger, _userInputEventBusController);
     fMount(logger, _userInputKeyboardController);
     fMount(logger, _userInputMouseController);
     fMount(logger, _userInputTouchController);
     fMount(logger, _cameraController);
-
-    _entityControllersBag.forEach(fMount.bind(null, logger));
 
     progressMessagePort.postMessage({
       reset: true,
@@ -193,13 +193,12 @@ export function MapScene(
     state.isPaused = true;
 
     fPause(logger, _viewBag);
+    fPause(logger, _entityControllerBag);
     fPause(logger, _userInputEventBusController);
     fPause(logger, _userInputKeyboardController);
     fPause(logger, _userInputMouseController);
     fPause(logger, _userInputTouchController);
     fPause(logger, _cameraController);
-
-    _entityControllersBag.forEach(fPause.bind(null, logger));
   }
 
   async function preload(): Promise<void> {
@@ -254,7 +253,7 @@ export function MapScene(
 
       if (isEntityWithController(view.entity)) {
         for (let controller of _entityControllerFactory.create(view)) {
-          _entityControllersBag.add(controller);
+          _entityControllerBag.entityControllers.add(controller);
         }
       }
 
@@ -274,6 +273,7 @@ export function MapScene(
     });
 
     fPreload(logger, _viewBag);
+    fPreload(logger, _entityControllerBag);
 
     _isScenePreloaded = true;
   }
@@ -288,27 +288,25 @@ export function MapScene(
     });
 
     fUnmount(logger, _viewBag);
+    fUnmount(logger, _entityControllerBag);
     fUnmount(logger, _userInputEventBusController);
     fUnmount(logger, _userInputKeyboardController);
     fUnmount(logger, _userInputMouseController);
     fUnmount(logger, _userInputTouchController);
     fUnmount(logger, _cameraController);
     unmountAll(_unmountables);
-
-    _entityControllersBag.forEach(fUnmount.bind(null, logger));
   }
 
   function unpause(): void {
     state.isPaused = false;
 
     fUnpause(logger, _viewBag);
+    fUnpause(logger, _entityControllerBag);
     fUnpause(logger, _userInputEventBusController);
     fUnpause(logger, _userInputKeyboardController);
     fUnpause(logger, _userInputMouseController);
     fUnpause(logger, _userInputTouchController);
     fUnpause(logger, _cameraController);
-
-    _entityControllersBag.forEach(fUnpause.bind(null, logger));
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
@@ -332,11 +330,8 @@ export function MapScene(
     _userInputMouseController.update(delta, elapsedTime, tickTimerState);
     _userInputTouchController.update(delta, elapsedTime, tickTimerState);
 
-    for (let entityController of _entityControllersBag) {
-      entityController.update(delta, elapsedTime, tickTimerState);
-    }
-
     _cameraController.update(delta, elapsedTime, tickTimerState);
+    _entityControllerBag.update(delta, elapsedTime, tickTimerState);
     _viewBag.update(delta, elapsedTime, tickTimerState);
 
     _renderPass.camera = _cameraController.camera;
@@ -349,16 +344,24 @@ export function MapScene(
   }
 
   function updatePreloadingState(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    if (_entityControllerBag.state.isPreloading && !_isScenePreloaded) {
+      throw new Error("EntityControllerBag may only start preloading if scene is fully preloaded.");
+    }
+
     if (_viewBag.state.isPreloading && !_isScenePreloaded) {
       throw new Error("ViewBag may only start preloading if scene is fully preloaded.");
+    }
+
+    if (_entityControllerBag.state.isPreloading) {
+      _entityControllerBag.updatePreloadingState(delta, elapsedTime, tickTimerState);
     }
 
     if (_viewBag.state.isPreloading) {
       _viewBag.updatePreloadingState(delta, elapsedTime, tickTimerState);
     }
 
-    state.isPreloaded = _isScenePreloaded && _viewBag.state.isPreloaded;
-    state.isPreloading = state.isPreloading || _viewBag.state.isPreloading;
+    state.isPreloaded = _isScenePreloaded && _entityControllerBag.state.isPreloaded && _viewBag.state.isPreloaded;
+    state.isPreloading = state.isPreloading || _entityControllerBag.state.isPreloading || _viewBag.state.isPreloading;
   }
 
   return Object.freeze({

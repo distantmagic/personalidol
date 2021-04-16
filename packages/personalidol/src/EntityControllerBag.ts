@@ -1,0 +1,142 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
+import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { mount as fMount } from "@personalidol/framework/src/mount";
+import { pause as fPause } from "@personalidol/framework/src/pause";
+import { preload as fPreload } from "@personalidol/framework/src/preload";
+import { unmount as fUnmount } from "@personalidol/framework/src/unmount";
+import { unpause as fUnpause } from "@personalidol/framework/src/unpause";
+
+import type { Logger } from "loglevel";
+
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+
+import type { AnyEntity } from "./AnyEntity.type";
+import type { EntityController } from "./EntityController.interface";
+import type { EntityControllerBag as IEntityControllerBag } from "./EntityControllerBag.interface";
+import type { EntityControllerBagState } from "./EntityControllerBagState.type";
+
+export function EntityControllerBag(logger: Logger): IEntityControllerBag {
+  const state: EntityControllerBagState = Object.seal({
+    isDisposed: false,
+    isMounted: false,
+    isPaused: false,
+    isPreloaded: false,
+    isPreloading: false,
+    needsUpdates: true,
+  });
+
+  const entityControllers: Set<EntityController<AnyEntity>> = new Set();
+
+  const _updatableControllers: Set<EntityController<AnyEntity>> = new Set();
+  let _entityController: null | EntityController<AnyEntity> = null;
+
+  function dispose(): void {
+    entityControllers.forEach(_disposeEntityController);
+
+    // Clear entityControllers references so they can be garbage collected.
+    entityControllers.clear();
+    _updatableControllers.clear();
+
+    state.isDisposed = true;
+  }
+
+  function mount(): void {
+    entityControllers.forEach(_mountEntityController);
+    state.isMounted = true;
+  }
+
+  function pause(): void {
+    state.isPaused = true;
+    entityControllers.forEach(_pauseEntityController);
+  }
+
+  function preload(): void {
+    entityControllers.forEach(_preloadEntityController);
+    updatePreloadingState();
+  }
+
+  function unmount(): void {
+    entityControllers.forEach(_unmountEntityController);
+    state.isMounted = false;
+  }
+
+  function unpause(): void {
+    state.isPaused = false;
+    entityControllers.forEach(_unpauseEntityController);
+  }
+
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    for (_entityController of _updatableControllers) {
+      if (_entityController.state.needsUpdates) {
+        _entityController.update(delta, elapsedTime, tickTimerState);
+      } else {
+        _updatableControllers.delete(_entityController);
+      }
+    }
+  }
+
+  function updatePreloadingState(): void {
+    for (_entityController of entityControllers) {
+      if (_entityController.state.isPreloading) {
+        state.isPreloading = true;
+        return;
+      }
+
+      if (!_entityController.state.isPreloaded) {
+        return;
+      }
+    }
+
+    state.isPreloading = false;
+    state.isPreloaded = true;
+  }
+
+  function _disposeEntityController(entityController: EntityController<AnyEntity>): void {
+    fDispose(logger, entityController);
+  }
+
+  function _mountEntityController(entityController: EntityController<AnyEntity>): void {
+    fMount(logger, entityController);
+  }
+
+  function _pauseEntityController(entityController: EntityController<AnyEntity>): void {
+    fPause(logger, entityController);
+  }
+
+  function _preloadEntityController(entityController: EntityController<AnyEntity>): void {
+    fPreload(logger, entityController);
+
+    if (entityController.state.needsUpdates) {
+      _updatableControllers.add(entityController);
+    }
+  }
+
+  function _unmountEntityController(entityController: EntityController<AnyEntity>): void {
+    fUnmount(logger, entityController);
+  }
+
+  function _unpauseEntityController(entityController: EntityController<AnyEntity>): void {
+    fUnpause(logger, entityController);
+  }
+
+  return Object.freeze({
+    entityControllers: entityControllers,
+    id: MathUtils.generateUUID(),
+    isDisposable: true,
+    isMountable: true,
+    isPollablePreloading: true,
+    isPreloadable: true,
+    name: "EntityControllerBag",
+    state: state,
+
+    dispose: dispose,
+    mount: mount,
+    pause: pause,
+    preload: preload,
+    unmount: unmount,
+    unpause: unpause,
+    update: update,
+    updatePreloadingState: updatePreloadingState,
+  });
+}
