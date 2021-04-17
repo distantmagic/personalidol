@@ -4,7 +4,7 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { MorphBlendMeshTransition as IMorphBlendMeshTransition } from "./MorphBlendMeshTransition.interface";
 import type { MorphBlendMeshTransitionState } from "./MorphBlendMeshTransitionState.type";
 
-const TRANSITION_FRAMES: number = 15;
+const TRANSITION_SECONDS: number = 0.05;
 
 export function MorphBlendMeshTransition(mesh: MorphBlendMesh, fromAnimation: string, targetAnimation: string): IMorphBlendMeshTransition {
   const state: MorphBlendMeshTransitionState = Object.seal({
@@ -21,7 +21,7 @@ export function MorphBlendMeshTransition(mesh: MorphBlendMesh, fromAnimation: st
   });
 
   let _animationMix: number = 1;
-  let _blendCounter: number = TRANSITION_FRAMES;
+  let _blendCounter: number = TRANSITION_SECONDS;
 
   for (let animation of mesh.animationsList) {
     if (animation.name !== fromAnimation && animation.name !== targetAnimation) {
@@ -35,12 +35,12 @@ export function MorphBlendMeshTransition(mesh: MorphBlendMesh, fromAnimation: st
   mesh.setAnimationWeight(state.targetAnimation, 0);
   mesh.playAnimation(state.targetAnimation);
 
-  function _updateBlend() {
+  function _updateBlend(delta: number) {
     _animationMix = 1;
 
     if (_blendCounter > 0) {
-      _animationMix = (TRANSITION_FRAMES - _blendCounter) / TRANSITION_FRAMES;
-      _blendCounter -= 1;
+      _animationMix = (TRANSITION_SECONDS - _blendCounter) / TRANSITION_SECONDS;
+      _blendCounter -= delta;
     } else {
       if (state.currentAnimation !== state.targetAnimation) {
         mesh.setAnimationWeight(state.currentAnimation, 0);
@@ -64,7 +64,7 @@ export function MorphBlendMeshTransition(mesh: MorphBlendMesh, fromAnimation: st
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    _updateBlend();
+    _updateBlend(delta);
 
     mesh.update(delta, elapsedTime, tickTimerState);
   }

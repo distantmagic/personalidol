@@ -1,3 +1,5 @@
+import type { Logger } from "loglevel";
+
 import type { MainLoopTicker } from "@personalidol/framework/src/MainLoopTicker.interface";
 import type { MainLoopTickerState } from "@personalidol/framework/src/MainLoopTickerState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
@@ -9,7 +11,7 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
  * See more here:
  * http://www.isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing
  */
-export function DynamicsMainLoopTicker(simulationTimestep: number = 1 / 60, panicThreshold = 300): MainLoopTicker {
+export function DynamicsMainLoopTicker(logger: Logger, simulationTimestep: number = 1 / 60, panicThreshold = 30): MainLoopTicker {
   const state: MainLoopTickerState = Object.seal({
     scheduledUpdates: 0,
   });
@@ -34,12 +36,12 @@ export function DynamicsMainLoopTicker(simulationTimestep: number = 1 / 60, pani
     tickTimerState.elapsedTime = elapsedTime;
 
     state.scheduledUpdates = Math.floor(_frameDelta / simulationTimestep);
+    _frameDelta -= state.scheduledUpdates * simulationTimestep;
 
     if (state.scheduledUpdates > panicThreshold) {
-      throw new Error("Main loop updates are piling up.");
+      logger.warn(`Main loop updates are piling up. Skipping "${state.scheduledUpdates - 1}" updates.`);
+      state.scheduledUpdates = 1;
     }
-
-    _frameDelta -= state.scheduledUpdates * simulationTimestep;
   }
 
   return Object.freeze({

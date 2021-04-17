@@ -41,7 +41,7 @@ const partialDependencies: Partial<Dependencies> = {
 
 const AMMO_WASM_URL: string = `${__STATIC_BASE_PATH}/lib/ammo.wasm.wasm?${__CACHE_BUST}`;
 const logger = Loglevel.getLogger(self.name);
-const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler(), DynamicsMainLoopTicker());
+const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler(), DynamicsMainLoopTicker(logger));
 const serviceManager: IServiceManager = ServiceManager(logger);
 
 logger.setLevel(__LOG_LEVEL);
