@@ -57,6 +57,7 @@ function onDependenciesReady(dependencies: Dependencies): void {
     logger,
     dependencies.ammo,
     SimulantFactory<SimulantsLookup>(),
+    mainLoop.ticker.tickTimerState,
     dependencies.dynamicsMessagePort,
     dependencies.progressMessagePort
   );

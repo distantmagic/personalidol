@@ -1,3 +1,3 @@
-import type { Vector3 } from "three";
+import type { Vector3Simple } from "./Vector3Simple.type";
 
-export type TriangleSimple = [Vector3, Vector3, Vector3];
+export type TriangleSimple = [Vector3Simple, Vector3Simple, Vector3Simple];

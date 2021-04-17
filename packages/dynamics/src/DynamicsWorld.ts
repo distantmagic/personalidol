@@ -4,10 +4,14 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { dispose } from "@personalidol/framework/src/dispose";
+import { mount } from "@personalidol/framework/src/mount";
 import { name } from "@personalidol/framework/src/name";
 import { preload } from "@personalidol/framework/src/preload";
+import { unmount } from "@personalidol/framework/src/unmount";
 
 import type { Logger } from "loglevel";
+
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { DynamicsWorld as IDynamicsWorld } from "./DynamicsWorld.interface";
 import type { DynamicsWorldInfo } from "./DynamicsWorldInfo.type";
@@ -17,8 +21,6 @@ import type { MessageSimulantRegister } from "./MessageSimulantRegister.type";
 import type { Simulant } from "./Simulant.interface";
 import type { SimulantFactory } from "./SimulantFactory.interface";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
-
-const _registeredSimulants: Map<string, Simulant> = new Map();
 
 function _createAmmoDynamicsWorld(ammo: typeof Ammo) {
   const collisionConfiguration = new ammo.btDefaultCollisionConfiguration();
@@ -36,10 +38,10 @@ export function DynamicsWorld<S extends SimulantsLookup>(
   logger: Logger,
   ammo: typeof Ammo,
   simulantFactory: SimulantFactory<S>,
+  tickTimerState: TickTimerState,
   dynamicsMessagePort: MessagePort,
   progressMessagePort: MessagePort
 ): IDynamicsWorld<S> {
-  const _dynamicsWorld = _createAmmoDynamicsWorld(ammo);
   const info: DynamicsWorldInfo = Object.seal({
     registeredSimulants: 0,
   });
@@ -47,13 +49,16 @@ export function DynamicsWorld<S extends SimulantsLookup>(
     needsUpdates: true,
   });
 
+  const _dynamicsWorld = _createAmmoDynamicsWorld(ammo);
+  const _registeredSimulants: Map<string, Simulant> = new Map();
+
   const _physicsMessageRouter = createRouter({
     disposeSimulant(message: MessageSimulantDispose): void {
       message.forEach(_disposeSimulant);
     },
 
     registerSimulant(message: MessageSimulantRegister<S, string & keyof S>): void {
-      const simulant = simulantFactory.create(message);
+      const simulant = simulantFactory.create(ammo, _dynamicsWorld, message);
 
       if (_registeredSimulants.has(message.id)) {
         throw new Error(`Duplicate simulant id: "${name(simulant)}"`);
@@ -73,10 +78,28 @@ export function DynamicsWorld<S extends SimulantsLookup>(
       throw new Error(`No simulant registered with id: "${id}"`);
     }
 
+    if (simulant.state.isMounted) {
+      unmount(logger, simulant);
+    }
+
     dispose(logger, simulant);
 
     _registeredSimulants.delete(id);
     info.registeredSimulants = _registeredSimulants.size;
+  }
+
+  function _updateSimulant(simulant: Simulant): void {
+    if (!simulant.state.isPreloaded) {
+      return;
+    }
+
+    if (!simulant.state.isMounted) {
+      mount(logger, simulant);
+
+      return;
+    }
+
+    simulant.update(tickTimerState.delta, tickTimerState.elapsedTime, tickTimerState);
   }
 
   function start(): void {
@@ -88,6 +111,7 @@ export function DynamicsWorld<S extends SimulantsLookup>(
   }
 
   function update(delta: number): void {
+    _registeredSimulants.forEach(_updateSimulant);
     _dynamicsWorld.stepSimulation(delta);
   }
 

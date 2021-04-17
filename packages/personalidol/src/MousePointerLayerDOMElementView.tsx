@@ -20,18 +20,18 @@ const _css = `
   }
 
   .mouse-pointer-decoration {
-    background-color: red;
-    display: block;
-    height: 10px;
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    transform:
-      translate3D(-50%, -50%, 0)
-      translate3D(var(--translate-x), var(--translate-y), 0)
-    ;
-    width: 10px;
+    // background-color: red;
+    // display: block;
+    // height: 10px;
+    // left: 0;
+    // pointer-events: none;
+    // position: absolute;
+    // top: 0;
+    // transform:
+    //   translate3D(-50%, -50%, 0)
+    //   translate3D(var(--translate-x), var(--translate-y), 0)
+    // ;
+    // width: 10px;
   }
 `;
 

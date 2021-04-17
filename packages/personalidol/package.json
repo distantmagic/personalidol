@@ -26,6 +26,7 @@
     "tslib": "^2.1.0"
   },
   "devDependencies": {
+    "@types/ammo.js": "github:osman-turan/ammo.js-typings#4270a20c9f992969ffbd3e989aaa0efbe10fd5c4",
     "@types/jest": "^26.0.21",
     "@types/jsdom": "^16.2.7",
     "@types/three": "^0.126.1",

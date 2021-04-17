@@ -84,6 +84,7 @@ export function* buildEntities(
           // rotating, animating, etc.
           default:
             yield <EntityFuncGroup>{
+              brushes: entity.brushes,
               classname: entityClassName,
               id: MathUtils.generateUUID(),
               properties: entity.properties,
@@ -228,6 +229,7 @@ export function* buildEntities(
   // thread can load models, etc
 
   yield <EntityWorldspawn>{
+    brushes: mergedBrushes,
     classname: "worldspawn",
     id: MathUtils.generateUUID(),
     properties: worldProperties,

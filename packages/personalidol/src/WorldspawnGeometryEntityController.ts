@@ -74,6 +74,12 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
       },
       [_internalDynamicsMessageChannel.port2]
     );
+
+    // Send an entity copy and do not use transferables as View may be already
+    // using those parameters.
+    _internalDynamicsMessageChannel.port1.postMessage({
+      brushes: view.entity.brushes,
+    });
   }
 
   function unmount(): void {
