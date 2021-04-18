@@ -26,6 +26,11 @@ body.bootstrap-fatal-error {
   will-change: height, width;
 }
 
+#canvas {
+  height: 100%;
+  width: 100%;
+}
+
 #ui-root {
   pointer-events: none;
 }
