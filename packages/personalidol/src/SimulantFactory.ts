@@ -1,5 +1,6 @@
 /// <reference types="@types/ammo.js" />
 
+import { NPCSimulant } from "./NPCSimulant";
 import { WorldspawnGeometrySimulant } from "./WorldspawnGeometrySimulant";
 
 import type { MessageSimulantRegister } from "@personalidol/dynamics/src/MessageSimulantRegister.type";
@@ -10,6 +11,8 @@ import type { SimulantsLookup } from "./SimulantsLookup.type";
 export function SimulantFactory<S extends SimulantsLookup>(): ISimulantFactory<S> {
   function create<K extends string & keyof S>(ammo: typeof Ammo, dynamicsWorld: Ammo.btDiscreteDynamicsWorld, message: MessageSimulantRegister<S, K>): S[K] {
     switch (message.simulant) {
+      case "npc":
+        return NPCSimulant(message.id, ammo, dynamicsWorld, message.simulantFeedbackMessagePort) as S[K];
       case "worldspawn-geoemetry":
         return WorldspawnGeometrySimulant(message.id, ammo, dynamicsWorld, message.simulantFeedbackMessagePort) as S[K];
       default:

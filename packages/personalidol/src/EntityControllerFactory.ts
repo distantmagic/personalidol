@@ -2,10 +2,13 @@ import { name } from "@personalidol/framework/src/name";
 
 import { isCharacterView } from "./isCharacterView";
 import { isEntityViewOfClass } from "./isEntityViewOfClass";
+import { isNPCEntityView } from "./isNPCEntityView";
 import { isEntityWithController } from "./isEntityWithController";
 import { NPCEntityController } from "./NPCEntityController";
 import { PlayerEntityController } from "./PlayerEntityController";
 import { WorldspawnGeometryEntityController } from "./WorldspawnGeometryEntityController";
+
+import type { Logger } from "loglevel";
 
 import type { CameraController } from "@personalidol/framework/src/CameraController.interface";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
@@ -17,8 +20,10 @@ import type { EntityControllerFactory as IEntityControllerFactory } from "./Enti
 import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntityView } from "./EntityView.interface";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
+import type { NPCEntity } from "./NPCEntity.type";
 
 export function EntityControllerFactory(
+  logger: Logger,
   cameraController: CameraController,
   dynamicsMessagePort: MessagePort,
   userInputEventBusController: UserInputController,
@@ -33,7 +38,15 @@ export function EntityControllerFactory(
 
     switch (view.entity.properties.controller) {
       case "npc":
-        yield NPCEntityController(view);
+        if (!isNPCEntityView(view)) {
+          throw new Error(`NPC entity controller only supports NPCEntity. Got: "${view.entity.classname}"`);
+        }
+
+        if (!isCharacterView<NPCEntity>(view)) {
+          throw new Error("NPC entity controller only supports character view.");
+        }
+
+        yield NPCEntityController(logger, view, dynamicsMessagePort);
         break;
       case "player":
         if (!isEntityViewOfClass<EntityPlayer>(view, "player")) {
@@ -44,14 +57,16 @@ export function EntityControllerFactory(
           throw new Error("Player entity controller only supports character view.");
         }
 
-        yield PlayerEntityController(
+        yield (PlayerEntityController(
+          logger,
           view,
           cameraController,
           userInputEventBusController,
           userInputKeyboardController,
           userInputMouseController,
-          userInputTouchController
-        ) as IEntityController<E>;
+          userInputTouchController,
+          dynamicsMessagePort
+        ) as unknown) as IEntityController<E>;
         break;
       case "worldspawn":
         if (!isEntityViewOfClass<EntityWorldspawn>(view, "worldspawn")) {

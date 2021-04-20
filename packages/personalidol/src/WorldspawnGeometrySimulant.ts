@@ -9,9 +9,10 @@ import { createRouter } from "@personalidol/framework/src/createRouter";
 import type { Brush } from "@personalidol/quakemaps/src/Brush.type";
 import type { MessageFeedbackSimulantPreloaded } from "@personalidol/dynamics/src/MessageFeedbackSimulantPreloaded.type";
 import type { Simulant } from "@personalidol/dynamics/src/Simulant.interface";
-import type { SimulantsLookup } from "./SimulantsLookup.type";
 import type { SimulantState } from "@personalidol/dynamics/src/SimulantState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+
+import type { SimulantsLookup } from "./SimulantsLookup.type";
 
 function _fixBrushAfterDeserialization(brush: Brush): void {
   for (let halfSpace of brush.halfSpaces) {

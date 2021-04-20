@@ -1,6 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { isPollablePreloading } from "@personalidol/framework/src/isPollablePreloading";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
@@ -52,8 +53,10 @@ export function EntityControllerBag(logger: Logger): IEntityControllerBag {
   }
 
   function preload(): void {
+    state.isPreloaded = false;
+    state.isPreloading = true;
+
     entityControllers.forEach(_preloadEntityController);
-    updatePreloadingState();
   }
 
   function unmount(): void {
@@ -76,20 +79,20 @@ export function EntityControllerBag(logger: Logger): IEntityControllerBag {
     }
   }
 
-  function updatePreloadingState(): void {
-    for (_entityController of entityControllers) {
-      if (_entityController.state.isPreloading) {
-        state.isPreloading = true;
-        return;
-      }
-
-      if (!_entityController.state.isPreloaded) {
-        return;
-      }
-    }
-
+  function updatePreloadingState(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     state.isPreloading = false;
     state.isPreloaded = true;
+
+    for (_entityController of entityControllers) {
+      if (_entityController.state.isPreloading || !_entityController.state.isPreloaded) {
+        state.isPreloading = true;
+        state.isPreloaded = false;
+      }
+
+      if (_entityController.state.isPreloading && isPollablePreloading(_entityController)) {
+        _entityController.updatePreloadingState(delta, elapsedTime, tickTimerState);
+      }
+    }
   }
 
   function _disposeEntityController(entityController: EntityController<AnyEntity>): void {

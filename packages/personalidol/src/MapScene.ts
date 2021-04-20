@@ -138,6 +138,7 @@ export function MapScene(
   );
 
   const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(
+    logger,
     _cameraController,
     dynamicsMessagePort,
     _userInputEventBusController,
