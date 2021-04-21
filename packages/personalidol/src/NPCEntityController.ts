@@ -2,6 +2,7 @@ import { MathUtils } from "three/src/math/MathUtils";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { name } from "@personalidol/framework/src/name";
+import { RigidBodyRemoteHandle } from "@personalidol/dynamics/src/RigidBodyRemoteHandle";
 
 import type { Logger } from "loglevel";
 
@@ -58,16 +59,6 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
     // _internalDynamicsMessageChannel.port2.close();
   }
 
-  function applyCentralImpulse(x: number, y: number, z: number): void {
-    _internalDynamicsMessageChannel.port1.postMessage({
-      applyCentralImpulse: {
-        x: x,
-        y: y,
-        z: z,
-      },
-    });
-  }
-
   function mount(): void {
     state.isMounted = true;
   }
@@ -115,6 +106,7 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
     isMountable: true,
     isPreloadable: true,
     name: `NPCEntityController(${name(view)})`,
+    rigidBody: RigidBodyRemoteHandle(_internalDynamicsMessageChannel.port1),
     state: state,
     view: view,
 
@@ -125,7 +117,5 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
     unmount: unmount,
     unpause: unpause,
     update: update,
-
-    applyCentralImpulse: applyCentralImpulse,
   });
 }

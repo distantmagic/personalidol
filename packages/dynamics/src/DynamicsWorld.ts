@@ -29,7 +29,7 @@ function _createAmmoDynamicsWorld(ammo: typeof Ammo) {
   const solver = new ammo.btSequentialImpulseConstraintSolver();
   const dynamicsWorld = new ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
-  dynamicsWorld.setGravity(new ammo.btVector3(0, -10, 0));
+  dynamicsWorld.setGravity(new ammo.btVector3(0, -1000, 0));
 
   return dynamicsWorld;
 }

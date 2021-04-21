@@ -23,20 +23,40 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
 
   // Reduce the memory leaks by sharing this object.
   const _transform: Ammo.btTransform = new ammo.btTransform();
+  const _vector: Ammo.btVector3 = new ammo.btVector3(0, 0, 0);
 
   let _npcRigidBody: null | Ammo.btRigidBody = null;
 
   const _simulantFeedbackMessageRouter = createRouter({
+    applyCentralForce(force: Vector3Simple) {
+      if (!_npcRigidBody) {
+        throw new Error("NPC rigid body is not ready but received a central force");
+      }
+
+      _vector.setValue(force.x, force.y, force.z);
+      _npcRigidBody.applyCentralForce(_vector);
+    },
+
     applyCentralImpulse(impulse: Vector3Simple) {
       if (!_npcRigidBody) {
         throw new Error("NPC rigid body is not ready but received a central impulse");
       }
 
-      _npcRigidBody.applyCentralImpulse(new ammo.btVector3(impulse.x, impulse.y, impulse.z));
+      _vector.setValue(impulse.x, impulse.y, impulse.z);
+      _npcRigidBody.applyCentralImpulse(_vector);
+    },
+
+    setLinearVelocity(velocity: Vector3Simple) {
+      if (!_npcRigidBody) {
+        throw new Error("NPC rigid body is not ready but received a velocity");
+      }
+
+      _vector.setValue(velocity.x, velocity.y, velocity.z);
+      _npcRigidBody.setLinearVelocity(_vector);
     },
 
     entity(entity: NPCEntity) {
-      const npcMass = 1;
+      const npcMass = 80;
       const npcLocalInertia = new ammo.btVector3(0, 0, 0);
       const npcShape = new ammo.btSphereShape(10);
 

@@ -7,6 +7,7 @@
   "dependencies": {
     "@personalidol/ammo": "^0.0.4",
     "@personalidol/framework": "^0.0.4",
+    "@personalidol/quakemaps": "^0.0.4",
     "loglevel": "^1.7.1",
     "three": "^0.127.0"
   },
