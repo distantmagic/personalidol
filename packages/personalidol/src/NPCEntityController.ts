@@ -1,10 +1,12 @@
 import { MathUtils } from "three/src/math/MathUtils";
+import { Vector3 } from "three/src/math/Vector3";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { name } from "@personalidol/framework/src/name";
 import { RigidBodyRemoteHandle } from "@personalidol/dynamics/src/RigidBodyRemoteHandle";
 
 import type { Logger } from "loglevel";
+import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 
 import type { MessageSimulantDispose } from "@personalidol/dynamics/src/MessageSimulantDispose.type";
 import type { MessageSimulantRegister } from "@personalidol/dynamics/src/MessageSimulantRegister.type";
@@ -32,11 +34,14 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
     preloaded: _onSimulantPreloaded,
   });
 
+  const _transitionVector: IVector3 = new Vector3();
+
   let _internalDynamicsMessageChannel: MessageChannel = new MessageChannel();
   let _simulantId: string = MathUtils.generateUUID();
 
   function _onSimulantOriginChange(origin: Vector3Simple): void {
-    view.object3D.position.set(origin.x, origin.y, origin.z);
+    _transitionVector.set(origin.x, origin.y, origin.z);
+    view.transitionTo(_transitionVector);
   }
 
   function _onSimulantPreloaded(): void {

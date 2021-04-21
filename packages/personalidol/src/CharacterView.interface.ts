@@ -8,5 +8,7 @@ export interface CharacterView<E extends AnyEntity> extends EntityView<E> {
   readonly isCharacterView: true;
   readonly state: CharacterViewState;
 
-  transition(vec: Vector3): void;
+  transitionBy(vec: Vector3): void;
+
+  transitionTo(vec: Vector3): void;
 }

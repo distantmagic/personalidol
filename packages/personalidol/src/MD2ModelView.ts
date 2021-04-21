@@ -222,6 +222,7 @@ export function MD2ModelView(
     state.animation = "stand";
 
     _mesh.setAnimationTime("stand", _animationOffset);
+    _mesh.position.set(0, 15, 0);
     _mesh.rotation.set(0, entity.angle, 0);
 
     _meshContainer.add(_mesh);
@@ -256,7 +257,7 @@ export function MD2ModelView(
     _meshContainer.add(_labelContainer);
 
     // Only use standing animation to offset the bounding box.
-    _labelContainer.position.set(0, geometry.boundingBoxes.stand.max.y + 5, 0);
+    _labelContainer.position.set(0, geometry.boundingBoxes.stand.max.y + 5 + 15, 0);
 
     useObjectLabel(domMessagePort, _labelContainer, entity, _mountables, _unmountables, _disposables);
 
@@ -285,7 +286,7 @@ export function MD2ModelView(
     state.isPreloaded = true;
   }
 
-  function transition(vec: IVector3): void {
+  function transitionBy(vec: IVector3): void {
     if (vec.length() <= 0) {
       state.animation = "stand";
 
@@ -299,10 +300,14 @@ export function MD2ModelView(
     }
 
     _transitionTarget.copy(_meshContainer.position).add(vec);
-    _meshContainer.lookAt(_transitionTarget);
+    _meshContainer.lookAt(new Vector3(_transitionTarget.x, _meshContainer.position.y, _transitionTarget.z));
 
     // _meshContainer.rotation.set(0, entity.angle, 0);
     _meshContainer.position.copy(_transitionTarget);
+  }
+
+  function transitionTo(vec: IVector3): void {
+    return transitionBy(vec.clone().sub(_meshContainer.position));
   }
 
   function unmount(): void {
@@ -360,7 +365,8 @@ export function MD2ModelView(
     mount: mount,
     pause: pause,
     preload: preload,
-    transition: transition,
+    transitionBy: transitionBy,
+    transitionTo: transitionTo,
     unmount: unmount,
     unpause: unpause,
     update: update,
