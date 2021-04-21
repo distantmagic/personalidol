@@ -8,14 +8,15 @@ import type { Logger } from "loglevel";
 import type { MessageSimulantDispose } from "@personalidol/dynamics/src/MessageSimulantDispose.type";
 import type { MessageSimulantRegister } from "@personalidol/dynamics/src/MessageSimulantRegister.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
 
 import type { CharacterView } from "./CharacterView.interface";
-import type { EntityController } from "./EntityController.interface";
 import type { EntityControllerState } from "./EntityControllerState.type";
 import type { NPCEntity } from "./NPCEntity.type";
+import type { NPCEntityController } from "./NPCEntityController.interface";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: CharacterView<E>, dynamicsMessagePort: MessagePort): EntityController<E> {
+export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: CharacterView<E>, dynamicsMessagePort: MessagePort): NPCEntityController<E> {
   const state: EntityControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -26,11 +27,16 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
   });
 
   const _simulantFeedbackMessageRouter = createRouter({
+    origin: _onSimulantOriginChange,
     preloaded: _onSimulantPreloaded,
   });
 
   let _internalDynamicsMessageChannel: MessageChannel = new MessageChannel();
   let _simulantId: string = MathUtils.generateUUID();
+
+  function _onSimulantOriginChange(origin: Vector3Simple): void {
+    view.object3D.position.set(origin.x, origin.y, origin.z);
+  }
 
   function _onSimulantPreloaded(): void {
     if (!state.isPreloading) {
@@ -50,6 +56,16 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
 
     _internalDynamicsMessageChannel.port1.close();
     // _internalDynamicsMessageChannel.port2.close();
+  }
+
+  function applyCentralImpulse(x: number, y: number, z: number): void {
+    _internalDynamicsMessageChannel.port1.postMessage({
+      applyCentralImpulse: {
+        x: x,
+        y: y,
+        z: z,
+      },
+    });
   }
 
   function mount(): void {
@@ -109,5 +125,7 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
     unmount: unmount,
     unpause: unpause,
     update: update,
+
+    applyCentralImpulse: applyCentralImpulse,
   });
 }

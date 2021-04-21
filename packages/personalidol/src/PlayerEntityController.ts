@@ -93,7 +93,7 @@ export function PlayerEntityController(
       userInputTouchController.cameraTransitionRequest
     );
 
-    view.transition(transitionVector);
+    _npcEntityController.applyCentralImpulse(transitionVector.x, transitionVector.y, transitionVector.z);
 
     cameraController.cameraResetPosition.copy(view.object3D.position);
     cameraController.resetPosition();
