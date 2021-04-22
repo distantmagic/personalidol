@@ -54,11 +54,11 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
     }
 
     if (keyboardState[KeyboardIndices.PageDown]) {
-      cameraController.zoomIn(0.2);
+      cameraController.zoomIn(0.1 * userSettings.cameraMovementSpeed * delta);
     }
 
     if (keyboardState[KeyboardIndices.PageUp]) {
-      cameraController.zoomOut(0.2);
+      cameraController.zoomOut(0.1 * userSettings.cameraMovementSpeed * delta);
     }
 
     if (keyboardState[KeyboardIndices.ArrowUp] || keyboardState[KeyboardIndices.KeyW]) {

@@ -293,7 +293,11 @@ export function MD2ModelView(
       return;
     }
 
-    state.animation = "run";
+    if (vec.y < 0.1 && vec.y > -0.1) {
+      state.animation = "run";
+    } else {
+      state.animation = "jump";
+    }
 
     if (_mesh) {
       _mesh.rotation.set(0, (-1 * Math.PI) / 2, 0);

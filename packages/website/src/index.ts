@@ -11,6 +11,7 @@ import { FontPreloadService } from "@personalidol/dom/src/FontPreloadService";
 import { getHTMLElementById } from "@personalidol/dom/src/getHTMLElementById";
 import { HTMLElementSizeHandle } from "@personalidol/dom/src/HTMLElementSizeHandle";
 import { InternationalizationService } from "@personalidol/i18n/src/InternationalizationService";
+import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/framework/src/isCanvasTransferControlToOffscreenSupported";
 import { isSharedArrayBufferSupported } from "@personalidol/framework/src/isSharedArrayBufferSupported";
 import { isUserSettingsValid } from "@personalidol/personalidol/src/isUserSettingsValid";
 import { KeyboardObserver } from "@personalidol/input/src/KeyboardObserver";
@@ -31,6 +32,7 @@ import { RendererDimensionsManager } from "@personalidol/dom-renderer/src/Render
 import { RequestAnimationFrameScheduler } from "@personalidol/framework/src/RequestAnimationFrameScheduler";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
 import { ServiceWorkerManager } from "@personalidol/service-worker/src/ServiceWorkerManager";
+import { SetTimeoutScheduler } from "@personalidol/framework/src/SetTimeoutScheduler";
 import { StatsCollector } from "@personalidol/dom-renderer/src/StatsCollector";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { TouchObserver } from "@personalidol/input/src/TouchObserver";
@@ -84,7 +86,7 @@ async function bootstrap() {
   const eventBus = EventBus();
   const statsReporterMessageChannel = createSingleThreadMessageChannel();
 
-  const mainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
+  const mainLoop = isCanvasTransferControlToOffscreenSupported() ? MainLoop(logger, SetTimeoutScheduler()) : MainLoop(logger, RequestAnimationFrameScheduler());
 
   const windowResizeObserver = WindowResizeObserver(dimensionsState, mainLoop.ticker.tickTimerState);
 
