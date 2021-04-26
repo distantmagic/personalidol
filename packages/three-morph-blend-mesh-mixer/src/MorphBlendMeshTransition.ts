@@ -4,7 +4,7 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { MorphBlendMeshTransition as IMorphBlendMeshTransition } from "./MorphBlendMeshTransition.interface";
 import type { MorphBlendMeshTransitionState } from "./MorphBlendMeshTransitionState.type";
 
-const TRANSITION_SECONDS: number = 0.3;
+const TRANSITION_SECONDS: number = 0.1;
 
 export function MorphBlendMeshTransition(mesh: MorphBlendMesh, fromAnimation: string, targetAnimation: string): IMorphBlendMeshTransition {
   const state: MorphBlendMeshTransitionState = Object.seal({

@@ -86,6 +86,8 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
 
         const body = new ammo.btRigidBody(rbInfo);
 
+        body.setRestitution(0);
+
         _disposables.add(disposableAmmo(ammo, body));
 
         _rigidBodies.add(body);

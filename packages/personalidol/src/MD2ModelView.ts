@@ -55,7 +55,7 @@ type AnimationClipsCached = {
   usage: number;
 };
 
-const MOVEMENT_DAMP = 40;
+const MOVEMENT_DAMP = 20;
 
 const _animationClipsCache: Map<string, AnimationClipsCached> = new Map();
 let _globalAnimationOffset: number = 0;
@@ -296,10 +296,10 @@ export function MD2ModelView(
       return;
     }
 
-    if (vec.y < 0.1 && vec.y > -0.1) {
+    if (Math.abs(vec.x) > 0.1 || Math.abs(vec.z) > 0.1) {
       state.animation = "run";
     } else {
-      state.animation = "jump";
+      state.animation = "stand";
     }
 
     if (_mesh) {
