@@ -55,7 +55,6 @@ export function PlayerEntityController(
 
     fMount(logger, _npcEntityController);
 
-    cameraController.needsImmediateMove = true;
     cameraController.cameraResetPosition.copy(view.object3D.position);
     cameraController.resetPosition();
   }

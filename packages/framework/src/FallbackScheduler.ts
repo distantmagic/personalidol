@@ -6,7 +6,7 @@ import type { Scheduler } from "./Scheduler.interface";
 
 type TickType = ReturnType<typeof requestAnimationFrame | typeof setTimeout>;
 
-export function FallbackScheduler(timestep: number = 100 / 60): Scheduler<TickType> {
+export function FallbackScheduler(timestep: number = 1000 / 60): Scheduler<TickType> {
   if (isRequestAnimationFrameSupported()) {
     return RequestAnimationFrameScheduler();
   }

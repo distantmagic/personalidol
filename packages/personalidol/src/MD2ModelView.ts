@@ -10,6 +10,7 @@ import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
+import { damp } from "@personalidol/framework/src/damp";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
@@ -53,6 +54,8 @@ type AnimationClipsCached = {
   animations: Array<IAnimationClip>;
   usage: number;
 };
+
+const MOVEMENT_DAMP = 40;
 
 const _animationClipsCache: Map<string, AnimationClipsCached> = new Map();
 let _globalAnimationOffset: number = 0;
@@ -257,7 +260,7 @@ export function MD2ModelView(
     _meshContainer.add(_labelContainer);
 
     // Only use standing animation to offset the bounding box.
-    _labelContainer.position.set(0, geometry.boundingBoxes.stand.max.y + 5 + 15, 0);
+    _labelContainer.position.set(0, geometry.boundingBoxes.stand.max.y + 10, 0);
 
     useObjectLabel(domMessagePort, _labelContainer, entity, _mountables, _unmountables, _disposables);
 
@@ -293,7 +296,7 @@ export function MD2ModelView(
       return;
     }
 
-    if (vec.y < 0.0 && vec.y > 0.0) {
+    if (vec.y < 0.1 && vec.y > -0.1) {
       state.animation = "run";
     } else {
       state.animation = "jump";
@@ -304,10 +307,12 @@ export function MD2ModelView(
     }
 
     _transitionTarget.copy(_meshContainer.position).add(vec);
-    _meshContainer.lookAt(new Vector3(_transitionTarget.x, _meshContainer.position.y, _transitionTarget.z));
+    // _meshContainer.lookAt(_transitionTarget);
 
     // _meshContainer.rotation.set(0, entity.angle, 0);
-    _meshContainer.position.copy(_transitionTarget);
+    _meshContainer.lookAt(new Vector3(_transitionTarget.x, _meshContainer.position.y, _transitionTarget.z));
+
+    // _meshContainer.position.copy(_transitionTarget);
   }
 
   function transitionTo(vec: IVector3): void {
@@ -344,6 +349,10 @@ export function MD2ModelView(
     if (!_morphBlendMeshMixer) {
       return;
     }
+
+    _meshContainer.position.x = damp(_meshContainer.position.x, _transitionTarget.x, MOVEMENT_DAMP, delta);
+    _meshContainer.position.y = damp(_meshContainer.position.y, _transitionTarget.y, MOVEMENT_DAMP, delta);
+    _meshContainer.position.z = damp(_meshContainer.position.z, _transitionTarget.z, MOVEMENT_DAMP, delta);
 
     _morphBlendMeshMixer.setAnimation(state.animation);
     _morphBlendMeshMixer.update(delta, elapsedTime, tickTimerState);

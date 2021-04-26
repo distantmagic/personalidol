@@ -29,7 +29,7 @@ export function createScenes(
   devicePixelRatio: number,
   isOffscreen: boolean,
   eventBus: EventBus,
-  mainLoop: MainLoop,
+  mainLoop: MainLoop<number | ReturnType<typeof setTimeout>>,
   serviceManager: ServiceManager,
   canvas: HTMLCanvasElement | OffscreenCanvas,
   dimensionsState: Uint32Array,

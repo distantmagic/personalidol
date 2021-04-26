@@ -34,7 +34,7 @@ import type { Scheduler } from "./Scheduler.interface";
  * @see MouseObserevr
  * @see TouchObserver
  */
-export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<TickType>, ticker: MainLoopTicker = DefaultMainLoopTicker()): IMainLoop {
+export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<TickType>, ticker: MainLoopTicker = DefaultMainLoopTicker()): IMainLoop<TickType> {
   const clock = new Clock(false);
   const updatables = new Set<MainLoopUpdatable>();
 
@@ -99,6 +99,7 @@ export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<Tic
     id: MathUtils.generateUUID(),
     isMainLoop: true,
     name: "MainLoop",
+    scheduler: frameScheduler,
     ticker: ticker,
     updatables: updatables,
 

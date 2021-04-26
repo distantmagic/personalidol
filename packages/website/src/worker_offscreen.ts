@@ -68,7 +68,7 @@ const logger = Loglevel.getLogger(self.name);
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
 
-const mainLoop: IMainLoop = MainLoop(logger, RequestAnimationFrameScheduler());
+const mainLoop: IMainLoop<number> = MainLoop(logger, RequestAnimationFrameScheduler());
 const serviceManager: IServiceManager = ServiceManager(logger);
 
 const serviceBuilder: IServiceBuilder<Dependencies> = ServiceBuilder<Dependencies>(self.name, partialDependencies);

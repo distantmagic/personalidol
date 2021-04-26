@@ -13,7 +13,7 @@ import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.
 
 export async function createTexturesService(
   logger: Logger,
-  mainLoop: MainLoop,
+  mainLoop: MainLoop<number | ReturnType<typeof setTimeout>>,
   serviceManager: ServiceManager,
   progressMessagePort: MessagePort,
   websiteToProgressMessagePort: MessagePort

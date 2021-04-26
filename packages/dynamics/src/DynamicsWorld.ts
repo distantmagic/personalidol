@@ -34,6 +34,10 @@ function _createAmmoDynamicsWorld(ammo: typeof Ammo) {
   return dynamicsWorld;
 }
 
+/**
+ * `DynamicsWorlds` needs to run with `DynamicsMainLoopTicker`, because it
+ * expects constant timestep in physics simulation.
+ */
 export function DynamicsWorld<S extends SimulantsLookup>(
   logger: Logger,
   ammo: typeof Ammo,
@@ -111,7 +115,7 @@ export function DynamicsWorld<S extends SimulantsLookup>(
   }
 
   function update(delta: number): void {
-    _dynamicsWorld.stepSimulation(delta);
+    _dynamicsWorld.stepSimulation(delta, 0, 1);
     _registeredSimulants.forEach(_updateSimulant);
   }
 

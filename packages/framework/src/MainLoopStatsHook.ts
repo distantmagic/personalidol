@@ -1,5 +1,7 @@
 import { MathUtils } from "three/src/math/MathUtils";
 
+import { name } from "./name";
+
 import type { MainLoop } from "./MainLoop.interface";
 import type { MainLoopStatsHook as IMainLoopStatsHook } from "./MainLoopStatsHook.interface";
 import type { MainLoopStatsReport } from "./MainLoopStatsReport.type";
@@ -7,7 +9,7 @@ import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 
 const DEBUG_NAME: "main_loop" = "main_loop";
 
-export function MainLoopStatsHook(mainLoop: MainLoop): IMainLoopStatsHook {
+export function MainLoopStatsHook(mainLoop: MainLoop<any>): IMainLoopStatsHook {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -17,6 +19,8 @@ export function MainLoopStatsHook(mainLoop: MainLoop): IMainLoopStatsHook {
     currentIntervalTicks: 0,
     debugName: DEBUG_NAME,
     lastUpdate: 0,
+    schedulerName: name(mainLoop.scheduler),
+    tickerName: name(mainLoop.ticker),
   };
 
   let _previousUpdateTime: number = 0;

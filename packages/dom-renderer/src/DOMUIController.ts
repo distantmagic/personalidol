@@ -35,7 +35,7 @@ function _isCustomElementDefined<L extends DOMElementsLookup>(name: string & key
 
 export function DOMUIController<L extends DOMElementsLookup, U extends UserSettings>(
   logger: Logger,
-  mainLoop: MainLoop,
+  mainLoop: MainLoop<number | ReturnType<typeof setTimeout>>,
   uiRootElement: HTMLElement,
   domElementsLookup: L,
   domElementViewBuilder: DOMElementViewBuilder<U>

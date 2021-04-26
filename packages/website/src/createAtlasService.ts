@@ -13,7 +13,7 @@ import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.
 
 export function createAtlasService(
   logger: Logger,
-  mainLoop: MainLoop,
+  mainLoop: MainLoop<number | ReturnType<typeof setTimeout>>,
   serviceManager: ServiceManager,
   progressMessagePort: MessagePort,
   statsMessagePort: MessagePort,

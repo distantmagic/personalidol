@@ -69,9 +69,7 @@ See the base [`Mountable`](framework-Mountable.interface.mdx) and [`Pauseable`](
           <li>
             Checks if any human input (keyboard, mouse, touch, etc) that might
             affect the camera is pressed and reacts accordingly (by zooming,
-            panning, etc). It uses damping for smoother movement by default,
-            but it is possible skip it and move camera immediately to the end
-            state.
+            panning, etc).
           </li>
           <li>
             Reorients the camera to look at the specified position.
@@ -119,20 +117,11 @@ Contains a reference to the currently used camera.
 This is the position that camera resets to if a user requests that. This
 property can be changed anytime.
 
-### `.needsImmediateMove`: `boolean` *setter*
-
-Settings this causes the `CameraController` to skip damping and move
-immediately to the target during the next frame. After camera moves to the
-target it will use damping again during the next movement and this property
-will reset to `false`. You need to set it to `true` everytime you want the
-camera to move immediately.
-
 ### `.position`: [`THREE.Vector3`](https://threejs.org/docs/?q=vector3#api/en/math/Vector3)
 
-Sets the camera desired position. `CameraController` will use damping (smooth
-movement) to get to that position during a series of frames. You can change
-the position anytime, you don't have to check if `CameraController` is already
-moving, it will adjust automatically.
+Sets the camera desired position. You can change the position anytime, you
+don't have to check if `CameraController` is already moving, it will adjust
+automatically.
 
 ### `.state`: [`CameraControllerState`](personalidol-CameraControllerState.type.mdx) *readonly*
 

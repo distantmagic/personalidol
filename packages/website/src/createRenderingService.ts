@@ -23,7 +23,7 @@ import type { UserSettings } from "@personalidol/personalidol/src/UserSettings.t
 
 export async function createRenderingService(
   logger: Logger,
-  mainLoop: MainLoop,
+  mainLoop: MainLoop<number | ReturnType<typeof setTimeout>>,
   serviceManager: ServiceManager,
   canvas: HTMLCanvasElement,
   devicePixelRatio: number,

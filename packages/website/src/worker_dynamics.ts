@@ -45,7 +45,7 @@ const logger = Loglevel.getLogger(self.name);
 // If the FallbackScheduler uses `setTimeout`, then it would be ok to sample
 // time twice as often as the dynamics loop should update.
 // See: Nyquist–Shannon–Kotelnikov sampling theorem.
-const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler(1 / 120), DynamicsMainLoopTicker(logger, 1 / 60));
+const mainLoop: IMainLoop<number | ReturnType<typeof setTimeout>> = MainLoop(logger, FallbackScheduler(1000 / 120), DynamicsMainLoopTicker(logger, 1 / 60));
 
 const serviceManager: IServiceManager = ServiceManager(logger);
 

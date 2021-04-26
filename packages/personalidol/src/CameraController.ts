@@ -3,7 +3,6 @@ import { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Vector3 } from "three/src/math/Vector3";
 
-import { damp } from "@personalidol/framework/src/damp";
 import { updateOrthographicCameraAspect } from "@personalidol/framework/src/updateOrthographicCameraAspect";
 import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updatePerspectiveCameraAspect";
 
@@ -16,7 +15,6 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 
 import type { UserSettings } from "./UserSettings.type";
 
-const CAMERA_DAMP = 10;
 const CAMERA_ZOOM_INITIAL = 401;
 const CAMERA_ZOOM_MAX = 1;
 const CAMERA_ZOOM_MIN = 1401;
@@ -51,12 +49,9 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
   let _cameraZoomAmount = 0;
   let _isCameraChanged: boolean = false;
   let _orthographicCameraFrustumSize: number = _cameraZoomAmount;
-  let _needsImmediateMove: boolean = false;
 
   function mount(): void {
     state.isMounted = true;
-
-    _needsImmediateMove = true;
 
     resetPosition();
     resetZoom();
@@ -90,37 +85,22 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
     }
 
     if (_orthographicCamera.type === userSettings.cameraType) {
-      _needsImmediateMove = _needsImmediateMove || _isCameraChanged;
       _currentCamera = _orthographicCamera;
     }
 
     if (_perspectiveCamera.type === userSettings.cameraType) {
-      _needsImmediateMove = _needsImmediateMove || _isCameraChanged;
       _currentCamera = _perspectiveCamera;
     }
 
-    if (_needsImmediateMove) {
-      _orthographicCameraFrustumSize = _cameraZoomAmount;
-    } else {
-      _orthographicCameraFrustumSize = damp(_orthographicCameraFrustumSize, _cameraZoomAmount, CAMERA_DAMP, delta);
-    }
-
+    _orthographicCameraFrustumSize = _cameraZoomAmount;
     _orthographicCameraFrustumSize = Math.max(_orthographicCameraFrustumSize, CAMERA_ORTHOGRAPHIC_FRUSTUM_SIZE_MIN);
 
     updateOrthographicCameraAspect(dimensionsState, _orthographicCamera, _orthographicCameraFrustumSize);
     updatePerspectiveCameraAspect(dimensionsState, _perspectiveCamera);
 
-    if (_needsImmediateMove) {
-      _needsImmediateMove = false;
-
-      _currentCamera.position.x = _cameraPosition.x + _cameraZoomAmount;
-      _currentCamera.position.z = _cameraPosition.z + _cameraZoomAmount;
-      _currentCamera.position.y = _cameraPosition.y + _cameraZoomAmount;
-    } else {
-      _currentCamera.position.x = damp(_currentCamera.position.x, _cameraPosition.x + _cameraZoomAmount, CAMERA_DAMP, delta);
-      _currentCamera.position.z = damp(_currentCamera.position.z, _cameraPosition.z + _cameraZoomAmount, CAMERA_DAMP, delta);
-      _currentCamera.position.y = damp(_currentCamera.position.y, _cameraPosition.y + _cameraZoomAmount, CAMERA_DAMP, delta);
-    }
+    _currentCamera.position.x = _cameraPosition.x + _cameraZoomAmount;
+    _currentCamera.position.z = _cameraPosition.z + _cameraZoomAmount;
+    _currentCamera.position.y = _cameraPosition.y + _cameraZoomAmount;
 
     _currentCamera.lookAt(_currentCamera.position.x - _cameraZoomAmount, _currentCamera.position.y - _cameraZoomAmount, _currentCamera.position.z - _cameraZoomAmount);
   }
@@ -145,10 +125,6 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
 
     get camera() {
       return _currentCamera;
-    },
-
-    set needsImmediateMove(needsImmediateMove: boolean) {
-      _needsImmediateMove = needsImmediateMove;
     },
 
     mount: mount,

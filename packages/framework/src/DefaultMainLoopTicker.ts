@@ -1,3 +1,5 @@
+import { MathUtils } from "three/src/math/MathUtils";
+
 import type { MainLoopTicker } from "./MainLoopTicker.interface";
 import type { MainLoopTickerState } from "./MainLoopTickerState.type";
 import type { TickTimerState } from "./TickTimerState.type";
@@ -22,6 +24,8 @@ export function DefaultMainLoopTicker(): MainLoopTicker {
   }
 
   return Object.freeze({
+    id: MathUtils.generateUUID(),
+    name: "DefaultMainLoopTicker",
     state: state,
     tickTimerState: tickTimerState,
 

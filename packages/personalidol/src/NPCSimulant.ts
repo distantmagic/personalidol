@@ -71,7 +71,8 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
 
       _disposables.add(disposableAmmo(ammo, npcLocalInertia));
 
-      const npcShape = new ammo.btSphereShape(14);
+      // const npcShape = new ammo.btSphereShape(14);
+      const npcShape = new ammo.btCapsuleShape(14, 20);
 
       _disposables.add(disposableAmmo(ammo, npcShape));
 
@@ -92,6 +93,13 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
       _disposables.add(disposableAmmo(ammo, rbInfo));
 
       _npcRigidBody = new ammo.btRigidBody(rbInfo);
+
+      // Disable character rotation.
+      const angularFactor = new ammo.btVector3(0, 0, 0);
+
+      _disposables.add(disposableAmmo(ammo, angularFactor));
+
+      _npcRigidBody.setAngularFactor(angularFactor);
 
       _disposables.add(disposableAmmo(ammo, _npcRigidBody));
 
