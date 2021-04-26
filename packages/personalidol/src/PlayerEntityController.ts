@@ -93,7 +93,9 @@ export function PlayerEntityController(
       userInputTouchController.cameraTransitionRequest
     );
 
-    _npcEntityController.rigidBody.setLinearVelocity(transitionVector.clone().normalize().multiplyScalar(300));
+    const movementVector = transitionVector.clone().normalize().multiplyScalar(300);
+
+    _npcEntityController.rigidBody.setLinearVelocity(movementVector);
 
     cameraController.cameraResetPosition.copy(view.object3D.position);
     cameraController.resetPosition();

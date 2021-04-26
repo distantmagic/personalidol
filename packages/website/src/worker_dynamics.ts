@@ -5,14 +5,15 @@ import Loglevel from "loglevel";
 
 import { AmmoLoader } from "@personalidol/ammo/src/AmmoLoader";
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { DynamicsMainLoopTicker } from "@personalidol/dynamics/src/DynamicsMainLoopTicker";
 import { DynamicsWorld } from "@personalidol/dynamics/src/DynamicsWorld";
 import { DynamicsWorldStatsHook } from "@personalidol/dynamics/src/DynamicsWorldStatsHook";
+import { FallbackScheduler } from "@personalidol/framework/src/FallbackScheduler";
 import { MainLoop } from "@personalidol/framework/src/MainLoop";
 import { MainLoopStatsHook } from "@personalidol/framework/src/MainLoopStatsHook";
 import { prefetch } from "@personalidol/framework/src/prefetch";
 import { ServiceBuilder } from "@personalidol/framework/src/ServiceBuilder";
 import { ServiceManager } from "@personalidol/framework/src/ServiceManager";
-import { FallbackScheduler } from "@personalidol/framework/src/FallbackScheduler";
 import { SimulantFactory } from "@personalidol/personalidol/src/SimulantFactory";
 import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 
@@ -40,7 +41,7 @@ const partialDependencies: Partial<Dependencies> = {
 
 const AMMO_WASM_URL: string = `${__STATIC_BASE_PATH}/lib/ammo.wasm.wasm?${__CACHE_BUST}`;
 const logger = Loglevel.getLogger(self.name);
-const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler());
+const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler(), DynamicsMainLoopTicker(logger));
 const serviceManager: IServiceManager = ServiceManager(logger);
 
 logger.setLevel(__LOG_LEVEL);

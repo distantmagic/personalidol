@@ -14,6 +14,8 @@ import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.ty
 import type { NPCEntity } from "./NPCEntity.type";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
+const NPC_MASS: number = 80;
+
 export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.btDiscreteDynamicsWorld, simulantFeedbackMessagePort: MessagePort): Simulant {
   const state: SimulantState = Object.seal({
     isDisposed: false,
@@ -65,7 +67,6 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
     },
 
     entity(entity: NPCEntity) {
-      const npcMass = 80;
       const npcLocalInertia = new ammo.btVector3(0, 0, 0);
 
       _disposables.add(disposableAmmo(ammo, npcLocalInertia));
@@ -74,7 +75,7 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
 
       _disposables.add(disposableAmmo(ammo, npcShape));
 
-      npcShape.calculateLocalInertia(npcMass, npcLocalInertia);
+      npcShape.calculateLocalInertia(NPC_MASS, npcLocalInertia);
 
       const startTransform = new ammo.btTransform();
 
@@ -86,7 +87,7 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
 
       _disposables.add(disposableAmmo(ammo, npcMotionState));
 
-      const rbInfo = new ammo.btRigidBodyConstructionInfo(npcMass, npcMotionState, npcShape, npcLocalInertia);
+      const rbInfo = new ammo.btRigidBodyConstructionInfo(NPC_MASS, npcMotionState, npcShape, npcLocalInertia);
 
       _disposables.add(disposableAmmo(ammo, rbInfo));
 

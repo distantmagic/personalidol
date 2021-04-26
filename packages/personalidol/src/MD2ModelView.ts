@@ -222,7 +222,7 @@ export function MD2ModelView(
     state.animation = "stand";
 
     _mesh.setAnimationTime("stand", _animationOffset);
-    _mesh.position.set(0, 15, 0);
+    _mesh.position.set(0, 0, 0);
     _mesh.rotation.set(0, entity.angle, 0);
 
     _meshContainer.add(_mesh);
@@ -293,7 +293,7 @@ export function MD2ModelView(
       return;
     }
 
-    if (vec.y < 0.1 && vec.y > -0.1) {
+    if (vec.y < 0.0 && vec.y > 0.0) {
       state.animation = "run";
     } else {
       state.animation = "jump";
