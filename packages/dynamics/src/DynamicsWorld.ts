@@ -115,8 +115,8 @@ export function DynamicsWorld<S extends SimulantsLookup>(
   }
 
   function update(delta: number): void {
-    _dynamicsWorld.stepSimulation(delta, 0, 1);
     _registeredSimulants.forEach(_updateSimulant);
+    _dynamicsWorld.stepSimulation(delta, 0, 1);
   }
 
   return Object.freeze({

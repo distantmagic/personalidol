@@ -45,6 +45,8 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
       }
 
       _vector.setValue(force.x, force.y, force.z);
+
+      _npcRigidBody.activate(true);
       _npcRigidBody.applyCentralForce(_vector);
     },
 
@@ -54,6 +56,8 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
       }
 
       _vector.setValue(impulse.x, impulse.y, impulse.z);
+
+      _npcRigidBody.activate(true);
       _npcRigidBody.applyCentralImpulse(_vector);
     },
 
@@ -65,6 +69,8 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
       const currentVelocity: Ammo.btVector3 = _npcRigidBody.getLinearVelocity();
 
       _vector.setValue(velocity.x, currentVelocity.y(), velocity.z);
+
+      _npcRigidBody.activate(true);
       _npcRigidBody.setLinearVelocity(_vector);
     },
 
@@ -73,7 +79,6 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
 
       _disposables.add(disposableAmmo(ammo, npcLocalInertia));
 
-      // const npcShape = new ammo.btSphereShape(14);
       const npcShape = new ammo.btCapsuleShape(14, 20);
 
       _disposables.add(disposableAmmo(ammo, npcShape));
@@ -95,7 +100,8 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
       _disposables.add(disposableAmmo(ammo, rbInfo));
 
       _npcRigidBody = new ammo.btRigidBody(rbInfo);
-      _npcRigidBody.setRestitution(0);
+
+      _disposables.add(disposableAmmo(ammo, _npcRigidBody));
 
       // Disable character rotation.
       const angularFactor = new ammo.btVector3(0, 0, 0);
@@ -103,8 +109,6 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
       _disposables.add(disposableAmmo(ammo, angularFactor));
 
       _npcRigidBody.setAngularFactor(angularFactor);
-
-      _disposables.add(disposableAmmo(ammo, _npcRigidBody));
 
       const origin = _npcRigidBody.getWorldTransform().getOrigin();
 

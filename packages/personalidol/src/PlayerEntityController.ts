@@ -95,6 +95,7 @@ export function PlayerEntityController(
     const movementVector = transitionVector.clone().normalize().multiplyScalar(300);
 
     _npcEntityController.rigidBody.setLinearVelocity(movementVector);
+    // _npcEntityController.rigidBody.applyCentralImpulse(movementVector);
 
     cameraController.cameraResetPosition.copy(view.object3D.position);
     cameraController.resetPosition();

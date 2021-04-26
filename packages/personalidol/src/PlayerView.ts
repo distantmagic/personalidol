@@ -28,7 +28,7 @@ export function PlayerView(
     id: MathUtils.generateUUID(),
     angle: 0,
     classname: "model_md2",
-    model_name: "necron99",
+    model_name: "ratamahatta",
     origin: entity.origin,
     properties: entity.properties,
     skin: 3,
