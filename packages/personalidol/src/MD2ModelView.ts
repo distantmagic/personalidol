@@ -302,6 +302,10 @@ export function MD2ModelView(
       state.animation = "stand";
     }
 
+    if (Math.abs(vec.y) > 10) {
+      state.animation = "jump";
+    }
+
     if (_mesh) {
       _mesh.rotation.set(0, (-1 * Math.PI) / 2, 0);
     }
