@@ -1,7 +1,10 @@
 /// <reference types="@types/ammo.js" />
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { disposableAmmo } from "@personalidol/ammo/src/disposableAmmo";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
 
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { MessageFeedbackSimulantPreloaded } from "@personalidol/dynamics/src/MessageFeedbackSimulantPreloaded.type";
 import type { Simulant } from "@personalidol/dynamics/src/Simulant.interface";
 import type { SimulantState } from "@personalidol/dynamics/src/SimulantState.type";
@@ -21,9 +24,15 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
     needsUpdates: true,
   });
 
-  // Reduce the memory leaks by sharing this object.
+  const _disposables: Set<DisposableCallback> = new Set();
+
   const _transform: Ammo.btTransform = new ammo.btTransform();
+
+  _disposables.add(disposableAmmo(ammo, _transform));
+
   const _vector: Ammo.btVector3 = new ammo.btVector3(0, 0, 0);
+
+  _disposables.add(disposableAmmo(ammo, _vector));
 
   let _npcRigidBody: null | Ammo.btRigidBody = null;
 
@@ -58,18 +67,32 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
     entity(entity: NPCEntity) {
       const npcMass = 80;
       const npcLocalInertia = new ammo.btVector3(0, 0, 0);
-      const npcShape = new ammo.btSphereShape(10);
+
+      _disposables.add(disposableAmmo(ammo, npcLocalInertia));
+
+      const npcShape = new ammo.btSphereShape(14);
+
+      _disposables.add(disposableAmmo(ammo, npcShape));
 
       npcShape.calculateLocalInertia(npcMass, npcLocalInertia);
 
       const startTransform = new ammo.btTransform();
 
+      _disposables.add(disposableAmmo(ammo, startTransform));
+
       startTransform.setIdentity();
 
       const npcMotionState = new ammo.btDefaultMotionState(startTransform);
+
+      _disposables.add(disposableAmmo(ammo, npcMotionState));
+
       const rbInfo = new ammo.btRigidBodyConstructionInfo(npcMass, npcMotionState, npcShape, npcLocalInertia);
 
+      _disposables.add(disposableAmmo(ammo, rbInfo));
+
       _npcRigidBody = new ammo.btRigidBody(rbInfo);
+
+      _disposables.add(disposableAmmo(ammo, _npcRigidBody));
 
       const origin = _npcRigidBody.getWorldTransform().getOrigin();
 
@@ -104,6 +127,7 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
     state.isDisposed = true;
 
     simulantFeedbackMessagePort.close();
+    disposeAll(_disposables);
   }
 
   function mount(): void {

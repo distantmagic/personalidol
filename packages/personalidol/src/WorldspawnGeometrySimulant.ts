@@ -5,8 +5,11 @@ import { Vector3 } from "three/src/math/Vector3";
 
 import { buildGeometryPoints } from "@personalidol/quakemaps/src/buildGeometryPoints";
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { disposableAmmo } from "@personalidol/ammo/src/disposableAmmo";
+import { disposeAll } from "@personalidol/framework/src/disposeAll";
 
 import type { Brush } from "@personalidol/quakemaps/src/Brush.type";
+import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { MessageFeedbackSimulantPreloaded } from "@personalidol/dynamics/src/MessageFeedbackSimulantPreloaded.type";
 import type { Simulant } from "@personalidol/dynamics/src/Simulant.interface";
 import type { SimulantState } from "@personalidol/dynamics/src/SimulantState.type";
@@ -34,6 +37,7 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
     needsUpdates: true,
   });
 
+  const _disposables: Set<DisposableCallback> = new Set();
   const _rigidBodies: Set<Ammo.btRigidBody> = new Set();
 
   const _simulantFeedbackMessageRouter = createRouter({
@@ -44,23 +48,45 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
 
       const transform = new ammo.btTransform();
 
+      _disposables.add(disposableAmmo(ammo, transform));
+
+      const transformOrigin = new ammo.btVector3(0, 0, 0);
+
+      _disposables.add(disposableAmmo(ammo, transformOrigin));
+
       transform.setIdentity();
-      transform.setOrigin(new ammo.btVector3(0, 0, 0));
+      transform.setOrigin(transformOrigin);
 
       const localInertia = new ammo.btVector3(0, 0, 0);
-      const myMotionState = new ammo.btDefaultMotionState(transform);
+
+      _disposables.add(disposableAmmo(ammo, localInertia));
+
+      const motionState = new ammo.btDefaultMotionState(transform);
+
+      _disposables.add(disposableAmmo(ammo, motionState));
 
       for (let brush of brushes) {
         _fixBrushAfterDeserialization(brush);
 
         const shape = new ammo.btConvexHullShape();
 
+        _disposables.add(disposableAmmo(ammo, shape));
+
         for (let point of buildGeometryPoints([brush])) {
-          shape.addPoint(new ammo.btVector3(point.x, point.y, point.z));
+          const shapePoint = new ammo.btVector3(point.x, point.y, point.z);
+
+          _disposables.add(disposableAmmo(ammo, shapePoint));
+
+          shape.addPoint(shapePoint);
         }
 
-        const rbInfo = new ammo.btRigidBodyConstructionInfo(0, myMotionState, shape, localInertia);
+        const rbInfo = new ammo.btRigidBodyConstructionInfo(0, motionState, shape, localInertia);
+
+        _disposables.add(disposableAmmo(ammo, rbInfo));
+
         const body = new ammo.btRigidBody(rbInfo);
+
+        _disposables.add(disposableAmmo(ammo, body));
 
         _rigidBodies.add(body);
       }
@@ -85,6 +111,7 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
     state.isDisposed = true;
 
     simulantFeedbackMessagePort.close();
+    disposeAll(_disposables);
   }
 
   function mount(): void {

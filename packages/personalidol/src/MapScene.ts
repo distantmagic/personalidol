@@ -62,9 +62,7 @@ import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
-const _disposables: Set<DisposableCallback> = new Set();
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
-const _unmountables: Set<UnmountableCallback> = new Set();
 
 const _internationalizationMessageRouter = createRouter({
   loadedNamespaces: handleRPCResponse(_rpcLookupTable),
@@ -113,6 +111,9 @@ export function MapScene(
   });
 
   let _isScenePreloaded: boolean = false;
+
+  const _disposables: Set<DisposableCallback> = new Set();
+  const _unmountables: Set<UnmountableCallback> = new Set();
 
   const _scene = new Scene();
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
