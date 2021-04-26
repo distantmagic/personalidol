@@ -14,6 +14,8 @@ import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.ty
 import type { NPCEntity } from "./NPCEntity.type";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
+const NPC_DIMENSIONS_BASE: number = 14;
+const NPC_DIMENSIONS_HEIGHT: number = 20;
 const NPC_MASS: number = 80;
 
 export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.btDiscreteDynamicsWorld, simulantFeedbackMessagePort: MessagePort): Simulant {
@@ -79,7 +81,7 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
 
       _disposables.add(disposableAmmo(ammo, npcLocalInertia));
 
-      const npcShape = new ammo.btCapsuleShape(14, 20);
+      const npcShape = new ammo.btCapsuleShape(NPC_DIMENSIONS_BASE, NPC_DIMENSIONS_HEIGHT);
 
       _disposables.add(disposableAmmo(ammo, npcShape));
 
