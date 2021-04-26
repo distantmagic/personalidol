@@ -41,7 +41,12 @@ const partialDependencies: Partial<Dependencies> = {
 
 const AMMO_WASM_URL: string = `${__STATIC_BASE_PATH}/lib/ammo.wasm.wasm?${__CACHE_BUST}`;
 const logger = Loglevel.getLogger(self.name);
-const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler(), DynamicsMainLoopTicker(logger));
+
+// If the FallbackScheduler uses `setTimeout`, then it would be ok to sample
+// time twice as often as the dynamics loop should update.
+// See: Nyquist–Shannon–Kotelnikov sampling theorem.
+const mainLoop: IMainLoop = MainLoop(logger, FallbackScheduler(1 / 120), DynamicsMainLoopTicker(logger, 1 / 60));
+
 const serviceManager: IServiceManager = ServiceManager(logger);
 
 logger.setLevel(__LOG_LEVEL);
