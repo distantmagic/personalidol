@@ -72,7 +72,7 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
 
         _disposables.add(disposableAmmo(ammo, shape));
 
-        for (let point of buildGeometryPoints([brush])) {
+        for (let point of buildGeometryPoints([brush], false)) {
           const shapePoint = new ammo.btVector3(point.x, point.y, point.z);
 
           _disposables.add(disposableAmmo(ammo, shapePoint));

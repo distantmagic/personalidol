@@ -35,7 +35,11 @@ function _isPointInsideBrush(brush: Brush, point: IVector3): boolean {
   return true;
 }
 
-export function* buildGeometryTriangles(brushes: ReadonlyArray<Brush>, discardOccluding: null | IVector3 = null): Generator<BrushHalfSpaceTriangle> {
+export function* buildGeometryTriangles(
+  brushes: ReadonlyArray<Brush>,
+  skipPlaceholders: boolean = true,
+  discardOccluding: null | IVector3 = null
+): Generator<BrushHalfSpaceTriangle> {
   const pointsCache: IntersectingPointsCache = {};
 
   for (let brush of brushes) {
@@ -63,7 +67,7 @@ export function* buildGeometryTriangles(brushes: ReadonlyArray<Brush>, discardOc
 
   for (let brush of brushes) {
     for (let halfSpace of brush.halfSpaces) {
-      if (isEmptyTexturePlaceholder(halfSpace.texture.name)) {
+      if (skipPlaceholders && isEmptyTexturePlaceholder(halfSpace.texture.name)) {
         // no texture means that those vertcies should not be rendered
         continue;
       }

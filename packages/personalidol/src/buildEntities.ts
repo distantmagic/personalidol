@@ -20,6 +20,7 @@ import type { EntityLightPoint } from "./EntityLightPoint.type";
 import type { EntityLightSpotlight } from "./EntityLightSpotlight.type";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { EntityPlayer } from "./EntityPlayer.type";
+import type { EntityScriptedZone } from "./EntityScriptedZone.type";
 import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
@@ -87,7 +88,7 @@ export function* buildEntities(
               classname: entityClassName,
               id: generateUUID(),
               properties: entity.properties,
-              ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, null),
+              ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, true, null),
             };
             break;
         }
@@ -118,7 +119,6 @@ export function* buildEntities(
           scale: Number(entity.properties.scale),
           transferables: _transferablesEmpty,
         };
-
         break;
       case "model_md2":
         yield <EntityMD2Model>{
@@ -139,6 +139,15 @@ export function* buildEntities(
           origin: _getEntityOrigin(filename, entity),
           properties: entity.properties,
           transferables: _transferablesEmpty,
+        };
+        break;
+      case "scripted_zone":
+        yield <EntityScriptedZone>{
+          brushes: entity.brushes,
+          classname: entityClassName,
+          id: generateUUID(),
+          properties: entity.properties,
+          ...buildGeometryAttributes(entity.brushes, resolveTextureDimensions, true, null),
         };
         break;
       case "spark_particles":
@@ -232,6 +241,6 @@ export function* buildEntities(
     classname: "worldspawn",
     id: generateUUID(),
     properties: worldProperties,
-    ...buildGeometryAttributes(mergedBrushes, resolveTextureDimensions, discardOccluding),
+    ...buildGeometryAttributes(mergedBrushes, resolveTextureDimensions, true, discardOccluding),
   };
 }

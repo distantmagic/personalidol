@@ -4,6 +4,7 @@ import { InstancedGLTFModelView } from "./InstancedGLTFModelView";
 import { MD2ModelView } from "./MD2ModelView";
 import { PlayerView } from "./PlayerView";
 import { PointLightView } from "./PointLightView";
+import { ScriptedZoneView } from "./ScriptedZoneView";
 import { SpotlightLightView } from "./SpotlightLightView";
 import { TargetView } from "./TargetView";
 import { WorldspawnGeometryView } from "./WorldspawnGeometryView";
@@ -26,6 +27,7 @@ import type { EntityLookupCallback } from "./EntityLookupCallback.type";
 import type { EntityLookupTable } from "./EntityLookupTable.type";
 import type { EntityMD2Model } from "./EntityMD2Model.type";
 import type { EntityPlayer } from "./EntityPlayer.type";
+import type { EntityScriptedZone } from "./EntityScriptedZone.type";
 import type { EntitySounds } from "./EntitySounds.type";
 import type { EntitySparkParticles } from "./EntitySparkParticles.type";
 import type { EntityTarget } from "./EntityTarget.type";
@@ -78,6 +80,10 @@ export function EntityViewFactory(
 
     player(entity: EntityPlayer): EntityView<EntityPlayer> {
       return PlayerView(logger, userSettings, scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, rpcLookupTable);
+    },
+
+    scripted_zone(entity: EntityScriptedZone): EntityView<EntityScriptedZone> {
+      return ScriptedZoneView(logger, entity);
     },
 
     sounds(entity: EntitySounds): EntityView<EntitySounds> {

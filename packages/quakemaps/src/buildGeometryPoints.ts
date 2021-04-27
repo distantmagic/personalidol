@@ -6,10 +6,10 @@ import type { Vector3 as IVector3 } from "three/src/math/Vector3";
 import type { Brush } from "./Brush.type";
 import type { Vector3Simple } from "./Vector3Simple.type";
 
-export function* buildGeometryPoints(brushes: ReadonlyArray<Brush>, discardOccluding: null | IVector3 = null): Generator<Vector3Simple> {
+export function* buildGeometryPoints(brushes: ReadonlyArray<Brush>, skipPlaceholders: boolean = true, discardOccluding: null | IVector3 = null): Generator<Vector3Simple> {
   const unique: Set<string> = new Set();
 
-  for (let brushHalfSpaceTriangle of buildGeometryTriangles(brushes, discardOccluding)) {
+  for (let brushHalfSpaceTriangle of buildGeometryTriangles(brushes, skipPlaceholders, discardOccluding)) {
     for (let point of brushHalfSpaceTriangle.triangle) {
       const marshaled = marshalCoords(point.x, point.y, point.z);
 

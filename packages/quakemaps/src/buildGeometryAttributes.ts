@@ -15,7 +15,12 @@ import type { Vector3Simple } from "./Vector3Simple.type";
 
 type UV = [number, number];
 
-export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, resolveTextureDimensions: TextureDimensionsResolver, discardOccluding: null | IVector3 = null): Geometry {
+export function buildGeometryAttributes(
+  brushes: ReadonlyArray<Brush>,
+  resolveTextureDimensions: TextureDimensionsResolver,
+  skipPlaceholders: boolean = true,
+  discardOccluding: null | IVector3 = null
+): Geometry {
   let indexIncrement = 0;
   const indexLookup: {
     [key: string]: number;
@@ -29,7 +34,7 @@ export function buildGeometryAttributes(brushes: ReadonlyArray<Brush>, resolveTe
   const uvs: Array<number> = [];
   const vertices: Array<number> = [];
 
-  for (let brushHalfSpaceTriangle of buildGeometryTriangles(brushes, discardOccluding)) {
+  for (let brushHalfSpaceTriangle of buildGeometryTriangles(brushes, skipPlaceholders, discardOccluding)) {
     const halfSpace = brushHalfSpaceTriangle.halfSpace;
     const normal = brushHalfSpaceTriangle.halfSpace.plane.normal;
     const triangle = brushHalfSpaceTriangle.triangle;

@@ -2,8 +2,9 @@ import { name } from "@personalidol/framework/src/name";
 
 import { isCharacterView } from "./isCharacterView";
 import { isEntityViewOfClass } from "./isEntityViewOfClass";
-import { isNPCEntityView } from "./isNPCEntityView";
 import { isEntityWithController } from "./isEntityWithController";
+import { isNPCEntityView } from "./isNPCEntityView";
+import { MapTransitionEntityController } from "./MapTransitionEntityController";
 import { NPCEntityController } from "./NPCEntityController";
 import { PlayerEntityController } from "./PlayerEntityController";
 import { WorldspawnGeometryEntityController } from "./WorldspawnGeometryEntityController";
@@ -18,6 +19,7 @@ import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityController as IEntityController } from "./EntityController.interface";
 import type { EntityControllerFactory as IEntityControllerFactory } from "./EntityControllerFactory.interface";
 import type { EntityPlayer } from "./EntityPlayer.type";
+import type { EntityScriptedZone } from "./EntityScriptedZone.type";
 import type { EntityView } from "./EntityView.interface";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 import type { NPCEntity } from "./NPCEntity.type";
@@ -37,6 +39,13 @@ export function EntityControllerFactory(
     }
 
     switch (view.entity.properties.controller) {
+      case "map-transition":
+        if (!isEntityViewOfClass<EntityScriptedZone>(view, "scripted_zone")) {
+          throw new Error(`Map transition entity controller only supports "scripted_zone" entity. Got: "${view.entity.classname}"`);
+        }
+
+        yield MapTransitionEntityController(view, dynamicsMessagePort) as IEntityController<E>;
+        break;
       case "npc":
         if (!isNPCEntityView(view)) {
           throw new Error(`NPC entity controller only supports NPCEntity. Got: "${view.entity.classname}"`);
