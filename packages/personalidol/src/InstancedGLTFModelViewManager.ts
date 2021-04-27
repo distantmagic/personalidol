@@ -1,12 +1,12 @@
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { InstancedMesh } from "three/src/objects/InstancedMesh";
-import { MathUtils } from "three/src/math/MathUtils";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { mountAll } from "@personalidol/framework/src/mountAll";
 import { must } from "@personalidol/framework/src/must";
 import { name } from "@personalidol/framework/src/name";
@@ -55,7 +55,7 @@ export function InstancedGLTFModelViewManager(
   rpcLookupTable: RPCLookupTable
 ): IInstancedGLTFModelViewManager {
   const nameable: Nameable = Object.seal({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "InstancedGLTFModelViewManager",
   });
   const state: ViewState = Object.seal({
@@ -175,7 +175,7 @@ export function InstancedGLTFModelViewManager(
       load: {
         model_name: entity.model_name,
         model_scale: entity.scale,
-        rpc: MathUtils.generateUUID(),
+        rpc: generateUUID(),
       },
     });
 

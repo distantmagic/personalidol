@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import { UserSettingsDynamicLightQualityMap } from "./UserSettingsDynamicLightQualityMap.enum";
 
@@ -53,7 +52,7 @@ export function BackgroundLightUserSettingsManager(userSettings: UserSettings, l
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isPreloadable: true,
     isUserSettingsManager: true,
     name: "BackgroundLightUserSettingsManager",

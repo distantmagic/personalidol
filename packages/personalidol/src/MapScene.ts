@@ -1,6 +1,5 @@
 import { Color } from "three/src/math/Color";
 import { Fog } from "three/src/scenes/Fog";
-import { MathUtils } from "three/src/math/MathUtils";
 import { Scene } from "three/src/scenes/Scene";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
@@ -9,6 +8,7 @@ import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loade
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { imageDataBufferResponseToTexture } from "@personalidol/texture-loader/src/imageDataBufferResponseToTexture";
@@ -226,7 +226,7 @@ export function MapScene(
     } = await sendRPCMessage(_rpcLookupTable, quakeMapsMessagePort, {
       unmarshal: {
         filename: mapFilename,
-        rpc: MathUtils.generateUUID(),
+        rpc: generateUUID(),
       },
     });
 
@@ -250,7 +250,7 @@ export function MapScene(
       await sendRPCMessage(_rpcLookupTable, internationalizationMessagePort, {
         loadNamespaces: {
           namespaces: Array.from(i18Namespaces.values()),
-          rpc: MathUtils.generateUUID(),
+          rpc: generateUUID(),
         },
       });
     }
@@ -368,12 +368,12 @@ export function MapScene(
     }
 
     state.isPreloaded = _isScenePreloaded && _entityControllerBag.state.isPreloaded && _viewBag.state.isPreloaded;
-    state.isPreloading = state.isPreloading || _entityControllerBag.state.isPreloading || _viewBag.state.isPreloading;
+    state.isPreloading = !_isScenePreloaded || _entityControllerBag.state.isPreloading || _viewBag.state.isPreloading;
   }
 
   return Object.freeze({
     currentMap: mapName,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isMapScene: true,
     isMountable: true,

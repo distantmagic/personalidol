@@ -24,4 +24,14 @@ export function preload(logger: Logger, mount: Preloadable): void {
   if (mount.state.isPreloaded && mount.state.isPreloading) {
     throw new Error(`Mount can't be both preloaded and preloading at the same time: "${name(mount)}"`);
   }
+
+  if (mount.state.isPreloaded) {
+    return;
+  }
+
+  setTimeout(function () {
+    if (mount.state.isPreloading) {
+      logger.warn(`PRELOAD.SLOW(${name(mount)})`);
+    }
+  }, 3000);
 }

@@ -1,7 +1,7 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
-import { MathUtils } from "three/src/math/MathUtils";
 
 import { BackgroundLightUserSettingsManager } from "./BackgroundLightUserSettingsManager";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 
 import type { Logger } from "loglevel";
@@ -63,7 +63,7 @@ export function AmbientLightView(logger: Logger, userSettings: UserSettings, sce
 
   return Object.freeze({
     entity: entity,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,

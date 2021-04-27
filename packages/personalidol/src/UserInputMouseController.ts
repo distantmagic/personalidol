@@ -1,7 +1,7 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { getMousePointerVectorX } from "@personalidol/input/src/getMousePointerVectorX";
 import { getMousePointerVectorY } from "@personalidol/input/src/getMousePointerVectorY";
 import { isPotentiallyMouseClick } from "@personalidol/input/src/isPotentiallyMouseClick";
@@ -82,7 +82,7 @@ export function UserInputMouseController(userSettings: UserSettings, dimensionsS
 
   return Object.freeze({
     cameraTransitionRequest: _cameraTransitionRequest,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMountable: true,
     isUserInputController: true,
     name: "UserInputMouseController",

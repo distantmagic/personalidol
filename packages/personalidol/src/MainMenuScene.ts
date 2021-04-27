@@ -1,8 +1,8 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Scene } from "three/src/scenes/Scene";
 
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
@@ -136,7 +136,7 @@ export function MainMenuScene(
     needsUpdates: true,
   });
 
-  const _domMainMenuElementId: string = MathUtils.generateUUID();
+  const _domMainMenuElementId: string = generateUUID();
 
   function _onFontsPreloaded(): void {
     _fontsPreloaded = true;
@@ -217,13 +217,13 @@ export function MainMenuScene(
     await sendRPCMessage(_rpcLookupTable, fontPreloadMessagePort, <MessageFontPreload>{
       preloadFont: {
         ...fontParameters,
-        rpc: MathUtils.generateUUID(),
+        rpc: generateUUID(),
       },
     });
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isMainMenuScene: true,
     isMountable: true,

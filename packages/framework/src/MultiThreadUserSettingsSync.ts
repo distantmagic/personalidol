@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createRouter } from "./createRouter";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { UserSettings } from "./UserSettings.type";
@@ -36,7 +35,7 @@ export function MultiThreadUserSettingsSync(userSettings: UserSettings, userSett
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isUserSettingsSync: true,
     name: `MultiThreadUserSettingsSync(${debugName})`,
     state: state,

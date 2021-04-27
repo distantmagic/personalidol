@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { ResizeableRenderer } from "@personalidol/three-modules/src/ResizeableRenderer.interface";
 
@@ -50,7 +49,7 @@ export function HTMLElementDimensionsManager(htmlElement: HTMLElement, dimension
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "HTMLElementDimensionsManager",
     state: state,
 

@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { i18n } from "i18next";
 
@@ -63,7 +62,7 @@ export function InternationalizationService(i18next: i18n, progressMessagePort: 
   function stop(): void {}
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     i18next: i18next,
     isPreloadable: true,
     name: "InternationalizationService",

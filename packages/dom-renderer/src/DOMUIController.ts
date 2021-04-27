@@ -1,8 +1,7 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { clearHTMLElement } from "@personalidol/dom/src/clearHTMLElement";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 
 import { Events } from "./Events.enum";
@@ -265,7 +264,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isPreloadable: true,
     name: "DOMUIController",
     state: state,

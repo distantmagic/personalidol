@@ -1,8 +1,8 @@
 import { Color } from "three/src/math/Color";
-import { MathUtils } from "three/src/math/MathUtils";
 import { PointLight } from "three/src/lights/PointLight";
 
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 
 import { ShadowLightUserSettingsManager } from "./ShadowLightUserSettingsManager";
@@ -71,7 +71,7 @@ export function PointLightView(logger: Logger, userSettings: UserSettings, scene
 
   return Object.freeze({
     entity: entity,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,

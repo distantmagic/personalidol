@@ -1,6 +1,6 @@
 import { HemisphereLight } from "three/src/lights/HemisphereLight";
-import { MathUtils } from "three/src/math/MathUtils";
 
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 
 import { BackgroundLightUserSettingsManager } from "./BackgroundLightUserSettingsManager";
@@ -65,7 +65,7 @@ export function HemisphereLightView(logger: Logger, userSettings: UserSettings, 
 
   return Object.freeze({
     entity: entity,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,

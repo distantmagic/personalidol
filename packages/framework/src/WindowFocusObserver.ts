@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { Logger } from "loglevel";
 
@@ -53,7 +53,7 @@ export function WindowFocusObserver(logger: Logger, tickTimerState: TickTimerSta
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isWindowFocusObserver: true,
     name: "WindowFocusObserver",
     state: state,

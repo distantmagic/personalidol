@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { PerformanceMemory } from "./PerformanceMemory.type";
@@ -35,7 +35,7 @@ export function PerformanceStatsHook(): StatsHook {
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isPerformanceStatsHook: true,
     isStatsHook: true,
     name: `PerformanceStatsHook("${DEBUG_NAME}")`,

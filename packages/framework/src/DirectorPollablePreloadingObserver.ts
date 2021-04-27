@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import { isPollablePreloading } from "./isPollablePreloading";
 
@@ -36,7 +36,7 @@ export function DirectorPollablePreloadingObserver(director: Director): IDirecto
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDirectorPollablePreloadingObserver: true,
     isMainLoopUpdatable: true,
     name: "DirectorPollablePreloadingObserver",

@@ -1,6 +1,6 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Object3D } from "three/src/core/Object3D";
 
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { noop } from "@personalidol/framework/src/noop";
 
 import type { Object3D as IObject3D } from "three/src/core/Object3D";
@@ -61,7 +61,7 @@ export function TargetView(scene: Scene, entity: EntityTarget): EntityView<Entit
 
   return Object.freeze({
     entity: entity,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,

@@ -1,5 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { mount } from "./mount";
 import { unmount } from "./unmount";
 
@@ -58,7 +57,7 @@ export function SceneTransition(logger: Logger, sceneDirectorState: DirectorStat
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "SceneTransition",
     state: state,
 

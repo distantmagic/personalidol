@@ -1,6 +1,6 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { noop } from "@personalidol/framework/src/noop";
 
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
@@ -53,7 +53,7 @@ export function UserInputEventBusController(userSettings: UserSettings, eventBus
 
   return Object.freeze({
     cameraTransitionRequest: _cameraTransitionRequest,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMountable: true,
     isUserInputController: true,
     name: "UserInputEventBusController",

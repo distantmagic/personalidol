@@ -1,5 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { passiveEventListener } from "@personalidol/framework/src/passiveEventListener";
 
 import { isKeyboardKeyName } from "./isKeyboardKeyName";
@@ -127,7 +126,7 @@ export function KeyboardObserver(
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isKeyboardObserver: true,
     name: "KeyboardObserver",
     state: state,

@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { StatsHook } from "./StatsHook.interface";
@@ -79,7 +79,7 @@ export function StatsReporter(debugName: string, statsMessagePort: MessagePort, 
 
   return Object.freeze({
     hooks: hooks,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isStatsReporter: true,
     name: "StatsReporter",
     state: state,

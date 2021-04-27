@@ -1,5 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { name } from "@personalidol/framework/src/name";
 
 import { MD2ModelView } from "./MD2ModelView";
@@ -25,7 +24,7 @@ export function PlayerView(
   rpcLookupTable: RPCLookupTable
 ): CharacterView<EntityPlayer> {
   const _md2Entity: EntityMD2Model = Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     angle: 0,
     classname: "model_md2",
     model_name: "ratamahatta",
@@ -41,7 +40,7 @@ export function PlayerView(
 
   return Object.freeze({
     entity: entity,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isCharacterView: true,
     isDisposable: true,
     isEntityView: true,

@@ -16,6 +16,7 @@ yarn run esbuild \
     --define:process.env.NODE_ENV=\"${NODE_ENV}\" \
     --entry-names="./[name]_${BUILD_ID}" \
     --format=esm \
+    --log-limit=0 \
     --minify \
     --outdir=./public/lib \
     --platform=browser \

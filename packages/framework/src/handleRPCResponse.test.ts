@@ -1,10 +1,10 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import { createRPCLookupTable } from "./createRPCLookupTable";
 import { handleRPCResponse } from "./handleRPCResponse";
 
 test("calls function stored in the RPCLookupTable based on response parameter", function (done) {
-  const uuid = MathUtils.generateUUID();
+  const uuid = generateUUID();
   const rpcLookupTable = createRPCLookupTable();
 
   rpcLookupTable[uuid] = function (data) {

@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { isPollablePreloading } from "@personalidol/framework/src/isPollablePreloading";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
@@ -125,7 +124,7 @@ export function EntityControllerBag(logger: Logger): IEntityControllerBag {
 
   return Object.freeze({
     entityControllers: entityControllers,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isMountable: true,
     isPollablePreloading: true,

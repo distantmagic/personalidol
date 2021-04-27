@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
@@ -52,7 +51,7 @@ export function StatsCollector(userSettings: UserSettings, domMessagePort: Messa
     }
 
     if (!_domStatsReporterElementId) {
-      _domStatsReporterElementId = MathUtils.generateUUID();
+      _domStatsReporterElementId = generateUUID();
     }
 
     _domPropsVersion += 1;
@@ -83,7 +82,7 @@ export function StatsCollector(userSettings: UserSettings, domMessagePort: Messa
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "StatsCollector",
     state: state,
 

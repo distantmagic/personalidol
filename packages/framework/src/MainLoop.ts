@@ -1,5 +1,6 @@
 import { Clock } from "three/src/core/Clock";
-import { MathUtils } from "three/src/math/MathUtils";
+
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import { DefaultMainLoopTicker } from "./DefaultMainLoopTicker";
 import { isNameable } from "./isNameable";
@@ -96,7 +97,7 @@ export function MainLoop<TickType>(logger: Logger, frameScheduler: Scheduler<Tic
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMainLoop: true,
     name: "MainLoop",
     scheduler: frameScheduler,

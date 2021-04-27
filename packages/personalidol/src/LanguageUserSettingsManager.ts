@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { i18n } from "i18next";
 
@@ -32,7 +31,7 @@ export function LanguageUserSettingsManager(userSettings: UserSettings, i18next:
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isPreloadable: true,
     isUserSettingsManager: true,
     name: "LanguageUserSettingsManager",

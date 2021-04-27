@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import { dispose } from "./dispose";
 import { preload } from "./preload";
@@ -136,7 +136,7 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: `Director(${debugName})`,
     state: state,
 

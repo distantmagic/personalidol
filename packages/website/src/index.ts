@@ -370,8 +370,10 @@ async function bootstrap() {
 
   const gltfMessageChannel = createMultiThreadMessageChannel();
   const gltfToProgressMessageChannel = createMultiThreadMessageChannel();
+  const gltfToTexturesMessageChannel = createMultiThreadMessageChannel();
 
   addProgressMessagePort(gltfToProgressMessageChannel.port1, false);
+  texturesService.registerMessagePort(gltfToTexturesMessageChannel.port1);
 
   await prefetch(websiteToProgressMessageChannel.port2, "worker", workers.gltf.url);
 
@@ -388,8 +390,9 @@ async function bootstrap() {
     {
       gltfMessagePort: gltfMessageChannel.port1,
       progressMessagePort: gltfToProgressMessageChannel.port2,
+      texturesMessagePort: gltfToTexturesMessageChannel.port2,
     },
-    [gltfMessageChannel.port1, gltfToProgressMessageChannel.port2]
+    [gltfMessageChannel.port1, gltfToProgressMessageChannel.port2, gltfToTexturesMessageChannel.port2]
   );
 
   // MD2 worker offloads model loading from the thread whether it's the main

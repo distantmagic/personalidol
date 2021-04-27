@@ -6,13 +6,13 @@
   },
   "dependencies": {
     "@personalidol/texture-loader": "^0.0.4",
-    "three": "^0.127.0",
+    "three": "^0.128.0",
     "tslib": "^2.2.0"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.22",
+    "@types/jest": "^26.0.23",
     "@types/three": "^0.127.1",
-    "esbuild": "^0.11.12",
+    "esbuild": "^0.11.15",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "ts-jest": "^26.5.5",

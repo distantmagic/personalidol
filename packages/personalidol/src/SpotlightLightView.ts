@@ -1,8 +1,8 @@
 import { Color } from "three/src/math/Color";
-import { MathUtils } from "three/src/math/MathUtils";
 import { SpotLight } from "three/src/lights/SpotLight";
 
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { onlyOne } from "@personalidol/framework/src/onlyOne";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 
@@ -87,7 +87,7 @@ export function SpotlightLightView(
 
   return Object.freeze({
     entity: entity,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityView: true,
     isExpectingTargets: true,

@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { IsUserSettingsValidCallback } from "./IsUserSettingsValidCallback.type";
@@ -58,7 +58,7 @@ export function LocalStorageUserSettingsSync<U extends UserSettings>(userSetting
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isUserSettingsSync: true,
     name: `LocalStorageUserSettingsSync(${debugName})`,
     state: state,

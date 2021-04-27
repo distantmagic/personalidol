@@ -1,6 +1,6 @@
 /// <reference types="@types/resize-observer-browser" />
 
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import { DimensionsIndices } from "./DimensionsIndices.enum";
 
@@ -41,7 +41,7 @@ export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsSt
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isHTMLElementResizeObserver: true,
     name: "HTMLElementResizeObserver",
     state: state,

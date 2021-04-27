@@ -1,7 +1,7 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Vector2 } from "three/src/math/Vector2";
 
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { isInDimensionsBounds } from "@personalidol/framework/src/isInDimensionsBounds";
 import { passiveEventListener } from "@personalidol/framework/src/passiveEventListener";
 
@@ -147,7 +147,7 @@ export function MouseObserver(
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMouseObserver: true,
     name: "MouseObserver",
     state: state,

@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
@@ -28,7 +28,7 @@ export function DynamicsWorldStatsHook<S extends SimulantsLookup>(dynamicsWorld:
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMainLoopStatsHook: true,
     isStatsHook: true,
     name: `DynamicsWorldStatsHook("${DEBUG_NAME}")`,

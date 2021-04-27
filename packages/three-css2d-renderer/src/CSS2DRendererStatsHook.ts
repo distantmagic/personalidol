@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { StatsHook } from "@personalidol/framework/src/StatsHook.interface";
@@ -31,7 +31,7 @@ export function CSS2DRendererStatsHook(renderer: CSS2DRenderer): StatsHook {
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isCSS2DRendererStatsHook: true,
     isStatsHook: true,
     name: `CSS2DRendererStatsHook("${DEBUG_NAME}")`,

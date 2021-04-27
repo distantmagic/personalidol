@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MessageProgress } from "./MessageProgress.type";
 import type { MessageProgressChange } from "./MessageProgressChange.type";
@@ -106,7 +106,7 @@ export function ProgressManager(): IProgressManager {
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "ProgressManager",
     state: state,
 

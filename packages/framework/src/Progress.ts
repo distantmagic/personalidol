@@ -1,5 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { name } from "./name";
 
 import type { MessageProgressChange } from "./MessageProgressChange.type";
@@ -18,7 +17,7 @@ export function Progress(progressMessagePort: MessagePort, resourceType: string,
   });
 
   const _nameable: Nameable = {
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: `Progress("${resourceType}", "${resourceUri}")`,
   };
 

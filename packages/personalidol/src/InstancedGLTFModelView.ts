@@ -1,6 +1,6 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Object3D } from "three/src/core/Object3D";
 
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 
 import type { Logger } from "loglevel";
@@ -87,7 +87,7 @@ export function InstancedGLTFModelView(
 
   return Object.freeze({
     entity: entity,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityView: true,
     isExpectingTargets: false,

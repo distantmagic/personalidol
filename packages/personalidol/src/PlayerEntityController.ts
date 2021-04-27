@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { longestVector3 } from "@personalidol/framework/src/longestVector3";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { name } from "@personalidol/framework/src/name";
@@ -113,7 +112,7 @@ export function PlayerEntityController(
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityController: true,
     isMountable: true,

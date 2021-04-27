@@ -1,8 +1,7 @@
 /// <reference types="@types/css-font-loading-module" />
 
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { prefetch } from "@personalidol/framework/src/prefetch";
 
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
@@ -40,7 +39,7 @@ export function FontPreloadService(fontPreloadMessagePort: MessagePort, progress
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "FontPreloadService",
 
     start: start,

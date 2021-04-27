@@ -1,7 +1,7 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { name } from "@personalidol/framework/src/name";
 import { RigidBodyRemoteHandle } from "@personalidol/dynamics/src/RigidBodyRemoteHandle";
 
@@ -37,7 +37,7 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
   const _transitionVector: IVector3 = new Vector3();
 
   let _internalDynamicsMessageChannel: MessageChannel = new MessageChannel();
-  let _simulantId: string = MathUtils.generateUUID();
+  let _simulantId: string = generateUUID();
 
   function _onSimulantOriginChange(origin: Vector3Simple): void {
     _transitionVector.set(origin.x, origin.y, origin.z);
@@ -105,7 +105,7 @@ export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: C
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {}
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityController: true,
     isMountable: true,

@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdateCallback } from "./MainLoopUpdateCallback.type";
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
@@ -47,7 +47,7 @@ export function WorkerServiceClient(worker: Worker, workerName: string, updater:
   }
 
   return {
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isWorkerServiceClient: true,
     name: `WorkerServiceClient(${workerName})`,
     state: state,

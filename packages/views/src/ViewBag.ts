@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { dispose as fDispose } from "@personalidol/framework/src/dispose";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { mount as fMount } from "@personalidol/framework/src/mount";
 import { pause as fPause } from "@personalidol/framework/src/pause";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
@@ -120,7 +119,7 @@ export function ViewBag(logger: Logger): IViewBag {
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isMountable: true,
     isPollablePreloading: true,

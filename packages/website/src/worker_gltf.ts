@@ -3,15 +3,18 @@
 import Loglevel from "loglevel";
 import { LoadingManager } from "three/src/loaders/LoadingManager";
 
-import { GLTFLoader } from "@personalidol/three-modules/src/loaders/GLTFLoader";
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
+import { createTextureReceiverMessagesRouter } from "@personalidol/texture-loader/src/createTextureReceiverMessagesRouter";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
+import { GLTFLoader } from "@personalidol/three-modules/src/loaders/GLTFLoader";
 import { isMesh } from "@personalidol/framework/src/isMesh";
 import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
+import { THREETextureLoader } from "@personalidol/texture-loader/src/THREETextureLoader";
 
 import type { BufferAttribute } from "three/src/core/BufferAttribute";
 import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
@@ -22,6 +25,7 @@ import type { MessageWorkerReady } from "@personalidol/framework/src/MessageWork
 import type { ReusedResponse } from "@personalidol/framework/src/ReusedResponse.type";
 import type { ReusedResponsesCache } from "@personalidol/framework/src/ReusedResponsesCache.type";
 import type { ReusedResponsesUsage } from "@personalidol/framework/src/ReusedResponsesUsage.type";
+import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
 import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 
 declare var self: DedicatedWorkerGlobalScope;
@@ -32,6 +36,8 @@ type ModelLoadRequest = RPCMessage & {
 };
 
 const logger = Loglevel.getLogger(self.name);
+const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
+const _textureReceiverMessageRouter = createTextureReceiverMessagesRouter(_rpcLookupTable);
 
 logger.setLevel(__LOG_LEVEL);
 logger.debug(`WORKER_SPAWNED(${self.name})`);
@@ -40,7 +46,7 @@ const emptyTransferables: [] = [];
 const loadingCache: ReusedResponsesCache = createReusedResponsesCache();
 const loadingUsage: ReusedResponsesUsage = createReusedResponsesUsage();
 
-const _gltfLoader: IGLTFLoader = new GLTFLoader(new LoadingManager());
+let _gltfLoader: null | IGLTFLoader = null;
 let _progressMessagePort: null | MessagePort = null;
 
 function _extractGLTFGeometryAttributes(gltf: GLTF, modelScale: number): GeometryAttributes {
@@ -88,6 +94,10 @@ function _extractGLTFGeometryAttributes(gltf: GLTF, modelScale: number): Geometr
 function _gltfLoadWithProgress(url: string, modelScale: number): Promise<GeometryAttributes> {
   if (null === _progressMessagePort) {
     throw new Error(`Progress message port must be set in WORKER(${self.name}) before loading GLTF model.`);
+  }
+
+  if (null === _gltfLoader) {
+    throw new Error(`GLTFLoader is not ready.`);
   }
 
   const progress = Progress(_progressMessagePort, "model", url);
@@ -150,5 +160,17 @@ self.onmessage = createRouter({
     self.postMessage(<MessageWorkerReady>{
       ready: true,
     });
+  },
+
+  texturesMessagePort(port: MessagePort): void {
+    if (null !== _gltfLoader) {
+      throw new Error(`Textures message port was already received by WORKER(${self.name}).`);
+    }
+
+    port.onmessage = _textureReceiverMessageRouter;
+
+    const loadingManager = new LoadingManager();
+
+    _gltfLoader = new GLTFLoader(loadingManager, new THREETextureLoader(logger, loadingManager, _rpcLookupTable, port));
   },
 });

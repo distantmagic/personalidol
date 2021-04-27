@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
@@ -30,7 +29,7 @@ export function WebGLRendererUserSettingsManager(userSettings: UserSettings, ren
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isPreloadable: true,
     isUserSettingsManager: true,
     name: "WebGLRendererUserSettingsManager",

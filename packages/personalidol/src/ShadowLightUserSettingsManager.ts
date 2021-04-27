@@ -1,7 +1,6 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
 import { disposeWebGLRenderTarget } from "@personalidol/framework/src/disposeWebGLRenderTarget";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { PointLight } from "three/src/lights/PointLight";
 import type { SpotLight } from "three/src/lights/SpotLight";
@@ -50,7 +49,7 @@ export function ShadowLightUserSettingsManager(userSettings: UserSettings, entit
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isPreloadable: true,
     isUserSettingsManager: true,
     name: "ShadowLightUserSettingsManager",

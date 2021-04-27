@@ -1,5 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { name } from "./name";
 
 import type { MainLoop } from "./MainLoop.interface";
@@ -45,7 +44,7 @@ export function MainLoopStatsHook(mainLoop: MainLoop<any>): IMainLoopStatsHook {
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMainLoopStatsHook: true,
     isStatsHook: true,
     name: `MainLoopStatsHook("${DEBUG_NAME}")`,

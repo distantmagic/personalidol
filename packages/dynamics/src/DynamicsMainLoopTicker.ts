@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { Logger } from "loglevel";
 
@@ -48,7 +48,7 @@ export function DynamicsMainLoopTicker(logger: Logger, simulationTimestep: numbe
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: `DynamicsMainLoopTicker(${simulationTimestep}, ${panicThreshold})`,
     state: state,
     tickTimerState: tickTimerState,

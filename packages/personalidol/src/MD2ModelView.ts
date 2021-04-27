@@ -5,15 +5,15 @@ import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { Color } from "three/src/math/Color";
 import { Float32BufferAttribute } from "three/src/core/BufferAttribute";
 import { Group } from "three/src/objects/Group";
-import { MathUtils } from "three/src/math/MathUtils";
 import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
-import { damp } from "@personalidol/framework/src/damp";
+import { damp } from "@personalidol/math/src/damp";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { MorphBlendMesh } from "@personalidol/three-modules/src/misc/MorphBlendMesh";
 import { MorphBlendMeshMixer } from "@personalidol/three-morph-blend-mesh-mixer/src/MorphBlendMeshMixer";
 import { mountAll } from "@personalidol/framework/src/mountAll";
@@ -120,7 +120,7 @@ export function MD2ModelView(
   texturesMessagePort: MessagePort,
   rpcLookupTable: RPCLookupTable
 ): CharacterView<EntityMD2Model> {
-  const id: string = MathUtils.generateUUID();
+  const id: string = generateUUID();
   const name: string = `MD2ModelView("${entity.model_name}", ${entity.skin})`;
   const state: CharacterViewState = Object.seal({
     animation: "stand",
@@ -184,7 +184,7 @@ export function MD2ModelView(
     } = await sendRPCMessage(rpcLookupTable, md2MessagePort, {
       load: {
         model_name: entity.model_name,
-        rpc: MathUtils.generateUUID(),
+        rpc: generateUUID(),
       },
     });
 

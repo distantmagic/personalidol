@@ -1,9 +1,9 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 function _createMessageEvent(type: string, data: any): MessageEvent {
   return new MessageEvent(type, {
     data: data,
-    lastEventId: MathUtils.generateUUID(),
+    lastEventId: generateUUID(),
   });
 }
 

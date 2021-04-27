@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { ResizeableRenderer } from "@personalidol/framework/src/ResizeableRenderer.interface";
@@ -25,7 +24,7 @@ export function RendererDimensionsManager(dimensionsState: Uint32Array, renderer
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isRendererDimensionsManager: true,
     name: "RendererDimensionsManager",
     state: state,

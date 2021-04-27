@@ -1,7 +1,6 @@
 import { AmbientLight } from "three/src/lights/AmbientLight";
 import { BoxGeometry } from "three/src/geometries/BoxGeometry";
 import { Color } from "three/src/math/Color";
-import { MathUtils } from "three/src/math/MathUtils";
 import { Mesh } from "three/src/objects/Mesh";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
@@ -12,6 +11,7 @@ import { createRouter } from "@personalidol/framework/src/createRouter";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { GlitchPass } from "@personalidol/three-modules/src/postprocessing/GlitchPass";
 import { RenderPass } from "@personalidol/three-modules/src/postprocessing/RenderPass";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
@@ -163,7 +163,7 @@ export function LoadingScreenScene(
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isMountable: true,
     isPreloadable: true,

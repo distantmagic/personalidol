@@ -1,13 +1,13 @@
 /// <reference lib="webworker" />
 
 import Loglevel from "loglevel";
-import { MathUtils } from "three/src/math/MathUtils";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { buildEntities } from "@personalidol/personalidol/src/buildEntities";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { getI18NextKeyNamespace } from "@personalidol/i18n/src/getI18NextKeyNamespace";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
 import { monitorResponseProgress } from "@personalidol/framework/src/monitorResponseProgress";
@@ -144,7 +144,7 @@ async function _onMapContentLoaded(
   } = await sendRPCMessage(_rpcLookupTable, atlasMessagePort, {
     createTextureAtlas: {
       textureUrls: textureUrls,
-      rpc: MathUtils.generateUUID(),
+      rpc: generateUUID(),
     },
   });
 

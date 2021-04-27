@@ -1,8 +1,8 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { updateOrthographicCameraAspect } from "@personalidol/framework/src/updateOrthographicCameraAspect";
 import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updatePerspectiveCameraAspect";
 
@@ -117,7 +117,7 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
 
   return Object.freeze({
     cameraResetPosition: _cameraResetPosition,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMountable: true,
     name: "CameraController",
     position: _cameraPosition,

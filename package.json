@@ -8,6 +8,7 @@
     "packages/framework",
     "packages/i18n",
     "packages/input",
+    "packages/math",
     "packages/personalidol",
     "packages/quakemaps",
     "packages/service-worker",

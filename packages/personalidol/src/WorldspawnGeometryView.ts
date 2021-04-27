@@ -1,7 +1,6 @@
 import { BufferAttribute } from "three/src/core/BufferAttribute";
 import { BufferGeometry } from "three/src/core/BufferGeometry";
 import { FrontSide } from "three/src/constants";
-import { MathUtils } from "three/src/math/MathUtils";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { Vector3 } from "three/src/math/Vector3";
 
@@ -10,6 +9,7 @@ import { createEmptyMesh } from "@personalidol/framework/src/createEmptyMesh";
 import { disposableGeneric } from "@personalidol/framework/src/disposableGeneric";
 import { disposableMaterial } from "@personalidol/framework/src/disposableMaterial";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { mountAll } from "@personalidol/framework/src/mountAll";
 import { preload as fPreload } from "@personalidol/framework/src/preload";
 import { unmountAll } from "@personalidol/framework/src/unmountAll";
@@ -41,7 +41,7 @@ export function WorldspawnGeometryView(
   worldspawnTexture: ITexture,
   matrixAutoUpdate: boolean = false
 ): EntityView<EntityWorldspawn> {
-  const id: string = MathUtils.generateUUID();
+  const id: string = generateUUID();
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,

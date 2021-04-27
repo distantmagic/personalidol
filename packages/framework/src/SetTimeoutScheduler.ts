@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { Scheduler } from "./Scheduler.interface";
 import type { SchedulerCallback } from "./SchedulerCallback.type";
@@ -15,7 +15,7 @@ export function SetTimeoutScheduler(timestep: number = 1000 / 60): Scheduler<Tic
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: `SetTimeoutScheduler(${timestep})`,
 
     cancelFrame: cancelFrame,

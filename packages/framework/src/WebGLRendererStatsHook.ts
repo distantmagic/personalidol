@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 
@@ -40,7 +40,7 @@ export function WebGLRendererStatsHook(renderer: WebGLRenderer): StatsHook {
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isWebGLRendererStatsHook: true,
     isStatsHook: true,
     name: `WebGLRendererStatsHook("${DEBUG_NAME}")`,

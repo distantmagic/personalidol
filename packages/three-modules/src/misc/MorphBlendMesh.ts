@@ -1,5 +1,6 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Mesh } from "three/src/objects/Mesh";
+
+import { clamp } from "@personalidol/math/src/clamp";
 
 import type { BufferGeometry } from "three/src/core/BufferGeometry";
 import type { Material } from "three/src/materials/Material";
@@ -228,7 +229,7 @@ export class MorphBlendMesh extends Mesh {
         if (animation.time < 0) animation.time += animation.duration;
       }
 
-      var keyframe = animation.start + MathUtils.clamp(Math.floor(animation.time / frameTime), 0, animation.length - 1);
+      var keyframe = animation.start + clamp(Math.floor(animation.time / frameTime), 0, animation.length - 1);
 
       if (keyframe !== animation.currentFrame) {
         this.morphTargetInfluences[animation.lastFrame] = 0;

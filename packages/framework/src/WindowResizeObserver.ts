@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import { DimensionsIndices } from "./DimensionsIndices.enum";
 
@@ -32,7 +32,7 @@ export function WindowResizeObserver(dimensionsState: Uint32Array, tickTimerStat
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isWindowResizeObserver: true,
     name: "WindowResizeObserver",
     state: state,

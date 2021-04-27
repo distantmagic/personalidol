@@ -1,8 +1,8 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 
 import { computePrimaryTouchStretchVector } from "@personalidol/input/src/computePrimaryTouchStretchVector";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { isPrimaryTouchInitiatedByRootElement } from "@personalidol/input/src/isPrimaryTouchInitiatedByRootElement";
 import { isPrimaryTouchPressed } from "@personalidol/input/src/isPrimaryTouchPressed";
 
@@ -64,7 +64,7 @@ export function UserInputTouchController(userSettings: UserSettings, dimensionsS
 
   return Object.freeze({
     cameraTransitionRequest: _cameraTransitionRequest,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMountable: true,
     isUserInputController: true,
     name: "UserInputTouchController",

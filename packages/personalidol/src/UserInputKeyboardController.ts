@@ -1,6 +1,6 @@
-import { MathUtils } from "three/src/math/MathUtils";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { KeyboardIndices } from "@personalidol/input/src/KeyboardIndices.enum";
 
 import type { Vector3 as IVector3 } from "three/src/math/Vector3";
@@ -87,7 +87,7 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
 
   return Object.freeze({
     cameraTransitionRequest: _cameraTransitionRequest,
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isMountable: true,
     isUserInputController: true,
     name: "UserInputKeyboardController",

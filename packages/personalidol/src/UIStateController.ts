@@ -1,8 +1,7 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { DOMElementViewHandle } from "@personalidol/dom-renderer/src/DOMElementViewHandle";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { pause } from "@personalidol/framework/src/pause";
 import { unpause } from "@personalidol/framework/src/unpause";
 
@@ -202,7 +201,7 @@ export function UIStateController(
   }
 
   return Object.seal({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "UIStateController",
     state: state,
 

@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementViewHandle as IDOMElementViewHandle } from "./DOMElementViewHandle.interface";
@@ -23,7 +23,7 @@ export function DOMElementViewHandle<T extends DOMElementsLookup>(domMessagePort
     }
 
     if (!_domElementId) {
-      _domElementId = MathUtils.generateUUID();
+      _domElementId = generateUUID();
     }
 
     domMessagePort.postMessage({

@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { name } from "@personalidol/framework/src/name";
 
 import type { MessageSimulantDispose } from "@personalidol/dynamics/src/MessageSimulantDispose.type";
@@ -28,7 +27,7 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
   });
 
   let _internalDynamicsMessageChannel: MessageChannel = new MessageChannel();
-  let _simulantId: string = MathUtils.generateUUID();
+  let _simulantId: string = generateUUID();
 
   function _onSimulantPreloaded(): void {
     if (!state.isPreloading) {
@@ -93,7 +92,7 @@ export function WorldspawnGeometryEntityController(view: EntityView<EntityWorlds
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {}
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isDisposable: true,
     isEntityController: true,
     isMountable: true,

@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { Logger } from "loglevel";
 import type { InstancedMesh } from "three/src/objects/InstancedMesh";
@@ -32,7 +32,7 @@ export function InstancedMeshHandle(logger: Logger, userSettings: UserSettings, 
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isInstancedMeshHandle: true,
     isPreloadable: true,
     name: "InstancedMeshHandle",

@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { DimensionsIndices } from "@personalidol/framework/src/DimensionsIndices.enum";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { isInDimensionsBounds } from "@personalidol/framework/src/isInDimensionsBounds";
 import { passiveEventListener } from "@personalidol/framework/src/passiveEventListener";
 
@@ -147,7 +146,7 @@ export function TouchObserver(
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isTouchObserver: true,
     name: "TouchObserver",
     state: state,

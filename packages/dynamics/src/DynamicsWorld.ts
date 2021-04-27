@@ -1,9 +1,8 @@
 /// <reference types="@types/ammo.js" />
 
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { dispose } from "@personalidol/framework/src/dispose";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { mount } from "@personalidol/framework/src/mount";
 import { name } from "@personalidol/framework/src/name";
 import { preload } from "@personalidol/framework/src/preload";
@@ -120,7 +119,7 @@ export function DynamicsWorld<S extends SimulantsLookup>(
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     info: info,
     isDynamicsWorld: true,
     name: "DynamicsWorld",

@@ -1,6 +1,5 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { createSettingsHandle } from "@personalidol/framework/src/createSettingsHandle";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { Logger } from "loglevel";
 import type { Mesh } from "three/src/objects/Mesh";
@@ -32,7 +31,7 @@ export function MeshUserSettingsManager(logger: Logger, userSettings: UserSettin
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     isPreloadable: true,
     isUserSettingsManager: true,
     name: "MeshUserSettingsManager",

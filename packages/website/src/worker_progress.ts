@@ -1,10 +1,10 @@
 /// <reference lib="webworker" />
 
 import Loglevel from "loglevel";
-import { MathUtils } from "three/src/math/MathUtils";
 
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { createRouter } from "@personalidol/framework/src/createRouter";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { ProgressManager } from "@personalidol/framework/src/ProgressManager";
 
 import type { DOMElementsLookup } from "@personalidol/personalidol/src/DOMElementsLookup.type";
@@ -70,7 +70,7 @@ function _onProgress(): void {
   }
 
   if (!_domLoadingScreenElementId) {
-    _domLoadingScreenElementId = MathUtils.generateUUID();
+    _domLoadingScreenElementId = generateUUID();
   }
 
   _progressPropsVersion += 1;
@@ -97,7 +97,7 @@ function _onProgressError(): void {
   }
 
   if (!_domFatalErrorElementId) {
-    _domFatalErrorElementId = MathUtils.generateUUID();
+    _domFatalErrorElementId = generateUUID();
   }
 
   _errorPropsVersion += 1;

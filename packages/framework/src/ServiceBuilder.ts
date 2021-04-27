@@ -1,5 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { name } from "./name";
 
 import type { ArgumentCallback } from "./ArgumentCallback.type";
@@ -8,7 +7,7 @@ import type { ServiceBuilder as IServiceBuilder } from "./ServiceBuilder.interfa
 
 export function ServiceBuilder<D>(debugName: string, dependencies: Partial<D>): IServiceBuilder<D> {
   const nameable: Nameable = Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: `ServiceBuilder("${debugName}")`,
   });
   const onready: Set<ArgumentCallback<D>> = new Set();

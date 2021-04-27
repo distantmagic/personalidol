@@ -1,8 +1,7 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { preloadImage } from "@personalidol/dom/src/preloadImage";
 import { Progress } from "@personalidol/framework/src/Progress";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
@@ -94,7 +93,7 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "DOMTextureService",
     state: state,
 

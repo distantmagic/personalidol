@@ -1,4 +1,4 @@
-import { MathUtils } from "three/src/math/MathUtils";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { Scheduler } from "./Scheduler.interface";
 import type { SchedulerCallback } from "./SchedulerCallback.type";
@@ -15,7 +15,7 @@ function requestFrame(callback: SchedulerCallback): TickType {
 
 export function RequestAnimationFrameScheduler(): Scheduler<TickType> {
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "RequestAnimationFrameScheduler",
 
     cancelFrame: cancelFrame,

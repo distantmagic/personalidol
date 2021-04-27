@@ -1,11 +1,11 @@
-import { MathUtils } from "three/src/math/MathUtils";
-
 import { attachMultiRouter } from "@personalidol/framework/src/attachMultiRouter";
 import { createReusedResponsesCache } from "@personalidol/framework/src/createReusedResponsesCache";
 import { createReusedResponsesUsage } from "@personalidol/framework/src/createReusedResponsesUsage";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { createRPCLookupTable } from "@personalidol/framework/src/createRPCLookupTable";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { handleRPCResponse } from "@personalidol/framework/src/handleRPCResponse";
+import { isPowerOfTwo } from "@personalidol/math/src/isPowerOfTwo";
 import { reuseResponse } from "@personalidol/framework/src/reuseResponse";
 
 import { imageDataBufferResponseToImageData } from "./imageDataBufferResponseToImageData";
@@ -182,7 +182,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
       throw new Error("Texture sides must be of equal length.");
     }
 
-    if (!MathUtils.isPowerOfTwo(textureSize)) {
+    if (!isPowerOfTwo(textureSize)) {
       throw new Error("Texture size must be a power of two.");
     }
 
@@ -282,7 +282,7 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
   }
 
   return Object.freeze({
-    id: MathUtils.generateUUID(),
+    id: generateUUID(),
     name: "AtlasService",
     state: state,
 
