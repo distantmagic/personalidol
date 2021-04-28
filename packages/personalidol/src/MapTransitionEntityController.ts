@@ -65,16 +65,14 @@ export function MapTransitionEntityController(view: EntityView<EntityScriptedZon
 
     dynamicsMessagePort.postMessage(
       {
-        registerSimulant: <MessageSimulantRegister<SimulantsLookup, "worldspawn-geoemetry">>{
+        registerSimulant: <MessageSimulantRegister<SimulantsLookup, "ghost-zone">>{
           id: _simulantId,
-          simulant: "worldspawn-geoemetry",
+          simulant: "ghost-zone",
           simulantFeedbackMessagePort: _internalDynamicsMessageChannel.port2,
         },
       },
       [_internalDynamicsMessageChannel.port2]
     );
-
-    console.log(view);
 
     // Send an entity copy and do not use transferables as View may be already
     // using those parameters.

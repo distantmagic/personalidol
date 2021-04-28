@@ -15,7 +15,7 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.btDiscreteDynamicsWorld, simulantFeedbackMessagePort: MessagePort): Simulant {
+export function GhostZoneSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.btDiscreteDynamicsWorld, simulantFeedbackMessagePort: MessagePort): Simulant {
   const state: SimulantState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -26,7 +26,7 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
   });
 
   const _disposables: Set<DisposableCallback> = new Set();
-  const _rigidBodies: Set<Ammo.btRigidBody> = new Set();
+  const _ghostObjects: Set<Ammo.btGhostObject> = new Set();
 
   const _simulantFeedbackMessageRouter = createRouter({
     brushes(brushes: Array<Brush>) {
@@ -68,17 +68,13 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
           shape.addPoint(shapePoint);
         }
 
-        const rbInfo = new ammo.btRigidBodyConstructionInfo(0, motionState, shape, localInertia);
+        const ghostObject = new ammo.btGhostObject();
 
-        _disposables.add(disposableAmmo(ammo, rbInfo));
+        _disposables.add(disposableAmmo(ammo, ghostObject));
 
-        const body = new ammo.btRigidBody(rbInfo);
+        ghostObject.setCollisionShape(shape);
 
-        body.setRestitution(0);
-
-        _disposables.add(disposableAmmo(ammo, body));
-
-        _rigidBodies.add(body);
+        _ghostObjects.add(ghostObject);
       }
 
       _onPreloaded();
@@ -107,8 +103,8 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
   function mount(): void {
     state.isMounted = true;
 
-    for (let rigidBody of _rigidBodies) {
-      dynamicsWorld.addRigidBody(rigidBody);
+    for (let ghostObject of _ghostObjects) {
+      dynamicsWorld.addCollisionObject(ghostObject);
     }
   }
 
@@ -125,8 +121,8 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
   function unmount(): void {
     state.isMounted = false;
 
-    for (let rigidBody of _rigidBodies) {
-      dynamicsWorld.removeRigidBody(rigidBody);
+    for (let ghostObject of _ghostObjects) {
+      dynamicsWorld.removeCollisionObject(ghostObject);
     }
   }
 
@@ -142,7 +138,7 @@ export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynami
     isMountable: true,
     isPreloadable: true,
     isSimulant: true,
-    name: "WorldspawnGeometrySimulant",
+    name: "GhostZoneSimulant",
     state: state,
 
     dispose: dispose,
