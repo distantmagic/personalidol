@@ -52,6 +52,7 @@ export function DynamicsWorld<S extends SimulantsLookup>(
     registeredSimulants: 0,
   });
   const state: DynamicsWorldState = Object.seal({
+    isPaused: false,
     needsUpdates: true,
   });
 
@@ -108,6 +109,10 @@ export function DynamicsWorld<S extends SimulantsLookup>(
     simulant.update(tickTimerState.delta, tickTimerState.elapsedTime, tickTimerState);
   }
 
+  function pause(): void {
+    state.isPaused = true;
+  }
+
   function start(): void {
     dynamicsMessagePort.onmessage = _physicsMessageRouter;
   }
@@ -116,7 +121,15 @@ export function DynamicsWorld<S extends SimulantsLookup>(
     dynamicsMessagePort.onmessage = null;
   }
 
+  function unpause(): void {
+    state.isPaused = false;
+  }
+
   function update(delta: number): void {
+    if (state.isPaused) {
+      return;
+    }
+
     _registeredSimulants.forEach(_updateSimulant);
     _dynamicsWorld.stepSimulation(delta, 0, 1);
   }
@@ -128,8 +141,10 @@ export function DynamicsWorld<S extends SimulantsLookup>(
     name: "DynamicsWorld",
     state: state,
 
+    pause: pause,
     start: start,
     stop: stop,
+    unpause: unpause,
     update: update,
   });
 }
