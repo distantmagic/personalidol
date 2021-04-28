@@ -8,9 +8,13 @@ import { name } from "@personalidol/framework/src/name";
 import { preload } from "@personalidol/framework/src/preload";
 import { unmount } from "@personalidol/framework/src/unmount";
 
+import { UserDataRegistry } from "./UserDataRegistry";
+
 import type { Logger } from "loglevel";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+
+import type { UserDataRegistry as IUserDataRegistry } from "./UserDataRegistry.interface";
 
 import type { DynamicsWorld as IDynamicsWorld } from "./DynamicsWorld.interface";
 import type { DynamicsWorldInfo } from "./DynamicsWorldInfo.type";
@@ -28,6 +32,9 @@ function _createAmmoDynamicsWorld(ammo: typeof Ammo) {
   const solver = new ammo.btSequentialImpulseConstraintSolver();
   const dynamicsWorld = new ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
+  // Everything in the dynamics world is scaled up
+  // (character models are 15x15x20 on average), so gravity needs to be higher
+  // in order for simulation to look and feel right.
   dynamicsWorld.setGravity(new ammo.btVector3(0, -9.81 * 100, 0));
 
   // Ghost objects collistions and overlaps.
@@ -54,6 +61,7 @@ export function DynamicsWorld<S extends SimulantsLookup>(
 
   const _dynamicsWorld = _createAmmoDynamicsWorld(ammo);
   const _registeredSimulants: Map<string, Simulant> = new Map();
+  const _userDataRegistry: IUserDataRegistry = UserDataRegistry();
 
   const _dynamicsMessageRouter = createRouter({
     pause: pause,
@@ -64,7 +72,7 @@ export function DynamicsWorld<S extends SimulantsLookup>(
     },
 
     registerSimulant(message: MessageSimulantRegister<S, string & keyof S>): void {
-      const simulant = simulantFactory.create(ammo, _dynamicsWorld, message);
+      const simulant = simulantFactory.create(ammo, _dynamicsWorld, _userDataRegistry, message);
 
       if (_registeredSimulants.has(message.id)) {
         throw new Error(`Duplicate simulant id: "${name(simulant)}"`);

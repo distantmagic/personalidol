@@ -2,17 +2,22 @@ import { createRouter } from "@personalidol/framework/src/createRouter";
 import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { name } from "@personalidol/framework/src/name";
 
+import { isEntityOfClass } from "./isEntityOfClass";
+
 import type { MessageSimulantDispose } from "@personalidol/dynamics/src/MessageSimulantDispose.type";
 import type { MessageSimulantRegister } from "@personalidol/dynamics/src/MessageSimulantRegister.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityController } from "./EntityController.interface";
 import type { EntityControllerState } from "./EntityControllerState.type";
-import type { EntityView } from "./EntityView.interface";
+import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntityScriptedZone } from "./EntityScriptedZone.type";
+import type { EntityView } from "./EntityView.interface";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
+import type { UIState } from "./UIState.type";
 
-export function MapTransitionEntityController(view: EntityView<EntityScriptedZone>, dynamicsMessagePort: MessagePort): EntityController<EntityScriptedZone> {
+export function MapTransitionEntityController(view: EntityView<EntityScriptedZone>, uiState: UIState, dynamicsMessagePort: MessagePort): EntityController<EntityScriptedZone> {
   const state: EntityControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -23,6 +28,18 @@ export function MapTransitionEntityController(view: EntityView<EntityScriptedZon
   });
 
   const _simulantFeedbackMessageRouter = createRouter({
+    overlappingEntities(entities: Set<AnyEntity>) {
+      for (let entity of entities) {
+        if (isEntityOfClass<EntityPlayer>(entity, "player")) {
+          uiState.currentMap = view.entity.properties.map_transition_target;
+
+          break;
+        }
+      }
+    },
+
+    overlappingSimulants(simulantIds: Set<string>) {},
+
     preloaded: _onSimulantPreloaded,
   });
 

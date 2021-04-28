@@ -125,7 +125,7 @@ export function UIStateController(
     uiState.currentMap = null;
   }
 
-  function _transitionToaMapScene(targetMap: string): void {
+  function _transitionToMapScene(targetMap: string): void {
     directorState.next = MapScene(
       logger,
       userSettings,
@@ -136,6 +136,7 @@ export function UIStateController(
       keyboardState,
       mouseState,
       touchState,
+      uiState,
       domMessagePort,
       dynamicsMessagePort,
       gltfMessagePort,
@@ -185,7 +186,7 @@ export function UIStateController(
     }
 
     if (_uiStateCurrentMap && _uiStateCurrentMap !== _dirtyCurrentMap) {
-      _transitionToaMapScene(_uiStateCurrentMap);
+      _transitionToMapScene(_uiStateCurrentMap);
       return;
     }
 

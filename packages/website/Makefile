@@ -52,6 +52,14 @@ purge:
 .PHONY: release
 release: tsc public/index.html public/index.js
 
+.PHONY: test
+test:
+	yarn run jest
+
+.PHONY: test.watch
+test.watch:
+	yarn run jest --watch
+
 .PHONY: tsc
 tsc:
 	yarn run tsc --noEmit

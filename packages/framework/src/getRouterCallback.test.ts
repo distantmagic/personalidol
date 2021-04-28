@@ -14,6 +14,7 @@ test("throws user friendly error message if route is not set", function () {
   };
 
   expect(function () {
+    // @ts-ignore - we are testing the runtime behavior
     getRouterCallback(routes, "bar");
   }).toThrow(`Available keys are: "test"`);
 });

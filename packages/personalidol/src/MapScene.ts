@@ -60,6 +60,7 @@ import type { EntityViewFactory as IEntityViewFactory } from "./EntityViewFactor
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
+import type { UIState } from "./UIState.type";
 import type { UserSettings } from "./UserSettings.type";
 
 const _rpcLookupTable: RPCLookupTable = createRPCLookupTable();
@@ -89,6 +90,7 @@ export function MapScene(
   keyboardState: Uint8Array,
   mouseState: Int32Array,
   touchState: Int32Array,
+  uiState: UIState,
   domMessagePort: MessagePort,
   dynamicsMessagePort: MessagePort,
   gltfMessagePort: MessagePort,
@@ -141,6 +143,7 @@ export function MapScene(
   const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(
     logger,
     _cameraController,
+    uiState,
     dynamicsMessagePort,
     _userInputEventBusController,
     _userInputKeyboardController,

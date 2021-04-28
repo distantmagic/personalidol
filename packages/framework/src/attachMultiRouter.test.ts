@@ -24,8 +24,8 @@ test("attaches router directly to the message port", function (done) {
     test2: mockCallback2,
   };
 
-  attachMultiRouter(messageChannel1.port1, routes);
-  attachMultiRouter(messageChannel2.port1, routes);
+  attachMultiRouter((messageChannel1.port1 as unknown) as MessagePort, routes);
+  attachMultiRouter((messageChannel2.port1 as unknown) as MessagePort, routes);
 
   messageChannel1.port2.postMessage({
     test1: "bar",

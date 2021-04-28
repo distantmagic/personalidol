@@ -9,6 +9,8 @@ import type { MessageFeedbackSimulantPreloaded } from "@personalidol/dynamics/sr
 import type { Simulant } from "@personalidol/dynamics/src/Simulant.interface";
 import type { SimulantState } from "@personalidol/dynamics/src/SimulantState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UserDataHandle } from "@personalidol/dynamics/src/UserDataHandle.interface";
+import type { UserDataRegistry } from "@personalidol/dynamics/src/UserDataRegistry.interface";
 import type { Vector3Simple } from "@personalidol/quakemaps/src/Vector3Simple.type";
 
 import type { NPCEntity } from "./NPCEntity.type";
@@ -18,7 +20,13 @@ const NPC_DIMENSIONS_BASE: number = 14;
 const NPC_DIMENSIONS_HEIGHT: number = 20;
 const NPC_MASS: number = 80;
 
-export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.btDiscreteDynamicsWorld, simulantFeedbackMessagePort: MessagePort): Simulant {
+export function NPCSimulant(
+  id: string,
+  ammo: typeof Ammo,
+  dynamicsWorld: Ammo.btDiscreteDynamicsWorld,
+  userDataRegistry: UserDataRegistry,
+  simulantFeedbackMessagePort: MessagePort
+): Simulant {
   const state: SimulantState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -29,8 +37,8 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
   });
 
   const _disposables: Set<DisposableCallback> = new Set();
-
   const _transform: Ammo.btTransform = new ammo.btTransform();
+  const _userDataHandle: UserDataHandle = userDataRegistry.createHandleById(id);
 
   _disposables.add(disposableAmmo(ammo, _transform));
 
@@ -77,6 +85,8 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
     },
 
     entity(entity: NPCEntity) {
+      _userDataHandle.data.set("entity", entity);
+
       const npcLocalInertia = new ammo.btVector3(0, 0, 0);
 
       _disposables.add(disposableAmmo(ammo, npcLocalInertia));
@@ -112,6 +122,10 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
 
       _npcRigidBody.setAngularFactor(angularFactor);
 
+      // User index could be a pointer when using cpp version of bullet, but
+      // may as well be just an integer index otherwise.
+      _npcRigidBody.setUserIndex(_userDataHandle.userIndex);
+
       const origin = _npcRigidBody.getWorldTransform().getOrigin();
 
       origin.setX(entity.origin.x);
@@ -144,8 +158,9 @@ export function NPCSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.b
   function dispose(): void {
     state.isDisposed = true;
 
-    simulantFeedbackMessagePort.close();
     disposeAll(_disposables);
+    simulantFeedbackMessagePort.close();
+    userDataRegistry.disposeHandleById(id);
   }
 
   function mount(): void {

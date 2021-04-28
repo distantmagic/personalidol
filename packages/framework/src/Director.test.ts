@@ -1,6 +1,7 @@
 import Loglevel from "loglevel";
 
-import { generateUUID } from "./generateUUID";
+import { generateUUID } from "@personalidol/math/src/generateUUID";
+
 import { Director } from "./Director";
 
 import type { Scene } from "./Scene.interface";
@@ -50,6 +51,10 @@ function MockScene(preloadImmediately: boolean): Scene {
 
   return Object.freeze({
     id: generateUUID(),
+    isDisposable: true,
+    isMountable: true,
+    isPreloadable: true,
+    isScene: true,
     name: "MockScene",
     state: state,
 

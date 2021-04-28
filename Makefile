@@ -22,7 +22,7 @@ docs:
 	$(MAKE) -C docs release
 
 .PHONY: prettier
-prettier: node_modules
+prettier: bootstrap
 	$(call FOREACH,prettier)
 
 .PHONY: clean
@@ -42,5 +42,9 @@ purge: clean
 	rm -f yarn.lock
 
 .PHONY: release
-release: node_modules
+release: bootstrap
 	$(MAKE) -C packages/website release
+
+.PHONY: test
+test: bootstrap
+	$(call FOREACH,test)

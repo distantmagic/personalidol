@@ -13,10 +13,18 @@ import type { MessageFeedbackSimulantPreloaded } from "@personalidol/dynamics/sr
 import type { Simulant } from "@personalidol/dynamics/src/Simulant.interface";
 import type { SimulantState } from "@personalidol/dynamics/src/SimulantState.type";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+import type { UserDataRegistry } from "@personalidol/dynamics/src/UserDataRegistry.interface";
 
+import type { AnyEntity } from "./AnyEntity.type";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function GhostZoneSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.btDiscreteDynamicsWorld, simulantFeedbackMessagePort: MessagePort): Simulant {
+export function GhostZoneSimulant(
+  id: string,
+  ammo: typeof Ammo,
+  dynamicsWorld: Ammo.btDiscreteDynamicsWorld,
+  userDataRegistry: UserDataRegistry,
+  simulantFeedbackMessagePort: MessagePort
+): Simulant {
   const state: SimulantState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -28,6 +36,8 @@ export function GhostZoneSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: 
 
   const _disposables: Set<DisposableCallback> = new Set();
   const _ghostObjects: Set<Ammo.btGhostObject> = new Set();
+  const _overlappingEntities: Set<AnyEntity> = new Set();
+  const _overlappingSimulants: Set<string> = new Set();
 
   const _simulantFeedbackMessageRouter = createRouter({
     brushes(brushes: Array<Brush>) {
@@ -107,9 +117,18 @@ export function GhostZoneSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: 
     for (let i = 0; i < numOverlappingObjects; i += 1) {
       const userIndex = ghostObject.getOverlappingObject(i).getUserIndex();
 
-      if (userIndex > 0) {
-        // Object has some user data attached.
-        console.log(userIndex);
+      if (userIndex < 1 || !userDataRegistry.hasIdByUserIndex(userIndex)) {
+        continue;
+      }
+
+      const handle = userDataRegistry.getHandleByUserIndex(userIndex);
+      const entity: undefined | AnyEntity = handle.data.get("entity");
+
+      // Object has some user data attached.
+      _overlappingSimulants.add(handle.simulantId);
+
+      if (entity) {
+        _overlappingEntities.add(entity);
       }
     }
   }
@@ -152,7 +171,15 @@ export function GhostZoneSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: 
   }
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    _overlappingEntities.clear();
+    _overlappingSimulants.clear();
+
     _ghostObjects.forEach(_updateGhostObject);
+
+    simulantFeedbackMessagePort.postMessage({
+      overlappingEntities: _overlappingEntities,
+      // overlappingSimulants: _overlappingSimulants,
+    });
   }
 
   return Object.freeze({

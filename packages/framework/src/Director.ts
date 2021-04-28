@@ -110,7 +110,10 @@ export function Director(logger: Logger, tickTimerState: TickTimerState, debugNa
 
     // 1,0,1
     if (next && !_transitioning && current) {
-      unmount(logger, current);
+      if (current.state.isMounted) {
+        unmount(logger, current);
+      }
+
       dispose(logger, current);
 
       state.current = null;

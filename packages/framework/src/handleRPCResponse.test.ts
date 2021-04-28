@@ -7,7 +7,7 @@ test("calls function stored in the RPCLookupTable based on response parameter", 
   const uuid = generateUUID();
   const rpcLookupTable = createRPCLookupTable();
 
-  rpcLookupTable[uuid] = function (data) {
+  rpcLookupTable[uuid] = function (data: any) {
     expect(data.foo).toBe("bar");
     expect(data.rpc).toBe(uuid);
 
