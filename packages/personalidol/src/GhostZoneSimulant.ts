@@ -1,6 +1,7 @@
 /// <reference types="@types/ammo.js" />
 
 import { buildGeometryPoints } from "@personalidol/quakemaps/src/buildGeometryPoints";
+import { CollisionFlags } from "@personalidol/ammo/src/CollisionFlags.enum";
 import { createRouter } from "@personalidol/framework/src/createRouter";
 import { disposableAmmo } from "@personalidol/ammo/src/disposableAmmo";
 import { disposeAll } from "@personalidol/framework/src/disposeAll";
@@ -74,6 +75,9 @@ export function GhostZoneSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: 
 
         ghostObject.setCollisionShape(shape);
 
+        // This is binary OR (not ||)
+        ghostObject.setCollisionFlags(ghostObject.getCollisionFlags() | CollisionFlags.CF_NO_CONTACT_RESPONSE);
+
         _ghostObjects.add(ghostObject);
       }
 
@@ -91,6 +95,23 @@ export function GhostZoneSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: 
 
     state.isPreloading = false;
     state.isPreloaded = true;
+  }
+
+  function _updateGhostObject(ghostObject: Ammo.btGhostObject): void {
+    const numOverlappingObjects = ghostObject.getNumOverlappingObjects();
+
+    if (numOverlappingObjects < 1) {
+      return;
+    }
+
+    for (let i = 0; i < numOverlappingObjects; i += 1) {
+      const userIndex = ghostObject.getOverlappingObject(i).getUserIndex();
+
+      if (userIndex > 0) {
+        // Object has some user data attached.
+        console.log(userIndex);
+      }
+    }
   }
 
   function dispose(): void {
@@ -130,7 +151,9 @@ export function GhostZoneSimulant(id: string, ammo: typeof Ammo, dynamicsWorld: 
     state.isPaused = false;
   }
 
-  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {}
+  function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
+    _ghostObjects.forEach(_updateGhostObject);
+  }
 
   return Object.freeze({
     id: id,

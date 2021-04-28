@@ -30,8 +30,8 @@ function _createAmmoDynamicsWorld(ammo: typeof Ammo) {
 
   dynamicsWorld.setGravity(new ammo.btVector3(0, -9.81 * 100, 0));
 
-  // Ghost objects collistions.
-  // dynamicsWorld.getBroadphase().getOverlappingPairCache().setInternalGhostPairCallback(new ammo.btGhostPairCallback());
+  // Ghost objects collistions and overlaps.
+  dynamicsWorld.getBroadphase().getOverlappingPairCache().setInternalGhostPairCallback(new ammo.btGhostPairCallback());
 
   return dynamicsWorld;
 }
