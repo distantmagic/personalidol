@@ -65,6 +65,7 @@ export function UIStateController(
   let _currentScene: null | Scene = null;
   let _dirtyCurrentMap: null | string = null;
   let _internalUIMessageChannel: MessageChannel = createSingleThreadMessageChannel();
+  let _isDynamicsWorldPaused: boolean = false;
   let _uiStateCurrentMap: null | string = uiState.currentMap;
 
   let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu");
@@ -189,6 +190,20 @@ export function UIStateController(
     }
 
     _currentScene = directorState.current;
+
+    if (_isDynamicsWorldPaused !== uiState.isScenePaused) {
+      _isDynamicsWorldPaused = uiState.isScenePaused;
+
+      if (_isDynamicsWorldPaused) {
+        dynamicsMessagePort.postMessage({
+          pause: null,
+        });
+      } else {
+        dynamicsMessagePort.postMessage({
+          unpause: null,
+        });
+      }
+    }
 
     if (_currentScene && _currentScene.state.isPaused !== uiState.isScenePaused) {
       if (!uiState.isScenePaused) {

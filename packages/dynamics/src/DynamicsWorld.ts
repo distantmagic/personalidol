@@ -36,10 +36,6 @@ function _createAmmoDynamicsWorld(ammo: typeof Ammo) {
   return dynamicsWorld;
 }
 
-/**
- * `DynamicsWorlds` needs to run with `DynamicsMainLoopTicker`, because it
- * expects constant timestep in physics simulation.
- */
 export function DynamicsWorld<S extends SimulantsLookup>(
   logger: Logger,
   ammo: typeof Ammo,
@@ -59,7 +55,10 @@ export function DynamicsWorld<S extends SimulantsLookup>(
   const _dynamicsWorld = _createAmmoDynamicsWorld(ammo);
   const _registeredSimulants: Map<string, Simulant> = new Map();
 
-  const _physicsMessageRouter = createRouter({
+  const _dynamicsMessageRouter = createRouter({
+    pause: pause,
+    unpause: unpause,
+
     disposeSimulant(message: MessageSimulantDispose): void {
       message.forEach(_disposeSimulant);
     },
@@ -114,7 +113,7 @@ export function DynamicsWorld<S extends SimulantsLookup>(
   }
 
   function start(): void {
-    dynamicsMessagePort.onmessage = _physicsMessageRouter;
+    dynamicsMessagePort.onmessage = _dynamicsMessageRouter;
   }
 
   function stop(): void {
@@ -125,6 +124,10 @@ export function DynamicsWorld<S extends SimulantsLookup>(
     state.isPaused = false;
   }
 
+  /**
+   * `DynamicsWorlds` needs to run with `DynamicsMainLoopTicker`, because it
+   * expects constant timestep in physics simulation.
+   */
   function update(delta: number): void {
     if (state.isPaused) {
       return;
