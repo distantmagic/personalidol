@@ -7,7 +7,6 @@ import { Color } from "three/src/math/Color";
 import { DirectionalLight } from "three/src/lights/DirectionalLight";
 import { FileLoader } from "three/src/loaders/FileLoader";
 import { Group } from "three/src/objects/Group";
-import { ImageBitmapLoader } from "three/src/loaders/ImageBitmapLoader";
 import { InterleavedBuffer } from "three/src/core/InterleavedBuffer";
 import { InterleavedBufferAttribute } from "three/src/core/InterleavedBufferAttribute";
 import { Interpolant } from "three/src/math/Interpolant";
@@ -39,8 +38,6 @@ import { SpotLight } from "three/src/lights/SpotLight";
 import { Vector2 } from "three/src/math/Vector2";
 import { Vector3 } from "three/src/math/Vector3";
 import { VectorKeyframeTrack } from "three/src/animation/tracks/VectorKeyframeTrack";
-
-import { isCreateImageBitmapSupported } from "@personalidol/framework/src/isCreateImageBitmapSupported";
 
 import {
   ClampToEdgeWrapping,
