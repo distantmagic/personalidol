@@ -5,6 +5,7 @@ import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/frame
 import { isCustomEvent } from "@personalidol/framework/src/isCustomEvent";
 import { unary } from "@personalidol/framework/src/unary";
 
+import { CameraParameters } from "./CameraParameters.enum";
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { UserSettingsDynamicLightQualityMap } from "./UserSettingsDynamicLightQualityMap.enum";
 
@@ -347,7 +348,13 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dt>{this.t("ui:user_settings_camera_zoom_amount")}</dt>
             <dd>{this.t("ui:user_settings_camera_zoom_amount_description")}</dd>
           </dl>
-          <pi-form-range-slider max={1401} min={1} onChange={this.onCameraZoomAmountChange} step={50} value={this.userSettings.cameraZoomAmount} />
+          <pi-form-range-slider
+            max={CameraParameters.ZOOM_MIN}
+            min={CameraParameters.ZOOM_MAX}
+            onChange={this.onCameraZoomAmountChange}
+            step={CameraParameters.ZOOM_STEP}
+            value={this.userSettings.cameraZoomAmount}
+          />
         </form>
         {isOffscreenCanvasSupported && (
           <Fragment>

@@ -1,12 +1,13 @@
 import { UserSettings as BaseUserSettings } from "@personalidol/framework/src/UserSettings";
 
+import { CameraParameters } from "./CameraParameters.enum";
 import { UserSettingsDynamicLightQualityMap } from "./UserSettingsDynamicLightQualityMap.enum";
 
 import type { UserSettings as IUserSettings } from "./UserSettings.type";
 
 function createEmptyState(pixelRatio: number): IUserSettings {
   return Object.assign(BaseUserSettings.createEmptyState(), {
-    cameraZoomAmount: 201,
+    cameraZoomAmount: CameraParameters.ZOOM_DEFAULT,
     cameraType: "PerspectiveCamera" as IUserSettings["cameraType"],
     devicePixelRatio: pixelRatio,
     dynamicLightQuality: UserSettingsDynamicLightQualityMap.Low,

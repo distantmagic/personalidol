@@ -2,6 +2,7 @@ import { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
 import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import { Vector3 } from "three/src/math/Vector3";
 
+import { CameraParameters } from "./CameraParameters.enum";
 import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { updateOrthographicCameraAspect } from "@personalidol/framework/src/updateOrthographicCameraAspect";
 import { updatePerspectiveCameraAspect } from "@personalidol/framework/src/updatePerspectiveCameraAspect";
@@ -15,11 +16,7 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 
 import type { UserSettings } from "./UserSettings.type";
 
-const CAMERA_ZOOM_INITIAL = 201;
-const CAMERA_ZOOM_MAX = 1;
-const CAMERA_ZOOM_MIN = 1401;
-const CAMERA_ZOOM_STEP = 50;
-const CAMERA_ORTHOGRAPHIC_FRUSTUM_SIZE_MIN = CAMERA_ZOOM_MAX + 4 * CAMERA_ZOOM_STEP;
+const CAMERA_ORTHOGRAPHIC_FRUSTUM_SIZE_MIN = CameraParameters.ZOOM_MAX + 4 * CameraParameters.ZOOM_STEP;
 
 export function CameraController(logger: Logger, userSettings: UserSettings, dimensionsState: Uint32Array, keyboardState: Uint8Array): ICameraController {
   const state: CameraControllerState = Object.seal({
@@ -34,7 +31,7 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
   _orthographicCamera.position.y = 3000;
   _orthographicCamera.far = 8000;
   _orthographicCamera.lookAt(0, 0, 0);
-  _orthographicCamera.near = -1 * CAMERA_ZOOM_MIN;
+  _orthographicCamera.near = -1 * CameraParameters.ZOOM_MIN;
 
   const _perspectiveCamera = new PerspectiveCamera();
 
@@ -64,7 +61,7 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
   }
 
   function resetZoom(): void {
-    userSettings.cameraZoomAmount = CAMERA_ZOOM_INITIAL;
+    userSettings.cameraZoomAmount = CameraParameters.ZOOM_DEFAULT;
     userSettings.version += 1;
   }
 
@@ -109,14 +106,14 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
   }
 
   function zoomIn(scale: number = 1): void {
-    userSettings.cameraZoomAmount += CAMERA_ZOOM_STEP * scale;
-    userSettings.cameraZoomAmount = Math.min(CAMERA_ZOOM_MIN, userSettings.cameraZoomAmount);
+    userSettings.cameraZoomAmount += CameraParameters.ZOOM_STEP * scale;
+    userSettings.cameraZoomAmount = Math.min(CameraParameters.ZOOM_MIN, userSettings.cameraZoomAmount);
     userSettings.version += 1;
   }
 
   function zoomOut(scale: number = 1): void {
-    userSettings.cameraZoomAmount -= CAMERA_ZOOM_STEP * scale;
-    userSettings.cameraZoomAmount = Math.max(CAMERA_ZOOM_MAX, userSettings.cameraZoomAmount);
+    userSettings.cameraZoomAmount -= CameraParameters.ZOOM_STEP * scale;
+    userSettings.cameraZoomAmount = Math.max(CameraParameters.ZOOM_MAX, userSettings.cameraZoomAmount);
     userSettings.version += 1;
   }
 
