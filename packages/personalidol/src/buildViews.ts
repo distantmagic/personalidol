@@ -1,3 +1,5 @@
+import jexl from "jexl";
+
 import { name } from "@personalidol/framework/src/name";
 
 import { isTargeting } from "./isTargeting";
@@ -10,7 +12,33 @@ import type { Texture as ITexture } from "three/src/textures/Texture";
 import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityView } from "./EntityView.interface";
 import type { EntityViewFactory } from "./EntityViewFactory.interface";
+import type { UIState } from "./UIState.type";
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
+
+async function* _filterEntities(uiState: UIState, entities: ReadonlyArray<AnyEntity>): AsyncGenerator<AnyEntity> {
+  const expressionContext = Object.freeze({
+    uiState: Object.freeze(Object.assign({}, uiState)),
+  });
+
+  for (let entity of entities) {
+    const expression: undefined | string = entity.properties.if;
+
+    if ("string" !== typeof entity.properties.if) {
+      yield entity;
+      continue;
+    }
+
+    const result = await jexl.eval(expression, expressionContext);
+
+    if ("boolean" !== typeof result) {
+      throw new Error(`Entity expression evaluated to ${typeof result} instead of boolean: "${expression}"`);
+    }
+
+    if (result) {
+      yield entity;
+    }
+  }
+}
 
 function _findTargetedViews(entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>>, step: ViewBuildingStep): Set<EntityView<AnyEntity>> {
   const entity: AnyEntity = step.entity;
@@ -33,15 +61,21 @@ function _findTargetedViews(entityViews: WeakMap<AnyEntity, EntityView<AnyEntity
   return targetedViews;
 }
 
-export function* buildViews(
+export async function* buildViews(
   logger: Logger,
+  uiState: UIState,
   entityViewFactory: EntityViewFactory,
   worldspawnTexture: ITexture,
   entities: ReadonlyArray<AnyEntity>
-): Generator<EntityView<AnyEntity>> {
+): AsyncGenerator<EntityView<AnyEntity>> {
   const entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>> = new WeakMap();
+  const filteredEntities: Array<AnyEntity> = [];
 
-  for (let step of createViewBuildingPlan(entities)) {
+  for await (let entity of _filterEntities(uiState, entities)) {
+    filteredEntities.push(entity);
+  }
+
+  for await (let step of createViewBuildingPlan(uiState, filteredEntities)) {
     const targetedViews = _findTargetedViews(entityViews, step);
     const entityView = entityViewFactory.create(step.entity, targetedViews, worldspawnTexture);
 

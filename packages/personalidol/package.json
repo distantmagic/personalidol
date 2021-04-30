@@ -20,6 +20,7 @@
     "@personalidol/views": "^0.0.4",
     "clsx": "^1.1.1",
     "i18next": "^20.2.2",
+    "jexl": "^2.3.0",
     "loglevel": "^1.7.1",
     "preact": "^10.5.13",
     "three": "^0.128.0",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@types/ammo.js": "github:osman-turan/ammo.js-typings#4270a20c9f992969ffbd3e989aaa0efbe10fd5c4",
     "@types/jest": "^26.0.23",
+    "@types/jexl": "^2.2.0",
     "@types/jsdom": "^16.2.10",
     "@types/three": "^0.127.1",
     "@types/toposort": "^2.0.3",
