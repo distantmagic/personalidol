@@ -46,15 +46,13 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
   const _cameraResetPosition: IVector3 = new Vector3();
 
   let _currentCamera: OrthographicCamera | PerspectiveCamera = _perspectiveCamera;
-  let _cameraZoomAmount = 0;
   let _isCameraChanged: boolean = false;
-  let _orthographicCameraFrustumSize: number = _cameraZoomAmount;
+  let _orthographicCameraFrustumSize: number = userSettings.cameraZoomAmount;
 
   function mount(): void {
     state.isMounted = true;
 
     resetPosition();
-    resetZoom();
   }
 
   function pause(): void {
@@ -66,7 +64,8 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
   }
 
   function resetZoom(): void {
-    _cameraZoomAmount = CAMERA_ZOOM_INITIAL;
+    userSettings.cameraZoomAmount = CAMERA_ZOOM_INITIAL;
+    userSettings.version += 1;
   }
 
   function unmount(): void {
@@ -92,27 +91,33 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
       _currentCamera = _perspectiveCamera;
     }
 
-    _orthographicCameraFrustumSize = _cameraZoomAmount;
+    _orthographicCameraFrustumSize = userSettings.cameraZoomAmount;
     _orthographicCameraFrustumSize = Math.max(_orthographicCameraFrustumSize, CAMERA_ORTHOGRAPHIC_FRUSTUM_SIZE_MIN);
 
     updateOrthographicCameraAspect(dimensionsState, _orthographicCamera, _orthographicCameraFrustumSize);
     updatePerspectiveCameraAspect(dimensionsState, _perspectiveCamera);
 
-    _currentCamera.position.x = _cameraPosition.x + _cameraZoomAmount;
-    _currentCamera.position.z = _cameraPosition.z + _cameraZoomAmount;
-    _currentCamera.position.y = _cameraPosition.y + _cameraZoomAmount;
+    _currentCamera.position.x = _cameraPosition.x + userSettings.cameraZoomAmount;
+    _currentCamera.position.z = _cameraPosition.z + userSettings.cameraZoomAmount;
+    _currentCamera.position.y = _cameraPosition.y + userSettings.cameraZoomAmount;
 
-    _currentCamera.lookAt(_currentCamera.position.x - _cameraZoomAmount, _currentCamera.position.y - _cameraZoomAmount, _currentCamera.position.z - _cameraZoomAmount);
+    _currentCamera.lookAt(
+      _currentCamera.position.x - userSettings.cameraZoomAmount,
+      _currentCamera.position.y - userSettings.cameraZoomAmount,
+      _currentCamera.position.z - userSettings.cameraZoomAmount
+    );
   }
 
   function zoomIn(scale: number = 1): void {
-    _cameraZoomAmount += CAMERA_ZOOM_STEP * scale;
-    _cameraZoomAmount = Math.min(CAMERA_ZOOM_MIN, _cameraZoomAmount);
+    userSettings.cameraZoomAmount += CAMERA_ZOOM_STEP * scale;
+    userSettings.cameraZoomAmount = Math.min(CAMERA_ZOOM_MIN, userSettings.cameraZoomAmount);
+    userSettings.version += 1;
   }
 
   function zoomOut(scale: number = 1): void {
-    _cameraZoomAmount -= CAMERA_ZOOM_STEP * scale;
-    _cameraZoomAmount = Math.max(CAMERA_ZOOM_MAX, _cameraZoomAmount);
+    userSettings.cameraZoomAmount -= CAMERA_ZOOM_STEP * scale;
+    userSettings.cameraZoomAmount = Math.max(CAMERA_ZOOM_MAX, userSettings.cameraZoomAmount);
+    userSettings.version += 1;
   }
 
   return Object.freeze({

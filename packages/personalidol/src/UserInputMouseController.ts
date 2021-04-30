@@ -76,8 +76,8 @@ export function UserInputMouseController(userSettings: UserSettings, dimensionsS
     _pointerVector.rotateAround(_pointerVectorRotationPivot, (3 * Math.PI) / 4);
     _pointerVector.normalize();
 
-    _cameraTransitionRequest.x += userSettings.cameraMovementSpeed * _pointerVector.y * delta;
-    _cameraTransitionRequest.z += userSettings.cameraMovementSpeed * _pointerVector.x * delta;
+    _cameraTransitionRequest.x += _pointerVector.y * delta;
+    _cameraTransitionRequest.z += _pointerVector.x * delta;
   }
 
   return Object.freeze({

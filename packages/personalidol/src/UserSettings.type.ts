@@ -4,7 +4,7 @@ import type { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
 import type { UserSettings as BaseUserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 export type UserSettings = BaseUserSettings & {
-  cameraMovementSpeed: number;
+  cameraZoomAmount: number;
   cameraType: OrthographicCamera["type"] | PerspectiveCamera["type"];
   devicePixelRatio: number;
   dynamicLightQuality: 0 | 1 | 2 | 4;

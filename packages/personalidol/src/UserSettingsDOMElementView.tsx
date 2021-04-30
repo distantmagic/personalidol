@@ -141,8 +141,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this._unaryT = unary(this.t);
 
     this.close = this.close.bind(this);
-    this.onCameraMovementSpeedChange = this.onCameraMovementSpeedChange.bind(this);
     this.onCameraTypeChange = this.onCameraTypeChange.bind(this);
+    this.onCameraZoomAmountChange = this.onCameraZoomAmountChange.bind(this);
     this.onDynamicLightQualityChange = this.onDynamicLightQualityChange.bind(this);
     this.onOverlayClick = this.onOverlayClick.bind(this);
     this.onPixelRatioChange = this.onPixelRatioChange.bind(this);
@@ -166,18 +166,18 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     this.close();
   }
 
-  onCameraMovementSpeedChange(evt: Event) {
+  onCameraZoomAmountChange(evt: Event) {
     if (!isCustomEvent(evt)) {
-      throw new Error("Expected custom event with:: 'onDynamicLightQualityChange'.");
+      throw new Error("Expected custom event with:: 'onCameraZoomAmountChange'.");
     }
 
-    this.userSettings.cameraMovementSpeed = Number(evt.detail);
+    this.userSettings.cameraZoomAmount = Number(evt.detail);
     this.userSettings.version += 1;
   }
 
   onCameraTypeChange(evt: Event) {
     if (!isCustomEvent(evt)) {
-      throw new Error("Expected custom event with:: 'onDynamicLightQualityChange'.");
+      throw new Error("Expected custom event with:: 'onCameraTypeChange'.");
     }
 
     if (!_cameraTypeValues.includes(evt.detail)) {
@@ -344,10 +344,10 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             values={_cameraTypeValues}
           />
           <dl>
-            <dt>{this.t("ui:user_settings_camera_movement_speed")}</dt>
-            <dd>{this.t("ui:user_settings_camera_movement_speed_description")}</dd>
+            <dt>{this.t("ui:user_settings_camera_zoom_amount")}</dt>
+            <dd>{this.t("ui:user_settings_camera_zoom_amount_description")}</dd>
           </dl>
-          <pi-form-range-slider max={2000} min={100} onChange={this.onCameraMovementSpeedChange} step={100} value={this.userSettings.cameraMovementSpeed} />
+          <pi-form-range-slider max={1401} min={1} onChange={this.onCameraZoomAmountChange} step={50} value={this.userSettings.cameraZoomAmount} />
         </form>
         {isOffscreenCanvasSupported && (
           <Fragment>

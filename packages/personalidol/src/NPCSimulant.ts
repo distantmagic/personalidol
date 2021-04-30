@@ -38,15 +38,16 @@ export function NPCSimulant(
 
   const _disposables: Set<DisposableCallback> = new Set();
   const _transform: Ammo.btTransform = new ammo.btTransform();
-  const _userDataHandle: UserDataHandle = userDataRegistry.createHandleById(id);
 
   _disposables.add(disposableAmmo(ammo, _transform));
 
+  const _userDataHandle: UserDataHandle = userDataRegistry.createHandleById(id);
   const _vector: Ammo.btVector3 = new ammo.btVector3(0, 0, 0);
 
   _disposables.add(disposableAmmo(ammo, _vector));
 
   let _npcRigidBody: null | Ammo.btRigidBody = null;
+  let _transformOrigin: null | Ammo.btVector3 = null;
 
   const _simulantFeedbackMessageRouter = createRouter({
     applyCentralForce(force: Vector3Simple) {
@@ -204,24 +205,15 @@ export function NPCSimulant(
     }
 
     _npcRigidBody.getMotionState().getWorldTransform(_transform);
-
-    const origin = _transform.getOrigin();
+    _transformOrigin = _transform.getOrigin();
 
     simulantFeedbackMessagePort.postMessage({
       origin: {
-        x: origin.x(),
-        y: origin.y(),
-        z: origin.z(),
+        x: _transformOrigin.x(),
+        y: _transformOrigin.y(),
+        z: _transformOrigin.z(),
       },
     });
-
-    // const rotation = _transform.getRotation();
-
-    // console.log(origin.x(), origin.y(), origin.z());
-    // object[3] = rotation.x();
-    // object[4] = rotation.y();
-    // object[5] = rotation.z();
-    // object[6] = rotation.w();
   }
 
   return Object.freeze({

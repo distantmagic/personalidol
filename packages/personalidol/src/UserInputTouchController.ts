@@ -58,8 +58,8 @@ export function UserInputTouchController(userSettings: UserSettings, dimensionsS
 
     _stretchVector.rotateAround(_stretchVectorRotationPivot, (3 * Math.PI) / 4);
 
-    _cameraTransitionRequest.x += userSettings.cameraMovementSpeed * _stretchVector.y * delta;
-    _cameraTransitionRequest.z += userSettings.cameraMovementSpeed * _stretchVector.x * delta;
+    _cameraTransitionRequest.x += _stretchVector.y * delta;
+    _cameraTransitionRequest.z += _stretchVector.x * delta;
   }
 
   return Object.freeze({

@@ -54,11 +54,11 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
     }
 
     if (keyboardState[KeyboardIndices.PageDown]) {
-      cameraController.zoomIn(0.1 * userSettings.cameraMovementSpeed * delta);
+      cameraController.zoomIn(0.1 * delta);
     }
 
     if (keyboardState[KeyboardIndices.PageUp]) {
-      cameraController.zoomOut(0.1 * userSettings.cameraMovementSpeed * delta);
+      cameraController.zoomOut(0.1 * delta);
     }
 
     if (keyboardState[KeyboardIndices.ArrowUp] || keyboardState[KeyboardIndices.KeyW]) {
@@ -82,7 +82,7 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
     }
 
     _cameraTransitionRequest.normalize();
-    _cameraTransitionRequest.multiplyScalar(userSettings.cameraMovementSpeed * delta);
+    _cameraTransitionRequest.multiplyScalar(delta);
   }
 
   return Object.freeze({

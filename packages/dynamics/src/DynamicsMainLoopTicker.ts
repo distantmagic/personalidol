@@ -42,7 +42,7 @@ export function DynamicsMainLoopTicker(logger: Logger, simulationTimestep: numbe
     _frameDelta -= state.scheduledUpdates * simulationTimestep;
 
     if (state.scheduledUpdates > panicThreshold) {
-      logger.warn(`Main loop updates are piling up. Skipping "${state.scheduledUpdates - 1}" updates.`);
+      logger.warn(`Dynamics loop updates are piling up. Skipping "${state.scheduledUpdates - 1}" updates.`);
       state.scheduledUpdates = 1;
     }
   }
