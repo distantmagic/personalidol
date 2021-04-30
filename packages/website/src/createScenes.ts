@@ -11,6 +11,7 @@ import { RendererDimensionsManager } from "@personalidol/dom-renderer/src/Render
 import { SceneTransition } from "@personalidol/framework/src/SceneTransition";
 import { UIState } from "@personalidol/personalidol/src/UIState";
 import { UIStateController } from "@personalidol/personalidol/src/UIStateController";
+import { UIStateControllerStatsHook } from "@personalidol/personalidol/src/UIStateControllerStatsHook";
 import { WebGLRendererStatsHook } from "@personalidol/framework/src/WebGLRendererStatsHook";
 import { WebGLRendererUserSettingsManager } from "@personalidol/personalidol/src/WebGLRendererUserSettingsManager";
 
@@ -73,9 +74,6 @@ export function createScenes(
 
   const webGLRendererUserSettingsManager = WebGLRendererUserSettingsManager(userSettings, webGLRenderer);
 
-  statsReporter.hooks.add(CSS2DRendererStatsHook(css2DRenderer));
-  statsReporter.hooks.add(WebGLRendererStatsHook(webGLRenderer));
-
   const currentSceneDirector = Director(logger, mainLoop.ticker.tickTimerState, "Scene");
   const loadingSceneDirector = Director(logger, mainLoop.ticker.tickTimerState, "LoadingScreen");
   const sceneTransition = SceneTransition(logger, currentSceneDirector.state, loadingSceneDirector.state);
@@ -108,6 +106,10 @@ export function createScenes(
     uiMessagePort,
     uiState
   );
+
+  statsReporter.hooks.add(CSS2DRendererStatsHook(css2DRenderer));
+  statsReporter.hooks.add(UIStateControllerStatsHook(uiStateController));
+  statsReporter.hooks.add(WebGLRendererStatsHook(webGLRenderer));
 
   loadingSceneDirector.state.next = LoadingScreenScene(logger, userSettings, effectComposer, dimensionsState, domMessagePort, progressMessagePort);
 

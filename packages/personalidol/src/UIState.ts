@@ -3,6 +3,7 @@ import { UIState as IUIState } from "./UIState.type";
 function createEmptyState(): IUIState {
   return {
     currentMap: null,
+    previousMap: null,
     isInGameMenuOpened: false,
     isInGameMenuTriggerVisible: false,
     isLanguageSettingsScreenOpened: false,

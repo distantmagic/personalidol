@@ -22,6 +22,7 @@ import type { Scene } from "@personalidol/framework/src/Scene.interface";
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { UIState } from "./UIState.type";
 import type { UIStateController as IUIStateController } from "./UIStateController.interface";
+import type { UIStateControllerInfo } from "./UIStateControllerInfo.type";
 import type { UserSettings } from "./UserSettings.type";
 
 export function UIStateController(
@@ -47,6 +48,8 @@ export function UIStateController(
   uiMessagePort: MessagePort,
   uiState: UIState
 ): IUIStateController {
+  const info: UIStateControllerInfo = Object.seal({});
+
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -62,8 +65,8 @@ export function UIStateController(
     isVirtualJoystickLayerVisible: _onIsVirtualJoystickLayerVisible,
   });
 
+  let _actuallyLoadedMap: null | string = null;
   let _currentScene: null | Scene = null;
-  let _dirtyCurrentMap: null | string = null;
   let _internalUIMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _isDynamicsWorldPaused: boolean = false;
   let _uiStateCurrentMap: null | string = uiState.currentMap;
@@ -121,8 +124,9 @@ export function UIStateController(
       progressMessagePort,
     );
 
-    _dirtyCurrentMap = null;
+    _actuallyLoadedMap = null;
     uiState.currentMap = null;
+    uiState.previousMap = null;
   }
 
   function _transitionToMapScene(targetMap: string): void {
@@ -151,7 +155,6 @@ export function UIStateController(
     );
 
     uiState.currentMap = targetMap;
-    _dirtyCurrentMap = targetMap;
   }
 
   function start() {
@@ -185,7 +188,10 @@ export function UIStateController(
       return;
     }
 
-    if (_uiStateCurrentMap && _uiStateCurrentMap !== _dirtyCurrentMap) {
+    if (_uiStateCurrentMap && _uiStateCurrentMap !== _actuallyLoadedMap) {
+      uiState.previousMap = _actuallyLoadedMap;
+      _actuallyLoadedMap = _uiStateCurrentMap;
+
       _transitionToMapScene(_uiStateCurrentMap);
       return;
     }
@@ -218,8 +224,10 @@ export function UIStateController(
 
   return Object.seal({
     id: generateUUID(),
+    info: info,
     name: "UIStateController",
     state: state,
+    uiState: uiState,
 
     start: start,
     stop: stop,

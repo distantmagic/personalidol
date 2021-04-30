@@ -7,4 +7,5 @@ export type UIState = {
   isScenePaused: boolean;
   isUserSettingsScreenOpened: boolean;
   isVirtualJoystickLayerVisible: boolean;
+  previousMap: null | string;
 };
