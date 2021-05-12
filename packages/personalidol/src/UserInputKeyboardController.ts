@@ -54,11 +54,13 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
     }
 
     if (keyboardState[KeyboardIndices.PageDown]) {
-      cameraController.zoomIn(0.1 * delta);
+      // Zoom is throttled a bit, since with keyboard it fires during each
+      // frame.
+      cameraController.zoomIn(delta * 0.5);
     }
 
     if (keyboardState[KeyboardIndices.PageUp]) {
-      cameraController.zoomOut(0.1 * delta);
+      cameraController.zoomOut(delta * 0.5);
     }
 
     if (keyboardState[KeyboardIndices.ArrowUp] || keyboardState[KeyboardIndices.KeyW]) {

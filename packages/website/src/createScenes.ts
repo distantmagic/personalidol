@@ -90,6 +90,7 @@ export function createScenes(
     css2DRenderer,
     currentSceneDirector.state,
     eventBus,
+    mainLoop.ticker.tickTimerState,
     dimensionsState,
     keyboardState,
     mouseState,

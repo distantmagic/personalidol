@@ -18,6 +18,7 @@ import type { EffectComposer } from "@personalidol/three-modules/src/postprocess
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { UIState } from "./UIState.type";
@@ -32,6 +33,7 @@ export function UIStateController(
   css2DRenderer: CSS2DRenderer,
   directorState: DirectorState,
   eventBus: EventBus,
+  tickTimerState: TickTimerState,
   dimensionsState: Uint32Array,
   keyboardState: Uint8Array,
   mouseState: Int32Array,
@@ -136,6 +138,7 @@ export function UIStateController(
       effectComposer,
       css2DRenderer,
       eventBus,
+      tickTimerState,
       dimensionsState,
       keyboardState,
       mouseState,
