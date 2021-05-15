@@ -6,7 +6,7 @@ import type { Texture as ITexture } from "three";
 
 export function imageToTexture(image: ImageData | ImageBitmap): ITexture {
   // this typecasting is a hack to make it work with threejs
-  const texture = new CanvasTexture((image as unknown) as HTMLImageElement);
+  const texture = new CanvasTexture(image as unknown as HTMLImageElement);
 
   texture.format = RGBAFormat;
   texture.wrapS = texture.wrapT = RepeatWrapping;

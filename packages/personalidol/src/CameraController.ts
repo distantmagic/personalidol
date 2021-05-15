@@ -105,14 +105,14 @@ export function CameraController(logger: Logger, userSettings: UserSettings, dim
     );
   }
 
-  function zoomIn(delta: number = 1): void {
-    userSettings.cameraZoomAmount += CameraParameters.ZOOM_STEP * delta;
+  function zoomIn(step: number): void {
+    userSettings.cameraZoomAmount += step;
     userSettings.cameraZoomAmount = Math.min(CameraParameters.ZOOM_MIN, userSettings.cameraZoomAmount);
     userSettings.version += 1;
   }
 
-  function zoomOut(delta: number = 1): void {
-    userSettings.cameraZoomAmount -= CameraParameters.ZOOM_STEP * delta;
+  function zoomOut(step: number): void {
+    userSettings.cameraZoomAmount -= step;
     userSettings.cameraZoomAmount = Math.max(CameraParameters.ZOOM_MAX, userSettings.cameraZoomAmount);
     userSettings.version += 1;
   }

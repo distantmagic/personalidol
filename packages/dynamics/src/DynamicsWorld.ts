@@ -28,7 +28,7 @@ import type { SimulantsLookup } from "./SimulantsLookup.type";
 function _createAmmoDynamicsWorld(ammo: typeof Ammo) {
   const collisionConfiguration = new ammo.btDefaultCollisionConfiguration();
   const dispatcher = new ammo.btCollisionDispatcher(collisionConfiguration);
-  const overlappingPairCache: Ammo.btBroadphaseInterface = (new ammo.btDbvtBroadphase() as unknown) as Ammo.btBroadphaseInterface;
+  const overlappingPairCache: Ammo.btBroadphaseInterface = new ammo.btDbvtBroadphase() as unknown as Ammo.btBroadphaseInterface;
   const solver = new ammo.btSequentialImpulseConstraintSolver();
   const dynamicsWorld = new ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 

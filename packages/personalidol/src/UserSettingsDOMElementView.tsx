@@ -353,7 +353,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             min={CameraParameters.ZOOM_MAX}
             onChange={this.onCameraZoomAmountChange}
             step={CameraParameters.ZOOM_STEP}
-            value={this.userSettings.cameraZoomAmount}
+            value={Math.round(this.userSettings.cameraZoomAmount)}
           />
         </form>
         {isOffscreenCanvasSupported && (

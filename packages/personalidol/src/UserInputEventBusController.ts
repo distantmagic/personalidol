@@ -1,5 +1,6 @@
 import { Vector3 } from "three/src/math/Vector3";
 
+import { CameraParameters } from "./CameraParameters.enum";
 import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { noop } from "@personalidol/framework/src/noop";
 
@@ -33,9 +34,9 @@ export function UserInputEventBusController(
     }
 
     if (zoomAmount < 0) {
-      cameraController.zoomOut(tickTimerState.delta);
+      cameraController.zoomOut(CameraParameters.ZOOM_STEP);
     } else {
-      cameraController.zoomIn(tickTimerState.delta);
+      cameraController.zoomIn(CameraParameters.ZOOM_STEP);
     }
   }
 

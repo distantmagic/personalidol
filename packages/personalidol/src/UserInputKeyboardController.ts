@@ -1,5 +1,6 @@
 import { Vector3 } from "three/src/math/Vector3";
 
+import { CameraParameters } from "./CameraParameters.enum";
 import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { KeyboardIndices } from "@personalidol/input/src/KeyboardIndices.enum";
 
@@ -54,13 +55,11 @@ export function UserInputKeyboardController(userSettings: UserSettings, keyboard
     }
 
     if (keyboardState[KeyboardIndices.PageDown]) {
-      // Zoom is throttled a bit, since with keyboard it fires during each
-      // frame.
-      cameraController.zoomIn(delta * 0.5);
+      cameraController.zoomIn(CameraParameters.ZOOM_VELOCITY * delta);
     }
 
     if (keyboardState[KeyboardIndices.PageUp]) {
-      cameraController.zoomOut(delta * 0.5);
+      cameraController.zoomOut(CameraParameters.ZOOM_VELOCITY * delta);
     }
 
     if (keyboardState[KeyboardIndices.ArrowUp] || keyboardState[KeyboardIndices.KeyW]) {

@@ -108,7 +108,7 @@ export function EntityViewFactory(
       throw new Error(`Unknown entity class: ${classname}`);
     }
 
-    return (entityLookupTable[classname] as unknown) as EntityLookupCallback<K, EntityLookup[K]>;
+    return entityLookupTable[classname] as unknown as EntityLookupCallback<K, EntityLookup[K]>;
   }
 
   function _isClassname<K extends keyof EntityLookupTable>(classname: string): classname is K {

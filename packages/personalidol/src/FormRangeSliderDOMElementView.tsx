@@ -1,6 +1,7 @@
 import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
+import { roundToNearestMultiple } from "@personalidol/math/src/roundToNearestMultiple";
 
 import type { JSX } from "preact";
 
@@ -142,10 +143,12 @@ export class FormRangeSliderDOMElementView extends DOMElementView<UserSettings> 
   }
 
   render(delta: number) {
+    const value = roundToNearestMultiple(this._step, Number(this._value));
+
     return (
       <div class="pi-range-slider">
-        <input max={this._max} min={this._min} onInput={this.onRangeInput} step={this._step} type="range" value={this._value} />
-        <div class="pi-range-slider__value">{this._value}</div>
+        <input max={this._max} min={this._min} onInput={this.onRangeInput} step={this._step} type="range" value={value} />
+        <div class="pi-range-slider__value">{value}</div>
       </div>
     );
   }

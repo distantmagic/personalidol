@@ -68,7 +68,7 @@ export function EntityControllerFactory(
           throw new Error("Player entity controller only supports character view.");
         }
 
-        yield (PlayerEntityController(
+        yield PlayerEntityController(
           logger,
           view,
           cameraController,
@@ -77,7 +77,7 @@ export function EntityControllerFactory(
           userInputMouseController,
           userInputTouchController,
           dynamicsMessagePort
-        ) as unknown) as IEntityController<E>;
+        ) as unknown as IEntityController<E>;
         break;
       case "worldspawn":
         if (!isEntityViewOfClass<EntityWorldspawn>(view, "worldspawn")) {
