@@ -12,11 +12,13 @@ import type { Texture as ITexture } from "three/src/textures/Texture";
 import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityView } from "./EntityView.interface";
 import type { EntityViewFactory } from "./EntityViewFactory.interface";
+import type { GameState } from "./GameState.type";
 import type { UIState } from "./UIState.type";
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
 
-async function* _filterEntities(uiState: UIState, entities: ReadonlyArray<AnyEntity>): AsyncGenerator<AnyEntity> {
+async function* _filterEntities(gameState: GameState, uiState: UIState, entities: ReadonlyArray<AnyEntity>): AsyncGenerator<AnyEntity> {
   const expressionContext = Object.freeze({
+    gameState: Object.freeze(Object.assign({}, gameState)),
     uiState: Object.freeze(Object.assign({}, uiState)),
   });
 
@@ -63,6 +65,7 @@ function _findTargetedViews(entityViews: WeakMap<AnyEntity, EntityView<AnyEntity
 
 export async function* buildViews(
   logger: Logger,
+  gameState: GameState,
   uiState: UIState,
   entityViewFactory: EntityViewFactory,
   worldspawnTexture: ITexture,
@@ -71,7 +74,7 @@ export async function* buildViews(
   const entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>> = new WeakMap();
   const filteredEntities: Array<AnyEntity> = [];
 
-  for await (let entity of _filterEntities(uiState, entities)) {
+  for await (let entity of _filterEntities(gameState, uiState, entities)) {
     filteredEntities.push(entity);
   }
 

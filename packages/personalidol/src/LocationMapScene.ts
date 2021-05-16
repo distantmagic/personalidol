@@ -258,7 +258,7 @@ export function LocationMapScene(
       });
     }
 
-    for await (let view of buildViews(logger, uiState, _entityViewFactory, worldspawnTexture, entities)) {
+    for await (let view of buildViews(logger, gameState, uiState, _entityViewFactory, worldspawnTexture, entities)) {
       _viewBag.views.add(view);
 
       if (isEntityWithController(view.entity)) {

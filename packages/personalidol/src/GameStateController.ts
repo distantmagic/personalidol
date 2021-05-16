@@ -3,6 +3,7 @@ import { generateUUID } from "@personalidol/math/src/generateUUID";
 import { pause } from "@personalidol/framework/src/pause";
 import { unpause } from "@personalidol/framework/src/unpause";
 
+import { GameState } from "./GameState";
 import { isMainMenuScene } from "./isMainMenuScene";
 import { MainMenuScene } from "./MainMenuScene";
 import { LocationMapScene } from "./LocationMapScene";
@@ -17,11 +18,15 @@ import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoo
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
-import type { GameState } from "./GameState.type";
+import type { GameState as IGameState } from "./GameState.type";
 import type { GameStateController as IGameStateController } from "./GameStateController.interface";
 import type { UIState } from "./UIState.type";
 import type { UserSettings } from "./UserSettings.type";
 
+/**
+ * The aim of this class is to make the wished game state the actual game
+ * state.
+ */
 export function GameStateController(
   logger: Logger,
   userSettings: UserSettings,
@@ -44,22 +49,22 @@ export function GameStateController(
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
-  gameState: GameState,
+  gameState: IGameState,
   uiState: UIState
 ): IGameStateController {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
 
+  const _actualGameState = GameState.createEmptyState();
+
   const _gameMessageRouter = createRouter({
     currentLocationMap: _onCurrentMapMessage,
     isScenePaused: _onIsScenePausedMessage,
   });
 
-  let _actuallyLoadedMap: null | string = null;
   let _currentScene: null | Scene = null;
   let _isDynamicsWorldPaused: boolean = false;
-  let _uiStateCurrentMap: null | string = gameState.currentLocationMap;
 
   function _onCurrentMapMessage(mapName: null | string): void {
     gameState.currentLocationMap = mapName;
@@ -83,7 +88,9 @@ export function GameStateController(
       progressMessagePort,
     );
 
-    _actuallyLoadedMap = null;
+    _actualGameState.currentLocationMap = null;
+    _actualGameState.previousLocationMap = null;
+
     gameState.currentLocationMap = null;
     gameState.previousLocationMap = null;
   }
@@ -115,6 +122,10 @@ export function GameStateController(
     );
 
     gameState.currentLocationMap = targetMap;
+    gameState.previousLocationMap = _actualGameState.currentLocationMap;
+
+    _actualGameState.currentLocationMap = gameState.currentLocationMap;
+    _actualGameState.previousLocationMap = gameState.previousLocationMap;
   }
 
   function start() {
@@ -131,19 +142,14 @@ export function GameStateController(
       return;
     }
 
-    _uiStateCurrentMap = gameState.currentLocationMap;
-
-    if (!_uiStateCurrentMap && !isMainMenuScene(directorState.current)) {
+    if (!gameState.currentLocationMap && !isMainMenuScene(directorState.current)) {
       // Default to the main menu in any case.
       _transitionToMainMenuScene();
       return;
     }
 
-    if (_uiStateCurrentMap && _uiStateCurrentMap !== _actuallyLoadedMap) {
-      gameState.previousLocationMap = _actuallyLoadedMap;
-      _actuallyLoadedMap = _uiStateCurrentMap;
-
-      _transitionToMapScene(_uiStateCurrentMap);
+    if (gameState.currentLocationMap && gameState.currentLocationMap !== _actualGameState.currentLocationMap) {
+      _transitionToMapScene(gameState.currentLocationMap);
       return;
     }
 
