@@ -17,6 +17,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
 
     const message: MessageGameStateChange = {
       currentLocationMap: "map-gates",
+      // currentWorldMap: "map-northern-creek",
     };
 
     this.gameMessagePort.postMessage(message);

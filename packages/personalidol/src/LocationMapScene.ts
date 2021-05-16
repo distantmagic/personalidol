@@ -59,7 +59,7 @@ import type { EntityControllerFactory as IEntityControllerFactory } from "./Enti
 import type { EntityViewFactory as IEntityViewFactory } from "./EntityViewFactory.interface";
 import type { GameState } from "./GameState.type";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
-import type { MapScene as IMapScene } from "./MapScene.interface";
+import type { LocationMapScene as ILocationMapScene } from "./LocationMapScene.interface";
 import type { UIState } from "./UIState.type";
 import type { UserSettings } from "./UserSettings.type";
 
@@ -103,7 +103,7 @@ export function LocationMapScene(
   texturesMessagePort: MessagePort,
   mapName: string,
   mapFilename: string
-): IMapScene {
+): ILocationMapScene {
   const state: SceneState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -376,7 +376,7 @@ export function LocationMapScene(
     currentMap: mapName,
     id: generateUUID(),
     isDisposable: true,
-    isMapScene: true,
+    isLocationMapScene: true,
     isMountable: true,
     isPollablePreloading: true,
     isPreloadable: true,

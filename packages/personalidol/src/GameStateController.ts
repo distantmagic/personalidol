@@ -7,6 +7,7 @@ import { GameState } from "./GameState";
 import { isMainMenuScene } from "./isMainMenuScene";
 import { MainMenuScene } from "./MainMenuScene";
 import { LocationMapScene } from "./LocationMapScene";
+import { WorldMapScene } from "./WorldMapScene";
 
 import type { Logger } from "loglevel";
 
@@ -59,15 +60,19 @@ export function GameStateController(
   const _actualGameState = GameState.createEmptyState();
 
   const _gameMessageRouter = createRouter({
-    currentLocationMap: _onCurrentMapMessage,
+    currentLocationMap: _onCurrentLocationMapMessage,
+    currentWorldMap: _onCurrentWorldMapMessage,
     isScenePaused: _onIsScenePausedMessage,
   });
 
   let _currentScene: null | Scene = null;
-  let _isDynamicsWorldPaused: boolean = false;
 
-  function _onCurrentMapMessage(mapName: null | string): void {
+  function _onCurrentLocationMapMessage(mapName: null | string): void {
     gameState.currentLocationMap = mapName;
+  }
+
+  function _onCurrentWorldMapMessage(mapName: null): void {
+    gameState.currentWorldMap = mapName;
   }
 
   function _onIsScenePausedMessage(isScenePaused: boolean): void {
@@ -79,14 +84,7 @@ export function GameStateController(
       throw new Error("Already at the main menu.");
     }
 
-    // prettier-ignore
-    directorState.next = MainMenuScene(
-      logger,
-      effectComposer,
-      domMessagePort,
-      fontPreloadMessagePort,
-      progressMessagePort,
-    );
+    directorState.next = MainMenuScene(logger, effectComposer, domMessagePort, fontPreloadMessagePort, progressMessagePort);
 
     _actualGameState.currentLocationMap = null;
     _actualGameState.previousLocationMap = null;
@@ -95,7 +93,7 @@ export function GameStateController(
     gameState.previousLocationMap = null;
   }
 
-  function _transitionToMapScene(targetMap: string): void {
+  function _transitionToLocationMapScene(targetMap: string): void {
     directorState.next = LocationMapScene(
       logger,
       userSettings,
@@ -128,6 +126,16 @@ export function GameStateController(
     _actualGameState.previousLocationMap = gameState.previousLocationMap;
   }
 
+  function _transitionToWorldMapScene(targetMap: string): void {
+    directorState.next = WorldMapScene(logger, targetMap);
+
+    gameState.currentWorldMap = targetMap;
+    gameState.previousWorldMap = _actualGameState.currentWorldMap;
+
+    _actualGameState.currentWorldMap = gameState.currentWorldMap;
+    _actualGameState.previousWorldMap = gameState.previousWorldMap;
+  }
+
   function start() {
     gameMessagePort.onmessage = _gameMessageRouter;
   }
@@ -142,23 +150,28 @@ export function GameStateController(
       return;
     }
 
-    if (!gameState.currentLocationMap && !isMainMenuScene(directorState.current)) {
+    if (!gameState.currentLocationMap && !gameState.currentWorldMap && !isMainMenuScene(directorState.current)) {
       // Default to the main menu in any case.
       _transitionToMainMenuScene();
       return;
     }
 
     if (gameState.currentLocationMap && gameState.currentLocationMap !== _actualGameState.currentLocationMap) {
-      _transitionToMapScene(gameState.currentLocationMap);
+      _transitionToLocationMapScene(gameState.currentLocationMap);
+      return;
+    }
+
+    if (gameState.currentWorldMap && gameState.currentWorldMap !== _actualGameState.currentWorldMap) {
+      _transitionToWorldMapScene(gameState.currentWorldMap);
       return;
     }
 
     _currentScene = directorState.current;
 
-    if (_isDynamicsWorldPaused !== gameState.isScenePaused) {
-      _isDynamicsWorldPaused = gameState.isScenePaused;
+    if (_actualGameState.isScenePaused !== gameState.isScenePaused) {
+      _actualGameState.isScenePaused = gameState.isScenePaused;
 
-      if (_isDynamicsWorldPaused) {
+      if (gameState.isScenePaused) {
         dynamicsMessagePort.postMessage({
           pause: null,
         });
