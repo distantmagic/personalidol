@@ -31,7 +31,7 @@ export function MapTransitionEntityController(view: EntityView<EntityScriptedZon
     overlappingEntities(entities: Set<AnyEntity>) {
       for (let entity of entities) {
         if (isEntityOfClass<EntityPlayer>(entity, "player")) {
-          uiState.currentMap = view.entity.properties.map_transition_target;
+          uiState.currentLocationMap = view.entity.properties.map_transition_target;
 
           break;
         }

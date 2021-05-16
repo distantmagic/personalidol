@@ -38,7 +38,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
     evt.preventDefault();
 
     const message: MessageUIStateChange = {
-      currentMap: null,
+      currentLocationMap: null,
     };
 
     this.uiMessagePort.postMessage(message);

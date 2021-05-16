@@ -16,7 +16,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
     evt.preventDefault();
 
     const message: MessageUIStateChange = {
-      currentMap: "map-gates",
+      currentLocationMap: "map-gates",
     };
 
     this.uiMessagePort.postMessage(message);

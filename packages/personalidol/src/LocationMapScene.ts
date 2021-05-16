@@ -80,7 +80,7 @@ const _quakeMapsRouter = createRouter({
 
 const _textureReceiverMessageRouter = createTextureReceiverMessagesRouter(_rpcLookupTable);
 
-export function MapScene(
+export function LocationMapScene(
   logger: Logger,
   userSettings: UserSettings,
   effectComposer: EffectComposer,
@@ -385,7 +385,7 @@ export function MapScene(
     isPreloadable: true,
     isScene: true,
     isViewBaggableScene: true,
-    name: `Map("${mapFilename}")`,
+    name: `LocationMapScene("${mapFilename}")`,
     state: state,
 
     dispose: dispose,

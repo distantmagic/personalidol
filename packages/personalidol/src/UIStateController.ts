@@ -7,7 +7,7 @@ import { unpause } from "@personalidol/framework/src/unpause";
 
 import { isMainMenuScene } from "./isMainMenuScene";
 import { MainMenuScene } from "./MainMenuScene";
-import { MapScene } from "./MapScene";
+import { LocationMapScene } from "./LocationMapScene";
 
 import type { Logger } from "loglevel";
 
@@ -57,7 +57,7 @@ export function UIStateController(
   });
 
   const _domMessageRouter = createRouter({
-    currentMap: _onCurrentMapMessage,
+    currentLocationMap: _onCurrentMapMessage,
     isInGameMenuOpened: _onIsInGameMenuOpenedMessage,
     isInGameMenuTriggerVisible: _onIsInGameMenuTriggerVisible,
     isLanguageSettingsScreenOpened: _onIsLanguageSettingsScreenOpened,
@@ -71,7 +71,7 @@ export function UIStateController(
   let _currentScene: null | Scene = null;
   let _internalUIMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _isDynamicsWorldPaused: boolean = false;
-  let _uiStateCurrentMap: null | string = uiState.currentMap;
+  let _uiStateCurrentMap: null | string = uiState.currentLocationMap;
 
   let _inGameMenuHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu");
   let _inGameMenuTriggerHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-in-game-menu-trigger");
@@ -81,7 +81,7 @@ export function UIStateController(
   let _virtualJoystickLayerHandle: IDOMElementViewHandle = DOMElementViewHandle<DOMElementsLookup>(domMessagePort, "pi-virtual-joystick-layer");
 
   function _onCurrentMapMessage(mapName: null | string): void {
-    uiState.currentMap = mapName;
+    uiState.currentLocationMap = mapName;
   }
 
   function _onIsInGameMenuOpenedMessage(isInGameMenuOpened: boolean): void {
@@ -127,12 +127,12 @@ export function UIStateController(
     );
 
     _actuallyLoadedMap = null;
-    uiState.currentMap = null;
-    uiState.previousMap = null;
+    uiState.currentLocationMap = null;
+    uiState.previousLocationMap = null;
   }
 
   function _transitionToMapScene(targetMap: string): void {
-    directorState.next = MapScene(
+    directorState.next = LocationMapScene(
       logger,
       userSettings,
       effectComposer,
@@ -157,7 +157,7 @@ export function UIStateController(
       `${__ASSETS_BASE_PATH}/maps/${targetMap}.map?${__CACHE_BUST}`
     );
 
-    uiState.currentMap = targetMap;
+    uiState.currentLocationMap = targetMap;
   }
 
   function start() {
@@ -183,7 +183,7 @@ export function UIStateController(
       return;
     }
 
-    _uiStateCurrentMap = uiState.currentMap;
+    _uiStateCurrentMap = uiState.currentLocationMap;
 
     if (!_uiStateCurrentMap && !isMainMenuScene(directorState.current)) {
       // Default to the main menu in any case.
@@ -192,7 +192,7 @@ export function UIStateController(
     }
 
     if (_uiStateCurrentMap && _uiStateCurrentMap !== _actuallyLoadedMap) {
-      uiState.previousMap = _actuallyLoadedMap;
+      uiState.previousLocationMap = _actuallyLoadedMap;
       _actuallyLoadedMap = _uiStateCurrentMap;
 
       _transitionToMapScene(_uiStateCurrentMap);

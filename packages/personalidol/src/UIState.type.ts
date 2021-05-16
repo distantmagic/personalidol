@@ -1,5 +1,5 @@
 export type UIState = {
-  currentMap: null | string;
+  currentLocationMap: null | string;
   isInGameMenuOpened: boolean;
   isInGameMenuTriggerVisible: boolean;
   isLanguageSettingsScreenOpened: boolean;
@@ -7,5 +7,5 @@ export type UIState = {
   isScenePaused: boolean;
   isUserSettingsScreenOpened: boolean;
   isVirtualJoystickLayerVisible: boolean;
-  previousMap: null | string;
+  previousLocationMap: null | string;
 };
