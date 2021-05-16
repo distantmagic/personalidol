@@ -15,7 +15,12 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function WorldspawnGeometrySimulant(id: string, ammo: typeof Ammo, dynamicsWorld: Ammo.btDiscreteDynamicsWorld, simulantFeedbackMessagePort: MessagePort): Simulant {
+export function WorldspawnGeometrySimulant(
+  id: string,
+  ammo: typeof Ammo,
+  dynamicsWorld: Ammo.btDiscreteDynamicsWorld,
+  simulantFeedbackMessagePort: MessagePort
+): Simulant {
   const state: SimulantState = Object.seal({
     isDisposed: false,
     isMounted: false,

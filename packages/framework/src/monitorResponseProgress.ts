@@ -1,9 +1,18 @@
 import type { ProgressCallback } from "./ProgressCallback.type";
 
-export function monitorResponseProgress(progressCallback: ProgressCallback, needsResponse: true): (value: Response) => Promise<Response>;
-export function monitorResponseProgress(progressCallback: ProgressCallback, needsResponse: false): (value: Response) => Promise<null>;
+export function monitorResponseProgress(
+  progressCallback: ProgressCallback,
+  needsResponse: true
+): (value: Response) => Promise<Response>;
+export function monitorResponseProgress(
+  progressCallback: ProgressCallback,
+  needsResponse: false
+): (value: Response) => Promise<null>;
 
-export function monitorResponseProgress(progressCallback: ProgressCallback, needsResponse: boolean): (value: Response) => Promise<Response | null> {
+export function monitorResponseProgress(
+  progressCallback: ProgressCallback,
+  needsResponse: boolean
+): (value: Response) => Promise<Response | null> {
   return function (response: Response): Promise<Response | null> {
     const contentLength = Number(response.headers.get("content-length"));
     const body = response.body;

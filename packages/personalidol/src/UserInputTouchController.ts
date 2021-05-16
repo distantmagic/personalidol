@@ -18,7 +18,11 @@ import type { UserSettings } from "./UserSettings.type";
 const _stretchVector: IVector2 = new Vector2(0, 0);
 const _stretchVectorRotationPivot: IVector2 = new Vector2(0, 0);
 
-export function UserInputTouchController(userSettings: UserSettings, dimensionsState: Uint32Array, touchState: Int32Array): UserInputController {
+export function UserInputTouchController(
+  userSettings: UserSettings,
+  dimensionsState: Uint32Array,
+  touchState: Int32Array
+): UserInputController {
   const state: UserInputControllerState = Object.seal({
     isMounted: false,
     isPaused: false,

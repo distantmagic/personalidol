@@ -21,7 +21,11 @@ function isOpeningBracket(line: string): boolean {
   return line.startsWith("{");
 }
 
-export function* unmarshalMap(filename: string, content: string, textureUrlResolver: null | TextureUrlResolver = null): Generator<EntitySketch> {
+export function* unmarshalMap(
+  filename: string,
+  content: string,
+  textureUrlResolver: null | TextureUrlResolver = null
+): Generator<EntitySketch> {
   const lines: ReadonlyArray<string> = content.split(REGEXP_NEWLINE);
   let currentBrushSketch: null | Brush = null;
   let currentEntitySketch: null | EntitySketch = null;

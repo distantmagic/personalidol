@@ -98,7 +98,13 @@ function _textureWrapV(halfSpace: HalfSpace, textureDimensions: AtlasTextureDime
   return (v + halfSpace.texture.offset.y) / textureDimensions.height;
 }
 
-function _createUV(halfSpace: HalfSpace, point: Vector3Simple, textureDimensions: AtlasTextureDimension, triangle: TriangleSimple, i: number): UV {
+function _createUV(
+  halfSpace: HalfSpace,
+  point: Vector3Simple,
+  textureDimensions: AtlasTextureDimension,
+  triangle: TriangleSimple,
+  i: number
+): UV {
   const normal = halfSpace.plane.normal;
 
   // prettier-ignore
@@ -200,5 +206,7 @@ function _createUV(halfSpace: HalfSpace, point: Vector3Simple, textureDimensions
 }
 
 function _marshalToIndex(halfSpace: HalfSpace, point: Vector3Simple, uv: UV): string {
-  return `${halfSpace.texture.name} ${marshalVector3(halfSpace.plane.normal)} ${marshalVector3(point)} ${uv[0]} ${uv[1]}`;
+  return `${halfSpace.texture.name} ${marshalVector3(halfSpace.plane.normal)} ${marshalVector3(point)} ${uv[0]} ${
+    uv[1]
+  }`;
 }

@@ -74,7 +74,10 @@ function _clearCachedAnimations(entity: EntityMD2Model): void {
   }
 }
 
-function _getSetCachedAnimations(entity: EntityMD2Model, geometry: MD2LoaderParsedGeometryWithParts): Array<IAnimationClip> {
+function _getSetCachedAnimations(
+  entity: EntityMD2Model,
+  geometry: MD2LoaderParsedGeometryWithParts
+): Array<IAnimationClip> {
   const cachedAnimations: undefined | AnimationClipsCached = _animationClipsCache.get(entity.model_name);
 
   if (cachedAnimations) {
@@ -208,7 +211,11 @@ export function MD2ModelView(
     // Material
 
     const material = new MeshBasicMaterial({
-      map: await _loadTexture(`${__ASSETS_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${geometry.parts.skins[entity.skin]}?${__CACHE_BUST}`),
+      map: await _loadTexture(
+        `${__ASSETS_BASE_PATH}/models/model-md2-${entity.model_name}/skins/${
+          geometry.parts.skins[entity.skin]
+        }?${__CACHE_BUST}`
+      ),
       morphTargets: true,
       // morphNormals: true,
     });

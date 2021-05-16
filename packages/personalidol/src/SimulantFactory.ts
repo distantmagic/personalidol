@@ -19,9 +19,21 @@ export function SimulantFactory<S extends SimulantsLookup>(): ISimulantFactory<S
   ): S[K] {
     switch (message.simulant) {
       case "ghost-zone":
-        return GhostZoneSimulant(message.id, ammo, dynamicsWorld, userDataRegistry, message.simulantFeedbackMessagePort) as S[K];
+        return GhostZoneSimulant(
+          message.id,
+          ammo,
+          dynamicsWorld,
+          userDataRegistry,
+          message.simulantFeedbackMessagePort
+        ) as S[K];
       case "npc":
-        return NPCSimulant(message.id, ammo, dynamicsWorld, userDataRegistry, message.simulantFeedbackMessagePort) as S[K];
+        return NPCSimulant(
+          message.id,
+          ammo,
+          dynamicsWorld,
+          userDataRegistry,
+          message.simulantFeedbackMessagePort
+        ) as S[K];
       case "worldspawn-geoemetry":
         return WorldspawnGeometrySimulant(message.id, ammo, dynamicsWorld, message.simulantFeedbackMessagePort) as S[K];
       default:

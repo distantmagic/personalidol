@@ -98,7 +98,12 @@ export class VirtualJoystickLayerDOMElementView extends DOMElementView<UserSetti
           xmlns="http://www.w3.org/2000/svg"
         >
           <circle class="pointer__stretch-boundary" cx="55" cy="55" r="50" />
-          <circle class="pointer__stretch-indicator" cx={55 + 40 * this._stretchVector.x} cy={55 + -40 * this._stretchVector.y} r="10" />
+          <circle
+            class="pointer__stretch-indicator"
+            cx={55 + 40 * this._stretchVector.x}
+            cy={55 + -40 * this._stretchVector.y}
+            r="10"
+          />
         </svg>
       </div>
     );

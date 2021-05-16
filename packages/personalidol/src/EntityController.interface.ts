@@ -8,7 +8,12 @@ import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityControllerState } from "./EntityControllerState.type";
 import type { EntityView } from "./EntityView.interface";
 
-export interface EntityController<E extends AnyEntity> extends Disposable, MainLoopUpdatable, Mountable, Pauseable, Preloadable {
+export interface EntityController<E extends AnyEntity>
+  extends Disposable,
+    MainLoopUpdatable,
+    Mountable,
+    Pauseable,
+    Preloadable {
   readonly state: EntityControllerState;
   readonly view: EntityView<E>;
   readonly isEntityController: true;

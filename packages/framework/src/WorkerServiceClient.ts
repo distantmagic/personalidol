@@ -19,7 +19,11 @@ const _messageStop = Object.freeze({
 
 function _noop(): void {}
 
-export function WorkerServiceClient(worker: Worker, workerName: string, updater: null | MainLoopUpdateCallback = null): IWorkerServiceClient {
+export function WorkerServiceClient(
+  worker: Worker,
+  workerName: string,
+  updater: null | MainLoopUpdateCallback = null
+): IWorkerServiceClient {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });

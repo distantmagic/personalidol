@@ -15,7 +15,10 @@ type SupportedLights = AmbientLight | HemisphereLight;
 
 const _lightDefaultIntensity: WeakMap<SupportedLights, number> = new WeakMap();
 
-export function BackgroundLightUserSettingsManager(userSettings: UserSettings, light: SupportedLights): UserSettingsManager {
+export function BackgroundLightUserSettingsManager(
+  userSettings: UserSettings,
+  light: SupportedLights
+): UserSettingsManager {
   const state: UserSettingsManagerState = Object.seal({
     isPreloaded: false,
     isPreloading: false,

@@ -16,7 +16,12 @@ import type { EntityLightPoint } from "./EntityLightPoint.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function PointLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightPoint): EntityView<EntityLightPoint> {
+export function PointLightView(
+  logger: Logger,
+  userSettings: UserSettings,
+  scene: Scene,
+  entity: EntityLightPoint
+): EntityView<EntityLightPoint> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,

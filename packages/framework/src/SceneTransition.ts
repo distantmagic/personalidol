@@ -9,7 +9,11 @@ import type { SceneTransition as ISceneTransition } from "./SceneTransition.inte
 import type { SceneTransitionState } from "./SceneTransitionState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 
-export function SceneTransition(logger: Logger, sceneDirectorState: DirectorState, loadingScreenDirectorState: DirectorState): ISceneTransition {
+export function SceneTransition(
+  logger: Logger,
+  sceneDirectorState: DirectorState,
+  loadingScreenDirectorState: DirectorState
+): ISceneTransition {
   const state: SceneTransitionState = Object.seal({
     lastUpdateCurrentTick: -1,
     lastUpdateNextTick: -1,
@@ -25,9 +29,18 @@ export function SceneTransition(logger: Logger, sceneDirectorState: DirectorStat
     const scene = sceneDirectorState.current;
     const loadingScreen = loadingScreenDirectorState.current;
 
-    state.lastUpdateCurrentTick = Math.max(sceneDirectorState.lastUpdateCurrentTick, loadingScreenDirectorState.lastUpdateCurrentTick);
-    state.lastUpdateNextTick = Math.max(sceneDirectorState.lastUpdateNextTick, loadingScreenDirectorState.lastUpdateNextTick);
-    state.lastUpdateTransitioningTick = Math.max(sceneDirectorState.lastUpdateTransitioningTick, loadingScreenDirectorState.lastUpdateTransitioningTick);
+    state.lastUpdateCurrentTick = Math.max(
+      sceneDirectorState.lastUpdateCurrentTick,
+      loadingScreenDirectorState.lastUpdateCurrentTick
+    );
+    state.lastUpdateNextTick = Math.max(
+      sceneDirectorState.lastUpdateNextTick,
+      loadingScreenDirectorState.lastUpdateNextTick
+    );
+    state.lastUpdateTransitioningTick = Math.max(
+      sceneDirectorState.lastUpdateTransitioningTick,
+      loadingScreenDirectorState.lastUpdateTransitioningTick
+    );
 
     if (scene) {
       if (loadingScreen) {

@@ -13,7 +13,12 @@ import type { Raycastable } from "./Raycastable.interface";
 import type { Raycaster as IRaycaster } from "./Raycaster.interface";
 import type { RaycasterState } from "./RaycasterState.type";
 
-export function Raycaster(camerController: CameraController, dimensionsState: Uint32Array, mouseState: Int32Array, touchState: Int32Array): IRaycaster {
+export function Raycaster(
+  camerController: CameraController,
+  dimensionsState: Uint32Array,
+  mouseState: Int32Array,
+  touchState: Int32Array
+): IRaycaster {
   const state: RaycasterState = Object.seal({
     intersections: new Set(),
     hasIntersections: false,
@@ -30,7 +35,8 @@ export function Raycaster(camerController: CameraController, dimensionsState: Ui
   }
 
   function _raycast(raycastable: Raycastable): void {
-    raycastable.state.isRayIntersecting = _threeRaycaster.intersectObject(raycastable.raycasterObject3D, false).length > 0;
+    raycastable.state.isRayIntersecting =
+      _threeRaycaster.intersectObject(raycastable.raycasterObject3D, false).length > 0;
 
     if (raycastable.state.isRayIntersecting) {
       state.intersections.add(raycastable);

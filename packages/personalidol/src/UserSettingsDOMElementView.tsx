@@ -110,10 +110,18 @@ const _booleanEdgeLabels: ["", ""] = ["", ""];
 const _booleanLabels: [string, string] = ["ui:user_settings_label_off", "ui:user_settings_label_on"];
 const _booleanValues: [false, true] = [false, true];
 
-const _cameraTypeLabels: [string, string] = ["ui:user_settings_label_camera_orthographic", "ui:user_settings_label_camera_perspective"];
+const _cameraTypeLabels: [string, string] = [
+  "ui:user_settings_label_camera_orthographic",
+  "ui:user_settings_label_camera_perspective",
+];
 const _cameraTypeValues = ["OrthographicCamera", "PerspectiveCamera"];
 
-const _lightQualityLabels = ["ui:user_settings_label_off", "ui:user_settings_quality_low", "ui:user_settings_quality_medium", "ui:user_settings_quality_high"];
+const _lightQualityLabels = [
+  "ui:user_settings_label_off",
+  "ui:user_settings_quality_low",
+  "ui:user_settings_quality_medium",
+  "ui:user_settings_quality_high",
+];
 const _lightQualityValues = [
   UserSettingsDynamicLightQualityMap.None,
   UserSettingsDynamicLightQualityMap.Low,

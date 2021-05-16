@@ -23,6 +23,8 @@ export class MainMenuUserSettingsButtonDOMElementView extends DOMElementView<Use
   }
 
   render() {
-    return <pi-main-menu-button onClick={this.onButtonUserSettingsClick}>{this.t("ui:menu_options")}</pi-main-menu-button>;
+    return (
+      <pi-main-menu-button onClick={this.onButtonUserSettingsClick}>{this.t("ui:menu_options")}</pi-main-menu-button>
+    );
   }
 }

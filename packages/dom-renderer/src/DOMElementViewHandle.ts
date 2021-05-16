@@ -5,7 +5,10 @@ import type { DOMElementViewHandle as IDOMElementViewHandle } from "./DOMElement
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
-export function DOMElementViewHandle<T extends DOMElementsLookup>(domMessagePort: MessagePort, elementName: keyof T): IDOMElementViewHandle {
+export function DOMElementViewHandle<T extends DOMElementsLookup>(
+  domMessagePort: MessagePort,
+  elementName: keyof T
+): IDOMElementViewHandle {
   let _domElementId: null | string = null;
 
   function enable(isEnabled: boolean) {

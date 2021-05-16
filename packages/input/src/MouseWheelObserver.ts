@@ -7,7 +7,12 @@ import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 
 import type { MouseWheelObserver as IMouseWheelObserver } from "./MouseWheelObserver.interface";
 
-export function MouseWheelObserver(htmlElement: HTMLElement, eventBus: EventBus, dimensionsState: Uint32Array, mouseState: Int32Array): IMouseWheelObserver {
+export function MouseWheelObserver(
+  htmlElement: HTMLElement,
+  eventBus: EventBus,
+  dimensionsState: Uint32Array,
+  mouseState: Int32Array
+): IMouseWheelObserver {
   let _zoomAmount = 0;
 
   function start(): void {

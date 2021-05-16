@@ -6,7 +6,10 @@ import type { MessageEventHandler } from "./MessageEventHandler.type";
 import type { MessageEventMetaHandles } from "./MessageEventMetaHandles.type";
 import type { MessageEventRouter } from "./MessageEventRouter.type";
 
-export function createRouter(router: MessageEventRouter, metaHandles: null | MessageEventMetaHandles = null): MessageEventHandler {
+export function createRouter(
+  router: MessageEventRouter,
+  metaHandles: null | MessageEventMetaHandles = null
+): MessageEventHandler {
   const onerror = metaHandles && metaHandles.error;
 
   if ("function" === typeof onerror) {

@@ -147,7 +147,14 @@ export class FormRangeSliderDOMElementView extends DOMElementView<UserSettings> 
 
     return (
       <div class="pi-range-slider">
-        <input max={this._max} min={this._min} onInput={this.onRangeInput} step={this._step} type="range" value={value} />
+        <input
+          max={this._max}
+          min={this._min}
+          onInput={this.onRangeInput}
+          step={this._step}
+          type="range"
+          value={value}
+        />
         <div class="pi-range-slider__value">{value}</div>
       </div>
     );

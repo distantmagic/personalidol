@@ -84,7 +84,13 @@ export function GameStateController(
       throw new Error("Already at the main menu.");
     }
 
-    directorState.next = MainMenuScene(logger, effectComposer, domMessagePort, fontPreloadMessagePort, progressMessagePort);
+    directorState.next = MainMenuScene(
+      logger,
+      effectComposer,
+      domMessagePort,
+      fontPreloadMessagePort,
+      progressMessagePort
+    );
 
     _actualGameState.currentLocationMap = null;
     _actualGameState.previousLocationMap = null;

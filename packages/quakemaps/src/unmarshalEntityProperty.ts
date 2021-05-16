@@ -14,7 +14,11 @@ function reduceSplits(acc: string[], curr: string): Array<string> {
   return acc;
 }
 
-function sanitizeEntityPropertySplits(filename: string, lineno: number, splits: ReadonlyArray<string>): EntitySketchProperty {
+function sanitizeEntityPropertySplits(
+  filename: string,
+  lineno: number,
+  splits: ReadonlyArray<string>
+): EntitySketchProperty {
   if (splits.length !== 5) {
     throw new UnmarshalException(filename, lineno, "Unexpected number of brush splits.");
   }

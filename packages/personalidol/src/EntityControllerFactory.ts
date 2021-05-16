@@ -45,7 +45,9 @@ export function EntityControllerFactory(
     switch (view.entity.properties.controller) {
       case "map-transition":
         if (!isEntityViewOfClass<EntityScriptedZone>(view, "scripted_zone")) {
-          throw new Error(`Map transition entity controller only supports "scripted_zone" entity. Got: "${view.entity.classname}"`);
+          throw new Error(
+            `Map transition entity controller only supports "scripted_zone" entity. Got: "${view.entity.classname}"`
+          );
         }
 
         yield MapTransitionEntityController(view, gameState, dynamicsMessagePort) as IEntityController<E>;
@@ -83,7 +85,9 @@ export function EntityControllerFactory(
         break;
       case "worldspawn":
         if (!isEntityViewOfClass<EntityWorldspawn>(view, "worldspawn")) {
-          throw new Error(`Worldspawn entity controller only supports worldspawn entity. Got: "${view.entity.classname}"`);
+          throw new Error(
+            `Worldspawn entity controller only supports worldspawn entity. Got: "${view.entity.classname}"`
+          );
         }
 
         yield WorldspawnGeometryEntityController(view, dynamicsMessagePort) as IEntityController<E>;

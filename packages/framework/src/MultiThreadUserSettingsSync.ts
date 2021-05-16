@@ -5,7 +5,11 @@ import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { UserSettings } from "./UserSettings.type";
 import type { UserSettingsSync } from "./UserSettingsSync.interface";
 
-export function MultiThreadUserSettingsSync(userSettings: UserSettings, userSettingsMessagePort: MessagePort, debugName: string): UserSettingsSync {
+export function MultiThreadUserSettingsSync(
+  userSettings: UserSettings,
+  userSettingsMessagePort: MessagePort,
+  debugName: string
+): UserSettingsSync {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });

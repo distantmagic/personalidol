@@ -12,7 +12,10 @@ import type { EntityView } from "./EntityView.interface";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function WorldspawnGeometryEntityController(view: EntityView<EntityWorldspawn>, dynamicsMessagePort: MessagePort): EntityController<EntityWorldspawn> {
+export function WorldspawnGeometryEntityController(
+  view: EntityView<EntityWorldspawn>,
+  dynamicsMessagePort: MessagePort
+): EntityController<EntityWorldspawn> {
   const state: EntityControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,

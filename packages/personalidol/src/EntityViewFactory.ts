@@ -64,7 +64,11 @@ export function EntityViewFactory(
       return PointLightView(logger, userSettings, scene, entity);
     },
 
-    light_spotlight(entity: EntityLightSpotlight, worldspawnTexture: ITexture, targetedViews: Set<EntityView<AnyEntity>>): EntityView<EntityLightSpotlight> {
+    light_spotlight(
+      entity: EntityLightSpotlight,
+      worldspawnTexture: ITexture,
+      targetedViews: Set<EntityView<AnyEntity>>
+    ): EntityView<EntityLightSpotlight> {
       return SpotlightLightView(logger, userSettings, scene, entity, targetedViews);
     },
 
@@ -75,11 +79,29 @@ export function EntityViewFactory(
     },
 
     model_md2(entity: EntityMD2Model): EntityView<EntityMD2Model> {
-      return MD2ModelView(logger, userSettings, scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, rpcLookupTable);
+      return MD2ModelView(
+        logger,
+        userSettings,
+        scene,
+        entity,
+        domMessagePort,
+        md2MessagePort,
+        texturesMessagePort,
+        rpcLookupTable
+      );
     },
 
     player(entity: EntityPlayer): EntityView<EntityPlayer> {
-      return PlayerView(logger, userSettings, scene, entity, domMessagePort, md2MessagePort, texturesMessagePort, rpcLookupTable);
+      return PlayerView(
+        logger,
+        userSettings,
+        scene,
+        entity,
+        domMessagePort,
+        md2MessagePort,
+        texturesMessagePort,
+        rpcLookupTable
+      );
     },
 
     scripted_zone(entity: EntityScriptedZone): EntityView<EntityScriptedZone> {
@@ -103,7 +125,9 @@ export function EntityViewFactory(
     },
   };
 
-  function _getEntityLookupCallback<K extends keyof EntityLookupTable>(classname: K): EntityLookupCallback<K, EntityLookup[K]> {
+  function _getEntityLookupCallback<K extends keyof EntityLookupTable>(
+    classname: K
+  ): EntityLookupCallback<K, EntityLookup[K]> {
     if (!_isClassname<K>(classname)) {
       throw new Error(`Unknown entity class: ${classname}`);
     }
@@ -115,7 +139,11 @@ export function EntityViewFactory(
     return entityLookupTable.hasOwnProperty(classname);
   }
 
-  function create<K extends keyof EntityLookup>(entity: EntityLookup[K], targetedViews: Set<EntityView<AnyEntity>>, worldspawnTexture: ITexture): EntityView<EntityLookup[K]> {
+  function create<K extends keyof EntityLookup>(
+    entity: EntityLookup[K],
+    targetedViews: Set<EntityView<AnyEntity>>,
+    worldspawnTexture: ITexture
+  ): EntityView<EntityLookup[K]> {
     return _getEntityLookupCallback<K>(entity.classname as K)(entity, worldspawnTexture, targetedViews);
   }
 

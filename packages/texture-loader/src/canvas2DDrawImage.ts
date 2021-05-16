@@ -1,4 +1,8 @@
-export function canvas2DDrawImage(canvas: HTMLCanvasElement, context2D: CanvasRenderingContext2D, image: HTMLImageElement) {
+export function canvas2DDrawImage(
+  canvas: HTMLCanvasElement,
+  context2D: CanvasRenderingContext2D,
+  image: HTMLImageElement
+) {
   canvas.height = image.naturalHeight;
   canvas.width = image.naturalWidth;
 

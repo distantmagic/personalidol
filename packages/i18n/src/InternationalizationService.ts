@@ -12,7 +12,10 @@ type LoadNamespacesRequest = RPCMessage & {
   namespaces: Array<string>;
 };
 
-export function InternationalizationService(i18next: i18n, progressMessagePort: MessagePort): IInternationalizationService {
+export function InternationalizationService(
+  i18next: i18n,
+  progressMessagePort: MessagePort
+): IInternationalizationService {
   const state: PreloadableState = Object.seal({
     isPreloaded: false,
     isPreloading: false,

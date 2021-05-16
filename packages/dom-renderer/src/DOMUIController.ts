@@ -131,7 +131,9 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     const target = evt.detail;
 
     if (!isDOMElementView<U>(target)) {
-      throw new Error(`Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementConnected}"`);
+      throw new Error(
+        `Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementConnected}"`
+      );
     }
 
     if (_domElementViews.has(target)) {
@@ -157,7 +159,9 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     const target = evt.detail;
 
     if (!isDOMElementView<U>(target)) {
-      throw new Error(`Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementDisconnected}"`);
+      throw new Error(
+        `Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementDisconnected}"`
+      );
     }
 
     if (mainLoop.updatables.has(target)) {
@@ -178,7 +182,11 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
   function _updateRenderedElement(domElementView: DOMElementView<U>) {
     if (domElementView.state.needsUpdates) {
-      domElementView.update(mainLoop.ticker.tickTimerState.delta, mainLoop.ticker.tickTimerState.elapsedTime, mainLoop.ticker.tickTimerState);
+      domElementView.update(
+        mainLoop.ticker.tickTimerState.delta,
+        mainLoop.ticker.tickTimerState.elapsedTime,
+        mainLoop.ticker.tickTimerState
+      );
     }
   }
 
@@ -239,7 +247,9 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     _updateRenderedElementProps(domElementView, message.props);
 
     if (!domElementView.state.needsUpdates) {
-      throw new Error(`DOMElementView requested no more updates, but render message was received: "${domElementView.tagName}"`);
+      throw new Error(
+        `DOMElementView requested no more updates, but render message was received: "${domElementView.tagName}"`
+      );
     }
 
     _updateRenderedElement(domElementView);

@@ -22,7 +22,12 @@ function resolveTextureUrl(textureName: string, textureUrlResolver: null | Textu
   return textureUrlResolver(textureName);
 }
 
-export function unmarshalHalfSpace(filename: string, lineno: number, line: string, textureUrlResolver: null | TextureUrlResolver = null): HalfSpace {
+export function unmarshalHalfSpace(
+  filename: string,
+  lineno: number,
+  line: string,
+  textureUrlResolver: null | TextureUrlResolver = null
+): HalfSpace {
   const parts = line.trim().split(REGEXP_WHITESPACE);
 
   if (parts.length !== 21) {

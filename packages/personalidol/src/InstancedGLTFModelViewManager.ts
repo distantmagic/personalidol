@@ -85,7 +85,8 @@ export function InstancedGLTFModelViewManager(
 
   async function _createBufferGeometry(entity: EntityGLTFModel): Promise<IBufferGeometry> {
     const geometryKey = _createGeometryKey(entity);
-    const geometryAttributesPromise: undefined | Promise<GeometryAttributes> = _expectedGemetryAttributes.get(geometryKey);
+    const geometryAttributesPromise: undefined | Promise<GeometryAttributes> =
+      _expectedGemetryAttributes.get(geometryKey);
 
     if (!geometryAttributesPromise) {
       throw new Error("Expected geometry attributes to be set.");
@@ -192,7 +193,9 @@ export function InstancedGLTFModelViewManager(
 
   async function createEntiyMeshHandle(entity: EntityGLTFModel, reference: Object3D): Promise<IInstancedMeshHandle> {
     if (!_expectedEntities.has(entity)) {
-      throw new Error(`Entity is not expected for instancing: "Entity("${entity.classname}", "${entity.model_name}", "${entity.model_texture}")`);
+      throw new Error(
+        `Entity is not expected for instancing: "Entity("${entity.classname}", "${entity.model_name}", "${entity.model_texture}")`
+      );
     }
 
     const entityKey = _createEntityKey(entity);
@@ -235,7 +238,9 @@ export function InstancedGLTFModelViewManager(
     }
 
     if (state.isPreloaded) {
-      throw new Error(`Instanced view manager is already preloaded and no new entities can be expected: "${name(nameable)}"`);
+      throw new Error(
+        `Instanced view manager is already preloaded and no new entities can be expected: "${name(nameable)}"`
+      );
     }
 
     const textureUrl = _createTextureUrl(entity);

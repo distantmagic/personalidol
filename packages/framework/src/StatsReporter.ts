@@ -26,7 +26,11 @@ function _shouldUpdateHookReport(hookLastReports: HookLastReports, hook: StatsHo
   return true;
 }
 
-export function StatsReporter(debugName: string, statsMessagePort: MessagePort, tickTimerState: TickTimerState): IStatsReporter {
+export function StatsReporter(
+  debugName: string,
+  statsMessagePort: MessagePort,
+  tickTimerState: TickTimerState
+): IStatsReporter {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });

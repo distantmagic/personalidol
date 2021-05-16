@@ -17,7 +17,11 @@ import type { EntityView } from "./EntityView.interface";
 import type { GameState } from "./GameState.type";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function MapTransitionEntityController(view: EntityView<EntityScriptedZone>, gameState: GameState, dynamicsMessagePort: MessagePort): EntityController<EntityScriptedZone> {
+export function MapTransitionEntityController(
+  view: EntityView<EntityScriptedZone>,
+  gameState: GameState,
+  dynamicsMessagePort: MessagePort
+): EntityController<EntityScriptedZone> {
   const state: EntityControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,

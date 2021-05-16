@@ -26,7 +26,10 @@ const _vecTmpB = new Vector3();
 
 let _sharedArrayBufferNotified: boolean = false;
 
-export function CSS2DRenderer<L extends DOMElementsLookup>(logger: Logger, domMessagePort: MessagePort): ICSS2DRenderer {
+export function CSS2DRenderer<L extends DOMElementsLookup>(
+  logger: Logger,
+  domMessagePort: MessagePort
+): ICSS2DRenderer {
   let _height: number = 0;
   let _heightHalf: number = 0;
   let _width: number = 0;

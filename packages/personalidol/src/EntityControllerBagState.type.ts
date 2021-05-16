@@ -4,4 +4,8 @@ import type { MountableState } from "@personalidol/framework/src/MountableState.
 import type { PauseableState } from "@personalidol/framework/src/PauseableState.type";
 import type { PreloadableState } from "@personalidol/framework/src/PreloadableState.type";
 
-export type EntityControllerBagState = DisposableState & MainLoopUpdatableState & MountableState & PauseableState & PreloadableState;
+export type EntityControllerBagState = DisposableState &
+  MainLoopUpdatableState &
+  MountableState &
+  PauseableState &
+  PreloadableState;

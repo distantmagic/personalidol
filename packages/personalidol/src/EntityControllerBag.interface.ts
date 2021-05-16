@@ -9,7 +9,13 @@ import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityController } from "./EntityController.interface";
 import type { EntityControllerBagState } from "./EntityControllerBagState.type";
 
-export interface EntityControllerBag extends Disposable, MainLoopUpdatable, Mountable, Pauseable, PollablePreloading, Preloadable {
+export interface EntityControllerBag
+  extends Disposable,
+    MainLoopUpdatable,
+    Mountable,
+    Pauseable,
+    PollablePreloading,
+    Preloadable {
   readonly entityControllers: Set<EntityController<AnyEntity>>;
   readonly state: EntityControllerBagState;
 }

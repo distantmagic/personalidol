@@ -8,7 +8,10 @@ import type { UserSettingsManagerState } from "@personalidol/framework/src/UserS
 
 import type { UserSettings } from "./UserSettings.type";
 
-export function WebGLRendererUserSettingsManager(userSettings: UserSettings, renderer: WebGLRenderer): UserSettingsManager {
+export function WebGLRendererUserSettingsManager(
+  userSettings: UserSettings,
+  renderer: WebGLRenderer
+): UserSettingsManager {
   const state: UserSettingsManagerState = Object.seal({
     isPreloaded: false,
     isPreloading: false,

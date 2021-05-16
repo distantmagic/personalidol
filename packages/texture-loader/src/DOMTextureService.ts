@@ -36,7 +36,11 @@ const _messagesRouter = {
   },
 };
 
-export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRenderingContext2D, progressMessagePort: MessagePort): IDOMTextureService {
+export function DOMTextureService(
+  canvas: HTMLCanvasElement,
+  context2D: CanvasRenderingContext2D,
+  progressMessagePort: MessagePort
+): IDOMTextureService {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -77,7 +81,13 @@ export function DOMTextureService(canvas: HTMLCanvasElement, context2D: CanvasRe
 
   async function _processTextureQueue(request: TextureQueueItem): Promise<void> {
     const requestKey = keyFromTextureRequest(request);
-    const { data: imageData, isLast } = await reuseResponse<ImageData, TextureQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createImageData);
+    const { data: imageData, isLast } = await reuseResponse<ImageData, TextureQueueItem>(
+      _loadingCache,
+      _loadingUsage,
+      requestKey,
+      request,
+      _createImageData
+    );
 
     request.messagePort.postMessage(
       {

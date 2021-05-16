@@ -15,7 +15,11 @@ function _storeUserSettings<U extends UserSettings>(userSettings: U): void {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userSettings));
 }
 
-export function LocalStorageUserSettingsSync<U extends UserSettings>(userSettings: U, isUserSettingsValid: IsUserSettingsValidCallback<U>, debugName: string): UserSettingsSync {
+export function LocalStorageUserSettingsSync<U extends UserSettings>(
+  userSettings: U,
+  isUserSettingsValid: IsUserSettingsValidCallback<U>,
+  debugName: string
+): UserSettingsSync {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });

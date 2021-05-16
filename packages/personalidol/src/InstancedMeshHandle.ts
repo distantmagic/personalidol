@@ -8,7 +8,13 @@ import type { InstancedMeshHandle as IInstancedMeshHandle } from "./InstancedMes
 import type { InstancedMeshHandleState } from "./InstancedMeshHandleState.type";
 import type { UserSettings } from "./UserSettings.type";
 
-export function InstancedMeshHandle(logger: Logger, userSettings: UserSettings, mesh: InstancedMesh, index: number, reference: Object3D): IInstancedMeshHandle {
+export function InstancedMeshHandle(
+  logger: Logger,
+  userSettings: UserSettings,
+  mesh: InstancedMesh,
+  index: number,
+  reference: Object3D
+): IInstancedMeshHandle {
   const state: InstancedMeshHandleState = Object.seal({
     isPreloaded: false,
     isPreloading: false,

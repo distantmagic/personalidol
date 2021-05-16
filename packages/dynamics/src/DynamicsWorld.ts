@@ -28,9 +28,15 @@ import type { SimulantsLookup } from "./SimulantsLookup.type";
 function _createAmmoDynamicsWorld(ammo: typeof Ammo) {
   const collisionConfiguration = new ammo.btDefaultCollisionConfiguration();
   const dispatcher = new ammo.btCollisionDispatcher(collisionConfiguration);
-  const overlappingPairCache: Ammo.btBroadphaseInterface = new ammo.btDbvtBroadphase() as unknown as Ammo.btBroadphaseInterface;
+  const overlappingPairCache: Ammo.btBroadphaseInterface =
+    new ammo.btDbvtBroadphase() as unknown as Ammo.btBroadphaseInterface;
   const solver = new ammo.btSequentialImpulseConstraintSolver();
-  const dynamicsWorld = new ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+  const dynamicsWorld = new ammo.btDiscreteDynamicsWorld(
+    dispatcher,
+    overlappingPairCache,
+    solver,
+    collisionConfiguration
+  );
 
   // Everything in the dynamics world is scaled up
   // (character models are 15x15x20 on average), so gravity needs to be higher

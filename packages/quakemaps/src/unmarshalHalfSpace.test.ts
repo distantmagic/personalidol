@@ -5,7 +5,11 @@ import { unmarshalHalfSpace } from "./unmarshalHalfSpace";
 import type { Vector3 as IVector3 } from "three";
 
 test("half-plane string is unmarshaled", async function () {
-  const parsed = unmarshalHalfSpace("test", 0, "   ( -64 -64 -16 )   ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty   0 0 0 1       1  ");
+  const parsed = unmarshalHalfSpace(
+    "test",
+    0,
+    "   ( -64 -64 -16 )   ( -64 -63 -16 ) ( -64 -64 -15 ) __TB_empty   0 0 0 1       1  "
+  );
 
   expect(parsed).toEqual(
     expect.objectContaining({

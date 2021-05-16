@@ -6,7 +6,11 @@ import type { ResizeableRenderer } from "@personalidol/framework/src/ResizeableR
 
 import type { RendererDimensionsManager as IRendererDimensionsManager } from "./RendererDimensionsManager.interface";
 
-export function RendererDimensionsManager(dimensionsState: Uint32Array, renderer: ResizeableRenderer, updateStyles: boolean): IRendererDimensionsManager {
+export function RendererDimensionsManager(
+  dimensionsState: Uint32Array,
+  renderer: ResizeableRenderer,
+  updateStyles: boolean
+): IRendererDimensionsManager {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -18,7 +22,11 @@ export function RendererDimensionsManager(dimensionsState: Uint32Array, renderer
     _dimensionsLastUpdate = dimensionsState[DimensionsIndices.LAST_UPDATE];
 
     if (_dimensionsLastUpdate > _rendererLastUpdate) {
-      renderer.setSize(dimensionsState[DimensionsIndices.D_WIDTH], dimensionsState[DimensionsIndices.D_HEIGHT], updateStyles);
+      renderer.setSize(
+        dimensionsState[DimensionsIndices.D_WIDTH],
+        dimensionsState[DimensionsIndices.D_HEIGHT],
+        updateStyles
+      );
       _rendererLastUpdate = dimensionsState[DimensionsIndices.LAST_UPDATE];
     }
   }

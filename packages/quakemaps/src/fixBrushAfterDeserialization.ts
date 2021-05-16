@@ -8,7 +8,10 @@ export function fixBrushAfterDeserialization(brush: Brush): void {
     // Sometimes, but not always, the object prototype is messed up after
     // serialization / deserialization.
     if (!halfSpace.plane.isPlane) {
-      halfSpace.plane = new Plane(new Vector3(halfSpace.plane.normal.x, halfSpace.plane.normal.y, halfSpace.plane.normal.z), halfSpace.plane.constant);
+      halfSpace.plane = new Plane(
+        new Vector3(halfSpace.plane.normal.x, halfSpace.plane.normal.y, halfSpace.plane.normal.z),
+        halfSpace.plane.constant
+      );
     }
   }
 }

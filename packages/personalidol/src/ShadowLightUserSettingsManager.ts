@@ -13,7 +13,11 @@ import type { UserSettings } from "./UserSettings.type";
 
 type SupportedLights = PointLight | SpotLight;
 
-export function ShadowLightUserSettingsManager(userSettings: UserSettings, entity: EntityLight, light: SupportedLights): UserSettingsManager {
+export function ShadowLightUserSettingsManager(
+  userSettings: UserSettings,
+  entity: EntityLight,
+  light: SupportedLights
+): UserSettingsManager {
   const state: UserSettingsManagerState = Object.seal({
     isPreloaded: false,
     isPreloading: false,
@@ -25,7 +29,10 @@ export function ShadowLightUserSettingsManager(userSettings: UserSettings, entit
     light.visible = Boolean(userSettings.dynamicLightQuality & entity.quality_map);
     light.castShadow = userSettings.useShadows;
 
-    if (light.shadow.mapSize.height === userSettings.shadowMapSize && light.shadow.mapSize.width === userSettings.shadowMapSize) {
+    if (
+      light.shadow.mapSize.height === userSettings.shadowMapSize &&
+      light.shadow.mapSize.width === userSettings.shadowMapSize
+    ) {
       return;
     }
 

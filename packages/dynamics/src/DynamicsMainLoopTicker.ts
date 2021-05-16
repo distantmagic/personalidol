@@ -14,7 +14,11 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
  * See more here:
  * http://www.isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing
  */
-export function DynamicsMainLoopTicker(logger: Logger, simulationTimestep: number = 1 / 60, panicThreshold = 30): MainLoopTicker {
+export function DynamicsMainLoopTicker(
+  logger: Logger,
+  simulationTimestep: number = 1 / 60,
+  panicThreshold = 30
+): MainLoopTicker {
   const state: MainLoopTickerState = Object.seal({
     scheduledUpdates: 0,
   });

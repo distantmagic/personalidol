@@ -134,11 +134,17 @@ export function TouchObserver(
 
   function _updateDimensionsRelativeCoords(): void {
     for (let i = 0; i < touchState[TouchIndices.T_TOTAL] && i < TouchState.touches_total; i += 1) {
-      touchState[TouchState.touches[i].RELATIVE_X] = touchState[TouchState.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
-      touchState[TouchState.touches[i].RELATIVE_Y] = touchState[TouchState.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
+      touchState[TouchState.touches[i].RELATIVE_X] =
+        touchState[TouchState.touches[i].CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
+      touchState[TouchState.touches[i].RELATIVE_Y] =
+        touchState[TouchState.touches[i].CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
 
       touchState[TouchState.touches[i].IN_BOUNDS] = Number(
-        isInDimensionsBounds(dimensionsState, touchState[TouchState.touches[i].CLIENT_X], touchState[TouchState.touches[i].CLIENT_Y])
+        isInDimensionsBounds(
+          dimensionsState,
+          touchState[TouchState.touches[i].CLIENT_X],
+          touchState[TouchState.touches[i].CLIENT_Y]
+        )
       );
     }
 

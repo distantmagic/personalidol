@@ -13,7 +13,11 @@ import type { UserInputControllerState } from "@personalidol/input/src/UserInput
 
 import type { UserSettings } from "./UserSettings.type";
 
-export function UserInputKeyboardController(userSettings: UserSettings, keyboardState: Uint8Array, cameraController: CameraController): UserInputController {
+export function UserInputKeyboardController(
+  userSettings: UserSettings,
+  keyboardState: Uint8Array,
+  cameraController: CameraController
+): UserInputController {
   const state: UserInputControllerState = Object.seal({
     isMounted: false,
     isPaused: false,

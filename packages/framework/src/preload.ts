@@ -18,7 +18,11 @@ export function preload(logger: Logger, mount: Preloadable): void {
   mount.preload();
 
   if (!mount.state.isPreloading && !mount.state.isPreloaded) {
-    throw new Error(`Mount needs to go into 'preloading' state immediately after calling '.preload' method or be preloaded immediately instead: "${name(mount)}"`);
+    throw new Error(
+      `Mount needs to go into 'preloading' state immediately after calling '.preload' method or be preloaded immediately instead: "${name(
+        mount
+      )}"`
+    );
   }
 
   if (mount.state.isPreloaded && mount.state.isPreloading) {

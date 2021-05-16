@@ -19,7 +19,11 @@ import type { NPCEntity } from "./NPCEntity.type";
 import type { NPCEntityController } from "./NPCEntityController.interface";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
 
-export function NPCEntityController<E extends NPCEntity>(logger: Logger, view: CharacterView<E>, dynamicsMessagePort: MessagePort): NPCEntityController<E> {
+export function NPCEntityController<E extends NPCEntity>(
+  logger: Logger,
+  view: CharacterView<E>,
+  dynamicsMessagePort: MessagePort
+): NPCEntityController<E> {
   const state: EntityControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,

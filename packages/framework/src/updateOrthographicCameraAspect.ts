@@ -2,7 +2,11 @@ import { DimensionsIndices } from "./DimensionsIndices.enum";
 
 import type { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
 
-export function updateOrthographicCameraAspect(dimensionsState: Uint32Array, camera: OrthographicCamera, frustumSize: number): void {
+export function updateOrthographicCameraAspect(
+  dimensionsState: Uint32Array,
+  camera: OrthographicCamera,
+  frustumSize: number
+): void {
   const aspect = dimensionsState[DimensionsIndices.D_WIDTH] / dimensionsState[DimensionsIndices.D_HEIGHT];
 
   camera.left = (-frustumSize * aspect) / 2;

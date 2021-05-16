@@ -138,10 +138,14 @@ export function MouseObserver(
   }
 
   function _updateDimensionsRelativeCoords(): void {
-    mouseState[MouseIndices.M_RELATIVE_X] = mouseState[MouseIndices.M_CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
-    mouseState[MouseIndices.M_RELATIVE_Y] = mouseState[MouseIndices.M_CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
+    mouseState[MouseIndices.M_RELATIVE_X] =
+      mouseState[MouseIndices.M_CLIENT_X] - dimensionsState[DimensionsIndices.P_LEFT];
+    mouseState[MouseIndices.M_RELATIVE_Y] =
+      mouseState[MouseIndices.M_CLIENT_Y] - dimensionsState[DimensionsIndices.P_TOP];
 
-    mouseState[MouseIndices.M_IN_BOUNDS] = Number(isInDimensionsBounds(dimensionsState, mouseState[MouseIndices.M_CLIENT_X], mouseState[MouseIndices.M_CLIENT_Y]));
+    mouseState[MouseIndices.M_IN_BOUNDS] = Number(
+      isInDimensionsBounds(dimensionsState, mouseState[MouseIndices.M_CLIENT_X], mouseState[MouseIndices.M_CLIENT_Y])
+    );
 
     state.lastUpdate = tickTimerState.currentTick;
   }

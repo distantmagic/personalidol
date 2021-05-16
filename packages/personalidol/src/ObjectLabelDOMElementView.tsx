@@ -95,7 +95,10 @@ export class ObjectLabelDOMElementView extends DOMElementView<UserSettings> {
   }
 
   getTargetOpacity(): number {
-    const fadeOutDistance = this._rendererState[CSS2DObjectStateIndices.CAMERA_FAR] * this._rendererState[CSS2DObjectStateIndices.CAMERA_FAR] - FADE_OUT_DISTANCE_SQUARED;
+    const fadeOutDistance =
+      this._rendererState[CSS2DObjectStateIndices.CAMERA_FAR] *
+        this._rendererState[CSS2DObjectStateIndices.CAMERA_FAR] -
+      FADE_OUT_DISTANCE_SQUARED;
 
     if (this._rendererState[CSS2DObjectStateIndices.DISTANCE_TO_CAMERA_SQUARED] < fadeOutDistance) {
       return 1;

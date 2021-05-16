@@ -53,7 +53,12 @@ export function* buildGeometryTriangles(
         for (let k = j; k < brush.halfSpaces.length; k += 1) {
           // this basically generates combinations without repetitions where
           // order does not matter
-          const intersectingPoint = getIntersectingPoint(brush.halfSpaces[i], brush.halfSpaces[j], brush.halfSpaces[k], pointsCache);
+          const intersectingPoint = getIntersectingPoint(
+            brush.halfSpaces[i],
+            brush.halfSpaces[j],
+            brush.halfSpaces[k],
+            pointsCache
+          );
 
           if (intersectingPoint && _isPointInsideBrush(brush, intersectingPoint)) {
             _addUniquePointToBrush(brush, brush.halfSpaces[i].points, intersectingPoint);

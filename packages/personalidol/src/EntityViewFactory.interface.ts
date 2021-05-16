@@ -7,5 +7,9 @@ import type { EntityView } from "./EntityView.interface";
 export interface EntityViewFactory {
   readonly isEntityViewFactory: true;
 
-  create<K extends keyof EntityLookup>(entity: EntityLookup[K], targetedViews: Set<EntityView<AnyEntity>>, worldspawnTexture: ITexture): EntityView<EntityLookup[K]>;
+  create<K extends keyof EntityLookup>(
+    entity: EntityLookup[K],
+    targetedViews: Set<EntityView<AnyEntity>>,
+    worldspawnTexture: ITexture
+  ): EntityView<EntityLookup[K]>;
 }

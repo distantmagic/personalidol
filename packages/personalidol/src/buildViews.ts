@@ -16,7 +16,11 @@ import type { GameState } from "./GameState.type";
 import type { UIState } from "./UIState.type";
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
 
-async function* _filterEntities(gameState: GameState, uiState: UIState, entities: ReadonlyArray<AnyEntity>): AsyncGenerator<AnyEntity> {
+async function* _filterEntities(
+  gameState: GameState,
+  uiState: UIState,
+  entities: ReadonlyArray<AnyEntity>
+): AsyncGenerator<AnyEntity> {
   const expressionContext = Object.freeze({
     gameState: Object.freeze(Object.assign({}, gameState)),
     uiState: Object.freeze(Object.assign({}, uiState)),
@@ -42,7 +46,10 @@ async function* _filterEntities(gameState: GameState, uiState: UIState, entities
   }
 }
 
-function _findTargetedViews(entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>>, step: ViewBuildingStep): Set<EntityView<AnyEntity>> {
+function _findTargetedViews(
+  entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>>,
+  step: ViewBuildingStep
+): Set<EntityView<AnyEntity>> {
   const entity: AnyEntity = step.entity;
   const targetedViews: Set<EntityView<AnyEntity>> = new Set();
 
@@ -54,7 +61,9 @@ function _findTargetedViews(entityViews: WeakMap<AnyEntity, EntityView<AnyEntity
     const targetedView: undefined | EntityView<AnyEntity> = entityViews.get(targetedEntity);
 
     if (!targetedView) {
-      throw new Error(`Targeted entity view was expected to be ready before constructing "${entity.classname}": "${targetedEntity.classname}"`);
+      throw new Error(
+        `Targeted entity view was expected to be ready before constructing "${entity.classname}": "${targetedEntity.classname}"`
+      );
     }
 
     targetedViews.add(targetedView);

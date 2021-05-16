@@ -6,7 +6,10 @@ import type { ResizeableRenderer } from "@personalidol/three-modules/src/Resizea
 import type { HTMLElementDimensionsManager as IHTMLElementDimensionsManager } from "./HTMLElementDimensionsManager.interface";
 import type { HTMLElementDimensionsManagerState } from "./HTMLElementDimensionsManagerState.type";
 
-export function HTMLElementDimensionsManager(htmlElement: HTMLElement, dimensionsState: Uint32Array): IHTMLElementDimensionsManager {
+export function HTMLElementDimensionsManager(
+  htmlElement: HTMLElement,
+  dimensionsState: Uint32Array
+): IHTMLElementDimensionsManager {
   const state: HTMLElementDimensionsManagerState = Object.seal({
     needsUpdates: true,
   });

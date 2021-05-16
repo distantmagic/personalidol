@@ -13,6 +13,8 @@ export function pause(logger: Logger, pauseable: Pauseable): void {
   pauseable.pause();
 
   if (!pauseable.state.isPaused) {
-    throw new Error(`Scene needs to go into 'paused' state immediately after calling '.pause' method: "${name(pauseable)}"`);
+    throw new Error(
+      `Scene needs to go into 'paused' state immediately after calling '.pause' method: "${name(pauseable)}"`
+    );
   }
 }

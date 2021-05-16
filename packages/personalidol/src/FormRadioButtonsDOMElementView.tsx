@@ -79,7 +79,10 @@ const _css = `
   }
 `;
 
-export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettings> implements FormRadioButtonsDOMElementProps<T> {
+export class FormRadioButtonsDOMElementView<T>
+  extends DOMElementView<UserSettings>
+  implements FormRadioButtonsDOMElementProps<T>
+{
   static get observedAttributes() {
     return ["disabled"];
   }

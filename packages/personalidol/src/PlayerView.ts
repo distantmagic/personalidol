@@ -34,7 +34,16 @@ export function PlayerView(
     transferables: [],
   });
 
-  const _playerModel = MD2ModelView(logger, userSettings, scene, _md2Entity, domMessagePort, md2MessagePort, texturesMessagePort, rpcLookupTable);
+  const _playerModel = MD2ModelView(
+    logger,
+    userSettings,
+    scene,
+    _md2Entity,
+    domMessagePort,
+    md2MessagePort,
+    texturesMessagePort,
+    rpcLookupTable
+  );
 
   _playerModel.state.needsRaycast = false;
 

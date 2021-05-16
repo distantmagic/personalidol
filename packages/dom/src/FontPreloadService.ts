@@ -9,7 +9,10 @@ import type { RPCMessage } from "@personalidol/framework/src/RPCMessage.type";
 import type { FontPreloadService as IFontPreloadService } from "./FontPreloadService.interface";
 import type { FontPreloadParameters } from "./FontPreloadParameters.type";
 
-export function FontPreloadService(fontPreloadMessagePort: MessagePort, progressMessagePort: MessagePort): IFontPreloadService {
+export function FontPreloadService(
+  fontPreloadMessagePort: MessagePort,
+  progressMessagePort: MessagePort
+): IFontPreloadService {
   const _messageHandlers = {
     preloadFont: _preloadFont,
   };

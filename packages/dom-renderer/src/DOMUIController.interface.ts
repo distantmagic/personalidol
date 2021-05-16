@@ -8,7 +8,10 @@ import type { DOMUIControllerState } from "./DOMUIControllerState.type";
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
 import type { MessageDOMUIRender } from "./MessageDOMUIRender.type";
 
-export interface DOMUIController<L extends DOMElementsLookup, U extends UserSettings> extends Preloadable, RegistersMessagePort, Service {
+export interface DOMUIController<L extends DOMElementsLookup, U extends UserSettings>
+  extends Preloadable,
+    RegistersMessagePort,
+    Service {
   readonly state: DOMUIControllerState;
 
   dispose(message: MessageDOMUIDispose): void;

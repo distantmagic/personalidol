@@ -13,6 +13,8 @@ export function unpause(logger: Logger, pauseable: Pauseable): void {
   pauseable.unpause();
 
   if (pauseable.state.isPaused) {
-    throw new Error(`Scene needs to go into 'unpaused' state immediately after calling '.unpause' method: "${name(pauseable)}"`);
+    throw new Error(
+      `Scene needs to go into 'unpaused' state immediately after calling '.unpause' method: "${name(pauseable)}"`
+    );
   }
 }

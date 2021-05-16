@@ -29,13 +29,15 @@ declare global {
   namespace preact.JSX {
     interface IntrinsicElements {
       "pi-button": HTMLAttributes<ButtonDOMElementView>;
-      "pi-form-radio-buttons": HTMLAttributes<FormRadioButtonsDOMElementView<any>> & FormRadioButtonsDOMElementProps<any>;
+      "pi-form-radio-buttons": HTMLAttributes<FormRadioButtonsDOMElementView<any>> &
+        FormRadioButtonsDOMElementProps<any>;
       "pi-form-range-slider": HTMLAttributes<FormRangeSliderDOMElementView> & FormRangeSliderDOMElementProps;
       "pi-main-menu-button": HTMLAttributes<MainMenuButtonDOMElementView> & MainMenuButtonDOMElementProps;
       "pi-main-menu-language-button": HTMLAttributes<MainMenuLanguageButtonDOMElementView>;
       "pi-main-menu-layout": HTMLAttributes<MainMenuLayoutDOMElementView>;
       "pi-main-menu-user-settings-button": HTMLAttributes<MainMenuUserSettingsButtonDOMElementView>;
-      "pi-progress-manager-state": HTMLAttributes<ProgressManagerStateDOMElementView> & ProgressManagerStateDOMElementProps;
+      "pi-progress-manager-state": HTMLAttributes<ProgressManagerStateDOMElementView> &
+        ProgressManagerStateDOMElementProps;
       "pi-reload-button": HTMLAttributes<ReloadButtonDOMElementView>;
       "pi-settings-backdrop": HTMLAttributes<SettingsBackdropDOMElementView> & SettingsBackdropDOMElementProps;
     }

@@ -14,7 +14,12 @@ import type { EntityLightHemisphere } from "./EntityLightHemisphere.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function HemisphereLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightHemisphere): EntityView<EntityLightHemisphere> {
+export function HemisphereLightView(
+  logger: Logger,
+  userSettings: UserSettings,
+  scene: Scene,
+  entity: EntityLightHemisphere
+): EntityView<EntityLightHemisphere> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,

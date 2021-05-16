@@ -13,7 +13,12 @@ export class THREETextureLoader extends Loader {
   rpcLookupTable: RPCLookupTable;
   texturesMessagePort: MessagePort;
 
-  constructor(logger: Logger, manager: LoadingManager, rpcLookupTable: RPCLookupTable, texturesMessagePort: MessagePort) {
+  constructor(
+    logger: Logger,
+    manager: LoadingManager,
+    rpcLookupTable: RPCLookupTable,
+    texturesMessagePort: MessagePort
+  ) {
     super(manager);
 
     this.logger = logger;
@@ -21,7 +26,12 @@ export class THREETextureLoader extends Loader {
     this.texturesMessagePort = texturesMessagePort;
   }
 
-  async load(url: string, onLoad?: (response: ITexture) => void, onProgress?: (request: ProgressEvent) => void, onError?: (event: ErrorEvent) => void): Promise<void> {
+  async load(
+    url: string,
+    onLoad?: (response: ITexture) => void,
+    onProgress?: (request: ProgressEvent) => void,
+    onError?: (event: ErrorEvent) => void
+  ): Promise<void> {
     this.manager.itemStart(url);
 
     try {

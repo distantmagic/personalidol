@@ -34,7 +34,10 @@ function _findTargetedEntitiesByEntity(
   return ret;
 }
 
-export async function* createViewBuildingPlan(uiState: UIState, entities: ReadonlyArray<AnyEntity>): AsyncGenerator<ViewBuildingStep> {
+export async function* createViewBuildingPlan(
+  uiState: UIState,
+  entities: ReadonlyArray<AnyEntity>
+): AsyncGenerator<ViewBuildingStep> {
   const targetedEntities: ReadonlyArray<TargetedEntity> = entities.filter(isTarget);
   const targetedEntitiesCache: WeakMap<TargetingEntity, ReadonlyArray<TargetedEntity>> = new WeakMap();
   const dependencies: Array<[TargetedEntity, TargetingEntity]> = [];

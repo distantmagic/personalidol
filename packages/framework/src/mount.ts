@@ -13,6 +13,8 @@ export function mount(logger: Logger, mount: Mountable): void {
   mount.mount();
 
   if (!mount.state.isMounted) {
-    throw new Error(`Mount needs to go into 'mounted' state immediately after calling '.mount' method: "${name(mount)}"`);
+    throw new Error(
+      `Mount needs to go into 'mounted' state immediately after calling '.mount' method: "${name(mount)}"`
+    );
   }
 }

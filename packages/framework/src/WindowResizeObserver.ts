@@ -6,7 +6,10 @@ import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 import type { WindowResizeObserver as IWindowResizeObserver } from "./WindowResizeObserver.interface";
 
-export function WindowResizeObserver(dimensionsState: Uint32Array, tickTimerState: TickTimerState): IWindowResizeObserver {
+export function WindowResizeObserver(
+  dimensionsState: Uint32Array,
+  tickTimerState: TickTimerState
+): IWindowResizeObserver {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -16,7 +19,10 @@ export function WindowResizeObserver(dimensionsState: Uint32Array, tickTimerStat
   function stop(): void {}
 
   function update(): void {
-    if (dimensionsState[DimensionsIndices.D_HEIGHT] === window.innerHeight && dimensionsState[DimensionsIndices.D_WIDTH] === window.innerWidth) {
+    if (
+      dimensionsState[DimensionsIndices.D_HEIGHT] === window.innerHeight &&
+      dimensionsState[DimensionsIndices.D_WIDTH] === window.innerWidth
+    ) {
       // Nothing changed.
       return;
     }

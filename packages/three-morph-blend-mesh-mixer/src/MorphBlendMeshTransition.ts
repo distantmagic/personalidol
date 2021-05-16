@@ -6,7 +6,11 @@ import type { MorphBlendMeshTransitionState } from "./MorphBlendMeshTransitionSt
 
 const TRANSITION_SECONDS: number = 0.1;
 
-export function MorphBlendMeshTransition(mesh: MorphBlendMesh, fromAnimation: string, targetAnimation: string): IMorphBlendMeshTransition {
+export function MorphBlendMeshTransition(
+  mesh: MorphBlendMesh,
+  fromAnimation: string,
+  targetAnimation: string
+): IMorphBlendMeshTransition {
   const state: MorphBlendMeshTransitionState = Object.seal({
     needsUpdates: true,
     currentAnimation: fromAnimation,

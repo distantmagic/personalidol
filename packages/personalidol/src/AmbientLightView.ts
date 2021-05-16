@@ -13,7 +13,12 @@ import type { EntityLightAmbient } from "./EntityLightAmbient.type";
 import type { EntityView } from "./EntityView.interface";
 import type { UserSettings } from "./UserSettings.type";
 
-export function AmbientLightView(logger: Logger, userSettings: UserSettings, scene: Scene, entity: EntityLightAmbient): EntityView<EntityLightAmbient> {
+export function AmbientLightView(
+  logger: Logger,
+  userSettings: UserSettings,
+  scene: Scene,
+  entity: EntityLightAmbient
+): EntityView<EntityLightAmbient> {
   const state: ViewState = Object.seal({
     isDisposed: false,
     isMounted: false,

@@ -122,10 +122,18 @@ export class LanguageSettingsDOMElementView extends DOMElementView<UserSettings>
           {this.t("ui:user_settings_language")}
           <pi-button onClick={this.close}>{this.t("ui:user_settings_done").toLocaleLowerCase()}</pi-button>
         </h1>
-        <pi-main-menu-button active={"en" === this.i18next.language} disabled={this._isLanguageChangePending} onClick={this.onLanguageChange("en")}>
+        <pi-main-menu-button
+          active={"en" === this.i18next.language}
+          disabled={this._isLanguageChangePending}
+          onClick={this.onLanguageChange("en")}
+        >
           English
         </pi-main-menu-button>
-        <pi-main-menu-button active={"pl" === this.i18next.language} disabled={this._isLanguageChangePending} onClick={this.onLanguageChange("pl")}>
+        <pi-main-menu-button
+          active={"pl" === this.i18next.language}
+          disabled={this._isLanguageChangePending}
+          onClick={this.onLanguageChange("pl")}
+        >
           Polski
         </pi-main-menu-button>
       </pi-settings-backdrop>

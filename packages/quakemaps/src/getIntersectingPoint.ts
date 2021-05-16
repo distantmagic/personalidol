@@ -29,7 +29,12 @@ function getIntersectionDeterminant(hs1: HalfSpace, hs2: HalfSpace, hs3: HalfSpa
   return detMatrix.determinant();
 }
 
-export function getIntersectingPoint(hs1: HalfSpace, hs2: HalfSpace, hs3: HalfSpace, pointsCache: IntersectingPointsCache): null | IVector3 {
+export function getIntersectingPoint(
+  hs1: HalfSpace,
+  hs2: HalfSpace,
+  hs3: HalfSpace,
+  pointsCache: IntersectingPointsCache
+): null | IVector3 {
   const det = getIntersectionDeterminant(hs1, hs2, hs3);
 
   if (det === 0) {

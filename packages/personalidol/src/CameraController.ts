@@ -18,7 +18,12 @@ import type { UserSettings } from "./UserSettings.type";
 
 const CAMERA_ORTHOGRAPHIC_FRUSTUM_SIZE_MIN = CameraParameters.ZOOM_MAX + 4 * CameraParameters.ZOOM_STEP;
 
-export function CameraController(logger: Logger, userSettings: UserSettings, dimensionsState: Uint32Array, keyboardState: Uint8Array): ICameraController {
+export function CameraController(
+  logger: Logger,
+  userSettings: UserSettings,
+  dimensionsState: Uint32Array,
+  keyboardState: Uint8Array
+): ICameraController {
   const state: CameraControllerState = Object.seal({
     isMounted: false,
     isPaused: false,

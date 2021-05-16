@@ -122,10 +122,28 @@ export function LocationMapScene(
   const _cameraController: ICameraController = CameraController(logger, userSettings, dimensionsState, keyboardState);
   const _entityControllerBag: IEntityControllerBag = EntityControllerBag(logger);
   const _raycaster: IRaycaster = Raycaster(_cameraController, dimensionsState, mouseState, touchState);
-  const _userInputEventBusController: UserInputController = UserInputEventBusController(userSettings, eventBus, _cameraController, tickTimerState);
-  const _userInputKeyboardController: UserInputController = UserInputKeyboardController(userSettings, keyboardState, _cameraController);
-  const _userInputMouseController: IUserInputMouseController = UserInputMouseController(userSettings, dimensionsState, mouseState, _raycaster);
-  const _userInputTouchController: UserInputController = UserInputTouchController(userSettings, dimensionsState, touchState);
+  const _userInputEventBusController: UserInputController = UserInputEventBusController(
+    userSettings,
+    eventBus,
+    _cameraController,
+    tickTimerState
+  );
+  const _userInputKeyboardController: UserInputController = UserInputKeyboardController(
+    userSettings,
+    keyboardState,
+    _cameraController
+  );
+  const _userInputMouseController: IUserInputMouseController = UserInputMouseController(
+    userSettings,
+    dimensionsState,
+    mouseState,
+    _raycaster
+  );
+  const _userInputTouchController: UserInputController = UserInputTouchController(
+    userSettings,
+    dimensionsState,
+    touchState
+  );
   const _renderPass = new RenderPass(_scene, _cameraController.camera);
   const _viewBag: IViewBag = ViewBag(logger);
 

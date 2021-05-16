@@ -8,7 +8,11 @@ import type { HTMLElementResizeObserver as IHTMLElementResizeObserver } from "./
 import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
 import type { TickTimerState } from "./TickTimerState.type";
 
-export function HTMLElementResizeObserver(htmlElement: HTMLElement, dimensionsState: Uint32Array, tickTimerState: TickTimerState): IHTMLElementResizeObserver {
+export function HTMLElementResizeObserver(
+  htmlElement: HTMLElement,
+  dimensionsState: Uint32Array,
+  tickTimerState: TickTimerState
+): IHTMLElementResizeObserver {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });

@@ -21,7 +21,12 @@ import type { UserSettings } from "./UserSettings.type";
 const _pointerVector: IVector2 = new Vector2(0, 0);
 const _pointerVectorRotationPivot: IVector2 = new Vector2(0, 0);
 
-export function UserInputMouseController(userSettings: UserSettings, dimensionsState: Uint32Array, mouseState: Int32Array, raycaster: Raycaster): UserInputMouseController {
+export function UserInputMouseController(
+  userSettings: UserSettings,
+  dimensionsState: Uint32Array,
+  mouseState: Int32Array,
+  raycaster: Raycaster
+): UserInputMouseController {
   const state: UserInputMouseControllerState = Object.seal({
     isMounted: false,
     isPaused: false,
@@ -51,7 +56,11 @@ export function UserInputMouseController(userSettings: UserSettings, dimensionsS
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
     _cameraTransitionRequest.set(0, 0, 0);
 
-    if (state.isPaused || !isPrimaryMouseButtonPressed(mouseState) || !isPrimaryMouseButtonPressInitiatedByRootElement(mouseState)) {
+    if (
+      state.isPaused ||
+      !isPrimaryMouseButtonPressed(mouseState) ||
+      !isPrimaryMouseButtonPressInitiatedByRootElement(mouseState)
+    ) {
       state.isPressStartedWithIntersection = false;
       state.isPressStarted = false;
 

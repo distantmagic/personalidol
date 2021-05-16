@@ -58,7 +58,11 @@ const _texturesMessageRouter = createRouter({
  *
  * @see requestTexture
  */
-function _drawAtlasTexture(context2D: Context2D, texture: ImageBitmap | ImageData, textureDimension: AtlasTextureDimension): void {
+function _drawAtlasTexture(
+  context2D: Context2D,
+  texture: ImageBitmap | ImageData,
+  textureDimension: AtlasTextureDimension
+): void {
   if (isImageBitmap(texture)) {
     // prettier-ignore
     context2D.drawImage(
@@ -107,7 +111,12 @@ function _onImageBitmap({ imageBitmap }: ImageBitmapResponse): ImageBitmap {
   return imageBitmap;
 }
 
-export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, context2D: Context2D, progressMessagePort: MessagePort, texturesMessagePort: MessagePort): IAtlasService {
+export function AtlasService(
+  canvas: HTMLCanvasElement | OffscreenCanvas,
+  context2D: Context2D,
+  progressMessagePort: MessagePort,
+  texturesMessagePort: MessagePort
+): IAtlasService {
   const state: MainLoopUpdatableState = Object.seal({
     needsUpdates: true,
   });
@@ -257,7 +266,13 @@ export function AtlasService(canvas: HTMLCanvasElement | OffscreenCanvas, contex
     _isProcessingRequest = true;
 
     const requestKey = _keyFromAtlasQueueItem(request);
-    const { data: response, isLast } = await reuseResponse<Atlas, AtlasQueueItem>(_loadingCache, _loadingUsage, requestKey, request, _createTextureAtlas);
+    const { data: response, isLast } = await reuseResponse<Atlas, AtlasQueueItem>(
+      _loadingCache,
+      _loadingUsage,
+      requestKey,
+      request,
+      _createTextureAtlas
+    );
     const { imageData, textureDimensions } = response;
 
     request.messagePort.postMessage(
