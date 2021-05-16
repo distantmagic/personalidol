@@ -14,20 +14,14 @@ export function UIStateControllerStatsHook(uiStateController: UIStateController)
     needsUpdates: true,
   });
   const statsReport: UIStateControllerStatsReport = {
-    currentLocationMap: "",
     debugName: DEBUG_NAME,
-    isScenePaused: false,
     lastUpdate: 0,
-    previousLocationMap: "",
   };
 
   function reset(): void {}
 
   function update(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
-    statsReport.currentLocationMap = String(uiStateController.uiState.currentLocationMap);
-    statsReport.isScenePaused = uiStateController.uiState.isScenePaused;
     statsReport.lastUpdate = tickTimerState.currentTick;
-    statsReport.previousLocationMap = String(uiStateController.uiState.previousLocationMap);
   }
 
   return Object.freeze({

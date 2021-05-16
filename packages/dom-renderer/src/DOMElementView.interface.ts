@@ -11,6 +11,7 @@ export interface DOMElementView<U extends UserSettings> extends HTMLElement, Mai
   css: string;
   dimensionsState: Uint32Array;
   domMessagePort: MessagePort;
+  gameMessagePort: MessagePort;
   i18next: i18n;
   keyboardState: Uint8Array;
   mouseState: Int32Array;

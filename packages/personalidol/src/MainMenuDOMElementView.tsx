@@ -2,7 +2,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
-import type { MessageUIStateChange } from "./MessageUIStateChange.type";
+import type { MessageGameStateChange } from "./MessageGameStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
 export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
@@ -15,11 +15,11 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
   onButtonNewGameClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    const message: MessageUIStateChange = {
+    const message: MessageGameStateChange = {
       currentLocationMap: "map-gates",
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.gameMessagePort.postMessage(message);
   }
 
   render() {

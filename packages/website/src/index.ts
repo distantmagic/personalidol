@@ -166,6 +166,10 @@ async function bootstrap() {
 
   mainLoop.updatables.add(languageUserSettingsManager);
 
+  // Game message channel handles current game domain logic.
+
+  const gameMessageChannel = createMultiThreadMessageChannel();
+
   // DOMUiController handles DOM rendering using reconciliated routes.
 
   const uiMessageChannel = createMultiThreadMessageChannel();
@@ -176,6 +180,7 @@ async function bootstrap() {
     keyboardState,
     mouseState,
     touchState,
+    gameMessageChannel.port1,
     uiMessageChannel.port1,
     userSettings
   );
@@ -450,6 +455,7 @@ async function bootstrap() {
   await createScenes(
     dynamicsMessageChannel.port2,
     fontPreloadMessageChannel.port2,
+    gameMessageChannel.port2,
     gltfMessageChannel.port2,
     internationalizationMessageChannel.port2,
     md2MessageChannel.port2,

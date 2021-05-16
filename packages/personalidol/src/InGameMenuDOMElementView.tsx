@@ -2,6 +2,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
+import type { MessageGameStateChange } from "./MessageGameStateChange.type";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UserSettings } from "./UserSettings.type";
 
@@ -16,32 +17,37 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
   connectedCallback() {
     super.connectedCallback();
 
-    const message: MessageUIStateChange = {
+    const message: MessageGameStateChange = {
       isScenePaused: true,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.gameMessagePort.postMessage(message);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    const message: MessageUIStateChange = {
+    const uiMessage: MessageUIStateChange = {
       isInGameMenuOpened: false,
+    };
+
+    this.uiMessagePort.postMessage(uiMessage);
+
+    const gameMessage: MessageGameStateChange = {
       isScenePaused: false,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.gameMessagePort.postMessage(gameMessage);
   }
 
   onButtonExitClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    const message: MessageUIStateChange = {
+    const message: MessageGameStateChange = {
       currentLocationMap: null,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.gameMessagePort.postMessage(message);
   }
 
   onButtonReturnToGameClick(evt: MouseEvent) {

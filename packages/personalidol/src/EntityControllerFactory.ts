@@ -22,12 +22,14 @@ import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntityScriptedZone } from "./EntityScriptedZone.type";
 import type { EntityView } from "./EntityView.interface";
 import type { EntityWorldspawn } from "./EntityWorldspawn.type";
+import type { GameState } from "./GameState.type";
 import type { NPCEntity } from "./NPCEntity.type";
 import type { UIState } from "./UIState.type";
 
 export function EntityControllerFactory(
   logger: Logger,
   cameraController: CameraController,
+  gameState: GameState,
   uiState: UIState,
   dynamicsMessagePort: MessagePort,
   userInputEventBusController: UserInputController,
@@ -46,7 +48,7 @@ export function EntityControllerFactory(
           throw new Error(`Map transition entity controller only supports "scripted_zone" entity. Got: "${view.entity.classname}"`);
         }
 
-        yield MapTransitionEntityController(view, uiState, dynamicsMessagePort) as IEntityController<E>;
+        yield MapTransitionEntityController(view, gameState, dynamicsMessagePort) as IEntityController<E>;
         break;
       case "npc":
         if (!isNPCEntityView(view)) {

@@ -57,9 +57,9 @@ import type { ViewBag as IViewBag } from "@personalidol/views/src/ViewBag.interf
 import type { EntityControllerBag as IEntityControllerBag } from "./EntityControllerBag.interface";
 import type { EntityControllerFactory as IEntityControllerFactory } from "./EntityControllerFactory.interface";
 import type { EntityViewFactory as IEntityViewFactory } from "./EntityViewFactory.interface";
+import type { GameState } from "./GameState.type";
 import type { InstancedGLTFModelViewManager as IInstancedGLTFModelViewManager } from "./InstancedGLTFModelViewManager.interface";
 import type { MapScene as IMapScene } from "./MapScene.interface";
-import type { MessageUIStateChange } from "./MessageUIStateChange.type";
 import type { UIState } from "./UIState.type";
 import type { UserSettings } from "./UserSettings.type";
 
@@ -91,6 +91,7 @@ export function LocationMapScene(
   keyboardState: Uint8Array,
   mouseState: Int32Array,
   touchState: Int32Array,
+  gameState: GameState,
   uiState: UIState,
   domMessagePort: MessagePort,
   dynamicsMessagePort: MessagePort,
@@ -100,7 +101,6 @@ export function LocationMapScene(
   progressMessagePort: MessagePort,
   quakeMapsMessagePort: MessagePort,
   texturesMessagePort: MessagePort,
-  uiMessagePort: MessagePort,
   mapName: string,
   mapFilename: string
 ): IMapScene {
@@ -144,6 +144,7 @@ export function LocationMapScene(
   const _entityControllerFactory: IEntityControllerFactory = EntityControllerFactory(
     logger,
     _cameraController,
+    gameState,
     uiState,
     dynamicsMessagePort,
     _userInputEventBusController,
@@ -193,11 +194,9 @@ export function LocationMapScene(
     _unmountables.add(unmountPass(effectComposer, _renderPass));
     _disposables.add(disposableGeneric(_renderPass));
 
-    uiMessagePort.postMessage(<MessageUIStateChange>{
-      isInGameMenuTriggerVisible: true,
-      isMousePointerLayerVisible: true,
-      isVirtualJoystickLayerVisible: true,
-    });
+    uiState.isInGameMenuTriggerVisible = true;
+    uiState.isMousePointerLayerVisible = true;
+    uiState.isVirtualJoystickLayerVisible = true;
   }
 
   function pause(): void {
@@ -292,11 +291,9 @@ export function LocationMapScene(
   function unmount(): void {
     state.isMounted = false;
 
-    uiMessagePort.postMessage(<MessageUIStateChange>{
-      isInGameMenuTriggerVisible: false,
-      isMousePointerLayerVisible: false,
-      isVirtualJoystickLayerVisible: false,
-    });
+    uiState.isInGameMenuTriggerVisible = false;
+    uiState.isMousePointerLayerVisible = false;
+    uiState.isVirtualJoystickLayerVisible = false;
 
     fUnmount(logger, _viewBag);
     fUnmount(logger, _entityControllerBag);

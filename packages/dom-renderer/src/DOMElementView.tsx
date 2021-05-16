@@ -27,6 +27,7 @@ export class DOMElementView<U extends UserSettings> extends HTMLElement implemen
 
   private _dimensionsState: null | Uint32Array = null;
   private _domMessagePort: null | MessagePort = null;
+  private _gameMessagePort: null | MessagePort = null;
   private _i18next: null | i18n = null;
   private _keyboardState: null | Uint8Array = null;
   private _mouseState: null | Int32Array = null;
@@ -50,6 +51,15 @@ export class DOMElementView<U extends UserSettings> extends HTMLElement implemen
   set domMessagePort(domMessagePort: MessagePort) {
     this.needsRender = true;
     this._domMessagePort = domMessagePort;
+  }
+
+  get gameMessagePort(): MessagePort {
+    return must(this._gameMessagePort, "gameMessagePort is not set but it was expected to be.");
+  }
+
+  set gameMessagePort(gameMessagePort: MessagePort) {
+    this.needsRender = true;
+    this._gameMessagePort = gameMessagePort;
   }
 
   get i18next(): i18n {

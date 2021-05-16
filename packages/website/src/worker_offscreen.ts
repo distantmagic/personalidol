@@ -26,6 +26,7 @@ type Dependencies = {
   domMessagePort: MessagePort;
   dynamicsMessagePort: MessagePort;
   fontPreloadMessagePort: MessagePort;
+  gameMessagePort: MessagePort;
   gltfMessagePort: MessagePort;
   internationalizationMessagePort: MessagePort;
   keyboardState: Uint8Array;
@@ -49,6 +50,7 @@ const partialDependencies: Partial<Dependencies> = {
   domMessagePort: undefined,
   dynamicsMessagePort: undefined,
   fontPreloadMessagePort: undefined,
+  gameMessagePort: undefined,
   gltfMessagePort: undefined,
   internationalizationMessagePort: undefined,
   keyboardState: undefined,
@@ -109,6 +111,7 @@ function onDependenciesReady(dependencies: Dependencies): void {
     dependencies.domMessagePort,
     dependencies.dynamicsMessagePort,
     dependencies.fontPreloadMessagePort,
+    dependencies.gameMessagePort,
     dependencies.gltfMessagePort,
     dependencies.internationalizationMessagePort,
     dependencies.md2MessagePort,
@@ -150,6 +153,10 @@ self.onmessage = createRouter({
 
   fontPreloadMessagePort(port: MessagePort): void {
     serviceBuilder.setDependency("fontPreloadMessagePort", port);
+  },
+
+  gameMessagePort(port: MessagePort): void {
+    serviceBuilder.setDependency("gameMessagePort", port);
   },
 
   gltfMessagePort(port: MessagePort): void {

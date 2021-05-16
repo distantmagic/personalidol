@@ -5,6 +5,8 @@ import { CSS2DRendererStatsHook } from "@personalidol/three-css2d-renderer/src/C
 import { Director } from "@personalidol/framework/src/Director";
 import { DirectorPollablePreloadingObserver } from "@personalidol/framework/src/DirectorPollablePreloadingObserver";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
+import { GameState } from "@personalidol/personalidol/src/GameState";
+import { GameStateController } from "@personalidol/personalidol/src/GameStateController";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
 import { MultiThreadUserSettingsSync } from "@personalidol/framework/src/MultiThreadUserSettingsSync";
 import { RendererDimensionsManager } from "@personalidol/dom-renderer/src/RendererDimensionsManager";
@@ -19,6 +21,7 @@ import type { Logger } from "loglevel";
 
 import type { DOMElementsLookup } from "@personalidol/personalidol/src/DOMElementsLookup.type";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
+import type { GameState as IGameState } from "@personalidol/personalidol/src/GameState.type";
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
 import type { ServiceManager } from "@personalidol/framework/src/ServiceManager.interface";
 import type { StatsReporter } from "@personalidol/framework/src/StatsReporter.interface";
@@ -43,6 +46,7 @@ export function createScenes(
   domMessagePort: MessagePort,
   dynamicsMessagePort: MessagePort,
   fontPreloadMessagePort: MessagePort,
+  gameMessagePort: MessagePort,
   gltfMessagePort: MessagePort,
   internationalizationMessagePort: MessagePort,
   md2MessagePort: MessagePort,
@@ -81,9 +85,10 @@ export function createScenes(
   const currentSceneDirectorPollablePreloadingObserver = DirectorPollablePreloadingObserver(currentSceneDirector);
   const loadingSceneDirectorPollablePreloadingObserver = DirectorPollablePreloadingObserver(loadingSceneDirector);
 
+  const gameState: IGameState = GameState.createEmptyState();
   const uiState: IUIState = UIState.createEmptyState();
 
-  const uiStateController = UIStateController(
+  const gameStateController = GameStateController(
     logger,
     userSettings,
     effectComposer,
@@ -98,15 +103,18 @@ export function createScenes(
     domMessagePort,
     dynamicsMessagePort,
     fontPreloadMessagePort,
+    gameMessagePort,
     gltfMessagePort,
     internationalizationMessagePort,
     md2MessagePort,
     progressMessagePort,
     quakeMapsMessagePort,
     texturesMessagePort,
-    uiMessagePort,
+    gameState,
     uiState
   );
+
+  const uiStateController = UIStateController(logger, mainLoop.ticker.tickTimerState, domMessagePort, uiMessagePort, uiState);
 
   statsReporter.hooks.add(CSS2DRendererStatsHook(css2DRenderer));
   statsReporter.hooks.add(UIStateControllerStatsHook(uiStateController));
@@ -118,6 +126,7 @@ export function createScenes(
   serviceManager.services.add(loadingSceneDirectorPollablePreloadingObserver);
   serviceManager.services.add(multiThreadUserSettingsSync);
   serviceManager.services.add(currentSceneDirector);
+  serviceManager.services.add(gameStateController);
   serviceManager.services.add(uiStateController);
   serviceManager.services.add(loadingSceneDirector);
   serviceManager.services.add(sceneTransition);
@@ -132,6 +141,7 @@ export function createScenes(
   mainLoop.updatables.add(serviceManager);
   mainLoop.updatables.add(currentSceneDirector);
   mainLoop.updatables.add(loadingSceneDirector);
+  mainLoop.updatables.add(gameStateController);
   mainLoop.updatables.add(uiStateController);
   mainLoop.updatables.add(sceneTransition);
 }

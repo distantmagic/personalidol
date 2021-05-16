@@ -11,12 +11,14 @@ export function DOMElementViewBuilder<U extends UserSettings>(
   keyboardState: Uint8Array,
   mouseState: Int32Array,
   touchState: Int32Array,
+  gameMessagePort: MessagePort,
   uiMessagePort: MessagePort,
   userSettings: U
 ): IDOMElementViewBuilder<U> {
   function initialize(domElementView: DOMElementView<U>, domMessagePort: MessagePort): void {
     domElementView.dimensionsState = dimensionsState;
     domElementView.domMessagePort = domMessagePort;
+    domElementView.gameMessagePort = gameMessagePort;
     domElementView.i18next = i18next;
     domElementView.keyboardState = keyboardState;
     domElementView.mouseState = mouseState;

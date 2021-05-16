@@ -14,10 +14,10 @@ import type { EntityControllerState } from "./EntityControllerState.type";
 import type { EntityPlayer } from "./EntityPlayer.type";
 import type { EntityScriptedZone } from "./EntityScriptedZone.type";
 import type { EntityView } from "./EntityView.interface";
+import type { GameState } from "./GameState.type";
 import type { SimulantsLookup } from "./SimulantsLookup.type";
-import type { UIState } from "./UIState.type";
 
-export function MapTransitionEntityController(view: EntityView<EntityScriptedZone>, uiState: UIState, dynamicsMessagePort: MessagePort): EntityController<EntityScriptedZone> {
+export function MapTransitionEntityController(view: EntityView<EntityScriptedZone>, gameState: GameState, dynamicsMessagePort: MessagePort): EntityController<EntityScriptedZone> {
   const state: EntityControllerState = Object.seal({
     isDisposed: false,
     isMounted: false,
@@ -31,7 +31,7 @@ export function MapTransitionEntityController(view: EntityView<EntityScriptedZon
     overlappingEntities(entities: Set<AnyEntity>) {
       for (let entity of entities) {
         if (isEntityOfClass<EntityPlayer>(entity, "player")) {
-          uiState.currentLocationMap = view.entity.properties.map_transition_target;
+          gameState.currentLocationMap = view.entity.properties.map_transition_target;
 
           break;
         }
