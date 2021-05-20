@@ -4,7 +4,7 @@ import { h } from "preact";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 export interface Attributes<T> {
   currentValue: T;
@@ -85,7 +85,7 @@ const _css = `
   }
 `;
 
-export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettings> implements Attributes<T> {
+export class FormRadioButtonsDOMElementView<T> extends DOMElementView<DOMElementViewContext> implements Attributes<T> {
   static get observedAttributes() {
     return ["disabled"];
   }

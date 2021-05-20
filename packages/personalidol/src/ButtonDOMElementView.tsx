@@ -2,7 +2,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 const _css = `
   :host {
@@ -27,7 +27,7 @@ const _css = `
   }
 `;
 
-export class ButtonDOMElementView extends DOMElementView<UserSettings> {
+export class ButtonDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
 
   render(delta: number) {

@@ -11,6 +11,7 @@ import { workers } from "./workers";
 import type { Logger } from "loglevel";
 
 import type { DOMElementsLookup } from "@personalidol/personalidol/src/DOMElementsLookup.type";
+import type { DOMElementViewContext } from "@personalidol/personalidol/src/DOMElementViewContext.type";
 import type { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { KeyboardObserverState } from "@personalidol/input/src/KeyboardObserverState.type";
@@ -27,7 +28,7 @@ export async function createRenderingService(
   serviceManager: ServiceManager,
   canvas: HTMLCanvasElement,
   devicePixelRatio: number,
-  domUIController: DOMUIController<DOMElementsLookup, UserSettings>,
+  domUIController: DOMUIController<DOMElementsLookup, DOMElementViewContext>,
   dimensionsState: Uint32Array,
   eventBus: EventBus,
   keyboardObserverState: KeyboardObserverState,

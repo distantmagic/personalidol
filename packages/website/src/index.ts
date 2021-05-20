@@ -177,6 +177,7 @@ async function bootstrap() {
   const domElementViewBuilder = DOMElementViewBuilder({
     dimensionsState: dimensionsState,
     gameMessagePort: gameMessageChannel.port1,
+    isDOMElementViewContext: true,
     keyboardState: keyboardState,
     mouseState: mouseState,
     touchState: touchState,

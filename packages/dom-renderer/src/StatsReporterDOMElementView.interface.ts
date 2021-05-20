@@ -1,5 +1,4 @@
-import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
-
 import type { DOMElementView } from "./DOMElementView.interface";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
-export interface StatsReporterDOMElementView extends DOMElementView<UserSettings> {}
+export interface StatsReporterDOMElementView extends DOMElementView<DOMElementViewContext> {}

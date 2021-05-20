@@ -3,7 +3,7 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 export interface Attributes {
   active?: boolean;
@@ -53,7 +53,7 @@ export const css = `
   }
 `;
 
-export class MainMenuButtonDOMElementView extends DOMElementView<UserSettings> {
+export class MainMenuButtonDOMElementView extends DOMElementView<DOMElementViewContext> {
   static get observedAttributes() {
     return ["active", "disabled"];
   }

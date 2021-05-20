@@ -7,7 +7,7 @@ import { DOMZIndex } from "./DOMZIndex.enum";
 
 import type { ProgressManagerState } from "@personalidol/framework/src/ProgressManagerState.type";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 export interface Attributes {
   progressManagerState: ProgressManagerState;
@@ -118,7 +118,7 @@ const _css = `
   }
 `;
 
-export class ProgressManagerStateDOMElementView extends DOMElementView<UserSettings> {
+export class ProgressManagerStateDOMElementView extends DOMElementView<DOMElementViewContext> {
   static get observedAttributes() {
     return ["comment", "progress"];
   }

@@ -5,7 +5,7 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 const _css = `
   :host {
@@ -103,7 +103,7 @@ const _css = `
   }
 `;
 
-export class MainMenuLayoutDOMElementView extends DOMElementView<UserSettings> {
+export class MainMenuLayoutDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
 
   render() {

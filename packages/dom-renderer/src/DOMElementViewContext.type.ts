@@ -1,1 +1,3 @@
-export type DOMElementViewContext = {};
+export type DOMElementViewContext = {
+  readonly isDOMElementViewContext: true;
+};

@@ -4,7 +4,7 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
 import type { MessageProgressError } from "@personalidol/framework/src/MessageProgressError.type";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 const _css = `
   :host {
@@ -54,7 +54,7 @@ const _css = `
   }
 `;
 
-export class FatalErrorDOMElementView extends DOMElementView<UserSettings> {
+export class FatalErrorDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
 
   private _errors: ReadonlyArray<MessageProgressError> = [];

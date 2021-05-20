@@ -5,7 +5,7 @@ import { roundToNearestMultiple } from "@personalidol/math/src/roundToNearestMul
 
 import type { JSX } from "preact";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 export interface Attributes {
   max: number;
@@ -101,7 +101,7 @@ const _css = `
   }
 `;
 
-export class FormRangeSliderDOMElementView extends DOMElementView<UserSettings> {
+export class FormRangeSliderDOMElementView extends DOMElementView<DOMElementViewContext> {
   static get observedAttributes() {
     return ["max", "min", "step", "value"];
   }

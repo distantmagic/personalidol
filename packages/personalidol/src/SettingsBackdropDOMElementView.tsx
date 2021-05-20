@@ -6,7 +6,7 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 export interface Attributes {
   isloading?: boolean;
@@ -95,7 +95,7 @@ const _css = `
   }
 `;
 
-export class SettingsBackdropDOMElementView extends DOMElementView<UserSettings> {
+export class SettingsBackdropDOMElementView extends DOMElementView<DOMElementViewContext> {
   static get observedAttributes() {
     return ["isloading"];
   }
