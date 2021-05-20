@@ -8,7 +8,6 @@ import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 export interface DOMElementView<C extends DOMElementViewContext> extends HTMLElement, MainLoopUpdatable {
   readonly t: TFunction;
-  readonly css: string;
 
   context: DOMElementViewContext;
   domMessagePort: MessagePort;

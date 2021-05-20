@@ -36,7 +36,7 @@ const _css = `
 `;
 
 export class MousePointerLayerDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   beforeRender(): void {
     this.needsRender = true;

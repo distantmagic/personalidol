@@ -28,7 +28,7 @@ const _css = `
 `;
 
 export class ButtonDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   render(delta: number) {
     return (

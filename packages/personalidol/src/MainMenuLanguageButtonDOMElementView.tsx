@@ -32,7 +32,7 @@ const _css = `
 `;
 
 export class MainMenuLanguageButtonDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   constructor() {
     super();

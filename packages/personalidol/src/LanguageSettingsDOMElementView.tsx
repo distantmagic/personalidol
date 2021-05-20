@@ -58,7 +58,7 @@ const _css = `
 `;
 
 export class LanguageSettingsDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   private _isLanguageChangePending: boolean = false;
   private _targetLanguage: string = "";

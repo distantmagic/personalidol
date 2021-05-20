@@ -55,7 +55,7 @@ const _css = `
 `;
 
 export class FatalErrorDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   private _errors: ReadonlyArray<MessageProgressError> = [];
 

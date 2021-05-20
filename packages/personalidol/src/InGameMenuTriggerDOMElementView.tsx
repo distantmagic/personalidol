@@ -39,7 +39,7 @@ const _css = `
 `;
 
 export class InGameMenuTriggerDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   constructor() {
     super();

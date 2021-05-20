@@ -72,7 +72,8 @@ export class StatsReporterDOMElementView
   implements IStatsReporterDOMElementView
 {
   public static zIndex: number = 0;
-  public css: string = _css;
+  public static css: string = _css;
+
   public statsReportsFlattened: Array<FlattenedStatsReport> = [];
 
   set statsReports(statsReports: Array<StatsReport>) {

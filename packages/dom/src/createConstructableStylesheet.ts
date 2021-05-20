@@ -1,8 +1,8 @@
-type StyleSheetsCache = {
-  [key: string]: CSSStyleSheet;
-};
+import { createConstructableStyleSheetsCache } from "./createConstructableStyleSheetsCache";
 
-const _styleSheetsCache: StyleSheetsCache = {};
+import type { ConstructableStyleSheetsCache } from "./ConstructableStyleSheetsCache.type";
+
+const _styleSheetsCache: ConstructableStyleSheetsCache = createConstructableStyleSheetsCache();
 
 export function createConstructableStylesheet(css: string): CSSStyleSheet {
   if (_styleSheetsCache.hasOwnProperty(css)) {

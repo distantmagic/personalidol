@@ -100,7 +100,7 @@ export class SettingsBackdropDOMElementView extends DOMElementView<DOMElementVie
     return ["isloading"];
   }
 
-  public css: string = _css;
+  public static css: string = _css;
 
   private _isLoading: boolean = false;
 

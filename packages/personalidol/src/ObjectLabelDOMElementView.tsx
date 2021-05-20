@@ -51,7 +51,7 @@ type LabelProps = DOMElementProps & {
 };
 
 export class ObjectLabelDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   public _rendererState: Float32Array = CSS2DObjectState.createEmptyState(false);
 

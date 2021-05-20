@@ -90,7 +90,7 @@ export class FormRadioButtonsDOMElementView<T> extends DOMElementView<DOMElement
     return ["disabled"];
   }
 
-  public css: string = _css;
+  public static css: string = _css;
 
   private _currentValue: null | T = null;
   private _edgeLabels: null | [string, string] = null;

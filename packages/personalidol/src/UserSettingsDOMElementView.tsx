@@ -138,7 +138,7 @@ const _shadowMapSizeLabels = ["512", "1024", "2048", "4096"];
 const _shadowMapSizeValues = [512, 1024, 2048, 4096];
 
 export class UserSettingsDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
   public userSettingsLastAcknowledgedVersion: number = -1;
 
   private _isUseOffscreenCanvasChanged: boolean = false;

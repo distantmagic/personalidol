@@ -122,7 +122,7 @@ export class ProgressManagerStateDOMElementView extends DOMElementView<DOMElemen
   static get observedAttributes() {
     return ["comment", "progress"];
   }
-  public css: string = _css;
+  public static css: string = _css;
 
   private _expect: number = 0;
   private _progressPercentage: string = "0%";

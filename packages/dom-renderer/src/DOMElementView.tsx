@@ -1,9 +1,8 @@
 import { Fragment, h, render } from "preact";
 
-import { createConstructableStylesheet } from "@personalidol/dom/src/createConstructableStylesheet";
-import { isConstructableCSSStyleSheetSupported } from "@personalidol/framework/src/isConstructableCSSStyleSheetSupported";
 import { must } from "@personalidol/framework/src/must";
 
+import { DOMElementViewStyler } from "./DOMElementViewStyler";
 import { Events } from "./Events.enum";
 
 import type { i18n, TOptions } from "i18next";
@@ -14,9 +13,13 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 
 import type { DOMElementView as IDOMElementView } from "./DOMElementView.interface";
 import type { DOMElementViewContext } from "./DOMElementViewContext.type";
+import type { DOMElementViewStyler as IDOMElementViewStyler } from "./DOMElementViewStyler.interface";
+
+const _shadowRootInit: ShadowRootInit = {
+  mode: "closed",
+};
 
 export class DOMElementView<C extends DOMElementViewContext> extends HTMLElement implements IDOMElementView<C> {
-  public css: string = "";
   public lastRenderedLanguage: string = "";
   public needsRender: boolean = true;
   public shadow: ShadowRoot;
@@ -27,6 +30,7 @@ export class DOMElementView<C extends DOMElementViewContext> extends HTMLElement
 
   private _context: null | C = null;
   private _domMessagePort: null | MessagePort = null;
+  private _styler: IDOMElementViewStyler;
   private _i18next: null | i18n = null;
 
   get context(): C {
@@ -60,11 +64,10 @@ export class DOMElementView<C extends DOMElementViewContext> extends HTMLElement
     super();
 
     this.render = this.render.bind(this);
+    this.shadow = this.attachShadow(_shadowRootInit);
     this.t = this.t.bind(this);
 
-    this.shadow = this.attachShadow({
-      mode: "closed",
-    });
+    this._styler = DOMElementViewStyler(((this.constructor as any).css as undefined | string) || "");
   }
 
   adoptedCallback() {}
@@ -80,11 +83,7 @@ export class DOMElementView<C extends DOMElementViewContext> extends HTMLElement
   }
 
   connectedCallback() {
-    if (isConstructableCSSStyleSheetSupported()) {
-      // @ts-ignore this is a chrome-only feature at this point and as such it
-      // is not typed
-      this.shadow.adoptedStyleSheets = [createConstructableStylesheet(this.css)];
-    }
+    this._styler.connectedCallback(this.shadow);
 
     this.dispatchEvent(
       new CustomEvent(Events.elementConnected, {
@@ -127,17 +126,10 @@ export class DOMElementView<C extends DOMElementViewContext> extends HTMLElement
     this.lastRenderedLanguage = this.i18next.language;
     this.needsRender = false;
 
-    const renderedElements = this.render(delta, elapsedTime, tickTimerState);
-
-    if (!this.css || isConstructableCSSStyleSheetSupported()) {
-      render(renderedElements, this.shadow);
-      return;
-    }
-
     render(
       <Fragment>
-        <style>{this.css}</style>
-        {renderedElements}
+        {this._styler.render()}
+        {this.render(delta, elapsedTime, tickTimerState)}
       </Fragment>,
       this.shadow
     );

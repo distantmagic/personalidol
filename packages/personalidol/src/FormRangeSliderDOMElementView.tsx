@@ -106,7 +106,7 @@ export class FormRangeSliderDOMElementView extends DOMElementView<DOMElementView
     return ["max", "min", "step", "value"];
   }
 
-  public css: string = _css;
+  public static css: string = _css;
 
   private _max: number = 0;
   private _min: number = 0;

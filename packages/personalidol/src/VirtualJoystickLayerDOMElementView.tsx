@@ -64,7 +64,7 @@ const _css = `
 `;
 
 export class VirtualJoystickLayerDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   private _stretchVector: IVector2 = new Vector2();
 

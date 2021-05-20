@@ -58,7 +58,7 @@ export class MainMenuButtonDOMElementView extends DOMElementView<DOMElementViewC
     return ["active", "disabled"];
   }
 
-  public css: string = css;
+  public static css: string = css;
 
   private _isActive: boolean = false;
   private _isDisabled: boolean = false;

@@ -104,7 +104,7 @@ const _css = `
 `;
 
 export class MainMenuLayoutDOMElementView extends DOMElementView<DOMElementViewContext> {
-  public css: string = _css;
+  public static css: string = _css;
 
   render() {
     return (
