@@ -1,9 +1,8 @@
 import { DOMElementView } from "./DOMElementView";
 
-import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
-
 import type { DOMElementView as IDOMElementView } from "./DOMElementView.interface";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
-export function isDOMElementView<U extends UserSettings>(item: HTMLElement): item is IDOMElementView<U> {
+export function isDOMElementView<C extends DOMElementViewContext>(item: HTMLElement): item is IDOMElementView<C> {
   return item instanceof DOMElementView;
 }

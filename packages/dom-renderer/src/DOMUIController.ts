@@ -13,12 +13,12 @@ import type { i18n } from "i18next";
 import type { Logger } from "loglevel";
 
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
-import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
 import type { DOMElementProps } from "./DOMElementProps.type";
 import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { DOMElementView } from "./DOMElementView.interface";
 import type { DOMElementViewBuilder } from "./DOMElementViewBuilder.interface";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { DOMUIController as IDOMUIController } from "./DOMUIController.interface";
 import type { DOMUIControllerState } from "./DOMUIControllerState.type";
 import type { MessageDOMUIDispose } from "./MessageDOMUIDispose.type";
@@ -33,14 +33,14 @@ function _isCustomElementDefined<L extends DOMElementsLookup>(name: string & key
   return _definedCustomElements.includes(name);
 }
 
-export function DOMUIController<L extends DOMElementsLookup, U extends UserSettings>(
+export function DOMUIController<L extends DOMElementsLookup, C extends DOMElementViewContext>(
   logger: Logger,
   i18next: i18n,
   mainLoop: MainLoop<number | ReturnType<typeof setTimeout>>,
   uiRootElement: HTMLElement,
   domElementsLookup: L,
-  domElementViewBuilder: DOMElementViewBuilder<U>
-): IDOMUIController<L, U> {
+  domElementViewBuilder: DOMElementViewBuilder<C>
+): IDOMUIController<L, C> {
   const state: DOMUIControllerState = Object.seal({
     isPreloaded: false,
     isPreloading: false,
@@ -48,22 +48,22 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   const _internalDOMMessageChannel: MessageChannel = createSingleThreadMessageChannel();
   let _isRootElementCleared: boolean = false;
 
-  const _domElementViews: Set<DOMElementView<U>> = new Set();
-  const _managedDOMElementViewsLookup: Map<string, DOMElementView<U>> = new Map();
+  const _domElementViews: Set<DOMElementView<C>> = new Set();
+  const _managedDOMElementViewsLookup: Map<string, DOMElementView<C>> = new Map();
   const _uiMessageRouter = createRouter({
     dispose: dispose,
     render: render,
     renderBatch: renderBatch,
   });
 
-  function _createDOMElementViewByRenderMessage(message: MessageDOMUIRender<L>): DOMElementView<U> {
+  function _createDOMElementViewByRenderMessage(message: MessageDOMUIRender<L>): DOMElementView<C> {
     const DOMElementViewConstructor: HTMLElement = customElements.get(message.element);
 
     if (!isDOMElementViewConstructor(DOMElementViewConstructor)) {
       throw new Error("Object is not a DOMElementView constructor.");
     }
 
-    const domElementView = new DOMElementViewConstructor<U>();
+    const domElementView = new DOMElementViewConstructor<C>();
 
     domElementViewBuilder.initialize(domElementView, _internalDOMMessageChannel.port2, i18next);
 
@@ -84,7 +84,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
       if (element instanceof HTMLElement) {
         customElements.upgrade(element);
 
-        if (isDOMElementView<U>(element)) {
+        if (isDOMElementView<C>(element)) {
           logger.debug(`UPGRADE("${name}")`);
           domElementViewBuilder.initialize(element, _internalDOMMessageChannel.port2, i18next);
           _registerDOMElementView(element);
@@ -111,7 +111,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
   }
 
   function _disposeElementById(id: string): void {
-    let domElementView: undefined | DOMElementView<U> = _managedDOMElementViewsLookup.get(id);
+    let domElementView: undefined | DOMElementView<C> = _managedDOMElementViewsLookup.get(id);
 
     if (!domElementView) {
       throw new Error(`Element is not rendered and can't be disposed: "${id}"`);
@@ -132,7 +132,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     const target = evt.detail;
 
-    if (!isDOMElementView<U>(target)) {
+    if (!isDOMElementView<C>(target)) {
       throw new Error(
         `Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementConnected}"`
       );
@@ -160,7 +160,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     const target = evt.detail;
 
-    if (!isDOMElementView<U>(target)) {
+    if (!isDOMElementView<C>(target)) {
       throw new Error(
         `Received event, but element is not a DOMElementView: "${target.tagName}@${Events.elementDisconnected}"`
       );
@@ -177,12 +177,12 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     }
   }
 
-  function _registerDOMElementView(domElementView: DOMElementView<U>) {
+  function _registerDOMElementView(domElementView: DOMElementView<C>) {
     _domElementViews.add(domElementView);
     mainLoop.updatables.add(domElementView);
   }
 
-  function _updateRenderedElement(domElementView: DOMElementView<U>) {
+  function _updateRenderedElement(domElementView: DOMElementView<C>) {
     if (domElementView.state.needsUpdates) {
       domElementView.update(
         mainLoop.ticker.tickTimerState.delta,
@@ -192,7 +192,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
     }
   }
 
-  function _updateRenderedElementProps(domElementView: DOMElementView<U>, props: DOMElementProps) {
+  function _updateRenderedElementProps(domElementView: DOMElementView<C>, props: DOMElementProps) {
     if (domElementView.version >= props.version) {
       // Props did not change.
       return;
@@ -235,7 +235,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
       _isRootElementCleared = true;
     }
 
-    let domElementView: undefined | DOMElementView<U> = _managedDOMElementViewsLookup.get(message.id);
+    let domElementView: undefined | DOMElementView<C> = _managedDOMElementViewsLookup.get(message.id);
 
     if (!domElementView) {
       domElementView = _createDOMElementViewByRenderMessage(message);
