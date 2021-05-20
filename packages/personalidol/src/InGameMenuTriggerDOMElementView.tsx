@@ -5,8 +5,8 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 import { DOMZIndex } from "./DOMZIndex.enum";
 
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
-import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
   :host {
@@ -38,7 +38,7 @@ const _css = `
   }
 `;
 
-export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings> {
+export class InGameMenuTriggerDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
 
   constructor() {
@@ -54,7 +54,7 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
       isInGameMenuOpened: false,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.context.uiMessagePort.postMessage(message);
   }
 
   onInGameMenuTriggerClick() {
@@ -62,7 +62,7 @@ export class InGameMenuTriggerDOMElementView extends DOMElementView<UserSettings
       isInGameMenuOpened: true,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.context.uiMessagePort.postMessage(message);
   }
 
   render() {

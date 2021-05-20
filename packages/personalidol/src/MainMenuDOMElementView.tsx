@@ -2,10 +2,10 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { MessageGameStateChange } from "./MessageGameStateChange.type";
-import type { UserSettings } from "./UserSettings.type";
 
-export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
+export class MainMenuDOMElementView extends DOMElementView<DOMElementViewContext> {
   constructor() {
     super();
 
@@ -20,7 +20,7 @@ export class MainMenuDOMElementView extends DOMElementView<UserSettings> {
       // currentWorldMap: "map-northern-creek",
     };
 
-    this.gameMessagePort.postMessage(message);
+    this.context.gameMessagePort.postMessage(message);
   }
 
   render() {

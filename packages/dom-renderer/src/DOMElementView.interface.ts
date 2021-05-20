@@ -3,23 +3,18 @@ import type { VNode } from "preact";
 
 import type { MainLoopUpdatable } from "@personalidol/framework/src/MainLoopUpdatable.interface";
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
-export interface DOMElementView<U extends UserSettings> extends HTMLElement, MainLoopUpdatable {
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
+
+export interface DOMElementView<C extends DOMElementViewContext> extends HTMLElement, MainLoopUpdatable {
   readonly t: TFunction;
+  readonly css: string;
 
-  css: string;
-  dimensionsState: Uint32Array;
+  context: DOMElementViewContext;
   domMessagePort: MessagePort;
-  gameMessagePort: MessagePort;
   i18next: i18n;
-  keyboardState: Uint8Array;
-  mouseState: Int32Array;
-  touchState: Int32Array;
   lastRenderedLanguage: string;
   needsRender: boolean;
-  uiMessagePort: MessagePort;
-  userSettings: U;
   version: number;
 
   beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void;

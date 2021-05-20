@@ -11,8 +11,8 @@ import { UserSettingsDynamicLightQualityMap } from "./UserSettingsDynamicLightQu
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
-import type { UserSettings } from "./UserSettings.type";
 
 const isOffscreenCanvasSupported = isCanvasTransferControlToOffscreenSupported();
 
@@ -137,7 +137,7 @@ const _pixelRatioValues = [0.25, 0.5, 0.75, 1];
 const _shadowMapSizeLabels = ["512", "1024", "2048", "4096"];
 const _shadowMapSizeValues = [512, 1024, 2048, 4096];
 
-export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
+export class UserSettingsDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
   public userSettingsLastAcknowledgedVersion: number = -1;
 
@@ -166,7 +166,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       isUserSettingsScreenOpened: false,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.context.uiMessagePort.postMessage(message);
   }
 
   disconnectedCallback() {
@@ -180,8 +180,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       throw new Error("Expected custom event with:: 'onCameraZoomAmountChange'.");
     }
 
-    this.userSettings.cameraZoomAmount = Number(evt.detail);
-    this.userSettings.version += 1;
+    this.context.userSettings.cameraZoomAmount = Number(evt.detail);
+    this.context.userSettings.version += 1;
   }
 
   onCameraTypeChange(evt: Event) {
@@ -193,8 +193,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       throw new Error(`Unexpected camera type: "${evt.detail}"`);
     }
 
-    this.userSettings.cameraType = evt.detail;
-    this.userSettings.version += 1;
+    this.context.userSettings.cameraType = evt.detail;
+    this.context.userSettings.version += 1;
   }
 
   onDynamicLightQualityChange(evt: Event) {
@@ -206,8 +206,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       throw new Error(`Unexpected shadowmap size: "${evt.detail}"`);
     }
 
-    this.userSettings.dynamicLightQuality = evt.detail;
-    this.userSettings.version += 1;
+    this.context.userSettings.dynamicLightQuality = evt.detail;
+    this.context.userSettings.version += 1;
   }
 
   onPixelRatioChange(evt: Event) {
@@ -215,8 +215,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       throw new Error("Expected custom event with:: 'onPixelRatioChange'.");
     }
 
-    this.userSettings.pixelRatio = Number(evt.detail);
-    this.userSettings.version += 1;
+    this.context.userSettings.pixelRatio = Number(evt.detail);
+    this.context.userSettings.version += 1;
   }
 
   onShadowMapSizeChange(evt: Event) {
@@ -228,8 +228,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       throw new Error(`Unexpected shadowmap size: "${evt.detail}"`);
     }
 
-    this.userSettings.shadowMapSize = evt.detail;
-    this.userSettings.version += 1;
+    this.context.userSettings.shadowMapSize = evt.detail;
+    this.context.userSettings.version += 1;
   }
 
   onShowStatsReporterChange(evt: Event) {
@@ -237,8 +237,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       throw new Error("Expected custom event with:: 'onShowStatsReporterChange'.");
     }
 
-    this.userSettings.showStatsReporter = Boolean(evt.detail);
-    this.userSettings.version += 1;
+    this.context.userSettings.showStatsReporter = Boolean(evt.detail);
+    this.context.userSettings.version += 1;
   }
 
   onUseOffscreenCanvasChanged(evt: Event) {
@@ -247,8 +247,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
     }
 
     this._isUseOffscreenCanvasChanged = true;
-    this.userSettings.useOffscreenCanvas = Boolean(evt.detail);
-    this.userSettings.version += 1;
+    this.context.userSettings.useOffscreenCanvas = Boolean(evt.detail);
+    this.context.userSettings.version += 1;
   }
 
   onUseShadowsChange(evt: Event) {
@@ -256,8 +256,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       throw new Error("Expected custom event with:: 'onUseShadowsChange'.");
     }
 
-    this.userSettings.useShadows = Boolean(evt.detail);
-    this.userSettings.version += 1;
+    this.context.userSettings.useShadows = Boolean(evt.detail);
+    this.context.userSettings.version += 1;
   }
 
   onOverlayClick(evt: MouseEvent) {
@@ -277,8 +277,8 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
       return;
     }
 
-    this.needsRender = this.userSettingsLastAcknowledgedVersion < this.userSettings.version;
-    this.userSettingsLastAcknowledgedVersion = this.userSettings.version;
+    this.needsRender = this.userSettingsLastAcknowledgedVersion < this.context.userSettings.version;
+    this.userSettingsLastAcknowledgedVersion = this.context.userSettings.version;
   }
 
   render(delta: number) {
@@ -299,7 +299,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dd>{this.t("ui:user_settings_rendering_resolution_description")}</dd>
           </dl>
           <pi-form-radio-buttons
-            currentValue={this.userSettings.pixelRatio}
+            currentValue={this.context.userSettings.pixelRatio}
             edgeLabels={_lowHighEdgeLabelsTranslated}
             labels={_pixelRatioLabels}
             onChange={this.onPixelRatioChange}
@@ -310,7 +310,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dd>{this.t("ui:user_settings_dynamic_light_quality_description")}</dd>
           </dl>
           <pi-form-radio-buttons
-            currentValue={this.userSettings.dynamicLightQuality}
+            currentValue={this.context.userSettings.dynamicLightQuality}
             edgeLabels={_booleanEdgeLabels}
             labels={_lightQualityLabels.map(this._unaryT)}
             onChange={this.onDynamicLightQualityChange}
@@ -321,7 +321,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dd>{this.t("ui:user_settings_use_shadows_description")}</dd>
           </dl>
           <pi-form-radio-buttons
-            currentValue={this.userSettings.useShadows}
+            currentValue={this.context.userSettings.useShadows}
             edgeLabels={_booleanEdgeLabels}
             labels={_booleanLabelsTranslated}
             onChange={this.onUseShadowsChange}
@@ -332,7 +332,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dd>{this.t("ui:user_settings_shadow_map_size_description")}</dd>
           </dl>
           <pi-form-radio-buttons
-            currentValue={this.userSettings.shadowMapSize}
+            currentValue={this.context.userSettings.shadowMapSize}
             edgeLabels={_lowHighEdgeLabelsTranslated}
             labels={_shadowMapSizeLabels}
             onChange={this.onShadowMapSizeChange}
@@ -346,7 +346,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dd>{this.t("ui:user_settings_camera_type_description")}</dd>
           </dl>
           <pi-form-radio-buttons
-            currentValue={this.userSettings.cameraType}
+            currentValue={this.context.userSettings.cameraType}
             edgeLabels={_booleanEdgeLabels}
             labels={_cameraTypeLabelsTranslated}
             onChange={this.onCameraTypeChange}
@@ -361,7 +361,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             min={CameraParameters.ZOOM_MAX}
             onChange={this.onCameraZoomAmountChange}
             step={CameraParameters.ZOOM_STEP}
-            value={Math.round(this.userSettings.cameraZoomAmount)}
+            value={Math.round(this.context.userSettings.cameraZoomAmount)}
           />
         </form>
         {isOffscreenCanvasSupported && (
@@ -379,7 +379,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
                 )}
               </dl>
               <pi-form-radio-buttons
-                currentValue={this.userSettings.useOffscreenCanvas}
+                currentValue={this.context.userSettings.useOffscreenCanvas}
                 disabled={!isOffscreenCanvasSupported}
                 edgeLabels={_booleanEdgeLabels}
                 labels={_booleanLabelsTranslated}
@@ -396,7 +396,7 @@ export class UserSettingsDOMElementView extends DOMElementView<UserSettings> {
             <dd>{this.t("ui:user_settings_show_rendering_stats_description")}</dd>
           </dl>
           <pi-form-radio-buttons
-            currentValue={this.userSettings.showStatsReporter}
+            currentValue={this.context.userSettings.showStatsReporter}
             edgeLabels={_booleanEdgeLabels}
             labels={_booleanLabelsTranslated}
             onChange={this.onShowStatsReporterChange}

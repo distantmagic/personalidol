@@ -4,7 +4,7 @@ import { createMultiThreadMessageChannel } from "@personalidol/framework/src/cre
 import { createSingleThreadMessageChannel } from "@personalidol/framework/src/createSingleThreadMessageChannel";
 import { DimensionsState } from "@personalidol/framework/src/DimensionsState";
 import { domElementsLookup } from "@personalidol/personalidol/src/domElementsLookup";
-import { DOMElementViewBuilder } from "@personalidol/dom-renderer/src/DOMElementViewBuilder";
+import { DOMElementViewBuilder } from "@personalidol/personalidol/src/DOMElementViewBuilder";
 import { DOMUIController } from "@personalidol/dom-renderer/src/DOMUIController";
 import { EventBus } from "@personalidol/framework/src/EventBus";
 import { FontPreloadService } from "@personalidol/dom/src/FontPreloadService";
@@ -174,17 +174,16 @@ async function bootstrap() {
 
   const uiMessageChannel = createMultiThreadMessageChannel();
 
-  const domElementViewBuilder = DOMElementViewBuilder(
-    internationalizationService.i18next,
-    dimensionsState,
-    keyboardState,
-    mouseState,
-    touchState,
-    gameMessageChannel.port1,
-    uiMessageChannel.port1,
-    userSettings
-  );
-  const domUIController = DOMUIController(logger, mainLoop, uiRoot, domElementsLookup, domElementViewBuilder);
+  const domElementViewBuilder = DOMElementViewBuilder({
+    dimensionsState: dimensionsState,
+    gameMessagePort: gameMessageChannel.port1,
+    keyboardState: keyboardState,
+    mouseState: mouseState,
+    touchState: touchState,
+    uiMessagePort: uiMessageChannel.port1,
+    userSettings: userSettings,
+  });
+  const domUIController = DOMUIController(logger, i18next, mainLoop, uiRoot, domElementsLookup, domElementViewBuilder);
 
   preload(logger, domUIController);
 

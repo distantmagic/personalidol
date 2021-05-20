@@ -4,7 +4,7 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { MouseIndices } from "@personalidol/input/src/MouseIndices.enum";
 import { TouchIndices } from "@personalidol/input/src/TouchIndices.enum";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 const _css = `
   :host {
@@ -35,7 +35,7 @@ const _css = `
   }
 `;
 
-export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings> {
+export class MousePointerLayerDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
 
   beforeRender(): void {
@@ -43,11 +43,11 @@ export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings
   }
 
   render() {
-    if (this.mouseState[MouseIndices.M_LAST_USED] < this.touchState[TouchIndices.T_LAST_USED]) {
+    if (this.context.mouseState[MouseIndices.M_LAST_USED] < this.context.touchState[TouchIndices.T_LAST_USED]) {
       return null;
     }
 
-    if (!this.mouseState[MouseIndices.M_IN_BOUNDS]) {
+    if (!this.context.mouseState[MouseIndices.M_IN_BOUNDS]) {
       return null;
     }
 
@@ -55,8 +55,8 @@ export class MousePointerLayerDOMElementView extends DOMElementView<UserSettings
       <div
         class="mouse-pointer-decoration"
         style={{
-          "--translate-x": `${this.mouseState[MouseIndices.M_RELATIVE_X]}px`,
-          "--translate-y": `${this.mouseState[MouseIndices.M_RELATIVE_Y]}px`,
+          "--translate-x": `${this.context.mouseState[MouseIndices.M_RELATIVE_X]}px`,
+          "--translate-y": `${this.context.mouseState[MouseIndices.M_RELATIVE_Y]}px`,
         }}
       ></div>
     );

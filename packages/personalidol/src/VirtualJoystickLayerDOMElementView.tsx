@@ -14,7 +14,7 @@ import { DOMZIndex } from "./DOMZIndex.enum";
 
 import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 
-import type { UserSettings } from "./UserSettings.type";
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 
 const _css = `
   :host,
@@ -63,7 +63,7 @@ const _css = `
   }
 `;
 
-export class VirtualJoystickLayerDOMElementView extends DOMElementView<UserSettings> {
+export class VirtualJoystickLayerDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
 
   private _stretchVector: IVector2 = new Vector2();
@@ -73,15 +73,15 @@ export class VirtualJoystickLayerDOMElementView extends DOMElementView<UserSetti
   }
 
   render() {
-    const _isInBounds = isPrimaryTouchInDimensionsBounds(this.dimensionsState, this.touchState);
-    const _isPressed = isPrimaryTouchPressed(this.touchState);
-    const _isInitiatedByRootElement = isPrimaryTouchInitiatedByRootElement(this.touchState);
+    const _isInBounds = isPrimaryTouchInDimensionsBounds(this.context.dimensionsState, this.context.touchState);
+    const _isPressed = isPrimaryTouchPressed(this.context.touchState);
+    const _isInitiatedByRootElement = isPrimaryTouchInitiatedByRootElement(this.context.touchState);
 
     if (!_isInBounds || !_isPressed || !_isInitiatedByRootElement) {
       return null;
     }
 
-    computePrimaryTouchStretchVector(this._stretchVector, this.touchState);
+    computePrimaryTouchStretchVector(this._stretchVector, this.context.touchState);
 
     return (
       <div class="virtual-joystick-layer">
@@ -91,8 +91,8 @@ export class VirtualJoystickLayerDOMElementView extends DOMElementView<UserSetti
             "pointer--is-pressed": _isPressed && _isInitiatedByRootElement,
           })}
           style={{
-            "--translate-x": `${getPrimaryTouchInitialClientX(this.touchState)}px`,
-            "--translate-y": `${getPrimaryTouchInitialClientY(this.touchState)}px`,
+            "--translate-x": `${getPrimaryTouchInitialClientX(this.context.touchState)}px`,
+            "--translate-y": `${getPrimaryTouchInitialClientY(this.context.touchState)}px`,
           }}
           viewBox="0 0 110 110"
           xmlns="http://www.w3.org/2000/svg"

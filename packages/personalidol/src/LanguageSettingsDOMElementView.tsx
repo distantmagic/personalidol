@@ -6,8 +6,8 @@ import { DOMBreakpoints } from "./DOMBreakpoints.enum";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
 
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
-import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
   :host {
@@ -57,7 +57,7 @@ const _css = `
   }
 `;
 
-export class LanguageSettingsDOMElementView extends DOMElementView<UserSettings> {
+export class LanguageSettingsDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
 
   private _isLanguageChangePending: boolean = false;
@@ -74,7 +74,7 @@ export class LanguageSettingsDOMElementView extends DOMElementView<UserSettings>
       isLanguageSettingsScreenOpened: false,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.context.uiMessagePort.postMessage(message);
   }
 
   beforeRender(delta: number, elapsedTime: number, tickTimerState: TickTimerState): void {
@@ -103,15 +103,15 @@ export class LanguageSettingsDOMElementView extends DOMElementView<UserSettings>
     return function (evt: MouseEvent): void {
       evt.preventDefault();
 
-      if (language === self.userSettings.language) {
+      if (language === self.context.userSettings.language) {
         return;
       }
 
       self._isLanguageChangePending = true;
       self._targetLanguage = language;
 
-      self.userSettings.language = language;
-      self.userSettings.version += 1;
+      self.context.userSettings.language = language;
+      self.context.userSettings.version += 1;
     };
   }
 

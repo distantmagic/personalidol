@@ -2,10 +2,10 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
-import type { UserSettings } from "./UserSettings.type";
 
-export class MainMenuUserSettingsButtonDOMElementView extends DOMElementView<UserSettings> {
+export class MainMenuUserSettingsButtonDOMElementView extends DOMElementView<DOMElementViewContext> {
   constructor() {
     super();
 
@@ -19,7 +19,7 @@ export class MainMenuUserSettingsButtonDOMElementView extends DOMElementView<Use
       isUserSettingsScreenOpened: true,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.context.uiMessagePort.postMessage(message);
   }
 
   render() {

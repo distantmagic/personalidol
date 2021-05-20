@@ -2,11 +2,11 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { MessageGameStateChange } from "./MessageGameStateChange.type";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
-import type { UserSettings } from "./UserSettings.type";
 
-export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
+export class InGameMenuDOMElementView extends DOMElementView<DOMElementViewContext> {
   constructor() {
     super();
 
@@ -21,7 +21,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       isScenePaused: true,
     };
 
-    this.gameMessagePort.postMessage(message);
+    this.context.gameMessagePort.postMessage(message);
   }
 
   disconnectedCallback() {
@@ -31,13 +31,13 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       isInGameMenuOpened: false,
     };
 
-    this.uiMessagePort.postMessage(uiMessage);
+    this.context.uiMessagePort.postMessage(uiMessage);
 
     const gameMessage: MessageGameStateChange = {
       isScenePaused: false,
     };
 
-    this.gameMessagePort.postMessage(gameMessage);
+    this.context.gameMessagePort.postMessage(gameMessage);
   }
 
   onButtonExitClick(evt: MouseEvent) {
@@ -47,7 +47,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       currentLocationMap: null,
     };
 
-    this.gameMessagePort.postMessage(message);
+    this.context.gameMessagePort.postMessage(message);
   }
 
   onButtonReturnToGameClick(evt: MouseEvent) {
@@ -57,7 +57,7 @@ export class InGameMenuDOMElementView extends DOMElementView<UserSettings> {
       isInGameMenuOpened: false,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.context.uiMessagePort.postMessage(message);
   }
 
   render() {

@@ -9,6 +9,7 @@ import { isDOMElementView } from "./isDOMElementView";
 import { isDOMElementViewConstructor } from "./isDOMElementViewConstructor";
 import { isHTMLElementConstructor } from "./isHTMLElementConstructor";
 
+import type { i18n } from "i18next";
 import type { Logger } from "loglevel";
 
 import type { MainLoop } from "@personalidol/framework/src/MainLoop.interface";
@@ -34,6 +35,7 @@ function _isCustomElementDefined<L extends DOMElementsLookup>(name: string & key
 
 export function DOMUIController<L extends DOMElementsLookup, U extends UserSettings>(
   logger: Logger,
+  i18next: i18n,
   mainLoop: MainLoop<number | ReturnType<typeof setTimeout>>,
   uiRootElement: HTMLElement,
   domElementsLookup: L,
@@ -63,7 +65,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     const domElementView = new DOMElementViewConstructor<U>();
 
-    domElementViewBuilder.initialize(domElementView, _internalDOMMessageChannel.port2);
+    domElementViewBuilder.initialize(domElementView, _internalDOMMessageChannel.port2, i18next);
 
     return domElementView;
   }
@@ -84,7 +86,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
         if (isDOMElementView<U>(element)) {
           logger.debug(`UPGRADE("${name}")`);
-          domElementViewBuilder.initialize(element, _internalDOMMessageChannel.port2);
+          domElementViewBuilder.initialize(element, _internalDOMMessageChannel.port2, i18next);
           _registerDOMElementView(element);
           _updateRenderedElement(element);
         }
@@ -142,7 +144,7 @@ export function DOMUIController<L extends DOMElementsLookup, U extends UserSetti
 
     // Pick up any element that was created by a view.
 
-    domElementViewBuilder.initialize(target, _internalDOMMessageChannel.port2);
+    domElementViewBuilder.initialize(target, _internalDOMMessageChannel.port2, i18next);
     _registerDOMElementView(target);
     _updateRenderedElement(target);
 

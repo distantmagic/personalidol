@@ -5,8 +5,8 @@ import { isStatsReport } from "@personalidol/framework/src/isStatsReport";
 import { DOMElementView } from "./DOMElementView";
 
 import type { StatsReport } from "@personalidol/framework/src/StatsReport.type";
-import type { UserSettings } from "@personalidol/framework/src/UserSettings.type";
 
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { StatsReporterDOMElementView as IStatsReporterDOMElementView } from "./StatsReporterDOMElementView.interface";
 
 type FlattenedStatsReport = [string, boolean | number | string];
@@ -67,7 +67,10 @@ function _sortCompareReports(a: FlattenedStatsReport, b: FlattenedStatsReport): 
   return a[0].localeCompare(b[0]);
 }
 
-export class StatsReporterDOMElementView extends DOMElementView<UserSettings> implements IStatsReporterDOMElementView {
+export class StatsReporterDOMElementView
+  extends DOMElementView<DOMElementViewContext>
+  implements IStatsReporterDOMElementView
+{
   public static zIndex: number = 0;
   public css: string = _css;
   public statsReportsFlattened: Array<FlattenedStatsReport> = [];

@@ -2,8 +2,8 @@ import { h } from "preact";
 
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
+import type { DOMElementViewContext } from "./DOMElementViewContext.type";
 import type { MessageUIStateChange } from "./MessageUIStateChange.type";
-import type { UserSettings } from "./UserSettings.type";
 
 const _css = `
   :host {
@@ -31,7 +31,7 @@ const _css = `
   }
 `;
 
-export class MainMenuLanguageButtonDOMElementView extends DOMElementView<UserSettings> {
+export class MainMenuLanguageButtonDOMElementView extends DOMElementView<DOMElementViewContext> {
   public css: string = _css;
 
   constructor() {
@@ -47,7 +47,7 @@ export class MainMenuLanguageButtonDOMElementView extends DOMElementView<UserSet
       isLanguageSettingsScreenOpened: true,
     };
 
-    this.uiMessagePort.postMessage(message);
+    this.context.uiMessagePort.postMessage(message);
   }
 
   render() {
