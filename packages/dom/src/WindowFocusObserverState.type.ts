@@ -1,4 +1,4 @@
-import type { MainLoopUpdatableState } from "./MainLoopUpdatableState.type";
+import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 
 export type WindowFocusObserverState = MainLoopUpdatableState & {
   isDocumentFocused: boolean;

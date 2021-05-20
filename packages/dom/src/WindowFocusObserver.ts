@@ -2,7 +2,8 @@ import { generateUUID } from "@personalidol/math/src/generateUUID";
 
 import type { Logger } from "loglevel";
 
-import type { TickTimerState } from "./TickTimerState.type";
+import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
+
 import type { WindowFocusObserver as IKeyboardObserver } from "./WindowFocusObserver.interface";
 import type { WindowFocusObserverState } from "./WindowFocusObserverState.type";
 

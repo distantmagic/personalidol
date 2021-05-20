@@ -7,7 +7,7 @@ import { TouchIndices } from "./TouchIndices.enum";
 import { TouchState } from "./TouchState";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { WindowFocusObserverState } from "@personalidol/framework/src/WindowFocusObserverState.type";
+import type { WindowFocusObserverState } from "@personalidol/dom/src/WindowFocusObserverState.type";
 
 import type { TouchObserver as ITouchObserver } from "./TouchObserver.interface";
 import type { TouchObserverState } from "./TouchObserverState.type";

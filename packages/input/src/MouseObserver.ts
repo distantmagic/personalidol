@@ -12,7 +12,7 @@ import { MouseState } from "./MouseState";
 import type { Vector2 as IVector2 } from "three/src/math/Vector2";
 
 import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.type";
-import type { WindowFocusObserverState } from "@personalidol/framework/src/WindowFocusObserverState.type";
+import type { WindowFocusObserverState } from "@personalidol/dom/src/WindowFocusObserverState.type";
 
 import type { MouseObserver as IMouseObserver } from "./MouseObserver.interface";
 import type { MouseObserverState } from "./MouseObserverState.type";

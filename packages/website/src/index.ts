@@ -36,8 +36,8 @@ import { StatsReporter } from "@personalidol/framework/src/StatsReporter";
 import { TouchObserver } from "@personalidol/input/src/TouchObserver";
 import { TouchState } from "@personalidol/input/src/TouchState";
 import { UserSettings } from "@personalidol/personalidol/src/UserSettings";
-import { WindowFocusObserver } from "@personalidol/framework/src/WindowFocusObserver";
-import { WindowResizeObserver } from "@personalidol/framework/src/WindowResizeObserver";
+import { WindowFocusObserver } from "@personalidol/dom/src/WindowFocusObserver";
+import { WindowResizeObserver } from "@personalidol/dom/src/WindowResizeObserver";
 import { WorkerServiceClient } from "@personalidol/framework/src/WorkerServiceClient";
 
 import { workers } from "./workers";
