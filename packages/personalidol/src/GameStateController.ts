@@ -14,6 +14,7 @@ import type { Logger } from "loglevel";
 import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer.interface";
 import type { DirectorState } from "@personalidol/framework/src/DirectorState.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
+import type { Evaluator } from "@personalidol/expression-language/src/Evaluator.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { MainLoopUpdatableState } from "@personalidol/framework/src/MainLoopUpdatableState.type";
 import type { Scene } from "@personalidol/framework/src/Scene.interface";
@@ -34,6 +35,7 @@ export function GameStateController(
   effectComposer: EffectComposer,
   css2DRenderer: CSS2DRenderer,
   directorState: DirectorState,
+  evaluator: Evaluator,
   eventBus: EventBus,
   tickTimerState: TickTimerState,
   dimensionsState: Uint32Array,
@@ -105,6 +107,7 @@ export function GameStateController(
       userSettings,
       effectComposer,
       css2DRenderer,
+      evaluator,
       eventBus,
       tickTimerState,
       dimensionsState,

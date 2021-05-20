@@ -5,6 +5,7 @@
     "packages/dom",
     "packages/dom-renderer",
     "packages/dynamics",
+    "packages/expression-language",
     "packages/framework",
     "packages/i18n",
     "packages/input",

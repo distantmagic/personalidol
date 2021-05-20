@@ -5,6 +5,7 @@ import { CSS2DRendererStatsHook } from "@personalidol/three-css2d-renderer/src/C
 import { Director } from "@personalidol/framework/src/Director";
 import { DirectorPollablePreloadingObserver } from "@personalidol/framework/src/DirectorPollablePreloadingObserver";
 import { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer";
+import { Evaluator } from "@personalidol/expression-language/src/Evaluator";
 import { GameState } from "@personalidol/personalidol/src/GameState";
 import { GameStateController } from "@personalidol/personalidol/src/GameStateController";
 import { LoadingScreenScene } from "@personalidol/personalidol/src/LoadingScreenScene";
@@ -88,12 +89,18 @@ export function createScenes(
   const gameState: IGameState = GameState.createEmptyState();
   const uiState: IUIState = UIState.createEmptyState();
 
+  const evaluator = Evaluator({
+    gameState: gameState,
+    uiState: uiState,
+  });
+
   const gameStateController = GameStateController(
     logger,
     userSettings,
     effectComposer,
     css2DRenderer,
     currentSceneDirector.state,
+    evaluator,
     eventBus,
     mainLoop.ticker.tickTimerState,
     dimensionsState,

@@ -43,6 +43,7 @@ import type { CameraController as ICameraController } from "@personalidol/framew
 import type { CSS2DRenderer } from "@personalidol/three-css2d-renderer/src/CSS2DRenderer.interface";
 import type { DisposableCallback } from "@personalidol/framework/src/DisposableCallback.type";
 import type { EffectComposer } from "@personalidol/three-modules/src/postprocessing/EffectComposer.interface";
+import type { Evaluator } from "@personalidol/expression-language/src/Evaluator.interface";
 import type { EventBus } from "@personalidol/framework/src/EventBus.interface";
 import type { Raycaster as IRaycaster } from "@personalidol/input/src/Raycaster.interface";
 import type { RPCLookupTable } from "@personalidol/framework/src/RPCLookupTable.type";
@@ -51,7 +52,6 @@ import type { TickTimerState } from "@personalidol/framework/src/TickTimerState.
 import type { UnmountableCallback } from "@personalidol/framework/src/UnmountableCallback.type";
 import type { UserInputController } from "@personalidol/input/src/UserInputController.interface";
 import type { UserInputMouseController as IUserInputMouseController } from "@personalidol/input/src/UserInputMouseController.interface";
-// import type { View } from "@personalidol/views/src/View.interface";
 import type { ViewBag as IViewBag } from "@personalidol/views/src/ViewBag.interface";
 
 import type { EntityControllerBag as IEntityControllerBag } from "./EntityControllerBag.interface";
@@ -85,6 +85,7 @@ export function LocationMapScene(
   userSettings: UserSettings,
   effectComposer: EffectComposer,
   css2DRenderer: CSS2DRenderer,
+  evaluator: Evaluator,
   eventBus: EventBus,
   tickTimerState: TickTimerState,
   dimensionsState: Uint32Array,
@@ -276,7 +277,15 @@ export function LocationMapScene(
       });
     }
 
-    for await (let view of buildViews(logger, gameState, uiState, _entityViewFactory, worldspawnTexture, entities)) {
+    for await (let view of buildViews(
+      logger,
+      gameState,
+      uiState,
+      _entityViewFactory,
+      evaluator,
+      worldspawnTexture,
+      entities
+    )) {
       _viewBag.views.add(view);
 
       if (isEntityWithController(view.entity)) {

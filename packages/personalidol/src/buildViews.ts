@@ -1,13 +1,13 @@
-import jexl from "jexl";
-
 import { name } from "@personalidol/framework/src/name";
 
 import { isTargeting } from "./isTargeting";
-
 import { createViewBuildingPlan } from "./createViewBuildingPlan";
+import { LocationMapEntityFilter } from "./LocationMapEntityFilter";
 
 import type { Logger } from "loglevel";
 import type { Texture as ITexture } from "three/src/textures/Texture";
+
+import type { Evaluator } from "@personalidol/expression-language/src/Evaluator.interface";
 
 import type { AnyEntity } from "./AnyEntity.type";
 import type { EntityView } from "./EntityView.interface";
@@ -15,36 +15,6 @@ import type { EntityViewFactory } from "./EntityViewFactory.interface";
 import type { GameState } from "./GameState.type";
 import type { UIState } from "./UIState.type";
 import type { ViewBuildingStep } from "./ViewBuildingStep.type";
-
-async function* _filterEntities(
-  gameState: GameState,
-  uiState: UIState,
-  entities: ReadonlyArray<AnyEntity>
-): AsyncGenerator<AnyEntity> {
-  const expressionContext = Object.freeze({
-    gameState: Object.freeze(Object.assign({}, gameState)),
-    uiState: Object.freeze(Object.assign({}, uiState)),
-  });
-
-  for (let entity of entities) {
-    const expression: undefined | string = entity.properties.if;
-
-    if ("string" !== typeof entity.properties.if) {
-      yield entity;
-      continue;
-    }
-
-    const result = await jexl.eval(expression, expressionContext);
-
-    if ("boolean" !== typeof result) {
-      throw new Error(`Entity expression evaluated to ${typeof result} instead of boolean: "${expression}"`);
-    }
-
-    if (result) {
-      yield entity;
-    }
-  }
-}
 
 function _findTargetedViews(
   entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>>,
@@ -77,15 +47,12 @@ export async function* buildViews(
   gameState: GameState,
   uiState: UIState,
   entityViewFactory: EntityViewFactory,
+  evaluator: Evaluator,
   worldspawnTexture: ITexture,
   entities: ReadonlyArray<AnyEntity>
 ): AsyncGenerator<EntityView<AnyEntity>> {
   const entityViews: WeakMap<AnyEntity, EntityView<AnyEntity>> = new WeakMap();
-  const filteredEntities: Array<AnyEntity> = [];
-
-  for await (let entity of _filterEntities(gameState, uiState, entities)) {
-    filteredEntities.push(entity);
-  }
+  const filteredEntities: ReadonlyArray<AnyEntity> = await LocationMapEntityFilter(evaluator).filter(entities);
 
   for await (let step of createViewBuildingPlan(uiState, filteredEntities)) {
     const targetedViews = _findTargetedViews(entityViews, step);
