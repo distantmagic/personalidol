@@ -7,6 +7,13 @@ import type { JSX } from "preact";
 
 import type { UserSettings } from "./UserSettings.type";
 
+export interface Attributes {
+  max: number;
+  min: number;
+  step: number;
+  value: number;
+}
+
 const CSS_THUMB_BACKGROUND_COLOR = "#ffffff";
 const CSS_THUMB_BORDER_COLOR = "#000000";
 const CSS_THUMB_HEIGHT = 26;

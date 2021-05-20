@@ -8,6 +8,11 @@ import { DOMZIndex } from "./DOMZIndex.enum";
 
 import type { UserSettings } from "./UserSettings.type";
 
+export interface Attributes {
+  isloading?: boolean;
+  onDirectClick(): void;
+}
+
 const _css = `
   :host {
     all: initial;

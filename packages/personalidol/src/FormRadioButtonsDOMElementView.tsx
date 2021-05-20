@@ -4,8 +4,14 @@ import { h } from "preact";
 import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 import { must } from "@personalidol/framework/src/must";
 
-import type { FormRadioButtonsDOMElementProps } from "./FormRadioButtonsDOMElementProps.interface";
 import type { UserSettings } from "./UserSettings.type";
+
+export interface Attributes<T> {
+  currentValue: T;
+  edgeLabels: [string, string];
+  labels: ReadonlyArray<string>;
+  values: ReadonlyArray<T>;
+}
 
 const _css = `
   :host {
@@ -79,10 +85,7 @@ const _css = `
   }
 `;
 
-export class FormRadioButtonsDOMElementView<T>
-  extends DOMElementView<UserSettings>
-  implements FormRadioButtonsDOMElementProps<T>
-{
+export class FormRadioButtonsDOMElementView<T> extends DOMElementView<UserSettings> implements Attributes<T> {
   static get observedAttributes() {
     return ["disabled"];
   }

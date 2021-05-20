@@ -2,26 +2,36 @@ import type { DOMElementsLookup as BaseDOMElementsLookup } from "@personalidol/d
 
 import type { ButtonDOMElementView } from "./ButtonDOMElementView";
 import type { FatalErrorDOMElementView } from "./FatalErrorDOMElementView";
-import type { FormRadioButtonsDOMElementProps } from "./FormRadioButtonsDOMElementProps.interface";
-import type { FormRadioButtonsDOMElementView } from "./FormRadioButtonsDOMElementView";
-import type { FormRangeSliderDOMElementProps } from "./FormRangeSliderDOMElementProps.interface";
-import type { FormRangeSliderDOMElementView } from "./FormRangeSliderDOMElementView";
+import type {
+  FormRadioButtonsDOMElementView,
+  Attributes as FormRadioButtonsDOMElementAttributes,
+} from "./FormRadioButtonsDOMElementView";
+import type {
+  FormRangeSliderDOMElementView,
+  Attributes as FormRangeSliderDOMElementAttributes,
+} from "./FormRangeSliderDOMElementView";
 import type { InGameMenuDOMElementView } from "./InGameMenuDOMElementView";
 import type { InGameMenuTriggerDOMElementView } from "./InGameMenuTriggerDOMElementView";
 import type { LanguageSettingsDOMElementView } from "./LanguageSettingsDOMElementView";
-import type { MainMenuButtonDOMElementProps } from "./MainMenuButtonDOMElementProps.interface";
-import type { MainMenuButtonDOMElementView } from "./MainMenuButtonDOMElementView";
+import type {
+  MainMenuButtonDOMElementView,
+  Attributes as MainMenuButtonDOMElementAttributes,
+} from "./MainMenuButtonDOMElementView";
 import type { MainMenuDOMElementView } from "./MainMenuDOMElementView";
 import type { MainMenuLanguageButtonDOMElementView } from "./MainMenuLanguageButtonDOMElementView";
 import type { MainMenuLayoutDOMElementView } from "./MainMenuLayoutDOMElementView";
 import type { MainMenuUserSettingsButtonDOMElementView } from "./MainMenuUserSettingsButtonDOMElementView";
 import type { MousePointerLayerDOMElementView } from "./MousePointerLayerDOMElementView";
 import type { ObjectLabelDOMElementView } from "./ObjectLabelDOMElementView";
-import type { ProgressManagerStateDOMElementProps } from "./ProgressManagerStateDOMElementProps.type";
-import type { ProgressManagerStateDOMElementView } from "./ProgressManagerStateDOMElementView";
+import type {
+  ProgressManagerStateDOMElementView,
+  Attributes as ProgressManagerStateDOMElementAttributes,
+} from "./ProgressManagerStateDOMElementView";
 import type { ReloadButtonDOMElementView } from "./ReloadButtonDOMElementView";
-import type { SettingsBackdropDOMElementProps } from "./SettingsBackdropDOMElementProps.interface";
-import type { SettingsBackdropDOMElementView } from "./SettingsBackdropDOMElementView";
+import type {
+  SettingsBackdropDOMElementView,
+  Attributes as SettingsBackdropDOMElementAttributes,
+} from "./SettingsBackdropDOMElementView";
 import type { UserSettingsDOMElementView } from "./UserSettingsDOMElementView";
 import type { VirtualJoystickLayerDOMElementView } from "./VirtualJoystickLayerDOMElementView";
 
@@ -30,16 +40,16 @@ declare global {
     interface IntrinsicElements {
       "pi-button": HTMLAttributes<ButtonDOMElementView>;
       "pi-form-radio-buttons": HTMLAttributes<FormRadioButtonsDOMElementView<any>> &
-        FormRadioButtonsDOMElementProps<any>;
-      "pi-form-range-slider": HTMLAttributes<FormRangeSliderDOMElementView> & FormRangeSliderDOMElementProps;
-      "pi-main-menu-button": HTMLAttributes<MainMenuButtonDOMElementView> & MainMenuButtonDOMElementProps;
+        FormRadioButtonsDOMElementAttributes<any>;
+      "pi-form-range-slider": HTMLAttributes<FormRangeSliderDOMElementView> & FormRangeSliderDOMElementAttributes;
+      "pi-main-menu-button": HTMLAttributes<MainMenuButtonDOMElementView> & MainMenuButtonDOMElementAttributes;
       "pi-main-menu-language-button": HTMLAttributes<MainMenuLanguageButtonDOMElementView>;
       "pi-main-menu-layout": HTMLAttributes<MainMenuLayoutDOMElementView>;
       "pi-main-menu-user-settings-button": HTMLAttributes<MainMenuUserSettingsButtonDOMElementView>;
       "pi-progress-manager-state": HTMLAttributes<ProgressManagerStateDOMElementView> &
-        ProgressManagerStateDOMElementProps;
+        ProgressManagerStateDOMElementAttributes;
       "pi-reload-button": HTMLAttributes<ReloadButtonDOMElementView>;
-      "pi-settings-backdrop": HTMLAttributes<SettingsBackdropDOMElementView> & SettingsBackdropDOMElementProps;
+      "pi-settings-backdrop": HTMLAttributes<SettingsBackdropDOMElementView> & SettingsBackdropDOMElementAttributes;
     }
   }
 }

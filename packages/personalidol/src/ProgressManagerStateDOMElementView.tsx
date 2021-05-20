@@ -9,6 +9,10 @@ import type { ProgressManagerState } from "@personalidol/framework/src/ProgressM
 
 import type { UserSettings } from "./UserSettings.type";
 
+export interface Attributes {
+  progressManagerState: ProgressManagerState;
+}
+
 const _css = `
   @keyframes gradient-shine {
     0% {

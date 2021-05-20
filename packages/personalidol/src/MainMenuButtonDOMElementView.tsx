@@ -5,6 +5,10 @@ import { DOMElementView } from "@personalidol/dom-renderer/src/DOMElementView";
 
 import type { UserSettings } from "./UserSettings.type";
 
+export interface Attributes {
+  active?: boolean;
+}
+
 export const css = `
   :host {
     all: initial;
