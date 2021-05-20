@@ -309,7 +309,7 @@ export function MD2ModelView(
       state.animation = "stand";
     }
 
-    if (Math.abs(vec.y) > 10) {
+    if (Math.abs(vec.y) > 16) {
       state.animation = "jump";
     }
 
