@@ -54,7 +54,7 @@ purge:
 	rm -f yarn.lock
 
 .PHONY: release
-release: tsc public/index.html public/index.js
+release: public/index.html public/index.js
 
 .PHONY: test
 test:
