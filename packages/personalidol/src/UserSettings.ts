@@ -1,3 +1,4 @@
+import { isCanvasTransferControlToOffscreenSupported } from "@personalidol/framework/src/isCanvasTransferControlToOffscreenSupported";
 import { UserSettings as BaseUserSettings } from "@personalidol/framework/src/UserSettings";
 
 import { CameraParameters } from "./CameraParameters.enum";
@@ -14,7 +15,7 @@ function createEmptyState(pixelRatio: number): IUserSettings {
     language: "en",
     pixelRatio: 1,
     shadowMapSize: 512 as IUserSettings["shadowMapSize"],
-    useOffscreenCanvas: false,
+    useOffscreenCanvas: isCanvasTransferControlToOffscreenSupported(),
     useShadows: true,
   });
 }
