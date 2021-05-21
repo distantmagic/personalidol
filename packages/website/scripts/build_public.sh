@@ -2,7 +2,7 @@
 
 # Clean up old files first.
 rm -rf ./public/lib/*;
-rm ./public/service_worker_*
+rm -f ./public/service_worker_*
 
 yarn run esbuild \
     --bundle \
