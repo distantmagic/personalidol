@@ -2,16 +2,16 @@
 <html lang="en">
   <head>
     <link
-      href="/g/personalidol/assets/favicon.ico?{{{__CACHE_BUST}}}"
+      href="{{__ASSETS_BASE_PATH}}/favicon.ico?{{{__CACHE_BUST}}}"
       rel="icon"
     >
     <link
-      href="/g/personalidol/manifest.json?{{{__CACHE_BUST}}}"
+      href="{{__STATIC_BASE_PATH}}/manifest.json?{{{__CACHE_BUST}}}"
       integrity="{{#integrity}}./manifest.json{{/integrity}}"
       rel="manifest"
     >
     <link
-      href="/g/personalidol/style.css?{{{__CACHE_BUST}}}"
+      href="{{__STATIC_BASE_PATH}}/style.css?{{{__CACHE_BUST}}}"
       integrity="{{#integrity}}./style.css{{/integrity}}"
       rel="stylesheet"
     >
@@ -38,13 +38,13 @@
     </div>
     <script
       integrity="{{#integrity}}./preload.js{{/integrity}}"
-      src="/g/personalidol/preload.js?{{{__CACHE_BUST}}}"
+      src="{{__STATIC_BASE_PATH}}/preload.js?{{{__CACHE_BUST}}}"
       type="module"
     ></script>
     <script
       async
       integrity="{{#integrity}}./lib/index_{{__BUILD_ID}}.js{{/integrity}}"
-      src="/g/personalidol/lib/index_{{__BUILD_ID}}.js"
+      src="{{__STATIC_BASE_PATH}}/lib/index_{{__BUILD_ID}}.js"
       type="module"
     ></script>
   </body>

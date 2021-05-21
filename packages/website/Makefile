@@ -11,7 +11,11 @@ CACHE_BUST := $(shell BUILD_ID=$(BUILD_ID) sh ./scripts/helper_cache_bust.sh)
 
 .PHONY: public/index.html
 public/index.html: public/index.js public/index.mustache $(SOURCES_TS)
-	BUILD_ID=$(BUILD_ID) CACHE_BUST=$(CACHE_BUST) node ./scripts/build_mustache.js
+	ASSETS_BASE_PATH=${ASSETS_BASE_PATH} \
+	BUILD_ID=$(BUILD_ID) \
+	CACHE_BUST=$(CACHE_BUST) \
+	STATIC_BASE_PATH=${STATIC_BASE_PATH} \
+		node ./scripts/build_mustache.js
 
 public/index.js: scripts/build_public.sh $(SOURCES_TS)
 	ASSETS_BASE_PATH=${ASSETS_BASE_PATH} \
@@ -31,7 +35,7 @@ clean:
 	rm -rf ./public/index.html
 	rm -rf ./public/lib
 	rm -rf ./public/service_worker.js
-	rm -rf ./public/service_worker.js.map
+	rm -rf ./public/service_worker_*.js.map
 
 .PHONY: ncu
 ncu:
