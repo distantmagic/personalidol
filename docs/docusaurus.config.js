@@ -5,8 +5,8 @@ const githubRepoUrl = 'https://github.com/distantmagic/personalidol';
 module.exports = {
   title: 'Personal Idol',
   tagline: '',
-  url: 'https://distantmagic.github.io',
-  baseUrl: '/personalidol/',
+  url: 'https://docs.distantmagic.com',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',

@@ -7,7 +7,7 @@
 
 Documentation is also a work in progress:
 
-https://distantmagic.github.io/personalidol/docs/
+https://docs.distantmagic.com
 
 ## Support
 
