@@ -89,9 +89,7 @@ const _css = `
 
   h2 {
     font-size: 1.4rem;
-    font-variant: small-caps;
-    text-transform: lowercase;
-    word-spacing: 0.3ch;
+    font-weight: 400;
   }
 
   nav {

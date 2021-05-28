@@ -24,7 +24,6 @@ const _css = `
   p {
     font-family: monospace;
     font-size: 1rem;
-    letter-spacing: 0.1ch;
     line-height: 1.6;
   }
 
