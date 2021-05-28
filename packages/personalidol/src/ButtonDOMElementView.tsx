@@ -18,7 +18,7 @@ const _css = `
     border: 1px solid white;
     color: white;
     cursor: pointer;
-    font-family: Mukta;
+    font-family: Karla, sans-serif;
     font-size: 1rem;
     line-height: 1;
     padding: 0.8rem 1.6rem;

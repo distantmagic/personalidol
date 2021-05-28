@@ -21,7 +21,7 @@ export const css = `
   .main-menu-button {
     background-color: transparent;
     border: 1px solid transparent;
-    font-family: "Mukta";
+    font-family: Karla, sans-serif;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1;

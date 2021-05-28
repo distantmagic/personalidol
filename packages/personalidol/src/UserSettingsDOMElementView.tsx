@@ -32,11 +32,12 @@ const _css = `
   }
 
   dd {
-    font-weight: lighter;
+    font-weight: normal;
     margin: 0;
   }
 
   dt {
+    font-weight: 700;
     margin-bottom: -0.8rem;
   }
 
@@ -45,9 +46,8 @@ const _css = `
     background-color: black;
     border-bottom: 1px solid white;
     display: grid;
-    font-family: Almendra;
+    font-family: Lora, serif;
     font-size: 3.2rem;
-    font-variant: small-caps;
     font-weight: normal;
     grid-template-columns: 1fr auto;
     line-height: 1;
@@ -58,7 +58,7 @@ const _css = `
   }
 
   h2 {
-    font-family: Mukta, sans-serif;
+    font-family: Karla, sans-serif;
     font-size: 1.6rem;
     font-weight: bold;
     margin: 0;
@@ -83,7 +83,7 @@ const _css = `
   .user-settings__form {
     align-items: center;
     display: grid;
-    font-family: Mukta, sans-serif;
+    font-family: Karla, sans-serif;
     grid-row-gap: 3rem;
   }
 

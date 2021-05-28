@@ -23,9 +23,8 @@ const _css = `
     background-color: black;
     border-bottom: 1px solid white;
     display: grid;
-    font-family: Almendra;
+    font-family: Lora;
     font-size: 3.2rem;
-    font-variant: small-caps;
     font-weight: normal;
     grid-column-gap: 1.6rem;
     grid-template-columns: 1fr auto;

@@ -28,83 +28,20 @@ import type { DOMElementsLookup } from "./DOMElementsLookup.type";
 import type { MainMenuScene as IMainMenuScene } from "./MainMenuScene.interface";
 
 const _fonts: ReadonlyArray<FontPreloadParameters> = Object.freeze([
-  // Almendra
-
-  // {
-  //   family: "Almendra",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-bold.ttf?${__CACHE_BUST}`,
-  //   descriptors: {
-  //     weight: "700",
-  //   }
-  // },
-  // {
-  //   family: "Almendra",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-bolditalic.ttf?${__CACHE_BUST}`,
-  //   descriptors: {
-  //     weight: "700",
-  //     style: "italic",
-  //   }
-  // },
-  // {
-  //   family: "Almendra",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-italic.ttf?${__CACHE_BUST}`,
-  //   descriptors: {
-  //     weight: "400",
-  //     style: "italic",
-  //   }
-  // },
   {
-    family: "Almendra",
-    source: `${__ASSETS_BASE_PATH}/fonts/font-almendra-regular.ttf?${__CACHE_BUST}`,
+    family: "Karla",
+    source: `${__ASSETS_BASE_PATH}/fonts/font-karla-variablefont-wght.ttf?${__CACHE_BUST}`,
     descriptors: {
-      weight: "400",
+      weight: "125 950",
     },
   },
-
-  // Mukta
-
-  // {
-  //   family: "Mukta",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-extrabold.ttf?${__CACHE_BUST}`,
-  //   descriptors: {
-  //     weight: "800",
-  //   }
-  // },
-  // {
-  //   family: "Mukta",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-extralight.ttf?${__CACHE_BUST}`,
-  //   descriptors: {
-  //     weight: "200",
-  //   }
-  // },
   {
-    family: "Mukta",
-    source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-light.ttf?${__CACHE_BUST}`,
+    family: "Lora",
+    source: `${__ASSETS_BASE_PATH}/fonts/font-lora-variablefont-wght.ttf?${__CACHE_BUST}`,
     descriptors: {
-      weight: "300",
+      weight: "125 950",
     },
   },
-  // {
-  //   family: "Mukta",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-regular.ttf?${__CACHE_BUST}`,
-  //   descriptors: {
-  //     weight: "400",
-  //   },
-  // },
-  {
-    family: "Mukta",
-    source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-medium.ttf?${__CACHE_BUST}`,
-    descriptors: {
-      weight: "500",
-    },
-  },
-  // {
-  //   family: "Mukta",
-  //   source: `${__ASSETS_BASE_PATH}/fonts/font-mukta-semibold.ttf?${__CACHE_BUST}`,
-  //   descriptors: {
-  //     weight: "800",
-  //   }
-  // },
 ]);
 
 const _disposables: Set<DisposableCallback> = new Set();

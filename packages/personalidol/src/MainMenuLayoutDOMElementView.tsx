@@ -74,7 +74,7 @@ const _css = `
 
   h1,
   h2 {
-    font-family: "Almendra", sans-serif;
+    font-family: Lora, serif;
     line-height: 1;
     margin: 0;
     padding-left: 1.6rem;
@@ -83,7 +83,6 @@ const _css = `
 
   h1 {
     font-size: 3.2rem;
-    font-weight: normal;
     letter-spacing: -0.1ch;
     margin: 0;
   }
@@ -92,7 +91,7 @@ const _css = `
     font-size: 1.4rem;
     font-variant: small-caps;
     text-transform: lowercase;
-    word-spacing: 0.6ch;
+    word-spacing: 0.3ch;
   }
 
   nav {

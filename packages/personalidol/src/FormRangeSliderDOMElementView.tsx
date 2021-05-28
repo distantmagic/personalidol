@@ -45,7 +45,7 @@ const _css = `
 
   .pi-range-slider__value {
     color: white;
-    font-family: Mukta, sans-serif;
+    font-family: Karla, sans-serif;
   }
 
   input[type=range] {

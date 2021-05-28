@@ -25,7 +25,7 @@ const _css = `
   .pi-radio {
     align-items: center;
     display: grid;
-    font-family: Mukta;
+    font-family: Karla, sans-serif;
     grid-row-gap: 0.4rem;
     grid-template-areas:
       "bullets bullets"

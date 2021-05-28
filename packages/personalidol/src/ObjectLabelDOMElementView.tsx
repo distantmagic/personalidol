@@ -32,7 +32,7 @@ const _css = `
     background-color: rgba(0, 0, 0, 0.8);
     color: #eee;
     display: flex;
-    font-family: Mukta;
+    font-family: Karla, sans-serif;
     font-size: 1rem;
     height: 2rem;
     justify-content: center;
