@@ -90,6 +90,7 @@ const _css = `
   h2 {
     font-size: 1.4rem;
     font-weight: 400;
+    margin-top: 5px;
   }
 
   nav {
