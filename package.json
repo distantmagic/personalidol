@@ -2,5 +2,9 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "name": "personalidol",
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
 }
