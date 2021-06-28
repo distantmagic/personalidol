@@ -17,10 +17,6 @@ node_modules yarn.lock: package.json packages/*/package.json
 .PHONY: bootstrap
 bootstrap: node_modules
 
-.PHONY: docs
-docs:
-	$(MAKE) -C docs release
-
 .PHONY: prettier
 prettier: bootstrap
 	$(call FOREACH,prettier)
@@ -28,13 +24,11 @@ prettier: bootstrap
 .PHONY: clean
 clean:
 	$(call FOREACH,clean)
-	$(MAKE) -C docs clean
 	rm -rf node_modules
 
 .PHONY: ncu
 ncu:
 	$(call FOREACH,ncu)
-	$(MAKE) -C docs ncu
 
 .PHONY: purge
 purge: clean
