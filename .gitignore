@@ -7,3 +7,4 @@
 
 # package managers
 /.yarn
+/.pnp.js
