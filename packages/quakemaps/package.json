@@ -5,7 +5,7 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/texture-loader": "^0.0.4",
+    "@personalidol/texture-loader": "^0.0.6",
     "three": "^0.129.0",
     "tslib": "^2.3.0"
   },
@@ -31,5 +31,5 @@
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
   "sideEffects": false,
-  "version": "0.0.5"
+  "version": "0.0.6"
 }

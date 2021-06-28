@@ -5,8 +5,8 @@
     "url": "https://github.com/mcharytoniuk/personalidol/issues"
   },
   "dependencies": {
-    "@personalidol/ammo": "^0.0.4",
-    "@personalidol/framework": "^0.0.4",
+    "@personalidol/ammo": "^0.0.6",
+    "@personalidol/framework": "^0.0.6",
     "@personalidol/quakemaps": "^0.0.4",
     "loglevel": "^1.7.1",
     "three": "^0.129.0"
@@ -34,5 +34,5 @@
     "url": "git+https://github.com/mcharytoniuk/personalidol.git"
   },
   "sideEffects": false,
-  "version": "0.0.4"
+  "version": "0.0.6"
 }
