@@ -1389,59 +1389,6 @@
   dependencies:
     "@octokit/openapi-types" "^8.1.4"
 
-"@personalidol/dom-renderer@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@personalidol/dom-renderer/-/dom-renderer-0.0.4.tgz#3f1e9acf7e49f4ef8aa14971a785492abec77aa1"
-  integrity sha512-KIvzMfognybLcXbEUidKmWtqEbq1mo9GDZotcG8men1OKbyuq/F4OA9wppNjrlTKMmT26muGUWSYQ5LsQ3nafA==
-  dependencies:
-    "@personalidol/framework" "^0.0.4"
-    "@personalidol/loading-manager" "^0.0.4"
-    "@personalidol/support" "^0.0.4"
-    loglevel "^1.7.1"
-    preact "^10.5.11"
-    three "^0.124.0"
-
-"@personalidol/framework@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@personalidol/framework/-/framework-0.0.4.tgz#28ff0e34a826c7887d4acace72c5c458b2214ee7"
-  integrity sha512-WVSBOJKqUE5Q/6BsJ4lT6rPI46Rb6gmmTbs322B3Z4arvm1ZOtUPtUz2gd7nEkpiGf2IFp91wsWW01AhX28pUg==
-  dependencies:
-    loglevel "^1.7.1"
-    three "^0.124.0"
-
-"@personalidol/loading-manager@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@personalidol/loading-manager/-/loading-manager-0.0.4.tgz#d7fe9401c2f5c004145e8badbca9a0a73176188f"
-  integrity sha512-ykm0NAgCpYiXZfDcHDEIy1EBlY0bUwBGkk5jpt1k2JNs5ySg2OJWQzmRCll5eHbo0AKY3PNJ35wV51p9lRGbUA==
-  dependencies:
-    "@personalidol/framework" "^0.0.4"
-    loglevel "^1.7.1"
-    three "^0.124.0"
-
-"@personalidol/quakemaps@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@personalidol/quakemaps/-/quakemaps-0.0.4.tgz#83f7ef95c6ebe9c6124ec100e248703c8d01a168"
-  integrity sha512-36EW+P9bKoOOc6ylkV0d1iam7LAqmGo4g3f06P244DKbLoXKuZqBML7Vnkle1VQBpFJY8sOCyK6x4NMnWL6Eyg==
-  dependencies:
-    "@personalidol/texture-loader" "^0.0.4"
-    three "^0.124.0"
-    tslib "^2.1.0"
-
-"@personalidol/support@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@personalidol/support/-/support-0.0.4.tgz#5fc7f7c79bfdf7cd3eaf4523fa571a85b4369b13"
-  integrity sha512-hukgqLXXQLaL2nj+RwQRcUHRvKCjuX3ZtremdATEaZlmcDdwybgv1MAFiHQD5K689haIOJNn4a8N1t0avHIuZQ==
-
-"@personalidol/texture-loader@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@personalidol/texture-loader/-/texture-loader-0.0.4.tgz#dbca47e4a2370fe8349dca4eac3194abfff84e55"
-  integrity sha512-/TXE+hyXuji26+j31lQS4YWaYo59l9cQBSSo5zS/853lS/ILWfgVy5wwpIvUmVZWPfBhk7uMzb20N39jqNq8Sg==
-  dependencies:
-    "@personalidol/dom-renderer" "^0.0.4"
-    "@personalidol/framework" "^0.0.4"
-    "@personalidol/loading-manager" "^0.0.4"
-    three "^0.124.0"
-
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
@@ -6035,7 +5982,7 @@ posix-character-classes@^0.1.0:
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
   integrity sha1-AerA/jta9xoqbAL+q7jB/vfgDqs=
 
-preact@^10.5.11, preact@^10.5.13:
+preact@^10.5.13:
   version "10.5.13"
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.5.13.tgz#85f6c9197ecd736ce8e3bec044d08fd1330fa019"
   integrity sha512-q/vlKIGNwzTLu+jCcvywgGrt+H/1P/oIRSD6mV4ln3hmlC+Aa34C7yfPI4+5bzW8pONyVXYS7SvXosy2dKKtWQ==
@@ -7111,11 +7058,6 @@ thenify-all@^1.0.0:
   dependencies:
     any-promise "^1.0.0"
 
-three@^0.124.0:
-  version "0.124.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.124.0.tgz#14ab1a26ba6c56e51190e1b55695cd3c1e69ea55"
-  integrity sha512-ROXp1Ly7YyF+jC910DQyAWj++Qlw2lQv0qwYLNQwdDbjk4bsOXAfGO92wYTMPNei1GMJUmCxSxc3MjGBTS09Rg==
-
 three@^0.129.0:
   version "0.129.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.129.0.tgz#f5e530bbc96eac5d5b4749cb5da886ef0d42f554"
@@ -7280,7 +7222,7 @@ tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.1.0, tslib@^2.3.0:
+tslib@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
   integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
