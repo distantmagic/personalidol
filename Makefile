@@ -9,8 +9,11 @@ endef
 
 # Real targets
 
-node_modules yarn.lock: package.json packages/*/package.json
-	yarn install
+yarn.lock: package.json packages/*/package.json
+
+node_modules:
+	yarn install --check-files --frozen-lockfile --non-interactive
+
 
 # Phony targets
 
